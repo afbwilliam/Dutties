@@ -1,0 +1,62 @@
+$Title Affine Variational Inequality (AFFINEVI,SEQ=48)
+
+$ontext
+An affine VI is to find x in X:
+
+F(x) (y - x) >= 0, for all y in X
+
+Here F is an affine (linear) function and X is polyhedral:
+e.g. X = { x >= 0 | Ax >= b }
+
+This can be reformulated as an MCP:
+
+0 <= F(x) - A'u           \perp x >= 0
+0 <= Ax - b               \perp u >= 0
+
+Contributor: Michael Ferris, February 2010
+$offtext
+
+sets
+ I  / i1 /
+ J  / j1 * j2 /
+ ;
+alias(J,K);
+
+table A(I,J)
+       j1        j2
+i1     -1        -1
+;
+
+parameter b(I) /
+i1   -1
+/;
+
+table M(J,J)
+       j1        j2
+j1      1
+j2      1         1
+;
+
+parameter q(J) /
+j1  2
+j2 -3
+/;
+
+positive variables
+ x(J)  'primal vars, perp to f(J)'
+ ;
+
+equations
+ F(J)
+ g(I)
+ ;
+
+F(J)..      sum(K, M(J,K)* x(K)) + q(J)  =N= 0 ;
+g(I)..      sum {j, A(I,J)*x(J)}         =g= b(I) ;
+
+model affVI / F, g/;
+
+file fx /"%emp.info%"/;
+putclose fx 'vi F x';
+
+solve affVI using emp;

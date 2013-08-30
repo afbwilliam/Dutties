@@ -1,0 +1,5 @@
+$title  uses system.f? and compares with full file name (PUT4,SEQ=37)
+file temp /temp.gms /;
+putclose temp '$if NOT "' system.fp system.fn system.fe '" == "%system.fp%%system.fn%%system.fe%" $error not the same'
+execute '=gams temp.gms lo=%GAMS.lo%';
+abort$errorlevel 'gams program above failed';

@@ -1,0 +1,23 @@
+$title nlp2mcp: Form the KKT conditions of an NLP as an MCP  (NLP2MCP,SEQ=61)
+
+$ontext
+This model shows how to solve an NLP as an MCP using EMP. EMP essentially
+reformulates te NLP using Karush–Kuhn–Tucker (KKT) conditions.
+
+Contributor: Michael C. Ferris, February 2011
+$offtext
+
+
+variables f,z; positive variables x,y;
+equations g, h, defobj;
+
+g.. x + y =l= 1;
+h.. x + y - z =e= 2;
+defobj.. f =e= -3*x + y;
+
+model comp / defobj, g, h /;
+
+file info / '%emp.info%' /;
+putclose info / 'modeltype mcp';
+
+solve comp using emp minimizing f;

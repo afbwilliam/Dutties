@@ -1,0 +1,80 @@
+$Title Test disjunctions with negative bounds on variables (EMPDISJ4,SEQ=507)
+
+$ontext
+Contributor: Jan-H. Jagla, February 2011
+$offtext
+
+$onechoV > testm1.inc
+abort$(abs(%1.objval-(-2.0))>1e-6) 'Objective value wrong [%1,%2]' , %1.objval;
+abort$(abs(b.l-0.0)         >1e-6) 'b.l wrong [%1,%2]'             , b.l      ;
+abort$(abs(x.l-(-2.0))      >1e-6) 'x.l wrong [%1,%2]'             , x.l      ;
+$offecho
+
+$onechoV > testm2.inc
+abort$(abs(%1.objval-(-2.1))>1e-6) 'Objective value wrong [%1,%2]' , %1.objval;
+abort$(abs(b.l-1.0)         >1e-6) 'b.l wrong [%1,%2]'             , b.l      ;
+abort$(abs(x.l-(-1.0))      >1e-6) 'x.l wrong [%1,%2]'             , x.l      ;
+$offecho
+
+variable z,x;
+binary variable b;
+equation obj1,obj2,e1,e2;
+
+obj1.. z =e= -0.9*b + x;
+obj2.. z =e= -1.1*b + x;
+e1.. x =g= -1;
+
+x.lo = -2;
+
+$onecho > jams.opt
+Filename mymodel.gms
+Dict mydoc.txt
+$offecho
+
+model m1  / obj1,e1 /; m1.optcr=0; m1.optfile=1;
+model m2  / obj2,e1 /; m2.optcr=0; m2.optfile=1;
+
+* Test with ConvexHull (default reformulation)
+execute 'echo disjunction chull b e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 CHull
+solve m2 us emp min z;
+$batinclude testm2.inc m2 CHull
+
+* Test with bigM
+execute 'echo disjunction bigM b e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 BigM
+solve m2 us emp min z;
+$batinclude testm2.inc m2 BigM
+
+$IF not SOLVER cplex $GOTO SCIP
+* Test with Indicators and CPLEX
+option mip=cplex;
+execute 'echo disjunction indic b e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 Indic
+solve m2 us emp min z;
+$batinclude testm2.inc m2 Indic
+
+$LABEL SCIP
+$IF not SOLVER scip $GOTO XPRESS
+* Test with Indicators and SCIP
+option mip=scip;
+execute 'echo disjunction indic b e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 Indic
+solve m2 us emp min z;
+$batinclude testm2.inc m2 Indic
+
+$LABEL XPRESS
+$IF not SOLVER xpress $GOTO DONE
+* Test with Indicators and XPRESS
+option mip=xpress;
+execute 'echo disjunction indic b e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 Indic
+solve m2 us emp min z;
+$batinclude testm2.inc m2 Indic
+
+$LABEL DONE

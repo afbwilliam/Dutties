@@ -1,0 +1,127 @@
+$Title  External Function - Example 4x (EX4X,SEQ=568)
+
+$ontext
+
+  Example contributed by Meta Voelker and Michael Ferris, UW-Madison
+
+  Model for finding the smoothing parameter (window width) used to
+  estimate the density function for a set of DEA efficiency scores.
+  The density estimate uses a reflected kernel function. The smoothing
+  parameter is found by maximizing the log likelihood cross-validation
+  function on the efficiency scores.
+
+  Reference: B.W. Sliverman, Density Estimation for Statistics and
+  Data Analysis, Chapman and Hall, 1986.
+
+  The example is similar to ex4 but there are two extra DLLs that
+  show the use of constant derivatives in Fortran (ex4xf_cb.for) and C
+  (ex4xc_cb.c). The execution time should be reduced if CONOPT3 is used
+  as the NLP solver.
+
+$offtext
+
+
+option limrow = 0, limcol = 0;
+
+* original DMU set names
+set ALLI /1*950/;
+set I(ALLI);
+alias (I,II);
+
+* include objective values from optimizing on initial sample
+parameter objval(alli);
+$gdxin deasolu
+$load objval
+
+* use the command-line option "--nDMU=N" if set, else take them all
+* Note that the standard GAMS model, ex4, cannot handle all data.
+* You can skip this model by defining --noGAMS=1.
+* The GAMS solution is also read off the GDX file, in case the GAMS
+* run is skipped
+
+$if not set nDMU $set nDMU 999999
+scalar n / %nDMU% /;
+n = min (n, card(ALLI));
+I(ALLI) = (ord(ALLI) le n);
+
+positive variable h       'smoothing parameter';
+variable          cv      'log likelihood function value';
+h.lo = 0.00001;
+scalar hinit / 10.01 /;
+scalar fudge /1e-8/;
+
+equation eqn;
+equation eqnX;
+
+eqn.. cv =e= sum {i,
+                  log (fudge + sum {ii$[not sameas(ii,i)],
+                                    exp(-sqr[(objval(i)-objval(ii))/h]/2) +
+                                    exp(-sqr[(objval(i)-2+objval(ii))/h]/2)
+                                   }
+                      )
+                 }
+             - n*log(h);
+
+eqnX..       1*h + 2*cv =X= 1;
+
+model ex4x      /eqn/;
+model ex4xf_cb /eqnX/;
+model ex4xc_cb /eqnX/;
+
+parameter report(*,*) 'Solution Summary';
+$load report
+option report:5;
+scalar totdist /0/;
+
+file out / 'ex4x.put' /;
+put out n:0:0 /;
+put fudge:24:15 /;
+loop {I,
+     put objval(i):23:13 /;
+};
+putclose;
+
+$onechoV > runme.gms
+h.l = hinit;
+h.m = 0;
+cv.l = 0;
+cv.m = 0;
+%1.workspace=1000;
+solve %1 maximizing cv using nlp;
+abort$(%1.solvestat <> 1) 'problems running model %1';
+
+execerror = 0;
+report('h', '%1') = h.l;
+report('cv','%1') = cv.l;
+execerror = 0;
+totdist = totdist + abs(h.l  - report('h', 'ex4'));
+totdist = totdist + abs(cv.l - report('cv','ex4'));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=ex4xc_cb.c                                     --libname=ex4xc_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 ex4xf_cb.f90"%eq% --libname=ex4xf_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                   batinclude runme ex4x
+$if set runC_cb    $batinclude runme ex4xc_cb
+$if set runF_cb    $batinclude runme ex4xf_cb
+
+if ((totdist < 1.0E-6),
+  display "@@@@ #Test passed.",report;
+else
+  abort totdist, "@@@@ #Test not passed. Inspect ex4.lst for details.",report;
+);
+

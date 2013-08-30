@@ -1,0 +1,22 @@
+$title 'Test correctness of sinh intrinsic' (FNSINH,SEQ=161)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+$gdxin fnsinh
+$load aeps reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = sinh.value (data(T,'x'));
+  data(T, 'fx')    = sinh.grad  (data(T,'x'));
+  data(T,'fxx')    = sinh.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+}
+
+abort$(execerror lt 3)
+  'Should get execution errors evaluating sinh(x) for |x| large';
+execerror = 0;
+
+$include fntest_x.inc

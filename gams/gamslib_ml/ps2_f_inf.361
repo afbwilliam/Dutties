@@ -1,0 +1,48 @@
+$Title Parts Supply Problem w/ Inefficient Type w/o Asymmetric Information (PS2_F_inf,SEQ=361)
+
+* Hideo Hashimoto, Kojun Hamada, and Nobuhiro Hosoe, "A Numerical Approach
+*   to the Contract Theory: the Case of Adverse Selection", GRIPS Discussion
+*   Paper 11-27, National Graduate Institute for Policy Studies, Tokyo, Japan,
+*   March 2012.
+*
+*  http://r-center.grips.ac.jp/DiscussionPapersDetails/247/#
+
+Option limcol=0,limrow=0;
+
+* Definition of Set
+Set     i       type of supplier        /inf/;
+* Definition of Parameters
+Parameter
+        theta(i)        efficiency      /inf    0.3/;
+* Definition of Primal/Dual Variables
+Positive Variable
+        x(i)            quality
+        b(i)            maker's revenue
+        c(i)            cost;
+Variable
+        Util            maker's utility;
+Equation
+        obj             maker's utility function
+        rev(i)          maker's revenue function
+        pc(i)           participation constraint;
+* Specification of Equations
+obj..   Util =e= sum(i, (b(i)-c(i)));
+rev(i)..b(i) =e= x(i)**(0.5);
+pc(i).. c(i)-theta(i)*x(i) =e= 0;
+
+* Setting Lower Bounds on Variables to Avoid Division by Zero
+x.lo(i)=0.0001;
+
+* Defining and Solving the Model
+Model FB1 /all/;
+Solve FB1 maximizing Util using NLP;
+
+Parameter
+                db(i)   derivative of b
+                w(i)    price
+;
+db(i)   =0.5*x.l(i)**(-0.5);
+w(i)    =c.l(i);
+
+Display x.l, b.l, c.l, util.l, db, w;
+* End of Model

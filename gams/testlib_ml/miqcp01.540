@@ -1,0 +1,96 @@
+$title Test of correctness for levels & marginals of MIQCP (MIQCP01,SEQ=540)
+
+$ontext
+Test of correctness of the levels and marginals returned.
+We have QP terms in the objective only - all MIQCP solvers accept this.
+Cases considered:
+  1) =L=, =G=, =E= constraints
+To add later:
+  2) min [convex obj] or max [concave obj]
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = xQx + cx + b where cz and b take different values
+$offtext
+
+$if not set MTYPE   $set MTYPE miqcp
+$if not set TESTTOL $set TESTTOL 5e-6
+scalar mchecks / 0 /;
+$if not %QPMCHECKS% == 0 mchecks = 1;
+
+scalars
+  cz    / 1 /
+  cb    / 0 /
+  bigM  / 2   /
+  delta /  .2 /
+  x0    / 1.9 /
+  y0    / 1.15 /
+  ;
+variables x, y, z;
+binary variables b0, b1;
+
+equations
+  obj
+  h0  'halfplane (x+y-3) <= -delta if b0=0'
+  h1  'halfplane (x+y-3) >=  delta if b0=1'
+  xc
+  ;
+obj.. z =E= sqr(x-x0) + sqr(y-y0);
+h0..  (x + y - 3) -    b0 * bigM =L= -delta;
+h1..  (x + y - 3) + (1-b0)* bigM =G=  delta;
+xc..  x =e= 1 + b1;
+
+model m / all /;
+
+scalar failed / 0 /;
+$escape =
+$echo if{%=1, display '%=1 failed', '%=2'; failed=1}; > gtest.gms
+$escape %
+
+scalars
+  isMin    / 1 /
+  tol      / %TESTTOL% /,
+  objval   / .0125 /
+  obj_l    / 0.0 /
+  obj_m    / 1.0 /
+  b0_l / 1   /,    b0_m / .2 /
+  b1_l / 1   /,    b1_m / .1 /
+  s_l  / 0.2 /,    s_m  / 0 /
+  x_l  / 2   /,    x_m  / 0 /
+  y_l  / 1.2 /,    y_m  / 0 /
+  h0_l / 1.2 /,    h0_m / 0 /
+  h1_l / 1.2 /,    h1_m / .1 /
+  xc_l /  1  /,    xc_m / .1 /
+  ;
+
+solve m min z using miqcp;
+execute_unload 'miqpSol.gdx';
+* do not reset optcr if already set to a nondefault value
+if {(.1 = %gams.optcr%), option optcr = 1e-6; };
+
+$ batinclude gtest "(m.solvestat <> %solvestat.NormalCompletion%)" "wrong solver status"
+$ batinclude gtest "((m.modelstat <> %modelstat.Optimal%) and (m.modelstat <> %modelstat.IntegerSolution%))" "wrong model status"
+
+$ batinclude gtest "(abs(cz*z.l-cb-objval) > tol)"     "bad z.l"
+$ batinclude gtest "(abs(z.m) > tol)"                  "bad z.m"
+
+$ batinclude gtest "(abs(b0.l-b0_l) > tol)"            "bad b0.l"
+$ batinclude gtest "(abs(b1.l-b1_l) > tol)"            "bad b1.l"
+$ batinclude gtest "(abs(x.l-x_l) > tol)"              "bad x.l"
+$ batinclude gtest "(abs(y.l-y_l) > tol)"              "bad y.l"
+
+$ batinclude gtest "(abs(obj.l-cb) > tol)"             "bad obj.l"
+$ batinclude gtest "(abs(h0.l-h0_l) > tol)"            "bad h0.l"
+$ batinclude gtest "(abs(h1.l-h1_l) > tol)"            "bad h1.l"
+$ batinclude gtest "(abs(xc.l-xc_l) > tol)"            "bad xc.l"
+
+if {mchecks,
+$   batinclude gtest "(abs(b0.m-b0_m) > tol)"          "bad b0.m"
+$   batinclude gtest "(abs(b1.m-b1_m) > tol)"          "bad b1.m"
+$   batinclude gtest "(abs(x.m-x_m) > tol)"            "bad x.m"
+$   batinclude gtest "(abs(y.m-x_m) > tol)"            "bad y.m"
+$   batinclude gtest "(abs(cz*obj.m-obj_m) > tol)"     "bad obj.m"
+$   batinclude gtest "(abs(h0.m-h0_m) > tol)"          "bad h0.m"
+$   batinclude gtest "(abs(h1.m-h1_m) > tol)"          "bad h1.m"
+$   batinclude gtest "(abs(xc.m-xc_m) > tol)"          "bad xc.m"
+};
+
+abort$failed 'test failed', cz, cb;

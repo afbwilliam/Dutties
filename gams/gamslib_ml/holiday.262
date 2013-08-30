@@ -1,0 +1,98 @@
+$title US Holidays and Leave Chart (HOLIDAY,SEQ=262)
+
+* The US government recognizes 10 Federal Holidays. If a holiday falls on a
+* weekend then the previous Friday or the following Monday is off. A simple
+* Leave Chart for any year can be generated using calendar functions.
+* You can also change the year: >gams holiday --year=1999
+*
+*
+* GAMS Development Corporation, Formulation and Language Examples.
+
+scalar year; year = gyear(jnow);
+
+$if set year year = %year%;
+
+set FHD  US Federal Holidays / "NEW YEAR'S DAY"              January 1
+                               "MARTIN LUTHER KING BIRTHDAY" 3rd Monday in January
+                               "PRESIDENT'S DAY"             3rd Monday in February
+                               "MEMORIAL DAY"                Last Monday in May
+                               "INDEPENDENCE DAY"            July 4
+                               "LABOR DAY"                   1st Monday in September
+                               "COLUMBUS DAY"                2nd Monday in October
+                               "VETERAN'S DAY"               November 11
+                               "THANKSGIVING DAY"            4th Thursday in November
+                               "CHRISTMAS DAY"               December 25th    /
+
+parameters FHDyear(fhd) US Federal Holidays for year in Julian Days;
+
+FHDyear("NEW YEAR'S DAY")             = jdate(year,1,1);
+FHDyear("MARTIN LUTHER KING BIRTHDAY")= jdate(year,1,1)  + mod(8-gdow(jdate(year,1,1)),7) + 2*7;
+FHDyear("PRESIDENT'S DAY")            = jdate(year,2,1)  + mod(8-gdow(jdate(year,2,1)),7) + 2*7;
+FHDyear("MEMORIAL DAY")               = jdate(year,5,31) + mod(1-gdow(jdate(year,5,31)),7);
+FHDyear("INDEPENDENCE DAY")           = jdate(year,7,4);
+FHDyear("LABOR DAY")                  = jdate(year,9,1)  + mod(8-gdow(jdate(year,9,1)),7);
+FHDyear("COLUMBUS DAY")               = jdate(year,10,1) + mod(8-gdow(jdate(year,10,1)),7) + 7;
+FHDyear("VETERAN'S DAY")              = jdate(year,11,11);
+FHDyear("THANKSGIVING DAY")           = jdate(year,11,1) + mod(11-gdow(jdate(year,11,1)),7) + 3*7;
+FHDyear("CHRISTMAS DAY")              = jdate(year,12,25);
+display fhdyear;
+
+* Federal Holidays falling on a weekend result in Friday or Monday off. Also
+* note that we could have one more day off 12/31 is a Friday.
+
+set fhdc Holidays off; parameter    FHDyearC(*) US Federal holidays off;
+
+fhdc(fhd) = yes; fhdc('Next New Year') = yes;
+
+fHDyearc(fhd)                         = fHDyear (fhd);
+fHDyearc(fhd)$(gdow(fhdyearc(fhd))=6) = fHDyearc(fhd) - 1;
+fHDyearc(fhd)$(gdow(fhdyearc(fhd))=7) = fHDyearc(fhd) + 1;
+fHDyearc('Next New Year')             = jdate(year+1,1,1) -(gdow(jdate(year+1,1,1))=6);
+display fhdyearc;
+
+sets month / January, February, March, April, May, June, July, August, September, October, November, December /;
+
+file leave / holiday.put /;
+
+parameters i,j
+           dim(month) Days in month
+           ordm(month);
+
+ordm(month) = ord(month);
+dim(month)  = jdate(year+(ord(month)=12),ordm(month++1),1) - jdate(year,ord(month),1);
+display dim;
+
+put leave year:0:0 ' US Annual Leave Chart' /;
+put / ' ':9 '|';
+for(i = 1 to 31,
+   if(i < 10,
+      put ' |'
+   else
+      put floor(i/10):1:0 '|') );
+put / ' ':9 '|';
+for(i = 1 to 31, put mod(i,10):1:0 '|');
+
+loop(month,
+   put / month.tl:9 '|';
+   for(i = 1 to dim(month),
+      j= jdate(year,ord(month),i);
+      if(gdow(j) > 5,
+         put 'W|'
+      else
+         if(sum(fhdc, fhdyearc(fhdc)=j),
+            put 'H|'
+         else
+            put ' |' ) ) );
+   put$(mod(ordm(month),3)=0) / ;
+);
+
+put // 'W  Weekend'
+     / 'H  Federal Holiday' /
+
+if(gdow(jdate(year+1,1,1))=6, put / 'January 1st of next year is a Saturday and we will have off December 31st this year' / );
+if(gdow(jdate(year,1,1)  )=6, put / 'January 1st of this year is a Saturday and we had off December 31st last year' / );
+
+loop(fhd, put / fhd.tl:30 fhd.te(fhd));
+
+put //'If a Federal Holiday is on a Saturday we will have off on Friday, if the'
+     /'holiday is on a Sunday we will have off on Monday.';

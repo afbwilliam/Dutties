@@ -1,0 +1,123 @@
+$TITLE MPEC model to test all types of matches, using =N= (MPEC01,SEQ=104)
+
+$ontext
+  This is a fairly simple MPEC model with some useful features:
+   a) it has a unique solution
+   b) it contains all types of matches
+   c) it can be run as an MCP as well as an MPEC
+
+Contributor: Steve Dirkse, Jan 2004
+$offtext
+
+$if NOT set MTYPE $set MTYPE mpec
+$if not set TESTTOL $set TESTTOL 1e-3
+
+scalar tol / %TESTTOL% /;
+
+variables
+    z           'objective var',
+    x           'upper-level control variable',
+    yL0         'state var: lower bounded, at lower bound',
+    yL1         'state var: lower bounded, basic',
+    yU1         'state var: upper bounded, basic',
+    yU2         'state var: upper bounded, at upper bound',
+    yF1         'state var: free, basic',
+    yB0         'state var: double bounded, at lower bound',
+    yB1         'state var: double bounded, basic',
+    yB2         'state var: double bounded, at upper bound';
+
+x.l = 1;
+
+yL0.lo =    0;  yL0.up = inf;      yL0.l  = 1;
+yL1.lo =    0;  yL1.up = inf;      yL1.l  = 1;
+yU1.lo = -inf;  yU1.up = 2;        yU1.l  = 1;
+yU2.lo = -inf;  yU2.up = 2;        yU2.l  = 1;
+yF1.lo = -inf;  yF1.up = inf;      yF1.l  = 1;
+yB0.lo =    0;  yB0.up = 2;        yB0.l  = 1;
+yB1.lo =    0;  yB1.up = 2;        yB1.l  = 1;
+yB2.lo =    0;  yB2.up = 2;        yB2.l  = 1;
+
+equations
+    obj,
+    fL0,
+    fL1,
+    fU1,
+    fU2,
+    fF1,
+    fB0,
+    fB1,
+    fB2;
+
+obj..   z =e= sqr(x-1.0);
+
+fL0..   3 * yL0 + 1 * yL1 =N= x - 1;
+fL1..   1 * yL0 + 3 * yL1 =N= x + 2;
+
+fU1..   3 * yU1 + 1 * yU2 =N= x + 4;
+fU2..   1 * yU1 + 3 * yU2 =N= x + 10;
+
+fF1..   yL0 + yL1 + yU1 + yU2 + 10 * yF1 + yB0 + yB1 + yB2 =N= x + 16;
+
+fB0..   3 * yB0 + 1 * yB1 + 1 * yB2 =N= x;
+fB1..   1 * yB0 + 3 * yB1 + 1 * yB2 =N= x + 4;
+fB2..   1 * yB0 + 1 * yB1 + 3 * yB2 =N= x + 10;
+
+model alltypes /
+$ifi '%MTYPE%' == 'mpec' obj,
+                 fL0.yL0, fL1.yL1,
+                 fU1.yU1, fU2.yU2,
+                 fF1.yF1,
+                 fB0.yB0, fB1.yB1, fB2.yB2 /;
+
+* $ontext   this is the optimal solution
+yL0.l=0;
+yL1.l=1;
+yU1.l=1;
+yU2.l=2;
+yF1.l=1;
+yB0.l=0;
+yB1.l=1;
+yB2.l=2;
+* $offtext
+
+option limcol=0,limrow=0;
+$ifi NOT '%MTYPE%' == 'mpec' x.fx=1;
+solve alltypes using %MTYPE%
+$ifi '%MTYPE%' == 'mpec' minimizing z;
+
+if {(alltypes.solvestat = %solvestat.CapabilityProblems%),
+  abort$[alltypes.modelstat <> %modelstat.NoSolutionReturned%] 'Wrong status codes',
+  alltypes.solvestat, alltypes.modelstat;
+else
+  abort$[not(alltypes.solvestat = %solvestat.NormalCompletion% and (alltypes.modelstat = %modelstat.Optimal% or
+  alltypes.modelstat = %modelstat.LocallyOptimal%))] 'Wrong status codes', alltypes.solvestat,
+  alltypes.modelstat;
+
+* check for correct solution
+
+  abort$(abs(yL0.l-0) > tol) 'var yL0.l should be 0', yL0.l;
+  abort$(abs(yL1.l-1) > tol) 'var yL1.l should be 1', yL1.l;
+  abort$(abs(yU1.l-1) > tol) 'var yU1.l should be 1', yU1.l;
+  abort$(abs(yU2.l-2) > tol) 'var yU2.l should be 2', yU2.l;
+  abort$(abs(yF1.l-1) > tol) 'var yF1.l should be 1', yF1.l;
+  abort$(abs(yB0.l-0) > tol) 'var yB0.l should be 0', yB0.l;
+  abort$(abs(yB1.l-1) > tol) 'var yB1.l should be 1', yB1.l;
+  abort$(abs(yB2.l-2) > tol) 'var yB2.l should be 2', yB2.l;
+
+  abort$(abs(fL0.l-1) > tol) 'equ fL0.l should be  1', fL0.l;
+  abort$(abs(fL1.l-0) > tol) 'equ fL1.l should be  0', fL1.l;
+  abort$(abs(fU1.l-0) > tol) 'equ fU1.l should be  0', fU1.l;
+  abort$(abs(fU2.l+4) > tol) 'equ fU2.l should be -4', fU2.l;
+  abort$(abs(fF1.l-0) > tol) 'equ fF1.l should be  0', fF1.l;
+  abort$(abs(fB0.l-2) > tol) 'equ fB0.l should be  2', fB0.l;
+  abort$(abs(fB1.l-0) > tol) 'equ fB1.l should be  0', fB1.l;
+  abort$(abs(fB2.l+4) > tol) 'equ fB2.l should be -4', fB2.l;
+
+$ ifi not '%MTYPE%' == 'mpec' $goto nompec
+  abort$(abs(x.l-1)   > tol) 'var   x.l should be  1', x.l;
+  abort$(abs(z.l-0)   > tol) 'var   z.l should be  0', z.l;
+  abort$(abs(obj.l-0) > tol) 'equ obj.l should be  0', obj.l;
+$ label nompec
+
+* TODO - add checks for .m values.
+};

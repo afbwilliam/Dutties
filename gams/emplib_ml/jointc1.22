@@ -1,0 +1,49 @@
+$title Educational bilevel model (JOINTC1, SEQ=22)
+
+$ontext
+
+This is an example that shows that upper level joint constraints
+cannot simply be put into lower level model
+
+First model
+-----------
+The lower level problem essentially requires y = -x which implies -x >= x
+for the upper level problem. Since has a lower bound 1 this model is infeasible.
+
+Second model
+------------
+The lower level problem essentially requires y = |x|. Since x and y are
+minimized and x has a lower bound of 1 the solution is x = 1 = y.
+
+Contributor: Michael Ferris, November 2009
+
+$offtext
+
+variables x, y;
+
+equations upper, lower;
+upper.. y =g= x;
+lower.. y =g= -x;
+model jc /all/;
+x.lo = 1;
+
+file fhandle /"%emp.info%"/;
+
+*First model
+putclose fhandle 'bilevel min y lower';
+solve jc using emp min x;
+* check that it is indeed infeasible
+abort$(jc.solvestat <> %SOLVESTAT.NORMAL COMPLETION%
+       or ((jc.modelstat <> %MODELSTAT.INFEASIBLE%)
+           and (jc.modelstat <> %MODELSTAT.LOCALLY INFEASIBLE%)) ) 'Wrong solution: 1st model';
+
+*Reset initial values
+x.l = 2;
+y.l = 0;
+
+*Second model
+putclose fhandle 'bilevel min y upper lower';
+solve jc using emp min x;
+* check that solution is x = y = 1
+abort$(jc.solvestat <> %SOLVESTAT.NORMAL COMPLETION%
+      or ((abs(x.l-1) > 1e-6) or (abs(y.l-1) > 1e-6)) )  'Wrong solution: 2nd model';

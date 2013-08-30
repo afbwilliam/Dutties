@@ -1,0 +1,60 @@
+$TITLE 'test the Matlab utility readgdx' (GDXMRW02,SEQ=248)
+
+$ontext
+
+This file contains code to test the GAMS/Matlab utility readgdx
+
+It is likely that these tests will also serve as the sole
+(or an auxiliary) form of documentation for readgdx.
+
+$offtext
+
+* $call =gams genr2.gms
+* $call =gams genr3.gms
+* $call =gams genr4.gms
+* $call =gams genr5.gms
+* the GDX files to read should not need to be (re)generated,
+* but you may find it useful to look at the generating source
+
+$call =rm read1_result.gdx read2_result.gdx read3_result.gdx read4_result.gdx
+$call =rm read5_result.gdx rtrns_result.gdx
+$set WAIT
+$if not %system.filesys% == UNIX $set WAIT /wait
+$call =matlab -r rbatch -logfile rbatch.log -nosplash -nodisplay %WAIT%
+
+$if not exist read1_result.gdx  $error "read1_result.gdx does not exist"
+$if not exist read2_result.gdx  $error "read2_result.gdx does not exist"
+$if not exist read3_result.gdx  $error "read3_result.gdx does not exist"
+$if not exist read4_result.gdx  $error "read4_result.gdx does not exist"
+$if not exist read5_result.gdx  $error "read5_result.gdx does not exist"
+$if not exist rtrns_result.gdx  $error "rtrns_result.gdx does not exist"
+
+$if not errorfree $log There were errors: not all tests passed
+$if not errorfree $exit
+
+scalars
+  magic / 525 /,
+  magict,    magic5,    magic4,    magic3,    magic2,    magic1,
+  errCountt, errCount5, errCount4, errCount3, errCount2, errCount1;
+
+execute_load 'read1_result.gdx', magic1=magic, errCount1=errCount;
+execute_load 'read2_result.gdx', magic2=magic, errCount2=errCount;
+execute_load 'read3_result.gdx', magic3=magic, errCount3=errCount;
+execute_load 'read4_result.gdx', magic4=magic, errCount4=errCount;
+execute_load 'read5_result.gdx', magic5=magic, errCount5=errCount;
+execute_load 'rtrns_result.gdx', magict=magic, errCountt=errCount;
+
+display magic1, magic2, magic3, magic4, magic5, magict,
+        errCount1, errCount2, errCount3, errCount4, errCount5, errCountt;
+abort$(magic1 <> magic) 'bad magic';
+abort$(magic2 <> magic) 'bad magic';
+abort$(magic3 <> magic) 'bad magic';
+abort$(magic4 <> magic) 'bad magic';
+abort$(magic5 <> magic) 'bad magic';
+abort$(magict <> magic) 'bad magic';
+abort$(errCount1 <> 0) 'bad errCount';
+abort$(errCount2 <> 0) 'bad errCount';
+abort$(errCount3 <> 0) 'bad errCount';
+abort$(errCount4 <> 0) 'bad errCount';
+abort$(errCount5 <> 0) 'bad errCount';
+abort$(errCountt <> 0) 'bad errCount';

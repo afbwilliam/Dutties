@@ -1,0 +1,20 @@
+$TITLE 'LINDOGLOBAL test suite - lindoglobal as subsolver' (LINDGL01,SEQ=339)
+
+variable f, x1, x2, y1, y2;
+positive variable y1;
+y2.lo = -1;
+y2.up = 1;
+
+equations cost, g, h1, h2;
+
+cost.. f =E= x1 + x2;
+   g.. sqr(x1) + sqr(x2) =L= 1;
+  h1.. x1 =G= y1 - y2 + 1;
+  h2.. x1 + y2 =N= 0;
+
+* declare h and y complementary
+model example / cost, g, h1.y1, h2.y2/;
+
+option mpec= nlpec;
+option dnlp=lindoglobal;
+solve example using mpec min f;

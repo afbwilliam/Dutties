@@ -1,0 +1,240 @@
+$title Test for interval evaluation (INTERVAL,SEQ=506)
+$Ontext
+
+Contributer: Arne Drud, December 2010
+
+$Offtext
+
+$onechoV > decr.gms
+$eolcom !
+*
+*  Monotonely decreasing function in various combinations
+*
+
+$if not set global $set global 0
+Scalar Global        1 if solver is global and 0 otherwise           / %global% /
+       LOpt_Stat     Model Status for locally optimal solutions      / 2 /
+       LInfeas_Stat  Model Status for locally infeasible solutions   / 5 /
+       GOpt_Stat     Model Status for globally optimal solutions     / 1 /
+       GInfeas_Stat  Model Status for globally infeasible solutions  / 4 /
+       Opt_Stat      Model Status for optimal solutions used here
+       Infeas_Stat   Model Status for infeasible solutions used here ;
+
+set case / high, mid, low /;
+parameter RhsV(case)
+scalar Rhs;
+variable x;
+
+$if not set case $abort Parameter case must define an existing include file
+$include %case%
+
+abort$(x.lo >= x.up) "lower and upper bounds are not consistent", x.lo, x.up;
+*
+*  Define Rhsv such that it is above function value at lower end of the
+*  interval and belowe the function value at the upper end of the interval
+*  and matches the function value in the middle for rhsv(mid):
+
+Rhsv("high") = func(x.lo) + 1.0;
+Rhsv("mid")  = func(((x.lo+x.up)/2));
+Rhsv("low")  = func(x.up) - 1.0;
+
+equation e_eq;
+e_eq .. func(x) =E= Rhs;
+model decr_eq / e_eq /;
+
+equation e_gt;
+e_gt .. func(x) =G= Rhs;
+model decr_gt / e_gt /;
+
+equation e_lt;
+e_lt .. func(x) =L= Rhs;
+model decr_lt / e_lt /;
+
+*
+*  Desired Model Status for local solver: 2 = Locally optimal, 5 = Locally infeasible
+*
+Parameter Mstat_eq(Case) / high 5
+                           mid  2
+                           low  5 /;
+Parameter Mstat_gt(Case) / high 5
+                           mid  2
+                           low  2 /;
+Parameter Mstat_lt(Case) / high 2
+                           mid  2
+                           low  5 /;
+*
+*  Translate into Global return codes if relevant
+*
+if ( Global,
+  option nlp=conopt4;
+  Opt_Stat = GOpt_Stat; Infeas_Stat = GInfeas_Stat;
+  Mstat_eq(case)$(Mstat_eq(case) eq LOpt_Stat)    = Opt_Stat;
+  Mstat_eq(case)$(Mstat_eq(case) eq LInfeas_Stat) = Infeas_Stat;
+  Mstat_gt(case)$(Mstat_gt(case) eq LOpt_Stat)    = Opt_Stat;
+  Mstat_gt(case)$(Mstat_gt(case) eq LInfeas_Stat) = Infeas_Stat;
+  Mstat_lt(case)$(Mstat_lt(case) eq LOpt_Stat)    = Opt_Stat;
+  Mstat_lt(case)$(Mstat_lt(case) eq LInfeas_Stat) = Infeas_Stat;
+else
+  option nlp=conopt3;
+  Opt_Stat = LOpt_Stat; Infeas_Stat = LInfeas_Stat;
+);
+*
+*  Characteristics for solution for optimal models:
+*  1: Variable at upper bound
+*  2: Variable determined by constraint as equality
+*
+Parameter Char_eq(case) / mid 2 /;
+Parameter Char_gt(case) / mid 2, low 1 /;
+Parameter Char_lt(case) / high 1, mid 1 /;
+
+option limrow = 0, limcol = 0;
+loop( case,
+   Rhs = RhsV(case);
+
+   if(not Global,x.l = (x.up+x.lo)/2;);
+   solve decr_eq using nlp maximizing x;
+   abort$(decr_eq.solvestat ne 1) "Solver Status is not 1";
+   abort$(decr_eq.modelstat ne Mstat_eq(case)) "Model Status is not as expected";
+   if ( decr_eq.modelstat eq Opt_Stat,
+      if ( Char_eq(case) eq 1,
+         abort$(abs(x.l-x.up) > 1.e-7) "Solution value is not as expected"; );
+      if ( Char_eq(case) eq 2,
+         abort$(abs(func(x.l)-RhsV(case)) > 1.e-7) "Solution value is not as expected"; );
+   );
+
+   if(not Global,x.l = (x.up+x.lo)/2;);
+   solve decr_gt using nlp maximizing x;
+   abort$(decr_gt.solvestat ne 1) "Solver Status is not 1";
+   abort$(decr_gt.modelstat ne Mstat_gt(case)) "Model Status is not as expected";
+   if ( decr_gt.modelstat eq Opt_Stat,
+      if ( Char_gt(case) eq 1,
+         abort$(abs(x.l-x.up) > 1.e-7) "Solution value is not as expected"; );
+      if ( Char_gt(case) eq 2,
+         abort$(abs(func(x.l)-RhsV(case)) > 1.e-7) "Solution value is not as expected"; );
+   );
+
+   if(not Global,x.l = (x.up+x.lo)/2;);
+   solve decr_lt using nlp maximizing x;
+   abort$(decr_lt.solvestat ne 1) "Solver Status is not 1";
+   abort$(decr_lt.modelstat ne Mstat_lt(case)) "Model Status is not as expected";
+   if ( decr_lt.modelstat eq Opt_Stat,
+      if ( Char_lt(case) eq 1,
+         abort$(abs(x.l-x.up) > 1.e-7) "Solution value is not as expected"; );
+      if ( Char_lt(case) eq 2,
+         abort$(abs(func(x.l)-RhsV(case)) > 1.e-7) "Solution value is not as expected"; );
+   );
+
+);
+$offecho
+
+
+$onecho > dcase1.gms
+$macro func(x) -log(x)
+x.lo = 0.1; x.up = 2;
+$offecho
+
+$onecho > dcase2.gms
+$macro func(x) -power(x,3)-x
+x.lo = 0.0; x.up = 1.0;
+$offecho
+
+$onecho > dcase3.gms
+$macro func(x) -power(x,3)
+x.lo = -1.0; x.up = -0.1;
+$offecho
+
+$onecho > dcase4.gms
+$macro func(x) -power(x,3)
+x.lo = -1.0; x.up = 0;
+if(not Global,x.l = -1;);
+$offecho
+
+$onecho > dcase5.gms
+$macro func(x) -exp(x)
+x.lo = -1; x.up = 2;
+$offecho
+
+$onecho > dcase6.gms
+$macro func(x) -exp(x)+exp(-x)
+x.lo = -1; x.up = 2;
+$offecho
+
+$onecho > dcase7.gms
+$macro func(x) 1-errorf(x)
+x.lo = 0.1; x.up = 2;
+$offecho
+
+$onecho > dcase8.gms
+$macro func(x) sqr(x)
+x.lo = -2.0; x.up = -0.1;
+$offecho
+
+$onecho > dcase9.gms
+$macro func(x) sqr(x)-power(x,3)
+x.lo = -1.0; x.up = -0.1;
+$offecho
+
+$onecho > dcase10.gms
+$macro func(x) -power(x,3)-x
+x.lo = -1.0; x.up = 1.0;
+$offecho
+
+$onecho > dcase11.gms
+$macro func(x) -power(x,3)
+x.lo = -1.0; x.up = 1.2;
+$offecho
+
+$onecho > dcase12.gms
+$macro func(x) -power(x,3)
+x.lo = 0.0; x.up = 1.2;
+$offecho
+
+$call gams decr --case=dcase1  --global=1 lo=2 o=dcase1.lst
+$if errorlevel 1 $abort 'dcase1  --global=1 failed, see dcase1.lst'
+$call gams decr --case=dcase2  --global=1 lo=2 o=dcase2.lst
+$if errorlevel 1 $abort 'dcase2  --global=1 failed, see dcase2.lst'
+$call gams decr --case=dcase3  --global=1 lo=2 o=dcase3.lst
+$if errorlevel 1 $abort 'dcase3  --global=1 failed, see dcase3.lst'
+$call gams decr --case=dcase4  --global=1 lo=2 o=dcase4.lst
+$if errorlevel 1 $abort 'dcase4  --global=1 failed, see dcase4.lst'
+$call gams decr --case=dcase5  --global=1 lo=2 o=dcase5.lst
+$if errorlevel 1 $abort 'dcase5  --global=1 failed, see dcase5.lst'
+$call gams decr --case=dcase6  --global=1 lo=2 o=dcase6.lst
+$if errorlevel 1 $abort 'dcase6  --global=1 failed, see dcase6.lst'
+$call gams decr --case=dcase7  --global=1 lo=2 o=dcase7.lst
+$if errorlevel 1 $abort 'dcase7  --global=1 failed, see dcase7.lst'
+$call gams decr --case=dcase8  --global=1 lo=2 o=dcase8.lst
+$if errorlevel 1 $abort 'dcase8  --global=1 failed, see dcase8.lst'
+$call gams decr --case=dcase9  --global=1 lo=2 o=dcase9.lst
+$if errorlevel 1 $abort 'dcase9  --global=1 failed, see dcase9.lst'
+$call gams decr --case=dcase10 --global=1 lo=2 o=dcase10.lst
+$if errorlevel 1 $abort 'dcase10 --global=1 failed, see dcase10.lst'
+$call gams decr --case=dcase11 --global=1 lo=2 o=dcase11.lst
+$if errorlevel 1 $abort 'dcase11 --global=1 failed, see dcase11.lst'
+$call gams decr --case=dcase12 --global=1 lo=2 o=dcase12.lst
+$if errorlevel 1 $abort 'dcase12 --global=1 failed, see dcase12.lst'
+
+$call gams decr --case=dcase1  --global=0 lo=2 o=dcase1.lst
+$if errorlevel 1 $abort 'dcase1  --global=0 failed, see dcase1.lst'
+$call gams decr --case=dcase2  --global=0 lo=2 o=dcase2.lst
+$if errorlevel 1 $abort 'dcase2  --global=0 failed, see dcase2.lst'
+$call gams decr --case=dcase3  --global=0 lo=2 o=dcase3.lst
+$if errorlevel 1 $abort 'dcase3  --global=0 failed, see dcase3.lst'
+$call gams decr --case=dcase4  --global=0 lo=2 o=dcase4.lst
+$if errorlevel 1 $abort 'dcase4  --global=0 failed, see dcase4.lst'
+$call gams decr --case=dcase5  --global=0 lo=2 o=dcase5.lst
+$if errorlevel 1 $abort 'dcase5  --global=0 failed, see dcase5.lst'
+$call gams decr --case=dcase6  --global=0 lo=2 o=dcase6.lst
+$if errorlevel 1 $abort 'dcase6  --global=0 failed, see dcase6.lst'
+$call gams decr --case=dcase7  --global=0 lo=2 o=dcase7.lst
+$if errorlevel 1 $abort 'dcase7  --global=0 failed, see dcase7.lst'
+$call gams decr --case=dcase8  --global=0 lo=2 o=dcase8.lst
+$if errorlevel 1 $abort 'dcase8  --global=0 failed, see dcase8.lst'
+$call gams decr --case=dcase9  --global=0 lo=2 o=dcase9.lst
+$if errorlevel 1 $abort 'dcase9  --global=0 failed, see dcase9.lst'
+$call gams decr --case=dcase10 --global=0 lo=2 o=dcase10.lst
+$if errorlevel 1 $abort 'dcase10 --global=0 failed, see dcase10.lst'
+$call gams decr --case=dcase11 --global=0 lo=2 o=dcase11.lst
+$if errorlevel 1 $abort 'dcase11 --global=0 failed, see dcase11.lst'
+$call gams decr --case=dcase12 --global=0 lo=2 o=dcase12.lst
+$if errorlevel 1 $abort 'dcase12 --global=0 failed, see dcase12.lst'

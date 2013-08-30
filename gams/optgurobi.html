@@ -1,0 +1,1564 @@
+<html>
+<head>
+<title>GUROBI Options</title>
+</head>
+<body>
+<h2>GUROBI Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/gurobi.pdf">GUROBI manual</a>.
+
+<h2>Summary of GUROBI Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Termination options</h3></th></tr>
+<tr><td><a href="#GUROBIbariterlimit">
+bariterlimit</a></td>
+<td>Limits the number of barrier iterations performed</td></tr>
+<tr><td><a href="#GUROBIcutoff">
+cutoff</a></td>
+<td>Sets a target objective value</td></tr>
+<tr><td><a href="#GUROBIiterationlimit">
+iterationlimit</a></td>
+<td>Limits the number of simplex iterations performed</td></tr>
+<tr><td><a href="#GUROBInodelimit">
+nodelimit</a></td>
+<td>Limits the number of MIP nodes explored</td></tr>
+<tr><td><a href="#GUROBIsolutionlimit">
+solutionlimit</a></td>
+<td>Limits the number of feasible solutions found</td></tr>
+<tr><td><a href="#GUROBItimelimit">
+timelimit</a></td>
+<td>Limits the total time expended in seconds</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Tolerance options</h3></th></tr>
+<tr><td><a href="#GUROBIbarconvtol">
+barconvtol</a></td>
+<td>Controls barrier termination</td></tr>
+<tr><td><a href="#GUROBIbarqcpconvtol">
+barqcpconvtol</a></td>
+<td>Convergence tolerance for the barrier algorithm when solving a QCP</td></tr>
+<tr><td><a href="#GUROBIfeasibilitytol">
+feasibilitytol</a></td>
+<td>Primal feasibility tolerance</td></tr>
+<tr><td><a href="#GUROBIintfeastol">
+intfeastol</a></td>
+<td>Integer feasibility tolerance</td></tr>
+<tr><td><a href="#GUROBImarkowitztol">
+markowitztol</a></td>
+<td>Threshold pivoting tolerance</td></tr>
+<tr><td><a href="#GUROBImipgap">
+mipgap</a></td>
+<td>Relative MIP optimality gap</td></tr>
+<tr><td><a href="#GUROBImipgapabs">
+mipgapabs</a></td>
+<td>Absolute MIP optimality gap</td></tr>
+<tr><td><a href="#GUROBIoptimalitytol">
+optimalitytol</a></td>
+<td>Dual feasibility tolerance</td></tr>
+<tr><td><a href="#GUROBIpsdtol">
+psdtol</a></td>
+<td>limit on the amount of diagonal perturbation</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Simplex options</h3></th></tr>
+<tr><td><a href="#GUROBInormadjust">
+normadjust</a></td>
+<td>Pricing norm variants</td></tr>
+<tr><td><a href="#GUROBIobjscale">
+objscale</a></td>
+<td>Objective coefficients scaling</td></tr>
+<tr><td><a href="#GUROBIperturbvalue">
+perturbvalue</a></td>
+<td>Magnitude of simplex perturbation when required</td></tr>
+<tr><td><a href="#GUROBIquad">
+quad</a></td>
+<td>Quad precision computation in simplex</td></tr>
+<tr><td><a href="#GUROBIscaleflag">
+scaleflag</a></td>
+<td>Enables or disables model scaling</td></tr>
+<tr><td><a href="#GUROBIsifting">
+sifting</a></td>
+<td>Sifting within dual simplex</td></tr>
+<tr><td><a href="#GUROBIsiftmethod">
+siftmethod</a></td>
+<td>LP method used to solve sifting sub-problems</td></tr>
+<tr><td><a href="#GUROBIsimplexpricing">
+simplexpricing</a></td>
+<td>Determines variable pricing strategy</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Barrier options</h3></th></tr>
+<tr><td><a href="#GUROBIbarcorrectors">
+barcorrectors</a></td>
+<td>Limits the number of central corrections performed in each barrier iteration</td></tr>
+<tr><td><a href="#GUROBIbarhomogeneous">
+barhomogeneous</a></td>
+<td></td></tr>
+<tr><td><a href="#GUROBIbarorder">
+barorder</a></td>
+<td>Chooses the barrier sparse matrix fill-reducing algorithm</td></tr>
+<tr><td><a href="#GUROBIcrossover">
+crossover</a></td>
+<td>Determines the crossover strategy used to transform the barrier solution into a basic solution</td></tr>
+<tr><td><a href="#GUROBIcrossoverbasis">
+crossoverbasis</a></td>
+<td>Determines the initial basis construction strategy for crossover</td></tr>
+<tr><td><a href="#GUROBIqcpdual">
+qcpdual</a></td>
+<td>Determines whether dual variable values are computed for QCP models</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP options</h3></th></tr>
+<tr><td><a href="#GUROBIbranchdir">
+branchdir</a></td>
+<td>Determines which child node is explored first in the branch-and-cut search</td></tr>
+<tr><td><a href="#GUROBIcliquecuts">
+cliquecuts</a></td>
+<td>Controls clique cut generation</td></tr>
+<tr><td><a href="#GUROBIcovercuts">
+covercuts</a></td>
+<td>Controls cover cut generation</td></tr>
+<tr><td><a href="#GUROBIcutaggpasses">
+cutaggpasses</a></td>
+<td>Maximum number of aggregation passes during cut generation</td></tr>
+<tr><td><a href="#GUROBIcutpasses">
+cutpasses</a></td>
+<td>Maximum number of cutting plane passes performed during root cut generation</td></tr>
+<tr><td><a href="#GUROBIcuts">
+cuts</a></td>
+<td>Global cut generation control</td></tr>
+<tr><td><a href="#GUROBIflowcovercuts">
+flowcovercuts</a></td>
+<td>Controls flow cover cut generation</td></tr>
+<tr><td><a href="#GUROBIflowpathcuts">
+flowpathcuts</a></td>
+<td>Controls flow path cut generation</td></tr>
+<tr><td><a href="#GUROBIgomorypasses">
+gomorypasses</a></td>
+<td>Maximum number of Gomory cut passes</td></tr>
+<tr><td><a href="#GUROBIgubcovercuts">
+gubcovercuts</a></td>
+<td>Controls GUB cover cut generation</td></tr>
+<tr><td><a href="#GUROBIheuristics">
+heuristics</a></td>
+<td>Controls the amount of time spent in MIP heuristics</td></tr>
+<tr><td><a href="#GUROBIimpliedcuts">
+impliedcuts</a></td>
+<td>Controls implied bound cut generation</td></tr>
+<tr><td><a href="#GUROBIimprovestartgap">
+improvestartgap</a></td>
+<td>Optimality gap at which the MIP solver resets a few MIP parameters</td></tr>
+<tr><td><a href="#GUROBIimprovestartnodes">
+improvestartnodes</a></td>
+<td>Solution improvement strategy control</td></tr>
+<tr><td><a href="#GUROBIimprovestarttime">
+improvestarttime</a></td>
+<td>Elapsed time after which the MIP solver resets a few MIP parameters</td></tr>
+<tr><td><a href="#GUROBIminrelnodes">
+minrelnodes</a></td>
+<td>Number of nodes to explore in the Minimum Relaxation heuristic</td></tr>
+<tr><td><a href="#GUROBImipfocus">
+mipfocus</a></td>
+<td>Controls the focus of the MIP solver</td></tr>
+<tr><td><a href="#GUROBImipsepcuts">
+mipsepcuts</a></td>
+<td>Controls MIP separation cut generation</td></tr>
+<tr><td><a href="#GUROBImiqcpmethod">
+miqcpmethod</a></td>
+<td>Determines whether outer approximation is used to solve an MIQCP model.</td></tr>
+<tr><td><a href="#GUROBImircuts">
+mircuts</a></td>
+<td>Controls MIR cut generation</td></tr>
+<tr><td><a href="#GUROBImodkcuts">
+modkcuts</a></td>
+<td>Controls the generation of mod-k cuts</td></tr>
+<tr><td><a href="#GUROBInetworkcuts">
+networkcuts</a></td>
+<td>Controls network cut generation</td></tr>
+<tr><td><a href="#GUROBInodefiledir">
+nodefiledir</a></td>
+<td>Nodefile directory</td></tr>
+<tr><td><a href="#GUROBInodefilestart">
+nodefilestart</a></td>
+<td>Nodefile starting indicator</td></tr>
+<tr><td><a href="#GUROBInodemethod">
+nodemethod</a></td>
+<td>Algorithm used to solve node relaxations in a MIP model</td></tr>
+<tr><td><a href="#GUROBIpresparsify">
+presparsify</a></td>
+<td>Enables the presolve sparsify reduction for MIP models</td></tr>
+<tr><td><a href="#GUROBI.prior">
+.prior</a></td>
+<td>Branching priorities</td></tr>
+<tr><td><a href="#GUROBIpumppasses">
+pumppasses</a></td>
+<td>Number of passes of the feasibility pump heuristic</td></tr>
+<tr><td><a href="#GUROBIrins">
+rins</a></td>
+<td>Frequency of the RINS heuristic</td></tr>
+<tr><td><a href="#GUROBIsubmipcuts">
+submipcuts</a></td>
+<td>Controls the generation of sub-MIP cutting planes</td></tr>
+<tr><td><a href="#GUROBIsubmipnodes">
+submipnodes</a></td>
+<td>Limits the number of nodes explored by the heuristics</td></tr>
+<tr><td><a href="#GUROBIsymmetry">
+symmetry</a></td>
+<td>Controls MIP symmetry detection</td></tr>
+<tr><td><a href="#GUROBIvarbranch">
+varbranch</a></td>
+<td>Controls the branch variable selection strategy</td></tr>
+<tr><td><a href="#GUROBIzerohalfcuts">
+zerohalfcuts</a></td>
+<td>Controls zero-half cut generation</td></tr>
+<tr><td><a href="#GUROBIzeroobjnodes">
+zeroobjnodes</a></td>
+<td>Number of nodes to explore in the zero objective heuristic</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Other options</h3></th></tr>
+<tr><td><a href="#GUROBIaggfill">
+aggfill</a></td>
+<td>Controls the amount of fill allowed during presolve aggregation</td></tr>
+<tr><td><a href="#GUROBIaggregate">
+aggregate</a></td>
+<td>Enables or disables aggregation in presolve</td></tr>
+<tr><td><a href="#GUROBIdisplayinterval">
+displayinterval</a></td>
+<td>Controls the frequency at which log lines are printed in seconds</td></tr>
+<tr><td><a href="#GUROBIdumpsolution">
+dumpsolution</a></td>
+<td>Controls export of alternate MIP solutions</td></tr>
+<tr><td><a href="#GUROBIfeasopt">
+feasopt</a></td>
+<td>Computes a minimum-cost relaxation to make an infeasible model feasible</td></tr>
+<tr><td><a href="#GUROBIfeasoptmode">
+feasoptmode</a></td>
+<td>Mode of FeasOpt</td></tr>
+<tr><td><a href="#GUROBI.feaspref">
+.feaspref</a></td>
+<td>feasibility preference</td></tr>
+<tr><td><a href="#GUROBIfixoptfile">
+fixoptfile</a></td>
+<td>Option file for fixed problem optimization</td></tr>
+<tr><td><a href="#GUROBIiis">
+iis</a></td>
+<td>Run the Irreducible Inconsistent Subsystem (IIS) finder if the problem is infeasible</td></tr>
+<tr><td><a href="#GUROBIiismethod">
+iismethod</a></td>
+<td>Controls use of IIS method</td></tr>
+<tr><td><a href="#GUROBIkappa">
+kappa</a></td>
+<td>Display approximate condition number estimates for the optimal simplex basis</td></tr>
+<tr><td><a href="#GUROBIkappaexact">
+kappaexact</a></td>
+<td>Display exact condition number estimates for the optimal simplex basis</td></tr>
+<tr><td><a href="#GUROBImethod">
+method</a></td>
+<td>Algorithm used to solve continuous models</td></tr>
+<tr><td><a href="#GUROBImipstart">
+mipstart</a></td>
+<td>Use mip starting values</td></tr>
+<tr><td><a href="#GUROBInames">
+names</a></td>
+<td>Indicator for loading names</td></tr>
+<tr><td><a href="#GUROBIprecrush">
+precrush</a></td>
+<td>Presolve constraint option</td></tr>
+<tr><td><a href="#GUROBIpredeprow">
+predeprow</a></td>
+<td>Controls the presolve dependent row reduction</td></tr>
+<tr><td><a href="#GUROBIpredual">
+predual</a></td>
+<td>Controls whether presolve forms the dual of a continuous model</td></tr>
+<tr><td><a href="#GUROBIpremiqpmethod">
+premiqpmethod</a></td>
+<td>Transformation presolve performs on MIQP models</td></tr>
+<tr><td><a href="#GUROBIprepasses">
+prepasses</a></td>
+<td>Controls the number of passes performed by presolve</td></tr>
+<tr><td><a href="#GUROBIpreqlinearize">
+preqlinearize</a></td>
+<td>Controls linearization of Q matrices in the quadratic constraints or a quadratic objective</td></tr>
+<tr><td><a href="#GUROBIpresolve">
+presolve</a></td>
+<td>Controls the presolve level</td></tr>
+<tr><td><a href="#GUROBIprintoptions">
+printoptions</a></td>
+<td>List values of all options to GAMS listing file</td></tr>
+<tr><td><a href="#GUROBIreadparams">
+readparams</a></td>
+<td>Read Gurobi parameter file</td></tr>
+<tr><td><a href="#GUROBIrerun">
+rerun</a></td>
+<td>Resolve without presolve in case of unbounded or infeasible</td></tr>
+<tr><td><a href="#GUROBIseed">
+seed</a></td>
+<td>Random number seed</td></tr>
+<tr><td><a href="#GUROBIsensitivity">
+sensitivity</a></td>
+<td>Provide sensitivity information</td></tr>
+<tr><td><a href="#GUROBIsolvefixed">
+solvefixed</a></td>
+<td>Indicator for solving the fixed problem for a MIP to get a dual solution</td></tr>
+<tr><td><a href="#GUROBIthreads">
+threads</a></td>
+<td>Controls the number of threads to apply to parallel MIP or Barrier</td></tr>
+<tr><td><a href="#GUROBIusebasis">
+usebasis</a></td>
+<td>Use basis from GAMS</td></tr>
+<tr><td><a href="#GUROBIwriteparams">
+writeparams</a></td>
+<td>Write Gurobi parameter file</td></tr>
+<tr><td><a href="#GUROBIwriteprob">
+writeprob</a></td>
+<td>Save the problem instance</td></tr></table>
+<h2>Detailed Descriptions of GUROBI Options</h2>
+
+<h4><a name="GUROBIaggfill">
+aggfill</a>
+<i> (integer)</i> Controls the amount of fill allowed during presolve aggregation</h4><p>
+
+Larger values generally lead to presolved models with fewer rows and
+columns, but with more constraint matrix non-zeros.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="GUROBIaggregate">
+aggregate</a>
+<i> (integer)</i> Enables or disables aggregation in presolve</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GUROBIbarconvtol">
+barconvtol</a>
+<i> (real)</i> Controls barrier termination</h4><p>
+
+The barrier solver terminates when the relative difference between the
+primal and dual objective values is less than the specified tolerance.
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="GUROBIbarcorrectors">
+barcorrectors</a>
+<i> (integer)</i> Limits the number of central corrections performed in each barrier iteration</h4><p>
+
+The default value is choosen automatically, depending on problem
+characteristics.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIbarhomogeneous">
+barhomogeneous</a>
+<i> (integer)</i> </h4><p>
+
+Determines whether to use the homogeneous barrier algorithm. At the
+default setting (-1), it is only used when barrier solves a node
+relaxation for a MIP model. Setting the parameter to 0 turns it off,
+and setting it to 1 forces it on. The homogeneous algorithm is useful
+for recognizing infeasibility or unboundedness. It is a bit slower
+than the default algorithm.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Homogeneous Barrier off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Force Homogeneous Barrier on</td></tr>
+</table>
+
+<h4><a name="GUROBIbariterlimit">
+bariterlimit</a>
+<i> (integer)</i> Limits the number of barrier iterations performed</h4><p>
+
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="GUROBIbarorder">
+barorder</a>
+<i> (integer)</i> Chooses the barrier sparse matrix fill-reducing algorithm</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Approximate Minimum Degree ordering</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Nested Dissection ordering</td></tr>
+</table>
+
+<h4><a name="GUROBIbarqcpconvtol">
+barqcpconvtol</a>
+<i> (real)</i> Convergence tolerance for the barrier algorithm when solving a QCP</h4><p>
+
+When solving a QCP model, the barrier solver terminates when the
+relative difference between the primal and dual objective values is
+less than the specified tolerance. Tightening this tolerance may lead
+to a more accurate solution, but it may also lead to a failure to
+converge.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="GUROBIbranchdir">
+branchdir</a>
+<i> (integer)</i> Determines which child node is explored first in the branch-and-cut search</h4><p>
+
+This option allows more control over how the branch-and-cut tree is
+explored. Specifically, when a node in the MIP search is completed and
+two child nodes, corresponding to the down branch and the up branch
+are created, this parameter allows you to determine whether the MIP
+solver will explore the down branch first, the up branch first, or
+whether it will choose the next node based on a heuristic
+determination of which sub-tree appears more promising.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Always explore the down branch first</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Always explore the up branch first</td></tr>
+</table>
+
+<h4><a name="GUROBIcliquecuts">
+cliquecuts</a>
+<i> (integer)</i> Controls clique cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIcovercuts">
+covercuts</a>
+<i> (integer)</i> Controls cover cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIcrossover">
+crossover</a>
+<i> (integer)</i> Determines the crossover strategy used to transform the barrier solution into a basic solution</h4><p>
+
+Use value 0 to disable crossover; the solver will return an interior
+solution. Other options control whether the crossover algorithm tries
+to push primal or dual variables to bounds first, and then which
+simplex algorithm is used once variable pushing is complete. Options 1
+and 2 push dual variables first, then primal variables. Option 1
+finishes with primal, while option 2 finishes with dual. Options 3 and
+4 push primal variables first, then dual variables. Option 3 finishes
+with primal, while option 4 finishes with dual The default value of -1
+chooses automatically.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIcrossoverbasis">
+crossoverbasis</a>
+<i> (integer)</i> Determines the initial basis construction strategy for crossover</h4><p>
+
+The default value (0) chooses an initial basis quickly. A value of 1
+can take much longer, but often produces a much more numerically
+stable start basis.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBIcutaggpasses">
+cutaggpasses</a>
+<i> (integer)</i> Maximum number of aggregation passes during cut generation</h4><p>
+
+A non-negative value indicates the maximum number of constraint
+aggregation passes performed during cut generation. See the
+description of the global <a href="#GUROBIcuts">Cuts</a> parameter for
+further information.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIcutoff">
+cutoff</a>
+<i> (real)</i> Sets a target objective value</h4><p>
+
+Optimization will terminate if the engine determines that the optimal
+objective value for the model is worse than the specified cutoff. This
+option overwrites the GAMS cutoff option.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBIcutpasses">
+cutpasses</a>
+<i> (integer)</i> Maximum number of cutting plane passes performed during root cut generation</h4><p>
+
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIcuts">
+cuts</a>
+<i> (integer)</i> Global cut generation control</h4><p>
+
+The parameters, <i>cuts</i>, <a href="#GUROBIcliquecuts">cliquecuts</a>,
+<a href="#GUROBIcovercuts">covercuts</a>,
+<a href="#GUROBIflowcovercuts">flowcovercuts</a>,
+<a href="#GUROBIflowpathcuts">flowpathcuts</a>,
+<a href="#GUROBIgubcovercuts">gubcovercuts</a>,
+<a href="#GUROBIimpliedcuts">impliedcuts</a>,
+<a href="#GUROBImipsepcuts">mipsepcuts</a>,
+<a href="#GUROBImircuts">mircuts</a>,
+<a href="#GUROBImodkcuts">modkcuts</a>,
+<a href="#GUROBInetworkcuts">networkcuts</a>,
+<a href="#GUROBIgomorypasses">gomorypasses</a>,
+<a href="#GUROBIsubmipcuts">submipcuts</a>,
+<a href="#GUROBIcutaggpasses">cutaggpasses</a>  and
+<a href="#GUROBIzerohalfcuts">zerohalfcuts</a>,
+ affect the generation of MIP
+cutting planes.  In all cases except gomorypasses and cutaggpasses, a
+value of -1 corresponds to an automatic setting, which allows the
+solver to determine the appropriate level of aggressiveness in the cut
+generation.  Unless otherwise noted, settings of 0, 1, and 2
+correspond to no cut generation, conservative cut generation, or
+aggressive cut generation, respectively. The <i>Cuts</i> parameter
+provides global cut control, affecting the generation of all
+cuts. This parameter also has a setting of 3, which corresponds to
+very aggressive cut generation. The other parameters override the
+global <i>Cuts</i> parameter (so setting <i>Cuts</i> to 2 and <a
+href="#GUROBIcliquecuts">CliqueCuts</a> to 0 would generate all cut types
+aggressively, except clique cuts which would not be generated at
+all. Setting <i>Cuts</i> to 0 and <a
+href="#GUROBIgomorypasses">Gomorypasses</a> to 10 would not generate any
+cuts except Gomory cuts for 10 passes).
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Very aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIdisplayinterval">
+displayinterval</a>
+<i> (integer)</i> Controls the frequency at which log lines are printed in seconds</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="GUROBIdumpsolution">
+dumpsolution</a>
+<i> (string)</i> Controls export of alternate MIP solutions</h4><p>
+
+The GDX file specified by this option will contain a set call
+<tt>index</tt> that contains the names of GDX files with the
+individual solutions. For details see example model <tt>dumpsol</tt>
+in the GAMS Test Library.
+
+
+<h4><a name="GUROBIfeasibilitytol">
+feasibilitytol</a>
+<i> (real)</i> Primal feasibility tolerance</h4><p>
+
+All constrains must be satisfied to a tolerance of <i>FeasibilityTol</i>.
+
+<br><i>Range: [1e-9,1e-2]</i>
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="GUROBIfeasopt">
+feasopt</a>
+<i> (integer)</i> Computes a minimum-cost relaxation to make an infeasible model feasible</h4><p>
+
+With <tt>Feasopt</tt> turned on, a minimum-cost relaxation of the
+right hand side values of constraints or bounds on variables is
+computed in order to make an infeasible model feasible. It marks the
+relaxed right hand side values and bounds in the solution listing.
+<p>
+Several options are available for the metric used to determine what
+constitutes a minimum-cost relaxation which can be set by option
+<a href="#GUROBIfeasoptmode">feasoptmode</a>.
+<p>
+Feasible relaxations are available for all problem types.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Turns Feasible Relaxation off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Turns Feasible Relaxation on</td></tr>
+</table>
+
+<h4><a name="GUROBIfeasoptmode">
+feasoptmode</a>
+<i> (integer)</i> Mode of FeasOpt</h4><p>
+
+The parameter <tt>FeasOptMode</tt> allows different strategies in
+finding feasible relaxation in one or two phases. In its first phase,
+it attempts to minimize its relaxation of the infeasible model. That
+is, it attempts to find a feasible solution that requires minimal
+change. In its second phase, it finds an optimal solution (using the
+original objective) among those that require only as much relaxation
+as it found necessary in the first phase.  Values of the parameter
+<i>FeasOptMode</i> indicate two aspects: (1) whether to stop in phase
+one or continue to phase two and (2) how to measure the minimality of
+the relaxation (as a <i>sum</i> of required relaxations; as the
+<i>number</i> of constraints and bounds required to be relaxed; as a
+<i>sum of the squares</i> of required relaxations).
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Minimize sum of relaxations.
+Minimize the sum of all required relaxations in first phase only</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Minimize sum of relaxations and optimize.
+Minimize the sum of all required relaxations in first phase and
+execute second phase to find optimum among minimal relaxations</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Minimize number of relaxations.
+Minimize the number of constraints and bounds requiring relaxation in
+first phase only</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Minimize number of relaxations and optimize.
+Minimize the number of constraints and bounds requiring relaxation in
+first phase and execute second phase to find optimum among minimal
+relaxations</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Minimize sum of squares of relaxations.
+Minimize the sum of squares of required relaxations in first phase
+only</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Minimize sum of squares of relaxations and optimize.
+Minimize the sum of squares of required relaxations in first phase and
+execute second phase to find optimum among minimal relaxations</td></tr>
+</table>
+
+<h4><a name="GUROBI.feaspref">
+.feaspref</a>
+<i> (real <a href="#dotopt">dot option</a>)</i> feasibility preference</h4><p>
+
+You can express the costs associated with relaxing a bound or right
+hand side value during a <a href="#GUROBIfeasopt"><tt>feasopt</tt></a>
+run through the <tt>.feaspref</tt> option. The input value denotes the
+users willingness to relax a constraint or bound. More precisely, the
+reciprocal of the specified value is used to weight the relaxation of
+that constraint or bound. The user may specify a preference value less
+than or equal to 0 (zero), which denotes that the corresponding
+constraint or bound must not be relaxed.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GUROBIfixoptfile">
+fixoptfile</a>
+<i> (string)</i> Option file for fixed problem optimization</h4><p>
+
+
+
+<h4><a name="GUROBIflowcovercuts">
+flowcovercuts</a>
+<i> (integer)</i> Controls flow cover cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIflowpathcuts">
+flowpathcuts</a>
+<i> (integer)</i> Controls flow path cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIgomorypasses">
+gomorypasses</a>
+<i> (integer)</i> Maximum number of Gomory cut passes</h4><p>
+
+A non-negative value indicates the maximum number of Gomory cut passes
+performed. See the description of the global <a href="#GUROBIcuts">Cuts</a>
+parameter for further information.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIgubcovercuts">
+gubcovercuts</a>
+<i> (integer)</i> Controls GUB cover cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIheuristics">
+heuristics</a>
+<i> (real)</i> Controls the amount of time spent in MIP heuristics</h4><p>
+
+Larger values produce more and better feasible solutions, at a cost of
+slower progress in the best bound.
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.05)</i>
+
+<h4><a name="GUROBIiis">
+iis</a>
+<i> (integer)</i> Run the Irreducible Inconsistent Subsystem (IIS) finder if the problem is infeasible</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not run the IIS finder</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Run the IIS finder</td></tr>
+</table>
+
+<h4><a name="GUROBIiismethod">
+iismethod</a>
+<i> (integer)</i> Controls use of IIS method</h4><p>
+
+Chooses the IIS method to use. Method 0 is often faster, while method
+1 can produce a smaller IIS. The default value of -1 chooses
+automatically.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIimpliedcuts">
+impliedcuts</a>
+<i> (integer)</i> Controls implied bound cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIimprovestartgap">
+improvestartgap</a>
+<i> (real)</i> Optimality gap at which the MIP solver resets a few MIP parameters</h4><p>
+
+The MIP solver can change parameter settings in the middle of the
+search in order to adopt a strategy that gives up on moving the best
+bound and instead devotes all of its effort towards finding better
+feasible solutions. This parameter allows you to specify an optimality
+gap at which the MIP solver will switch to this strategy. For example,
+setting this parameter to 0.1 will cause the MIP solver to switch once
+the relative optimality gap is smaller than 0.1.
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="GUROBIimprovestartnodes">
+improvestartnodes</a>
+<i> (real)</i> Solution improvement strategy control</h4><p>
+
+The MIP solver can change parameter settings in the middle of the
+search in order to adopt a strategy that gives up on moving the best
+bound and instead devotes all of its effort towards finding better
+feasible solutions. This parameter allows you to specify the node
+count at which the MIP solver switches to a solution improvement
+strategy. For example, setting this parameter to 10 will cause the MIP
+solver to switch strategies once the node count is larger than 10.
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="GUROBIimprovestarttime">
+improvestarttime</a>
+<i> (real)</i> Elapsed time after which the MIP solver resets a few MIP parameters</h4><p>
+
+The MIP solver can change parameter settings in the middle of the
+search in order to adopt a strategy that gives up on moving the best
+bound and instead devotes all of its effort towards finding better
+feasible solutions. This parameter allows you to specify a time limit
+when the MIP solver will switch to this strategy. For example, setting
+this parameter to 10 will cause the MIP solver to switch 10 seconds
+after starting the optimization.
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="GUROBIintfeastol">
+intfeastol</a>
+<i> (real)</i> Integer feasibility tolerance</h4><p>
+
+An integrality restriction on a variable is considered satisfied when
+the variable's value is less than <i>IntFeasTol</i> from the nearest
+integer value.
+
+<br><i>Range: [1e-9,1e-1]</i>
+
+<br><i>(default = 1e-5)</i>
+
+<h4><a name="GUROBIiterationlimit">
+iterationlimit</a>
+<i> (real)</i> Limits the number of simplex iterations performed</h4><p>
+
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="GUROBIkappa">
+kappa</a>
+<i> (integer)</i> Display approximate condition number estimates for the optimal simplex basis</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not compute and display approximate condition number</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Compute and display approximate condition number</td></tr>
+</table>
+
+<h4><a name="GUROBIkappaexact">
+kappaexact</a>
+<i> (integer)</i> Display exact condition number estimates for the optimal simplex basis</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not compute and display exact condition number</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Compute and display exact condition number</td></tr>
+</table>
+
+<h4><a name="GUROBImarkowitztol">
+markowitztol</a>
+<i> (real)</i> Threshold pivoting tolerance</h4><p>
+
+Used to limit numerical error in the simplex algorithm.  A larger
+value may avoid numerical problems in rare situations, but it will
+also harm performance.
+
+<br><i>Range: [1e-4,0.999]</i>
+
+<br><i>(default = 0.0078125)</i>
+
+<h4><a name="GUROBImethod">
+method</a>
+<i> (integer)</i> Algorithm used to solve continuous models<br>&nbsp;&nbsp;&nbsp;Synonyms:
+lpmethod
+rootmethod</h4><p>
+
+Concurrent optimizers run multiple solvers on multiple threads
+simultaneously, and choose the one that finishes first. Deterministic
+concurrent (4) gives the exact same result each time, while concurrent
+(3) is often faster but can produce different optimal bases when run
+multiple times. In the current release, the default Automatic (-1)
+will choose non-deterministic concurrent (3) for an LP, barrier (2)
+for a QP, and dual (1) for the MIP root node. Only simplex and barrier
+algorithms are available for continuous QP models. Only primal and
+dual simplex are available for solving the root of an MIQP model. Only
+barrier is available for continuous QCP models.
+<p>
+The default setting is rarely significantly slower than the best
+possible setting, so you generally won't see a big gain from changing
+this parameter. There are classes of models where one particular
+algorithm is consistently fastest, though, so you may want to
+experiment with different options when confronted with a particularly
+difficult model.
+<p>
+Note that if memory is tight on an LP model, you should consider
+choosing the dual simplex method (<tt>Method=1</tt>). The default will
+invoke the concurrent optimizer, which typically consumes a lot more
+memory than dual simplex alone.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Automatic</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Primal simplex</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Barrier</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Concurrent</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Deterministic concurrent</td></tr>
+</table>
+
+<h4><a name="GUROBIminrelnodes">
+minrelnodes</a>
+<i> (integer)</i> Number of nodes to explore in the Minimum Relaxation heuristic</h4><p>
+
+This parameter controls the Minimum Relaxation heuristic that can be
+useful for finding solutions to MIP models where other strategies fail
+to find feasible solutions in a reasonable amount of time. This
+heuristic is only applied at the end of the MIP root, and only when no
+other root heuristic finds a feasible solution.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBImipfocus">
+mipfocus</a>
+<i> (integer)</i> Controls the focus of the MIP solver</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Balance between finding good feasible solutions and proving optimality</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Focus towards finding feasible solutions</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Focus towards proving optimality</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Focus on moving the best objective bound</td></tr>
+</table>
+
+<h4><a name="GUROBImipgap">
+mipgap</a>
+<i> (real)</i> Relative MIP optimality gap</h4><p>
+
+The MIP engine will terminate (with an optimal result) when the gap
+between the lower and upper objective bound is less than
+<i>MipGap</i> times the upper bound.
+
+<br><i>Range: [0,maxdouble]</i>
+
+<br><i>(default = GAMS optcr)</i>
+
+<h4><a name="GUROBImipgapabs">
+mipgapabs</a>
+<i> (real)</i> Absolute MIP optimality gap</h4><p>
+
+The MIP solver will terminate (with an optimal result) when the gap between
+the lower and upper objective bound is less than <i>MIPGapAbs</i>.
+
+<br><i>Range: [0,maxdouble]</i>
+
+<br><i>(default = GAMS optca)</i>
+
+<h4><a name="GUROBImipsepcuts">
+mipsepcuts</a>
+<i> (integer)</i> Controls MIP separation cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBImipstart">
+mipstart</a>
+<i> (integer)</i> Use mip starting values</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use the values</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use the values</td></tr>
+</table>
+
+<h4><a name="GUROBImiqcpmethod">
+miqcpmethod</a>
+<i> (integer)</i> Determines whether outer approximation is used to solve an MIQCP model.</h4><p>
+
+Controls the method used to solve MIQCP models. Value 1 uses a
+linearized, outer-approximation approach, while value 0 solves
+continuous QCP relaxations at each node. The default setting (-1)
+chooses automatically.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Linearized, outer-approximation approach</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Continuous QCP relaxations at each node</td></tr>
+</table>
+
+<h4><a name="GUROBImircuts">
+mircuts</a>
+<i> (integer)</i> Controls MIR cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBImodkcuts">
+modkcuts</a>
+<i> (integer)</i> Controls the generation of mod-k cuts</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBInames">
+names</a>
+<i> (integer)</i> Indicator for loading names</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not load GAMS names into Gurobi model</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Load GAMS names into Gurobi model</td></tr>
+</table>
+
+<h4><a name="GUROBInetworkcuts">
+networkcuts</a>
+<i> (integer)</i> Controls network cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBInodefiledir">
+nodefiledir</a>
+<i> (string)</i> Nodefile directory</h4><p>
+
+Determines the directory into which nodes are written when node memory
+usage exceeds the specified NodefileStart value.
+
+<br><i>(default = .)</i>
+
+<h4><a name="GUROBInodefilestart">
+nodefilestart</a>
+<i> (real)</i> Nodefile starting indicator</h4><p>
+
+Controls the point at which MIP tree nodes are written to
+disk. Whenever node storage exceeds the specified value (in GBytes),
+nodes are written to disk.
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="GUROBInodelimit">
+nodelimit</a>
+<i> (real)</i> Limits the number of MIP nodes explored</h4><p>
+
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="GUROBInodemethod">
+nodemethod</a>
+<i> (integer)</i> Algorithm used to solve node relaxations in a MIP model</h4><p>
+
+Algorithm used for MIP node relaxations. Note that barrier is not an
+option for MIQP node relaxations.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Primal simplex</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Barrier</td></tr>
+</table>
+
+<h4><a name="GUROBInormadjust">
+normadjust</a>
+<i> (integer)</i> Pricing norm variants</h4><p>
+
+Chooses from among multiple pricing norm variants. The default value
+of -1 chooses automatically.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIobjscale">
+objscale</a>
+<i> (real)</i> Objective coefficients scaling</h4><p>
+
+Divides the model objective by the specified value to avoid numerical
+errors that may result from very large objective coefficients. The
+default value of 0 decides on the scaling automatically. A value less
+than zero uses the maximum coefficient to the specified power as the
+scaling (so ObjScale=-0.5 would scale by the square root of the
+largest objective coefficient).
+
+<br><i>Range: [-1,maxdouble]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBIoptimalitytol">
+optimalitytol</a>
+<i> (real)</i> Dual feasibility tolerance</h4><p>
+
+Reduced costs must all be larger than <i>OptimalityTol</i> in the
+improving direction in order for a model to be declared optimal.
+
+<br><i>Range: [1e-9,1e-2]</i>
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="GUROBIperturbvalue">
+perturbvalue</a>
+<i> (real)</i> Magnitude of simplex perturbation when required</h4><p>
+
+
+<br><i>Range: [0,0.01]</i>
+
+<br><i>(default = 0.0002)</i>
+
+<h4><a name="GUROBIprecrush">
+precrush</a>
+<i> (integer)</i> Presolve constraint option</h4><p>
+
+Allows presolve to translate constraints on the original model to
+equivalent constraints on the presolved model. This parameter is
+turned on when you use BCH with Gurobi.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBIpredeprow">
+predeprow</a>
+<i> (integer)</i> Controls the presolve dependent row reduction</h4><p>
+
+Controls the presolve dependent row reduction, which eliminates
+linearly dependent constraints from the constraint matrix. The default
+setting (-1) applies the reduction to continuous models but not to MIP
+models. Setting 0 turns the reduction off for all models. Setting 1
+turns it on for all models.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIpredual">
+predual</a>
+<i> (integer)</i> Controls whether presolve forms the dual of a continuous model</h4><p>
+
+Depending on the structure of the model, solving the dual can reduce
+overall solution time. The default setting uses a heuristic to
+decide. Setting 0 forbids presolve from forming the dual, while
+setting 1 forces it to take the dual. Setting 2 employs a more
+expensive heuristic that forms both the presolved primal and dual
+models (on two threads), and heuristically chooses one of them.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIpremiqpmethod">
+premiqpmethod</a>
+<i> (integer)</i> Transformation presolve performs on MIQP models</h4><p>
+
+Chooses the transformation presolve performs on MIQP models.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Always leaves the model as an MIQP</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Attempts to transform the model into an MILP</td></tr>
+</table>
+
+<h4><a name="GUROBIprepasses">
+prepasses</a>
+<i> (integer)</i> Controls the number of passes performed by presolve</h4><p>
+
+Limits the number of passes performed by presolve. The default setting
+(-1) chooses the number of passes automatically.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIpreqlinearize">
+preqlinearize</a>
+<i> (integer)</i> Controls linearization of Q matrices in the quadratic constraints or a quadratic objective</h4><p>
+
+Option 1 attempts to linearize quadratic constraints or a quadratic
+objective, potentially transforming an MIQP or MIQCP into an
+MILP. Option 0 shuts off the transformation. The default setting (-1)
+choose automatically. The automatic setting works well, but there are
+cases where forcing Q linearization can be beneficial.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Linearization off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Force Linearization on</td></tr>
+</table>
+
+<h4><a name="GUROBIpresolve">
+presolve</a>
+<i> (integer)</i> Controls the presolve level</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIpresparsify">
+presparsify</a>
+<i> (integer)</i> Enables the presolve sparsify reduction for MIP models</h4><p>
+
+This reduction can sometimes significantly reduce the number of
+nonzero values in the presolved model.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Disable the presolve sparsify reduction</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Enable the presolve sparsify reduction</td></tr>
+</table>
+
+<h4><a name="GUROBIprintoptions">
+printoptions</a>
+<i> (integer)</i> List values of all options to GAMS listing file</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not list option values to GAMS listing file</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>List option values to GAMS listing file</td></tr>
+</table>
+
+<h4><a name="GUROBI.prior">
+.prior</a>
+<i> (real <a href="#dotopt">dot option</a>)</i> Branching priorities</h4><p>
+
+GAMS allows to specfiy priorities for discrete variables only. Gurobi
+can detect that continuous variables are implied discrete variables
+and can utilize priorities. Such priorities can be specified through a
+GAMS/Gurobi solver option file. The syntax for <i>dot</i> options is
+explained in the Introduction chapter of the Solver Manual. The
+priorities are only passed on to Gurobi if the model attribute
+<tt>priorOpt</tt> is turned on.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GUROBIpsdtol">
+psdtol</a>
+<i> (real)</i> limit on the amount of diagonal perturbation</h4><p>
+
+Positive semi-definite tolerance (for QP/MIQP). Sets a limit on the
+amount of diagonal perturbation that the optimizer is allowed to
+automatically perform on the Q matrix in order to correct minor PSD
+violations. If a larger perturbation is required, the optimizer will
+terminate stating the problem is not PSD.
+
+<br><i>Range: [0,maxdouble]</i>
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="GUROBIpumppasses">
+pumppasses</a>
+<i> (integer)</i> Number of passes of the feasibility pump heuristic</h4><p>
+
+Note that this heuristic is only applied at the end of the MIP root,
+and only when no other root heuristic found a feasible solution.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBIqcpdual">
+qcpdual</a>
+<i> (integer)</i> Determines whether dual variable values are computed for QCP models</h4><p>
+
+Determines whether dual variable values are computed for QCP
+models. Computing them can add significant time to the optimization,
+so you should turn this parameter to 0 if you do not need them.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Compute dual for QCP problem</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Do not compute dual for QCP problem</td></tr>
+</table>
+
+<h4><a name="GUROBIquad">
+quad</a>
+<i> (integer)</i> Quad precision computation in simplex</h4><p>
+
+Enables or disables quad precision computation in simplex. The -1
+default setting allows the algorithm to decide.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIreadparams">
+readparams</a>
+<i> (string)</i> Read Gurobi parameter file</h4><p>
+
+
+
+<h4><a name="GUROBIrerun">
+rerun</a>
+<i> (integer)</i> Resolve without presolve in case of unbounded or infeasible</h4><p>
+
+In case Gurobi reports <i>Model was proven to be either infeasible or
+unbounded</i>, this option decides about a resolve without presolve
+which will determine the exact model status. If the option is set to
+<i>auto</i>, which is the default, and the model fits into demo
+limits, the problems is resolved.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>No</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Yes</td></tr>
+</table>
+
+<h4><a name="GUROBIrins">
+rins</a>
+<i> (integer)</i> Frequency of the RINS heuristic</h4><p>
+
+Default value (-1) chooses automatically. A value of 0 shuts off
+RINS. A positive value <i>n</i> applies RINS at every <i>n</i>-th node
+of the MIP search tree.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIscaleflag">
+scaleflag</a>
+<i> (integer)</i> Enables or disables model scaling</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GUROBIseed">
+seed</a>
+<i> (integer)</i> Random number seed</h4><p>
+
+Modifies the random number seed. This acts as a small perturbation to
+the solver, and typically leads to different solution paths.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GUROBIsensitivity">
+sensitivity</a>
+<i> (integer)</i> Provide sensitivity information</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not provide sensitivity information</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Provide sensitivity information</td></tr>
+</table>
+
+<h4><a name="GUROBIsifting">
+sifting</a>
+<i> (integer)</i> Sifting within dual simplex</h4><p>
+
+Enables or disables sifting within dual simplex. Sifting is often
+useful for LP models where the number of variables is many tiems
+larger than the number of constraints. With a <i>Moderate</i> setting,
+sifting will be applied to LP models and to the root node for MIP
+models. With an <i>Aggressive</i> setting, sifting will be also
+applied to the nodes of a MIP. Note that this parameter has no effect
+if you aren't using dual simplex. Note also that sifting will be
+skipped in cases where it is obviously a worse choice, even when
+sifting has been selected.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Moderate</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Agressive</td></tr>
+</table>
+
+<h4><a name="GUROBIsiftmethod">
+siftmethod</a>
+<i> (integer)</i> LP method used to solve sifting sub-problems</h4><p>
+
+Note that this parameter only has an effect when you are using dual
+simplex and sifting has been selected (either by the automatic method,
+or through the <i>Sifting</i> parameter).
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Primal Simplex</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Dual Simplex</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Barrier</td></tr>
+</table>
+
+<h4><a name="GUROBIsimplexpricing">
+simplexpricing</a>
+<i> (integer)</i> Determines variable pricing strategy</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Partial Pricing</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Steepest Edge</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Devex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Quick-Start Steepest Edge</td></tr>
+</table>
+
+<h4><a name="GUROBIsolutionlimit">
+solutionlimit</a>
+<i> (integer)</i> Limits the number of feasible solutions found</h4><p>
+
+
+<br><i>(default = maxint)</i>
+
+<h4><a name="GUROBIsolvefixed">
+solvefixed</a>
+<i> (integer)</i> Indicator for solving the fixed problem for a MIP to get a dual solution</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not solve the fixed problem</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solve the fixed problem</td></tr>
+</table>
+
+<h4><a name="GUROBIsubmipcuts">
+submipcuts</a>
+<i> (integer)</i> Controls the generation of sub-MIP cutting planes</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="GUROBIsubmipnodes">
+submipnodes</a>
+<i> (integer)</i> Limits the number of nodes explored by the heuristics</h4><p>
+
+Limits the number of nodes explored by the heuristics, like
+RINS. Exploring more nodes can produce better solutions, but it
+generally takes longer.
+
+<br><i>(default = 500)</i>
+
+<h4><a name="GUROBIsymmetry">
+symmetry</a>
+<i> (integer)</i> Controls MIP symmetry detection</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIthreads">
+threads</a>
+<i> (integer)</i> Controls the number of threads to apply to parallel MIP or Barrier</h4><p>
+
+Default number of parallel threads allowed for any solution
+method. Non-positive values are interpreted as the number of cores to
+leave free so setting threads to 0 uses all available cores while
+setting threads to -1 leaves one core free for other tasks.
+
+<br><i>(default = GAMS threads)</i>
+
+<h4><a name="GUROBItimelimit">
+timelimit</a>
+<i> (real)</i> Limits the total time expended in seconds</h4><p>
+
+
+<br><i>(default = GAMS reslim)</i>
+
+<h4><a name="GUROBIusebasis">
+usebasis</a>
+<i> (integer)</i> Use basis from GAMS</h4><p>
+
+If usebasis is not specified, GAMS (option bratio) decides if the
+starting basis or a primal/dual solution is given to Gurobi. If
+usebasis is excplictely set in an option file then the basis or a
+primal/dual solution is passed to Gurobi independent of the GAMS
+option bratio. Please note, if Gurobi uses a starting basis presolve
+will be skipped.
+
+<br><i>(default = GAMS bratio)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No basis</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Supply basis if basis is full otherwise provide primal dual solution</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Supply basis iff basis is full</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Supply primal dual solution</td></tr>
+</table>
+
+<h4><a name="GUROBIvarbranch">
+varbranch</a>
+<i> (integer)</i> Controls the branch variable selection strategy</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Pseudo Reduced Cost Branching</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Pseudo Shadow Price Branching</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Maximum Infeasibility Branching</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Strong Branching</td></tr>
+</table>
+
+<h4><a name="GUROBIwriteparams">
+writeparams</a>
+<i> (string)</i> Write Gurobi parameter file</h4><p>
+
+
+
+<h4><a name="GUROBIwriteprob">
+writeprob</a>
+<i> (string)</i> Save the problem instance</h4><p>
+
+
+
+<h4><a name="GUROBIzerohalfcuts">
+zerohalfcuts</a>
+<i> (integer)</i> Controls zero-half cut generation</h4><p>
+
+See the description of the global <a href="#GUROBIcuts">Cuts</a> parameter
+for further information.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Auto</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Conservative</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Aggressive</td></tr>
+</table>
+
+<h4><a name="GUROBIzeroobjnodes">
+zeroobjnodes</a>
+<i> (integer)</i> Number of nodes to explore in the zero objective heuristic</h4><p>
+
+Note that this heuristic is only applied at the end of the MIP root,
+and only when no other root heuristic finds a feasible solution.
+
+<br><i>(default = 0)</i><h2><a name="dotopt">Dot Options</a></h2>
+
+Dot options allow users to associate values to variables and equations using the
+GAMS name of the variables and equations. The general syntax of a dot option in
+the option file is as follows:
+<pre>
+<i>variable/equation-name.optionname value</i>
+</pre>
+Dot options can be specified for <b>all</b>, a <b>block</b>, a <b>slice</b>, and
+a <b>single</b> variable and equation. The following example makes the use of
+the dot option clear.
+
+<pre>
+Set i /i1*i3/;
+Set j /j2*j4/;
+variable v(i,j), w(i); equation e(i,j);
+</pre>
+
+Consider the following lines in an option file with the imaginary option name <tt>dotopt</tt>:
+<table>
+<tr><td><b>Line in option file</b></td><td><b>Explanation</b></td>
+<tr><td><tt>variables.dotopt 1</tt></td><td>Sets the value of <i>all</i> variables to 1</td>
+<tr><td><tt>equations.dotopt 2</tt></td><td>Sets the value of <i>all</i> equations to 2</td>
+<tr><td><tt>v.dotopt 3</tt></td>        <td>Sets the value of the variables in <i>block</i> <tt>v</tt> to 3</td>
+<tr><td><tt>e.dotopt(*,*) 4</tt></td>   <td>Sets the value of the equations in <i>block</i> <tt>e</tt> to 4</td>
+<tr><td><tt>v.dotopt(*,'j2') 5</tt></td><td>Sets the value of the variables <tt>v</tt> that have j2 in the second index position (<i>slice</i>) to 5</td>
+<tr><td><tt>e.dotopt('i3',*) 6</tt></td><td>Sets the value of the equations <tt>e</tt> that have i3 in the first index position (<i>slice</i>) to 6</td>
+<tr><td><tt>w.dotopt('i2') 7</tt></td>  <td>Sets the value of the <i>single</i> variables <tt>v('i2')</tt> to 7</td>
+<tr><td><tt>e.dotopt('i3','j3') 8</tt>&nbsp;&nbsp;</td><td>Sets the value of the <i>single</i> equations <tt>e('i3','i3')</tt> to 8</td>
+</table>
+
+<p>The values of the dot option are applied in correspondence to the sequence they appear in the option file. In the current example, the values of dotopt for the equation <tt>e</tt> would be as follows:
+
+<table>
+<tr><td><tt>e.dotopt</tt></td><td><tt>i1</tt></td><td><tt>i2</tt></td><td><tt>i3</tt></td>
+<tr><td><tt>j2</tt></td><td>4</td><td>4</td><td>6</td>
+<tr><td><tt>j3</tt></td><td>4</td><td>4</td><td>8</td>
+<tr><td><tt>j4</tt></td><td>4</td><td>4</td><td>6</td>
+</table>
+
+</body></html>

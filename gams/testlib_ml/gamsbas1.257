@@ -1,0 +1,9 @@
+$TITLE 'GAMSBAS test suite - basic option reading test' (GAMSBAS1,SEQ=257)
+* We do not ship GAMSBAS anymore. Please check the McCarl guide for alternatives
+$ontext
+$call gamslib -q 1
+$echo "abort$(transport.modelstat <> %modelstat.Optimal% or transport.solvestat <> %solvestat.NormalCompletion%) 'problems with gamsbas option';" >> trnsport.gms
+$echo "lp bdmlp" > gamsbas.opt
+$call =gams trnsport lp=gamsbas lo=0 optfile=1
+$if errorlevel 1 $abort 'problems with gamsbas options'
+$offtext

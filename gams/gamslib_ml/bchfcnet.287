@@ -1,0 +1,90 @@
+$Title Fixed Cost Network Flow Problem with Cuts using BCH Facility (BCHFCNET,SEQ=287)
+$Ontext
+
+  Francisco Ortega, Laurence Wolsey
+  A branch-and-cut algorithm for the single-commodity, uncapacitated,
+  fixed-charge network flow problem.
+  Networks 41 (2003), no. 3, 143--158.
+
+  http://www.core.ucl.ac.be/services/psfiles/dp00/dp2000-49.pdf
+
+  Michael Bussieck, Hua Ni, Alexey Koptsevich
+  Technical Note: Solving the Steiner Tree Problem with GAMS Branch-and-Cut Facility.
+  Technical report, GAMS Development Corp. 2003.
+
+$Offtext
+$eolcom //
+
+Set       nn              nodes
+          ss              sub arcs index
+          arc(nn,nn,ss)   arcs
+
+Alias(nn,n,m),(s,ss)
+
+Parameter demand(nn)      node demand
+          fcost(nn,nn,ss) fixed cost
+          vcost(nn,nn,ss) variable cost
+          xupp(nn,nn,ss)  upper bound on flow
+          yupp(nn,nn,ss)  upper bound on build
+Scalar    u               sum of demand
+          usetree         whether the additional equation is present  /0/
+          usett1          same /0/
+          usett2          same /0/
+
+$include berlin2.inc
+
+arc(m,n,s)$(fcost(m,n,s) or vcost(m,n,s) or xupp(m,n,s) or yupp(m,n,s)) = yes;
+
+* Export data for use in the cut generator
+execute_unload 'net.gdx', nn ss arc demand fcost vcost u usetree usett1 usett2 xupp yupp;
+
+Variable  cost
+          x(nn,nn,ss)        flow over the arc
+          y(nn,nn,ss)        usage of the arc
+
+Positive variables x
+Binary variables y
+
+Equations obj             objective
+          tt2(n)          no flow through non-demanding nodes
+          bf(nn,nn,ss)    binary forcing constraints
+          bal(nn)         flow conservation constraints
+          tree(nn)        outflow via one arc only
+          tt1(n)          demanding nodes are fed via one arc only;
+
+obj..       sum(arc, vcost(arc)*x(arc) + fcost(arc)*y(arc)) =e= cost;
+
+bal(n)..    sum(arc(m,n,s), x(m,n,s)) - sum(arc(n,m,s), x(n,m,s)) =e= demand(n);
+bf(arc)..   x(arc) =l= xupp(arc)*y(arc);
+
+tree(n)$usetree..   sum(arc(n,m,s), y(n,m,s)) =l= 1;
+
+tt1(n)$(usett1 and demand(n) > 0)..   sum((m,s), y(m,n,s)) =e= 1;
+
+tt2(n)$(usett2 and demand(n) = 0)..   sum((m,s), y(m,n,s)) =l= 1;
+
+model master /all/;
+
+$ifi %system.mip% == cplex   $goto cont
+$abort 'BCH Facility not available for MIP solver %system.mip%.'
+$label cont
+
+master.optfile = 1;
+$onecho > cplex.opt
+mipinterval 1
+usercutcall bchdicut.inc minlp baron optcr 0.0 optca 0.5 reslim 10 optfile=1 lo=2 --cplex=1
+usercutfirst 100
+$offecho
+
+$onecho > baron.opt
+isoltol 0.99
+numsol 20
+gdxout bchdicut
+firstfeas 1
+$offecho
+
+xupp(arc) = min(u,xupp(arc));
+x.up(arc) = xupp(arc);
+y.up(arc)$yupp(arc) = yupp(arc);
+master.optcr=0;
+solve master mini cost using mip;

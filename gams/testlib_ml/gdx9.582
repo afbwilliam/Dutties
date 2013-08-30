@@ -1,0 +1,64 @@
+$TITLE 'Checks unloading and loading a GDX file with variable attributes' (gdx9, SEQ=582)
+
+$ontext
+execute_unload's variables with randomly choosen attributes into GDX file,
+resets attributes in GAMS, execute_load's GDX file, and checks that the
+original attribute values have been restored.
+$offtext
+
+Set i / 1*10 /;
+Parameter xl(i), xlo(i), xup(i), xm(i), xsc(i);
+Parameter zl, zlo, zup, zm, zsc;
+
+xlo(i) = uniform(0,1);
+xup(i) = uniform(1,2);
+xl(i) = uniform(xlo(i), xup(i));
+xm(i) = uniform(-10,10);
+xsc(i) = uniform(0,2);
+
+zlo = -42;
+zup =  42;
+zl = 17;
+zm = 526;
+zsc = 525;
+
+Positive Variable x(i);
+Variable z;
+
+x.lo(i) = xlo(i);
+x.up(i) = xup(i);
+x.l(i) = xl(i);
+x.m(i) = xm(i);
+x.scale(i) = xsc(i);
+
+z.lo = zlo;
+z.up = zup;
+z.l = zl;
+z.m = zm;
+z.scale = zsc;
+
+execute_unload 'test.gdx', x, z;
+
+x.fx(i) = 0;
+x.l(i) = 0;
+x.m(i) = 0;
+x.scale(i) = 1;
+z.fx = 0;
+z.l = 0;
+z.m = 0;
+z.scale = 1;
+
+execute_load 'test.gdx', x, z;
+
+abort$(smax(i, abs(xlo(i) - x.lo(i))) > 1e-12)    "x.lo wrong"
+abort$(smax(i, abs(xup(i) - x.up(i))) > 1e-12)    "x.up wrong"
+abort$(smax(i, abs(xl(i) - x.l(i))) > 1e-12)      "x.l wrong"
+abort$(smax(i, abs(xm(i) - x.m(i))) > 1e-12)      "x.m wrong"
+abort$(smax(i, abs(xsc(i) - x.scale(i))) > 1e-12) "x.scale wrong"
+
+abort$(abs(z.lo - zlo) > 1e-12) "z.lo wrong"
+abort$(abs(z.up - zup) > 1e-12) "z.up wrong"
+abort$(abs(z.l - zl) > 1e-12)   "z.l wrong"
+abort$(abs(z.m - zm) > 1e-12)   "z.m wrong"
+abort$(abs(z.scale - zsc) > 1e-12) "z.scale wrong"
+

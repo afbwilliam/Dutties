@@ -1,0 +1,59 @@
+$title piped assignment - permutation for two dimensions (PIPE1,SEQ=111)
+
+$ontext
+
+Contributor: Alex Meeraus
+$offtext
+
+$version 137 goto OK
+$clearerror
+$stop
+$label OK
+
+set i / i1*i5 /
+set j / j1*j5 /
+
+parameters a(i,j)    original
+           b(j,i)    permuted with assign
+           c(j,i)    permuted with option
+           cc(i,j)   copy of a with option
+           dbc(j,i)  diff between b and c
+           dcc(i,j)  diff between a and cc;
+
+a(i,j) =  ord(j)+(ord(i)-1)*card(j);
+
+b(j,i) = a(i,j);
+
+option c  < a
+       cc < a;
+
+dbc(j,i) = c(j,i) - b(j,i);
+dcc(i,j) = a(i,j) - cc(i,j);
+
+display dbc,dcc;
+
+abort$(card(dbc)) 'piped assign failed',a,b,c,dbc;
+abort$(card(dcc)) 'piped assign failed',a,cc,dcc;
+
+variable  xx(i,j) some variable;
+set       ss(i,j) this will be the domain of a
+          kk(i,j) this will be the domain of xx
+          ll(j,i) permuted kk
+          das(i,j) difference between ss and a
+          dxk(i,j) difference between kk and xx
+          dxl(j,i) difference between ll and xx;
+
+xx.l(i,j) = uniform(0,1) > .8;
+
+option ss < a
+       kk < xx
+       ll < xx;
+
+das(i,j) = a(i,j)    xor ss(i,j);
+dxk(i,j) = xx.l(i,j) xor kk(i,j);
+dxl(j,i) = xx.l(i,j) xor ll(j,i);
+display das,dxk,dxl;
+
+abort$(card(das)) 'piped assign failed',a,ss,das;
+abort$(card(dxk)) 'piped assign failed',xx.l,kk,dxk;
+abort$(card(dxl)) 'piped assign failed',xx.l,ll,dxl;

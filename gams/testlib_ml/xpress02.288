@@ -1,0 +1,48 @@
+$TITLE 'XPRESS test suite - check levels and marginals' (XPRESS02,SEQ=288)
+$ondollar
+
+$ontext
+
+We need to make sure we get correct marginal signs with XPRESS
+in all cases (e.g. when we use the barrier code with and without
+crossover).  The conventions used have changed with different XPRESS
+releases so we need a thorough check.
+
+   - LP  (lp02)
+   - QCP (qcp01)
+
+Contributor: Steve Dirkse, Nov 2004
+$OFFTEXT
+
+
+$if not exist lp02.gms  $call testlib -q lp02
+$if not exist qcp01.gms $call testlib -q qcp01
+
+* defaultalg 2 -> dual simplex
+* defaultalg 3 -> primal simplex
+* defaultalg 4 -> barrier
+
+$echo defaultalg 2  > xpress.902
+$echo defaultalg 3  > xpress.903
+$echo defaultalg 4  > xpress.904
+$echo crossover  1 >> xpress.904
+$echo defaultalg 4  > xpress.905
+$echo crossover  0 >> xpress.905
+
+
+* LP TEST
+$call gams lp02 lp=xpress          optfile 902 lo=%GAMS.lo%
+$if errorlevel 1 $abort 'lp02 with optfile 902 failed'
+$call gams lp02 lp=xpress          optfile 903 lo=%GAMS.lo%
+$if errorlevel 1 $abort 'lp02 with optfile 903 failed'
+$call gams lp02 lp=xpress          optfile 904 lo=%GAMS.lo%
+$if errorlevel 1 $abort 'lp02 with optfile 904 failed'
+$call gams lp02 lp=xpress          optfile 905  --testtol=1e-5 lo=%GAMS.lo%
+$if errorlevel 1 $abort 'lp02 with optfile 905 failed'
+
+
+* QCP TEST
+* $call gams qcp01 qcp=xpress         optfile 904 lo=%GAMS.lo%
+* $if errorlevel 1 $abort 'qcp01 with optfile 904 failed'
+$call gams qcp01 qcp=xpress         optfile 905  --testtol=5e-4 lo=%GAMS.lo%
+$if errorlevel 1 $abort 'qcp01 with optfile 905 failed'

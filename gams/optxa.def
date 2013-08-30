@@ -1,0 +1,78 @@
+*
+* optxa.def
+*
+minos lookup
+basis string 0 "" 1 1 controls writing of advanced basis file for restarts
+set_dualsimplex boolean 0 1 1 1 controls use of dual simplex method on restarts
+force boolean 0 0 1 1 force internal relaxation of bounds if infeasible
+limitsearch string 0 "" 1 1 limit searching of the branch-and-bound tree
+matlist enumstr 0 "none" 1 1 display the problem for debugging
+ "Var" 1 List columns in each row
+ "Con" 1 List rows in each column
+ "Both" 1 Do both Var and Con
+ "None" 1 No debugging display
+secret strlist 0 0 1 pass on secret XA options
+set_barrier enumstr 0 "no" 1 1 control the primal-dual interior point algorithm
+ "Yes" 1 Use barrier, with crossover on MIP only
+ "No" 1 Use simplex
+ "X" 1 Use barrier, with crossover
+set_bell boolean 0 0 1 1 controls the termination bell
+set_bvpriority double 0 1600 0 maxdouble 1 1 set default priority of all binary variables
+set_crash enumint 0 0 1 1 control basis-crashing method
+ 0 1 Minimize primal infeasibility
+ 1 1 Minimize dual infeasibility
+ 2 1 Both 0 & 1
+set_degeniter integer 0 0 0 maxint 1 1 consecutive degenerate pivots before anti-cycling code is activated
+set_freqlog string 0 "" 1 1 time frequency for printing the iteration log
+set_intgap double 0 0 0 maxdouble 1 1 Minimum objective improvement between incumbents
+set_intlimit integer 0 0 0 maxint 1 1 limit number of incumbents found
+set_intpct double 0 0 0 100 1 1 % of available integer columns to consider fixing at each node
+set_iround boolean 0 1 1 1 control rounding of integer vars when XA reports solutions
+set_iteration integer 0 0 0 maxint 1 1 sets limit on simplex iterations
+set_ltolerance double 0 5e-6 0 maxdouble 1 1 lower tolerance for integrality: (i-utol,i+ltol) is integral
+set_utolerance double 0 5e-6 0 maxdouble 1 1 upper tolerance for integrality: (i-utol,i+ltol) is integral
+set_markowitz double 0 10 0 maxdouble 1 1 larger values favor sparsity over numeric stability
+set_maxcpu integer 0 0 0 maxint 1 1 limits the number of processors to use
+set_maxnodes integer 0 0 0 maxint 1 1 sets the estimate of the number of nodes in the branch-and-bound tree
+set_nodelimit integer 0 0 0 maxint 1 1 limits the number of nodes in the branch-and-bound tree
+set_perturbate double 0 0 mindouble maxdouble 1 1 controls perturbation on highly degenerate problems
+set_pricing enumint 0 0 1 1 controls the variable pricing strategy
+ 0 1 Standard reduced cost pricing
+ 1 1 Automatic DEVEX pricing switch over
+ 2 1 Infeasible DEVEX pricing
+ 3 1 Feasible DEVEX pricing  (our next choice)
+ 4 1 Both infeasible and feasible DEVEX pricing
+set_reducedcost double 0 1e-7 0 maxdouble 1 1 zero tolerance for the primal marginals
+set_reinvertfreq integer 0 40 0 maxint 1 1 set basis re-inversion frequency
+set_relaxed boolean 0 0 1 1 relax integrality requirement in MIP models - solve as an RMIP
+set_restart boolean 0 0 0 1 controls read & write of XA restart file for MIP models
+set_scale string 0 "" 1 1 set scaling method
+set_stickwithit integer 0 10 0 maxint 1 1 controls how XA follows branching advice from an integer basis
+set_tctolerance double 0 1e-7 0 maxdouble 1 1 zero tolerance for technology coefficients
+set_timelimit double 0 0 0 maxdouble 1 1 set the time limit
+set_tolerance_dual double 0 1e-7 0 maxdouble 1 1 dual feasibility tolerance
+set_tolerance_primal double 0 1e-7 0 maxdouble 1 1 primal feasibility tolerance
+set_ypivot double 0 1e-9 0 maxdouble 1 1 sets a pivot tolerance
+set_xtozero double 0 1e-7 0 maxdouble 1 1 primal feasibility tolerance
+stopafter string 0 "" 1 1 post-integer-feasible time limit for MIP models
+strategy string 0 "" 1 1 controls the MIP search strategy
+tomps enumstr 0 "no" 1 1 write an MPS file (gams.mps) for the problem
+ "Yes" 1 Write problem in MPS format
+ "No" 1 Do not write an MPS formatted file
+ "Secure" 1 Write problem in MPS format with names C0, C1, ... and R0, R1, ...
+*
+* deprecated section
+*
+XA_X deprecated
+ set_xtozero
+*
+* obsolete section
+*
+XA_X obsolete
+ set_restart
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General options
+*** End of file

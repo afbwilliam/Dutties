@@ -1,0 +1,888 @@
+$Title Dinamico, Dynamic Multi-Sector, Multi-skill Model (DINAM,SEQ=35)
+$Stitle Introduction
+
+$Ontext
+
+Dinamico is multi-sector, multi-skill model of the Mexican economy. for
+complete description of data and model consult the reference.
+
+
+Manne, A S, Dinamico, A Multi-Sector, Multi-skill Model. In Goreaux,
+L M, and Manne, A S, Eds, Multi-level Planning: Case Studies in Mexico.
+North-Holland, Amsterdam, 1973.
+
+$Offtext
+
+
+ Set  tm             labels appearing in the transaction matrices and reports /
+                     agri-ka      agriculture - capital-labor substitution
+                     agri         agriculture
+                     agri-total   total annual investment in agriculture
+                     mine         mining
+                     petrol       petroleum
+                     food         food
+                     text         textiles
+                     wood         wood
+                     chem         chemicals
+                     n-met        non-metallics
+
+                     b-met        basic metals
+                     mach         machinery
+                     const        construction
+                     elec         electricity
+                     comm         commerce
+                     trans        transportation
+                     serv         services
+                     imp          imports
+                     hc           household consumption
+                     gc           government consumption
+
+                     tc           tourist consumption
+                     exp          exports
+                     fi           fixed investment
+                     ii           investment inventories
+                     err          errors and ommisions
+                     va           value added (gross)
+                     gvp          gross value of production
+                     g-d-p        gross domestic production
+                     consumed     aggregate consumption
+                     savings      aggregate domestic savings
+
+                     r-gap        resource gap
+                     investment   aggregate annual investment
+                     gdp-gr       annual growth rate of gdp
+                     con-gr       annual growth rate of consumption
+                     sav-gr       annual growth rate of savings
+                     inv-gr       annual growth rate of investment
+                     inc-k-o      incremental-capital-output ratio
+                     mps          marginal propensity to save (%)
+                     aps          average propensity to save (%)
+                     imports
+
+                     ea+zt        export earnings and tourism
+                     rgap-fexch   resource gap: imports - export earnings and tourism
+                     fcl          foreign concessional capital inflows
+                     fdpl         foreign direct capital inflows
+                     infcl        interest payments on concessional capital
+                     infdpl       interest payments on direct foreign capital
+                     rgap-fgap    resource gap: algebraic sum of capital inflows and outflows
+                     for-exch     dual variable ft: 1960 pesos worth of maximand per 1000 1960 pesos worth
+                     trad-manu    tradeable manufactures
+                     ratio        efficiency price of foreign exchange relative to price of tradeable manufactures
+
+                     eff-sl1      efficiency wages
+                     dual         dual variables for labor constraints
+                     fc-infc      concessional capital inflows less interest
+                     res-gap      resource gap
+                     fexch-m      efficiency price of foreign exchange
+                     fgap-m       efficiency price of foreign aid
+                     relative     efficiency price of foreign exchange relative to price of tradeable manufactures
+                     export-e     merchandize exports
+                     high-cost    exports of high-cost manufactures at producers prices
+
+                     earnings     foreign exchange earnings at market prices
+                     gap          resource gap: imports less merchandize exports and tourism
+                     zm4          exports of high-cost manufactures
+                     za4          merchandize exports
+                     zt4          tourism
+
+                     eff-wages    efficiency wages annual average centered on 1980
+                     con4         aggregate consumption in 1980
+                     income       labor income: employment x efficiency wages
+                     aggregate
+                     income-t                                            /
+
+$Stitle set definitions
+
+ Set te        plan horizon        / 1968, 1971, 1974, 1977, 1980, 1983, 1986, 1989 /
+
+     t(te)     optimization horizon/ 1971, 1974, 1977, 1980, 1983, 1986 /
+
+     jd(tm)    sectors-of-destination used in data estimation /
+               agri, mine, petrol, food, text, wood, chem, n-met, b-met, mach, const, elec, comm, trans,
+               serv, hc,   gc,     tc,   exp,  fi,   ii  /
+
+     j(jd)     input-output sectors of destination /
+               agri, mine, petrol, food, text, wood, chem, n-met, b-met, mach, const, elec, comm, trans, serv     /
+
+     id(tm)    sectors-of-origin used in data estimation  /
+               agri, mine, petrol, food, text, wood, chem, n-met, b-met, mach, const, elec, comm, trans, serv, imp /
+
+     i(id)     input-output sectors of origin /
+               agri, mine, petrol, food, text, wood, chem, n-met, b-met, mach, const, elec, comm, trans, serv      /
+
+     im(i)     merchandize commodities        / agri, mine, petrol, food, text, wood, chem, n-met, b-met, mach     /
+
+     inc(id)   foreign commodities - non-competitive / imp /
+
+     s         labor skill categories /  eng      engineers and scientists
+                                         tech     other professional and technical workers
+                                         admin    administrative and clerical workers
+                                         man      manual and sales workers outside agriculture
+                                         unskill  unskilled agriculture workers                /
+
+     sun(s)    unskilled agricultural workers / unskill /
+
+     l         lag structure for human capital formation / 0*2 /
+
+     eit       education input types / change, input /
+
+     sst(te,s) skill  substitutions allowed during time periods / (1971,1974).(eng,tech,admin),
+                                                                  (1971,1974,1977,1980,1983,1986,1989).man /
+
+ Alias(te,tep),(t,tp),(s,sp);
+
+$Stitle transactions matrix manipulations from 1960 data
+
+ Set    ic1(tm)      row labels for transactions matrix /
+                     agri, mine, petrol, food, text, wood, chem, n-met, b-met, mach, const, elec, comm, trans,
+                     serv, imp,  err,    va,   gvp /
+
+        jdp(jd)      jd sectors from 1 thru 21 but not 19
+
+ Scalar interval     time interval between optimization years  / 3 /;
+
+ jdp(jd) = yes; jdp("exp") = no; display jdp;
+
+ Table tm1960(tm,tm) transactions matrix for 1960 (billions of 1960 pesos)
+
+          agri   mine   petrol   food   text  wood   chem  n-met  b-met  mach   const  elec   comm  trans   serv
+
+ agri   2.028   .014     .001  8.049   1.091  .521   .55    .001   .002  .028    .003         .004          .018
+ mine    .001  1.007     .128   .025    .004  .008   .093   .109   .455  .143    .216   .005  .01    .007   .006
+ petrol  .621   .154    2.944   .445    .185  .097   .126   .218   .275  .173    .124   .216  .163  1.022   .094
+ food   1.66    .012     .011  4.697    .054  .033   .13    .005   .021  .026    .041   .002  .056   .028   .109
+ text   .522    .012     .015   .094   2.565  .038   .094   .012   .025  .081    .038   .005  .09    .012   .084
+ wood   .123    .035     .074   .438    .1   1.038   .246   .092   .043  .182    .613   .013  .428   .048   .357
+ chem   .741    .099     .054   .134    .661  .134  1.018   .049   .043  .43     .191   .011  .078   .304   .318
+ n-met  .003    .012     .007   .252    .008  .013   .056   .18    .063  .051   1.428   .001  .02    .002   .017
+ b-met  .048    .068     .025   .144    .058  .039   .066   .033   .873 1.249   1.166   .013  .132   .027   .149
+ mach   .224    .05      .048   .317    .114  .051   .095   .043   .057  .904    .867   .052  .206   .097   .463
+ const  .14     .024     .026   .045    .038  .016   .02    .025   .022  .011    .06    .043  .083   .072   .367
+ elec   .073    .106     .003   .165    .122  .062   .075   .075   .062  .063    .049   .08   .25    .03    .156
+ comm  1.199    .165     .197  2.632   1.527  .483   .869   .249   .314  .544   1.66    .093  .351   .619  1.28
+ trans  .001    .009     .012   .057    .032  .021   .03    .008   .007  .046    .02    .012 2.943   .024   .13
+ serv   .159    .152     .227   .681    .337  .241   .347   .078   .239  .312    .348   .043 1.61    .243  5.439
+ imp    .548    .061     .704   .567    .599  .44   1.664   .156   .366 1.934    .921   .107  .119   .482   .429
+ err    .105    .025     .023   .093    .028  .021  0.057   .013   .046  .047    .088   .007  .116   .027   .344
+ va    23.97   2.306    5.128 10.62    5.434 2.347  3.245  1.182  1.786 4.278   6.105  1.502 46.88  4.996 30.732
+
+   +        hc     gc     tc     exp     fi      ii
+$Maxcol 72
+ agri   14.846   .013   .073   2.88    .943   1.101                     the submatrix consisting of the 15 input-output
+ mine     .002   .001          2.007   .024    .06                      sectors (and import on the row) represents the
+ petrol  2.257   .116           .173   .002    .222                     interindustry flows.  from this we obtain the
+ food   19.711   .042   .083   2.3     .04     .394                     interindustry input-output coefficients.
+ text    7.835   .023   .19     .651   .027    .544                     the column vectors "hc" (household consumption)
+ wood    1.242   .117   .035    .13    .05     .199                     "gc" (government consumption), "tc" (tourists
+ chem    3.635   .217           .221   .073    .379                     consumption), "exp" (exports), "fi" (fixed
+ n-met    .099   .117           .072   .026    .101                     investment), "ii" (inventory investment) are
+ b-met           .024           .092   .222    .262                     final demand vectors - of these sectors for
+ mach    3.28    .281   .094    .114  2.529    .616                     goods from the 16 row sectors.
+ const           .028                12.787    .131
+ elec     .54    .179                  .115
+ comm   35.835   .222   .336   1.125  3.625    .214
+ trans   4.309   .18    .111    .001   .087
+ serv   20.58   7.501  1.166    .217   .572
+ imp     1.313   .231           .055  3.84     .479
+ err    -.036  -1.009           .01
+
+ Table t1968(tm,tm) independently estimated data for 1968 (billions of 1960 pesos)
+
+            exp      gvp                                                 the "exp" column represents the
+
+ agri     3.860   44.775                                                 export column vector in the trans-
+ mine     2.360    5.074                                                 actions matrix in 1968.
+ petrol    .450   17.001
+ food     2.880   48.689                                                 the "gvp" column is the gross value
+ text      .580   22.671                                                 of production for 1968 - the row and
+ wood      .310    9.827                                                 column totals for the inter-industry
+ chem      .660   17.913                                                 transactions matrix in 1968.
+ n-met     .120    5.351
+ b-met     .230   10.768
+ mach      .560   27.231
+ const            26.774
+ elec              5.669
+ comm     1.560   89.838
+ trans            12.598
+ serv      .300   72.242
+ hc              191.1
+ gc               17.7
+ tc               4.22
+ exp              13.870
+ imp              21.0
+ fi              49.5
+ ii               5.5
+ va      13.870
+$Maxcol 120
+
+ Parameter xj60(jd)      gross production in sector j in 1960 (column totals - billions of 1960 pesos)
+           ax60(id,jd)   transaction flows in 1960 (billions of 1960 pesos)
+           aij60(id,jd)  i-o coefficient matrix for transactions in 1960
+           xj68(jd)      gross output in sector j in 1968 (column totals - billions of 1960 pesos)
+           yi68(id)      row totals for 1968 (billions of 1960 pesos)
+           ax19(id)      export vector for 1968 (billions of 1960 pesos)
+           aij68(tm,tm)  i-o coefficient matrix for transactions in 1968
+           ax68          transaction flows in 1968 (billions of 1960 pesos)
+           rho(id)       annual technological rate of change between 1960 and 1968 (%);
+
+** initialize 1960 parameters
+
+ xj60(jd)              = sum(ic1, tm1960(ic1,jd));
+ ax60(id,jd)           = tm1960(id,jd);
+ aij60(id,jd)$xj60(jd) = tm1960(id,jd)/xj60(jd);
+
+* initialize the column and row totals and the export column in the transactions matrix for 1968
+* from the known data in table t1968
+
+ xj68(jdp) = t1968(jdp,"gvp");
+ yi68(id)  = t1968(id,"gvp");
+ ax19(id)  = t1968(id,"exp");
+
+$Maxcol 72
+* obtain the technological rate of change.                              the only available information are the detailed
+                                                                        matrix for 1960 and the aggregate demand and
+ Parameter temp1(id) row totals;                                        production for 1968.  therefore assume there
+ temp1(id) = sum(jdp, aij60(id,jdp)*xj68(jdp));                         exists an annual rate of technological change
+ rho(id)$temp1(id) = ((yi68(id) - ax19(id))/temp1(id))**(1/8) - 1;      in the coefficients for row i, rho(i).  this
+                                                                        is applied in the row correction procedure
+ Display xj60,ax60,aij60,xj68,yi68,ax19,temp1,rho;                      (in place of ras) to project the detailed
+                                                                        transactions matrix for 1968.
+ aij68(id,jdp) = ((1 + rho(id))**8)*aij60(id,jdp);
+
+ ax68(id,jdp)  = aij68(id,jdp)*xj68(jdp);
+ ax68(id,"exp") = ax19(id);
+ Display aij68,ax68;
+
+ Parameter rho2(id)  corrected rho - after subjective corrections to computed rho
+           rhotp     rho for plan horizon;
+
+ rho2(id)     = rho(id);                                                to project beyond 1968, the values of rho(i)
+ rho2("mach") = .03;                                                    obtained above are adjusted subjectively in
+ rho2("elec") = .03;                                                    certain cases.  it is assumed the historical
+ rho2("mine") = -.03;                                                   rates cannot possibly be maintained in the
+ rho2("imp")  = -.03;                                                   future.
+ rhotp(id,te) = (1 + rho2(id))**(interval*(ord(te)-1));
+ Display rho,rho2,rhotp;
+$Maxcol 120
+
+$Stitle i-o and consumption coefficients
+
+ Parameter x0(j)        base (1968) year output of sector j (billions of 1960 pesos)
+           a0(id,j)     i-o matrix for base year of optimization period (1968)
+           a(id,tm,te)  i-o matrix for optimization horizon
+           apc0(id)     average propensity to consume in base year (1968) - household & government
+           apc(id,te)   average propensity to consume in year t - household and government
+           apz0(id)     average propensity to consume item i by tourists in base year (1968)
+           apz(id,te)   average propensity to consume item i by tourists in year t
+           muc(te)      column correction factor for apc
+           muz(te)      column correction factor for apz;
+
+** i-o matrices and output levels **
+
+ x0(j)              = t1968(j,"gvp");
+ a0(id,j)           = aij68(id,j);
+ a(id,j,te)         = rhotp(id,te)*a0(id,j);
+ a(id,id,te)$t(te)  = a(id,id,te) - 1;
+ Display x0,a0,a;
+
+** consumption coefficients **
+
+ Scalar total  gross consumption by households and government in base year (1968);
+$Maxcol 72
+ total                = sum(id, ax68(id,"hc") + ax68(id,"gc"));         the consumption expenditure coefficient for
+                                                                        good i by domestic consumers (government &
+ apc0(id)             = (ax68(id,"gc") + ax68(id,"hc"))/total;          household) is the gross 1968 expenditure
+ muc(te)              = 1 / sum(id, (apc0(id) * rhotp(id,te))) ;        divided by total consumption outlay in 1968.
+ apc(id,te)           = apc0(id) * rhotp(id,te) * muc(te) ;             to project these coefficients into the future
+                                                                        we multiply by rho(i) (above) and mu(t) - mu(t)
+ apz0(id)             = aij68(id,"tc") ;                                ensures that the coefficients sum to 1.
+ muz(te)              = 1 / sum(id, (apz0(id) * rhotp(id,te))) ;
+ apz(id,te)           = apz0(id) * rhotp(id,te) * muz(te) ;             similarly for tourists.
+ Display  apc0,muc,apc,apz0,muz,apz,total;
+
+$Stitle capital-output coefficients
+$Maxcol 120
+
+ Table b0(id,j) capital-output ratios for base year (1968) in billions of 1960 pesos
+
+       agri  mine petrol food  text  wood  chem  n-met  b-met  mach  const  elec  comm  trans  serv
+
+ agri  .934
+ mine        .124
+ petrol            .004
+ food                    .048
+ text                          .047
+ wood                                .154
+ chem                                      .102
+ n-met                                           .088
+ b-met                                                   .352
+ mach  .207  .261  .395  .197  .155  .3    .203  .319    .263  .176  .085   .886  .189  1.634  .273
+ const .588  .331  .615  .299  .145  .296  .232  .447    .275  .235  .015  2.109  .169  5.173 2.328
+ elec                                                                       .462
+ comm  .224  .204  .378  .193  .194  .307  .294  .279    .348  .234  .070   .707  .126  1.363  .199
+ trans                                                                                   .159
+ serv  .039                                                                              .196  .154
+ imp   .262  .100  .339  .183  .264  .316  .455  .202    .497  .336  .042   .369  .011   .835  .055
+
+
+ Parameter b(id,j,te)  ratio of capital originating in sector i per unit of gross output in sector j
+           k(j,te)     capital coefficients of sector j
+           bk(id,j,te) sector of origin ratios;
+
+ b(id,j,te)   = rhotp(id,te) * b0(id,j) ;
+ k(j,te)      = sum(id, b(id,j,te)) ;
+ bk(id,j,te)  = b(id,j,te) / k(j,te) ;
+
+ Display b,k,bk;
+
+$Stitle labor data
+
+ Parameter lreq0(s,j)    input requirement for labor skill s per unit output in sector j
+           lreq(s,j,te)  input requirement for labor skill s per unit output in sector j year t
+           sigt(s,j,te)  time trend factor for reduction of labor input s in sector j year t
+           alr(te)       agricultural labor released per unit of cumulative capital
+           pvv           producers price value
+
+ Scalar    wage1960      wage of unskilled agri labor in 1960 - assumed to be marginal productivity  / 2400 /
+           mpc           annual marginal productivity of capital in agriculture - assume constant (%)/   16 /
+           mrs           marginal rate of substitution - pesos of capital per man-year
+
+ Parameter csm(id)    commerce and service margins            / comm   .1125
+                                                                serv   .0217  /;
+
+ pvv  = 1 - sum(id, csm(id));
+ Display pvv;
+
+
+ Table labor(j,s)  1968 employment  in millions
+
+               eng     tech     admin     man   unskill
+
+ agri       .00541   .02705   .06222           7.02400
+ mine       .00376   .00376   .00730   .09249
+ petrol     .00437   .00611   .01746   .05937
+ food       .00238   .00510   .03742   .29528
+ text       .00189   .00631   .02650   .59632
+ wood       .00143   .01061   .02122   .25344
+ chem       .00585   .00704   .03629   .07020
+ n-met      .00105   .00210   .00876   .10484
+ b-met      .00152   .00228   .00718   .07347
+ mach       .01857   .02837   .07831   .49140
+ const      .00916   .02185   .07332   .60063
+ elec       .00394   .00258   .02523   .04402
+ comm       .00220   .03002   .29730  1.13501
+ trans      .00182   .00684   .10212   .34511
+ serv       .01365   .48598   .58137  1.28942
+
+
+ Table  ls(te,s)  labor supply projection by year and skill (thousands of persons)
+
+           eng   tech  admin     man  unskill
+
+ 1968     .077   .646  1.382   5.451   7.024
+ 1971     .097   .791  1.623   6.125   7.389
+ 1974     .117   .936  1.864   6.906   7.841
+ 1977     .137  1.081  2.105   7.827   8.321
+ 1980     .157  1.226  2.346   8.966   8.830
+ 1983     .177  1.371  2.587  10.291   9.370
+ 1986     .197  1.516  2.828  11.746   9.943
+ 1989     .217  1.661  3.069  13.416  10.552
+
+
+ Table sigma(j,s) labor productivity changes (% per year)
+
+            eng     tech    admin      man   unskill
+
+ agri       1.0      1.0      1.5      2.0      2.0
+ mine       1.0      1.0      1.5      1.5      1.5
+ petrol     1.0      1.0      1.5      3.5      3.5
+ food       1.0      1.0      1.5      3.5      3.5
+ text       1.0      1.0      1.5      3.5      3.5
+ wood       1.0      1.0      1.5      3.5      3.5
+ chem       1.0      1.0      1.5      3.5      3.5
+ n-met      1.0      1.0      1.5      3.5      3.5
+ b-met      1.0      1.0      1.5      3.5      3.5
+ mach       1.0      1.0      1.5      3.5      3.5
+ const      1.0      1.0      1.5      1.5      1.5
+ elec       1.0      1.0      1.5      3.5      3.5
+ comm       1.0      1.0      1.5      3.5      3.5
+ trans      1.0      1.0      1.5      1.5      1.5
+ serv       1.0      1.0      1.5      1.5      1.5
+
+
+
+ Table sf(eit,s,l,s) coefficients for human capital formation activities
+$Maxcol 80
+
+                 2.eng   1.eng    0.eng   1.tech   0.tech  1.admin   0.admin     view the columns as processes.  for
+                                                                                 example, the engineering education
+ change.eng                        1.0                                           process two years before an engineer
+ change.tech                        .3              1.0                          is "produced" would require certain
+ change.admin    -2.0      .6       .1     -1.9      .9                1.0       inputs.  there are 2 types of inputs -
+ change.man                                                   -2.0     1.0       "input" which are short-term - only in
+ input.eng        -.17    -.14              -.02                                 that period as support - and "change"
+ input.tech       -.09                      -.18               -.16              which is transformed permenantly into
+ input.admin                                                   -.04              into a new kind of labor or reverts
+                                                                                 to its old classification.  in the
+                                                                                 model these permenant changes ("flows")
+                                                                                 are then summed up (a "stock").
+
+$Maxcol 72
+
+
+ Table ldg(s,s)  labor downgrading coefficients
+                                                                        the labor downgrading and upgrading mechanisms
+                 eng   tech   admin    man                              are only for short-term (annual) adjustments.
+
+ eng            -1.0                                                    labor downgrading can occur throughout the
+ tech            1.0   -1.0                                             model horizon and is a one-to-one replacement.
+ admin                  1.0    -1.0
+ man                            1.0   -1.0                              labor upgrading on the other hand is costly to
+ unskill                               1.0                              the economy (eg. to replace 1 engineer requires
+                                                                        1 technician, .5 administrators and 4 manuals)
+                                                                        and is applicable in the first 2 periods only
+ Table lug(s,s)  labor upgrading coefficients                           (after when the endogenous educational activi-
+                                                                        ties come on stream).  the exception is the
+                 eng   tech   admin    man                              movement of unskilled rural labor into the
+                                                                        urban labor force which can occur through the
+ eng             1.0                                                    entire model horizon.  the cost to the economy
+ tech           -1.0    1.0                                             is reflected in the requirement of inputs by
+ admin          -0.5   -1.0    1.0                                      the service sector (parameter ssr and material
+ man            -4.0   -2.0   -3.0     1.0                              balance constraint).  the time nature of labor
+ unskill                              -1.0                              upgrading is set in the parameter lugt below.
+
+$Maxcol 120
+
+ Parameter lugt(s,sp,te) time allowed labor upgrading coefficients ;
+ lugt(s,sp,te)             = lug(s,sp)$sst(te,sp);
+
+ lreq0(s,j)$t1968(j,"gvp") = labor(j,s) / t1968(j,"gvp") ;
+ sigt(s,j,te)              = (1/(1 + sigma(j,s)/100))**(interval*(ord(te)-1)) ;
+ lreq(s,j,te)              = sigt(s,j,te) * lreq0(s,j) ;
+
+ mrs                       = wage1960/(mpc/100);
+ alr(te)                   = 1 / ((mrs/1000) * (1 + sigma("agri","unskill")/100)**(8+(interval*(ord(te)-1))));
+
+ Display lugt,lreq0,lreq,sigt,mrs,alr;
+ Parameter length; length(s) = max(0, smax((sp,l)$sf("change",sp,l,s), ord(l)));
+ Display length;
+
+$Stitle trade and capital data
+
+ Set       rsfdp(te) reset limits on capital inflows in case 7 for following periods /
+
+                     1974, 1977, 1980, 1983 /
+
+ Parameter pfc(te)   foreign concessional capital inflows (billions of 1960 pesos) /
+
+                     1968   2.1,  1971   4.3,  1974   4.7,  1977   4.3,  1980   3.1,  1983   1.5,  1986   -.5    /
+
+           infc(te)  interest on fc (billions of 1960 pesos) /
+
+                     1968   -1.4, 1971   -1.9, 1974   -2.7, 1977   -3.4, 1980   -4.0, 1983   -4.4, 1986   -4.2   /
+
+           es(i)     export share of subsidized high-cost export manufactures in 1986 /
+
+                     food   .409, text   .064, wood   .044, chem   .183, n-met   .022, b-met   .064, mach   .214 /
+
+           fdpup(t)  upper bound on direct foreign capital inflows during each period /
+
+                     1971   5, 1974   5.5, 1977   5.5, 1980   5.5, 1983   5.5, 1986   5.0 /
+
+           zmi(te,tep)  linear decreasing factor for nominal implicit protection rate
+
+ Scalar    dpc          cost level of high cost manufacture relative to foreign exch earnings (1)       /  1.3   /
+           rcd          rate of change of cost differential from 30% to 0 (% points each interval)
+           cfdp         upper bound on cumulative foreign direct inflows                                / 30     /;
+
+ rcd       = (dpc - 1)/card(t);
+ zmi(t,tp) = dpc - rcd*(ord(t) - ord(tp));
+ Display rcd,zmi;
+
+ Table begr(*,*) bounds on export growth rates
+
+                    lower    upper
+ agri                2.0      6.0
+ mine                         4.0
+ petrol                       1.5
+ food                         6.0
+ text                         4.5
+ wood                         6.0
+ chem                        10.0
+ n-met                        7.5
+ b-met                       10.0
+ mach                        12.0
+ tourism             8.0     13.0
+
+ Parameter e0(i)       base year (1968) export levels (billions of 1960 pesos)
+           elo(i,te)   lower bound on export levels (billions of 1960 pesos)
+           eup(i,te)   upper bound on export levels (billions of 1960 pesos)
+           z0          base year (1968) earnings from tourism (billions of 1960 pesos)
+           zlo(te)     lower bound on earnings from tourism (billions of 1960 pesos)
+           zup(te)     upper bound on earnings from tourism (billions of 1960 pesos);
+
+ e0(i)         = ax68(i,"exp");
+ elo(i,te)     = e0(i) * (1 + begr(i,"lower")/100)**(interval*(ord(te)-1)) ;
+ eup(i,te)     = e0(i) * (1 + begr(i,"upper")/100)**(interval*(ord(te)-1)) ;
+
+ z0           = sum(i, ax68(i,"tc"));
+ zlo(te)      = z0 * (1 + begr("tourism","lower")/100)**(interval*(ord(te)-1)) ;
+ zup(te)      = z0 * (1 + begr("tourism","upper")/100)**(interval*(ord(te)-1)) ;
+ Display e0, elo,eup,z0,zlo,zup;
+
+$Stitle "special" initial and terminal conditions
+
+ Parameter deltae      post-terminal year increment in exports (billions of 1960 pesos)
+           deltaz      post-terminal year increment in tourist expenditures(billions of 1960 pesos)
+
+ Scalar    con68     aggregate consumption  in 1968                                  / 208.8 /
+           inv68     aggregate investment in 1968                                    /  55   /
+           sav68     aggregate savings in 1968                                       /  52.1 /
+           gdp68     gross domestic product in 1968                                  / 260.9 /
+           infdpt    interest & profit remitaances on capital borrowed prior to plan /   4.9 /
+           rgap68    resource gap in 1968                                            /   2.9 /
+           eazt68    foreign exchange earned from exports and tourism in 1968        / -18.1 /
+           fc68      concessional capital inflow in 1968                             /   2.1 /
+           fdp68     direct foreign capital inflow in 1968                           /   6.0 /
+           infdp68   interest & profit remittances in 1968 on foreign direct capital /  -3.8 /;
+
+ deltae(im)       = eup(im,"1989") - eup(im,"1986");
+ deltae("total")  = sum(im, deltae(im));
+ deltae(i)$csm(i) = csm(i)*deltae("total");
+
+ deltaz(id)     = zlo("1989")*apz(id,"1989") - zlo("1986")*apz(id,"1986");
+
+ Display deltae,deltaz;
+
+$Stitle model parameterizations
+
+ Scalar mps      marginal propensity to save                                        /  .3  /
+        g        growth rate - annual                                               /  .07 /
+        r        discount rate                                                      /  .15 /
+        beta     present value
+        betatr   present value for year 7 in discounted maximand
+        gamma    growth factor - three year period
+        gv3      growth rate - three year period for incremental capacity variable
+        acc      annual cost of capital - for private foreign capital (%)           /  .15 /
+        pci      income payments for capital inflows within the horizon
+        initial  initial period in model                                            / 1    /
+        last     last period of optimization horizon                                / 7    /
+
+
+ Parameter ts(te,tep)   time summation matrix
+           ts2(te,tep)  time summation matrix - for tau from t equal 1 to t-1
+           ssr(i,s)     service sector requirements to convert rural to urban labor
+           betat(te)    present value
+           w1(te)       weight for objective function 1
+           w2a(te)      weight for first component of objective function 2
+           w2b(te)      weight for second component of objective function 2
+           w3(te)       weight for objective function 3;
+
+ gamma             = (1 + g)**interval;
+ gv3               = gamma - 1;
+ pci               = (1 + acc)**interval - 1;
+ beta              = (1 + r)**(-interval);
+ betat(te)         = (1 + r)**(-(interval*(ord(te)-1)));
+ betatr            = betat("1989")/(1 - beta*gamma);
+ ssr("serv","man") = 2.4;
+
+ ts(te,tep)        = 1$(ord(te) ge ord(tep));
+ ts2(te,tep)       = 1$(ord(te) gt ord(tep));
+
+ w1(te)   = 0; w1("1971") = 1;
+ w2a(te)  = 0; w2a(t)     = betat(t); w2b(te)   = 0; w2b("1989")  = betatr;
+ w3(te)   = 0; w3("1989") = 1;
+ Display ts,ts2,mps,g,r,beta,betat,betatr,gamma,gv3,acc,pci,ssr,w1,w2a,w2b,w3;
+
+$Stitle model definition
+
+ Equations
+
+  mb(i,te)     material balance constraint                                       (10e9 pesos)
+  cap(j,te)    capacity constraint                                               (10e9 pesos)
+  tic(i,te)    terminal year investment constraint                               (10e9 pesos)
+  ldsc(s,te)   labor demand and supply constraint                                (10e6 man y)
+  drql(s,te)   definition of labor requirements                                  (10e6 man y)
+  trql(s,te)   terminal year labor requirements                                  (10e6 man y)
+  exdef(te)    exports definition                                                (10e9 pesos)
+  fexch(te)    foreign exchange constraint                                       (10e9 pesos)
+  fgap(te)     resource gap definition                                           (10e9 pesos)
+  ffdp         bound on cumulative direct private capital inflows                (10e9 pesos)
+  ginv(te)     aggregate investment definition                                   (10e9 pesos)
+  gsav(te)     gross savings definition                                          (10e9 pesos)
+  ggdp(te)     gross domestic product definition                                 (10e9 pesos)
+  h(te)        gradualist consumption path                                       (10e9 pesos)
+  tcc(te)      terminal conditions on consumption - in place of h                (10e9 pesos)
+  dsc(te)      domestic savings constraint                                       (10e9 pesos)
+  obj1         objective function: base case - maximize initial consumption      (10e9 pesos)
+  obj2         objective function: case 3 - maximize discounted consumption      (10e9 pesos)
+  obj3         objective function: case 4 - maximize terminal consumption        (10e9 pesos)
+
+
+ Variables
+
+  rgap(te)     resource gap in year t                                            (10e9 pesos)
+  max1         maximand: maximization of initial consumption                     (10e9 pesos)
+  max2         maximand: maximization of discounted consumption                  (10e9 pesos)
+  max3         maximand: maximization of terminal consumption                    (10e9 pesos)
+
+
+ Positive Variables
+
+  x(jd,te)     gross output of sector j in year t                                (10e9 pesos)
+  v(jd,te)     one-year increase in cap of sector - investment resources expended(10e9 pesos)
+  ld(s,te)     labor downgraded from category s in year t                        (10e6 man y)
+  ul(s,te)     labor upgraded into category s in year t                          (10e6 man y)
+  ka(te)       capital added to agriculture in substitution for unskilled labor  (10e9 pesos)
+  ed(s,te)     education processes for human capital - skill s first available   (10e6 man y)
+  rql(s,te)    requirements for labor skill s in year t                          (10e6 man y)
+  e(i,te)      exports of item i in year t                                       (10e9 pesos)
+  em(te)       exports of high-cost manufactures - first exported in year t      (10e9 pesos)
+  ea(te)       aggregate merchandize exports in year t                           (10e9 pesos)
+  zt(te)       earning from tourism in year t                                    (10e9 pesos)
+  fdp(te)      foreign direct private capital inflows net of amortization        (10e9 pesos)
+  inv(te)      gross domestic investment in year t                               (10e9 pesos)
+  sav(te)      gross domestic savings in year t                                  (10e9 pesos)
+  con(te)      aggregate consumption expenditures - household & government       (10e9 pesos)
+  gdp(te)      gross domestic product in year t                                  (10e9 pesos)
+  infdp        interest & profit remittances on foreign direct capital- prior    (10e9 pesos)
+  fc(te)       concessional foreign capital inflows - net of amortization        (10e9 pesos) ;
+
+$Eject
+$Double
+
+ mb(i,t).. sum(j, a(i,j,t)*x(j,t) + b(i,j,t)*v(j,t)) + bk(i,"agri",t)*ka(t) + apc(i,t)*con(t) + apz(i,t)*zt(t)
+         + es(i)*sum(tep$ts(t,tep), zmi(t,tep)*em(tep)) + e(i,t)$im(i) + csm(i)*ea(t) + sum(s, ssr(i,s)*ul(s,t)) =l= 0;
+
+ cap(j,t).. x(j,t) =l= x0(j) + interval*sum(te$ts2(t,te), v(j,te));
+
+ tic(i,te)$(ord(te) gt last)..
+  apc(i,te-1)*(con(te) - con(te-1)) + gv3*sum(j, b(i,j,te-1)*v(j,te-1)) + deltae(i) + deltaz(i)
+                                                             =l= interval*sum(j, -a(i,j,te-1)*v(j,te-1));
+
+ drql(s,t).. sum(j, lreq(s,j,t)*x(j,t)) - alr(t)*(ka(t) + interval*sum(te$ts2(t,te), ka(te)))$sun(s) =e= rql(s,t);
+
+ trql(s,te)$(ord(te) gt last)..
+ sum(j, lreq(s,j,te)*(x(j,te-1) + interval*v(j,te-1))) - interval*alr(te)*sum(tep$ts2(te,tep), ka(tep))$sun(s)
+                                 =e= rql(s,te);
+$Maxcol 73
+$Single
+
+ ldsc(s,te)$(ord(te) gt initial)..
+  rql(s,te) =l=                                                          requirement of s is less than or equal to
+      ls(te,s)                                                                supply of s
+    + sum(sp, ldg(s,sp)*ld(sp,te) + lugt(s,sp,te)*ul(sp,te))             plus labor downgraded out of s
+                                                                         plus labor upgraded out of s
+    + sum((tep,sp,l)$(((ord(tep)+(ord(l)-1)) gt length(sp))$ts(te,tep)), plus the sum of the net change in s due to
+                     sf("change",s,l,sp)*ed(sp,tep+(ord(l)-1)))               education over the sets tep(years), sp
+                                                                              (other labor groups) and l (lag) such
+                                                                              that these activities are possible in t
+    + sum((sp,l)$((ord(te)+(ord(l)-1)) gt length(sp)),                   plus the sum of the inputs of s required for
+                 sf("input",s,l,sp)*ed(sp,te+(ord(l)-1)));                    education over the sets sp (other labor)
+                                                                              and l such that these actvities are
+                                                                              possible in year t.
+$Double
+$Maxcol 120
+
+ exdef(t)..      pvv*ea(t) =e= sum(im, e(im,t)) + sum(tp$ts(t,tp), em(tp));
+
+ fexch(t)..      sum(inc, apc(inc,t)*con(t) + bk(inc,"agri",t)*ka(t)
+                        + sum(j, a(inc,j,t)*x(j,t) + b(inc,j,t)*v(j,t)) ) =e= ea(t) + zt(t) + rgap(t);
+
+ fgap(t)..       rgap(t) - fc(t) - fdp(t) + infdp + pci*sum(tp$ts2(t,tp),  fdp(tp)) =e= infc(t);
+
+ ffdp..          sum(t, fdp(t)) =l= cfdp;
+
+ ginv(te)$(ord(te) le last)..  sum(j, k(j,te)*v(j,te)) + ka(te) =e= inv(te);
+
+ gsav(t)..       inv(t) =e= sav(t) + rgap(t);
+
+ ggdp(t)..       con(t) + sav(t) =e= gdp(t);
+
+ dsc(te)$t(te).. sav(te) - sav(te-1) =l= mps*(gdp(te) - gdp(te-1));
+
+ h(te)$t(te)..   con(te+1) - con(te) =e= gamma * (con(te) - con(te-1));
+
+ tcc(te)$(ord(te) gt last).. con(te) =e= gamma*con(te-1);
+
+ obj1..          max1 =e= sum(te, w1(te)*con(te));
+
+ obj2..          max2 =e= sum(te, (w2a(te) + w2b(te))*con(te));
+
+ obj3..          max3 =e= sum(te, w3(te)*con(te));
+
+$Single
+
+$Stitle model definitions and bounds
+
+*initial conditions:
+ con.fx("1968") = con68;
+ inv.fx("1968") = inv68;
+ sav.fx("1968") = sav68;
+ gdp.fx("1968") = gdp68;
+
+ fdp.up(t)      = fdpup(t);
+
+ infdp.fx       = infdpt;
+ fc.fx(t)       = pfc(t);
+
+ e.lo(im,t)     = elo(im,t);
+ e.up(im,t)     = eup(im,t);
+
+ zt.lo(t)       = zlo(t);
+ zt.up(t)       = zup(t);
+
+ Model din0  dinamico base case modeland manne cases 6 and 8 /
+
+             mb, cap, tic, ldsc, drql, trql, exdef, fexch, fgap, ffdp, ginv, gsav, ggdp, dsc, h, obj1, obj2, obj3 /
+
+       din1  dinamico model for manne cases 3 and 4 /
+
+             mb, cap, tic, ldsc, drql, trql, exdef, fexch, fgap, ffdp, ginv, gsav, ggdp, dsc, tcc, obj1, obj2, obj3 /
+
+       din2  dinamico model for manne case 7  /
+
+             mb, cap, tic, exdef, fexch, fgap, ffdp, ginv, gsav, ggdp, dsc, h, obj1, obj2, obj3 /
+
+$Stitle d i n a m i c o - report for macro model of mexico: declarations
+
+ Set t1(te)       / 1968, 1971, 1974, 1977, 1980, 1983, 1986 /
+     ji           / agri-ka, agri-total, agri, mine , petrol, food, text , wood, chem,
+                    n-met  , b-met     , mach, const, elec  , comm, trans, serv      /
+     sm1          / g-d-p, consumed, savings, r-gap, investment, gdp-gr, con-gr, sav-gr, inv-gr /
+     sm2          / g-d-p, consumed, savings, r-gap, investment  /
+     sm3          / gdp-gr, con-gr, sav-gr, inv-gr /
+     sf1          / imports, ea+zt, rgap-fexch,fcl,fdpl,infcl,infdpl,rgap-fgap /
+     sf2          / imports, ea+zt, fcl, fdpl, infcl, infdpl          /
+     mm(sm2,sm3)  / g-d-p.gdp-gr, consumed.con-gr, savings.sav-gr, investment.inv-gr /
+     tb           / 1968-71, 1971-74, 1974-77, 1977-80, 1980-83, 1983-86 /
+     mtb(tb,t1)   / 1968-71.1971, 1971-74.1974, 1974-77.1977, 1977-80.1980, 1980-83.1983, 1983-86.1986 /
+     sl1          / employed, eff-sl1, dual, ori-74-80 /
+
+     runset       / gradualist, discounted, terminal, alternate6, alternate7, alternate8 /
+     run(runset)
+     y74(te)      / 1974 /
+     y80(te)      / 1980 /
+     y7480(te)    / 1974, 1980 /
+     mac11        / g-d-p, consumed, savings, investment /
+
+ Parameter macroecon1      macroeconomic results (billions of 1960 pesos) - (table 6 pg 134)
+           macroecon2      growth rates of macroeconomic variables - (table 6 pg 134)
+           forexch         foreign exchange (billions of 1960 pesos) - (table 7 pg 136)
+           production      levels (billions of 1960 pesos) - (table 8 pg 138)
+           investment      percentage composition of net investment by sector of destination - (pg 139)
+           effprices       efficiency prices of foreign exchange and tradeable manufactures - pg 141
+           laborc          efficiency wages & dual variables for labor constraint ldsc - (pg 143)
+
+           macrorun        macroeconomic results (billions of 1960 pesos) - pg 153
+           resource        resource gap - financial flows (billions of 1960 pesos) - pg 155
+           epfe            efficiency prices of foreign exchange and foreign aid - pg 158
+           fep80           foreign exchange projections for 1980 (billions of 1960 pesos) - pg 157
+           gpl80           gross production levels in 1980 (billions of 1960 pesos) - pg 159
+           efw80           employment and income - pg 160;
+
+$Stitle solution scenario and report definition: number 1
+
+ run(runset) = no; run("gradualist") = yes;
+
+ Solve din0 maximizing max1 using lp;
+
+** detailed scenario report **
+
+ macroecon1("g-d-p",t1)      = gdp.l(t1);
+ macroecon1("consumed",t1)   = con.l(t1);
+ macroecon1("savings",t1)    = sav.l(t1);
+ macroecon1("r-gap",t1)      = rgap.l(t1);
+ macroecon1("investment",t1) = inv.l(t1);
+ macroecon1("r-gap","1968")  = rgap68;
+ macroecon1("aps",t1)        = round(100*sav.l(t1)/gdp.l(t1),1);
+ macroecon1(sm2,t1)          = round( macroecon1(sm2,t1),1);
+
+ macroecon2(sm3,tb)          = sum((sm2,t1)$(mtb(tb,t1)*mm(sm2,sm3)),
+                                   100*((macroecon1(sm2,t1)/macroecon1(sm2,t1-1))**(1/3) - 1) );
+ macroecon2(sm3,"1968-86")   = sum(sm2$mm(sm2,sm3), 100*((macroecon1(sm2,"1986")/macroecon1(sm2,"1968"))**(1/18) -1) );
+ macroecon2(sm3,tb)          = round( macroecon2(sm3,tb),1);
+ macroecon2("inc-k-o",tb)    = round( 100*sum(t1$mtb(tb,t1), (inv.l(t1)-inv.l(t1-1))/sum(j,x.l(j,t1)-x.l(j,t1-1))), 1);
+ macroecon2("mps",tb)        = round( 100*sum(t1$mtb(tb,t1), (sav.l(t1)-sav.l(t1-1))/(gdp.l(t1)-gdp.l(t1-1))), 1);
+
+ forexch("imports",t1)     = sum(inc, apc(inc,t1)*con.l(t1) + sum(j, a(inc,j,t1)*x.l(j,t1) + b(inc,j,t1)
+                            *v.l(j,t1)) + bk(inc,"agri",t1)*ka.l(t1));
+ forexch("ea+zt",t1)       = -ea.l(t1) - zt.l(t1);
+ forexch("imports","1968") = t1968("imp","gvp");
+ forexch("ea+zt","1968")   = eazt68;
+ forexch("rgap-fexch",t1)  = forexch("imports",t1) + forexch("ea+zt",t1);
+ forexch("fcl",t1)         = fc.l(t1);
+ forexch("fdpl",t1)        = fdp.l(t1);
+ forexch("infcl",t1)       = infc(t1);
+ forexch("infdpl",t1)      = -(infdp.l + pci*sum(tep$ts2(t1,tep), fdp.l(tep)));
+ forexch("fcl","1968")     = fc68;
+ forexch("fdpl","1968")    = fdp68;
+ forexch("infcl","1968")   = infc("1968");
+ forexch("infdpl","1968")  = infdp68;
+ forexch("rgap-fgap",t1)   = forexch("fcl",t1) + forexch("fdpl",t1) + forexch("infcl",t1) + forexch("infdpl",t1);
+ forexch(sf1,t1)           = round(forexch(sf1,t1),1);
+
+ production(j,t1)        = round( x.l(j,t1), 1);
+ production(j,"1968")    = t1968(j,"gvp");
+ production(j,"1960-68") = round( 100*((t1968(j,"gvp")/xj60(j))**(1/8)-1),1);
+ production(j,"1968-80") = round( 100*((production(j,"1980")/production(j,"1968"))**(1/12)-1),1);
+
+ investment("agri-ka",t1)    = 100*ka.l(t1)/inv.l(t1);
+ investment(j,t1)            = 100*(k(j,t1)*v.l(j,t1))/inv.l(t1);
+ investment("agri-total",t1) = investment("agri-ka",t1) + investment("agri",t1);
+ investment("**total**",t1)  = sum(j, investment(j,t1)) + investment("agri-ka",t1);
+ investment(ji,t1)           = round(investment(ji,t1),1);
+
+ effprices("for-exch",t)  =  - round(fexch.m(t)*1000,2);
+ effprices("trad-manu",t) =  - round(sum(i, 1000*mb.m(i,t)*es(i)),2);
+ effprices("ratio",t)     = round(effprices("for-exch",t)/effprices("trad-manu",t),2);
+ effprices("for-exch","ori-74-80") = round(100*((effprices("for-exch","1974")/effprices("for-exch","1980"))**(1/6)
+                                              - 1),1);
+ effprices("trad-manu","ori-74-80") = round(100*((effprices("trad-manu","1974")/effprices("trad-manu","1980"))**(1/6)
+                                              - 1),1);
+
+ laborc(s,t,"eff-sl1")    = - round(ldsc.m(s,t),3);
+ laborc(s,t,"dual")       = round(ldsc.m(s,t)/(sum(i, apc(i,t)*mb.m(i,t)) + apc("imp",t)*fexch.m(t)),1);
+ laborc(s,"ori-74-80","eff-sl1") = round(100*((laborc(s,"1974","eff-sl1")/laborc(s,"1980","eff-sl1"))**(1/6) - 1));
+
+
+** comparative report **
+
+ macrorun(run,y7480,mac11)        = macroecon1(mac11,y7480);
+ macrorun(run,"1968-80","mps")    = round(100*(sav.l("1980")-sav.l("1968"))/(gdp.l("1980")-gdp.l("1968")),1);
+ macrorun(run,"1968-80","gdp-gr") = round(100*((gdp.l("1980")/gdp.l("1968"))**(1/12) - 1),1);
+
+ resource(run,t,"fdpl")     = fdp.l(t);
+ resource(run,t,"infdpl")   = forexch("infdpl",t);
+ resource(run,t,"fc-infc")  = fc.l(t) + infc(t);
+ resource(run,t,"res-gap")  = forexch("rgap-fgap",t);
+
+ epfe(run,y7480,"fexch-m")      = -round(1000*fexch.m(y7480),2);
+ epfe(run,y7480,"fgap-m")       = -round(1000*fgap.m(y7480),2);
+ epfe(run,y7480,"relative")     = effprices("ratio",y7480);
+
+ fep80(run,"imports","imports")   = round(forexch("imports","1980"),2);
+ fep80(run,im,"export-e")         = round(e.l(im,"1980"),2);
+ fep80(run,"zm4","high-cost")     = round( em.l("1971") + em.l("1974") + em.l("1977") + em.l("1980"), 2);
+ fep80(run,"za4","earnings")      = ea.l("1980");
+ fep80(run,"zt4","earnings")      = zt.l("1980");
+ fep80(run,"resource","gap")      = forexch("rgap-fexch","1980");
+ fep80("lower-bd",im,"export-e")     = e.lo(im,"1980");
+ fep80("upper-bd",im,"export-e")     = e.up(im,"1980");
+ fep80("lower-bd","zt4","earnings")  = zt.lo("1980");
+ fep80("upper-bd","zt4","earnings")  = zt.up("1980");
+
+ gpl80(run,j)  = round(x.l(j,"1980"),1);
+
+ efw80(run,s,"employed")           = rql.l(s,"1980");
+ efw80(run,"total-1-4","employed") = sum(s$(not sun(s)), rql.l(s,"1980"));
+ efw80(run,"total-1-5","employed") = sum(s, rql.l(s,"1980"));
+ efw80(run,s,"eff-wages")          = round((ldsc.m(s,"1977")+ldsc.m(s,"1980")+ldsc.m(s,"1983"))/
+                                              (3*(sum(i, apc(i,"1980")*mb.m(i,"1980"))
+                                                + apc("imp","1980")*fexch.m("1980"))),1);
+ efw80(run,s,"income")             = round(rql.l(s,"1980")*efw80(run,s,"eff-wages"),1);
+ efw80(run,"total-1-5","income")   = sum(s, efw80(run,s,"income"));
+ efw80(run,"con4","aggregate")     = con.l("1980");
+ efw80(run,"con4","income-t")      = round(100*efw80(run,"total-1-5","income")/efw80(run,"con4","aggregate"));
+ Display macroecon1,macroecon2,forexch,production,investment,effprices,laborc,macrorun,resource,epfe,fep80,gpl80,efw80;

@@ -1,0 +1,74 @@
+*
+* optaecpwrap.def
+*
+
+DefaultSettings enumint 0 2 1 1 1=Convex, 2=Pseudo-convex constraints, 3=Pseudo-convex
+ 0 1 EcpStr=1, EcpLinStr=4, EcpTermCrit=1,EcpC_MipSolLim1=1
+ 1 1 EcpStr=1, EcpLinStr=1, EcpTermCrit=1,EcpC_MipSolLim1=1
+ 2 1 EcpStr=2, EcpLinStr=1, EcpTermCrit=3,EcpC_MipSolLim1=1
+ 3 1 EcpStr=3, EcpLinStr=1, EcpTermCrit=4,EcpC_MipSolLim1=1
+EcpStr enumint 0 2 1 1 Change only strategy 1,2 or 3
+ 1 1 No Alpha updating on cutting planes
+ 2 1 Alpha updating on cutting planes
+ 3 1 Strategy 2 + objective function reduction constraint
+EcpLinStr enumint 0 1 1 1 ECP_Linearization_Strategy
+ 0 1 Add cutting planes only for max g_i >= epsilon_g
+ 1 1 Add cutting planes for 25% of max g_i >= epsilon_g
+ 2 1 Add cutting planes for 50% of max g_i >= epsilon_g
+ 3 1 Add cutting planes for 75% of max g_i >= epsilon_g
+ 4 1 Add cutting planes for all g_i >= epsilon_g
+AlphaStr enumint 0 1 1 1 Alpha_Strategy
+ 0 1 No alpha updating used on the cutting planes
+ 1 1 Alpha updating (should be used if termination criterion>1)
+Beta double 0 1.30 0 maxdouble 1 1 Beta
+Gamma double 0 2 0 maxdouble 1 1 Gamma
+PcoStr enumint 0 3 1 1 PCO_Strategy
+ 1 1 Remove old objective function cuts when obj.fun. is improved
+ 2 1 Replace old objective function cuts when obj.fun. is improved
+ 3 1 Remove old objective function cuts when obj.fun. is improved + line search to the best level curve
+ 4 1 Replace old objective function cuts when obj.fun. is improved + line search to the best level curve
+EcpIterLim integer 0 1000 0 maxint 1 1 ECP_Iteration_Limit
+EcpTermCrit enumint 0 3 1 1 ECPTermination_Criterion
+ 1 1 Max g_i <= epsilon_g
+ 2 1 Criterion 1 + Special criterion for Quasi-Convex NLP
+ 3 1 Criterion 1 + Alpha >= g_k / epsilon_h
+ 4 1 Criterion 3 + abs(f(z)-mu) <= epsilon_f
+EpsilonG double 0 0.001 0 maxdouble 1 1 Epsilon_g
+EpsilonZ double 0 0.1 0 maxdouble 1 1 Epsilon_z
+EpsilonHStr enumint 0 1 1 1 Epsilon_h_Strategy
+ 0 1 Epsilon_h = Epsilon_z
+ 1 1 Epsilon_h = Epsilon_z * Norm of gradient at k
+EpsilonF double 0 0.001 0 maxdouble 1 1 Epsilon_f
+EcpStartStr enumint 0 1 1 1 ECP_Starting_Strategy
+ 1 1 First ECP Iteration solved as a MIP problem
+ 2 1 First ECP Iteration solved as a Relaxed MIP problem
+ModAlphaFiles enumint 0 0 1 1 Allow_Modified_Alpha_Files
+ 0 1 Problem in *.ecp file generates alpha2.for, alpha3.for automatically
+ 1 1 As 0, but STOP before compiling Alpha-files (implicit MINLP models)
+MaxCpuTime double 0 1000 0 maxdouble 1 1 Maximum CPU-time
+ResMemSize integer 0 5000000 0 maxint 1 1 Reserved_Memory_Size
+C_BranchDirect integer 0 0 0 maxint 1 2 Branching_direction
+C_Presolve integer 0 0 0 maxint 1 2 Preprocessing_presolve
+C_NodeSelectStr integer 0 1 0 maxint 1 2 Node_selection_strategy
+C_SubLpAlg integer 0 0 0 maxint 1 2 Subproblem_LP_algorithm
+C_VarSelectStr integer 0 0 0 maxint 1 2 Variable_selection_strategy
+C_MipStrBackT double 0 0.9999 0 maxdouble 1 2 MIP_strategy_backtrack
+EcpC_MipSolLim1 integer 0 1 0 maxint 1 2 MIP_solutions_limit_(initial)
+C_MaxCpuTime integer 0 1000 0 maxint 1 2 Tree_memory_limit
+C_RelMipGapTol double 0 0.0001 0 maxdouble 1 2 Relative_MIPgap_tolerance
+C_MipTolIntegral double 0 1E-5 0 maxdouble 1 2 MIP_tolerance_integrality
+InfBnd double 0 1E10 0 maxdouble 1 1 Infinity value to be used on bounds
+CallConopt enumint 0 0 1 1 Call conopt to get duals
+ 0 1 Conopt is not called
+ 1 1 Automatically call Conopt to obtain dual values for the solution point returned
+NOBOUNDS immediate NOBOUNDS 0 3 ignore bounds
+READFILE immediate READFILE 0 3 include option file
+SECRET strlist 0 0 3 secret option setting
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General Options
+cplex group 2 1 CPLEX Options
+link group 3 0 Link Options
+*** End of file

@@ -1,0 +1,21 @@
+$title CNS model - singular, nonsquare (cns08,SEQ=98)
+
+$ontext
+  This CNS model is singular and it should be caught by GAMS since
+  it is not square.
+
+$offtext
+
+maxexecerror = 1;
+variable x;
+equation e1, e2;
+
+e1 .. x =e= 1;
+e2 .. x =e= 1;
+
+model cns08 / all /;
+option limrow = 0, limcol = 0;
+solve cns08 using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(cns08.solvestat <> %solvestat.SolveProcessingSkipped% or cns08.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;

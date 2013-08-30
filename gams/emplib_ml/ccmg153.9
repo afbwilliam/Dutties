@@ -1,0 +1,125 @@
+$title Bilevel Programs in Engineering Example 1.5.3 (CCMG153,9)
+
+$ontext
+Example from Chapter 1.5.3 page 45-48 and 276-277 (The Wall Design)
+
+Conejo A J, Castillo E, Minguez R, and Garcia-Bertrand R, Decomopsition
+Techniques in Mathematical Programming, Springer, Berlin, 2006.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+variables cost
+          a              width
+          b              hight
+          f0             safety
+          t              force
+          h              soil offset
+          beta           associated reliability index
+          z1             random variable for t
+          z2             tandom variable for h
+          relindex       reliability index;
+
+equations defobj,safety,minsafety,geometry,
+          reliability,defrelindex,overturning,
+          defbeta2,defbeta3,defz1,defz2;
+
+scalars
+   gamma         'unit weight [kN/m3]'      / 23   /
+   muh           'mean of h [m]'            /  3   /
+   mut           'mean of t [kN]'           / 50   /
+   sigmah        'std of h [m]'             /  0.2 /
+   sigmat        'std of t [kN]'            / 15   /
+   f00           overturning failure safety /  1.5 /
+   beta0         reliabilty bound           /  3   /
+   b0            minimum height             /  4   /;
+
+* classical design
+defobj.. cost =e= a*b;
+safety.. f0 =e= (sqr(a)*b*gamma)/(2*muh*mut);
+minsafety.. f0 =g= f00;
+geometry.. b =e= 2*a;
+b.lo = b0;
+
+* additional equation for modern design
+reliability.. beta =g= beta0;
+defbeta2.. beta =e= relindex;
+defrelindex.. relindex =e= (sqr(a)*b*gamma)/(2*h*t);
+overturning.. relindex =e= 1;
+
+* additional equations for mixed design
+defbeta3.. beta =e= sqrt(sqr(z1) + sqr(z2));
+defz1.. z1 =e= (t-mut)/sigmat;
+defz2.. z2 =e= (h-muh)/sigmah;
+
+model classic classic design / defobj,safety,minsafety,geometry                                                                   /
+      modern  modern design  / defobj,       minsafety,geometry,reliability,defbeta2,defrelindex,overturning                      /
+      mixed   mixed design   / defobj,safety,minsafety,geometry,reliability,         defrelindex,overturning,defbeta3,defz1,defz2 /;
+
+* need to avoid 0*0
+a.l = 0.1;
+b.l = 0.1;
+* need to avoid divison by zero
+h.l  = muh;
+t.l  = mut;
+z1.l = 1;
+z2.l = 1;
+
+* Now we solve the mixed problem with the proposed relaxation method
+* We will increase the safty factor (f00) until we reach the desired
+* failure mode probability (beta0).
+scalar  epsilon / 1e-6 /;
+
+model subproblem / defbeta3,defrelindex,overturning,defz1,defz2 /;
+option nlp=conopt,solvelink=%SOLVELINK.CallModule%,solprint=off,limrow=0,limcol=0;
+
+set v iteration counter / v1*v10 /;
+parameter report(v,*) iteration report;
+beta.l=0;
+loop(v$((beta0-beta.l) > epsilon),
+   solve classic us nlp min cost;
+   report(v,'cost') = cost.l;
+   report(v,'a')    = a.l;
+   report(v,'b')    = b.l;
+   report(v,'f00')  = f00;
+   a.fx = a.l;
+   b.fx = b.l;
+   solve subproblem min beta us nlp;
+   report(v,'beta') = beta.l;
+* Relax
+   a.lo = 0;
+   a.up = inf;
+   b.lo = 0;
+   b.up = inf;
+* Update failure safety
+   f00 = f00 + 0.3*max(beta0-beta.l,0);
+);
+
+display report;
+
+* Store the solution of the proposed relaxation method
+scalars a_l
+        b_l
+        cost_l
+        f0_l
+        beta_l;
+a_l    = a.l;
+b_l    = b.l;
+cost_l = cost.l;
+f0_l   = f0.l;
+beta_l = beta.l;
+
+*Now we use EMP to solve the modern design and the mixed design problem
+option solvelink=%SOLVELINK.CallScript%,solprint=on;
+
+File emp extended MP info file handle / '%emp.info%' / ;
+putclose emp '* modern design' / 'bilevel a b min beta * defbeta2 defrelindex overturning';
+solve modern us emp min cost;
+
+putclose emp '* mixed design' / 'bilevel a b min beta * defrelindex overturning defbeta3 defz1 defz2';
+solve mixed us emp min cost;
+
+abort$(   (cost.l - cost_l > epsilon)
+       or (f0.l   - f0_l   > epsilon)
+       or (beta.l - beta_l > epsilon)) 'The solution obtained for the mixed design problem is worse than the obtained by the relaxation method'

@@ -1,0 +1,85 @@
+$title Test inequalities with infinite bounds (MCP09,SEQ=440)
+
+
+$ontext
+This started as an example to show equivalent complementarity models,
+one using positive vars and the other using "mixed bounds", i.e
+arbitrary lower and upper bounds.  Put another way, this
+compares/contrasts NCP and MCP.  There should be nothing lost in the
+MCP formulation, with a gain in clarity/maintainability.
+
+This example turned up an issue when we use infinite bounds on
+inequalities for complementarity problems.
+
+For this example, think of the KKT system for the optimization problem
+  min    sqr(x-c)
+  s.t.   L <= x <= U
+
+Contributor: Steve Dirkse, March 2009
+$offtext
+
+scalars
+  c   / 3 /
+  L, U;
+
+variable z 'arbitrary bounded';
+positive variable x, loSlack, upSlack;
+* if we have L >= 0 we can let x be >= 0
+
+equations
+  f     'MCP function'
+  g     'NCP function'
+  loBound, upBound;
+  ;
+
+f..        2*(z-c) =N= 0;
+g..        2*(x-c) - loSlack + upSlack =G= 0;
+loBound..  x =G= L;
+upBound..  U =G= x;
+
+
+model ncp 'NCP version' / g.x, loBound.loSlack, upBound.upSlack /;
+model m   'MCP version' / f.z /;
+
+set
+  cases / c1 * c7 /
+  loup  / L, U /;
+table bnds(cases, loup)
+         L       U
+c1       4       5
+c2       1       2
+c3       2       4
+c4       4       1e4
+c5       -1e4    2
+c6       4       inf
+c7       -inf    2
+;
+parameter
+  report (cases,*,*)
+  diff(cases,*);
+alias(v,*);
+
+loop {cases,
+  L = bnds(cases,'L');
+  U = bnds(cases,'U');
+  z.lo = L;
+  z.up = U;
+  solve m using mcp;
+  abort$[m.modelstat <> %modelstat.Optimal%] 'bad modelstat solving MCP';
+  abort$[m.solvestat <> %solvestat.NormalCompletion%] 'bad solvestat solving MCP';
+  report(cases,'mcp','xLev') = z.l;
+  report(cases,'mcp','loSlack') = max( z.m,0);
+  report(cases,'mcp','upSlack') = max(-z.m,0);
+  solve ncp using mcp;
+  abort$[ncp.modelstat <> %modelstat.Optimal%] 'bad modelstat solving NCP';
+  abort$[ncp.solvestat <> %solvestat.NormalCompletion%] 'bad solvestat solving NCP';
+  report(cases,'ncp','xLev') = x.l;
+  report(cases,'ncp','loSlack') = loSlack.l;
+  report(cases,'ncp','upSlack') = upSlack.l;
+};
+
+diff(cases,v) = abs(report(cases,'ncp',v) - report(cases,'mcp',v));
+display bnds, report, diff;
+abort$[smax{(cases,v), diff(cases,v)} > 1e-6] 'different results';
+
+

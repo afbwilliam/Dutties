@@ -1,0 +1,10 @@
+$title .nr=2 writes scientific notation (PUT2,SEQ=35)
+
+file temp; temp.nr=2; temp.nd=3;
+
+putclose temp   "* from put2.gms"
+               /"$ondollar"
+               /"$ifi NOT '1.235e+00' == " 1.23456 " $error should be 1.235"
+               /"$ifi NOT '1.234e+00' == " 1.23432 " $error should be 1.234"
+
+execute "=gams temp.put lo=%GAMS.lo%"; execerror $= errorlevel;

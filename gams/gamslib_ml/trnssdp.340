@@ -1,0 +1,100 @@
+$Title  Solving the Transportation LP Problem using SDP (TRNSSDP,SEQ=340)
+$Ontext
+
+This problem finds a least cost shipping schedule that meets
+requirements at markets and supplies at factories. The semidefinite
+programming solver CSDP is used instead of traditional LP algorithm.
+The communication with CSDP requires the setup of matrix data
+structures. In a sense this GAMS model functions as a matrix generator.
+
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions.
+Princeton University Press, Princeton, New Jersey, 1963.
+
+This formulation is described in detail in:
+Rosenthal, R E, Chapter 2: A GAMS Tutorial. In GAMS: A User's Guide.
+The Scientific Press, Redwood City, California, 1988.
+
+The line numbers will not match those in the book because of these
+comments.
+
+$Offtext
+$eolcom //
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar freight  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter cost(i,j)  transport cost in thousands of dollars per case ;
+
+          cost(i,j) = freight * d(i,j) / 1000 ;
+
+
+$ontext
+  maximize -sum((i,j), c(i,j)*x(i,j))
+  s.t.
+  supply(i) ..   sum(j, x(i,j)) =l=  a(i)
+  demand(j) ..   sum(i, x(i,j)) =g=  b(j)
+$offtext
+
+$eval imax card(i)
+$eval jmax card(j)
+$eval xmax %imax%*%jmax%
+
+Set  n SDP variable space / x1*x%xmax% /
+     nmap(n,i,j)          / #n:(#i.#j) /
+     m SDP constraints    / #i,#j      /
+     mi(m)                / #i         /
+     mj(m)                /    #j      /
+
+Parameter
+     mLE(m)     SDP constraints with =l=
+     mGE(m)     SDP constraints with =g=
+     c(m)       right hand side
+     F0(n,n)    cost coefficients
+     F(m,n,n)   constraint matrix
+     Y(n,n)     primal solution to transport problem
+     xvec(m)    dual solution to transport problem;
+
+* Objective
+F0(n,n)    = -sum(nmap(n,i,j), cost(i,j));
+
+* supply
+F(mi,n,n)  = sum(nmap(n,i,j)$sameas(mi,i), 1);
+c(mi)      = sum(i$sameas(mi,i), a(i));
+mLE(mi)    = yes;
+
+* demand
+F(mj,n,n)  = sum(nmap(n,i,j)$sameas(mj,j), 1);
+c(mj)      = sum(j$sameas(mj,j), b(j));
+mGE(mj)    = yes;
+
+execute_unload 'csdpin.gdx' n, m, mLE, mGE, c, F, F0;
+execute 'gams runcsdp.inc lo=%gams.lo% --strict=1';
+abort$errorlevel 'Problems running RunCSDP. Check listing file for details.'
+
+execute_load 'csdpout.gdx', xvec, Y;
+
+Parameter rep;
+rep('ship', i, j)  = sum(nmap(n,i,j), Y(n,n));
+rep('price',j,'')  = sum(mj$sameas(mj,j), -xvec(mj));
+rep('obj'  ,'','') = sum((i,j), cost(i,j)*rep('ship', i, j));
+display rep;

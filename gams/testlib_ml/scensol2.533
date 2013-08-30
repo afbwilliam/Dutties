@@ -1,0 +1,81 @@
+$Title Test handling of unsorted scenario UELs in GUSS (SCENSOL2,SEQ=533)
+
+$Ontext
+This test makes sure that we do not get a 'Data not sorted' error when the
+scenario set contains a 'not sorted' uel.
+
+Contributor: Lutz Westermann
+$Offtext
+
+
+Sets
+     s   scenarios        / seattle,  los-angeles, san-diego /
+     i   canning plants   / seattle,  san-diego              /
+     j   markets          / new-york, chicago,     topeka    / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5                        1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+         c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars ;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j),  f * d(i,j) / 1000 *x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+Equation e dummy n row;  e.. sum((i,j), x(i,j)) =n= 3;
+
+Model transport /all/ ;
+
+set dict   / s.scenario   . ''
+             d.   param   .ds
+             x.   level   .xx /
+
+Parameter
+    ds(s,i,j)  updater for d
+    xx(s,i,j)  collector for level of x;
+
+ds(s,i,j)  = max(0,uniform(-5,2)) + eps;
+
+Solve transport using lp minimizing z scenario dict;
+
+* If we get a license error (global solver) just terminate
+if (transport.modelstat=%modelstat.LicensingProblem%,
+    abort.noerror 'too big for global solvers');
+
+display xx;
+
+set Error(s) No solution found;
+Error(s) = sum((i,j),xx(s,i,j)) = 0;
+abort$(card(error)) 'Missing solution for some scenarios', error;
+
+

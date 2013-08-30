@@ -1,0 +1,21 @@
+$title 'Test correctness of gamma intrinsic' (FNGAMMA,SEQ=183)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+$gdxin fngamma
+$load aeps reps0 reps1 reps2 relToInput T data
+$gdxin
+
+reps0 = 1e-13;
+reps1 = 1e-9;
+reps2 = 1e-8;
+loop {T,
+  data(T,  'f')    = gamma.value (data(T,'x'));
+  data(T, 'fx')    = gamma.grad  (data(T,'x'));
+  data(T,'fxx')    = gamma.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

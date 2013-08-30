@@ -1,0 +1,19 @@
+$title 'Test correctness of entropy intrinsic' (FNENTRO,SEQ=190)
+
+$include fnset_x.inc
+
+$gdxin fnentro
+$load aeps reps relToInput T data
+$gdxin
+
+reps1 = 8e-15;
+
+loop {T,
+  data(T,  'f')    = entropy.value (data(T,'x'));
+  data(T, 'fx')    = entropy.grad  (data(T,'x'));
+  data(T,'fxx')    = entropy.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

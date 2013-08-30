@@ -1,0 +1,69 @@
+$title Test $ifthen $elseif/else $endif  (IFTHEN3,SEQ=453)
+
+$ontext
+Contributor: Alex
+$offtext
+
+scalar count / 0 /;
+
+$ifthene 1
+display 'good ifthen 1'; count = count+1;
+$elseife 1
+abort 'bad elseif 1'
+$elseife 1
+abort 'bad second elseif 1'
+$else
+abort 'bad else 1'
+$endif
+
+$ifthene 1
+display 'good ifthen 2'; count = count+10;
+$elseife 0
+abort 'bad elseif 2'
+$elseife 1
+abort 'bad second elseif 2'
+$else
+abort 'bad else 2'
+$endif
+
+$ifthene 0
+abort 'bad ifthen 11'
+$elseife 1
+display 'good elseif 11'; count = count+100;
+$elseife 1
+abort 'bad second elseif 11'
+$else
+abort 'bad else 11'
+$endif
+
+$ifthene 0
+abort 'bad ifthen 12'
+$elseife 0
+abort 'bad elseif 12'
+$elseife 1
+display 'good second elseif 12'; count = count+1000;
+$else
+abort 'bad else 12'
+$endif
+
+$ifthene 0
+abort 'bad ifthen 13'
+$elseife 0
+abort 'bad elseif 13'
+$elseife 0
+abort 'bad second elseif 13'
+$else
+display 'good else 13'; count = count+10000;
+$endif
+
+$ifthene 0
+abort 'bad ifthen 14'
+$elseife 1
+display 'good elseif 14'; count = count+100000;
+$elseife 0
+abort 'bad second elseif 14'
+$else
+abort 'bad else 14'
+$endif
+
+abort$(count<>111111) count,'should be 111111';

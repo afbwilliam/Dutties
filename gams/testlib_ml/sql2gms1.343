@@ -1,0 +1,53 @@
+$title 'Test database access with SQL2GMS' (SQL2GMS1,SEQ=343)
+
+$ontext
+
+Test database access with SQL2GMS (OLEDB)
+Make multiple queries in one call, store in GDX file
+
+$offtext
+
+$if %system.filesys% == UNIX $log SQL2GMS test skipped for UNIX
+$if %system.filesys% == UNIX $exit
+
+$onecho > cmd.txt
+C=Provider=Microsoft.Jet.OLEDB.4.0;Data Source=querytest.mdb
+X=sqloutput.gdx
+
+Q1=select distinct(year) from data
+s1=year
+
+Q2=select distinct(loc) from data
+s2=loc
+
+Q3=select distinct(prod) from data
+s3=prd
+
+Q4=select prod,loc,year,sales from data
+a4=sales
+
+Q5=select prod,loc,year,profit from data
+a5=profit
+$offecho
+
+$call sql2gms @cmd.txt > %system.nullfile%
+
+Scalar rc;
+execute 'gdxdiff querytest.gdx sqloutput.gdx > %system.nullfile%';
+rc=errorlevel;
+display rc;
+abort$(rc <> 0) 'generated gdx file is different';
+
+
+set y 'years';
+set loc 'locations';
+set prd 'products';
+parameter sales(prd,loc,y);
+parameter profit(prd,loc,y);
+
+$gdxin 'sqloutput.gdx'
+$load y=year loc prd sales profit
+
+
+display sales;
+display profit;

@@ -1,0 +1,14 @@
+$title 'Test that $echon does not write a new line'  (ECHO1,SEQ=206)
+
+$echo * echo test  > temp.gms
+$echo  set i /    >> temp.gms
+$echo  one        >> temp.gms
+$echo  two        >> temp.gms
+$echo        /;   >> temp.gms
+$echon set j /    >> temp.gms
+$echon one        >> temp.gms
+$echon two        >> temp.gms
+$echon       /;   >> temp.gms
+$echo abort$(card(i) = card(j)) 'echon does not work' >> temp.gms
+$call =gams temp.gms lo=%GAMS.lo%
+$if errorlevel 1 abort echon does not work

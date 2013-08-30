@@ -1,0 +1,305 @@
+$title MIP Decomposition and Parallel Grid Submission - DICE Example (DICEGRID,SEQ=330)
+
+$Ontext
+$Offtext
+
+$eolcom !
+$ife %system.gamsversion%<231 $abort Version too old! Need 231 or higher
+
+$if not set mipmodel $set mipmodel dice
+
+* Retrieve the model '%mipmodel%' from the GAMS Model library and include the model source
+$call gamslib -q %mipmodel%
+$set nosolve yes       ! Instruct the dice model source to skip the solve statement
+$include %mipmodel%
+
+* Set some model spefic parameters for the generic decompostion and
+* solution procedure.  This requires knowledge about naming in the
+* dice model:
+$if not set objvar $set objvar wnx
+$if not set module $set module xdice
+$if not set minmax $set minmax max
+$if not set gdxvar $set gdxvar comp
+$if not set solvar $set solvar fval.l,%objvar%.l,%gdxvar%.l
+
+* Configuration parameters for Decomposition
+$if not set nsub     $set nsub 4  ! 2 to 3 times the number of machines available
+$if not set submit   $set submit parsubmit
+
+* Some macro definition to keep the remain source readable
+$set solve solve %module% using mip %minmax% %objvar%
+$set test '>' $set cutoff 'cutlo' $set incumbent -INF
+$ifi %minmax% == min
+$set test '<' $set cutoff 'cutup' $set incumbent +INF
+
+$ontext
+File and container names
+ GAMS Sub-Programs
+   writeincb.gms  GAMS program called by GAMS/Cplex whenever a new incumbent
+                  is found by the Cplex workers
+   checkincb.gms  GAMS program frequently called by the master to see if a
+                  better overall incumbent has been found by the Cplex workers.
+                  In case of a new incumbent, this program communicates the
+                  incumbent value as a cutoff to all Cplex workers.
+
+ GAMS/Cplex Option files
+   cplex.opt      Includes 'dumptree' option to produce decomposition
+   cplex.op2      worker option file in case of sequential submit
+   cplex.op3      incumbent as cutoff option (written by checkincb.gms, read by workers)
+   cplex.XXX      XXX=100+userjobid (UJI) option file for worker with userjobid
+
+ Text files
+   t%UJI%.trg     trigger names that instruct the GAMS/Cplex work to read cplex.op3
+   incb%UJD%.txt  current worker incumbent values
+   allincb.txt    temp file to collect work incumbent values used by checkincb.gms
+
+ GDX files
+   bnd%UJI%.gdx   decomposition bound files created by 'dumptree' option
+   incb.gdx       container name for incumbent value and solution values
+   bchout_i%UJI%.gdx  worker incumbent solution processed by writeincb.gms
+$offtext
+
+* Remove files so we start clean
+$call rm -f bnd*.gdx bch*.gdx t*.trg incb.gdx incb*.txt allincb.txt GMSbch*.*
+
+$onecho > cplex.opt
+dumptree %nsub%  ! stop after having nsub open nodes and export these
+mipinterval 1    ! just for display
+
+* All remaining options focus on improving the bound to generate
+* subproblems of equal but reduced level of difficulty
+nodesel 1        ! best bound selection
+preslvnd 2       ! node presolve
+repeatpresolve 3 ! second presolve after cut generation
+mipemphasis 3    ! focus on improving the best bound
+varsel 3         ! strong branching
+$offecho
+
+Parameter
+  rep       report of times and solution
+  incumbent best solution so far / %incumbent% /
+Set
+  s_grid   'subproblems from GAMS/Cplex dumpopt' / 1*%nsub% /
+File
+  fx        file handle for various file activities;
+
+* Create decomposition with up to nsub GDX containers with bounds on discrete variables
+Option optcr=0, optca=0, solprint=off, mip=cplex, limrow=0, limcol=0;
+%module%.optfile = 1; %solve%;
+
+execute_unload 'incb.gdx', incumbent; ! Create GDX container for incumbent
+
+* Save possible integer feasible solution of this run, it could be the optimum
+if (%module%.modelstat=%modelstat.Optimal% or %module%.modelstat=%modelstat.IntegerSolution%,
+   incumbent = %objvar%.l; execute_unload 'incb.gdx', incumbent, %solvar% );
+
+$goto %submit%
+
+$label  seqsubmit
+$stitle Sequential Submit and Solve of the subproblems
+$echo mipemphasis 3 > cplex.op2
+loop(s_grid,
+* Load the bounds corresponding to the subproblem and solve the subproblem
+  put_utility fx 'gdxin' / 'bnd' s_grid.tl; execute_load %gdxvar%;
+  if (not execerror,
+    %module%.cutoff = incumbent;
+    %module%.optfile = 2; %solve%;
+    rep(s_grid,'elapsed') = timeelapsed;
+    rep(s_grid,'time')    = %module%.resusd;
+    rep(s_grid,'mstat' )  = %module%.modelstat;
+    rep(s_grid,'sstat')   = %module%.solvestat;
+    if (%module%.modelstat=%modelstat.Optimal% or %module%.modelstat=%modelstat.IntegerSolution%,
+       rep(s_grid,'obj')  = %module%.objval;
+       if(%objvar%.l %test% incumbent,
+          incumbent       = %module%.objval;
+          execute_unload 'incb.gdx', incumbent, %solvar% )
+    else
+       rep(s_grid,'obj')    = na )
+  else
+    rep(s_grid,'mstat') = 99;
+    rep(s_grid,'sstat') = 99;
+    execerror = 0 ) );
+
+put_utility fx 'ren' / '';
+if (not mapval(incumbent), ! not INF or -INF
+   execute_load 'incb.gdx', %solvar%; display %solvar%;
+   put fx '*** Optimal solution found: ' incumbent /;
+else
+   put fx '*** Problem infeasible' / );
+
+display rep;
+$exit
+
+$label parsubmit
+$stitle Parallel submit and solve in parallel
+$eval nsubp1 %nsub%+1
+
+$ontext
+Create a Cplex option file for each job. This option file instructs
+the GAMS/Cplex worker to call out to the GAMS program writeincb.gms
+(userincbicall) to save the incumbents found by the workers. It also
+tells the GAMS/Cplex jobs to look for a trigger file (iatriggerfile).
+If the file exists, GAMS/Cplex will remove the trigger file and read
+an option file (iafile). The time GAMS/Cplex looks for a trigger file
+(iatriggertime) is set to 1 second, which is quiet small and should be
+significantly increased for more difficult problems.
+
+Because of name conflicts every communication file is postfixed with
+the userjobid and postfixed with the GAMS working directory. This is
+necessary if this run on a real grid system with shared file system.
+
+The nsub problems created by the 'dumptree' decomposition are solved
+with an emphasis on moving the best bound. The nsub+1 job will run on
+the original problem and focus on finding good feasible solutions.
+$offtext
+
+scalar cnt; for (cnt=1 to %nsubp1%,
+  put_utility fx 'ren' / 'cplex.' (100+cnt):0:0;
+*  put   'userincbicall ""%gams.workdir%writeincb.gms"" lo=0'
+  put   'userincbicall writeincb.gms lo=0'
+      / 'userjobid ' cnt:0:0 / 'usergdxprefix %gams.workdir%'
+      / 'interactive 1' / 'iafile "%gams.workdir%cplex.op3"' / 'iatriggertime 1'
+      / 'iatriggerfile "%gams.workdir%t' cnt:0:0 '.trg"'
+      / 'mipemphasis 3';
+  put$(cnt=%nsubp1%) / 'mipemphasis 1'); putclose fx;
+
+* Save the overall incumbent in file incb0.txt. This file gets updated
+* by checkincb.gms if we find an imporved incumbent
+put_utility fx 'ren' / 'incb0.txt'; putclose fx '0 ' incumbent:18:8;
+
+%module%.solvelink=%solvelink.AsyncGrid%; ! use the GAMS grid submission
+
+Parameter
+   h(s_grid)     job handle
+   jobssubmitted actual number of submitted jobs;
+
+* s_grid is a superset for the decomposition bound sets, execerror will signal the end
+loop(s_grid$(not execerror),
+* Load the bounds on the discrete variables
+  put_utility fx 'gdxin' / 'bnd' s_grid.tl:0; execute_load %gdxvar%;
+  if (not execerror,
+    %module%.optfile = 100+ord(s_grid);
+    %solve%; h(s_grid) = %module%.handle)
+);
+execerror=0; jobssubmitted = card(h);
+
+* Submit job with emphasis on finding good feasible solutions.  We do
+* not wait for this job to be complete, we just use its incumbent to
+* have good cutoff values early. After GAMS is completed we should
+* kill the job. Unfortunately, killing a job is extremely system
+* dependent (especially if this runs on a real grid).
+
+scalar feashandle;
+%module%.optfile = 100+%nsubp1%; %solve%; feashandle = %module%.handle;
+
+
+* Collect
+rep(s_grid,'mstat')$h(s_grid) = na;
+rep(s_grid,'sstat')$h(s_grid) = na;
+
+scalar bestcompleted the best solution of all completed jobs; bestcompleted = incumbent;
+
+repeat
+   loop(s_grid$handlecollect(h(s_grid)), ! collect if job is completed
+     rep(s_grid,'time')  = %module%.resusd;
+     rep(s_grid,'mstat') = %module%.modelstat;
+     rep(s_grid,'sstat') = %module%.solvestat;
+     rep(s_grid,'obj')   = %module%.objval;
+       if((%module%.modelstat=%modelstat.Optimal% or %module%.modelstat=%modelstat.IntegerSolution%) and %objvar%.l %test% bestcompleted,
+          bestcompleted  = %module%.objval;
+          execute_unload 'incb.gdx', bestcompleted, %solvar% );
+     display$handledelete(h(s_grid)) 'trouble deleting handles';
+     h(s_grid) = 0 );
+* see if any of the completed and outstanding jobs has an improved incumbent
+   execute$card(h) 'gams checkincb lo=2 --jobs=%nsubp1%';
+   display$sleep(card(h)*0.2) 'was sleeping for some time';
+until card(h) = 0 or timeelapsed > 150;
+
+scalar optimal optimality indicator; optimal = sum(s_grid$(rep(s_grid,'sstat')=1),1)=jobssubmitted;
+
+* Load incumbent of job with emphasis on feasibility which might be the optimal solution
+execute_load 'bchout_i%nsubp1%.gdx', %solvar%;
+if (not execerror and %objvar%.l %test% bestcompleted,
+   bestcompleted  = %module%.objval;
+   execute_unload 'incb.gdx', bestcompleted, %solvar% );
+execerror=0;
+
+put_utility fx 'ren' / '';
+put$(card(h)>0)      '*** We have ' card(h):0:0 ' outstanding jobs.' /;
+put$(not optimal)    '*** Some jobs returned with solver status <> 1. Optimality not guaranteed' /;
+if (not mapval(bestcompleted), ! not INF or -INF
+   execute_load 'incb.gdx', %solvar%; display optimal, %solvar%;
+   put$optimal       '*** Optimal solution found: '  bestcompleted /;
+   put$(not optimal) '*** Best collected solution: ' bestcompleted /;
+else
+   put$optimal       '*** Problem infeasible' /;
+   put$(not optimal) '*** No solution found' /;
+ );
+
+display rep;
+
+if (not handlecollect(feashandle), display$sleep(5) 'sleeping');
+display$handledelete(feashandle) 'trying now to delete';
+
+$escape =
+$onecho > writeincb.gms
+$Title code for worker %userjobid% to update/publish its incumbent
+$ontext
+This uses the existing BCH facility. GAMS/Cplex exports the complete
+incumbent in a GDX container called bchout_i%=userjobid%=.gdx. We only
+need the objective variable. We create a text file with the userjobid
+and the incumbent value. This will be merged with the incumbents from
+other workers by the checkincb.gms call. The BCH facility adds the
+--ncalls parameter with a sequence number to the call. We do not use
+this in this program, but need to list it in the setDDlist.
+$offtext
+
+* Checks for unreferenced double dashes parameters
+$setDDlist userjobid ncalls
+$set gdxincb %gams.workdir%bchout_i%=userjobid%=.gdx
+$set txtincb %gams.workdir%incb%=userjobid%=.txt
+Variable %objvar%;
+$gdxin '%gdxincb%' $load %objvar%
+File  fx / '%txtincb%' /; PutClose fx '%=userjobid%= ' %objvar%.l:18:8;
+$offecho
+$escape %
+
+$escape =
+$onecho > checkincb.gms
+$Title Collect incumbents of all worker jobs.
+$ontext
+In case of an improved incumbent update GAMS/Cplex option file
+cplex.op3 with a new cutoff value and create the trigger files for the
+workers to read the new cutoff value.
+
+This program is frequently executed by the master process.
+$offtext
+
+* Checks for unreferenced double dashes parameters
+$setDDlist jobs
+
+* Collect all incumbents from active worker jobs
+$call cat incb*.txt > allincb.txt 2> %system.nullfile%
+$if NOT exist allincb.txt $exit
+
+
+file       fx        filehandle for text files
+set        s         jobs submitted /0*%=jobs%=/
+parameters incumbent previously found
+           newincb   new incumbent
+           incb(s)   incumbent values reported /
+$             onempty oneps
+$             include allincb.txt
+                                               /;
+
+incumbent = incb('0');
+newincb   = s%minmax%(s$incb(s), incb(s));
+
+if(newincb %test% incumbent,
+   put_utility fx 'ren' / 'cplex.op3'; put '%cutoff% ' newincb:18:8;
+   put_utility fx 'ren' / 'incb0.txt'; put '0 ' newincb:18:8;
+*  tell everyone that we have a new incumbent by posting the trigger file
+   loop(s,
+      put_utility fx 'ren' / 't' s.tl:0 '.trg'; put 'trigger'));
+$offecho
+$escape %

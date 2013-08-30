@@ -1,0 +1,168 @@
+$Title Traveling Salesman Problem Instance with BCH (BCHTSP,SEQ=348)
+
+$Ontext
+
+The model writes an AWK script on the fly to process the an input file
+format defined by the maintainers of the TSPLib. More input instances
+are available from
+
+http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/
+
+The subtour elimination constraints are supplied on the fly while
+GAMS/CPLEX is running. The incumbent checking BCH call checks if
+the integer solution contains subtours, stores the corresponding 
+cuts, and rejects the solution. The cut BCH call supplies the cuts 
+produced by the previous call.
+$Offtext
+
+$set fn p43.inc
+$if not exist %fn% $abort %fn% ist not present
+
+$echon "$setglobal n " > %gams.scrdir%n.%gams.scrext%
+$call grep DIMENSION %fn% | cut -d: -f2 >> "%gams.scrdir%n.%gams.scrext%"
+$include %gams.scrdir%n.%gams.scrext%
+
+$onecho > %gams.scrdir%x.%gams.scrext%
+BEGIN                  { i=1 }
+/^EDGE_WEIGHT_TYPE/    { if ( $2 != "EXPLICIT" )    error("Wrong type")   }
+/^EDGE_WEIGHT_FORMAT/  { if ( $2 != "FULL_MATRIX" ) error("Wrong format") }
+/^EDGE_WEIGHT_SECTION/ { readM = 1; next }
+/^EOF/                 { exit }
+readM == 1             { for (k=1; k <= NF; k++) print "i" i,"i" j+k,$k;
+                         if (j+NF < %n%) j += NF; else { i++; j=0 }       }
+function error(s) { print("--- " s ". Exiting.");  exit; }
+$offecho
+
+$call awk -f "%gams.scrdir%x.%gams.scrext%" %fn% > "%gams.scrdir%data.%gams.scrext%"
+set ii    cities / i1*i%n% /
+    i(ii) subset of cities to fit GAMS demo model size / i1*i7 /
+alias (ii,jj),(i,j,k);
+
+parameter c(ii,jj) /
+$ondelim
+$include %gams.scrdir%data.%gams.scrext%
+$offdelim
+/;
+
+variables x(ii,jj)  decision variables - leg of trip
+          z         objective variable;
+binary variable x;
+
+equations objective   total cost
+          rowsum(ii)  leave each city only once
+          colsum(jj)  arrive at each city only once;
+*
+*
+* the assignment problem is a relaxation of the TSP
+*
+objective.. z =e= sum((i,j), c(i,j)*x(i,j));
+
+rowsum(i).. sum(j, x(i,j)) =e= 1;
+colsum(j).. sum(i, x(i,j)) =e= 1;
+
+* exclude diagonal
+*
+x.fx(ii,ii) = 0;
+option optcr=0;
+model assign /all/;
+
+execute_unload 'tspdata', i;
+option mip=cplex; assign.optfile=1;
+solve assign using mip minimizing z;
+abort$(assign.modelstat<>1 and abs(78-z.l)<1e-6) 'wrong solution';
+
+$onecho > cplex.opt
+preind 0
+userincbcall subtourcheck
+usercutcall  subtourelim
+$offecho
+$call rm -f nextcut.gdx
+
+$onechoV > subtourcheck.gms
+$title TSP Subtour emlinitaion - Check
+
+set i cities;
+$gdxin tspdata
+$load i
+$eval cardi card(i)
+
+alias (i,j,k);
+
+Binary variables x(i,j)  decision variables - leg of trip;
+
+$gdxin bchout_i.gdx
+$load x
+
+set t            cuts tours  /1*%cardi%/
+    tour(t,i,j)  subtours
+    from(i)      contains always one element: the from city
+    next(j)      contains always one element: the to city
+    visited(i)   flag whether a city is already visited
+    tt(t)        contains always one element: the current subtour;
+
+$eolcom //
+
+from(i)$(ord(i)=1) = yes;    // turn first element on
+tt(t)$(ord(t)=1)   = yes;    // turn first element on
+tour(t,i,j)=no;
+visited(i)=no;
+while(card(visited)<card(i),
+   next(j)=no;                 // find city visited after city 'from'
+   loop((from,j),next(j)$(x.l(from,j)>0.5) = yes);
+                               // check x.l(from,j)=1 would be dangerous
+   tour(tt,from,next) = yes;   // store in table
+   visited(from) = yes;        // mark city 'from' as visited
+   from(j) = next(j);
+   if (sum(visited(next),1)>0, // if already visited...
+      tt(t) = tt(t-1);         // advance tt index
+      loop(k$(not visited(k)), // find starting point of new subtour
+         from(j) = no;         // make sure we only have one element turned on
+         from(k) = yes;
+      )
+   )
+);
+* display tour;
+
+* In order to communicate with the MIP solver we need certain conventions
+* 1. Cut matrix interface requirement with fixed names
+Parameters rhs_c(t)    cut rhs
+           sense_c(t)  'the sense of the cuts 1 =L=, 2 =E=, 3 =G='
+           numcuts     number of cuts passed back
+* 2. Nonzeros in cut matrix using the original variable name plus _c
+           x_c(t,i,j)  coefficient of the x variables in the cut
+
+option tt<tour; // Get active tours
+abort$(card(tt)=1) 'Accept solution';
+
+numcuts = card(tt);
+loop(tt,
+   from(i)             = sum(tour(tt,i,j), 1); // all cities of the tour;
+   next(i)             = from(i);
+   x_c(tt,from,next)   = 1;
+   rhs_c(tt)           = sum(tour(tt,i,j), 1)-1;
+   sense_c(tt)         = 1;
+);
+display numcuts, x_c, rhs_c, sense_c;
+execute_unload 'nextcut', tt=cut, i, numcuts, x_c, rhs_c, sense_c;
+$offecho
+
+$onechoV > subtourelim.gms
+$title Supply the cut found in subtourcheck to solver
+
+Set        cut           cuts
+           i             cities
+Parameters rhs_c(cut)    cut rhs
+           sense_c(cut)  'the sense of the cuts 1 =L=, 2 =E=, 3 =G='
+           numcuts       number of cuts passed back
+           x_c(cut,i,i)  coefficient of the x variables in the cut
+
+$if not exist nextcut.gdx $goto nocuts
+$gdxin nextcut
+$load cut i rhs_c sense_c x_c numcuts
+$gdxin
+$call rm -f nextcut.gdx
+$exit
+
+$label nocuts
+numcuts = 0; 
+$offecho

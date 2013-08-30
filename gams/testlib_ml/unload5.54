@@ -1,0 +1,12 @@
+$title multiple $unloads of the same item are OK (UNLOAD5,SEQ=54)
+variable x; parameter a;
+
+a   = 2;
+x.l = 1;
+
+$gdxout gdx1
+$unload x x.l x.up x.l = x.garb x.l=y x= x
+$unload a a a=b a=a
+$gdxout
+$gdxin gdx1
+$load

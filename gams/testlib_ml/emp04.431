@@ -1,0 +1,94 @@
+$title Compare results of EMP runs using different options for nlp problem (EMP04,SEQ=431)
+
+$Ontext
+
+This test compares the results EMP delivers after being started with different
+options.
+
+This test makes use of the model mhw4d from the GAMS model library which is
+borrowed from:
+
+Wright, M H, Numerical Methods for Nonlinearly Constraint Optimization.
+PhD thesis, Stanford University, 1976.
+
+Contributor: Jan-H. Jagla, February 2009
+
+$Offtext
+
+option limcol=0, limrow=0;
+
+scalar solverstatus, iterusednlp, iterusedmcp;
+
+*-------------------------------------------------------------------------------
+* Original model copied from the GAMS Model Library
+Variables m, x1, x2, x3, x4, x5;
+Equations funct, eq1, eq2, eq3;
+
+funct.. m =e= sqr(x1-1)      + sqr(x1-x2)     + power(x2-x3,3)
+            + power(x3-x4,4) + power(x4-x5,4) ;
+
+eq1.. x1 + sqr(x2) + power(x3,3) =e= 3*sqrt(2) + 2 ;
+
+eq2.. x2 - sqr(x3) + x4          =e= 2*sqrt(2) - 2 ;
+
+eq3.. x1*x5 =e= 2 ;
+
+Model wright / all / ;
+
+x1.l = -1; x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+
+Solve wright using nlp minimizing m;
+*-------------------------------------------------------------------------------
+solverstatus = wright.solvestat;
+iterusednlp  = wright.iterusd;
+iterusedmcp  = 6;
+execute_unload 'default';
+
+file empopt /"jams.opt"/;
+file empinfo /"%emp.info%"/;
+
+option nlp=pathnlp;
+m.l = 0; x1.l = -1; x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+m.m = 0; x1.m = 0;  x2.m = 0; x3.m = 0; x4.m = 0;  x5.m = 0;
+funct.m = 0; eq1.m = 0; eq2.m = 0; eq3.m = 0;
+Solve wright using nlp minimizing m;
+solverstatus = wright.solvestat;
+iterusedmcp  = wright.iterusd;
+execute_unload 'PATHNLP';
+
+m.l = 0; x1.l = -1; x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+m.m = 0; x1.m = 0;  x2.m = 0; x3.m = 0; x4.m = 0;  x5.m = 0;
+funct.m = 0; eq1.m = 0; eq2.m = 0; eq3.m = 0;
+Solve wright using emp minimizing m;
+solverstatus = wright.solvestat;
+abort$(wright.iterusd <> iterusednlp) 'Iteration of EMP run differ';
+execute_unload 'EMP';
+
+putclose empinfo 'ModelType MCP';
+m.l = 0; x1.l = -1; x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+m.m = 0; x1.m = 0;  x2.m = 0; x3.m = 0; x4.m = 0;  x5.m = 0;
+funct.m = 0; eq1.m = 0; eq2.m = 0; eq3.m = 0;
+Solve wright using emp minimizing m;
+solverstatus = wright.solvestat;
+abort$(wright.iterusd <> iterusedmcp) 'Iteration of EMCP run differ';
+execute_unload 'EMCP';
+
+putclose empopt 'keepobj';
+putclose empinfo 'ModelType MCP';
+m.l = 0; x1.l = -1; x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+m.m = 0; x1.m = 0;  x2.m = 0; x3.m = 0; x4.m = 0;  x5.m = 0;
+funct.m = 0; eq1.m = 0; eq2.m = 0; eq3.m = 0;
+Solve wright using emp minimizing m;
+solverstatus = wright.solvestat;
+abort$(wright.iterusd <> iterusedmcp) 'Iteration of EMCPobj run differ';
+execute_unload 'EMCPobj';
+
+execute 'gdxdiff default.gdx PATHNLP.gdx diffile0.gdx Eps=1e-9 > %system.nullfile%';
+abort$errorlevel 'solution of default run and PATHNLP differ';
+execute 'gdxdiff default.gdx EMP.gdx     diffile1.gdx Eps=1e-9 > %system.nullfile%';
+abort$errorlevel 'solution of default run and EMP differ';
+execute 'gdxdiff default.gdx EMCP.gdx    diffile2.gdx Eps=1e-9 > %system.nullfile%';
+abort$errorlevel 'solution of default run and EMCP differ';
+execute 'gdxdiff default.gdx EMCPobj.gdx diffile3.gdx Eps=1e-9 > %system.nullfile%';
+abort$errorlevel 'solution of default run and EMCPobj differ';
+

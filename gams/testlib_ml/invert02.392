@@ -1,0 +1,53 @@
+$title 'Test invert utility on rank-deficient inputs' (INVERT02,SEQ=392)
+
+$ontext
+
+Test the invert utility on rank-deficient inputs.
+Given an n-dimensional matrix n of rank r, invert should return n-r.
+Note that DGESV is checking for an exact zero so it will over-estimate
+the rank in general.  We use the identity matrix in this test so we
+should get the correct rank from invert.
+
+Contributor: Erwin Kalvelagen and Steve Dirkse, July 2008.
+
+$offtext
+
+set i  /i1*i5 /;
+alias (i,j,k,r);
+
+scalar rc;
+parameter
+  A(i,j)
+  rankDeficient(i,j)
+  inv(i,j)           'inverse matrix'
+  chk(i,j)           'check the product'
+  ;
+
+A(i,i) = 1;
+
+
+execute_unload 'tmp.gdx', i, A;
+execute 'invert tmp.gdx i A tmp2.gdx inv >invert.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from invert', rc;
+
+execute_load 'tmp2.gdx',inv;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading inverse from b.gdx', rc;
+
+chk(i,j) = sum{k, A(i,k)*inv(k,j)};
+chk(i,j) = round(chk(i,j),14);
+display A,inv,chk;
+chk(i,i) = chk(i,i) - 1;
+abort$[card(chk)] 'A * inv <> identity';
+
+loop {r,
+* create a rank-r matrix from A, and check that we get the right
+* return code from invert
+  rankDeficient(i,j) = A(i,j)$[ord(j) <= ord(r)];
+  execute_unload 'tmp.gdx', i, rankDeficient;
+  execute 'invert tmp.gdx i rankDeficient tmp2.gdx inv >invert.log';
+  rc=errorlevel;
+  abort$(ord(r) + rc <> card(i)) 'Bad rank-deficiency returned from invert',
+    rc, rankDeficient, r;
+};

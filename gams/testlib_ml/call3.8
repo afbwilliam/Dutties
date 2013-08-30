@@ -1,0 +1,8 @@
+$title Check for standard output conflicts (CALL3,SEQ=8)
+
+$echo $error case an error > temp.gms
+$echo $call dir little    >> temp.gms
+$echo $clearerror         >> temp.gms
+$call =gams temp.gms lo=3
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%

@@ -1,0 +1,194 @@
+$TITLE North-South Trade and Capital Flows (NSMGE,SEQ=150)
+$Ontext
+
+North-South Trade and Capital Flows
+
+
+Manne, A S, and Preckel, P V, North-South Trade, Capital Flows and
+Economic Growth: An Almost Neoclassical Model. In Syrquin, S, Taylor, L,
+and Westphal, L E, Eds, Economic Structure and Performance. Academic
+Press, 1984.
+
+$Offtext
+
+SET     T               TIME PERIODS /T1*T11/;
+
+SET     R               REGIONS /N,S/,
+        NORTH(R)        CAPITAL EXPORTING REGION,
+        SOUTH(R)        CAPITAL IMPORTING REGION,
+        IP(T)           ENDOGENOUS INVESTMENT PERIOD (ALL BUT FINAL),
+        TFIRST(T)       FIRST PERIOD,
+        TLAST(T)        FINAL PERIOD;
+
+ALIAS (TT,T), (R,RR);
+
+TLAST(T) = YES$(ORD(T) EQ CARD(T));
+TFIRST(T) = YES$(ORD(T) EQ 1);
+IP(T) = YES$(ORD(T) LT CARD(T));
+NORTH("N") = YES;
+SOUTH("S") = YES;
+
+PARAMETER
+        GNP0(R)    Benchmark gross output       /N 6.142, S 0.914/,
+        BMROR(R)   Benchmark rates of return    /N 0.05,  S 0.10/,
+        DELTA(R)   Capital depreciation rates   /N 0.04,  S 0.04/,
+        GAMMA(R)   Potential growth rates       /N 0.03,  S 0.05/,
+        THETA(R)   One period discount factors  /N 0.95,  S 0.89/,
+        KRATIO(R)  Capital:GDP ratio            /N 3.0,   S 3.00/,
+        X0(R)      Benchmark export levels      /N 0.138, S 0.095/
+        M0(R)      Benchmark import levels,
+        DEF(T)     Permissible deficit,
+        LS(R,T)   Labor supply,
+        QREF(R,T)
+        PREF(R,T)   Reference price (for scaling);
+
+*       ONE REGION'S EXPORTS IS THE OTHER REGION'S IMPORTS:
+
+M0(R) = X0(R++1);
+
+PARAMETER
+        PKBAR(R)   Base year gross rate of return
+        K1(R)      Base year capital stock
+        L1(R)      Base year labor supply
+        SRVSHR(R)  One period capital survival share;
+
+        PKBAR(R) = BMROR(R) + DELTA(R);
+        K1(R)    = KRATIO(R) * (GNP0(R)-X0(R));
+        L1(R)    = GNP0(R) - X0(R++1) - K1(R) * PKBAR(R);
+
+*       ONE PERIOD CAPITAL SURVIVAL SHARE:
+
+        SRVSHR(R) = 1 - 3 * DELTA(R);
+
+        PREF(R,T) = THETA(R)**(ORD(T)-1);
+        PREF(R,TLAST) = PREF(R,TLAST) / (1-THETA(R));
+
+        QREF(R,T) = (1+3*GAMMA(R))**(ORD(T)-1);
+
+        LS(R,T) = L1(R)*(1+3*GAMMA(R))**(ORD(T)-1)
+
+$ONTEXT
+
+$MODEL:NS
+
+$COMMODITIES:
+        PU(R)   ! Utility price index
+        PL(R,T) ! Wage index
+        PO(R,T) ! Output price index
+        PM(R,T) ! Import price index
+        PK(R,T) ! Capital price index
+        RK(R,T) ! Return to capital
+
+$SECTORS:
+        U(R)            ! Utility index
+        Y(R,T)          ! Output index
+        X(R,T)          ! Export index
+        K(R,T)          ! Capital stock
+        I(R,T)$IP(T)    ! Investment
+
+$AUXILIARY:
+        TAU(T)$IP(T)    ! Balance of payments premium
+        TAUL
+
+$CONSUMERS:
+        RA(R)           ! Representative agent
+
+*       MACRO PRODUCTION FUNCTIONS.
+
+$PROD:Y(R,T)  s:1
+        O:PO(R,T)               Q:GNP0(R)
+        I:RK(R,T)               Q:K1(R)         P:PKBAR(R)
+        I:PL(R,T)               Q:L1(R)
+        I:PM(R,T)               Q:M0(R)
+
+$PROD:X(R,T)
+        O:PM(RR,T)$(ORD(RR) NE ORD(R))  Q:X0(R)
+        I:PO(R,T)                       Q:X0(R)  A:RA("S")
++               N:TAU(T)$IP(T)  M:(-1$SOUTH(R)+1$NORTH(R))$IP(T)
++               N:TAUL          M:(+1$SOUTH(R)-1$NORTH(R))
+
+$PROD:K(R,T)
+        I:PK(R,T)
+        I:PO(R,T)$TLAST(T)      Q:(GAMMA(R)+DELTA(R))
+        O:RK(R,T)
+        O:PK(R,T+1)             Q:SRVSHR(R)
+
+$PROD:I(R,T)$IP(T)
+        I:PO(R,T)
+        O:PK(R,T+1)   Q:3
+
+*       UTILITY:
+
+$PROD:U(R)  s:1
+        O:PU(R)            Q:(GNP0(R)*SUM(T,PREF(R,T)))
+        I:PO(R,T)          Q:GNP0(R)   P:PREF(R,T)
+
+*       ENDOWMENTS:
+
+$DEMAND:RA(R)
+   E:PK(R,TFIRST)       Q:K1(R)
+   E:PL(R,T)            Q:LS(R,T)
+   D:PU(R)
+
+*       BALANCE OF PAYMENTS CONSTRAINT:
+
+$CONSTRAINT:TAU(T)$IP(T)
+
+        X0("S") * X("S",T) * PO("S",T)
+                - X0("N") * X("N",T) * PO("N",T) =G= DEF(T)*PO("N",T);
+
+*       OVERALL TRADE BALANCE CONSTRAINT:
+
+$CONSTRAINT:TAUL
+        SUM(T, X0("N") * X("N",T) * PO("N",T)) =G=
+        SUM(T, X0("S") * X("S",T) * PO("S",T));
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset NS
+
+*       SPECIFY INITIAL ESTIMATES FOR PRICES AND OUTPUT LEVELS.
+*       BASED ON BALANCED GROWTH.
+
+        PO.L(R,T) = PREF(R,T);
+        PL.L(R,T) = PREF(R,T);
+        PK.L(R,T) = PREF(R,T);
+        RK.L(R,T) = PKBAR(R) * PREF(R,T);
+
+        Y.L(R,T) = QREF(R,T);
+        K.L(R,T) = K1(R) * QREF(R,T);
+        I.L(R,T) = (GAMMA(R)+DELTA(R)) * K.L(R,T);
+
+*       INITIAL GUESS AT RELATIVE INCOMES:
+
+        RA.L(R) = GNP0(R) * SUM(T, PREF(R,T));
+
+*       SPECIFY THE PERMISSIBLE DEFICIT:
+
+        DEF(T) = 0.043;
+
+$ONTEXT
+
+*       OPTION "PRE-SOLVE" TO HELP OUT THE SOLUTION ALGORITHM.
+
+*       DYNAMIC MODELS CAN BE DIFFICULT TO SOLVE.  ONE
+*       STRATEGY IS TO DO A "PRESOLVE" USING THE FIXED-INCOME
+*       RELAXATION.  FOR THIS MODEL, WE DO THIS AS FOLLOWS:
+
+        RA.FX(R) = RA.L(R);
+$INCLUDE NS.GEN
+        SOLVE NS USING MCP;
+        RA.UP(R) = +INF;
+        RA.LO(R) = 0;
+
+$OFFTEXT
+
+$INCLUDE NS.GEN
+SOLVE NS USING MCP;
+
+
+PARAMETER REPORT(T,*);
+REPORT(T,"YEAR") = 3 * (ORD(T)-1);
+REPORT(T,"PI_N") = PO.L("N",T) / PO.L("N","T1");
+REPORT(T,"PI_S") = PM.L("N",T) / PO.L("N","T1");
+REPORT(T,"PREM") = TAU.L(T)$IP(T) - TAUL.L;
+DISPLAY REPORT;

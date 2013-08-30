@@ -1,0 +1,91 @@
+$title Test for NL code bug from Dist 23.6 (NLCODE5,SEQ=532)
+
+$ontext
+This example turfs up a bug in the NL code generation.
+The 23.5.2 system (last in the 23.5 series) was OK.
+The problem exists in 23.6.0 alpha, in 23.6.5, and probably all of 23.6
+
+Contributor: Kent Zhao, June 2011
+$offtext
+
+SETS  t  Time periods  / 1*5 /
+      tfirst(t)
+      tlast(t)
+      t2(t);
+
+tfirst(t) = ord(t)=1;
+tlast (t) = ord(t)=card(t);
+t2    (t) = ord(t) <= card(t)-2;
+
+display tfirst,tlast,t2;
+
+PARAMETERS
+alpha /0.33/
+theta /0.7/
+gamma_n(t)
+Nbar /0.7921/
+Am(t)
+An(t)
+
+beta  /0.95/
+delta /0.04/
+gamma_m /0.04/
+K0 /1/
+gamma_n(t);
+
+gamma_n(t) = -0.000321469;
+
+* use integer power instead of real power, ord(t)-1 > t.off
+Am(t) = 1*power(1+gamma_m   ,t.off);
+An(t) = 1*power(1+gamma_n(t),t.off);
+
+
+Variables
+h(t)  total available time
+K(t)  capital stock
+;
+
+Equation
+EQ_h(t)  h(t)
+EQ_K(t)  K(t)
+EQ_KT
+;
+
+EQ_h(t)..        h(t) =E= 1 - (Nbar/An(t))**(1/theta);
+
+EQ_K(t2(t))..  K(t+2) =E=
+          (Am(t+1)*(K(t+1)/h(t+1))**alpha)*h(t+1)
+        + (1-delta)*K(t+1)
+        - beta*(1-delta + alpha*Am(t+1)*((K(t+1)/h(t+1))**(alpha-1)))
+              *(Am(t)*((K(t)/h(t))**alpha)*h(t) + (1-delta)*K(t) -K(t+1));
+
+EQ_KT(tlast(t))..     (K(t  )-(1-delta)*K(t-1))
+                     /(K(t-1)-(1-delta)*K(t-2))
+                   -  (Am(t-1)*((K(t-1)/h(t-1))**alpha)*h(t-1))
+                     /(Am(t-2)*((K(t-2)/h(t-2))**alpha)*h(t-2)) =E= 0;
+
+model m /EQ_h, EQ_K, EQ_KT/;
+
+K.lo(t) = 0.1;
+h.lo(t) = 0.01;
+h.up(t) = 1;
+K.fx(tfirst) = K0;
+
+$ontext
+h.l(t) = 0.8;
+K.l(t) = K0;
+$offtext
+
+execute_loadpoint 'nlcode5';
+
+option cns = conopt;
+solve m using CNS;
+
+abort$(m.solvestat <> %solvestat.NormalCompletion%) 'Expected solvestat Normal Completion';
+abort$(m.modelstat <> %modelstat.Solved%) 'Expected modelstat Solved';
+abort$(m.iterusd > 3) 'Expected to start at a solution', m.iterusd;
+
+$ontext
+save a solution for comparison & restarting
+execute_unload 'badnl.gdx', h, k;
+$offtext

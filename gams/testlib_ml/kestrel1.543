@@ -1,0 +1,39 @@
+$title Kestrel test for lp solvers (KESTREL1,SEQ=543)
+
+$ontext
+Simple trnsport test for lp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+$offtext
+
+$if not set neos_server $set neos_server "www.neos-server.org"
+
+$call gamslib -q trnsport
+
+set kestrel_solver /minos, mosek, knitro, bdmlp, cbc, ipopt, lindoglobal, xpress/;
+
+$onecho > trnsport_test.gms
+
+Parameter loc_z;
+Parameter tolerance /1e-5/;
+
+$include trnsport.gms
+
+loc_z = z.l;
+transport.optfile=1;
+option lp=kestrel;
+Solve transport using lp minimizing z ;
+abort$(transport.solvestat <> %solvestat.NormalCompletion% or transport.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$(abs(loc_z - z.l) > tolerance) 'obj different from local obj' , loc_z, z.l;
+
+$offecho
+
+file fx;
+file optfile /kestrel.opt/;
+loop(kestrel_solver,
+  put optfile 'kestrel_solver ' kestrel_solver.tl:0/;
+  put 'neos_server %neos_server%'/;
+  putclose 'socket_timeout 10'/;
+  put_utility fx 'shell' / 'gams trnsport_test lo=%GAMS.lo% lp=' kestrel_solver.tl:0;
+  abort$ERRORLEVEL "error in trnsport_test";
+)

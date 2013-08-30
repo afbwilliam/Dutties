@@ -1,0 +1,53 @@
+$title Test restart from old workfiles (restart1,SEQ=90)
+
+*With GAMS 23.4 we switched from 32bit to 64bit on AIX, old workfiles cannot be used anymore
+*$ifi %system.platform% == AIX $goto haveWorkfiles
+$ifi %system.platform% == AXU $goto haveWorkfiles
+$ifi %system.platform% == HP7 $goto haveWorkfiles
+$ifi %system.platform% == LNX $goto haveWorkfiles
+$ifi %system.platform% == SGI $goto haveWorkfiles
+$ifi %system.platform% == SOL $goto haveWorkfiles
+$ifi %system.platform% == WIN $goto haveWorkfiles
+
+* no old workfiles exist for this platform
+display "No old workfiles exist for platform = %system.platform%: exiting";
+$exit
+
+$label haveWorkfiles
+
+$set slash /
+$ifi %system.platform% == WIN $set slash \
+
+$set crestart =gams rtrans lo=0 r=restart%slash%' plat.tl:0 '%slash%' rdist.tl:0 '%slash%trnsport
+
+$echo {print "'" substr($0,match($0,/[1-9][0-9]\.[0-9]/),4)"'"} > d.awk
+$echo {print substr($0,match($0,/restart\//)+8,3)}              > p.awk
+$call gmsunzip -v restest | grep -i TRNSPORT.G01 | awk -f d.awk | sort | uniq > rdist.txt
+$call gmsunzip -v restest | grep -i TRNSPORT.G01 | awk -f p.awk | sort | uniq | tr "[:upper:]" "[:lower:]" >  plat.txt
+$call rm -rf restart
+
+
+Set rdist distribution restart files /
+$include rdist.txt
+    /
+    plat platforms /
+$include plat.txt
+    /;
+
+* Create run script
+$echo display x.l; > rtrans.gms
+
+file fx /rescript.gms/; fx.pw=1024;
+put fx   '$call gmsunzip -Coq restest restart%slash%%system.platform%%slash%*'
+       / '$if errorlevel 1 $abort "Could not run gmsunzip"'
+loop((rdist,plat)$sameas("%system.platform%",plat),
+  put  / '$if exist restart%slash%' plat.tl:0 '%slash%' rdist.tl:0 '%slash%trnsport.g01 $call %crestart%'
+       / '$if errorlevel 1 $error "Restart ' plat.tl:0 ' Distribution:' rdist.tl:0 '"';
+);
+
+putclose fx;
+
+Scalar rc;
+execute '=gams rescript lo=0';
+rc=errorlevel;
+abort$rc 'Restart Test Failed';

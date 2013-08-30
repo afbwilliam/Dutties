@@ -1,0 +1,9 @@
+$TITLE 'MOSEK test suite - basic option reading test' (MOSEK01,SEQ=264)
+
+$call gamslib -q 1
+
+$echo "abort$(transport.solvestat <> %solvestat.IterationInterrupt%) 'problems with MOSEK option';" >> trnsport.gms
+
+$echo "MSK_IPAR_INTPNT_MAX_ITERATIONS 1" > mosek.op2
+$call =gams trnsport lo=0 optfile=2 lp=mosek
+$if errorlevel 1 $abort 'problems with MOSEK options'

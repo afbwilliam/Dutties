@@ -1,0 +1,42 @@
+$title LogMIP User's Manual Example 2 (LOGMIP2,seq=335)
+$ontext
+Example to illustrate disjunctions with multiple terms and logic
+propositions.
+
+Aldo Vecchietti, LogMIP User's Manual, http://www.logmip.ceride.gov.ar/
+$offtext
+
+positive variables c, x1, x2; variable z;
+binary variable y1,y2,y3;
+
+equations obj,e1,e2,e3,e4,e5,e6;
+
+obj.. z =e= c + 2*x1 + x2;
+
+e1.. -x1 + x2 + 2 =l= 0; e2.. c =e= 5;
+e3..     - x2 + 2 =l= 0; e4.. c =e= 7;
+
+e5.. x1 - x2 =l= 1;
+e6.. x1 =e= 0;
+
+x1.up = 5; x2.up = 5; c.up = 7;
+
+logic equation l1,l2,l3;
+l1.. y1 -> not y3;
+l2.. y2 -> not y3;
+l3.. y3 -> not y2;
+
+model m / all / ;
+
+$onecho > "%lm.info%"
+default indic
+disjunction y1 e1 e2 elseif y2 e3 e4
+disjunction y3 e5    else   e6
+
+* optional, if not set LOGMIP will find the modeltype suitable
+modeltype mip
+$offecho
+
+option emp=logmip, mip=cplex;
+
+solve m using emp minimizing z;

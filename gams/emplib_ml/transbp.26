@@ -1,0 +1,101 @@
+$Title Transportation model with variable demand function using bilevel programming (TRANSBP,SEQ=26)
+
+$Ontext
+Dantzig's original transportation model TRNSPORT (in GAMS Model Library) is
+reformulated using EMP's bilevel programming.
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions.
+Princeton University Press, Princeton, New Jersey, 1963.
+
+Additional features:
+  The fixed demand b(j) is replaced by a function:
+    g(j) = max(b(j),y(j))
+  with an outer objective function that tries to force y to be close to a
+  target value (400). The max function is modeled using Variational Inequalties.
+
+  The original trnsport model is the lower level problem.
+
+Contributor: Michael Ferris, December 2009
+$Offtext
+
+Parameter report(*,*,*)  summary report;
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+          c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars
+     g(j)    generated demand;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+* --- Note: the fixed the demand b(j) was replaced by a variable demand g(j)
+demand(j) ..   sum(i, x(i,j))  =g=  g(j) ;
+
+Model transport /all/ ;
+
+* --- Now we solve the original fixed price trnsport model
+g.fx(j) = b(j);
+Solve transport using lp minimizing z ;
+report(i,j,'fixed') = x.l(i,j);
+
+Variables
+     obj,
+     y(j) 'external demand function';
+
+Equation
+     outerobj,
+     extdem(j);
+
+outerobj..  obj =e= sum(j, sqr((y(j) - 400)/b(j)));
+
+extdem(j).. g(j) =g= y(j);
+
+model emp bilevel trnsport model / all /;
+
+g.up(j) = inf;  g.lo(j) = b(j);
+
+* use the EMP info file to define the model
+file fx / '%emp.info%' /;
+put fx   'bilevel' /;
+put      ' min z x cost supply demand' /;
+putclose ' vi extdem g' /;
+
+* --- Now we solve the bilevel trnsport model using EMP
+solve emp us emp min obj;
+report(i,j,"bilevel")        = x.l(i,j);
+
+Display report;

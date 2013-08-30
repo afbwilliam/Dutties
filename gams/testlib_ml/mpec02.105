@@ -1,0 +1,113 @@
+$title Run through equreform options for NLPEC solver (MPEC02,SEQ=105)
+
+$ontext
+  This model is a driver that runs the NLPEC solver with a number
+  of different equreform options and using a number of different
+  DNLP solvers.  You can set the DNLP solver list using
+    --DNLP '"MINOS,CONOPT"'
+  and the equreform list using
+    --ER '"1,10,16*18"'
+  To turn off the skip list and really run all the tests,
+  set the --NOSKIP parameter to anything:
+    --NOSKIP=1
+$offtext
+
+
+
+set dnlp   'valid DNLP solvers' / baron, conopt, knitro, minos
+                                oqnlp, pathnlp, snopt /
+    globsize(dnlp) 'DNLP solvers with global demo size limit' / baron, oqnlp /,
+    mtype 'valid model types' / mpec, mcp /,
+    er    'valid reforms'     / 1*33 /;
+
+SET xxx   'must get dnlp into the UEL table'  / dnlp /;
+
+SET ter(er)       'reforms to test';
+SET tnlp(dnlp)    'DNLP solvers to test';
+SET tmtype(mtype) 'model types to run';
+
+file log /''/;
+
+$if not set ER $goto allER
+SET ter(er) / %ER% /;
+$if errorfree $goto ER_OK
+$clearerror
+put log 'The equreform(s) specified (--ER=%ER%) are not all valid';
+abort$1 'The equreform(s) specified (--ER=%ER%) are not all valid';
+$exit
+
+$label allER
+ter(er) = yes;
+$label ER_OK
+
+$if not set MTYPE $goto allMTYPE
+SET tmtype(mtype) / %MTYPE% /;
+$if errorfree $goto MTYPE_OK
+$clearerror
+put log 'The mtype(s) specified (--MTYPE=%MTYPE%) are not all valid';
+abort$1 'The mtype(s) specified (--MTYPE=%MTYPE%) are not all valid';
+$exit
+
+$label allMTYPE
+tmtype(mtype) = yes;
+$label MTYPE_OK
+
+
+$if not set DNLP $goto allDNLP
+SET tnlp(dnlp) / %DNLP% /;
+$if errorfree $goto DNLP_OK
+$clearerror
+put log 'The dnlp(s) specified (--DNLP=%DNLP%) are not all valid';
+abort$1 'The dnlp(s) specified (--DNLP=%DNLP%) are not all valid';
+$exit
+
+$label allDNLP
+tnlp(dnlp) = yes;
+$label DNLP_OK
+
+$onempty
+SET skip(er,dnlp) 'these tests are known to fail' /
+  (1,3,4,7,8,11,18,19,24,32,33).knitro
+* this next bunch introduced when KNITRO started rejecting =N= rows
+  (12,13,26,27).knitro
+* see trac #2214
+  (16,17,24,25).baron
+/;
+$offempty
+$if set DEMOSIZE skip(er,globsize) = yes;
+$if set NOSKIP skip(er,dnlp) = no;
+
+scalars  numTests /0/, numSkips /0/;
+file test / testat.gms /;
+
+put test '* AT test run' / '$if exist testat.txt $call rm testat.txt';
+loop {ter,
+  put test /'$echo equreform ' ter.tl:0:0 ' > nlpec.525';
+  loop {(tnlp,tmtype)$[SolverCapabilities(tnlp,'dnlp') and not skip(ter,tnlp)],
+    numTests = numTests + 1;
+    put test /'$call gams mpec01 trace=testat.txt lo=0 optfile=525'
+        ' DNLP=' tnlp.tl:0 ' ' tmtype.tl:0 '=nlpec --MTYPE=' tmtype.tl:0
+        ' U1 '
+$if %system.filesys% == UNIX "'"
+        '"er=' ter.tl:0 ' ' tnlp.tl:0 ' ' tmtype.tl:0 '"'
+$if %system.filesys% == UNIX "'"
+*        ' U1='"'"'"er=' ter.tl:0 ' ' tnlp.tl:0 ' ' tmtype.tl:0 '"'"'"
+  };
+  numSkips = numSkips +
+  sum{(tnlp,tmtype)$[SolverCapabilities(tnlp,'dnlp') and skip(ter,tnlp)], 1};
+};
+
+put /'$call =gams testat.txt a=gt o=testat.rep lo=%GAMS.lo%';
+put /'$log ***';
+put /'$log *** There were ' numTests:0:0 ' tests run';
+if {numSkips,
+  put /'$log *** In addition, ' numSkips:0:0
+       ' tests were skipped because of the skip list';
+};
+put /'$if NOT errorlevel 1 $log *** trace summary in testat.rep OK';
+put /'$if     errorlevel 1 $log *** trace summary in testat.rep -- we have errors';
+put /'$log ***';
+put /'$if     errorlevel 1 $error Errors in nlpec runs';
+putclose;
+
+execute '=gams testat.gms lo=%GAMS.lo%'; abort$errorlevel 'we have errors';

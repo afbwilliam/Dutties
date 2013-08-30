@@ -1,0 +1,93 @@
+$TITLE  A General Equilibrium Version of the vonThunen Model (VONTHMGE,SEQ=156)
+$Ontext
+
+A General Equilibrium Version of the vonThunen Model
+
+
+Mackinnon, J, A Technique for the Solution of Spatial Equilibrium
+Models. Journal of Regional Science 16, 3 (1976), 293-307.
+
+$Offtext
+
+SET     R       REGIONS /R1*R12/,
+        C       COMMODITIES /WHEAT, RICE, CORN, BARLEY/,
+        H       HOUSEHOLDS /WORKER, OWNER, PORTER/;
+
+SCALAR          LTOT    LABOR ENDOWMENT /30/,
+                TRNS    TRANSPORT ENDOWMENT /20/;
+
+PARAMETER       D(R)            DISTANCE TO REGION R,
+                A(R)            AREA OF REGION R,
+                T(C)            TRANSPORT REQUIREMENT
+                PHI(C)          COST FUNCTION SCALE PARAMETER
+                BETA(C)         COST FUNCTION SHARE PARAMETER,
+                ALPHA(*,H)      DEMAND FUNCTION SHARE;
+
+D(R) = 5 * (2 * ORD(R) - 1);
+A(R) = 2 * 3.1415 * D(R);
+
+TABLE  MISC(*,*)
+                WHEAT   RICE    CORN    BARLEY  LEISURE
+PHI             1       2       3       4
+BETA            0.9     0.7     0.5     0.3
+T               0.015   0.006   0.004   0.01
+WORKER          0.2     0.3     0.1     0.3     0.1
+OWNER           0.3     0.3     0.2     0.2
+PORTER          0.6     0.2     0.1     0.1;
+
+PHI(C)  = MISC("PHI",C);
+BETA(C) = MISC("BETA",C);
+T(C)    = MISC("T",C);
+ALPHA(C,H) = MISC(H,C);
+ALPHA("LEISURE",H) = MISC(H,"LEISURE");
+
+$ONTEXT
+
+$MODEL:VONTHUN
+
+$SECTORS:
+                Y(C,R)          ! OUTPUT LEVEL
+
+$COMMODITIES:
+                WL              ! WORKER WAGE
+                WP              ! PORTER WAGE
+                P(C)            ! MARKET PRICE
+                PK(R)           ! RENTAL RATE
+
+$CONSUMER:
+                PORTER
+                WORKER
+                OWNER
+
+$AUXILIARY:
+                IP(R)           ! INTERVENTION PURCHASE (BOUNDS PRICE)
+
+
+$PROD:Y(C,R)  s:0  a:1
+                O:P(C)          Q:PHI(C)
+                I:WL            Q:BETA(C) a:
+                I:PK(R)         Q:(1-BETA(C)) a:
+                I:WP            Q:(T(C)*D(R))
+
+$DEMAND:PORTER s:1
+        E:WP            Q:TRNS
+        D:P(C)          Q:ALPHA(C,"PORTER")
+
+$DEMAND:WORKER s:1
+        E:WL            Q:LTOT
+        D:P(C)          Q:ALPHA(C,"PORTER")
+        D:WL            Q:ALPHA("LEISURE","PORTER")
+
+$DEMAND:OWNER s:1
+        E:PK(R)         Q:A(R)
+        E:PK(R)         Q:-1    R:IP(R)
+        D:P(C)          Q:ALPHA(C,"OWNER")
+
+$CONSTRAINT:IP(R)
+        PK(R) =G= 0.001 * WL;
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset  VONTHUN
+
+$INCLUDE VONTHUN.GEN
+SOLVE VONTHUN USING MCP;

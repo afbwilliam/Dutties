@@ -1,0 +1,17 @@
+$title matching operators in a column spec (EVAL06,SEQ=468)
+
+$ontext
+This crashed before - just testing that it does not crash
+it only crashes when having an error before
+
+Contributor: Alex
+$offtext
+
+$error set the error bit
+parameter xx(*) / i1*i10 20 /;
+table x(*,*,*)
+*
+  note:garbage
+1      5
+
+$clearerror

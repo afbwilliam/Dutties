@@ -1,0 +1,48 @@
+$title Princeton Bilevel Optimization Example 9.2.1 (FLDS921,SEQ=36)
+
+$ontext
+
+  Test problem 9.3.2 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.2.1 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Shimizu, K, Ishizuka, Y, and Bard, J F, Nondifferentiable and Two-Level
+Mathematical Programming. Kluwer Academic Publishers, 1997
+
+Contributor: Jan-H. Jagla, January 2010
+
+$offtext
+
+*Solution of problem 9.2.1 on the web
+scalar  x_l /    1 /
+        y_l /    0 /
+        tol / 1e-6 /;
+
+variables z, z_in, y; positive variable x;
+equations ob, c0, c1, c2, c3, c4;
+
+ob..    sqr(x - 5) + sqr(2*y + 1)           =e=    z;
+
+c0..               + sqr(y) - 2*y - 1.5*x*y =e= z_in;
+c1..          -3*x +            y           =l=   -3;
+c2..             x -        0.5*y           =l=    4;
+c3..             x +            y           =l=    7;
+c4..               -            y           =l=    0;
+
+model bilevel / all /;
+
+$echo bilevel x min z_in * c0 c1 c2 c3 c4 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l;
+y.l = y_l;
+
+solve bilevel using EMP minimizing z;
+
+abort$(   (abs(x.l - x_l) > tol)
+       or (abs(y.l - y_l) > tol) ) 'Deviated from reported solution';

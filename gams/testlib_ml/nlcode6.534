@@ -1,0 +1,26 @@
+$title Test for NL code bug from Dist 23.6 (NLCODE6,SEQ=534)
+
+$ontext
+This example turfs up a bug in the NL code generation: trac #2092.
+The 23.5.2 system (last in the 23.5 series) was OK.
+The problem exists in all of 23.6, 23.7.1, and 23.7.2,
+but is fixed in maintenance release 23.7.3
+
+Contributor: Alex Meeraus, Aug 2011
+$offtext
+
+positive variable x, y;
+variable obj,w;
+
+equation eq_obj, f;
+
+eq_obj.. obj=E=w;
+f.. w =G= edist[1+sqr(x),2+sqr(y)];
+
+x.fx=2; y.fx=3;
+
+model mymodel /eq_obj,f/;
+
+solve mymodel using NLP minimizing obj;
+
+abort$(abs(obj.l-12.08304597)>1e-5) 'incorrect code generation';

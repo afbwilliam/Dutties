@@ -1,0 +1,15 @@
+$title cannot $unload different items to same gdx name (UNLOAD6,SEQ=55)
+variable x; parameter a;
+
+a   = 2;
+x.l = 1;
+
+$gdxout gdx1
+$unload x a x=a
+
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error cannot unload differnt items to same gdx name

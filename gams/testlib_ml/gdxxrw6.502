@@ -1,0 +1,45 @@
+$title Test for dset reading problem (GDXXRW5,SEQ=502)
+
+$ontext
+Contributor: Jan-H. Jagla, November 2010
+$offtext
+
+$if %system.platform% == WIN $goto runme
+$if %system.platform% == WEX $goto runme
+$log GDXXRW test skipped for this platform
+$exit
+
+$label runme
+$call msappavail -Excel
+$if not errorlevel 1 $goto realrunme
+$log no Excel
+$exit
+
+$label realrunme
+
+$call rm -f temp.gms temp.xls temp.gdx temp2.gdx
+
+* Create the sheet
+$onecho > temp.gms
+parameter temp /
+i1.j1 1
+i1.j2 2
+i1.j3 3
+i2.j1 4
+i2.j2 5
+i2.j3 6
+/;
+execute_unload 'temp.gdx',temp;
+execute '=gdxxrw temp.gdx o=temp.xls par=temp rng=temp!a1 rdim=2 trace=0';
+abort$errorlevel 'gdxxrw: writing failed';
+$offecho
+
+$call gams temp.gms lo=2
+$if errorlevel 1 $abort call of temp.gms failed
+
+set i;
+$call gdxxrw temp.xls o=temp2.gdx dset=i rng=temp!a1 rdim=1 trace=0
+$if errorlevel 1 $abort gdxxrw: reading failed
+$gdxin temp2
+$load i
+display i;

@@ -1,0 +1,596 @@
+<html>
+<head>
+<title>PATH Options</title>
+</head>
+<body>
+<h2>PATH Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/path.pdf">PATH manual</a>.
+
+<h2>Summary of PATH Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General options</h3></th></tr>
+<tr><td><a href="#PATHchen_lambda">
+chen_lambda</a></td>
+<td>lambda parameter for Chen-Chen-Kanzow residual</td></tr>
+<tr><td><a href="#PATHconvergence_tolerance">
+convergence_tolerance</a></td>
+<td>stopping criterion</td></tr>
+<tr><td><a href="#PATHcrash_iteration_limit">
+crash_iteration_limit</a></td>
+<td>maximum iterations allowed in crash</td></tr>
+<tr><td><a href="#PATHcrash_merit_function">
+crash_merit_function</a></td>
+<td>merit function used in crash method</td></tr>
+<tr><td><a href="#PATHcrash_method">
+crash_method</a></td>
+<td>pnewton or none</td></tr>
+<tr><td><a href="#PATHcrash_minimum_dimension">
+crash_minimum_dimension</a></td>
+<td>minimum problem dimension to perform crash</td></tr>
+<tr><td><a href="#PATHcrash_nbchange_limit">
+crash_nbchange_limit</a></td>
+<td>number of changes to the basis allowed</td></tr>
+<tr><td><a href="#PATHcrash_perturb">
+crash_perturb</a></td>
+<td>perturb the problem using pnewton crash</td></tr>
+<tr><td><a href="#PATHcrash_searchtype">
+crash_searchtype</a></td>
+<td>search type to use in the crash method</td></tr>
+<tr><td><a href="#PATHcumulative_iteration_limit">
+cumulative_iteration_limit</a></td>
+<td>maximum minor iterations allowed</td></tr>
+<tr><td><a href="#PATHgradient_searchtype">
+gradient_searchtype</a></td>
+<td>search type to use on a gradient step</td></tr>
+<tr><td><a href="#PATHgradient_step_limit">
+gradient_step_limit</a></td>
+<td>gradient steps allowed before restarting</td></tr>
+<tr><td><a href="#PATHinterrupt_limit">
+interrupt_limit</a></td>
+<td>ctrl-C's required before killing job</td></tr>
+<tr><td><a href="#PATHmajor_iteration_limit">
+major_iteration_limit</a></td>
+<td>maximum major iterations allowed</td></tr>
+<tr><td><a href="#PATHmerit_function">
+merit_function</a></td>
+<td>merit function to use (normal or fischer)</td></tr>
+<tr><td><a href="#PATHminor_iteration_limit">
+minor_iteration_limit</a></td>
+<td>minor iterations allowed in each major iteration</td></tr>
+<tr><td><a href="#PATHnms">
+nms</a></td>
+<td>allow line searching, watch-dogging, and nonmonotone descent</td></tr>
+<tr><td><a href="#PATHnms_initial_reference_factor">
+nms_initial_reference_factor</a></td>
+<td>controls size of initial reference value</td></tr>
+<tr><td><a href="#PATHnms_maximum_watchdogs">
+nms_maximum_watchdogs</a></td>
+<td>maximum number of watchdog steps allowed</td></tr>
+<tr><td><a href="#PATHnms_memory_size">
+nms_memory_size</a></td>
+<td>number of reference values kept</td></tr>
+<tr><td><a href="#PATHnms_mstep_frequency">
+nms_mstep_frequency</a></td>
+<td>frequency at which m-steps are performed</td></tr>
+<tr><td><a href="#PATHnms_searchtype">
+nms_searchtype</a></td>
+<td>search type to use</td></tr>
+<tr><td><a href="#PATHoption_file">
+option_file</a></td>
+<td>option file name for PATHLIB to read</td></tr>
+<tr><td><a href="#PATHpreprocess">
+preprocess</a></td>
+<td>turns preprocessing on/off</td></tr>
+<tr><td><a href="#PATHproximal_perturbation">
+proximal_perturbation</a></td>
+<td>initial perturbation</td></tr>
+<tr><td><a href="#PATHtime_limit">
+time_limit</a></td>
+<td>number of seconds algorithm is allowed to run</td></tr>
+<tr><td><a href="#PATHlemke_rank_deficiency_iterations">
+lemke_rank_deficiency_iterations</a></td>
+<td>number of attempts made to fix rank-deficient basis during Lemke start</td></tr>
+<tr><td><a href="#PATHlemke_start">
+lemke_start</a></td>
+<td>frequency of lemke starts</td></tr>
+<tr><td><a href="#PATHlemke_start_type">
+lemke_start_type</a></td>
+<td>type of lemke start</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Output options</h3></th></tr>
+<tr><td><a href="#PATHoutput_crash_iterations">
+output_crash_iterations</a></td>
+<td>output information on crash iterations</td></tr>
+<tr><td><a href="#PATHoutput_crash_iterations_frequency">
+output_crash_iterations_frequency</a></td>
+<td>frequency at which crash iteration log is printed</td></tr>
+<tr><td><a href="#PATHoutput_errors">
+output_errors</a></td>
+<td>output error messages</td></tr>
+<tr><td><a href="#PATHoutput_final_degeneracy_statistics">
+output_final_degeneracy_statistics</a></td>
+<td>print information regarding degeneracy at the solution</td></tr>
+<tr><td><a href="#PATHoutput_final_point">
+output_final_point</a></td>
+<td>output final point returned from PATH</td></tr>
+<tr><td><a href="#PATHoutput_final_point_statistics">
+output_final_point_statistics</a></td>
+<td>output information about the point, function, and Jacobian at the final point</td></tr>
+<tr><td><a href="#PATHoutput_final_scaling_statistics">
+output_final_scaling_statistics</a></td>
+<td>display matrix norms on the Jacobian at the final point</td></tr>
+<tr><td><a href="#PATHoutput_final_statistics">
+output_final_statistics</a></td>
+<td>output evaluation of available merit functions at the final point</td></tr>
+<tr><td><a href="#PATHoutput_final_summary">
+output_final_summary</a></td>
+<td>output summary information</td></tr>
+<tr><td><a href="#PATHoutput_initial_point">
+output_initial_point</a></td>
+<td>output initial point given to PATH</td></tr>
+<tr><td><a href="#PATHoutput_initial_point_statistics">
+output_initial_point_statistics</a></td>
+<td>output information about the point, function, and Jacobian at the initial point</td></tr>
+<tr><td><a href="#PATHoutput_initial_scaling_statistics">
+output_initial_scaling_statistics</a></td>
+<td>display matrix norms on the Jacobian at the initial point</td></tr>
+<tr><td><a href="#PATHoutput_initial_statistics">
+output_initial_statistics</a></td>
+<td>output evaluation of available merit functions at the initial point</td></tr>
+<tr><td><a href="#PATHoutput_linear_model">
+output_linear_model</a></td>
+<td>output linear model at each major iteration</td></tr>
+<tr><td><a href="#PATHoutput_major_iterations">
+output_major_iterations</a></td>
+<td>output information on major iterations</td></tr>
+<tr><td><a href="#PATHoutput_major_iterations_frequency">
+output_major_iterations_frequency</a></td>
+<td>frequency at which major iteration log is printed</td></tr>
+<tr><td><a href="#PATHoutput_maximum_zero_listing">
+output_maximum_zero_listing</a></td>
+<td>limits zero columns reported to listing file</td></tr>
+<tr><td><a href="#PATHoutput_maximum_zero_log">
+output_maximum_zero_log</a></td>
+<td>limits zero columns reported to log file</td></tr>
+<tr><td><a href="#PATHoutput_minor_iterations">
+output_minor_iterations</a></td>
+<td>output information on minor iterations</td></tr>
+<tr><td><a href="#PATHoutput_minor_iterations_frequency">
+output_minor_iterations_frequency</a></td>
+<td>frequency at which minor iteration log is printed</td></tr>
+<tr><td><a href="#PATHoutput_options">
+output_options</a></td>
+<td>output all options and their values</td></tr>
+<tr><td><a href="#PATHoutput">
+output</a></td>
+<td>no turns all output off</td></tr>
+<tr><td><a href="#PATHoutput_preprocess_level">
+output_preprocess_level</a></td>
+<td>control output of preprocessing information</td></tr>
+<tr><td><a href="#PATHoutput_restart_log">
+output_restart_log</a></td>
+<td>output options during restarts</td></tr>
+<tr><td><a href="#PATHoutput_time">
+output_time</a></td>
+<td>output breakdown of where time is spent</td></tr>
+<tr><td><a href="#PATHoutput_warnings">
+output_warnings</a></td>
+<td>output warning messages</td></tr></table>
+<h2>Detailed Descriptions of PATH Options</h2>
+
+<h4><a name="PATHchen_lambda">
+chen_lambda</a>
+<i> (real)</i> lambda parameter for Chen-Chen-Kanzow residual</h4><p>
+
+
+<br><i>(default = 0.8)</i>
+
+<h4><a name="PATHconvergence_tolerance">
+convergence_tolerance</a>
+<i> (real)</i> stopping criterion</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="PATHoutput_crash_iterations">
+output_crash_iterations</a>
+<i> (integer)</i> output information on crash iterations</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_crash_iterations_frequency">
+output_crash_iterations_frequency</a>
+<i> (integer)</i> frequency at which crash iteration log is printed</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHcrash_iteration_limit">
+crash_iteration_limit</a>
+<i> (integer)</i> maximum iterations allowed in crash</h4><p>
+
+
+<br><i>(default = 50)</i>
+
+<h4><a name="PATHcrash_merit_function">
+crash_merit_function</a>
+<i> (string)</i> merit function used in crash method</h4><p>
+
+
+<br><i>(default = fischer)</i>
+<table>
+<tr valign="top"><td width=20 align=right>normal</td><td>Use the normal map</td></tr>
+<tr valign="top"><td width=20 align=right>fischer</td><td>Use the Fischer function</td></tr>
+</table>
+
+<h4><a name="PATHcrash_method">
+crash_method</a>
+<i> (string)</i> pnewton or none</h4><p>
+
+
+<br><i>(default = pnewton)</i>
+<table>
+<tr valign="top"><td width=20 align=right>pnewton</td><td>Use projected Newton method</td></tr>
+<tr valign="top"><td width=20 align=right>none</td><td></td></tr>
+</table>
+
+<h4><a name="PATHcrash_minimum_dimension">
+crash_minimum_dimension</a>
+<i> (integer)</i> minimum problem dimension to perform crash</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHcrash_nbchange_limit">
+crash_nbchange_limit</a>
+<i> (integer)</i> number of changes to the basis allowed</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHcrash_perturb">
+crash_perturb</a>
+<i> (integer)</i> perturb the problem using pnewton crash</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHcrash_searchtype">
+crash_searchtype</a>
+<i> (string)</i> search type to use in the crash method</h4><p>
+
+
+<br><i>(default = line)</i>
+<table>
+<tr valign="top"><td width=20 align=right>line</td><td>Use a linesearch</td></tr>
+<tr valign="top"><td width=20 align=right>arc</td><td>Use an arcsearch</td></tr>
+</table>
+
+<h4><a name="PATHcumulative_iteration_limit">
+cumulative_iteration_limit</a>
+<i> (integer)</i> maximum minor iterations allowed</h4><p>
+
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="PATHoutput_errors">
+output_errors</a>
+<i> (integer)</i> output error messages</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_final_degeneracy_statistics">
+output_final_degeneracy_statistics</a>
+<i> (integer)</i> print information regarding degeneracy at the solution</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoutput_final_point">
+output_final_point</a>
+<i> (integer)</i> output final point returned from PATH</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoutput_final_point_statistics">
+output_final_point_statistics</a>
+<i> (integer)</i> output information about the point, function, and Jacobian at the final point</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_final_scaling_statistics">
+output_final_scaling_statistics</a>
+<i> (integer)</i> display matrix norms on the Jacobian at the final point</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoutput_final_statistics">
+output_final_statistics</a>
+<i> (integer)</i> output evaluation of available merit functions at the final point</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_final_summary">
+output_final_summary</a>
+<i> (integer)</i> output summary information</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHgradient_searchtype">
+gradient_searchtype</a>
+<i> (string)</i> search type to use on a gradient step</h4><p>
+
+
+<br><i>(default = arc)</i>
+<table>
+<tr valign="top"><td width=20 align=right>line</td><td>Use a linesearch</td></tr>
+<tr valign="top"><td width=20 align=right>arc</td><td>Use an arcsearch</td></tr>
+</table>
+
+<h4><a name="PATHgradient_step_limit">
+gradient_step_limit</a>
+<i> (integer)</i> gradient steps allowed before restarting</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="PATHoutput_initial_point">
+output_initial_point</a>
+<i> (integer)</i> output initial point given to PATH</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoutput_initial_point_statistics">
+output_initial_point_statistics</a>
+<i> (integer)</i> output information about the point, function, and Jacobian at the initial point</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_initial_scaling_statistics">
+output_initial_scaling_statistics</a>
+<i> (integer)</i> display matrix norms on the Jacobian at the initial point</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_initial_statistics">
+output_initial_statistics</a>
+<i> (integer)</i> output evaluation of available merit functions at the initial point</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHinterrupt_limit">
+interrupt_limit</a>
+<i> (integer)</i> ctrl-C's required before killing job</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="PATHoutput_linear_model">
+output_linear_model</a>
+<i> (integer)</i> output linear model at each major iteration</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoutput_major_iterations">
+output_major_iterations</a>
+<i> (integer)</i> output information on major iterations</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_major_iterations_frequency">
+output_major_iterations_frequency</a>
+<i> (integer)</i> frequency at which major iteration log is printed</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHmajor_iteration_limit">
+major_iteration_limit</a>
+<i> (integer)</i> maximum major iterations allowed</h4><p>
+
+
+<br><i>(default = 500)</i>
+
+<h4><a name="PATHoutput_maximum_zero_listing">
+output_maximum_zero_listing</a>
+<i> (integer)</i> limits zero columns reported to listing file</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="PATHoutput_maximum_zero_log">
+output_maximum_zero_log</a>
+<i> (integer)</i> limits zero columns reported to log file</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="PATHmerit_function">
+merit_function</a>
+<i> (string)</i> merit function to use (normal or fischer)</h4><p>
+
+
+<br><i>(default = fischer)</i>
+<table>
+<tr valign="top"><td width=20 align=right>normal</td><td>Use the normal map</td></tr>
+<tr valign="top"><td width=20 align=right>fischer</td><td>Use the Fischer function</td></tr>
+</table>
+
+<h4><a name="PATHoutput_minor_iterations">
+output_minor_iterations</a>
+<i> (integer)</i> output information on minor iterations</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_minor_iterations_frequency">
+output_minor_iterations_frequency</a>
+<i> (integer)</i> frequency at which minor iteration log is printed</h4><p>
+
+
+<br><i>(default = 500)</i>
+
+<h4><a name="PATHminor_iteration_limit">
+minor_iteration_limit</a>
+<i> (integer)</i> minor iterations allowed in each major iteration</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="PATHnms">
+nms</a>
+<i> (integer)</i> allow line searching, watch-dogging, and nonmonotone descent</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHnms_initial_reference_factor">
+nms_initial_reference_factor</a>
+<i> (real)</i> controls size of initial reference value</h4><p>
+
+
+<br><i>(default = 20)</i>
+
+<h4><a name="PATHnms_maximum_watchdogs">
+nms_maximum_watchdogs</a>
+<i> (integer)</i> maximum number of watchdog steps allowed</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="PATHnms_memory_size">
+nms_memory_size</a>
+<i> (integer)</i> number of reference values kept</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="PATHnms_mstep_frequency">
+nms_mstep_frequency</a>
+<i> (integer)</i> frequency at which m-steps are performed</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="PATHnms_searchtype">
+nms_searchtype</a>
+<i> (string)</i> search type to use</h4><p>
+
+
+<br><i>(default = line)</i>
+<table>
+<tr valign="top"><td width=20 align=right>line</td><td>Use a linesearch</td></tr>
+<tr valign="top"><td width=20 align=right>arc</td><td>Use an arcsearch</td></tr>
+</table>
+
+<h4><a name="PATHoutput_options">
+output_options</a>
+<i> (integer)</i> output all options and their values</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoption_file">
+option_file</a>
+<i> (string)</i> option file name for PATHLIB to read</h4><p>
+
+
+
+<h4><a name="PATHoutput">
+output</a>
+<i> (integer)</i> no turns all output off</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHpreprocess">
+preprocess</a>
+<i> (integer)</i> turns preprocessing on/off</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_preprocess_level">
+output_preprocess_level</a>
+<i> (integer)</i> control output of preprocessing information</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHproximal_perturbation">
+proximal_perturbation</a>
+<i> (real)</i> initial perturbation</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHoutput_restart_log">
+output_restart_log</a>
+<i> (integer)</i> output options during restarts</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="PATHoutput_time">
+output_time</a>
+<i> (integer)</i> output breakdown of where time is spent</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHtime_limit">
+time_limit</a>
+<i> (real)</i> number of seconds algorithm is allowed to run</h4><p>
+
+
+
+<h4><a name="PATHoutput_warnings">
+output_warnings</a>
+<i> (integer)</i> output warning messages</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="PATHlemke_rank_deficiency_iterations">
+lemke_rank_deficiency_iterations</a>
+<i> (integer)</i> number of attempts made to fix rank-deficient basis during Lemke start</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="PATHlemke_start">
+lemke_start</a>
+<i> (string)</i> frequency of lemke starts</h4><p>
+
+
+<br><i>(default = automatic)</i>
+<table>
+<tr valign="top"><td width=20 align=right>always</td><td>Use a Lemke start for each LCP subproblem</td></tr>
+<tr valign="top"><td width=20 align=right>automatic</td><td>Determined by algorithm</td></tr>
+<tr valign="top"><td width=20 align=right>first</td><td>Use a Lemke start for the first LCP subproblem</td></tr>
+</table>
+
+<h4><a name="PATHlemke_start_type">
+lemke_start_type</a>
+<i> (string)</i> type of lemke start</h4><p>
+
+
+<br><i>(default = slack)</i>
+<table>
+<tr valign="top"><td width=20 align=right>advanced</td><td>Start Lemke method using an advanced basis</td></tr>
+<tr valign="top"><td width=20 align=right>slack</td><td>Start Lemke method using and all-slack basis</td></tr>
+</table>
+</body></html>

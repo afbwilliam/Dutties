@@ -1,0 +1,65 @@
+$title GAMS Deployment Model (DEPLOY,SEQ=308)
+$ontext
+
+This model creates a GAMS deployment system
+
+Complete two steps and run this model and pick up gmsdeply.zip
+in your project/current directory
+
+1. Add the solvers and other products to the set DeployProducts.
+   Display p to inspect all possible products.
+2. Add names of files that usually do not come with your GAMS system
+   but you want in your deployment system between on/offecho
+
+$offtext
+
+
+Set   p   GAMS Products / system.SolverNames /
+      DeployProducts(p) / CONOPT /;
+
+* Add extra non GAMS files to your deployment system (relative to the GAMS home directory)
+$if not set ziplist $set ziplist %gams.scrdir%ziplist.%gams.scrext%
+$onecho > "%ziplist%"
+
+gamslice.txt
+
+$offecho
+
+* There is no need to change anything beyond this line
+
+* We always need the GAMS BASE system
+DeployProducts('GAMS') = yes;
+
+$if not set zipfile $set zipfile %gams.workdir%gmsdeply.zip
+$set gmsdir  %gams.scrdir%gmssysdir
+Set pfmap products file mapping;
+$gdxin %gams.sysdir%gmspfmap
+$load pfmap
+
+file fz / '%ziplist%' /; fz.silent=1; fz.ap=1;
+alias (f,d,*); loop(pfmap(DeployProducts,d,f), put fz pfmap.te(DeployProducts,d,f):0 /);
+putclose fz;
+
+$set prefix
+$set cdopt /d
+$if %system.filesys% == UNIX $set prefix sh
+$if %system.filesys% == UNIX $set cdopt
+
+file fs / 'runme.cmd' /; fs.silent=1; fs.pw=8192;
+
+put fs
+$if not %system.filesys% == UNIX '@echo off' /
+       'rm -f "%zipfile%"'
+       ' && cd %cdopt% "%gams.sysdir%"'
+       ' && cat "%ziplist%"'
+       ' | gmszip -qq -@ "%zipfile%"'
+     / 'mkdir "%gmsdir%"'
+       ' && cd %cdopt% "%gmsdir%"'
+       ' && gmsunzip -q "%zipfile%"'
+     / 'cd %cdopt% "%gmsdir%"'
+       ' && gamsinst -a > gamsinst.out 2>gamsinst.err'
+       ' && gmszip -qr "%zipfile%" *'
+     / 'cd .. && sleep 5 && rm -rf "%gmsdir%"';
+putclose fs;
+execute '%prefix% runme.cmd';
+

@@ -1,0 +1,16 @@
+$TITLE 'PATHNLP test suite - basic option reading test' (PATHNLP1,SEQ=261)
+
+$call gamslib -q 1
+
+$echo "abort$(transport.solvestat <> %solvestat.IterationInterrupt%) 'problems with PATHNLP options';" >> trnsport.gms
+* Why doesn't this next line reset the optfile????
+* $echo "transport.optfile = 0;" >> trnsport.gms
+$echo "file fopt /pathnlp.opt/; putclose fopt '* empty option file';"  >> trnsport.gms
+$echo "solve transport using lp min z;" >> trnsport.gms
+$echo "abort$(transport.solvestat <> %solvestat.NormalCompletion% or transport.modelstat <> %modelstat.Optimal%) 'problems with PATHNLP solver';" >> trnsport.gms
+
+* test the path option reading mode: first 3 chars are significant
+$echo "maj_iterjjjjj_limZZZZ 1"  > pathnlp.opt
+$echo "minor_iteration_limit 1" >> pathnlp.opt
+$call =gams trnsport lp=pathnlp lo=0 optfile=1
+$if errorlevel 1 $abort 'problems with PATHNLP options'

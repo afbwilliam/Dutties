@@ -1,0 +1,15 @@
+$title 'Test export of defaults for uninitialized scalars' (UNLOAD9,SEQ=208)
+
+* we have to trick gams a bit with the variables
+* to make them scalars
+$gdxout temp
+scalar a;
+variable x; equation e; e.. x =e= 1;
+$unload a   x
+$gdxout
+$gdxin temp
+$load a x
+$gdxin
+display a,x.l, x.lo;
+abort$(a <> 0) 'uninitialized scalar wrong';
+abort$(x.lo <> -inf) 'uninitialized variable wrong';

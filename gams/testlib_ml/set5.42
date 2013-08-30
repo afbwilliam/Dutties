@@ -1,0 +1,16 @@
+$title split file name (SET5,SEQ=42)
+
+$if not %system.filesys% == UNIX $goto notunix
+$setnames '/a/abc/def.geh' fp fn fe
+$if NOT %fp% == /a/abc/  $error path should be /a/abc/
+$if NOT %fn% == def      $error name should be def
+$if NOT %fe% == .geh     $error name should be .geh
+$show
+$exit
+
+$label notunix
+$setnames 'a:\abc\def.geh' fp fn fe
+$if NOT %fp% == a:\abc\  $error path should be a:\abc\
+$if NOT %fn% == def      $error name should be def
+$if NOT %fe% == .geh     $error name should be .geh
+$show

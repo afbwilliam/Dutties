@@ -1,0 +1,12 @@
+$TITLE 'Generate test data for read3 test of gdxMrw' (GENR3,SEQ=241)
+
+set i / i1 * i6 /;
+parameter fibo(i) /
+  i1 1
+  i2 1
+/;
+loop {i$[ord(i) gt 2],
+  fibo(i) = fibo(i-2)+fibo(i-1);
+};
+
+execute_unload 'exr3.gdx';

@@ -1,0 +1,81 @@
+$title CNS model - unsolvable model, scaling issues (cns12,SEQ=102)
+
+$ontext
+  The following model and its scaled variant are both infeasible.
+  E2 and e3 uniquely determines x2 = x3 = 0, and e1 is then
+  impossible to satisfy.
+  The scaling in the second model may force a solver based on
+  monotonicity of the infeasibilities to adjust x1 gradually as
+  x2 and x3 are moved towards zero, and the solution process may end
+  with a very large x1 value and therefore also a very large
+  derivative.
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+
+Scalar scale / 1 /;
+
+variable x1, x2, x3;
+equation e1, e2, e3;
+
+e1 .. scale * x1 * x2 =e= scale;
+e2 .. x2 + x3 =e= 0;
+e3 .. x2 - x3 =e= 0;
+
+x1.l = 1;
+x2.l = 1;
+x3.l = 1;
+
+model m / all /;
+
+
+*  Case 1: without bounds, a solver may get within tolerance with
+*          a large x1 and small x2,x3
+x1.l = 1; x2.l = 1; x3.l = 1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%                    )  'bad solvestat';
+if {(m.modelstat = %modelstat.Solved%),
+* solver found a "solution": check that it is within tolerance
+  abort$(abs(e1.l-scale) > tol)                   'bad e1.l';
+  abort$(abs(e2.l-0) > tol)                       'bad e2.l';
+  abort$(abs(e3.l-0) > tol)                       'bad e3.l';
+else
+  abort$(m.modelstat <> %modelstat.LocallyInfeasible%)                        'bad modelstat';
+  abort$(m.numinfes < 1)                          'wrong .numinfes';
+};
+
+*  Case 2: bound x2, this makes the model infeasible
+x1.lo = -1e5; x1.up = 1e5;
+x1.l = 1; x2.l = 1; x3.l = 1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.LocallyInfeasible%)      'bad return codes';
+abort$(m.numinfes < 1)                            'wrong .numinfes';
+x1.lo = -INF; x1.up = INF;
+
+
+*  Case 3: scaled version of case 1
+scale = 5;
+x1.l = 1; x2.l = 1; x3.l = 1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%                    )      'bad solvestat';
+if {(m.modelstat = %modelstat.Solved%),
+* solver found a "solution": check that it is within tolerance
+  abort$(abs(e1.l-scale) > tol)                   'bad e1.l';
+  abort$(abs(e2.l-0) > tol)                       'bad e2.l';
+  abort$(abs(e3.l-0) > tol)                       'bad e3.l';
+else
+  abort$(m.modelstat <> %modelstat.LocallyInfeasible%)                        'bad modelstat';
+  abort$(m.numinfes < 1)                          'wrong .numinfes';
+};
+
+
+*  Case 4: bound x2, this makes the model infeasible
+scale = 5;
+x1.lo = -1e5; x1.up = 1e5;
+x1.l = 1; x2.l = 1; x3.l = 1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.LocallyInfeasible%)      'bad return codes';
+abort$(m.numinfes < 1)                            'wrong .numinfes';
+x1.up = INF;
+x1.lo = -INF; x1.up = INF;

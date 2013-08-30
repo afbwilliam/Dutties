@@ -1,0 +1,114 @@
+$Title Cutting Stock - A Column Generation Approach with BCH (BCHSTOCK,SEQ=349)
+
+$ontext
+The task is to cut out some paper products of different sizes from a
+large raw paper roll, in order to meet a customer's order. The objective
+is to minimize the required number of paper rolls.
+
+The CG method is implemented using BCH. The running LP solver calls
+out to a BCH pricing call and that supplies new columns.
+
+
+P. C. Gilmore and R. E. Gomory, A linear programming approach to the
+cutting stock problem, Part I, Operations Research 9 (1961), 849-859.
+
+P. C. Gilmore and R. E. Gomory, A linear programming approach to the
+cutting stock problem, Part II, Operations Research 11 (1963), 863-888.
+$offtext
+$eolcom //
+
+Set  i    widths    /w1*w4/
+Parameter
+     r    raw width /100/
+     w(i) width     /w1  45
+                     w2  36
+                     w3  31
+                     w4  14/
+     d(i) demand    /w1  97
+                     w2 610
+                     w3 395
+                     w4 211/
+
+Set  p        patterns  /p1*p10/
+Parameter
+     aip(i,p) number of width i in pattern growing in p;
+
+* Master model
+Variable xp(p)     patterns used
+         z         objective variable
+Integer variable xp; xp.up(p) = sum(i, d(i));
+
+Equation numpat    number of patterns used
+         demand(i) meet demand;
+
+numpat..     sum(p, xp(p))          =e= z;
+demand(i)..  sum(p, aip(i,p)*xp(p)) =g= d(i);
+
+model master /numpat, demand/;
+
+* Initialization - the initial patterns have a single width
+aip(i,p)$(ord(i)=ord(p)) = floor(r/w(i));
+
+$echo userpricingcall pricing.gms > cplexd.opt
+
+execute_unload 'data', i, w, d, r;
+z.lo=0; // We need to prevent reformulation for now
+option rmip=cplexd, optcr=0; master.optfile=1;
+solve master using rmip minimizing z;
+
+* Read back the additional columns
+set
+   cols                  column         / 1*1000 /
+   cc(cols)              new columns
+   info                  column info    / level, lower, upper /
+parameters
+   col_info(cols, info)
+   demand_c(cols,i)      patterns generated
+
+execute_load 'bchsol.gdx', col_info, demand_c; option cc<col_info;
+
+* Fill the aip data with the new patters
+loop((cc(cols),p)$(ord(cols)=ord(p)-card(i)+1), aip(i,p) = demand_c(cols,i));
+master.optfile=0; solve master using mip minimizing z;
+abort$(master.modelstat<>1 or abs(z.l-453)>1e-6) 'wrong solution';
+
+$onechoV > pricing.gms
+Set i; Parameter w(i), d(i), r;
+
+$gdxin data
+$load i w d r 
+
+Equation demand(i);
+
+$gdxin bchout
+$load demand
+
+* Pricing problem - Knapsack model
+Variable  z, y(i) new pattern;
+Integer variable y; y.up(i) = ceil(r/w(i));
+
+Equation defobj, knapsack;
+
+defobj..     z =e= 1 - sum(i, demand.m(i)*y(i));
+knapsack..   sum(i, w(i)*y(i)) =l= r;
+
+model pricing /defobj, knapsack/; option optcr=0;
+solve pricing using mip minimizing z;
+
+Set cc /1/;
+Parameter
+    numcols                      number of columns generated / 0 /
+*  level, lower, upper, type: 0 cont, 1 bin, 2 int, 3 semicont, 4 semiint
+    col_info(cc,*)               Column information
+    numpat_c(cc), demand_c(cc,i) Matrix entries;
+
+* pattern that might improve the master model found?
+if(z.l < -0.001,
+   numcols              = numcols + 1;
+   numpat_c(cc)         = 1;
+   demand_c(cc,i)       = round(y.l(i));
+   col_info(cc,'lower') = 0;
+   col_info(cc,'upper') = smax(i$demand_c(cc,i), d(i)/demand_c(cc,i));
+   col_info(cc,'type')  = 2;
+);
+$offecho

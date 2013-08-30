@@ -1,0 +1,41 @@
+$title Test for LindoGlobal's CheckRange Option  (LINDORG2,SEQ=524)
+$Ontext
+This model tests the logic for NA cases for linear terms.
+
+Contributer: Lutz Westermann
+$Offtext
+
+
+positive variables x, y;
+variable z;
+
+equation a,b,c,d,e;
+a.. 0.5*x+2*y =g= 1;
+b.. 0.5*x+2*y =l= 1;
+c.. -0.5*x-2*y =g= -1;
+d.. -0.5*x-2*y =l= -1;
+e.. z =e= 1;
+
+model m /all/;
+
+x.l=1; y.l=1;
+
+m.optfile=1;
+$echo checkrange range.gdx > lindoglobal.opt
+
+option lp=lindoglobal; 
+
+solve m min z use lp;
+
+parameter a_x(*) /lo eps , hi +INF/
+          a_y(*) /lo 0.25, hi +INF/
+          b_x(*) /lo NA  , hi NA  /
+          b_y(*) /lo eps , hi 0.25/
+          c_x(*) /lo NA  , hi NA  /
+          c_y(*) /lo eps , hi 0.25/
+          d_x(*) /lo eps , hi +INF/
+          d_y(*) /lo 0.25, hi +INF/;
+
+execute_unload 'rangeWant.gdx' a_x, a_y, b_x, b_y, c_x, c_y, d_x, d_y;
+execute 'gdxdiff range.gdx rangeWant.gdx > %system.nullfile%';
+abort$errorlevel 'range.gdx and rangeWant.gdx differ';

@@ -1,0 +1,58 @@
+$title Educational embedded complementarity system model (FERRIS43,SEQ=24)
+
+$ontext
+
+  Embedded Complementarity System
+  -------------------------------
+
+  The problem to solve is:
+    min_x  f(x,y)  st  g(x,y) \leq 0
+  plus the constraint that
+    H(x,y,\lambda) = 0
+  where \lambda is the multiplier on the g(x,y) \leq 0 constraint.
+
+  EMP enables to write this problem simply by specifying the nlp
+  and the side constraint H. Using the mappings
+
+  dualequ H y
+  dualvar lambda g
+
+  EMP considers the side constraint H defining the dual of y and
+  the side variable lambda defining the dual of g.
+
+References:
+Ferris et al, An extended mathematical programming framework,
+Computers and Chemical Engineering 33, p.1973-1982, 2009
+
+Contributor: Jan-H. Jagla, November 2009
+
+$offtext
+
+Variables obj, x, y;
+Positive variable lambda;
+Equations defobj, g, H;
+
+defobj.. obj =e= sqr(x-y);
+g.. y =g= x + 1;
+
+H.. y + lambda =e= 2;
+
+$onecho > "%emp.info%"
+dualequ H y
+dualvar lambda g
+$offecho
+
+model ecs /defobj, g, H/;
+
+solve ecs using emp minimizing obj;
+
+*------------------------------------------------------
+* Write this model down manually and verify solution
+Equations dLdx;
+
+dLdx.. ( - 2*(x - y))/(-1) + lambda =N= 0;
+
+Model mcp / g.lambda,dLdx.x,H.y /;
+mcp.iterlim = 0;
+Solve mcp using MCP;
+abort$(mcp.objval > 1e-6) 'Solutions not the same';

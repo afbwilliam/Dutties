@@ -1,0 +1,38 @@
+$title gdx test sorting with new elements (GDX3,SEQ=117)
+
+$ontext
+
+Contributor: Paul van der Eijk
+$offtext
+
+*delete old data file
+$call "rm -rf gdx3.gdx"
+*generate program to generate the data file
+$onecho > gdx3.gen
+set i /i1*i20/
+    j /j1*j10/;
+parameter a(i,j);
+a(i,j)$(uniform(0,1) < 0.1) = uniform(1,2);
+*display a;
+execute_unload 'gdx3.gdx',i,j,a;
+$offecho
+
+$call gams gdx3.gen o=gdx3.out lo=%GAMS.lo%
+set i /i10*i20,i1*i9/;
+set j /j1*j10/;
+parameter a(i,j);
+$gdxin gdx3.gdx
+$load a
+$gdxin
+parameter b(i,j);
+set i_1(i) /i1*i9/;
+set i_2(i) /i10*i20/;
+b(i_1,j)$(uniform(0,1) < 0.1) = uniform(1,2);
+b(i_2,j)$(uniform(0,1) < 0.1) = uniform(1,2);
+
+parameter Check(i,j);
+Check(i,j) = A(i,j) - B(i,j);
+scalar Cnt;
+Cnt = Card(Check);
+display Check;
+Abort$(Cnt <> 0) "gdx3: difference not empty", Cnt;

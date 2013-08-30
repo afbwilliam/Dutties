@@ -1,0 +1,83 @@
+$title Julian date test (DATTIM4,SEQ=120)
+
+* The gams function JDate(year,month,day) accepts arguments similar to
+* to date functions in other languages. The earliest date is Jan 1, 1, and
+* the latest date is Dec 31, 9999. Gams picked Jan 1, 1900 as day 1,
+* as done by Excel. Unfortunately, Excel treats the year 1900 incorrectly
+* as a leap year and the serial days starting with March 1, 1900 will
+* be off by one day.
+*
+* The arguments are can be positive or negative and do not have to form
+* a proper date. The arguments with fractional values are first converted
+* to a signed integer by using the floor() function.
+*
+* Note about Excle:
+* The Excel DATE(yesr,month,day) function has the following data ranges
+* note that excel incorrectly treats the year 1900 as a leap year.
+*  DATE(1900, 1, 1) =        1  incorrect should be  2
+*  DATE(1900, 2,28) =       59  incorrect should be 60
+*  DATE(1900, 3, 1) =       61
+*  DATE(9999,12,31) =  2958465
+* for years having a value of less than 1900, 1900 + year is assumed
+*
+* The following table shows different ways of entering dates:
+$eolcom //
+
+set i / 1*22/; acronym error
+
+table tvals(i,*) test values
+
+      year   month   day      excel   correct
+ 1    2005     10     20      38645     38644
+ 2    2005.3   10.3   20.3    38645     38644
+ 3    2005.7   10.7   20.7    38645     38644
+ 4    2005     22     20      39010     39009
+ 5    2005     22    300      39290     39289
+ 6    2005     -5    300      38468     38467
+ 7    2005     -5    -10      38158     38157
+ 8    2005     -5    -10.3    38157     38156
+ 9    2005     -5    -10.7    38157     38156
+10       2     -9   -424          0     error
+11    1900      1      1          1         1
+12       0      0      1      error     error
+13    2004      2     30      38047     38046
+14    2004     14     30      38413     38412
+15    2004      0      0      37955     37954
+16    9999     12     31    2958465   2958464
+17    9999     13      1      error     error
+18    1900      1      2          2         2
+19    1899     12     31     693962
+20    1899     12     30     693961        -1
+21    1900      2      1         32        32
+22       1      1      1        367   -693594
+
+parameter res(i) gams julian serial numbers;
+
+res(i) = jdate(tvals(i,'year'),tvals(i,'month'),tvals(i,'day'));
+
+tvals(i,'gams') = res(i); display tvals;
+
+* convert acronym to UNDF
+tvals(i,'correct')$(tvals(i,'correct') = error) = 1/0;
+execerror = 0;
+
+set err1(i) gams values are incorrect
+    err2(i) recoverd values are different;
+
+err1(i) = tvals(i,'correct') <> res(i); display err1;
+abort$card(err1) ' incorrect date serial numbers';
+
+* Now we will recover the date components
+
+parameter back(i,*) recovered date components;
+
+back(i,'gams')  = res(i);
+back(i,'year')  = gyear(res(i));
+back(i,'month') = gmonth(res(i));
+back(i,'day')   = gday(res(i));
+back(i,'new')   = jdate(back(i,'year'),back(i,'month'),back(i,'day'));
+execerror = 0;
+display back;
+
+err2(i) = res(i) <> back(i,'new'); display err2;
+abort$card(err2) 'back operations were incorrect';

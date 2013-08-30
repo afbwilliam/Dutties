@@ -1,0 +1,61 @@
+$title 'One element dynamic extracted from TSP' (ONELAB2,SEQ=171)
+
+$eolcom //
+
+set i nodes / i1*i6 /, t tours / t1*t6 /; alias (i,j,k);
+
+table xl(i,j) decision variables - leg of trip
+
+             i1          i2          i3          i4          i5          i6
+
+i1                                                                    1.000
+i2                                1.000
+i3                    1.000
+i4                                                        1.000
+i5                                            1.000
+i6        1.000
+
+parameter tour(i,j,t)  subtours;
+     sets from(i)      contains always one element: the from city
+          next(j)      contains always one element: the to city
+          visited(i)   flag whether a city is already visited
+          tt(t)        contains always one element: the current subtour;
+   scalar goon         go on flag used to control loop;
+
+* initialize
+from(i)$(ord(i)=1) = yes;    // turn first element on
+tt(t)$(ord(t)=1)   = yes;    // turn first element on
+
+loop(i,
+   next(j) = no;                       // find city visited after city 'from'
+   loop((from,j)$xl(from,j),
+      next(j) = yes);                  // check x.l(from,j)=1 would be dangerous
+   tour(from,next,tt) = yes;           // store in table
+   visited(from) = yes;                // mark city 'from' as visited
+   from(j) = next(j);
+   if(sum(visited(next),1)>0,          // if already visited...
+      tt(t) = tt(t-1);
+      loop(k$(not visited(k)), // find starting point of new subtour
+         from(j) = no;         // make sure we only have one element turned on
+         from(k) = yes;
+      )
+   )
+)
+
+
+table goodtour(i,j,t)  subtours
+
+               t1          t2          t3
+
+i1.i6       1.000
+i2.i3                               1.000
+i3.i2                               1.000
+i4.i5                   1.000
+i5.i4                   1.000
+i6.i1       1.000
+
+parameter difftour(i,j,t) diff between tour and gooudtour;
+
+difftour(i,j,t) = goodtour(i,j,t) xor tour(i,j,t);
+
+abort$card(difftour) 'tour is wrong', tour, goodtour, difftour;

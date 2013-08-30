@@ -1,0 +1,81 @@
+$title Tests basic modelstat codes (LP04,SEQ=69)
+
+$ontext
+In this test we check infeasible and unbounded conditions
+$offtext
+
+$if not set SKIPUNBND $set SKIPUNBND 0
+scalar skipUnBnd / %SKIPUNBND% /;
+
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka /
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego    NA  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table c(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle           NA           1.7          1.8
+      san-diego        3.5           2.8          1.4  ;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j));
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model lp04 /all/ ;
+
+option limcol=0,limrow=0;
+
+
+c('seattle','new-york') = 2.5; a('san-diego') = 600;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp04 using lp minimizing z ;
+abort$( lp04.solvestat <> %solvestat.NormalCompletion% or lp04.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( lp04.numnopt  <> 0 ) 'bad numnopt';
+abort$( lp04.numinfes <> 0 ) 'bad numinfes';
+
+c('seattle','new-york') = 2.5; a('san-diego') = 500;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp04 using lp minimizing z ;
+abort$( lp04.solvestat <> %solvestat.NormalCompletion% or (lp04.modelstat <> %modelstat.Infeasible% and lp04.modelstat <> %ModelStat.Infeasible - No Solution%)) 'wrong status codes';
+abort$( lp04.numnopt  <> 0 ) 'bad numnopt';
+abort$( lp04.numinfes  = 0 ) 'bad numinfes';
+
+c('seattle','new-york') =  2.5; a('seattle') = inf;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp04 using lp minimizing z ;
+abort$( lp04.solvestat <> %solvestat.NormalCompletion% or lp04.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( lp04.numnopt  <> 0 ) 'bad numnopt';
+abort$( lp04.numinfes <> 0 ) 'bad numinfes';
+
+c('seattle','new-york') = -2.5; a('seattle') = inf;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+if {not skipUnBnd,
+  Solve lp04 using lp minimizing z ;
+  abort$( lp04.solvestat <> %solvestat.NormalCompletion% or (lp04.modelstat <> %modelstat.Unbounded% and lp04.modelstat <> %ModelStat.Unbounded - No Solution%)) 'wrong status codes';
+  if {(lp04.modelstat <> %modelstat.Unbounded%),
+    abort$( lp04.numinfes = 0 ) 'bad numinfes';
+  };
+};

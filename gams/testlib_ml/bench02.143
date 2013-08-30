@@ -1,0 +1,144 @@
+$TITLE BENCH test suite - LOG (BENCH02,SEQ=143)
+
+$ONTEXT
+
+Checks bench log output using:
+
+  - regular LP call
+  - LP call with Examiner
+  - LP call with Examiner fail (too tight tol)
+  - NLP call with Examiner fail (too tight tol)
+
+Contributor: Armin Pruessner, July 2004
+$OFFTEXT
+
+$ondollar
+
+$call gamslib -q trnsport
+$call gamslib -q circle
+
+$set bs
+$if %system.filesys% == UNIX $set bs \
+
+$onechoV > x.awk
+/BENCH SUMMARY/ { start=1 }
+start==1 { lc++; }
+lc>4 && lc<8 { print $0 }
+$offecho
+
+* LP TEST: REGULAR CALL (W/O EXAMINER)
+$call echo solvers cplex bdmlp minos > bench.opt
+$onecho > lp.log
+  CPLEX              1       1       153.6750       0.000      n/a
+  BDMLP              1       1       153.6750       0.000      n/a
+  MINOS              1       1       153.6750       0.000      n/a
+$offecho
+
+$call gams trnsport lp=bench optfile=1 lo=2
+$call awk -f x.awk trnsport.log >  "%gams.scrdir%lp2log.%gams.scrext%"
+
+* ignore resource time, i.e. replace by 0.000
+$call sed "s/ [0-9].[0-9][0-9][0-9]/0.000/g" "%gams.scrdir%lp2log.%gams.scrext%" > lp2.log
+$call diff -bw lp.log lp2.log | wc -w  > "%gams.scrdir%err_lpreg.%gams.scrext%"
+
+* LP TEST: REGULAR CALL (W/ EXAMINER)
+$onecho > bench.opt
+solvers cplex bdmlp minos
+examiner 1
+$offecho
+$onecho > lp.log
+  CPLEX              1       1       153.6750       0.000       P/P
+  BDMLP              1       1       153.6750       0.000       P/P
+  MINOS              1       1       153.6750       0.000       P/P
+$offecho
+
+$call gams trnsport lp=bench optfile=1 lo=2
+$call awk -f x.awk trnsport.log >  "%gams.scrdir%lp2log.%gams.scrext%"
+
+* ignore resource time, i.e. replace by 0.000
+$call sed "s/ [0-9].[0-9][0-9][0-9]/0.000/g" "%gams.scrdir%lp2log.%gams.scrext%" > lp2.log
+$call diff -bw lp.log lp2.log | wc -w  > "%gams.scrdir%err_lpex.%gams.scrext%"
+
+* LP TEST: REGULAR CALL (W/ EXAMINER AND TIGHT TOLERANCES)
+$onecho > bench.opt
+solvers bdmlp
+examiner 1
+primalfeastol 1e-16
+dualfeastol   1e-16
+primalcstol   1e-16
+dualcstol     1e-16
+$offecho
+$onecho > lp.log
+  BDMLP              1       1       153.6750       0.000       P/F
+$offecho
+
+$call gams trnsport lp=bench optfile=1 lo=2
+$call awk -f x.awk trnsport.log | grep BDMLP > "%gams.scrdir%lp2log.%gams.scrext%"
+
+* ignore resource time, i.e. replace by 0.000
+$call sed "s/ [0-9].[0-9][0-9][0-9]/0.000/g" "%gams.scrdir%lp2log.%gams.scrext%" > lp2.log
+$call diff -bw lp.log lp2.log | wc -w > "%gams.scrdir%err_lpex_t.%gams.scrext%"
+
+* NLP TEST: REGULAR CALL (W/ EXAMINER AND TIGHT TOLERANCES)
+$onecho > bench.op2
+solvers minos
+examiner 1
+primalfeastol 1e-16
+dualfeastol   1e-16
+primalcstol   1e-16
+dualcstol     1e-16
+$offecho
+$onecho > nlpOld.log
+  MINOS              2       1         4.5742       0.000       P/F
+$offecho
+$onecho > nlpNew.log
+  MINOS              2       1         4.5742       0.000       F/F
+$offecho
+
+$call gams circle nlp=bench optfile=2 lo=2
+$call awk -f x.awk circle.log | grep MINOS > "%gams.scrdir%nlp2log.%gams.scrext%"
+
+* ignore resource time, i.e. replace by 0.000
+$call sed "s/4.5742       [0-9].[0-9][0-9][0-9]/4.5742       0.000/g" "%gams.scrdir%nlp2log.%gams.scrext%" > nlp2.log
+$call diff -bw nlpOld.log nlp2.log | wc -w > "%gams.scrdir%err_nlpexOld_t.%gams.scrext%"
+$call diff -bw nlpNew.log nlp2.log | wc -w > "%gams.scrdir%err_nlpexNew_t.%gams.scrext%"
+
+* ABORT IF ERRORS OCCURED
+scalar err_lpreg /
+$include "%gams.scrdir%err_lpreg.%gams.scrext%"
+/;
+scalar err_lpex /
+$include "%gams.scrdir%err_lpex.%gams.scrext%"
+/;
+scalar err_lpex_t /
+$include "%gams.scrdir%err_lpex_t.%gams.scrext%"
+/;
+scalar err_nlpexOld_t /
+$include "%gams.scrdir%err_nlpexOld_t.%gams.scrext%"
+/;
+scalar err_nlpexNew_t /
+$include "%gams.scrdir%err_nlpexNew_t.%gams.scrext%"
+/;
+
+* sometimes BDMLP gets an exact solution,
+* so Examiner passes it even on tight tolerances
+$if %system.platform% == AIX err_lpex_t = 0;
+$if %system.platform% == AXU err_lpex_t = 0;
+$if %system.platform% == DAR err_lpex_t = 0;
+$if %system.platform% == DEX err_lpex_t = 0;
+$if %system.platform% == DII err_lpex_t = 0;
+$if %system.platform% == LEX err_lpex_t = 0;
+$if %system.platform% == LNX err_lpex_t = 0;
+$if %system.platform% == SGI err_lpex_t = 0;
+$if %system.platform% == SIS err_lpex_t = 0;
+$if %system.platform% == SOL err_lpex_t = 0;
+$if %system.platform% == SOX err_lpex_t = 0;
+$if %system.platform% == WEX err_lpex_t = 0;
+$if %system.platform% == WIN err_lpex_t = 0;
+* this is pretty lame - could invest some time to get a model/solver
+* combo that doesn't give an exact solution
+
+abort$(err_lpreg>0)   'LP log output incorrect - w/o Examiner'
+abort$(err_lpex>0)    'LP log output incorrect - w/  Examiner'
+abort$(err_lpex_t>0)  'LP log output incorrect - w/  Examiner and tight tolerances'
+abort$[(err_nlpexOld_t>0) AND (err_nlpexNew_t>0)] 'NLP log output incorrect - w/  Examiner and tight tolerances'

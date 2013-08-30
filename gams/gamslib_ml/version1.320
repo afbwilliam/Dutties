@@ -1,0 +1,58 @@
+$title How to test for a GAMS version (VERSION1,SEQ=320)
+$ontext
+
+As new features are added to the gams system, one may want
+to write GAMS code that adjusts to what version it is running
+under. The GAMS language processor has an integer version ID,
+whereas the GAMS releases are numbered with a string that can
+interpreted as a floating point number.
+
+GAMS release     GAMS version
+22.5             148            2007-04-01
+22.4             147            2007-02-14
+22.3             146            2006-11-27
+22.2             145            2006-04-21
+22.1             144            2006-03-15
+22.0             143            2005-08-01
+....
+
+1. 1995-09-28 the following features were introduced (GAMS version 86):
+
+   $version nnn     will issue a compilation error if nnn is greater than the
+                    current GAMS version
+   %system.version% will be replace with 'GAMS Rev nnn' where nnn is the
+                    current GAMS version
+   system.version   can be used on put without %% and ''
+
+2. 2006-04-21 GAMS release 22.2 (GAMS version 145) added the following features:
+
+   %system.GamsVersion%         will be replace with the current GAMS version 'nnn'
+   GamsVersion                  is a new function that will return nnn
+   $if GamsVersion mmm command  will execute command if the current GAMS version
+                                is greater or equal to nnn, this is similar to
+                                the $if errorlevel nnn
+
+3. 2007-04-1 GAMS release 22.5 (GAMS version 148) added access to the GAMS release number:
+
+   %system.GamsRelease%  will be replace with the current GAMS release 'mm.n'
+   GamsRelease           is a new function that will return mm.n
+
+$offtext
+$eolcom //
+
+$version   0     // this will always work
+$version 999     // this will fail
+$if NOT errorfree $clearerror
+
+$if     gamsversion 0   * will never be true
+$if NOT gamsversion 999 * will be true
+
+scalars ver,rel; ver=gamsversion; rel=gamsrelease; display ver,rel;
+abort$(%system.gamsversion% <> gamsversion) 'system error for gamsversion';
+abort$(%system.gamsrelease% <> gamsrelease) 'system error for gamsrelease';
+
+file tmp; put tmp 'system.version=' system.version
+                / 'system.gamsversion=' '%system.gamsversion%'
+                / 'system.gamsrelease=' '%system.gamsrelease%'
+                / 'gamsversion =' gamsversion
+                / 'gamsrelease =' gamsrelease ;

@@ -1,0 +1,30 @@
+$title 'Checks to see if we have unix utilities in the path' (GBIN1,SEQ=61)
+
+* This test is a bit convoluted for MS DOS/Windows:
+* We first need to reset the path to the gams system dircetory
+* and only then we test that gams will set the path to gbin correctly
+* by executing a simple grep job.
+
+$echo display 'good test by gbin1 on %system.filesys%' > temp.txt
+$echo '$call grep display temp.txt > temp.gms'         > temp.%gams.scrext%
+$echo $error gbin1 test failed                         > temp.gms
+
+$if %system.filesys% == DOS  $set ext  temp.bat
+$if %system.filesys% == MS95 $set ext  temp.bat
+$if %system.filesys% == MSNT $set ext  temp.cmd
+
+$if NOT set ext $goto notMS
+
+$echo @echo off                              > %ext%
+$echo path=%gams.sysdir%                     >> %ext%
+$echo 'gams temp.%gams.scrext% lo=%GAMS.lo%' >> %ext%
+$call %ext%
+$goto grepcheck
+
+$label notMS
+$include temp.%gams.scrext%
+
+$label grepcheck
+$call =gams temp.gms lo=%GAMS.lo%
+$if NOT errorlevel 0 $error errorlevel not 0 grep failed
+$if     errorlevel 1 $error errorlevel not 0 grep failed

@@ -1,0 +1,355 @@
+Schedule I   --  Cash Flow Under Proposal
+
+                                Total    Reinvest    Less     Cumulative
+  Date    Principal  Interest   Income    Income  Requirement   Balance
+30-Jun-97   61700000        0  61700000     0.00          0    61700000
+31-Jul-97   61700000    49741  61749741   851.60   -6800000    54950593
+31-Aug-97   54950593        0  54950593     0.00          0    54950593
+30-Sep-97   54950593   308611  55259204   859.66   -6900000    48360064
+31-Oct-97   48360064        0  48360064     0.00          0    48360064
+30-Nov-97   48360064  1022039  49382103     0.00   -6900000    42482103
+31-Dec-97   42482103        0  42482103     0.00          0    42482103
+31-Jan-98   42482103   245963  42728066     0.00   -6700000    36028066
+28-Feb-98   36028066        0  36028066     0.00          0    36028066
+31-Mar-98   36028066   119842  36147907  7682.22   -7300000    28855590
+30-Apr-98   28855590        0  28855590     0.00          0    28855590
+31-May-98   28855590   747528  29603117     0.00   -7300000    22303117
+
+
+Annualized Bond Equivilant Rate of Interest     5.8404
+
+
+Schedule II  --  Schedule of Securities to be Purchased
+
+                                    Model    Security  Number of            Percent
+                       Name of    Maturity      ID       Units    Cost of   of Total
+                       Security     Date      Number   Purchased  Purchases Portfolio
+
+US Treasury Bills and Notes
+
+                       ustnote    31-Jul-97               566       579407   0.9391
+                       ustnote    30-Nov-97               411       412527   0.6686
+                       ustnote    31-Mar-98              2140      2152476   3.4886
+                       ustnote    31-May-98             28741     28855590  46.7676
+
+                       Total                                      32000000  51.8639
+
+Obligations of US Govt Agencies
+
+                       fhdn       31-Mar-98               991      5020000   8.1361
+                       fmcdn      31-Jul-97              6216      6170000  10.0000
+                       fndn       30-Sep-97              6275      6170000  10.0000
+
+                       Total                                      17360000  28.1361
+
+Prime Commercial Paper
+
+                       merrilcp   31-Jan-98              5191      5000000   8.1037
+                       gecccp     30-Nov-97              3643      3545963   5.7471
+                       gecccp     31-Jan-98              1509      1454037   2.3566
+                       fordcp     30-Sep-97               428       420529   0.6816
+                       fordcp     30-Nov-97              1972      1919471   3.1110
+
+                       Total                                      12340000  20.0000
+
+                       Total Portfolio                            61700000
+
+Schedule III --  Compliance with Portfolio Requirements
+
+The portfolio in Schedule II satisfies all constraints.
+
+ Namely,
+
+a)  The total investment in U.S. Treasuries   is  $ 32000000
+       which satisfies the minimum requirement of $ 32000000
+
+b)  No proposed security has a maturity dated beyond Nov 30,1998
+
+c)  The total cost to the Authority is      $ 61700000
+       which does not exceed the maximum of $ 61700000
+
+d)  The portfolio contains purchases of government obligations as follows
+
+             Agency                         Total Purchase     Percent of Portfolio
+Federal Home Loan Bank Board                   5020000               8.1361
+Federal Home Loan Mortgage Company             6170000              10.0000
+Federal Mational Mortgage Association          6170000              10.0000
+
+     None of those purchases exceed 10% of the portfolio
+
+e)  The portfolio contains purchases of prime commercial paper as follows
+
+     Commercial Issuer                      Total Purchase     Percent of Portfolio
+Merril Lynch Commercial Paper                  5000000               8.1037
+GE Capital Commercial Paper                    5000000               8.1037
+Ford Commercial Paper                          2340000               3.7925
+
+     None of those purchases exceed $5000000
+
+     Furthermore the total purchase of prime commercial paper is  12340000
+      which amounts to 20.0000 % of the portfolio and does not exceed the
+      20% maximum
+
+f)  The portfolio reinvests only minor amounts at a 5% annual rate
+
+     Reinvestment occurs for two reasons:
+
+       1) Investments are lumpy -- whole units of securities need to
+            be aquired and interest from whole units of sale are recieved
+            so minor amounts of money may not be carried over
+
+       2) Maturity dates do not always exactly match the dates on which
+            cash is required , so cash is held for a few days
+
+
+
+Schedule IV --  Monthly Returns on Money
+
+30-Jun-97       1.04574
+31-Jul-97       1.04150
+31-Aug-97       1.03727
+30-Sep-97       1.03306
+31-Oct-97       1.02887
+30-Nov-97       1.02470
+31-Dec-97       1.02054
+31-Jan-98       1.01640
+28-Feb-98       1.01227
+31-Mar-98       1.00816
+30-Apr-98       1.00407
+31-May-98       1.00000
+
+
+Schedule V --  Costs of Restrictions
+
+Value of allowing one less dollar in U.S. Treasuries  0.0000000
+
+
+Value of allowing one more dollar in U.S. Agency Obligations
+
+
+Value of allowing one more dollar in individual commercial papers
+
+
+
+Value of allowing one more dollar in total commercial paper 0.0000000
+
+
+Schedule VI --  Monthly Cash Flow
+
+----------------------------------------------------------
+
+Sources of Funds - 30-Jun-97
+
+         Initial investment               61700000
+
+         Totals                   Cash in 61700000 Earning        0 Reinv       0
+
+
+Uses of Funds - 30-Jun-97
+
+         Buy Securities
+         fhdn        31-Mar-98             5020000
+         fmcdn       31-Jul-97             6170000
+         fndn        30-Sep-97             6170000
+         ustnote     31-Jul-97              579407
+         ustnote     30-Nov-97              412527
+         ustnote     31-Mar-98             2152476
+         ustnote     31-May-98            28855590
+         merrilcp    31-Jan-98             5000000
+         gecccp      30-Nov-97             3545963
+         gecccp      31-Jan-98             1454037
+         fordcp      30-Sep-97              420529
+         fordcp      30-Nov-97             1919471
+
+         Totals                 Cash used 61700000
+----------------------------------------------------------
+
+Sources of Funds - 31-Jul-97
+
+         fmcdn       31-Jul-97   Maturity  6216881 Earning    46030 Reinv     852
+         ustnote     31-Jul-97   Maturity   583119 Earning     3712 Reinv       0
+
+         Totals                   Cash in  6800000 Earning    49741 Reinv     852
+
+
+Uses of Funds - 31-Jul-97
+
+
+         Authority Draw                    6800000
+
+         Totals                 Cash used  6800000
+----------------------------------------------------------
+
+Sources of Funds - 31-Aug-97
+
+
+         Totals                   Cash in        0 Earning        0 Reinv       0
+
+
+Uses of Funds - 31-Aug-97
+
+
+         Totals                 Cash used        0
+----------------------------------------------------------
+
+Sources of Funds - 30-Sep-97
+
+         fhdn        31-Mar-98   Coupon     141625 Earning   141625
+         fndn        30-Sep-97   Maturity  6275737 Earning   104878 Reinv     860
+         ustnote     31-Mar-98   Coupon      54827 Earning    54827
+         fordcp      30-Sep-97   Maturity   427810 Earning     7281 Reinv       0
+
+         Totals                   Cash in  6900000 Earning   308611 Reinv     860
+
+
+Uses of Funds - 30-Sep-97
+
+
+         Authority Draw                    6900000
+
+         Totals                 Cash used  6900000
+----------------------------------------------------------
+
+Sources of Funds - 31-Oct-97
+
+
+         Totals                   Cash in        0 Earning        0 Reinv       0
+
+
+Uses of Funds - 31-Oct-97
+
+
+         Totals                 Cash used        0
+----------------------------------------------------------
+
+Sources of Funds - 30-Nov-97
+
+         ustnote     30-Nov-97   Maturity   423082 Earning    10555 Reinv       0
+         ustnote     31-May-98   Coupon     862227 Earning   862227
+         gecccp      30-Nov-97   Maturity  3642863 Earning    96900 Reinv       0
+         fordcp      30-Nov-97   Maturity  1971828 Earning    52357 Reinv       0
+
+         Totals                   Cash in  6900000 Earning  1022039 Reinv       0
+
+
+Uses of Funds - 30-Nov-97
+
+
+         Authority Draw                    6900000
+
+         Totals                 Cash used  6900000
+----------------------------------------------------------
+
+Sources of Funds - 31-Dec-97
+
+
+         Totals                   Cash in        0 Earning        0 Reinv       0
+
+
+Uses of Funds - 31-Dec-97
+
+
+         Totals                 Cash used        0
+----------------------------------------------------------
+
+Sources of Funds - 31-Jan-98
+
+         merrilcp    31-Jan-98   Maturity  5190976 Earning   190976 Reinv       0
+         gecccp      31-Jan-98   Maturity  1509024 Earning    54987 Reinv       0
+
+         Totals                   Cash in  6700000 Earning   245963 Reinv       0
+
+
+Uses of Funds - 31-Jan-98
+
+
+         Authority Draw                    6700000
+
+         Totals                 Cash used  6700000
+----------------------------------------------------------
+
+Sources of Funds - 28-Feb-98
+
+
+         Totals                   Cash in        0 Earning        0 Reinv       0
+
+
+Uses of Funds - 28-Feb-98
+
+
+         Totals                 Cash used        0
+----------------------------------------------------------
+
+Sources of Funds - 31-Mar-98
+
+         fhdn        31-Mar-98   Maturity  5105576 Earning    77894 Reinv    7682
+         ustnote     31-Mar-98   Maturity  2194424 Earning    41948 Reinv       0
+
+         Totals                   Cash in  7300000 Earning   119842 Reinv    7682
+
+
+Uses of Funds - 31-Mar-98
+
+
+         Authority Draw                    7300000
+
+         Totals                 Cash used  7300000
+----------------------------------------------------------
+
+Sources of Funds - 30-Apr-98
+
+
+         Totals                   Cash in        0 Earning        0 Reinv       0
+
+
+Uses of Funds - 30-Apr-98
+
+
+         Totals                 Cash used        0
+----------------------------------------------------------
+
+Sources of Funds - 31-May-98
+
+         ustnote     31-May-98   Maturity 29603117 Earning   747528 Reinv       0
+
+         Totals                   Cash in 29603117 Earning   747528 Reinv       0
+
+
+Uses of Funds - 31-May-98
+
+
+         Authority Draw                    7300000
+
+         Ending Balance                   22303117
+
+         Totals                 Cash used 29603117
+
+Schedule VII --  Raw Security Data Used
+
+                       Price              Coupon    Coupon     Short
+                      Less Any            6 months 12 months   Term   Minimum
+Name of     Model     Payments    Mature  before    before   Reinvest   Lot   Maximum
+Security   Maturity   to Seller    Value  Maturity Maturity   Income   Size   Available
+fhdn       31-Mar-98  5064.2938  5142.875  142.88     0.00     7.750      2
+fhdn       31-May-98  1000.0000  1027.400   27.40     0.00     0.281    100
+fmcdn      31-Jul-97   992.5950  1000.000    0.00     0.00     0.137     25
+fndn       30-Sep-97   983.2861  1000.000    0.00     0.00     0.137     10
+fndn       30-Nov-97   974.6253  1000.000    0.00     0.00     0.685     10
+ustnote    31-Jul-97  1022.8229  1029.375    0.00     0.00     0.000      5
+ustnote    30-Sep-97  1011.7572  1027.500    0.00     0.00     0.000      1
+ustnote    30-Nov-97  1004.3033  1030.000    0.00     0.00     0.000      1
+ustnote    31-Jan-98  1020.3557  1028.125   28.13     0.00     0.000      1
+ustnote    31-Mar-98  1006.0195  1025.625   25.63     0.00     0.000      1
+ustnote    31-May-98  1003.9908  1030.000   30.00     0.00     0.000      5
+merrilcp   31-Jul-97   992.2917  1000.000    0.00     0.00     0.000    100
+merrilcp   30-Sep-97   982.7950  1000.000    0.00     0.00     0.000    100
+merrilcp   30-Nov-97   973.2444  1000.000    0.00     0.00     0.000    100
+merrilcp   31-Jan-98   963.2100  1000.000    0.00     0.00     0.000    100
+gecccp     31-Jul-97   992.4867  1000.000    0.00     0.00     0.000    100
+gecccp     30-Sep-97   982.9500  1000.000    0.00     0.00     0.000    100
+gecccp     30-Nov-97   973.4000  1000.000    0.00     0.00     0.000    100
+gecccp     31-Jan-98   963.5614  1000.000    0.00     0.00     0.000    100
+fordcp     31-Jul-97   992.5003  1000.000    0.00     0.00     0.000    100
+fordcp     30-Sep-97   982.9806  1000.000    0.00     0.00     0.000    100
+fordcp     30-Nov-97   973.4475  1000.000    0.00     0.00     0.000    100
+fordcp     31-Jan-98   963.6261  1000.000    0.00     0.00     0.000    100

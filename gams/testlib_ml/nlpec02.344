@@ -1,0 +1,72 @@
+$TITLE 'NLPEC test suite - loop over DNLP solvers' (NLPEC02,SEQ=344)
+
+$ontext
+This model runs the NLPEC solver on the mpec01 model from testlib
+for each DNLP solver.  This tests that our solvers can run correctly
+as subsolvers of NLPEC - sometimes things happen to break this!
+
+Contributor: Steven Dirkse
+$offtext
+
+* requires CMEX Rev 141 - system.solverNames
+$version 141
+
+set solverNames / system.solverNames /;
+SET solverPlatformMap(solverNames,*) / system.SolverPlatformMap /;
+SET avail(solverNames)  'Solvers available for this platform';
+set lame(solverNames) /
+ ALPHAECP
+ AMPL
+ BARON
+ BARON2
+ BENCH
+ COINOS
+ DE
+ OS
+ CONVERT
+ CONVERTD
+ EXAMINER
+ GAMSCHK
+ GLOMIQO
+ KESTREL
+ LGO
+ LGOD
+ LINDOGLOBAL
+ LINDO
+ LINGO
+ MPECDUMP
+ MSNLP
+ OQNLP
+ SCENSOLVER
+/;
+set dummy / dnlp /;
+
+avail(solverNames) = sum(solverPlatformMap(solverNames,'%system.platform%'),1);
+
+SET tested(solverNames);
+tested(solverNames) = SolverCapabilities(solverNames,'dnlp')
+     and avail(solverNames) and not lame(SolverNames);
+
+file opt / 'nlpec.opt' / ;
+scalar rc;
+scalar count  / 0 /;
+scalar fails  / 0 /;
+
+execute 'echo Allruns.txt started on %system.date1% >  allruns.txt';
+execute 'echo fail.txt started on %system.date1% > fail.txt';
+
+loop {tested(solverNames),
+  putclose opt 'subSolver ', solverNames.tl /;
+  execute '=gams mpec01.gms lo=2 optfile=1';
+  rc = errorlevel;
+  count = count + 1;
+  if {rc,
+    execute 'cat nlpec.opt >> fail.txt';
+    fails := fails + 1;
+  };
+  execute 'cat nlpec.opt >> allruns.txt';
+};
+
+display "Count of attempted runs: ", count;
+display "Count of    failed runs: ", fails;
+abort$fails "Count of failed runs: ", fails;

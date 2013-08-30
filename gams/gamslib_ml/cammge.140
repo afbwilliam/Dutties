@@ -1,0 +1,598 @@
+$title Cameroon General Equilibrium Model - Mpsge Syntax (CAMMGE,SEQ=140)
+$Ontext
+       This is a modified version of gams library model CAMCGE.
+
+       This general equilibrium model is widely used as a blueprint
+       for new model developments. It follows closely the style and type
+       of model pioneered by devis, de melo and robinson in the late 1970.
+
+
+Condon, T, Dahl, H, and Devarajan, S, Implementing A Computable General
+Equilibrium Model on GAMS - the Cameroon Model. Tech. rep., The World
+Bank, 1987.
+
+$Offtext
+
+ set i       sectors   / ag_subsist    food crops
+                         ag_exp_ind    cash crops
+                         sylvicult     forestry
+                         ind_alim      food processing
+                         biens_cons    consumer goods
+                         biens_int     intermediate goods
+                         cim_int       construction materials
+                         biens_cap     capital goods
+                         construct     construction
+                         services      private services
+                         publiques     public services  /
+
+     it(i)   traded sectors
+     lc      labor categories  / rural , urban-unsk , urban-skil /
+
+     alias (i,j)
+
+*       -------------------- start benchmark data -------------------------
+
+parameter wa0(lc)     average wage rates ('79-80 mill cfaf per worker)
+
+        /rural  0.11, urban-unsk 0.15678, urban-skil 1.8657/ ;
+
+ scalars
+    er      real exchange rate     (unity)                   / 0.21 /
+    gr0     government revenue     ('79-80 bill cfaf)        / 179.00 /
+    gdtot0  government consumption ('79-80 bill cfaf)        / 135.03 /
+    cdtot0  private consumption    ('79-80 bill cfaf)        / 947.98 /
+    mpsv    marginal propensity to save (unity)              / 0.09305/
+    fsav0   foreign saving         ('79-80 bill dollars);
+
+table io(i,j) input-output coefficients  (unity)
+
+            ag_subsist  ag_exp_ind   sylvicult    ind_alim  biens_cons
+ag_subsist     0.03046                             0.30266     0.00206
+ag_exp_ind                 0.01518                 0.02043     0.01123
+sylvicult                                          0.00243
+ind_alim       0.00341     0.00629                 0.03241     0.01234
+biens_cons                                         0.00105     0.05385
+biens_int      0.00676     0.12385     0.02095     0.03794     0.08309
+cim_int        0.00002     0.00025     0.00017     0.11238     0.05095
+biens_cap      0.00041     0.00971     0.02427     0.00931     0.01229
+construct      0.00472     0.00113     0.00318     0.10456     0.01831
+services       0.00375     0.30649     0.26666     0.10100     0.26072
+publiques      0.00022     0.00293     0.00327     0.00536     0.00539
+
+         +   biens_int     cim_int   biens_cap   construct    services
+ag_subsist                                                     0.04120
+ag_exp_ind     0.00669
+sylvicult      0.02106
+ind_alim       0.00503                                         0.00092
+biens_cons     0.00435                                         0.00103
+biens_int      0.23461     0.18289     0.01567     0.14665     0.00929
+cim_int        0.05593     0.27608     0.11722     0.18643     0.00018
+biens_cap      0.05259     0.02053     0.05013     0.02622     0.00389
+construct      0.05302     0.00172     0.00031     0.01457     0.00385
+services       0.23006     0.11793     0.09922     0.13692     0.13728
+publiques      0.00957     0.00486     0.00081     0.00447     0.00219
+
+         +   publiques
+ind_alim       0.01532
+biens_cons     0.00338
+biens_int      0.08466
+construct      0.00394
+services       0.24145;
+
+
+ table imat(i,j) capital composition matrix   (unity)
+
+            ag_subsist  ag_exp_ind   sylvicult    ind_alim  biens_cons
+ag_subsist     0.23637
+biens_cap      0.59530     0.60608     0.63876     0.60608     0.78723
+construct      0.16833     0.39392     0.36124     0.39392     0.21277
+
+         +   biens_int     cim_int   biens_cap   construct    services
+biens_cap      0.63876     0.63876     0.60608     0.71728     0.17610
+construct      0.36124     0.36124     0.39392     0.28272     0.82390
+
+         +   publiques
+biens_cap      0.17610
+construct      0.82390;
+
+
+ table wdist(i,lc) wage proportionality factors  (unity)
+
+                    rural        urban-unsk         urban-skil
+ ag_subsist       1.01890           0.71491
+ ag_exp_ind       0.49556           0.34774            0.29222
+ sylvicult        3.26280           2.28900            1.92320
+ ind_alim         1.45710           1.02230            0.85902
+ biens_cons       1.13350           0.79531            0.66829
+ biens_int        3.10740           2.18060            1.83230
+ cim_int          6.32240           4.43640            3.72770
+ biens_cap        2.50350           1.75520            1.47580
+ construct        2.92040           2.04920            1.72200
+ services         1.40390           0.98502            0.82776
+ publiques                          1.32630            1.11460;
+
+
+ table xle(i,lc) employment by sector and labor category  (1000 persons)
+
+                           rural   urban-unsk   urban-skil
+ ag_subsist              1654.43    162.89
+ ag_exp_ind               399.93     45.50800      5.05700
+ sylvicult               7.66200      1.78900       .59700
+ ind_alim               12.98900      9.43400      2.35800
+ biens_cons             28.34400     37.46200     12.48800
+ biens_int              18.33100     16.55300      8.30000
+ cim_int                 1.45800      1.31700       .66000
+ biens_cap               3.11200      2.82000      1.20800
+ construct              22.58400     28.46200      7.11600
+ services                 121.20    125.8         61.96000
+ publiques                           83.029       32.77100;
+
+set zzdata /m0,e0,xd0,k0,depr,esub,etrn,eta,
+            tm0,te0,itax0,cles,gles,kio,dst0,id/;
+
+ table zz(zzdata,i) miscellaneous parameters and initial data
+
+      ag_subsist  ag_exp_ind   sylvicult    ind_alim  biens_cons   biens_int
+
+m0      2.461       8.039       0.023       17.961      37.062      138.57
+e0      4.594       125.07      22.337      23.451      5.864       101.33
+xd0     330.48      131.45      29.503      72.024      118.43      284.38
+k0      495.73      170.89      73.76       140.0       236.87      853.13
+depr    0.0246      0.0472      0.0244      0.0144      0.0212      0.0335
+esub    1.5         0.9         0.4         1.25        1.25        0.5
+etrn    1.5         0.9         0.4         1.25        1.25        0.5
+eta     1.0         1.0         1.0         4.0         4.0         4.0
+tm0     0.2205      0.233       0.278       0.3534      0.3826      0.1768
+itax0   0.002       0.191       0.057       0.038       0.096       0.026
+cles    0.2744      0.00445                 0.05599     0.14099     0.17738
+kio     0.11        0.09        0.06        0.01        0.04        0.14
+dst0    4.033       3.509       1.025       3.19        7.101       3.494
+id      6.71
+
+  +     cim_int   biens_cap   construct    services   publiques
+
+m0      49.616      134.72                  74.439
+e0      10.501      3.838                   81.626
+xd0     34.169      10.298      174.12      615.79      163.98
+k0      102.51      20.6        435.29      769.73      180.36
+depr    0.0335      0.0111      0.0232      0.0637      0.0637
+esub    0.75        0.4         0.4         0.4         0.4
+etrn    0.75        0.4         0.4         0.4         0.4
+eta     4.0         4.0                     4.0
+tm0     0.2633      0.268
+itax0   0.014       0.029       0.034       0.076
+cles                            0.004       0.31921     0.02358
+gles                                                    1.0
+kio     0.02        0.01        0.08        0.34        0.1
+dst0                0.433
+id                  113.36      138.13;
+
+*       -------------------- end of benchmark data -------------------------
+
+*       transfer input data into working arrays:
+
+parameter   cles(i)     private consumption shares                    (unity)
+            depr(i)     depreciation rates                            (unity)
+            dk0(i)      investment by sector of destination('79-80 bill cfaf)
+            dst0(i)     inventory investment by sector     ('79-80 bill cfaf)
+            dstr(i)     inventory investment ratios                   (unity)
+            e0(i)       exports                            ('79-80 bill cfaf)
+            esub(i)     armington elasticity of substitution          (unity)
+            eta(i)      export demand elasticity                      (unity)
+            etrn(i)     export elasticity of transformation           (unity)
+            gles(i)     government consumption shares                 (unity)
+            govsav0     benchmark government savings       ('79-80 bill cfaf)
+            hhsav0      benchmark private savings          ('79-80 bill cfaf)
+            totsav0     benchmark total savings
+            indtax0     benchmark indirect tax revenue     ('79-80 bill cfaf)
+            duty0       benchmark export tariff revenue    ('79-80 bill cfaf)
+            tariff0     benchmark import tariff revenue    ('79-80 bill cfaf)
+            id0(i)      investment by sector of origin     ('79-80 bill cfaf)
+            itax0(i)    benchmark indirect tax rates                  (unity)
+            k0(i)       capital stocks by sector           ('79-80 bill cfaf)
+            kio(i)      investment shares by sector of destination    (unity)
+            ls0(lc)     labor supplies by category             (1000 persons)
+            m0(i)       imports                            ('79-80 bill cfaf)
+            pl0(i,lc)   benchmark wage index                          (unity)
+            pwe0(i)     world market price of exports                 (unity)
+            pwm0(i)     world market price of imports                 (unity)
+            rk0(i)      benchmark return to capital                   (unity)
+            te0(i)      benchmark export duty rates                   (unity)
+            tm0(i)      benchmark tariff rates                        (unity)
+            x0(i)       composite good supply              ('79-80 bill cfaf)
+            xd0(i)      domestic output by sector          ('79-80 bill cfaf)
+            xxd0(i)     domestic sales by sector           ('79-80 bill cfaf)
+            y0          benchmark private gdp              ('79-80 bill cfaf);
+
+ cles(i) = zz("cles",i);
+ depr(i) = zz("depr",i);
+ dst0(i) = zz("dst0",i);
+ e0(i)   = zz("e0",i);
+ esub(i) = zz("esub",i);
+ eta(i)  = zz("eta",i);
+ etrn(i) = zz("etrn",i);
+ gles(i) = zz("gles",i);
+ id0(i)  = zz("id",i);
+ itax0(i) = zz("itax0",i);
+ k0(i)   = zz("k0",i);
+ kio(i)  = zz("kio",i);
+ m0(i)   = zz("m0",i);
+ te0(i)  = zz("te0",i);
+ tm0(i)  = zz("tm0",i);
+ xd0(i)  = zz("xd0",i);
+
+*       computed coefficients:
+
+ dstr(i) = dst0(i) / xd0(i);
+ it(i)   = yes$m0(i);
+ ls0(lc) = sum(i, xle(i,lc));
+ pwe0(i) = 1/((1+te0(i))*er) ;
+ pwm0(i) = 1/((1+tm0(i))*er) ;
+ xxd0(i) = xd0(i) - e0(i);
+ x0(i)   = xxd0(i) + m0(i);
+ rk0(i) = (xd0(i) * (1  - itax0(i) - sum(j, io(j,i)))
+                - sum(lc, wa0(lc) * wdist(i,lc) * xle(i,lc))) / k0(i);
+ pl0(i,lc) = wdist(i,lc);
+
+parameter chk,mkt(*);
+chk = sum(i, kio(i)) - 1;
+abort$(abs(chk) gt 1.e-6) " investment shares do not sum to unity" , kio, chk;
+
+chk = sum(i, cles(i)) - 1;
+abort$(abs(chk) gt 1.e-6) " consumption shares do not sum to unity", cles,chk;
+
+chk = sum(i, gles(i)) - 1;
+abort$(abs(chk) gt 1.e-6) " consumption shares do not sum to unity", gles,chk;
+
+*       specify foreign savings for consistency with trade levels:
+
+fsav0 = sum(i, pwm0(i) * m0(i) - pwe0(i) * e0(i));
+display fsav0;
+
+*       government tax revenue:
+
+duty0   = sum(it, te0(it) * e0(it));
+indtax0 = sum(i,  itax0(i) * xd0(i));
+tariff0 = sum(it, tm0(it) * m0(it) * pwm0(it)) * er;
+govsav0 = duty0 + indtax0 + tariff0 - gdtot0;
+
+y0  = sum(i, k0(i) * (rk0(i) -depr(i))) +
+        sum((i,lc), wdist(i,lc) * wa0(lc) * xle(i,lc));
+
+hhsav0 = mpsv * y0;
+
+totsav0 = hhsav0 + govsav0 + sum(i, depr(i)*k0(i)) + fsav0*er;
+
+dk0(i) = kio(i) * (totsav0 - sum(j, dstr(j) * xd0(j)));
+
+mkt(i) = x0(i)  - sum(j, io(i,j) * xd0(j))
+                - dstr(i) * xd0(i)
+                - sum(j, imat(i,j) * dk0(j))
+                - cles(i) * (1-mpsv)*y0
+                - gles(i) * gdtot0;
+
+mkt("total") = sum(i, mkt(i));
+
+display duty0, indtax0, tariff0, y0, govsav0, hhsav0, totsav0, mkt;
+
+*       adjust consumer demand shares for consistency:
+
+parameter cleschk(i,*);
+cleschk(i,"original") = cles(i);
+cles(i) = (cles(i) * (1-mpsv) * y0 + mkt(i)) / ((1-mpsv)*y0);
+cleschk(i,"revised") = cles(i);
+display cleschk;
+
+display k0,rk0;
+
+*       declare exogenous parameters used in counterfactual
+*       simulations:
+
+parameter       tm(i)           import tariff rate
+                te(i)           export tariff rate
+                itax(i)         indirect tax rate
+                pwm(i)          world market import price
+                pwe(i)          world market export price;
+
+tm(i) = tm0(i);
+te(i) = te0(i);
+itax(i) = itax0(i);
+pwm(i) = pwm0(i);
+pwe(i) = pwe0(i);
+
+$ontext
+
+*       the following defines the cameroon model using
+*       mps/ge "vector syntax".
+
+$model:cameroon
+
+*       functions are scaled so that all of the variables
+*       are equal to unity in the benchmark.
+
+*       the counter-factual values of activity levels and prices
+*       should therefore be interpreted as index values relative
+*       to the benchmark.
+
+$sectors:
+        xd(i)           ! domestic and export supply
+        x(i)            ! armington aggregation
+        dk(i)           ! investment by sector of destination
+        m(i)$it(i)      ! imports
+
+$commodities:
+        pfx             ! real exchange rate
+        pd(i)           ! domestic supply price
+        p(i)            ! price index for armington aggregate
+        pe(i)$it(i)     ! export price index
+        pm(i)$it(i)     ! import price index
+        pl(lc)          ! labor price index
+        rk(i)           ! price index for existing capital
+        pk(i)           ! price index for new capital
+        psav            ! price index for savings transfer
+
+$consumers:
+        hh              ! household
+        govt            ! government
+        investor        ! savings allocation agent
+
+$auxiliary:
+        e(i)$it(i)      ! export index
+        vexport         ! value of exports
+        xdl(i)$dstr(i)  ! inventory demand multiplier
+
+*       production function for domestic and export supply:
+
+$prod:xd(i)  t:etrn(i)  a:1
+
+*       separate output coefficients for sales to domestic
+*       and export markets:
+
+        o:pd(i)         q:xxd0(i)       a:govt  t:itax(i)
+        o:pe(i)         q:e0(i)         a:govt  t:itax(i)
+
+*       intermediate inputs:
+
+        i:p(j)  q:(io(j,i)*xd0(i))
+
+*       primary factor inputs:
+
+        i:pl(lc) q:(wa0(lc)*xle(i,lc)) p:pl0(i,lc) a: a:hh t:(wdist(i,lc)-1)
+        i:rk(i)  q:(rk0(i)*k0(i))     a:
+
+*       armington composite function:
+
+$prod:x(i)  s:esub(i)
+        o:p(i)          q:x0(i)
+        i:pd(i)         q:xxd0(i)
+        i:pm(i)         q:m0(i)
+
+*       import and export:
+
+$prod:m(it)
+        o:pm(it)        q:(m0(it))
+        i:pfx           q:(pwm(it)*m0(it)*er)   a:govt t:tm(it)
+
+*       new capital formation:
+
+$prod:dk(i)
+        o:pk(i)         q:dk0(i)
+        i:p(j)          q:(imat(j,i)*dk0(i))
+
+*       private households:
+
+$demand:hh  s:1
+        e:pe(it)        q:(-e0(it))             r:e(it)
+        e:pe(it)        q:(-e0(it)*te(it))      r:e(it)
+        e:pfx           q:1                     r:vexport
+        e:rk(i)         q:(rk0(i)*k0(i))
+        e:pk(i)         q:(-depr(i)*k0(i))
+        e:pl(lc)        q:(wa0(lc)*ls0(lc))
+        d:psav          q:(mpsv*y0)
+        d:p(i)          q:(cles(i)*(1-mpsv)*y0)
+
+*       government - public goods demands are fixed.  any
+*       excess of tax
+
+$demand:govt
+        e:p(i)          q:(-gdtot0*gles(i))
+        e:pe(it)        q:(e0(it)*te(it))       r:e(it)
+        d:psav          q:govsav0
+
+*       investor allocates savings among new capital goods
+*       with fixed budget shares:
+
+$demand:investor  s:1
+        e:psav          q:(govsav0+mpsv*y0)
+        e:pfx           q:(fsav0*er)
+        e:pk(i)         q:(depr(i)*k0(i))
+        e:p(i)          q:(-dstr(i)*xd0(i))     r:xdl(i)
+        d:pk(i)         q:dk0(i)
+
+*       export demand function (constant elasticity):
+
+$constraint:e(i)$it(i)
+        e(i) =e= ( pfx / pe(i))**eta(i);
+
+*       aggregate value of exports:
+
+$constraint:vexport
+        vexport * pfx =e= er * sum(it, pwe0(it)*e0(it)*e(it)*pe(it));
+
+*       store xd level value in auxiliary variable xdl:
+
+$constraint:xdl(i)$dstr(i)
+        xdl(i) =e= xd(i);
+
+$offtext
+$hidden     $$$$$$$$ $$$$$$$$  case important under UNIX
+$sysinclude mpsgeset CAMEROON
+
+*       replicate the benchmark:
+
+e.l(it) = 1;
+vexport.l = sum(it, pwe0(it)*e0(it)*er);
+xdl.l(i) = 1;
+
+*       normalize prices using the real exchange rate for comparability
+*       with test problems camcge and cammcp:
+
+pfx.fx = 1;
+
+*       check the benchmark:
+
+cameroon.iterlim = 0;
+$hidden  $$$$$$$$$$$$ case important under unix
+$include CAMEROON.GEN
+solve cameroon using mcp;
+cameroon.iterlim = 1000;
+
+*--------------------------------------------------------------------------
+*       define the same model using gams algebra.
+
+parameter alpha, lvs, kvs, beta;
+alias (lc, llc);
+
+alpha(i)$(xxd0(i) + e0(i)) = xxd0(i) / (xxd0(i) + e0(i));
+lvs(lc,i)$(xd0(i)*(1-sum(j,io(j,i)))) =
+        pl0(i,lc)*wa0(lc)*xle(i,lc) / (xd0(i)*(1-itax0(i)-sum(j,io(j,i))));
+kvs(i)$(xd0(i)*(1-sum(j,io(j,i)))) =
+        rk0(i) * k0(i) / (xd0(i)*(1-itax0(i)-sum(j,io(j,i))));
+beta(i)$x0(i) = xxd0(i) / x0(i);
+
+equations       prf_xd(i)       zero profit for xd
+                prf_x(i)        zero profit for x
+                prf_m(i)        zero profit for m
+                prf_dk(i)       zero profit for dk
+
+                income_hh       income balance for hh
+                income_gov      income balance for govt
+                income_inv      income balance for inv
+
+                mkt_pfx         supply-demand balance for pfx
+                mkt_pd(i)       supply-demand balance for pd
+                mkt_p(i)        supply-demand balance for p
+                mkt_pe(i)       supply-demand balance for pe
+                mkt_pm(i)       supply-demand balance for pm
+                mkt_pl(lc)      supply-demand balance for pl
+                mkt_rk(i)       supply-demand balance for rk
+                mkt_pk(i)       supply-demand balance for pk;
+
+prf_xd(i)..
+        sum(j, p(j) * io(j,i)) + (1-sum(j,io(j,i))) *
+        (prod(lc$lvs(lc,i),
+                (pl(lc)*wdist(i,lc)/pl0(i,lc))**lvs(lc,i)) * rk(i)**kvs(i))
+        =g=
+        (    alpha(i) *(pd(i)*(1-itax(i))/(1-itax0(i)))**(1+etrn(i)) +
+          (1-alpha(i))*(pe(i)*(1-itax(i))/(1-itax0(i)))**(1+etrn(i))
+        )**(1/(1+etrn(i)));
+
+prf_x(i)..
+        (    beta(i)  * pd(i)**(1-esub(i)) +
+          (1-beta(i)) * pm(i)**(1-esub(i))
+        )**(1/(1-esub(i))) =g= p(i);
+
+prf_m(it)..
+        pfx * pwm(it) * er * (1 + tm(it)) =g= pm(it);
+
+prf_dk(i)..
+        sum(j, p(j) * imat(j,i)) =g= pk(i);
+
+income_hh..
+        hh =e=  sum((lc,i)$xle(i,lc),
+                (wdist(i,lc)-1) * xd(i) * wa0(lc) * xle(i,lc) *
+                (prod(llc$lvs(llc,i),
+                (pl(llc)*wdist(i,llc)/pl0(i,llc))**lvs(llc,i)) *
+                rk(i)**kvs(i) / (pl(lc)*wdist(i,lc)/pl0(i,lc))))
+                + sum(i, rk(i) * rk0(i) * k0(i))
+                - sum(i, pk(i) * depr(i) * k0(i))
+                + sum(lc, pl(lc) * wa0(lc) * ls0(lc));
+
+income_gov..
+        govt =e=
+                sum(i, xd(i) * itax(i) *
+                (pd(i)**etrn(i)*pd(i)*xxd0(i) + pe(i)**etrn(i)*pe(i)*e0(i)) /
+                (    alpha(i) *(pd(i)*(1-itax(i))/(1-itax0(i)))**(1+etrn(i)) +
+                  (1-alpha(i))*(pe(i)*(1-itax(i))/(1-itax0(i)))**(1+etrn(i))
+                )**(etrn(i)/(1+etrn(i))))
+                + sum(it, m(it) * pfx * pwm(it) * m0(it) * er * tm(it))
+                - sum(i, p(i) * gdtot0 * gles(i))
+                + sum(it, (pfx/pe(it))**eta(it) * pe(it) * e0(it) * te(it));
+
+income_inv..
+        investor =e=  govt + mpsv * hh
+                        + pfx * fsav0 * er
+                        + sum(i, pk(i) * depr(i) * k0(i))
+                        - sum(i, xd(i) * p(i) * dstr(i) * xd0(i));
+
+mkt_pfx..
+                fsav0 +
+                sum(it,pwe0(it)*e0(it)*(pfx/pe(it))**eta(it)*pe(it))/pfx
+                =g= sum(it, m(it) * m0(it) * pwm(it));
+
+mkt_pd(i)..
+                xd(i) * xxd0(i) * pd(i)**etrn(i) /
+                (     alpha(i) *pd(i)**(1+etrn(i)) +
+                   (1-alpha(i))*pe(i)**(1+etrn(i))
+                )**(etrn(i)/(1+etrn(i)))  =g=
+                x(i) * xxd0(i) * (p(i)/pd(i))**esub(i);
+
+mkt_p(i)..
+                x(i) * x0(i) =g= hh * cles(i) * (1-mpsv) / p(i)
+                                + gdtot0 * gles(i)
+                                + dstr(i) * xd0(i) * xd(i)
+                                + sum(j, io(i,j)   * xd0(j) * xd(j))
+                                + sum(j, imat(i,j) * dk0(j) * dk(j));
+
+mkt_pe(it)..
+                xd(it) * e0(it) * pe(it)**etrn(it) /
+                (  alpha(it) *pd(it)**(1+etrn(it)) +
+                (1-alpha(it))*pe(it)**(1+etrn(it)))**(etrn(it)/(1+etrn(it)))
+                =g= e0(it) * (pfx/pe(it))**eta(it);
+
+mkt_pm(it)..
+                m(it) * m0(it) =g= x(it) * m0(it) * (p(it)/pm(it))**esub(it);
+
+mkt_pl(lc)..
+                wa0(lc) * ls0(lc) =g=
+                sum(i$xle(i,lc), xd(i) * wa0(lc) * xle(i,lc) *
+                  (prod(llc$lvs(llc,i),
+                  (pl(llc)*wdist(i,llc)/pl0(i,llc))**lvs(llc,i)) *
+                   rk(i)**kvs(i) / (pl(lc)*wdist(i,lc)/pl0(i,lc))) );
+
+mkt_rk(i)..
+                rk0(i) * k0(i) =g=
+                xd(i) * rk0(i) * k0(i) *
+                  (prod(llc$lvs(llc,i),
+                  (pl(llc)*wdist(i,llc)/pl0(i,llc))**lvs(llc,i)) *
+                   rk(i)**kvs(i) / rk(i) );
+
+mkt_pk(i)..
+                dk(i) * dk0(i) =g= investor * (dk0(i)/sum(j, dk0(j))) / pk(i);
+
+model algebraic /
+        prf_xd.xd,prf_x.x,prf_m.m,prf_dk.dk,
+        income_hh.hh,income_gov.govt,income_inv.investor,
+        mkt_pfx.pfx,mkt_pd.pd,mkt_p.p,mkt_pe.pe,mkt_pm.pm,mkt_pl.pl,
+        mkt_rk.rk,mkt_pk.pk /;
+
+*--------------------------------------------------------------------------
+*       check the mpsge solution using the algebraic formulation:
+
+algebraic.iterlim = 0;
+solve algebraic using mcp;
+algebraic.iterlim = 2000;
+*--------------------------------------------------------------------------
+
+*       solve a counterfactual with uniform tariff rates:
+
+tm(i) = 0.15;
+$hidden  $$$$$$$$$$$$ case important under unix
+$include CAMEROON.GEN
+solve cameroon using mcp;
+*--------------------------------------------------------------------------
+*       once more check the mpsge solution using the algebraic formulation:
+
+algebraic.iterlim = 0;
+solve algebraic using mcp;
+*--------------------------------------------------------------------------

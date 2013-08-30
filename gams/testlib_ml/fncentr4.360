@@ -1,0 +1,65 @@
+$TITLE 'Test correctness of centropy intrinsic' (FNCENTR4,SEQ=360)
+
+$ontext
+
+Test the centropy function, comparing the true derivatives
+with those computed numerically.  This test is just for rough
+correctness (to be sure we haven't gotten any signs wrong, etc.) so
+keep the inputs in an easy range where no overflow is possible:
+  x,y in [1e0,1e100]
+  d   in [0,1e-8]
+
+$offtext
+
+$include fnset_xy.inc
+
+set T / 1 * 4000 /;
+set TT(T);
+
+parameter pdata(T);
+option seed = 2008;
+pdata(T) = uniform(0,100);
+data(T,'x') = 10**pdata(T);
+pdata(T) = uniform(0,100);
+data(T,'y') = 10**pdata(T);
+pdata(T) = uniform(-20,-6);
+TT(T) = pdata(T) < -8;
+data(TT,'d') = 10**pdata(TT);
+
+aeps = 1e-4;
+reps = 1e-5;
+relToInput = 0;
+
+* compute the derivative values using finite differences
+* FYI: CMEX uses centered differences for gradn and hessn where possible:
+* grad(x) = (f(x+h) - f(x-h)) / 2h
+* hess(x) = grad(x+h) - grad(x-h) / 2h
+* setting real1 decreases h from the default of 1e-3
+* option real1 = 5e-5;
+
+loop {T,
+  data(T,  'f_')  = centropy.value(    data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T, 'fy_')  = centropy.gradn(1:  data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T, 'fx_')  = centropy.gradn(2:  data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fyy_')  = centropy.hessn(1:1:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fyx_')  = centropy.hessn(1:2:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fxy_')  = centropy.hessn(2:1:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fxx_')  = centropy.hessn(2:2:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T, 'rc')   = 0;
+  data(T, 'ec')   = 0;
+};
+
+loop {T,
+  data(T,  'f')  = centropy.value(   data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T, 'fy')  = centropy.grad(1:  data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T, 'fx')  = centropy.grad(2:  data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fyy')  = centropy.hess(1:1:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fyx')  = centropy.hess(1:2:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fxy')  = centropy.hess(2:1:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T,'fxx')  = centropy.hess(2:2:data(T,'y'),data(T,'x'),data(T,'d'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display relToInput;
+$include fntest_xy.inc

@@ -1,0 +1,306 @@
+$Title Test of EMP based on trnsport model (EMP06,SEQ=469)
+
+$Ontext
+Reformulate a modified version of trnsport using EMP, and check for
+correct solutions.  Modifications to the original model:
+  1. Adjust the data to make some supply constraints slack and remove
+  degeneracy.
+  2. Adjust equations to make LP duals (i.e. the prices) positive -
+  re-orientation is left for another discussion and another test
+
+Contributor: Steven Dirkse, January 2010
+
+$Offtext
+
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          1.5           0.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+          c(i,j) = f * d(i,j) / 1000 ;
+
+* ------------- optimal values -----------------
+parameters
+  costMarg   'objective eqn marginal' / 1 /
+  costLev    'objective eqn level'    / 0 /
+  sPrice(i)  'optimal supply price' /
+    seattle      0.09
+    san-diego    0
+  /
+  sLev(i)    'optimal supply level' /
+    seattle      -350
+    san-diego    -550
+  /
+  dPrice(j)  'optimal demand price' /
+    new-york     0.2250
+    chicago      0.1530
+    topeka       0.1260
+  /
+  dLev(j)    'optimal demand level' /
+    new-york     325
+    chicago      300
+    topeka       275
+  /
+  zLev       'optimal z level'    / 122.175 /
+  xMarg(i,j) 'optimal x marginal' /
+    seattle  .new-york     0
+    seattle  .chicago      0
+    seattle  .topeka       0.126
+    san-diego.new-york     0
+    san-diego.chicago      0.009
+    san-diego.topeka       0
+  /
+  xLev(i,j)  'optimal x level' /
+    seattle  .new-york    50
+    seattle  .chicago    300
+    seattle  .topeka       0
+    san-diego.new-york   275
+    san-diego.chicago      0
+    san-diego.topeka     275
+  /
+  ;
+
+positive variables
+  x(i,j)  shipment quantities in cases
+  sPr(i) 'supply price'
+  dPr(j) 'demand price'
+  ;
+variable
+  z       total transportation costs in thousands of dollars ;
+  ;
+
+equations
+  cost        define objective function
+  supply(i)   observe supply limit at plant i
+  demand(j)   satisfy demand at market j
+  demandX(j)  'satisfy price-responsive demand at market j'
+  profit(i,j)
+  ;
+
+cost ..          z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+supply(i) ..     a(i)  =g=  sum(j, x(i,j)) ;
+
+demand(j) ..     sum(i, x(i,j))  =g=  b(j) ;
+demandX(j) ..    sum(i, x(i,j))  =g=  b(j) - eps*dPr(j) ;
+
+profit(i,j) ..   sPr(i) + c(i,j)  =g=  dPr(j);
+
+Model translp   / cost, supply, demand / ;
+Model transmcp  / supply.sPr, demandX.dPr, profit.x / ;
+Model transemp 'solve using emp' / cost, supply, demandX /;
+
+file fx / '%emp.info%' /;
+
+* ------------- solve/check LP -----------------
+Solve translp using lp minimizing z ;
+
+abort$[abs(costMarg-cost.m) > 1e-5] 'bad cost marginal',
+  cost.m, costMarg;
+abort$[smax{i, abs(sPrice(i)-supply.m(i))} > 1e-5] 'bad supply price',
+  supply.m, sPrice;
+abort$[smax{j, abs(dPrice(j)-demand.m(j))} > 1e-5] 'bad demand price',
+  demand.m, dPrice;
+
+abort$[abs(costLev-cost.l) > 1e-5] 'bad cost level',
+  cost.l, costLev;
+abort$[smax{i, abs(sLev(i)-supply.l(i))} > 1e-5] 'bad supply level',
+  supply.l, sLev;
+abort$[smax{j, abs(dLev(j)-demand.l(j))} > 1e-5] 'bad demand level',
+  demand.l, dLev;
+
+abort$[abs(z.m) > 1e-5] 'bad z marginal - not zero', z.m;
+abort$[smax{(i,j), abs(xMarg(i,j)-x.m(i,j))} > 1e-5] 'bad x marginal',
+  x.m, xMarg;
+
+abort$[abs(zLev-z.l) > 1e-5] 'bad z level',
+  z.l, zLev;
+abort$[smax{(i,j), abs(xLev(i,j)-x.l(i,j))} > 1e-5] 'bad x level',
+  x.l, xLev;
+
+
+* ------------- solve/check MCP -----------------
+Solve transmcp using mcp;
+
+abort$[smax{i, abs(sPrice(i)-supply.m(i))} > 1e-5] 'bad supply price',
+  supply.m, sPrice;
+abort$[smax{j, abs(dPrice(j)-demandX.m(j))} > 1e-5] 'bad demand price',
+  demandX.m, dPrice;
+
+abort$[smax{i, abs(sLev(i)-supply.l(i))} > 1e-5] 'bad supply level',
+  supply.l, sLev;
+abort$[smax{j, abs(dLev(j)-demandX.l(j))} > 1e-5] 'bad demand level',
+  demandX.l, dLev;
+
+abort$[smax{(i,j), abs(xMarg(i,j)-x.m(i,j))} > 1e-5] 'bad x marginal',
+  x.m, xMarg;
+
+abort$[smax{(i,j), abs(xLev(i,j)-x.l(i,j))} > 1e-5] 'bad x level',
+  x.l, xLev;
+abort$[smax{i, abs(sPrice(i)-sPr.l(i))} > 1e-5] 'bad supply price',
+  sPr.l, sPrice;
+abort$[smax{j, abs(dPrice(j)-dPr.l(j))} > 1e-5] 'bad demand price',
+  dPr.l, dPrice;
+
+
+* ------------- solve/check EMP w/ dualvar -----------------
+* use the EMP info file to define the demand price to be equal to the
+* dual of the demand equation
+put fx '* dPr(j) = demandX.m(j)';
+loop{j, put / 'dualvar' dPr(j) demandX(j) };
+putclose;
+Solve transemp using emp minimizing z ;
+
+abort$[abs(costMarg-cost.m) > 1e-5] 'bad cost marginal',
+  cost.m, costMarg;
+abort$[smax{i, abs(sPrice(i)-supply.m(i))} > 1e-5] 'bad supply price',
+  supply.m, sPrice;
+abort$[smax{j, abs(dPrice(j)-demandX.m(j))} > 1e-5] 'bad demand price',
+  demandX.m, dPrice;
+
+abort$[abs(costLev-cost.l) > 1e-5] 'bad cost level',
+  cost.l, costLev;
+abort$[smax{i, abs(sLev(i)-supply.l(i))} > 1e-5] 'bad supply level',
+  supply.l, sLev;
+abort$[smax{j, abs(dLev(j)-demandX.l(j))} > 1e-5] 'bad demand level',
+  demandX.l, dLev;
+
+abort$[abs(z.m) > 1e-5] 'bad z marginal - not zero', z.m;
+abort$[smax{(i,j), abs(xMarg(i,j)-x.m(i,j))} > 1e-5] 'bad x marginal',
+  x.m, xMarg;
+
+abort$[abs(zLev-z.l) > 1e-5] 'bad z level',
+  z.l, zLev;
+abort$[smax{(i,j), abs(xLev(i,j)-x.l(i,j))} > 1e-5] 'bad x level',
+  x.l, xLev;
+abort$[smax{j, abs(dPrice(j)-dPr.l(j))} > 1e-5] 'bad demand price',
+  dPr.l, dPrice;
+
+
+* ------------- solve/check EMP w/ equilibrium -----------------
+* use the EMP info file to set up an equilibrium model in EMP
+put fx;
+put 'equilibrium' /;
+put 'min z *  cost' /;
+loop{i,
+  put supply(i) /;
+};
+loop{j,
+  put demandX(j) /;
+};
+loop{j,
+  put 'dualVar' dPr(j) demandX(j) /;
+};
+putclose;
+Solve transemp using emp;
+
+abort$[abs(costMarg-cost.m) > 1e-5] 'bad cost marginal',
+  cost.m, costMarg;
+abort$[smax{i, abs(sPrice(i)-supply.m(i))} > 1e-5] 'bad supply price',
+  supply.m, sPrice;
+abort$[smax{j, abs(dPrice(j)-demandX.m(j))} > 1e-5] 'bad demand price',
+  demandX.m, dPrice;
+
+abort$[abs(costLev-cost.l) > 1e-5] 'bad cost level',
+  cost.l, costLev;
+abort$[smax{i, abs(sLev(i)-supply.l(i))} > 1e-5] 'bad supply level',
+  supply.l, sLev;
+abort$[smax{j, abs(dLev(j)-demandX.l(j))} > 1e-5] 'bad demand level',
+  demandX.l, dLev;
+
+abort$[abs(z.m) > 1e-5] 'bad z marginal - not zero', z.m;
+abort$[smax{(i,j), abs(xMarg(i,j)-x.m(i,j))} > 1e-5] 'bad x marginal',
+  x.m, xMarg;
+
+abort$[abs(zLev-z.l) > 1e-5] 'bad z level',
+  z.l, zLev;
+abort$[smax{(i,j), abs(xLev(i,j)-x.l(i,j))} > 1e-5] 'bad x level',
+  x.l, xLev;
+abort$[smax{j, abs(dPrice(j)-dPr.l(j))} > 1e-5] 'bad demand price',
+  dPr.l, dPrice;
+
+* ================================================================
+* Do the same tests again but now using non-indexed emp.info files
+* ================================================================
+
+* ------------- solve/check EMP w/ dualvar -----------------
+* use the EMP info file to define the demand price to be equal to the
+* dual of the demand equation
+put fx '* dPr(j) = demandX.m(j)';
+putclose / 'dualvar dPr demandX';
+Solve transemp using emp minimizing z ;
+
+abort$[abs(costMarg-cost.m) > 1e-5] 'bad cost marginal',
+  cost.m, costMarg;
+abort$[smax{i, abs(sPrice(i)-supply.m(i))} > 1e-5] 'bad supply price',
+  supply.m, sPrice;
+abort$[smax{j, abs(dPrice(j)-demandX.m(j))} > 1e-5] 'bad demand price',
+  demandX.m, dPrice;
+
+abort$[abs(costLev-cost.l) > 1e-5] 'bad cost level',
+  cost.l, costLev;
+abort$[smax{i, abs(sLev(i)-supply.l(i))} > 1e-5] 'bad supply level',
+  supply.l, sLev;
+abort$[smax{j, abs(dLev(j)-demandX.l(j))} > 1e-5] 'bad demand level',
+  demandX.l, dLev;
+
+abort$[abs(z.m) > 1e-5] 'bad z marginal - not zero', z.m;
+abort$[smax{(i,j), abs(xMarg(i,j)-x.m(i,j))} > 1e-5] 'bad x marginal',
+  x.m, xMarg;
+
+abort$[abs(zLev-z.l) > 1e-5] 'bad z level',
+  z.l, zLev;
+abort$[smax{(i,j), abs(xLev(i,j)-x.l(i,j))} > 1e-5] 'bad x level',
+  x.l, xLev;
+abort$[smax{j, abs(dPrice(j)-dPr.l(j))} > 1e-5] 'bad demand price',
+  dPr.l, dPrice;
+
+
+* ------------- solve/check EMP w/ equilibrium -----------------
+* use the EMP info file to set up an equilibrium model in EMP
+put fx   'equilibrium' /;
+put      'min z * cost supply demandX' /;
+putclose 'dualVar dPr demandX' /;
+Solve transemp using emp;
+
+abort$[abs(costMarg-cost.m) > 1e-5] 'bad cost marginal',
+  cost.m, costMarg;
+abort$[smax{i, abs(sPrice(i)-supply.m(i))} > 1e-5] 'bad supply price',
+  supply.m, sPrice;
+abort$[smax{j, abs(dPrice(j)-demandX.m(j))} > 1e-5] 'bad demand price',
+  demandX.m, dPrice;
+
+abort$[abs(costLev-cost.l) > 1e-5] 'bad cost level',
+  cost.l, costLev;
+abort$[smax{i, abs(sLev(i)-supply.l(i))} > 1e-5] 'bad supply level',
+  supply.l, sLev;
+abort$[smax{j, abs(dLev(j)-demandX.l(j))} > 1e-5] 'bad demand level',
+  demandX.l, dLev;
+
+abort$[abs(z.m) > 1e-5] 'bad z marginal - not zero', z.m;
+abort$[smax{(i,j), abs(xMarg(i,j)-x.m(i,j))} > 1e-5] 'bad x marginal',
+  x.m, xMarg;
+
+abort$[abs(zLev-z.l) > 1e-5] 'bad z level',
+  z.l, zLev;
+abort$[smax{(i,j), abs(xLev(i,j)-x.l(i,j))} > 1e-5] 'bad x level',
+  x.l, xLev;
+abort$[smax{j, abs(dPrice(j)-dPr.l(j))} > 1e-5] 'bad demand price',
+  dPr.l, dPrice;

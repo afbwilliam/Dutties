@@ -1,0 +1,249 @@
+$title Traffic Assignment Model (TRAFFIC,SEQ=19)
+
+$ontext
+
+In this traffic assignment problem, we have a number of users/cities, connected
+by a shared network of roads.   Each user n
+needs to move a fixed quantity from her city n to city n++3
+over the shared network.  Each user can routes flow among multiple paths between
+her source and distination nodes.  The delay on each path is the sum of the
+delay along each arc in the path, while the *effective delay* for each user
+is the maximum delay over the her paths with nonzero flow.  Each user
+routes her flow so as to minimize her effective delay, assuming the flow chosen
+by the other users is constant.
+
+We give two formulations of the model: the first is as a VI via EMP,
+the second as a standard MCP.  The MCP formulation has the advantage of yielding
+a small model (one variable per city) but the function used to define the MCP
+is less readable and maintainable than the functions used to define the VI.
+It would be easier to modify the VI formulation to add some additional links
+or to bound some of the link flows, while the MCP formulation depends on the
+particular form of the network.
+
+The MCP formulation is taken from
+
+Steven P. Dirkse,  Ph.D. Dissertation
+         Robust Solution of Mixed Complementarity Problems.
+         Mathematical Programming Technical Report 94-12, August 1994.
+         ftp://ftp.cs.wisc.edu/math-prog/tech-reports/94-12.ps
+         Chapter 3.2.4, Pages 63-65
+
+while the model originates from
+
+Bertsekas, D. P. & Gafni E. M. (1982) 'Projection methods for variational
+         inequalities with application to the traffic assignment problem',
+         Mathematical Programming Study 17, 139-159
+
+Contributor: Steven Dirkse, February 2009
+
+$offtext
+
+$eolcom //
+
+sets
+  n   'cities/origins in the network'     / n1 * n5 /
+  typ 'types of nodes' /
+        od      'origin-destination node'
+        oA, oB  'outer loop'
+        iA, iB  'inner loop'
+  /
+  p   'path types' / inner, outer /
+  ;
+alias (n,n1,n2);
+alias (typ,t1,t2);
+sets
+  A(n1,t1,n2,t2) 'unidirectional arcs from (n1,t1) to (n2,t2)'
+  paths(n,p,n1,t1,n2,t2) 'path-arc incidence matrix';
+
+A(n1,'od',n1   ,'oA') = yes;   // on-ramp to outer loop
+A(n1,'oA',n1   ,'oB') = yes;   // main outer arc
+A(n1,'oB',n1++1,'od') = yes;   // off-ramp from outer loop
+A(n1,'oB',n1++1,'oA') = yes;   // outer loop by-pass
+
+A(n1,'od',n1   ,'iA') = yes;   // on-ramp to inner loop
+A(n1,'iA',n1   ,'iB') = yes;   // main inner arc
+A(n1,'iB',n1--1,'od') = yes;   // off-ramp from inner loop
+A(n1,'iB',n1--1,'iA') = yes;   // outer loop by-pass
+
+abort$[card(A) <> 8*card(n)] 'We should have 8 arcs per city';
+
+scalars
+  w       'highway weight'       / 10 /
+  gamma   'coupling coefficient' / 0.5 /;
+* The delay on some links is increased by
+*    gamma * delay on merging/exiting links
+* with gamma set to  0, 0.5, or 4
+
+$ONTEXT
+demands are either
+( .1,   .2,     .3,     .4,     .5)
+or
+( 1,    8       1       8       1),
+$OFFTEXT
+
+parameters
+  demand (n) /
+    n1   .1
+    n2   .2
+    n3   .3
+    n4   .4
+    n5   .5
+  /,
+  c(n,p,n1,t1,n2,t2)  'coefs for delay';
+
+
+c(n,'outer',n,   'od',n,   'oA') = 1;     // main node to outer loop
+c(n,'outer',n,   'oA',n,   'oB') = w;     // outer loop
+c(n,'outer',n,   'oB',n++1,'oA') = 1;     // outer loop bypass
+c(n,'outer',n++1,'oA',n++1,'oB') = w;     // outer loop
+c(n,'outer',n++1,'oB',n++2,'oA') = 1;     // outer loop bypass
+c(n,'outer',n++2,'oA',n++2,'oB') = w;     // outer loop
+c(n,'outer',n++2,'oB',n++3,'od') = 1;     // outer loop to main node
+
+c(n,'inner',n,   'od',n,   'iA') = 1;     // main node to inner loop
+c(n,'inner',n,   'iA',n,   'iB') = w;     // inner loop
+c(n,'inner',n,   'iB',n--1,'iA') = 1;     // inner loop bypass
+c(n,'inner',n--1,'iA',n--1,'iB') = w;     // inner loop
+c(n,'inner',n--1,'iB',n--2,'od') = 1;     // inner loop to main node
+
+abort$[card(c) <> 12*card(n)] 'We should have 12 arcs per city in c';
+
+paths(n,p,n1,t1,n2,t2) = c(n,p,n1,t1,n2,t2);
+
+* now add some extra delay for congestion effects due to arcs not on the path
+* two types of congestion are considered:
+*   1. delay on an on-ramp due to merging with traffic on a bypass link
+*   2  delay on a highway due to traffic on an off-ramp
+c(n,'outer',n--1,'oB',n   ,'oA') = gamma;    // bypass traffic slows on-ramp
+c(n,'outer',n   ,'oB',n++1,'od') = 2*gamma;  // off-ramp traffic slows highway
+c(n,'outer',n++1,'oB',n++2,'od') = 2*gamma;  // off-ramp traffic slows highway
+c(n,'outer',n++2,'oB',n++3,'od') =
+ c(n,'outer',n++2,'oB',n++3,'od') +2*gamma;  // off-ramp traffic slows highway
+
+c(n,'inner',n++1,'iB',n   ,'iA') = gamma;    // bypass traffic slows on-ramp
+c(n,'inner',n   ,'iB',n--1,'od') = 2*gamma;  // off-ramp traffic slows highway
+c(n,'inner',n--1,'iB',n--2,'od') =
+ c(n,'inner',n--1,'iB',n--2,'od') +2*gamma;  // off-ramp traffic slows highway
+
+
+positive variables
+  x(n,p)         'flow on each path';
+variables
+  f(n1,t1,n2,t2) 'flow on each arc';
+
+equations
+  delay(n,p)     'delay on each of the paths'
+  fDef(n1,t1,n2,t2)
+  flowCon(n)    'flows must meet demands'
+  ;
+$macro d(f) (1 + f + sqr(f))
+
+delay(n,p)..  sum{A, c(n,p,A)*d(f(A))} =N= 0;
+fDef(A)..  f(A) =e= sum{paths(n,p,A), x(n,p)};
+flowCon(n).. sum{p, x(n,p)} =G= demand(n);
+
+model mVI / delay, fDef, flowCon /;
+
+* define the complementary pairs for vi
+file myinfo / '%emp.info%' /;
+putclose myinfo 'vi delay x';
+
+x.l(n,p) = 0.5 * demand(n);
+f.l(A) = sum{paths(n,p,A), x.l(n,p)}
+
+solve mVI using EMP;
+abort$[mVI.modelstat <> %MODELSTAT.LOCALLY OPTIMAL%] 'bad modelstat for mVI';
+abort$[mVI.solvestat <> %SOLVESTAT.NORMAL COMPLETION%] 'bad solvestat for mVI';
+
+* for the report labels, ed = effective delay
+parameter report(n,*), report2(n,p,*);
+report2(n,p,'delayVI') = sum{A, c(n,p,A)*d(f.l(A))};
+report2(n,p,'flowVI')  = round(x.l(n,p),8);
+report(n,'ed_calcVI') = smax{p$[x.l(n,p) > 1e-8], report2(n,p,'delayVI')};
+report(n,'ed_margVI') = flowCon.m(n);
+report(n,'ed_diffVI') = abs(report(n,'ed_calcVI')-report(n,'ed_margVI'));
+report(n,'out-in_VI') = (report2(n,'outer','delayVI')
+                       - report2(n,'inner','delayVI')) + eps;
+display report, report2;
+
+
+
+$ontext
+We can write the VI above without using auxiliary vars f and d.
+Using an additional reformulation trick, we can write it as a VI(F,z), where
+  z(n) is the flow from n to n++3 on the (longer) outside loop,
+  demand(n) - z(n) the flow on the (shorter) inside loop, and
+  F(z) = delay(outer loop) - delay(inner loop)
+Since the feasible set for z is a box, this is just a straight-up MCP.
+$offtext
+
+positive variable z(n);
+z.up(n) = demand(n);
+equation   dd(n)    'delay(outer) - delay(inner), shipping n to n++3' ;
+
+dd(n) ..
+* delay(outer)
+[
+(1 + z(n) + power(z(n),2))
++ gamma * (1 + z(n++3) + z(n++4) + power(z(n++3)+z(n++4),2))
+
++ w * (1 + z(n) + z(n++3) + z(n++4) + power(z(n) + z(n++3) + z(n++4),2))
++ 2 * gamma * (1 + z(n++3) + power(z(n++3),2))
+
++ (1 + z(n) + z(n++4) + power(z(n) + z(n++4),2))
+
++ w * (1 + z(n) + z(n++1) + z(n++4) + power(z(n) + z(n++1) + z(n++4), 2))
++ 2 * gamma * (1 + z(n++4) + power(z(n++4),2))
+
++ (1 + z(n) + z(n++1) + power(z(n)+z(n++1),2))
+
++ w * (1 + z(n) + z(n++1) + z(n++2) + power(z(n) + z(n++1) + z(n++2), 2))
++ 2 * gamma * (1 + z(n) + power(z(n),2))
+
++ (1 + z(n) + power(z(n),2))
+]
+
+   =n=
+
+* delay(inner)
+[
+(1 + demand(n)-z(n) + power(demand(n)-z(n),2))
++ gamma * (1 + demand(n++1)-z(n++1) + power(demand(n++1)-z(n++1),2))
+
++ w * (1 + demand(n)-z(n) + demand(n++1)-z(n++1)
++ power(demand(n)-z(n)+demand(n++1)-z(n++1),2))
++ 2 * gamma * (1 + demand(n++1)-z(n++1) + power(demand(n++1)-z(n++1),2))
+
++ (1 + demand(n)-z(n) + power(demand(n)-z(n),2))
+
++ w * (1 + demand(n)-z(n) + demand(n++4)-z(n++4)
++ power(demand(n)-z(n)+demand(n++4)-z(n++4),2))
++ 2 * gamma * (1 + demand(n)-z(n) + power(demand(n)-z(n),2))
+
++ (1 + demand(n)-z(n) + power(demand(n)-z(n),2))
+];
+
+
+model mMCP / dd.z /;
+solve mMCP using mcp;
+abort$[mMCP.modelstat <> %MODELSTAT.OPTIMAL%] 'bad modelstat for mMCP';
+abort$[mMCP.solvestat <> %SOLVESTAT.NORMAL COMPLETION%] 'bad solvestat for mMCP';
+
+* put together a report from the MCP solution
+parameters xp(n,p), fp(n1,t1,n2,t2);
+xp(n,'outer') = z.l(n);
+xp(n,'inner') = demand(n) - xp(n,'outer');
+fp(A) = sum{paths(n,p,A), xp(n,p)};
+
+report2(n,p,'delayMCP') = sum{A, c(n,p,A)*(1 + fp(A) + sqr(fp(A)))};
+report2(n,p,'flowMCP')  = xp(n,p);
+report2(n,p,'flowDiff') = abs(xp(n,p) - report2(n,p,'flowVI')) + eps;
+report(n,'ed_MCP')      = smax{p$[xp(n,p) > 1e-8], report2(n,p,'delayMCP')};
+report(n,'ed_diffMCP')  = abs(report(n,'ed_calcVI')-report(n,'ed_MCP')) + eps;
+report(n,'out-in_MCP')  = dd.l(n) + eps;
+report(n,'out-in_diff') = (report(n,'out-in_VI')-report(n,'out-in_MCP')) + eps;
+display report, report2;
+
+abort$[smax{n, report(n,'ed_diffMCP')} > 1e-5] 'different effective delay in MCP and VI';
+abort$[smax{(n,p), report2(n,p,'flowDiff')} > 1e-5] 'different path flow in MCP and VI';
+abort$[smax{(n,p), report(n,'out-in_diff')} > 1e-5] 'different difference in MCP and VI';

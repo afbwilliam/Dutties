@@ -1,0 +1,142 @@
+$title Sequencing on a single machine (SEQUENCE, SEQ=20)
+
+$ontext
+A set of tasks is to be processed on a single machine.
+The execution of the tasks is non-preemptive (ie cannot be interrupted).
+For every task i its release date, duration and due date are given.
+
+What is the sequence that minimizes the maximum tardiness?
+
+Reference:
+Applications of optimization with Xpress-MP (Last update 10 September, 2007)
+7.4 Sequencing jobs on a bottleneck machine, pp 94-97
+
+This model shows how to use different reformulations (BigM, Convex Hull and
+Indicators) through EMP without any change to the model itself.
+
+Contributor: Michael Ferris and Jan-H. Jagla, April 2009
+$offtext
+
+set job / 1*7 /;
+set times /release,duration,due/;
+
+table data(times,job)
+                1       2       3       4       5       6       7
+release         2       5       4                       8       9
+duration        5       6       8       4       2       4       2
+due             10      21      15      10      5       15      22
+;
+
+alias (job,i,j);
+
+binary variables order(i,j) "i must be ordered before j";
+positive variables start(j) "start time of job j";
+positive variables comp(j) "completion time of job j";
+positive variables late(j) "lateness of job j";
+variable tardiness;
+
+equations
+  defcomp(j),deflate(j), deftard(j);
+
+defcomp(j)..
+  comp(j) =e= start(j) + data('duration',j);
+
+* This is really max(0, comp(j) - data('due',j))
+deflate(j)..
+  late(j) =g= comp(j) - data('due',j);
+
+deftard(j)..
+  tardiness =g= late(j);
+
+model base /all/;
+
+*--- BigM Formulation
+scalar M; M = sum(job, data('release',job) + data('duration',job));
+
+equations
+  disjoint1(i,j), disjoint2(i,j);
+
+* The following are either-or constraints, do paper i or paper j
+disjoint1(i,j)$(ord(i) lt ord(j))..
+  comp(i) =l= start(j) + M*(1-order(i,j));
+
+disjoint2(i,j)$(ord(i) lt ord(j))..
+  comp(j) =l= start(i) + M*order(i,j);
+
+model sequence /base, disjoint1, disjoint2/;
+sequence.optcr = 0;
+
+start.lo(j) = max(0, data('release',j));
+
+solve sequence using mip min tardiness;
+
+*--- EMP Formulation facilitating using Bigm, ConvexHull or Indicators
+equations
+  seq(i,j);
+
+model sequence_emp /base, seq/;
+sequence_emp.optcr = 0;
+
+* The following are either-or constraints, do paper i or paper j
+seq(i,j)$(not sameas(i,j))..
+  comp(i) =l= start(j);
+
+file emp / '%emp.info%' /
+     empopt / 'jams.opt' /;
+
+sequence_emp.optfile=1;
+
+scalar ll; ll= LicenseLevel;
+
+*--- EMP Convex Hull (default)
+* resulting model requires license
+if(ll>0,
+   loop((i,j)$(ord(i) < ord(j)),
+      put emp / 'disjunction *' seq(i,j) 'else' seq(j,i));
+   putclose emp;
+
+   putclose empopt / 'FileName convexhull.gms';
+
+   solve sequence_emp using emp min tardiness;
+   abort$(sequence_emp.objval <> sequence.objval) 'EMP Convex Hull: Incorrect solution', sequence_emp.objval, sequence.objval;
+);
+
+*--- EMP BigM
+put emp / 'default bigm' M:0:0;
+loop((i,j)$(ord(i) < ord(j)),
+   put emp / 'disjunction *' seq(i,j) 'else' seq(j,i));
+putclose emp;
+
+putclose empopt / 'FileName bigm.gms';
+solve sequence_emp using emp min tardiness;
+abort$(sequence_emp.objval <> sequence.objval) 'EMP BigM: Incorrect solution', sequence_emp.objval, sequence.objval;
+
+*--- EMP Indicators (CPLEX, XPRESS and SCIP only)
+$if NOT SOLVER cplex $exit
+put emp / 'default indic';
+loop((i,j)$(ord(i) < ord(j)),
+   put emp / 'disjunction *' seq(i,j) 'else' seq(j,i));
+putclose emp;
+
+putclose empopt / 'FileName indicators.gms'
+                / 'SubSolver cplex';
+
+solve sequence_emp using emp min tardiness;
+abort$(sequence_emp.objval <> sequence.objval) 'EMP Indicators: Incorrect solution', sequence_emp.objval, sequence.objval;
+
+*--- with EMP one can also mix & match different reformulation types
+*--- and change the parameters used by the reformulation
+put emp / 'default indic';
+loop((i,j)$(ord(i) < ord(j) and ord(i) < card(i) and ord(j) < card(j)),
+   put emp / 'disjunction *' seq(i,j) 'else' seq(j,i));
+loop((i,j)$(ord(i) < ord(j) and (ord(i) < card(i)/2 and ord(j) = card(j))),
+   put emp / 'disjunction bigm' M:0:0 '*' seq(i,j) 'else' seq(j,i));
+loop((i,j)$(ord(i) < ord(j) and (ord(i) >= card(i)/2 and ord(j) = card(j))),
+   put emp / 'disjunction chull 4000 *' seq(i,j) 'else' seq(j,i));
+putclose emp;
+
+putclose empopt / 'FileName mixandmatch.gms'
+                / 'SubSolver cplex';
+
+solve sequence_emp using emp min tardiness;
+abort$(sequence_emp.objval <> sequence.objval) 'EMP Mix & Match: Incorrect solution', sequence_emp.objval, sequence.objval;

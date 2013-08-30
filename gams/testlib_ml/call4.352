@@ -1,0 +1,24 @@
+$title 'Check call with long command line' (CALL4,SEQ=352)
+
+$ontext
+Check that the $call handles input longer than 255 chars
+
+Contributor: Steve
+$offtext
+
+$echo 123456789a 123456789b 123456789c 123456789d 123456789e 123456789f 123456789g 123456789h 123456789i 123456789j 123456789k 123456789l 123456789m 123456789n 123456789o 123456789p 123456789q 123456789r 123456789s 123456789t 123456789u 123456789v 123456789w 123456789x 123456789y 123456789z big_line_done > tmp1.txt
+
+$call grep "big_line_done" tmp1.txt > tmp2.txt
+
+$call test -s tmp2.txt
+$if errorlevel 1 $abort '$echo with long line failed'
+
+$call echo 123456789a 123456789b 123456789c 123456789d 123456789e 123456789f 123456789g 123456789h 123456789i 123456789j 123456789k 123456789l 123456789m 123456789n 123456789o 123456789p 123456789q 123456789r 123456789s 123456789t 123456789u 123456789v 123456789w 123456789x 123456789y 123456789z big_line_done > tmp3.txt
+
+$call grep "big_line_done" tmp3.txt > tmp4.txt
+
+$call test -s tmp4.txt
+$if errorlevel 1 $abort '$call echo with long line failed'
+
+
+$call rm tmp?.txt

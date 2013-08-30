@@ -1,0 +1,58 @@
+$title Test of =e= indicator constraints (INDIC02,SEQ=542)
+
+$ontext
+Test =e= indicator constraints.
+
+Contributed by Steve Dirkse, November 2011
+$offtext
+
+binary variable b;
+positive variables x, y;
+variable z;
+
+equations
+  obj
+  e0    'on if b=0'
+  e1    'on if b=1'
+  useB  'trivial equation to get b into the model'
+  ;
+
+obj.. z =e= x + y;
+e0..  y =e= -1.5*x + 4.5;
+e1..  y =e= -2  *x + 5;
+useB..  b =L= 1;
+
+model m  / all /;
+
+
+$onecho > cplex.o99
+indic e0$b 0
+indic e1$b 1
+$offecho
+$onecho > xpress.o99
+indic e0$b 0
+indic e1$b 1
+$offecho
+$echo gams/indicatorfile = "cplex.o99" > scip.o99
+m.optfile = 99;
+m.optcr = 1e-5;
+
+x.up = 10;
+
+* x=1, y=3 solves both e0 and e1
+* if y.up < 3, e0 is favored, and b = 0 is optimal
+* if y.up > 3, e1 is favored, and b = 1 is optimal
+
+y.up = 2;
+solve m using mip max z;
+abort$[m.solvestat <> %solvestat.NormalCompletion%] "wrong solver status";
+abort$[m.modelstat <> %modelstat.Optimal%] "wrong model status";
+abort$[abs(b.l) > 1e-6] 'binary not zero', b.l;
+abort$[abs(4.5 - y.l - 1.5*x.l) > 1e-6] 'e0 not satisfied', x.l, y.l;
+
+y.up = 4;
+solve m using mip max z;
+abort$[m.solvestat <> %solvestat.NormalCompletion%] "wrong solver status";
+abort$[m.modelstat <> %modelstat.Optimal%] "wrong model status";
+abort$[abs(b.l-1) > 1e-6] 'binary not one', b.l;
+abort$[abs(5 - y.l - 2*x.l) > 1e-6] 'e1 not satisfied', x.l, y.l;

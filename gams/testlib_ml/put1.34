@@ -1,0 +1,11 @@
+$title aliased set and .te (PUT1,SEQ=34)
+file temp; put temp;
+set i master set of sites / i1 Seattle
+                            i2 Portland
+                            i3  /;
+
+alias(i,j);
+loop(i, put i.te(i) / );
+loop(i, put j.te(i) / );
+loop(j, put j.te(j) / );
+loop(j, put i.te(j) / );

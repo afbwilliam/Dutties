@@ -1,0 +1,36 @@
+$title Bad acronym mapping (GDX8,SEQ=405)
+
+$ontext
+This started to work with 22.6 and acronym info in gdx.
+The acronym index values have to be remapped.
+
+Contributor: Alex
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$call "rm -f acr1.gdx acr2.gdx"
+
+$onecho > acr1.gms
+ACRONYM averLevels,anotherone;
+scalar x / averlevels /
+       y / anotherone /;
+parameter z / 1 averLevels,2 anotherone /;
+execute_unload "acr1.gdx";
+$offecho
+
+$onecho > acr2.gms
+ACRONYM anotherone,averLevels;
+scalar x / averlevels /
+       y / anotherone /;
+parameter z / 1 averLevels,2 anotherone /;
+execute_unload "acr2.gdx";
+$offecho
+
+$call gams acr1 lo=%gams.lo%
+$call gams acr2 lo=%gams.lo%
+$if not exist acr1.gdx $abort 'missing acr1.gdx'
+$if not exist acr2.gdx $abort 'missing acr2.gdx'
+$call gdxdiff acr1 acr2 > %NUL%
+$if errorlevel 1 $abort bad acronym mapping

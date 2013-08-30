@@ -1,0 +1,101 @@
+$title  Scarf's Activity Analysis Example (SCARFEMP-DEM,SEQ=51)
+
+$Ontext
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.
+Yale University Press, 1973.
+
+Contributor: Michael Ferris, October 2010
+$Offtext
+
+$call gamslib -q scarfmcp
+$include scarfdata.inc
+
+option limrow = 0, limcol = 0;
+
+positive
+variables
+        y(s)    production,
+        x(c,h)  Marshallian demand,
+        p(c)    commodity price,
+        i(h)    income;
+
+equations
+        mkt(c)          commodity market,
+        profit(s)       zero profit,
+        income(h)       income index;
+
+mkt(c)..        sum(s, a(c,s) * y(s)) + sum(h, e(c,h)) =g=
+                sum(h, x(c,h));
+
+profit(s)..     -sum(c, a(c,s) * p(c)) =g= 0;
+
+income(h)..     i(h) =g= sum(c, p(c) * e(c,h));
+
+p.l(c) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+p.lo(c)  = 0.00001$(smax(h, alpha(c,h)));
+y.lo(s) = 0;
+
+*       fix the price of numeraire commodity:
+
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+variables z(h);
+equations objdef(h), budget(h);
+
+* distinguish ces and cobb-douglas demand functions:
+* following works for Cobb Douglas functions (esub(h) = 1)
+
+objdef(h)..
+  z(h) =e=
+  (1/rho(h))*log(sum(c$alpha(c,h), lambda(c,h)*x(c,h)**rho(h)))$(esub(h) ne 1)
+
+  + sum(c$alpha(c,h), alpha(c,h)*log(x(c,h)))$(esub(h) eq 1);
+
+budget(h)..
+  sum(c, p(c)*x(c,h)) =l= i(h);
+
+model scarf /objdef, budget, mkt, profit, income/;
+
+* For Cobb Douglas
+* esub(h) = 1;
+
+* Set initial values for production (y)
+x.l(c,h) = 1;
+* x.l(c,h) = 0.1;
+x.lo(c,h) = 0.00001$alpha(c,h);
+x.fx(c,h)$(not alpha(c,h)) = 0;
+
+file myinfo / '%emp.info%' /;
+put myinfo / 'equilibrium';
+put / 'vi income i';
+put / 'vi mkt p';
+put / 'vi profit y';
+loop(h,
+  put / 'max' z(h);
+  loop(c, put / x(c,h) );
+  put / objdef(h) budget(h);
+);
+putclose /;
+
+* determine good starting point for consumption variables
+i.fx(h) = i.l(h);
+p.fx(c) = p.l(c);
+y.fx(s) = y.l(s);
+solve scarf using emp;
+
+p.lo(c)  = 0.00001$(smax(h, alpha(c,h)));
+p.up(c) = inf;
+y.lo(s) = 0; y.up(s) = inf;
+solve scarf using emp;
+
+* now solve for real
+i.lo(h) = 0; i.up(h) = inf;
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+solve scarf using emp;
+
+display y.l;

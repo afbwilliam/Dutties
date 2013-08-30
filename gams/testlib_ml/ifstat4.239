@@ -1,0 +1,46 @@
+$title 'Tests $if gamslevel and related items' (IFSTAT4,SEQ=239)
+
+$ontext
+Tests different ways to detect or compute the GAMS Revision number,
+aka the version number.
+$offtext
+
+* Rich Roberts from SRS
+SET
+  rev          / 'GAMS Rev 1 ' * 'GAMS Rev 300 '/,
+  current(rev) /'%system.version%'/;
+SCALAR RichRev;
+RichRev = SUM(current(rev), ord(rev) );
+display RichRev;
+
+* Alex Meeraus
+scalar AlexRev, i;
+AlexRev=0;
+* compute based on digits of %system.verID%
+for(i=8 to 10,
+   AlexRev = AlexRev*10 + (ord('%system.verID%',i)-ord('0',1))
+);
+display AlexRev;
+
+* Michael Bussieck
+Parameter MichaelRev, gversion(*,*) /
+$ondelim
+%system.version%
+$offdelim
+/;
+MichaelRev = gversion('Gams','Rev');
+display MichaelRev;
+
+* new stuff
+$if not errorfree $abort
+$version 145
+$if not errorfree $terminate
+
+scalar gamsrev1; gamsrev1 = gamsversion; display gamsrev1;
+scalar gamsrev2; gamsrev2 = %system.gamsversion%; display gamsrev2;
+$if NOT gamsversion %system.gamsversion% $abort gamsversion not greater or equal to system.gamsversion
+
+abort$(GamsRev1<>RichRev)   'GamsRev1<>RichRev';
+abort$(GamsRev1<>AlexRev)   'GamsRev1<>AlexRev';
+abort$(GamsRev1<>MichaelRev)'GamsRev1<>MichaelRev';
+abort$(GamsRev1<>Gamsrev2)  'GamsRev1<>GamsRev2';

@@ -1,0 +1,66 @@
+$Title  option solveopt explained (SOLVEOPT,SEQ=347)
+$ontext
+
+The option SOLVEOPT controls the way solution values are returned to the
+GAMS internal data base. There are two ways to enter solveopt values:
+
+ 1. For all solves following: option solveopt=merge|replace|clear
+
+    merge  : solution values are merged into the existing GAMS data base.
+             This is the DEFAULT behavior.
+    replace: all equation in the model list and all variable appearing in the
+             final model instance, are removed before solution records are
+             returned to the GAMS data base.
+    clear  : all equations and all variables mentioned in symbolic equations
+             belonging to the current model instance are removed before
+             solution records are returned to the GAMS data base.
+ 2. For a specific model: <model>.solveopt=n
+
+    1  merge    this is the DEFAULT value
+    0  replace
+    2  clear
+
+    The model attribute is initialized to NA, which means to use the global
+    solveopt settings.
+
+
+GAMS Development Corporation, Modeling Tool Box.
+
+$offtext
+
+set i / a,b,c /, j(i) / b /;
+
+variables obj,x1(i),x2(i),x3(i),x4(i); equations defobj,e1(i),e2(i),e3(i);
+
+defobj.. obj =e= sum(i, x1(i));
+
+e1(i)   .. x1(i) =g= ord(i) + x4(i)$0;
+e2(j)   .. x2(j) =e= 20;
+e3(i)$0 .. x3(i) =e= ord(i)*10;
+
+model m / all /;  m.limcol=0; m.limrow=0;
+
+x1.up(i) = 10; x2.up(i) = 20; x3.up(i) = 30; x4.up(i) = 40;
+e1.scale(i) = 10; e2.scale(i) = 20; e3.scale(i) = 30;
+
+*option solveopt=merge;
+m.solveopt=1;
+solve m us lp min obj;
+* data items not in the model instance remain unchanged
+display x1.up,x2.up,x3.up,x4.up,e1.scale,e2.scale,e3.scale;
+
+*option solveopt=replace;
+m.solveopt=0;
+solve m us lp min obj;
+* data of equations in the model list will be removed before results are returned
+* data of variables in the current model instance will be removed before
+*    returning results
+display x1.up,x2.up,x3.up,x4.up,e1.scale,e2.scale,e3.scale;
+
+*option solveopt=clear;
+m.solveopt=2;
+solve m us lp min obj;
+* data of equations in the model list will be removed before results are returned
+* data of variables appearing in the symbolic equations of model will be
+*   removed before results are returned
+display x1.up,x2.up,x3.up,x4.up,e1.scale,e2.scale,e3.scale;

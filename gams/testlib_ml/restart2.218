@@ -1,0 +1,54 @@
+$title 'Test restart from new (Rev 142 & later) workfiles' (RESTART2,SEQ=218)
+
+$ontext
+Tests ability to do cross-platform reads of the workfiles from Rev 142
+and following.  The save data is generated from model save2.216.
+
+Contributor: Steve Dirkse
+$offtext
+
+$set slash /
+$ifi NOT %system.filesys% == unix $set slash \
+
+$set ZIPFILE res2test.zip
+$set SCRIPTFILE re2script.gms
+$set RDIR restart2
+
+* rest2.gms already exists in testlib
+$set crestart =gams rest2 lo=0 r=%RDIR%%slash%' dist.tl:0 '%slash%s' plat.tl:0
+
+$echo {print substr($0,2,3)}                                    > p.awk
+$echo {print "'" $1 "'.'" substr($2,2,3) "'"}                   > b.awk
+$echo {print "'" $0 "'"}                                        > q.awk
+$call gmsunzip -vqq %ZIPFILE% *.g00 *.G00 | cut -d/ -f2 | sort | uniq | awk -f q.awk > dist2.txt
+$call gmsunzip -vqq %ZIPFILE% *.g00 *.G00 | cut -d/ -f3 | sort | uniq | awk -f p.awk > plat2.txt
+$call gmsunzip -vqq %ZIPFILE% *.g00 *.G00 | cut -d/ -f2,3 | awk -F/ -f b.awk >  dipl2.txt
+$call rm -rf restart2
+
+Set dist 'distributions' /
+$include dist2.txt
+    /;
+Set plat platforms /
+$include plat2.txt
+    /;
+Set dp(dist,plat) 'complete list of restart files' /
+$include dipl2.txt
+    /;
+
+display dist, plat, dp;
+* $exit
+
+file fx /%SCRIPTFILE%/; fx.pw=1024;
+put fx   '$call gmsunzip -Coq %ZIPFILE% '
+       / '$if errorlevel 1 $abort "Could not run gmsunzip"'
+loop(dp(dist,plat),
+  put  / '$call %crestart%
+       / '$if errorlevel 1 $error "Restart ' plat.tl:0 ' Distribution:' dist.tl:0 '"';
+);
+
+putclose fx;
+
+Scalar rc;
+execute '=gams %SCRIPTFILE% lo=0';
+rc=errorlevel;
+abort$rc 'Restart Test Failed';

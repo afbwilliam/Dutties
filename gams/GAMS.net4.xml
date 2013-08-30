@@ -1,0 +1,3181 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GAMS.net4</name>
+    </assembly>
+    <members>
+        <member name="M:GAMS.GAMSDatabaseEnumerator.#ctor(GAMS.GAMSDatabase)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="database">Identifier of GAMSDatabase</param>
+        </member>
+        <member name="T:GAMS.NamespaceDoc">
+            <summary>
+            <p>The GAMS namespace provides objects to interact with the General Algebraic Modeling
+            System (GAMS). Objects in this namespace allow convenient exchange of input data
+            and model results (GAMSDatabase), help to create and run GAMS models (GAMSJob), 
+            that can be customized by GAMS options (GAMSOptions). Furthermore, it 
+            introduces a way to solve a sequence of closely related model instances in the 
+            most efficient way (GAMSModelInstance).</p>
+            <p>The underlying GAMS engine relies to some extent on file based communication 
+            (e.g. the listing file) and other unmanaged resources. The use of external 
+            resources in the .NET environment requires special attention. Hence, some 
+            objects in the GAMS namespace implement the IDisposable interface (e.g. 
+            GAMSDatabase) and need to be properly disposed before the .NET garbage collector
+            does its job.</p>
+            <p>A GAMS program can include other source files (e.g. $include), load data from 
+            GDX files (e.g. $GDXIN or execute_load), and create PUT files. All these files 
+            can be specified with a (relative) path and therefore an anchor into the file 
+            system is required. The base class GAMSWorkspace manages the anchor to the file
+            system. If external file communication is not an issue in a particular .NET 
+            solution, temporary directories and files will be managed by objects in the 
+            namespace.</p>
+            <p>With the exception of GAMSWorkspace the objects in the GAMS namespace cannot be 
+            accessed across different threads unless the instance is locked. The classes themself
+            are thread safe and multiple objects of the class can be used from different threads 
+            (see below for restrictions on solvers that are not thread safe within the 
+            GAMSModelInstance class).</p>
+            <p>This alpha version of the GAMS namespace lacks support for the following GAMS 
+            components:</p>
+            <p>Acronyms, domain checking, support for GAMS compilation/execution errors 
+            (GAMSJob.Run just throws an exception), structured access to listing file, and 
+            proper support for solver options.</p>
+            <p>Currently only CplexD and Gurobi fully utilize the power of solving 
+            GAMSModelInstances. Some solvers will not even work in a multi-threaded 
+            application using GAMSModelInstances. For some solvers this is unavoidable 
+            because the solver library is not thread safe (e.g.  MINOS), other solvers are 
+            in principle thread safe but the GAMS link is not (e.g. Cplex, note there is a 
+            thread safe version of Cplex called CplexD which lack some minor features e.g. 
+            support for BCH framework). Moreover, GAMSModelInstances are not available for quadratic 
+            model types (QCP, MIQCP, RMIQCP).</p>
+            <h4>Release Notes</h4>
+            <h5>24.0.2</h5>
+            <ul>
+            <li>Add new function GAMSSymbol.CopySymbol which copys all records from one to another GAMSSymbol</li>
+            </ul>
+            <h5>24.0.1</h5>
+            <ul>
+            <li>Add function Interrupt to GAMSJob</li>
+            <li>Do not throw an exception when hitting an Alias with the GAMSDatabaseEnumerator or GetSymbol function but return the aliased GAMSSet</li>
+            </ul>
+            <h5>23.9.3</h5>
+            <ul>
+            <li>Constructor of GAMSWorkspace now appends conditionally the GAMS system directory to the PATH environment variable. This fixes a problem with applications that create and dispose many GAMSWorkspace instances.</li>
+            </ul>
+            <h5>23.9.2</h5>
+            <ul>
+            <li>GAMSModelInstance.Instantiate is now thread-safe</li>
+            <li>Additional flag createOutDB for method GAMSJob.Solve which allows to switch off automatic outDB creation</li>
+            <li>Fix a problem with parallel execution of GAMSModelInstances in Debug mode</li>
+            <li>Add new class GAMSException</li>
+            <li>Add tighter restriction on adding symbols to GAMSModelInstance.SyncDB</li>
+            <li>Add new class GAMSModelInstanceOpt to customize method GAMSModelInstance.Solve</li>
+            <ul>
+            <li>GAMSModelInstanceOpt.Debug: produces a gams.gms, jacobian.gdx and dictmap.gdx allowing inspection of the model instance solved in the GAMSModelInstance.Solve method</li>
+            <li>GAMSModelInstanceOpt.NoMatchLimit: controls the maximum number of accepted unmatched scenario records before terminating the solve</li>
+            <li>GAMSModelInstanceOpt.OptFile: allows to choose solver option for GAMSModelInstance.Solve</li>
+            <li>GAMSModelInstanceOpt.Solver: allows to choose solver for GAMSModelInstance.Solve</li>
+            </ul>
+            <li>Add GAMSWorkspace.ScratchFilePrefix to prefix all scratch files created by GAMS.Net</li>
+            <li>GAMSJob no longer implements IDisposable</li>
+            </ul>
+            </summary>
+        </member>
+        <member name="T:GAMS.EquType">
+            <summary>
+            Equation subtype
+            </summary>
+        </member>
+        <member name="F:GAMS.EquType.E">
+            <summary>
+            Equality - =E=
+            </summary>
+        </member>
+        <member name="F:GAMS.EquType.G">
+            <summary>
+            Greater or equal than inequality - =G=
+            </summary>
+        </member>
+        <member name="F:GAMS.EquType.L">
+            <summary>
+            Less or equal than inequality - =L=
+            </summary>
+        </member>
+        <member name="F:GAMS.EquType.N">
+            <summary>
+            Non-binding equation - =N=
+            </summary>
+        </member>
+        <member name="F:GAMS.EquType.X">
+            <summary>
+            External equation - =X=
+            </summary>
+        </member>
+        <member name="F:GAMS.EquType.C">
+            <summary>
+            Cone equation - =C=
+            </summary>
+        </member>
+        <member name="T:GAMS.VarType">
+            <summary>
+            Variable subtype
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.Unknown">
+            <summary>
+            Unknown variable type
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.Binary">
+            <summary>
+            Binary variable
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.Integer">
+            <summary>
+            Integer Variable
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.Positive">
+            <summary>
+            Positive variable
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.Negative">
+            <summary>
+            Negative variable
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.Free">
+            <summary>
+            Free variable
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.SOS1">
+            <summary>
+            Special Ordered Set 1 
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.SOS2">
+            <summary>
+            Special Ordered Set 2
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.SemiCont">
+            <summary>
+            Semi-continuous variable
+            </summary>
+        </member>
+        <member name="F:GAMS.VarType.SemiInt">
+            <summary>
+            Semi-integer variable
+            </summary>
+        </member>
+        <member name="T:GAMS.SolveStat">
+            <summary>
+            Solver termination condition 
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.Normal">
+            <summary>
+            Normal termination
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.Iteration">
+            <summary>
+            Solver ran out of iterations
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.Resource">
+            <summary>
+            Solver exceeded time limit 
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.Solver">
+            <summary>
+            Solver quit with a problem 
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.EvalError">
+            <summary>
+            Solver quit with nonlinear term evaluation errors 
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.Capability">
+            <summary>
+            Solver terminated because the model is beyond the solvers capabilities
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.License">
+            <summary>
+            Solver terminated with a license error
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.User">
+            <summary>
+            Solver terminated on users request (e.g. Ctrl-C)
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.SetupErr">
+            <summary>
+            Solver terminated on setup error
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.SolverErr">
+            <summary>
+            Solver terminated with error
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.InternalErr">
+            <summary>
+            Solver terminated with error
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.Skipped">
+            <summary>
+            Solve skipped
+            </summary>
+        </member>
+        <member name="F:GAMS.SolveStat.SystemErr">
+            <summary>
+            Other error
+            </summary>
+        </member>
+        <member name="T:GAMS.ModelStat">
+            <summary>
+            Model Solution Status
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.OptimalGlobal">
+            <summary>
+            Optimal solution achieved
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.OptimalLocal">
+            <summary>
+            Local optimal solution achieved 
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.Unbounded">
+            <summary>
+            Unbounded model found
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.InfeasibleGlobal">
+            <summary>
+            Infeasible model found 
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.InfeasibleLocal">
+            <summary>
+            Locally infeasible model found 
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.InfeasibleIntermed">
+            <summary>
+            Solver terminated early and model was still infeasible
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.NonOptimalIntermed">
+            <summary>
+            Solver terminated early and model was feasible but not yet optimal
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.Integer">
+            <summary>
+            Integer solution found
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.NonIntegerIntermed">
+            <summary>
+            Solver terminated early with a non integer solution found 
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.IntegerInfeasible">
+            <summary>
+            No feasible integer solution could be found
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.LicenseError">
+            <summary>
+            Licensing problem
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.ErrorUnknown">
+            <summary>
+            Error – No cause known
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.ErrorNoSolution">
+            <summary>
+            Error – No solution attained
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.NoSolutionReturned">
+            <summary>
+            No solution returned 
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.SolvedUnique">
+            <summary>
+            Unique solution in a CNS models
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.Solved">
+            <summary>
+            Feasible solution in a CNS models
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.SolvedSingular">
+            <summary>
+            Singular in a CNS models
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.UnboundedNoSolution">
+            <summary>
+            Unbounded – no solution
+            </summary>
+        </member>
+        <member name="F:GAMS.ModelStat.InfeasibleNoSolution">
+            <summary>
+            Infeasible – no solution
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSException">
+            <summary>
+            Exception class thrown for GAMS exceptions
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSException.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Exception message</param>
+        </member>
+        <member name="M:GAMS.GAMSException.#ctor(System.String,System.Exception)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Exception message</param>
+            <param name="inner">Reference to the inner exception</param>
+        </member>
+        <member name="T:GAMS.GAMSWorkspaceInfo">
+            <summary>
+            The GAMSWorkspaceInfo can be used input parameter for the GAMSWorkspace constructor.
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSWorkspaceInfo.WorkingDirectory">
+            <summary>
+            GAMS working directory, anchor for all file-based operations
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSWorkspaceInfo.SystemDirectory">
+            <summary>
+            GAMS system directory
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSWorkspaceInfo.Debug">
+            <summary>
+            Debug Flag
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSWorkspaceInfo.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workingDirectory">GAMS working directory, anchor for all file-based operations (determined automatically if omitted, in user's temporary folder)</param>
+            <param name="systemDirectory">GAMS system directory (determined automatically if omitted)</param>
+            <param name="debug">Debug Flag</param>
+        </member>
+        <member name="T:GAMS.GAMSWorkspace">
+            <summary>
+            <p>The GAMSWorkspace is the base class in the GAMS namespace. Most objects of the 
+            GAMS namespace (e.g. GAMSDatabase and GAMSJob) have to be created by an "Add" 
+            method of GAMSWorkspace.</p>
+            <p>Unless a GAMS system directory is specified during construction of 
+            GAMSWorkspace, GAMSWorkspace determines the location of the GAMS installation 
+            automatically. This is a source of potential  problems if more than one GAMS 
+            installation exist on the machine.</p>
+            <p>Furthermore, a working directory (the anchor into the file system) can be 
+            provided when constructing the GAMSWorkspace instance. All file based 
+            operation inside a GAMS model should be relative to this location (e.g. $GDXIN
+            and $include). There are options to add input search paths (e.g. IDir) and 
+            output path (e.g. PutDir) to specify other file system locations. If no working
+            directory is supplied, GAMSWorkspace creates a temporary folder and on  
+            instance destruction removes this temporary folder.</p>
+            <p>In a typical .NET solution a single instance of GAMSWorkspace will 
+            suffice, since the class is thread-safe.</p>
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSWorkspace.ScratchFilePrefix">
+            <summary>
+            A string used to prefix automatically generated files
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.GamsLib(System.String)">
+            <summary>
+            Retrieves model from GAMS Model Library
+            </summary>
+            <param name="model">Model name</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.TestLib(System.String)">
+            <summary>
+            Retrieves model from GAMS Test Library
+            </summary>
+            <param name="model">Model name</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.EmpLib(System.String)">
+            <summary>
+            Retrieves model from Extended Math Programming Library
+            </summary>
+            <param name="model">Model name</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.DataLib(System.String)">
+            <summary>
+            Retrieves model from GAMS Data Utilities Library
+            </summary>
+            <param name="model">Model name</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.FinLib(System.String)">
+            <summary>
+            Retrieves model from Practical Financial Optimization Library
+            </summary>
+            <param name="model">Model name</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workingDirectory">GAMS working directory, anchor for all file-based operations (determined automatically if omitted, in user's temporary folder)</param>
+            <param name="systemDirectory">GAMS system directory (determined automatically if omitted)</param>
+            <param name="debug">Debug Flag</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.#ctor(GAMS.GAMSWorkspaceInfo)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="wsInfo">GAMSWorkspaceInfo defining GAMS working directory, GAMS system directory and Debug Flag</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.Finalize">
+            <summary>
+            Destructor
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.CheckpointAdd(System.String)">
+            <summary>
+            Add GAMSCheckpoint with given name to workspace
+            </summary>
+            <param name="checkpointName">Checkpoint name to add</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.CheckpointAdd">
+            <summary>
+            Add GAMSCheckpoint with default name to workspace
+            </summary>
+            <returns>Checkpoint name if everything worked, else an empty string</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.CheckpointDelete(System.String)">
+            <summary>
+            Delete the given GAMSCheckpoint from workspace
+            </summary>
+            <param name="checkpointName">Name of the checkpoint to delete</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.DatabaseAdd(System.String)">
+            <summary>
+            Add GAMSDatabase with given name to workspace
+            </summary>
+            <param name="databaseName">Database name to add</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.DatabaseAdd">
+            <summary>
+            Add GAMSDatabase with default name to workspace
+            </summary>
+            <returns>Database name if everything worked, else an empty string</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.DatabaseDelete(System.String)">
+            <summary>
+            Delete the given GAMSDatabase from workspace
+            </summary>
+            <param name="databaseName">Name of the database to delete</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.JobAdd(System.String)">
+            <summary>
+            Add GAMSJob with given name to workspace
+            </summary>
+            <param name="jobName">Job name to add</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.JobAdd">
+            <summary>
+            Add GAMSJob with default name to workspace
+            </summary>
+            <returns>Job name if everything worked, else an empty string</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.JobDelete(System.String)">
+            <summary>
+            Delete the given GAMSJob from workspace
+            </summary>
+            <param name="jobName">Name of the job to delete</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.ModelInstanceAdd(System.String)">
+            <summary>
+            Add GAMSModelInstance with given name to workspace
+            </summary>
+            <param name="modelInstanceName">Model instance name to add</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.ModelInstanceAdd">
+            <summary>
+            Add GAMSModelInstance with default name to workspace
+            </summary>
+            <returns>Model instance name if everything worked, else an empty string</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.ModelInstanceDelete(System.String)">
+            <summary>
+            Delete the given GAMSModelInstance from workspace
+            </summary>
+            <param name="modelInstanceName">Name of the model instance to delete</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddDatabaseFromGDX(System.String,System.String)">
+            <summary>
+            Database creation from an existing GDX file
+            </summary>
+            <param name="databaseName">Identifier of GAMSDatabase (determined automatically if omitted)</param>
+            <param name="gdxFileName">GDX File to initialize Database from</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddDatabase(System.String)">
+            <summary>
+            Empty Database creation
+            </summary>
+            <param name="databaseName">Identifier of GAMSDatabase (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddDatabase(GAMS.GAMSDatabase,System.String)">
+            <summary>
+            Database creation from existing database
+            </summary>
+            <param name="sourceDatabase">Source GAMSDatabase to initialize Database from</param>
+            <param name="databaseName">Identifier of GAMSDatabase (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddJobFromString(System.String,GAMS.GAMSCheckpoint,System.String)">
+            <summary>
+            Create GAMSJob from string model source
+            </summary>
+            <param name="gamsSource">GAMS model as string</param>
+            <param name="checkpoint">GAMSCheckpoint to initialize GAMSJob from</param>
+            <param name="jobName">Job name (determined automatically if omitted)</param>
+            <returns></returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddJobFromFile(System.String,GAMS.GAMSCheckpoint,System.String)">
+            <summary>
+            Create GAMSJob from model file
+            </summary>
+            <param name="fileName">GAMS source file name</param>
+            <param name="checkpoint">GAMSCheckpoint to initialize GAMSJob from</param>
+            <param name="jobName">Job name (determined automatically if omitted)</param>
+            <returns></returns>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddCheckpoint(System.String)">
+            <summary>
+            Create GAMSCheckpoint
+            </summary>
+            <param name="checkpointName">Identifier of GAMSCheckpoint or filename for existing checkpoint (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSWorkspace.AddOptions(GAMS.GAMSOptions)">
+            <summary>
+            Create GAMSOptions
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSWorkspace.Debug">
+            <summary>
+            Get value of Debug flag
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSWorkspace.WorkingDirectory">
+            <summary>
+            Get the working directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSWorkspace.SystemDirectory">
+            <summary>
+            Get the system directory
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSDatabase">
+            <summary>
+            <p>An instance of GAMSDatabase communicates data between the .NET world and the 
+            GAMS world. A GAMSDatabase consists of a collection of symbols (GAMSDatabase 
+            implements the IEnumerable interface, that allows to iterate conveniently 
+            through the symbols in a GAMSDatabase). The symbol types available for a
+            GAMSDatabase correspond to the symbols types know from the GAMS language: Set, 
+            Parameter, Variable, and Equation are represented in .NET by a derived class 
+            (e.g. GAMSSet, GAMSParameter, etc). Besides the type, a GAMSSymbol has a name 
+            (this has to match the name inside the GAMS model), a dimension (currently up to
+            20 or gamsglobals.maxdim) and some explanatory text.</p>
+            <p>Variables and equations also have a subtype: e.g. Binary, Positive, etc. for 
+            variables (see type gamsglobals.VarType) and e.g. E, G etc. for equations (see 
+            type gamsglobals.EquType).</p>
+            <p>GAMSDatabases can be created empty, or initialized from existing GDX files or 
+            from another GAMSDatabase (copy). Symbols can be added at any time (e.g. 
+            GAMSDatabase.AddParameter), but once a symbol is part of a GAMSDatabase, it 
+            cannot be removed. Only its associated data (GAMSSymbolRecord) can be purged 
+            (see GAMSSymbol.Clear()) or individually removed (GAMSSymbol.DeleteRecord). 
+            Individual data elements are accessed record by record. A record is identified 
+            by the keys (a vector of strings). The record data varies by symbol type. For 
+            example, a parameter record has a Value property, a variable has the properties 
+            Level, Lower, Upper, Marginal, and Scale. Adding a record with keys that already 
+            exist results in an exception. Similar, the unsuccessful search for a record 
+            also results in an exception.</p>
+            <p>GAMSSymbol implements the IEnumerable interface to conveniently iterate through 
+            the records of a symbol. There are also sliced access methods to symbol records 
+            that allow to iterate through all records with a fixed index at some positions. 
+            GAMSDatabases can be exported as GDX files for permanent storage. They also 
+            manage external resources and need to be properly disposed before the .NET 
+            garbage collector reclaims the instance.</p>
+            <p>GAMSJob (OutDB) and GAMSModelInstance (SyncDB) provide instances of GAMSDatabase 
+            to communicate results from a GAMS run or a solve. These databases should only 
+            be used in the context of the base object (GAMSJob or GAMSModelInstance). If a 
+            copy of such a database is required the GAMSDatabase constructor that 
+            initializes a GAMSDatabase from another database should be used (e.g. 
+            GAMSDatabase newdb = workspace.AddDatabase(GAMSJob.OutDB);).</p>
+            <p>GAMSDatabases often provide the input data for a GAMSJob. Such GAMSDatabases are
+            listed in the GAMSJob.Run methods. Inside the GAMS model source the GAMSDatabase 
+            is accessible through a GDX file. The GAMS model source requires a particular 
+            file name to connect to the proper GDX file (e.g. $GDXIN filename). A 
+            GAMSDatabase can be created with a given name which can be then used inside the 
+            model (e.g. GAMSDatabase db = workspace.AddDatabase(databaseName:"SupplyData"); 
+            and then inside the GAMS model source: $GDXIN SupplyData) or an automatically 
+            generated name can be used. This name can be passed down to the GAMS model by 
+            using the Defines list of a GAMSOptions instance:</p>
+            <code>
+              GAMSDatabase db = workspace.AddDatabase();
+              GAMSOptions opt = workspace.AddOptions();
+              opt.Defines.Add("SupplyDataFileName",db.Name);
+              ...
+              gamsjob.Run(opt, db);
+            </code>
+            <p>Inside the GAMS model source the name is accessed as follows:</p>
+            <code lang="GAMS">
+              $GDXIN %SupplyDataFileName%
+            </code>
+            <p>One has to act with some caution when it comes to odered sets which e.g. 
+            allow lag and lead. By not enforcing the "domain checking" for the GAMSDatabase 
+            .NET class we have aggravated the potential problems for ordered sets.
+            For GAMS, the labels of set elements are just strings, so the order of a set is 
+            determined by the appearance of its elements. For example, if one has 'set k 
+            / 2,3,4,1,5 /', the order of k is exactly given by this sequence. So the lag (k-1)
+            of k=4 is 3 and the lead (k+1) of k=4 is 1.</p>
+            <p>GAMS performs arithmetic with an extended number range. GAMS has special values 
+            for infinity (+INF, -INF), epsilon (EPS), not available (NA), and undefined (UNDEF). 
+            When GAMS evaluates expressions with these special values, the calculating engine 
+            ensures the correctness of the result (e.g. 5*eps=eps or 5+eps=5). The GAMS model 
+            CRAZY in the GAMS Model Library documents the results of the arithmetic operations 
+            with respect to special values.</p>
+            <p>In the GAMS .NET API we map the IEEE standard values for +/-infinity (e.g. 
+            double.PositiveInfinity) and NA (double.NaN) to the corresponding GAMS values. The 
+            special value for UNDEF gets unfiltered through the GAMS .NET API. The internal 
+            double value of UNDEF is 1.0E300 (or better use the constant sv_valund from gamsglobals).</p>
+            <p>Special attention needs to be given to the value of 0. Since GAMS is a sparse system 
+            it does not store (parameter) records with a true 0. If a record with numerical value of 
+            0 is needed, EPS can help. For example:</p>
+            <code lang="GAMS">
+            set j /1*10 /; parameter b(j); b(j) = 1; b('5') = 0;
+            scalar s,c; s = sum(j, b(j)); c = card(b); display s,c;
+            </code>
+            <p>will result in</p>
+            <code lang="GAMS">
+            ----      3 PARAMETER s                    =        9.000
+                        PARAMETER c                    =        9.000
+            </code>
+            <p>but</p> 
+            <code lang="GAMS">
+            b(j) = 1; b('5') = EPS;
+            </code>
+            <p>will result in</p>
+            <code lang="GAMS">
+            ----      3 PARAMETER s                    =        9.000
+                        PARAMETER c                    =       10.000
+            </code>
+            <p>What are the consequences for the GAMS .NET API? If we read parameter b in case of b('5')=0, 
+            the GAMSDatabase will not have a record for b('5'). In case of b('5')=EPS, the GAMSDatabase will 
+            have a record with value double.Epsilon. Unlike the IEEE values (e.g. double.PositivInfinity), 
+            arithmetic operations in .NET will modify double.Epsilon (e.g. 5*double.PositiveInfinity==double.PositiveInfinity 
+            but 5*double.Epsilon!=double.Epsilon). The same rules apply for preparing input data for GAMS 
+            in a GAMSDatabase. If a value of double.Epsilon is written, GAMS will see the special value EPS. 
+            All other small values (including 0) will be communicated unfiltered to GAMS. As mentioned before, 
+            zeros will not be entered as data records in GAMS. The compiler control $on/offEPS can help to 
+            automatically map zeros to EPS.</p>
+            <p>There is one oddity concerning values smaller than 1e-250 on GAMS input. Consider the following example:</p>
+            <code>
+            GAMSParameter b = db.AddGAMSParameter("b",1,"");
+            for(int i=1; i &lt; 11; i++) b.AddRecord(i.ToString()).Value = 1;
+            b.FindRecord("5").Value = 1e-251;
+            job.Run(db);
+            </code>
+            <code lang="GAMS">
+            $load j b
+            scalar card_b; card_b = card(b); display card_b;
+            b(j) = 2*b(j); card_b = card(b); display card_b;
+            </code>
+            <p>A record with values smaller than 1e-250 exists on input in GAMS, but as soon as the record gets 
+            updated by GAMS and is still smaller than 1e-250, the record gets removed.</p>
+            <p>The ordering of a set in GAMS can be non-intuitive: Consider "set i /5/, j /1*5/;". 
+            Elements '5' gets internal number 1, '1' get 2, '2' gets 3 and so on. The last element 
+            of j '5' has already the internal number 1. The sequence of internal numbers in j is 
+            not ascending and hence GAMS considers set j as not sorted, i.e. one can't use the 
+            ord() function nor the lag or lead (-,--,+,++) operators. If 'j' would have been defined 
+            before 'i' in this example, the "set not ordered" problem would have been avoided.</p>
+            <p>Please note that the GAMSDatabase actually does not implement a relational model for
+            database management. It should be seen as a data storage or data container.</p>
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.#ctor(GAMS.GAMSWorkspace,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workspace">GAMSWorkspace containing GAMSDatabase</param>
+            <param name="databaseName">Identifier of GAMSDatabase (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.#ctor(GAMS.GAMSWorkspace,GAMS.GAMSDatabase,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workspace">GAMSWorkspace containing GAMSDatabase</param>
+            <param name="sourceDatabase">Source GAMSDatabase to initialize Database from</param>
+            <param name="databaseName">Identifier of GAMSDatabase (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.Export(System.String)">
+            <summary>
+            Write database into a GDX file
+            </summary>
+            <param name="filePath">The path used to write the GDX file.
+            A relative path is relative to the GAMS working directory.
+            If not present, the file is written to the working directory using the name of the database.
+            </param>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.GetSymbol(System.String)">
+            <summary>
+            Get GAMSSymbol by name
+            </summary>
+            <param name="symbolIdentifier">Name of the symbol to retrieve</param>
+            <returns>Reference to symobl</returns>
+            <example>
+            <code>
+            GAMSSymbol symbol = database.getSymbol("a");
+            if(symbol is GAMSParameter)
+            {
+                GAMSParameter param = (GAMSParameter) symbol;
+            }
+            if(symbol is GAMSSet)
+            {
+                GAMSSet set = (GAMSSet) symbol;
+            }   
+            if(symbol is GAMSVariable)
+            {
+                GAMSVariable variable = (GAMSVariable) symbol;
+            }
+            if (symbol is GAMSEquation)
+            {
+                GAMSEquation equation = (GAMSEquation)symbol;
+            }
+            </code>
+            </example>
+            <seealso cref="M:GAMS.GAMSDatabase.GetParameter(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSet(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetVariable(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetEquation(System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.GetParameter(System.String)">
+            <summary>
+            Get GAMSParameter by name
+            </summary>
+            <param name="parameterIdentifier">Name of the parameter to retrieve</param>
+            <returns>Reference to parameter</returns>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSymbol(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSet(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetVariable(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetEquation(System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.GetSet(System.String)">
+            <summary>
+            Get GAMSSet by name
+            </summary>
+            <param name="setIdentifier">Name of the set to retrieve</param>
+            <returns>Reference to set</returns>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSymbol(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetParameter(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetVariable(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetEquation(System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.GetVariable(System.String)">
+            <summary>
+            Get GAMSVariable by name
+            </summary>
+            <param name="variableIdentifier">Name of the variable to retrieve</param>
+            <returns>Reference to variable</returns>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSymbol(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetParameter(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSet(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetEquation(System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.GetEquation(System.String)">
+            <summary>
+            Get GAMSEquation by name
+            </summary>
+            <param name="equationIdentifier">Name of the equation to retrieve</param>
+            <returns>Reference to equation</returns>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSymbol(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetParameter(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetSet(System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.GetVariable(System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.Clear">
+            <summary>
+            Clear all symbols in GAMSDatabase
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.Finalize">
+            <summary>
+            Destructor
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.Dispose">
+            <summary>
+            Free unmanaged ressources.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.AddEquation(System.String,System.Int32,GAMS.EquType,System.String)">
+            <summary>
+            Add equation symbol to database
+            </summary>
+            <param name="identifier">Equation name</param>
+            <param name="dimension">Equation dimension</param>
+            <param name="equType">Equation subtype (E: Equal, G: Greater, L: Less, N: No specification, X: External defined, C: Conic)</param>
+            <param name="explanatoryText">Explanatory text of equation</param>
+            <seealso cref="M:GAMS.GAMSDatabase.AddParameter(System.String,System.Int32,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddSet(System.String,System.Int32,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddVariable(System.String,System.Int32,GAMS.VarType,System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.AddParameter(System.String,System.Int32,System.String)">
+            <summary>
+            Add parameter symbol to database
+            </summary>
+            <param name="identifier">Parameter name</param>
+            <param name="dimension">Parameter dimension</param>
+            <param name="explanatoryText">Explanatory text of parameter</param>
+            <seealso cref="M:GAMS.GAMSDatabase.AddEquation(System.String,System.Int32,GAMS.EquType,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddSet(System.String,System.Int32,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddVariable(System.String,System.Int32,GAMS.VarType,System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.AddSet(System.String,System.Int32,System.String)">
+            <summary>
+            Add set symbol to database
+            </summary>
+            <param name="identifier">Set name</param>
+            <param name="dimension">Set dimension</param>
+            <param name="explanatoryText">Explanatory text of set</param>
+            <seealso cref="M:GAMS.GAMSDatabase.AddEquation(System.String,System.Int32,GAMS.EquType,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddParameter(System.String,System.Int32,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddVariable(System.String,System.Int32,GAMS.VarType,System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.AddVariable(System.String,System.Int32,GAMS.VarType,System.String)">
+            <summary>
+            Add variable symbol to database
+            </summary>
+            <param name="identifier">Variable name</param>
+            <param name="dimension">Variable dimension</param>
+            <param name="varType">Variable subtype (Binary, Integer, Positive, Negative, Free, SOS1, SOS2, SemiCont, SemiInt,)</param>
+            <param name="explanatoryText">Explanatory text to variable</param>
+            <seealso cref="M:GAMS.GAMSDatabase.AddEquation(System.String,System.Int32,GAMS.EquType,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddParameter(System.String,System.Int32,System.String)"/>
+            <seealso cref="M:GAMS.GAMSDatabase.AddSet(System.String,System.Int32,System.String)"/>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.Compact">
+            <summary>
+            Dispose temporary external ressources in database (advanced use)
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSDatabase.GetEnumerator">
+            <summary>
+            Get Enumerator to iterate through the symbols of the database
+            </summary>
+            <returns>database enumerator</returns>
+        </member>
+        <member name="P:GAMS.GAMSDatabase.NrSymbols">
+            <summary>
+            Retrieve the number of symbols in the GAMSDatabase
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSDatabase.Workspace">
+            <summary>
+            Get GAMSWorkspace containing GAMSDatabase
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSDatabase.Name">
+            <summary>
+            Get GAMSDatabase name
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSEquation">
+            <summary>
+            This is the representation of an equation symbol in GAMS. It exists in a
+            GAMSDatabase and contains GAMSEquationRecords which one can iterate through.
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSSymbol">
+            <summary>
+            This is the representation of a symbol in GAMS. It exists in a
+            GAMSDatabase and contains GAMSSymbolRecords which one can iterate through.
+            Derived classes are GAMSEquation, GAMSParameter, GAMSSet and GAMSVariable.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.AddRecord(System.String[])">
+            <summary>
+            Add record to GAMSSymbol
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to added record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.DeleteRecord(System.String[])">
+            <summary>
+            Delete GAMSSymbol record
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.Clear">
+            <summary>
+            Clear symbol
+            </summary>
+            <returns>True if everything worked, else false</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.FindRecord(System.String[])">
+            <summary>
+            Find record in GAMSSymbol
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to found record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.FirstRecord">
+            <summary>
+            Retrieve first record in GAMSSymbol
+            </summary>
+            <example>
+            <code>
+            try
+            {
+                Console.WriteLine("Transportation costs");
+                GAMSParameterRecord x = job.OutDB.GetParameter("c").FirstRecord();
+                do
+                {
+                    Console.WriteLine(x.Keys[0] + "." + x.Keys[1] + ":" + x.Value);
+                } while (x.MoveNext());
+            }
+            catch
+            {
+                Console.WriteLine("No records found");
+            }
+            </code>
+            </example>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.FirstRecord(System.String[])">
+            <summary>
+            Retrieve the first record in GAMSSymbol that meets the slice criteria.
+            </summary>
+            <example>
+            <code>
+            try
+            {
+                Console.WriteLine("Transportation costs from Seattle");
+                GAMSParameterRecord x = job.OutDB.GetParameter("c").FirstRecord("seattle", " ");
+                do
+                {
+                    Console.WriteLine(x.Keys[1] + ":" + x.Value);
+                } while (x.MoveNext());
+            }
+            catch
+            {
+                Console.WriteLine("No records found");
+            }
+            </code>
+            </example>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Refreence to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.LastRecord">
+            <summary>
+            Retrieve last record in GAMSSymbol
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.LastRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the last record in GAMSSymbol
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.CopySymbol(GAMS.GAMSSymbol)">
+            <summary>
+            Copys all records of this GAMSSymbol to target GAMSSymbol (if target had records, they will be deleted)
+            </summary>
+            <param name="target">Target GAMSSymbol</param>
+        </member>
+        <member name="M:GAMS.GAMSSymbol.GetEnumerator">
+            <summary>
+            Retrieve an enumerator for this symbol.
+            </summary>
+            <returns>Instance of GAMSSymbolEnumerator.</returns>
+        </member>
+        <member name="P:GAMS.GAMSSymbol.GAMSDatabase">
+            <summary>
+            Get GAMSDatabase containing GAMSSymbol
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSymbol.Name">
+            <summary>
+            Get GAMSSymbol name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSymbol.Dim">
+            <summary>
+            Get GAMSSymbol dimension
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSymbol.Text">
+            <summary>
+            Get explanatory text of GAMSSymbol
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSymbol.NumberRecords">
+            <summary>
+            Retrieve the number of records of the GAMSSymbol
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSEquation.#ctor(GAMS.GAMSDatabase,System.String,System.Int32,GAMS.EquType,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="database">Corresponding GAMSDatabase</param>
+            <param name="identifier">Equation name</param>
+            <param name="dimension">Equation dimension</param>
+            <param name="equType">Equation subtype (E: Equal, G: Greater, L: Less, N: No specification, X: External defined, C: Conic)</param>
+            <param name="explanatoryText">Explanatory text to equation</param>
+        </member>
+        <member name="M:GAMS.GAMSEquation.AddRecord(System.String[])">
+            <summary>
+            Add record to GAMSEquation
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to added record</returns>
+        </member>
+        <member name="M:GAMS.GAMSEquation.FindRecord(System.String[])">
+            <summary>
+            Find record in GAMSEquation
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to found record</returns>
+        </member>
+        <member name="M:GAMS.GAMSEquation.FirstRecord">
+            <summary>
+            Retrieve first record in GAMSEquation
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSEquation.FirstRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the first record in GAMSEquation
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSEquation.LastRecord">
+            <summary>
+            Retrieve last record in GAMSEquation
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSEquation.LastRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the last record in GAMSEquation
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="P:GAMS.GAMSEquation.EquType">
+            <summary>
+            Retrieve subtype of Equation (E: Equal, G: Greater, L: Less, N: No specification, X: External defined, C: Conic)
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSEquationRecord">
+            <summary>
+            This is the representation of a single record of a GAMSEquation.
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSSymbolRecord">
+            <summary>
+            This is the representation of a single record of a GAMSSymbol.
+            Derived classes are GAMSEquationRecord, GAMSParameterRecord, GAMSSetRecord and GAMSVariableRecord
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSSymbolRecord.#ctor(GAMS.GAMSSymbolRecord)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="rec">GAMSSymbolRecord to initialize this instance from</param>
+        </member>
+        <member name="M:GAMS.GAMSSymbolRecord.MoveNext">
+            <summary>
+            Iterate to next GAMSSymbolRecord of GAMSSymbol
+            </summary>
+            <returns>True if everything worked, false otherwise</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbolRecord.MovePrevious">
+            <summary>
+            Iterate to previous GAMSSymbolRecord of GAMSSymbol
+            </summary>
+            <returns>True if everything worked, false otherwise</returns>
+        </member>
+        <member name="P:GAMS.GAMSSymbolRecord.Symbol">
+            <summary>
+            Retrieve the GAMSSymbol that contains this record
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSymbolRecord.Keys">
+            <summary>
+            Retrieve keys of GAMSSymbolRecord
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSEquationRecord.#ctor(GAMS.GAMSEquationRecord)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="record">GAMSEquationRecord to initialize this instance from</param>
+        </member>
+        <member name="P:GAMS.GAMSEquationRecord.Equation">
+            <summary>
+            Return equation where this record belongs to
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSEquationRecord.Level">
+            <summary>
+            Get: Retrieve the the level of this GAMSEquationRecord
+            Set: Set the the level of this GAMSEquationRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSEquationRecord.Marginal">
+            <summary>
+            Get: Retrieve the marginal of this GAMSEquationRecord
+            Set: Set the marginal of this GAMSEquationRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSEquationRecord.Upper">
+            <summary>
+            Get: Retrieve the upper bound of this GAMSEquationRecord
+            Set: Set the upper bound of this GAMSEquationRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSEquationRecord.Lower">
+            <summary>
+            Get: Retrieve the lower bound of this GAMSEquationRecord
+            Set: Set the lower bound of this GAMSEquationRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSEquationRecord.Scale">
+            <summary>
+            Get: Retrieve the scale factor of this GAMSEquationRecord
+            Set: Set the scale factor of this GAMSEquationRecord
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSJob">
+            <summary>
+            <p>The GAMSJob class manages the execution of a GAMS program given by GAMS model 
+            source. The GAMS source (or more precisely the root of a model source tree) of
+            the job can be provided as a string or by a filename (relative to the working 
+            directory of the GAMSWorkspace) of a text file containing the GAMS model source.
+            The Run method organizes the export of the input GAMSDatabases, calls the GAMS 
+            compiler and execution system with the supplied options and on successful 
+            completion provides through the property OutDB (of type GAMSDatabase) the 
+            results of the model run.</p>
+            <p>While the result data is captured in a GAMSDatabase, the Run method can also 
+            create a GAMSCheckpoint that not only captures data but represents the state of
+            the entire GAMSJob and allows some other GAMSJob to continue from this state. 
+            In case of a compilation or execution error, the Run method will throw an 
+            exception. If the log output of GAMS is of interest, this can be captured by 
+            providing a TextWriter instance.</p>
+            <p>A GAMSJob is connected to external resources and needs to be properly 
+            disposed before the .NET garbage collector can claim the instance.</p>
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSJob.#ctor(GAMS.GAMSWorkspace,System.String,System.String,GAMS.GAMSCheckpoint)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workspace">GAMSWorkspace containing GAMSJob</param>
+            <param name="jobName">Identifier of GAMSJob</param>
+            <param name="fileName">File name</param>
+            <param name="checkpoint">GAMSCheckpoint</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.FromString(GAMS.GAMSWorkspace,System.String,GAMS.GAMSCheckpoint,System.String)">
+            <summary>
+            Retrieve GAMSJob by string
+            </summary>
+            <param name="workspace">GAMSWorkspace containing to GAMSJob</param>
+            <param name="gamsSource">GAMS model as string</param>
+            <param name="checkpoint">GAMSCheckpoint to initialize GAMSJob from (determined automatically if omitted)</param>
+            <param name="jobName">Job name (determined automatically if omitted)</param>
+            <returns></returns>
+        </member>
+        <member name="M:GAMS.GAMSJob.FromFile(GAMS.GAMSWorkspace,System.String,GAMS.GAMSCheckpoint,System.String)">
+            <summary>
+            Retrieve GAMSJob by file name
+            </summary>
+            <param name="workspace">GAMSWorkspace containing to GAMSJob</param>
+            <param name="fileName">GAMS source file name</param>
+            <param name="checkpoint">GAMSCheckpoint (determined automatically if omitted)</param>
+            <param name="jobName">Job name (determined automatically if omitted)</param>
+            <returns></returns>
+        </member>
+        <member name="M:GAMS.GAMSJob.Interrupt">
+            <summary>
+            Send interrupt signal to running GAMSJob
+            </summary>
+            <returns>True meaning "the signal was sent", false meaning "there is no Job running"</returns>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,GAMS.GAMSCheckpoint,System.IO.TextWriter,System.Boolean)">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSCheckpoint,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(System.IO.TextWriter,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,GAMS.GAMSCheckpoint,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,System.IO.TextWriter,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSCheckpoint,System.IO.TextWriter,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,GAMS.GAMSCheckpoint,System.IO.TextWriter,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSCheckpoint,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(System.IO.TextWriter,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,GAMS.GAMSCheckpoint,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,System.IO.TextWriter,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSCheckpoint,System.IO.TextWriter,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="M:GAMS.GAMSJob.Run(GAMS.GAMSOptions,GAMS.GAMSCheckpoint,System.IO.TextWriter,System.Boolean,GAMS.GAMSDatabase[])">
+            <summary>
+            Run GAMSJob
+            </summary>
+            <param name="gamsOptions">GAMS options to control job</param>
+            <param name="checkpoint">GAMSCheckpoint to be created by GAMSJob</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="createOutDB">Flag to define if OutDB should be created</param>
+            <param name="databases">GAMSDatabases read by the GAMSJob</param>
+        </member>
+        <member name="P:GAMS.GAMSJob.Name">
+            <summary>
+            Retrieve name of GAMSJob
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSJob.Workspace">
+            <summary>
+            Get GAMSWorkspace containing GAMSJob
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSJob.OutDB">
+            <summary>
+            Get GAMSDatabase created by Run method
+            </summary>
+        </member>
+        <member name="T:GAMS.UpdateAction">
+            <summary>
+            What field to update
+            </summary>
+        </member>
+        <member name="F:GAMS.UpdateAction.Upper">
+            <summary>
+            Supplies upper bounds for a variable
+            </summary>
+        </member>
+        <member name="F:GAMS.UpdateAction.Lower">
+            <summary>
+            Supplies lower bounds for a variable
+            </summary>
+        </member>
+        <member name="F:GAMS.UpdateAction.Fixed">
+            <summary>
+            Supplies fixed bounds for a variable
+            </summary>
+        </member>
+        <member name="F:GAMS.UpdateAction.Primal">
+            <summary>
+            Supplies level for a variable or equation
+            </summary>
+        </member>
+        <member name="F:GAMS.UpdateAction.Dual">
+            <summary>
+            Supplies marginal for a variable or equation
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSModelInstanceOpt">
+            <summary>
+            The GAMSModelInstanceOpt can be used to customize the GAMSModelInstance.Solve() routine.
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstanceOpt.Solver">
+            <summary>
+            GAMS Solver
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstanceOpt.OptFile">
+            <summary>
+            GAMS Optionfile number
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstanceOpt.NoMatchLimit">
+            <summary>
+            Controls the maximum number of accepted unmatched scenario records before terminating the solve
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstanceOpt.Debug">
+            <summary>
+            Debug Flag
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSModelInstanceOpt.#ctor(System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="solver">GAMS Solver</param>
+            <param name="noMatchLimit">Controls the maximum number of accepted unmatched scenario records before terminating the solve</param>
+            <param name="debug">Debug Flag</param>
+        </member>
+        <member name="T:GAMS.GAMSModifier">
+            <summary>
+            Instances of this class are input to GAMSModelInstance.Instatiate. A GAMSModifier consists either 
+            of a GAMSParameter or a triple: A GAMSVariable or GAMSEquation to be modified, the modification 
+            action (e.g. . Upper, Lower or Fixed for updating bounds of a variable, or Primal/Dual for updating 
+            the level/marginal of a variable or equation mainly used for starting non-linear models from different 
+            starting points), and a GAMSParameter that holds the data for modification.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSModifier.#ctor(GAMS.GAMSSymbol,GAMS.UpdateAction,GAMS.GAMSParameter)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="gamsSym">Symbol in the GAMS model to be modified</param>
+            <param name="updAction">Modification action</param>
+            <param name="dataSym">Parameter containing the data for the modification</param>
+        </member>
+        <member name="M:GAMS.GAMSModifier.#ctor(GAMS.GAMSParameter)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="gamsSym">Parameter in the GAMS model to be modified with data for modification</param>
+        </member>
+        <member name="P:GAMS.GAMSModifier.GamsSym">
+            <summary>
+            Symbol in the GAMS model to be modified
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSModifier.UpdAction">
+            <summary>
+            Type of modification
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSModifier.DataSym">
+            <summary>
+            Symbol containing the data for the modification
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSModelInstance">
+             <summary>
+             <p>The GAMSJob class is the standard  way of dealing with a GAMS model and the 
+             corresponding solution provided by a solver. The GAMS language provides 
+             programming flow that allows to solve models in a loop and do other 
+             sophisticated tasks, like building decomposition algorithms.</p>
+             <p>In rare cases, the GAMS model generation time dominates the solver solution time
+             and GAMS itself becomes the bottleneck in an optimization application. For a 
+             model instance which is a single mathematical model generated by a GAMS solve 
+             statement, the GAMSModelInstance class provides a controlled way of modifying a 
+             model instance and solving the resulting problem in the most efficient way, by 
+             communicating only the changes of the model to the solver and doing a hot start 
+             (in case of a continuous model like LP) without the use of disk IO.</p>
+             <p>The GAMSModelInstance requires a GAMSCheckpoint that contains the model 
+             definition. Significant parts of the GAMS solve need to be provided for the 
+             instantiation of the GAMSModelInstance. The modification of the model instance is 
+             done through data in SyncDB (a property of GAMSModelInstance of type GAMSDatabase). 
+             One needs to create GAMSModifiers which contain the information on how to modify 
+             the GAMSModelInstance. Such a GAMSModifier consists either of a GAMSParameter or 
+             of a triple with the GAMSVariable or GAMSEquation to be updated, the modification 
+             action (e.g. Upper, Lower or Fixed for updating bounds of a variable, or Primal/Dual 
+             for updating the level/marginal of a variable or equation mainly used for starting 
+             non-linear models from different starting points), and a GAMSParameter that holds 
+             the data for modification. GAMSSymbols of a GAMSModifier must belong to SyncDB. 
+             The list of GAMSModifiers needs to be supplied on the Instantiate call. The use of 
+             GAMSParameters that are GAMSModifiers is restricted in the GAMS model source. For 
+             example, the parameter cannot be used inside $(). Such parameters become endogenous 
+             to the model and will be treated by the GAMS compiler as such. Moreover, the rim of 
+             the model instance is fixed: No addition of variables and equations is possible.</p>
+             <p>The Instantiate call will only query the symbol information of the GAMSModifiers, 
+             not the data of SyncDB, e.g. to retrieve the dimension of the modifiers. That's why 
+             the modifier symbols have to exist (but don't have to have data) in SyncDB when 
+             Instantiate is called. The GAMSParameters that contain the update data in SyncDB can 
+             be filled at any time before executing the Solve method. The Solve method uses this 
+             data to update the model instance. The Solve method will iterate through all records 
+             of modifier symbols in the model instance and try to find update data in SyncDB. If 
+             a record in SyncDB is found, this data record will be copied into the model instance. 
+             If no corresponding record is found in SyncDB there are different choices: 1) the 
+             original data record is restored (UpdateType=BaseCase) which is the default, 2) the 
+             default record of a GAMSParameter (which is 0)  is used (UpdateType=Zero, and 3) no 
+             copy takes place and we use the previously copied record value (UpdateType=Accumulate). 
+             After the model instance has been updated, the model is passed to the selected solver.</p> 
+             <p>After the completion of the Solve method, the SyncDB will contain the primal and 
+             dual solution of the model just solved. Moreover, the GAMSParameters that are 
+             GAMSModifiers are also accessible in SyncDB as GAMSVariables with the name of the 
+             GAMSParameter plus "_var". The Marginal of this GAMSVariable can provide sensitivity 
+             information about the parameter setting. The status of the solve is accessible through 
+             the ModelStatus and SolveStatus properties.</p>
+             <p>A GAMSModelInstance is connected to external resources and needs to be properly 
+             disposed before the .NET garbage collector can claim the instance.</p>
+             <p>In general, file operations in GAMS .Net take place in the WorkingDirectory 
+             defined in the GAMSWorkspace. Execptions to this rule are files read or created 
+             due to solver specific options in the solve routine of GAMSModelInstance. These files 
+             are written to (or read from) the current directory, meaning the directory where
+             the application gets executed. If required, the current directory can be changed inside 
+             an application using the method System.IO.Directory.SetCurrentDirectory(string path).</p>
+             </summary>
+             <example>
+             Example on how to create a GAMSModelInstance from a GAMSCheckpoint that was
+             generated by the Run method of GAMSJob.
+             <code>
+             GAMSWorkspace ws = new GAMSWorkspace();
+             GAMSCheckpoint cp = ws.AddCheckpoint();
+            
+             ws.GamsLib("trnsport");
+            
+             GAMSJob job = ws.AddJobFromFile("trnsport.gms");
+             job.Run(cp);
+             
+             GAMSModelInstance mi = cp.AddModelInstance();
+             GAMSParameter b = mi.SyncDB.AddParameter("b", 1, "demand");
+             
+             mi.Instantiate("transport us lp min z", new GAMSModifier(b));
+             
+             double[] bmult = new double[] { 0.7, 0.9, 1.1, 1.3 };
+             foreach (double bm in bmult)
+             {
+                 b.Clear();
+                 foreach (GAMSParameterRecord rec in job.OutDB.GetParameter("b"))
+                     b.AddRecord(rec.Keys).Value = rec.Value * bm;
+                 mi.Solve();
+                 Console.WriteLine("Scenario bmult=" + bm + ":");
+                 Console.WriteLine("  Modelstatus: " + mi.ModelStatus);
+                 Console.WriteLine("  Solvestatus: " + mi.SolveStatus);
+                 Console.WriteLine("  Obj: " + mi.SyncDB.GetVariable("z").FindRecord().Level);
+             }       
+             </code>
+             </example>
+        </member>
+        <member name="M:GAMS.GAMSModelInstance.#ctor(GAMS.GAMSCheckpoint,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="checkpoint">GAMSCheckpoint</param>
+            <param name="modelInstanceName">Identifier of GAMSModelInstance (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSModelInstance.Finalize">
+            <summary>
+            Destructor
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSModelInstance.Dispose">
+            <summary>
+            Free unmanaged ressources.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSModelInstance.Instantiate(System.String,GAMS.GAMSModifier[])">
+            <summary>
+            Instantiate the GAMSModelInstance
+            </summary>
+            <param name="modelDefinition">Model definition</param>
+            <param name="modifiers">List of GAMSModifiers</param>
+        </member>
+        <member name="M:GAMS.GAMSModelInstance.Instantiate(System.String,GAMS.GAMSOptions,GAMS.GAMSModifier[])">
+            <summary>
+            Instantiate the GAMSModelInstance
+            </summary>
+            <param name="modelDefinition">Model definition</param>
+            <param name="options">GAMS options</param>
+            <param name="modifiers">List of GAMSModifiers</param>
+        </member>
+        <member name="M:GAMS.GAMSModelInstance.Solve(GAMS.GAMSModelInstance.SymbolUpdateType,System.IO.TextWriter,GAMS.GAMSModelInstanceOpt)">
+            <summary>
+            Solve model instance
+            </summary>
+            <param name="updateType">Update type</param>
+            <param name="output">Stream to capture GAMS log</param>
+            <param name="miOpt">GAMSModelInstance options</param>
+        </member>
+        <member name="P:GAMS.GAMSModelInstance.Checkpoint">
+            <summary>
+            Retrieve GAMSCheckpoint
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSModelInstance.Name">
+            <summary>
+            Retrieve name of GAMSModelInstance
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSModelInstance.SyncDB">
+            <summary>
+            Retrieve GAMSDatabase used to synchronize modifiable data
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSModelInstance.ModelStatus">
+            <summary>
+            Status of the model. (available after a solve)
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSModelInstance.SolveStatus">
+            <summary>
+            Solve status of the model. (available after a solve)
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSModelInstance.SymbolUpdateType">
+            <summary>
+            Symbol update type
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstance.SymbolUpdateType.Zero">
+            <summary>
+            If record does not exist use 0 (Zero)
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstance.SymbolUpdateType.BaseCase">
+            <summary>
+            If record does not exist use values from instantiation
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSModelInstance.SymbolUpdateType.Accumulate">
+            <summary>
+            If record does not exist use value from previous solve
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions">
+            <summary>
+            <p>The GAMSOptions class manages GAMS options (sometimes also called GAMS
+            parameters since they correspond to the command line parameters of the GAMS
+            executable) for a GAMSJob and GAMSModelInstance. There are integer (e.g.
+            NodLim), double (e.g. ResLim), and string (e.g. PutDir) valued options. There
+            are also a few list options (Defines to set string macros inside GAMS and IDir
+            provide multiple search paths for include files) and a power option to set a
+            solver for all suitable model types (AllModelTypes).</p>
+            <p>Some options known from other interfaces to GAMS that are of limited use or
+            could even create problematic situations in the .NET environment are not
+            settable through the GAMSOptions class.</p>
+            <p>For some options (e.g. Case) other GAMS interfaces use numeric values (e.g. 0,1)
+            while the GAMSOptions class has enumerated types with proper names (e.g.
+            MixedCase, UpperCase).</p>
+            <p>A GAMSOptions instance is connected to external resources and needs to be properly
+            disposed before the .NET garbage collector can claim the instance.</p>
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSOptions.IDir">
+            <summary>
+            Input file directories (up to 40 are allowed)
+            </summary>
+        </member>
+        <member name="F:GAMS.GAMSOptions.Defines">
+            <summary>
+            GAMS Dash Options
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSOptions.#ctor(GAMS.GAMSWorkspace,GAMS.GAMSOptions)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workspace">GAMSWorkspace containing GAMSOptions</param>
+        </member>
+        <member name="M:GAMS.GAMSOptions.Dispose">
+            <summary>
+            Free unmanaged ressources.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSOptions.ResetToDefault">
+            <summary>
+            Reset all GAMS options to default
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GDX">
+            <summary>
+            Gams data exchange file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Restart">
+            <summary>
+            Restart file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Input">
+            <summary>
+            Input file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Output">
+            <summary>
+            Output file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Save">
+            <summary>
+            Save file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Symbol">
+            <summary>
+            Symbol table file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.XSave">
+            <summary>
+            Write compressed save file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Expand">
+            <summary>
+            Expanded (include) input file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PageWidth">
+            <summary>
+            Output file page width
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PageSize">
+            <summary>
+            Output file page size (=0 no paging)
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PageContr">
+            <summary>
+            Output file page control option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Action">
+            <summary>
+            Gams processing requests
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SubSys">
+            <summary>
+            Name of subsystem configuration file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ErrNam">
+            <summary>
+            Name of error message file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ScrDir">
+            <summary>
+            Scratch directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ScrNam">
+            <summary>
+            Work file names stem
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SysDir">
+            <summary>
+            GAMS system directory where GAMS executables reside
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CurDir">
+            <summary>
+            Current directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.WorkDir">
+            <summary>
+            Working directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PutDir">
+            <summary>
+            Put file directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GridDir">
+            <summary>
+            Grid file directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ScriptNext">
+            <summary>
+            Script mailbox file name (GAMSNEXT)
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ScriptExit">
+            <summary>
+            Program or script to be executed at the end of a GAMS run
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ScriptFrst">
+            <summary>
+            First line to be written to GAMSNEXT file.
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LogLine">
+            <summary>
+            Amount of line tracing to the log file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LogOption">
+            <summary>
+            Log option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LogFile">
+            <summary>
+            Log file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Trace">
+            <summary>
+            Trace file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.AppendOut">
+            <summary>
+            Output file append option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.AppendLog">
+            <summary>
+            Log file append option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.StepSum">
+            <summary>
+            Summary of computing resources used by job steps
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MultiPass">
+            <summary>
+            Multipass facility
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Suppress">
+            <summary>
+            Compiler listing option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.DFormat">
+            <summary>
+            Date format
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.TFormat">
+            <summary>
+            Time format
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.TabIn">
+            <summary>
+            Tab spacing
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CtrlZ">
+            <summary>
+            enable reading control Z
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CtrlM">
+            <summary>
+            enable flexible line ending
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolverCntr">
+            <summary>
+            Solver control file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolverMatr">
+            <summary>
+            Solver matrix file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolverInst">
+            <summary>
+            Solver instruction file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolverStat">
+            <summary>
+            Solver status file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolverSolu">
+            <summary>
+            Solver solution file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolverDict">
+            <summary>
+            Solver dictionary file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolUse">
+            <summary>
+            Manage memory pools
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree1">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree2">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree3">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree4">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree5">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree6">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PoolFree7">
+            <summary>
+            Manage memory pools N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CodeX">
+            <summary>
+            Controls the allocation of executable code
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Case">
+            <summary>
+            Output case option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.G205">
+            <summary>
+            Use Gams version 2.05 syntax
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.License">
+            <summary>
+            Use alternative license file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.TopMargin">
+            <summary>
+            Output file page top margin
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LeftMargin">
+            <summary>
+            Output file page left margin
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.BotMargin">
+            <summary>
+            Output file page bottom margin, lines added at the end of a page
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.DumpParms">
+            <summary>
+            GAMS parameter logging
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Profile">
+            <summary>
+            Execution profiling
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir1">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir2">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir3">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir4">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir5">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir6">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir7">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir8">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir9">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir10">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir11">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir12">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir13">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir14">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir15">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir16">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir17">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir18">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir19">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir20">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir21">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir22">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir23">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir24">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir25">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir26">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir27">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir28">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir29">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir30">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir31">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir32">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir33">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir34">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir35">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir36">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir37">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir38">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir39">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir40">
+            <summary>
+            Input file directory number N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InputDir">
+            <summary>
+            Input file directories
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LibIncDir">
+            <summary>
+            LibInclude directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SysIncDir">
+            <summary>
+            SysInclude directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.User1">
+            <summary>
+            User string N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.User2">
+            <summary>
+            User string N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.User3">
+            <summary>
+            User string N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.User4">
+            <summary>
+            User string N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.User5">
+            <summary>
+            User string N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ForceWork">
+            <summary>
+            Force newer GAMS systems to translate and read save files generated by older systems
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CErr">
+            <summary>
+            Compile time error limit
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.FErr">
+            <summary>
+            Alternative error message file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.OptFile">
+            <summary>
+            Default option file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.FSave">
+            <summary>
+            Force workfile save
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.NlCon">
+            <summary>
+            Nonlinear instructions search length
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.DumpOpt">
+            <summary>
+            Writes preprocessed input to the file input.dmp
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ErrMsg">
+            <summary>
+            Placing of compilation error messages
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Opt">
+            <summary>
+            Fold constant $ expressions
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.RelPath">
+            <summary>
+            Processing of relative path
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GLanguage">
+            <summary>
+            GLanguage
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GFinclude">
+            <summary>
+            GFinclude
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.UnitType">
+            <summary>
+            UnitType
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GFImplicit">
+            <summary>
+            GFImplicit
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GFExt">
+            <summary>
+            GFExt
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.StringChk">
+            <summary>
+            String substitution options
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Reference">
+            <summary>
+            Symbol reference file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.OptDir">
+            <summary>
+            Option file directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ExecErr">
+            <summary>
+            Execution time error limit
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ErrorLog">
+            <summary>
+            Max error message lines written to the log for each error
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LimRow">
+            <summary>
+            Maximum number of rows listed in one equation block
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LimCol">
+            <summary>
+            Maximum number of columns listed in one variable block
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CharSet">
+            <summary>
+            Character set flag
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Keep">
+            <summary>
+            Do not delete scratch files
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.IDE">
+            <summary>
+            Integrated Development Environment flavor
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.TraceOpt">
+            <summary>
+            Trace file format option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.IterLim">
+            <summary>
+            Iteration limit solver default
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.DomLim">
+            <summary>
+            Domain violation limit solver default
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ResLim">
+            <summary>
+            Resource (CPU) solver default limit
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.OptCR">
+            <summary>
+            Relative Optimality criterion solver default
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.OptCA">
+            <summary>
+            Absolute Optimality criterion solver default
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SysOut">
+            <summary>
+            Solver Status file reporting option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolPrint">
+            <summary>
+            Solution report print option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Bratio">
+            <summary>
+            Basis acceptance threshold
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.HoldFixed">
+            <summary>
+            Treat fixed variables as constants
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.NodLim">
+            <summary>
+            Node limit in branch and bound tree
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.WorkFactor">
+            <summary>
+            Work space multiplier for some solvers
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.WorkSpace">
+            <summary>
+            Work space for some solvers in MB
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ForLim">
+            <summary>
+            Gams looping limit
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Seed">
+            <summary>
+            Random number seed
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.On115">
+            <summary>
+            Generate errors for unknown unique element in an equation
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ExecMode">
+            <summary>
+            Limits on external programs that are allowed to be executed
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.InteractiveSolver">
+            <summary>
+            Allow solver to interact via command line
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PLicense">
+            <summary>
+            Privacy license file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.JobTrace">
+            <summary>
+            Job trace string to be written to the trace file at the end of a Gams job
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Warnings">
+            <summary>
+            Number of warnings permitted before a run terminates
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.TraceLevel">
+            <summary>
+            Solvestat threshold used in conjunction with a=GT
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SetType">
+            <summary>
+            used to set the type of --keys
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Timer">
+            <summary>
+            Instruction timer threshold in milli seconds
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.FileCase">
+            <summary>
+            Casing of new file names (put, gdx, ref etc.)
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SavePoint">
+            <summary>
+            Save solver point in GDX file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.SolveLink">
+            <summary>
+            Solver link options 0 save 1 script 2 module
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Sys11">
+            <summary>
+            Dynamic resorting if indices in assignment/data statements are not in natural order
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Sys12">
+            <summary>
+            Pass model with generation errors to solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ZeroRes">
+            <summary>
+            The results of certain operations will be set to zero if abs(result) .le. ZeroRes
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ZeroResRep">
+            <summary>
+            Report underflow as a warning when abs(results) .le. ZeroRes and result set to zero
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.HeapLimit">
+            <summary>
+            Maximum Heap size allowed in MB
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ScrExt">
+            <summary>
+            Scratch extension to be used with temporary files
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ProcDir">
+            <summary>
+            Run or Process Directory
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.gdxCompress">
+            <summary>
+            Compression of generated gdx file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.gdxConvert">
+            <summary>
+            Version of gdx files generated (for backward compatibility)
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.AppendExpand">
+            <summary>
+            Expand file append option
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ETLim">
+            <summary>
+            Elapsed time limit in seconds
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ProfileTol">
+            <summary>
+            Minimum time a statement must use to appear in profile generated output
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.ProfileFile">
+            <summary>
+            Write profile information to this file
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MaxProcDir">
+            <summary>
+            Maximum number of 225* process directories
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Integer1">
+            <summary>
+            Integer communication cell N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Integer2">
+            <summary>
+            Integer communication cell N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Integer3">
+            <summary>
+            Integer communication cell N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Integer4">
+            <summary>
+            Integer communication cell N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Integer5">
+            <summary>
+            Integer communication cell N
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.GridScript">
+            <summary>
+            Grid submission script
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Threads">
+            <summary>
+            Number of threads to be used by a solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.UseDLL">
+            <summary>
+            Use Cmex library instead of executable
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.Debug">
+            <summary>
+            Run GAMS in debugging mode
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.PID2Error">
+            <summary>
+            Send GAMS pid to standard error stream
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.LP">
+            <summary>
+            Default LP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MIP">
+            <summary>
+            Default MIP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.RMIP">
+            <summary>
+            Default RMIP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.NLP">
+            <summary>
+            Default NLP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MCP">
+            <summary>
+            Default MCP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MPEC">
+            <summary>
+            Default MPEC solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.RMPEC">
+            <summary>
+            Default RMPEC solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.CNS">
+            <summary>
+            Default CNS solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.DNLP">
+            <summary>
+            Default DNLP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.RMINLP">
+            <summary>
+            Default RMINLP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MINLP">
+            <summary>
+            Default MINLP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.QCP">
+            <summary>
+            Default QCP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.MIQCP">
+            <summary>
+            Default MIQCP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.RMIQCP">
+            <summary>
+            Default RMIQCP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.EMP">
+            <summary>
+            Default EMP solver
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSOptions.AllModelTypes">
+            <summary>
+            Set default solver for all model types which the solver can handle
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EAction">
+            <summary>
+            Gams processing requests
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EStepSum">
+            <summary>
+            Summary of computing resources used by job steps
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EDFormat">
+            <summary>
+            Date format
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ETFormat">
+            <summary>
+            Time format
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ECase">
+            <summary>
+            Output case option
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EForceWork">
+            <summary>
+            Force newer GAMS systems to translate and read save files generated by older systems
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EStringChk">
+            <summary>
+            String substitution options
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ECharSet">
+            <summary>
+            Character set flag
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EKeep">
+            <summary>
+            Do not delete scratch files
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ESysOut">
+            <summary>
+            Solver Status file reporting option
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ESolPrint">
+            <summary>
+            Solution report print option
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EHoldFixed">
+            <summary>
+            Treat fixed variables as constants
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EExecMode">
+            <summary>
+            Limits on external programs that are allowed to be executed
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EInteractiveSolver">
+            <summary>
+            Allow solver to interact via command line
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EFileCase">
+            <summary>
+            Casing of new file names (put, gdx, ref etc.)
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ESavePoint">
+            <summary>
+            Save solver point in GDX file
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ESolveLink">
+            <summary>
+            Solver link options 0 save 1 script 2 module
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.ESys11">
+            <summary>
+            Dynamic resorting if indices in assignment/data statements are not in natural order
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EZeroResRep">
+            <summary>
+            Report underflow as a warning when abs(results) .le. ZeroRes and result set to zero
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EgdxCompress">
+            <summary>
+            Compression of generated gdx file
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSOptions.EgdxConvert">
+            <summary>
+            Version of gdx files generated (for backward compatibility)
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSParameter">
+            <summary>
+            This is the representation of a parameter symbol in GAMS. It exists in a
+            GAMSDatabase and contains GAMSParameterRecords which one can iterate through.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSParameter.#ctor(GAMS.GAMSDatabase,System.String,System.Int32,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="database">Corresponding GAMSDatabase</param>
+            <param name="identifier">Parameter name</param>
+            <param name="dimension">Parameter dimension</param>
+            <param name="explanatoryText">Explanatory text to parameter</param>
+        </member>
+        <member name="M:GAMS.GAMSParameter.AddRecord(System.String[])">
+            <summary>
+            Add record to GAMSParameter
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to added record</returns>
+        </member>
+        <member name="M:GAMS.GAMSParameter.FindRecord(System.String[])">
+            <summary>
+            Find record in GAMSParameter
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to found record</returns>
+        </member>
+        <member name="M:GAMS.GAMSParameter.FirstRecord">
+            <summary>
+            Retrieve first record in GAMSParameter
+            </summary>
+            <returns>Refernce to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSParameter.FirstRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the first record in GAMSParameter
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSParameter.LastRecord">
+            <summary>
+            Retrieve last record in GAMSParameter
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSParameter.LastRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the last record in GAMSParameter
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="T:GAMS.GAMSParameterRecord">
+            <summary>
+            This is the representation of a single record of a GAMSParameter.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSParameterRecord.#ctor(GAMS.GAMSParameterRecord)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="record">GAMSParameterRecord to initialize this instance from</param>
+        </member>
+        <member name="P:GAMS.GAMSParameterRecord.Parameter">
+            <summary>
+            Return parameter where this record belongs to
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSParameterRecord.Value">
+            <summary>
+            Get: Retrieve the value of this GAMSParameterRecord
+            Set: Set the value of this GAMSParameterRecord
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSCheckpoint">
+            <summary>
+            A GAMSCheckpoint class captures the state of a GAMSJob after the GAMSJob.Run 
+            method has been carried out. Another GAMSJob can continue (or restart) from a 
+            GAMSCheckpoint. A GAMSCheckpoint constructed with a file name will create a file 
+            (extension .g00) for permanent storage when supplied as parameter on the 
+            GAMSJob.Run method. Moreover, a GAMSModelInstance is also initialized from a 
+            checkpoint that contains the model definition of the model instance.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSCheckpoint.#ctor(GAMS.GAMSWorkspace,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="workspace">GAMSWorkspace containing GAMSCheckpoint</param>
+            <param name="checkpointName">Identifier of GAMSCheckpoint (determined automatically if omitted)</param>
+        </member>
+        <member name="M:GAMS.GAMSCheckpoint.AddModelInstance(System.String)">
+            <summary>
+            Create model instance
+            </summary>
+            <param name="modelInstanceName">Identifier of GAMSModelInstance (determined automatically if omitted)</param>
+        </member>
+        <member name="P:GAMS.GAMSCheckpoint.WorkSpace">
+            <summary>
+            Get the GAMSWorkspace
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSCheckpoint.FileName">
+            <summary>
+            Get the checkpoint file name
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSCheckpoint.Name">
+            <summary>
+            Get the checkpoint name
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSSet">
+            <summary>
+            This is the representation of a set symbol in GAMS. It exists in a
+            GAMSDatabase and contains GAMSSetRecords which one can iterate through.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSSet.#ctor(GAMS.GAMSDatabase,System.String,System.Int32,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="database">Corresponding GAMSDatabase</param>
+            <param name="identifier">Set name</param>
+            <param name="dimension">Set dimension</param>
+            <param name="explanatoryText">Explanatory text to set</param>
+        </member>
+        <member name="M:GAMS.GAMSSet.AddRecord(System.String[])">
+            <summary>
+            Add record to GAMSSet
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to added record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSet.FindRecord(System.String[])">
+            <summary>
+            Find record in GAMSSet
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to found record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSet.FirstRecord">
+            <summary>
+            Retrieve first record in GAMSSet
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSet.FirstRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the first record in GAMSSet
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSet.LastRecord">
+            <summary>
+            Retrieve last record in GAMSSet
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSSet.LastRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the last record of GAMSSet
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="T:GAMS.GAMSSetRecord">
+            <summary>
+            This is the representation of a single record of a GAMSSet.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSSetRecord.#ctor(GAMS.GAMSSetRecord)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="record">GAMSSetRecord to initialize this instance from</param>
+        </member>
+        <member name="P:GAMS.GAMSSetRecord.Set">
+            <summary>
+            Return set where this record belongs to
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSetRecord.Text">
+            <summary>
+            Get: Retrieve the content of this GAMSSetRecord
+            Set: Set the content of this GAMSSetRecord
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSSymbolEnumerator">
+            <summary>
+            Enumerator for iterating through the records of a specific symbol.
+            This class can be used with all GAMS symbol types.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSSymbolEnumerator.#ctor(GAMS.GAMSSymbol)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="symbol">The symbol that is bound to this Enumerator</param>
+        </member>
+        <member name="M:GAMS.GAMSSymbolEnumerator.MoveNext">
+            <summary>
+            Moves the enumerator to the next record.
+            </summary>
+            <returns>True if the operation is possible, false otherwise.</returns>
+        </member>
+        <member name="M:GAMS.GAMSSymbolEnumerator.Reset">
+            <summary>
+            Reset the enumerator to its initial state.
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSSymbolEnumerator.Current">
+            <summary>
+            Retrieve the current symbol
+            </summary>
+            <returns>
+            The current symbol record. This is an instance of a subclass of GAMSSymbolRecord, namely either GAMSVariableRecord,
+            GAMSEquationRecord, GAMSVariableRecord or GAMSSetRecord.
+            </returns>
+        </member>
+        <member name="T:GAMS.GAMSVariable">
+            <summary>
+            This is the representation of a variable symbol in GAMS. It exists in a
+            GAMSDatabase and contains GAMSVariableRecords which one can iterate through.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSVariable.#ctor(GAMS.GAMSDatabase,System.String,System.Int32,GAMS.VarType,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="database">Corresponding GAMSDatabase</param>
+            <param name="identifier">Variable name</param>
+            <param name="dimension">Variable dimension</param>
+            <param name="varType">Variable subtype (Binary, Integer, Positive, Negative, Free, SOS1, SOS2, SemiCont, SemiInt,)</param>
+            <param name="explanatoryText">Explanatory text to variable</param>
+        </member>
+        <member name="M:GAMS.GAMSVariable.AddRecord(System.String[])">
+            <summary>
+            Add record to GAMSVariable
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to added record</returns>
+        </member>
+        <member name="M:GAMS.GAMSVariable.FindRecord(System.String[])">
+            <summary>
+            Find record in GAMSVariable
+            </summary>
+            <param name="keys">List of keys</param>
+            <returns>Reference to found record</returns>
+        </member>
+        <member name="M:GAMS.GAMSVariable.FirstRecord">
+            <summary>
+            Retrieve first record in GAMSVariable
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSVariable.FirstRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the first record in GAMSVariable
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSVariable.LastRecord">
+            <summary>
+            Retrieve last record in GAMSVariable
+            </summary>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="M:GAMS.GAMSVariable.LastRecord(System.String[])">
+            <summary>
+            Retrieve a slice of the last record in GAMSVariable
+            </summary>
+            <param name="slice">Define filter for elements whose record should be retrieved</param>
+            <returns>Reference to record</returns>
+        </member>
+        <member name="P:GAMS.GAMSVariable.VarType">
+            <summary>
+            Retrieve subtype of variable (Binary, Integer, Positive, Negative, Free, SOS1, SOS2, SemiCont, SemiInt,)
+            </summary>
+        </member>
+        <member name="T:GAMS.GAMSVariableRecord">
+            <summary>
+            This is the representation of a single record of a GAMSVariable.
+            </summary>
+        </member>
+        <member name="M:GAMS.GAMSVariableRecord.#ctor(GAMS.GAMSVariableRecord)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="record">GAMSVariableRecord to initialize this instance from</param>
+        </member>
+        <member name="P:GAMS.GAMSVariableRecord.Variable">
+            <summary>
+            Return variable where this record belongs to
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSVariableRecord.Level">
+            <summary>
+            Get: Retrieve the the level of this GAMSVariableRecord
+            Set: Set the the level of this GAMSVariableRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSVariableRecord.Marginal">
+            <summary>
+            Get: Retrieve the marginal of this GAMSVariableRecord
+            Set: Set the marginal of this GAMSVariableRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSVariableRecord.Upper">
+            <summary>
+            Get: Retrieve the upper bound of this GAMSVariableRecord
+            Set: Set the upper bound of this GAMSVariableRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSVariableRecord.Lower">
+            <summary>
+            Get: Retrieve the lower bound of this GAMSVariableRecord
+            Set: Set the lower bound of this GAMSVariableRecord
+            </summary>
+        </member>
+        <member name="P:GAMS.GAMSVariableRecord.Scale">
+            <summary>
+            Get: Retrieve the scale factor of this GAMSVariableRecord
+            Set: Set the scale factor of this GAMSVariableRecord
+            </summary>
+        </member>
+        <member name="M:GAMS.SolverOptions.Dispose">
+            <summary>
+            Free unmanaged ressources.
+            </summary>
+        </member>
+        <member name="M:GAMS.SolverOptions.ResetToDefault">
+            <summary>
+            Reset all GAMS options to default
+            </summary>
+        </member>
+    </members>
+</doc>

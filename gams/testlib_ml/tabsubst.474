@@ -1,0 +1,21 @@
+$title tab and string substitution for long line (TABSUBST,SEQ=474)
+$ontext
+Early cmex implementations expanded tabs with looking at the total
+length of the line. We also make sure long line due to string
+subsitutions get rejected.
+$offtext
+$echo %system.tab%%aaa%display 'this statement has a total length of 50'; > tabtmp.gms
+*                               1         2         3         4         5         0
+*                      123456789012345678901234567890123456789012345678901234567890
+* assume we have enough space with 80000 line length
+$echo --aaa="" > pf.txt
+$call gams tabtmp tabin 79940 lo=%gams.lo% pf=pf.txt
+$if errorlevel 1 $abort should be OK
+* now we go beyond the max length and should get ane error
+$echo eolonly 1 > pf.txt
+$echo  --aaa=display 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; >> pf.txt
+$call gams tabtmp tabin 79940 lo=%gams.lo% pf=pf.txt
+$if NOT errorlevel 1 $abort should fail
+$echo scalar x;%system.tab%x=1;x=1;x=1;x=1;x=1;x=1;x=1;x=1;x=1;x=1; > tabtmp.gms
+$call gams tabtmp tabin 79960 lo=%gams.lo%
+$if NOT errorlevel 1 $abort should fail

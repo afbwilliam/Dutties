@@ -1,0 +1,37 @@
+$Title 'Tests simple lag and lead operations' (LAGS1,SEQ=166)
+
+set i /i1*i5/;
+
+parameter A(i) /i1=1,i2=2,i3=3,i4=4,i5=5/;
+parameter X1(i),X2(i),X3(i),X4(i);
+parameter RX1(i) /i1=2, i2=3,i3=4,i4=5/;
+parameter RX2(i) /i1=2, i2=3,i3=4,i4=5,i5=1/;
+parameter RX3(i) /i2=1,i3=2,i4=3,i5=4/;
+parameter RX4(i) /i1=5,i2=1,i3=2,i4=3,i5=4/;
+
+X1(i) = A(i+1);
+X2(i) = A(i++1);
+X3(i) = A(i-1);
+X4(i) = A(i--1);
+
+set Err(i);
+Err(i)$(X1(i) <> RX1(i)) = Yes; Abort$card(Err) 'X1 is different',X1,Rx1;
+Err(i)$(X2(i) <> RX2(i)) = Yes; Abort$card(Err) 'X2 is different',X2,Rx2;
+Err(i)$(X3(i) <> RX3(i)) = Yes; Abort$card(Err) 'X3 is different',X3,Rx3;
+Err(i)$(X4(i) <> RX4(i)) = Yes; Abort$card(Err) 'X4 is different',X4,Rx4;
+
+parameter Y1(i),Y2(i),Y3(i),Y4(i);
+parameter RY1(i) /i2=1,i3=2,i4=3,i5=4/;
+parameter RY2(i) /i1=5,i2=1,i3=2,i4=3,i5=4/;
+parameter RY3(i) /i1=2,i2=3,i3=4,i4=5/;
+parameter RY4(i) /i1=2,i2=3,i3=4,i4=5,i5=1/;
+
+Y1(i+1)=A(i);
+Y2(i++1)=A(i);
+Y3(i-1)=A(i);
+Y4(i--1)=A(i);
+
+Err(i)$(Y1(i) <> RY1(i)) = Yes; Abort$card(Err) 'Y1 is different',Y1,RY1;
+Err(i)$(Y2(i) <> RY2(i)) = Yes; Abort$card(Err) 'Y2 is different',Y2,RY2;
+Err(i)$(Y3(i) <> RY3(i)) = Yes; Abort$card(Err) 'Y3 is different',Y3,RY3;
+Err(i)$(Y4(i) <> RY4(i)) = Yes; Abort$card(Err) 'Y4 is different',Y4,RY4;

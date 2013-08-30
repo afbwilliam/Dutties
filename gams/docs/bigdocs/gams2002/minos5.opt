@@ -1,0 +1,6 @@
+BEGIN
+  Iteration limit        500
+  Major damping parameter 0.5
+  Feasibility tolerance   1.0E-7
+  Scale all variables
+END

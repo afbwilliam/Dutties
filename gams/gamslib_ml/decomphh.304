@@ -1,0 +1,231 @@
+$title A Successive Recalibration Algorithm for GE Models with Many Households (DECOMPHH,SEQ=304)
+
+$ontext
+This program constitutes explicit documentation of the solution
+algorithm used to solve a general equilibrium model of the economic
+effects of Russia's accession to the WTO based on Goskomstat's
+consumer expenditure survey.  That model has 55094 households.  For
+further details, see the working paper:
+
+Poverty Effects of Russia's WTO Accession: modeling "real" households
+and endogenous productivity effects.
+
+Thomas Rutherford, University of Colorado
+David Tarr, The World Bank
+Oleksandr Shepotylo, University of Maryland
+
+September, 2004
+
+Contact: dtarr@worldbank.org
+
+This is a small GAMS program which formulates a simple exchange model
+with multiple households and shows how the model can be solved either
+in "bottom-up" mode (with an explicit representation of the consumer
+demands in the model) or through successive computation of a
+"top-down" model.
+
+The default configuration of this model has 1000 households.  The
+program output is the reporting parameter itrlog which should be
+displayed as follows:
+
+----    459 PARAMETER itrlog  Equilibrium price levels
+
+         bottomup       iter0       iter1       iter2       iter3       iter4       iter5
+i1        0.96239     0.95735     0.96309     0.96230     0.96241     0.96239     0.96239
+i2        0.99602     0.99546     0.99607     0.99601     0.99602     0.99602     0.99602
+i3        1.00449     1.00511     1.00439     1.00451     1.00449     1.00450     1.00449
+i4        1.05347     1.05983     1.05275     1.05355     1.05346     1.05347     1.05347
+i5        0.98992     0.98869     0.99005     0.98990     0.98992     0.98992     0.98992
+i6        1.01483     1.01677     1.01456     1.01487     1.01483     1.01483     1.01483
+i7        1.00364     1.00420     1.00353     1.00365     1.00363     1.00364     1.00364
+i8        0.93811     0.93088     0.93903     0.93800     0.93813     0.93811     0.93812
+i9        1.02511     1.02800     1.02476     1.02515     1.02510     1.02511     1.02511
+i10       1.01202     1.01371     1.01176     1.01206     1.01201     1.01202     1.01202
+
+CPU       0.36100     0.03000     0.04000     0.03000     0.03000     0.03000     0.02000
+delta                 0.25639     0.03186     0.00407     0.00052     0.00007 8.740106E-6
+
+
+Rows labeled i1 to i10 report equilibrium prices from various models.
+"bottomup" presents equilibrium prices for the integrated model in
+which each of the households is explicitly modeled.  The columns
+labeled "iter0", "iter1", etc. report equilibrium prices returned for
+successive steps in the approximation procedure.  Notice that the
+bottom up model agrees to five decimals the last three iterations of
+the decomposition procedure.
+
+The row labeled "CPU" reports elapsed time (calculated using the GAMS
+internal function "system.timeexec") required to process each of the
+models.  (Notice that even with as few as 1000 households, the
+decomposition procedure is much faster than the integrated bottom-up
+model.)
+
+The row labeled "delta" reports the computed deviation at each step
+in the decomposition procedure.  This deviation is the 1-norm of
+changes in computed equilibrium prices from one iteration to the next.
+The decomposition algorithm is terminated when delta falls below 1e-5
+
+$offtext
+
+*        Define the dimensions of the model here:
+
+$if not set nhh $set nhh 1000
+
+set h  Households  /h1*h%nhh%/,
+    i  Commodities /i1*i10/;
+
+alias (i,j);
+
+*        Use randomly generated input data:
+
+parameter c0(i,h)    Reference consumption levels,
+          e0(i,h)    Commodity endowments,
+          timestart  Run time
+          sigma(h)   Elasticities of substitution in demand;
+
+c0(i,h)  = uniform(0,1);
+e0(i,h)  = uniform(0,1);
+sigma(h) = uniform(0.25, 2);
+
+*        Avoid the tedium of coding both Cobb-Douglas and CES
+*        demand functions:
+
+sigma(h)$(abs(sigma(h)-1) < 0.01) = 0.99;
+
+display c0, e0, sigma;
+
+*        Declare and solve a model with a fully disaggregate
+*        set of households:
+
+$ontext
+
+$model:bottomup
+
+$commodities:
+        p(i)
+
+$consumers:
+        hh(h)
+
+$demand:hh(h)  s:sigma(h)
+        e:p(i)        q:e0(i,h)
+        d:p(i)        q:c0(i,h)
+
+$offtext
+$sysinclude mpsgeset bottomup
+
+*        When an MPSGE model is formulated with high dimensionality, it is
+*        often necessary to manually increase the allocated workspace.  Here
+*        I am allocating 50 megabytes to the workspace array, a value which
+*        is adequate for more than 10,000 households:
+
+bottomup.workspace = 50;
+
+*        Solve the bottom-up model in a single shot:
+
+timestart = system.timeexec;
+$include BOTTOMUP.GEN
+solve bottomup using mcp;
+
+parameter itrlog(*,*) Equilibrium price levels;
+
+itrlog("CPU","bottomup") = system.timeexec - timestart;
+itrlog(i,"bottomup")     = p.l(i) * card(i) / sum(j, p.l(j));
+
+
+*        Next, solve the same model recursively using the
+*        successive recalibration algorithm:
+
+*        The top-down model is based on a single representative
+*        agent whose preferences are successively adjusted to
+*        locally portray the "community indifference curve" which
+*        describes the underlying household endowments and preferences:
+
+parameter theta(i,h)  Household benchmark budget shares,
+          pc(h)       Household consumption price index,
+          u(h)        Household utility index (relative to c0),
+          pref(i)     Reference price
+          cref(i)     Reference demand quantity;
+
+*        Compute the benchmark budget shares:
+
+theta(i,h) = c0(i,h) / sum(j, c0(j,h));
+
+*        Initially calibrate the community indifference curve
+*        based on a price point at the center of the simplex:
+
+u(h)    = sum(i, e0(i,h))/sum(i,c0(i,h));
+cref(i) = sum(h, c0(i,h) * u(h));
+pref(i) = 1;
+
+*        Here is the top-down model.  Note that the h set does
+*        not appear in this model:
+
+$ontext
+$model:topdown
+
+$commodities:
+        p(i)        ! Commodity prices
+
+$consumers:
+        ra        ! Reprsentative agent:
+
+*        Preferences are Cobb-Douglas:
+
+$demand:ra  s:1
+        e:p(i)        q:(sum(h,e0(i,h)))
+        d:p(i)        q:cref(i)  p:pref(i)
+
+$offtext
+$sysinclude mpsgeset topdown
+
+*        Fix aggregate income to normalize the price system:
+
+ra.fx = sum(h, hh.l(h));
+
+set iter Iterations in the projection algorithm /iter0*iter10/;
+
+parameter delta Convergence metric /1/;
+
+*        Loop until we have drive the sum of absolute price changes
+*        to a small level:
+
+loop(iter$(delta > 1e-5),
+
+*        Within each iteration we solve the top-down model.  Note that
+*        each solution is very cheap because the model is small and the
+*        previous iteration's solution is already in place:
+
+        timestart = system.timeexec;
+$include TOPDOWN.GEN
+        solve topdown using mcp;
+
+        itrlog("CPU",iter) = system.timeexec - timestart;
+
+*        Record the current deviation:
+
+        delta = sum(i, abs(p.l(i)-pref(i)));
+
+        itrlog("delta",iter) = delta;
+
+*        Update the iteration log:
+
+        itrlog(i,iter) = p.l(i) * card(i) / sum(j, p.l(j));
+
+*        Recalibrate preferences of the representative agent based on
+*        demands of the individual households:
+
+        pc(h) = sum(i, theta(i,h) * p.l(i)**(1-sigma(h)))**(1/(1-sigma(h)));
+
+*        Utility index for household h (relative to c0):
+
+        u(h) = sum(i, e0(i,h)*p.l(i))/(pc(h)*sum(i,c0(i,h)));
+
+*        Reference consumption level for the representative agent:
+
+        cref(i) = sum(h, c0(i,h) * u(h) * (pc(h)/p.l(i))**sigma(h));
+        pref(i) = p.l(i);
+);
+
+option itrlog:5;
+display itrlog;

@@ -1,0 +1,19 @@
+$TITLE 'Generate test data for read4 test of gdxMrw' (GENR4,SEQ=242)
+* we do not use set j - J is an internal Matlab function?
+set i / i0 , i1 /;
+set k / k0 , k1 /;
+parameter iiiii(i,i,i,i,i);
+parameter ikikikikik(i,k,i,k,i,k,i,k,i,k);
+
+parameter emptee(i,i,i);
+
+parameter vi(i), vk(k);
+vi(i) = ord(i)-1;
+vk(k) = ord(k)-1;
+alias(i,i1,i2,i3,i4,i5);
+alias(k,k1,k2,k3,k4,k5);
+iiiii(i1,i2,i3,i4,i5) = ((((vi(i1)*2)+vi(i2))*2+vi(i3))*2+vi(i4))*2+vi(i5);
+ikikikikik(i1,k1,i2,k2,i3,k3,i4,k4,i5,k5) = ((((
+  ((((vi(i1)*2+vk(k1))*2+vi(i2))*2+vk(k2))*2+vi(i3))*2+vk(k3)
+  )*2+vi(i4))*2+vk(k4))*2+vi(i5))*2+vk(k5);
+execute_unload 'exr4.gdx';

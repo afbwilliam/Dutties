@@ -1,0 +1,41 @@
+$title Test cholesky utility (CHOLES02,SEQ=412)
+
+$ontext
+
+Test factor returned by the cholesky utility
+
+Contributor: Steve Dirkse
+
+$offtext
+
+set I / i1 * i3 /;
+alias (I,J,K);
+
+parameters
+  L0(I,J)  'lower triangular matrix'
+  A(I,J)   'L * L-transpose'
+  L1(I,J)  'computed cholesky factor'
+  err(I,J) 'L0 - L1'
+  ;
+
+table L0
+        i1      i2      i3
+i1      4
+i2      2       1
+i3      1       4       2   ;
+
+A(I,J) = sum {K, L0(I,K)*L0(J,K)};
+
+scalar rc;
+execute_unload 'a.gdx', I, A;
+execute 'cholesky a.gdx i a L.gdx L > cholesky.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from cholesky', rc;
+execute_load 'L.gdx',L1=L;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading Cholesky factor L1 from L.gdx', rc;
+
+err(I,J) = L0(I,J) - L1(I,J);
+display L0, L1, err;
+rc = sum{(I,J), abs(err(I,J))};
+abort$[rc > 1e-8] 'bad Cholesky factor returned: expected L0, got L1';

@@ -1,0 +1,162 @@
+$title  Scarf's Activity Analysis Example (SCARFEMP-PRIMAL,SEQ=53)
+
+$Ontext
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.
+Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp),
+we instead use the KKT of the dual form optimization problem:
+   max_{x,y}  sum (h, i(h) * log(u_h(x)))
+   s.t    Ay  + sum_h endow(h) >= sum_h x(c,h), x,y >= 0
+
+coupled with the income complementarity relationship.
+
+This is detailed in Rutherford's 1992 paper entitled "Sequential Joint Maximization"
+
+Contributor: Michael Ferris, October 2010
+$Offtext
+
+$call gamslib -q scarfmcp
+$include scarfdata.inc
+
+positive
+variables
+
+        p(c)    commodity price,
+        y(s)    production,
+        i(h)    income;
+
+equations
+        mkt(c)          commodity market,
+        profit(s)       zero profit,
+        income(h)       income index;
+
+*       distinguish ces and cobb-douglas demand functions:
+
+mkt(c)..        sum(s, a(c,s) * y(s)) + sum(h, e(c,h)) =g=
+
+                sum(h$(esub(h) ne 1),
+                (i(h)/sum(cc, alpha(cc,h) * p(cc)**(1-esub(h)))) *
+                alpha(c,h) * (1/p(c))**esub(h)) +
+
+                sum(h$(esub(h) eq 1),
+                i(h) * alpha(c,h) / p(c));
+
+profit(s)..     -sum(c, a(c,s) * p(c)) =g= 0;
+
+income(h)..     i(h) =g= sum(c, p(c) * (e(c,h)+eps));
+
+model scarf / mkt.p, profit.y, income.i/;
+
+p.l(c) = 1;
+y.l(s) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+p.lo(c)  = 0.00001$(smax(h, alpha(c,h)) gt eps);
+
+*       fix the price of numeraire commodity:
+
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+* For Cobb Douglas
+* esub(h) = 1;
+
+solve scarf using mcp;
+
+* save values for testing later
+parameter xLev(c,h) closed form values for consumption given prices and income;
+parameter yLev(s);
+yLev(s) = y.l(s);
+
+* Now set up the equivalent model using emp
+
+variables z;
+positive variables x(c,h) Marshallian demand;
+equations objdef, mktcons(c);
+
+* following works for Cobb Douglas functions (esub(h) = 1) and CES
+
+objdef..
+  z =e=
+  sum(h$(esub(h) ne 1), i(h)*(1/rho(h))*log(sum(c$alpha(c,h), lambda(c,h)*x(c,h)**rho(h))))
+
+  +sum(h$(esub(h) eq 1), i(h)*sum(c$alpha(c,h), alpha(c,h)*log(x(c,h))));
+
+mktcons(c)..        sum(s, a(c,s) * y(s)) + sum(h, e(c,h)) =g= sum(h$alpha(c,h), x(c,h));
+
+model scarfemp /objdef, mktcons, income/;
+
+* Set initial values for production (y) and other variables
+x.l(c,h) = 1;
+y.l(s) = 1;
+x.lo(c,h) = 0.00001$alpha(c,h);
+x.fx(c,h)$(not alpha(c,h)) = 0;
+p.l(c) = 1;
+mktcons.m(c) = p.l(c);
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+file myinfo / '%emp.info%' /;
+put myinfo 'equilibrium';
+put      / 'max z x y objdef -mktcons';
+put      / 'dualVar p - mktcons';
+putclose / 'vi income i';
+
+* find good starting values for x
+i.fx(h) = i.l(h);
+x.l(c,h) = 1$alpha(c,h);
+
+solve scarfemp using emp;
+
+xLev(c,h) = ((i.l(h)/sum(cc, alpha(cc,h) * p.l(cc)**(1-esub(h)))) *
+                alpha(c,h) * (1/p.l(c))**esub(h))$(esub(h) ne 1) +
+
+                (i.l(h) * alpha(c,h) / p.l(c))$(esub(h) eq 1);
+
+abort$[smax{(c,h), abs(x.l(c,h) - xLev(c,h))} > 1e-5] 'not same x level'
+       x.l, xLev;
+
+* now solve for real
+i.lo(h) = 0; i.up(h) = inf;
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+solve scarfemp using emp;
+abort$[smax{s, abs(yLev(s)-y.l(s))} > 1e-5] 'bad y level (equilibrium)',
+  y.l, yLev;
+
+* Now reproduce with single opt and dualEqu
+* Set initial values for production (y) and other variables
+x.l(c,h) = 1;
+y.l(s) = 1;
+x.lo(c,h) = 0.00001$alpha(c,h);
+x.fx(c,h)$(not alpha(c,h)) = 0;
+p.l(c) = 1;
+mktcons.m(c) = p.l(c);
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+putclose myinfo 'dualEqu income i'
+              / 'dualVar p -mktcons';
+
+* find good starting values for x
+i.fx(h) = i.l(h);
+x.l(c,h) = 1$alpha(c,h);
+
+solve scarfemp using emp max z;
+
+xLev(c,h) = ((i.l(h)/sum(cc, alpha(cc,h) * p.l(cc)**(1-esub(h)))) *
+                alpha(c,h) * (1/p.l(c))**esub(h))$(esub(h) ne 1) +
+
+                (i.l(h) * alpha(c,h) / p.l(c))$(esub(h) eq 1);
+
+abort$[smax{(c,h), abs(x.l(c,h) - xLev(c,h))} > 1e-5] 'not same x level'
+       x.l, xLev;
+
+* now solve for real
+i.lo(h) = 0; i.up(h) = inf;
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+solve scarfemp using emp max z;
+abort$[smax{s, abs(yLev(s)-y.l(s))} > 1e-5] 'bad y level (dualEqu)',
+  y.l, yLev;

@@ -1,0 +1,20 @@
+$title $load under $onmulti works like data statements (LOAD1,SEQ=21)
+
+set i / i1*i3 /
+parameter a(i) / i1 1, i2 2, i3 3 /
+parameter b(i) / i1 1, i2 2, i3 3 /
+          c(i) / i1 5 /
+
+$gdxout gdx1
+$unload c
+$gdxout
+
+$onmulti
+parameter a(i) / i1 5 /;
+display a;
+
+$gdxin gdx1
+$load b=c
+display b;
+
+abort$sum(i, a(i) <> b(i)) 'a should be equal to be',a,b;

@@ -1,0 +1,55 @@
+$title 'Simple test on one =n= equation' (LP11,SEQ=251)
+
+$ontext
+In this test we check how a solver behaves when there is only
+one objective variable in one free equation.  Different tests
+are performed applying different directions of optimization.
+
+Contributor: Steve Dirkse
+$offtext
+
+$if not set MTYPE     $set MTYPE lp
+$if not set SKIPUNBND $set SKIPUNBND 0
+
+variable obj;
+
+equations e;
+
+model m / e /;
+
+e.. obj =n= 1;
+
+scalar tol / 1e-6 /;
+scalar skipUnBnd / %SKIPUNBND% /;
+
+if {not skipUnBnd,
+  solve m max obj us %MTYPE%;
+  abort$[(m.solvestat <> %solvestat.NormalCompletion% or (m.modelstat <> %modelstat.Unbounded%)
+         and (m.modelstat <> %modelstat.Unbounded-NoSolution%))] 'wrong status codes';
+
+  solve m min obj us %MTYPE%;
+  abort$[(m.solvestat <> %solvestat.NormalCompletion% or (m.modelstat <> %modelstat.Unbounded%)
+         and (m.modelstat <> %modelstat.Unbounded-NoSolution%))] 'wrong status codes';
+};
+
+obj.lo = -1000; obj.up = 1000;
+
+solve m max obj us %MTYPE%;
+  abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(m.numnopt  <> 0)              '    NONOPT flags set';
+  abort$(m.numinfes <> 0)              'INFEASIBLE flags set';
+  abort$(abs(m.objval - 1000) > tol)   'bad m.objval';
+  abort$(abs(e.l - 999)  > tol)        'bad equation level';
+  abort$(abs(e.m - 0)    > tol)        'bad equation marginal';
+  abort$(abs(obj.l - 1000)     > tol)  'bad variable level';
+  abort$(abs(obj.m - 1)        > tol)  'bad variable marginal';
+
+solve m min obj us %MTYPE%;
+  abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(m.numnopt  <> 0)              '    NONOPT flags set';
+  abort$(m.numinfes <> 0)              'INFEASIBLE flags set';
+  abort$(abs(m.objval + 1000) > tol)   'bad m.objval';
+  abort$(abs(e.l + 1001) > tol)        'bad equation level';
+  abort$(abs(e.m - 0)    > tol)        'bad equation marginal';
+  abort$(abs(obj.l + 1000)     > tol)  'bad variable level';
+  abort$(abs(obj.m - 1)        > tol)  'bad variable marginal';

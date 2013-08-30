@@ -1,0 +1,32 @@
+$title 'Test of correctness for levels & marginals of QCP, with solvelink=1,2,4,5' (SL4QCP01,SEQ=537)
+
+$ontext
+Run qcp01 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+Contributor: Lutz Westermann
+$offtext
+
+$set XX 95
+$if %system.platform% == WIN $set XX NT
+$if %system.platform% == WEX $set XX NT
+$if %system.filesys% == UNIX $set XX un
+$set q '"'
+$if %system.filesys% == UNIX $set q "'"
+
+$call grep -iv scrdir "%gams.scrdir%gmsprm%XX%.%gams.scrext%" | grep -iv scriptnext | grep -iv sysdir | grep -iv JobTrace > "%gams.scrdir%mypf.%gams.scrext%"
+
+$call gams qcp01.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=qcp01.gms solvelink=%SOLVELINK.CallScript%
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.CallScript%
+
+$call gams qcp01.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=qcp01.gms solvelink=%SOLVELINK.CallModule%
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.CallModule%
+
+$call cat "%GAMS.sysdir%gmscmp%XX%.txt" | grep -v "^\*" | awk %q%NF>4 {if ($7>1) print $0 }%q% | grep -vi scensolver | cut -d" " -f1 | grep -iwq %system.QCP%
+$if errorlevel 1 $goto skipsl5
+
+$call gams qcp01.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=qcp01.gms solvelink=%SOLVELINK.LoadLibrary%
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.LoadLibrary%
+
+$label skipsl5
+$call gams qcp01.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=qcp01.gms solvelink=%SOLVELINK.AsyncSimulate%
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.AsyncSimulate%

@@ -1,0 +1,28 @@
+$title 'sys11 testcase' (LOOP6,SEQ=169)
+
+set i /i1*i9/
+    j /j1*j9/;
+alias(j,jj);
+
+parameter A(i,j,j);
+A(i,j,jj)$(uniform(0,1) <= 0.2) = uniform(0,1);
+
+set X1(i,j),X2(i,j);
+
+option sys11=0;
+loop((i,j)$(Ord(j) > 1) ,
+   loop(jj$((A(i,jj,j) or A(i,jj,j-1))),
+      X1(i,j)=yes;
+      )
+     );
+
+option sys11=2;
+loop((i,j)$(Ord(j) > 1) ,
+   loop(jj$((A(i,jj,j) or A(i,jj,j-1))),
+      X2(i,j)=yes;
+      )
+     );
+
+set Err(i,j);
+Err(i,j)=X1(i,j) - X2(i,j);
+Abort$Card(Err) 'Sys11 difference';

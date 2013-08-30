@@ -1,0 +1,50 @@
+$Title Another simple VI example (SIMPLEVI3,SEQ=62)
+
+$ontext
+This model shows that a VI with no constraint set is equivalent to an MCP
+(models viMCP and mcp1) and shows that by introducing multipliers on the VI
+constraints (g) in the model vi, we can formulate an equivalent MCP (mcp2)
+
+Note the two forms of the syntax for the empinfo file.  In the first case we
+use the full form, whereas in the second case we use the "vectorized" form.
+
+Contributor: Michael C. Ferris, February 2011
+$offtext
+
+set I / 1 * 2 /;
+
+$macro FUN(I) ord(I)*(x(I) - 1) + 1.5
+
+positive variables x(I);
+equations f(I), g;
+
+f(I)..  FUN(I) =N= 0;
+g..     sum {I, x(I)} =G= 1;
+
+model viMCP / f /;
+model vi    / f, g /;
+
+file myinfo / '%emp.info%' /;
+put myinfo 'vi';
+loop{I,
+  put / f(I) x(I);
+};
+putclose;
+
+solve viMCP using emp;
+
+model mcp1 'MCP version of viMCP' / f.x /;
+solve mcp1 using mcp;
+
+put myinfo;
+putclose 'vi f x';
+
+solve vi    using emp;
+
+positive variable u;
+equation f2(I) 'MCP version of vi';
+
+f2(I)..  FUN(I) - u =N= 0;
+
+model mcp2 'MCP version of vi'    / f2.x, g.u /;
+solve mcp2 using mcp;

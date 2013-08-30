@@ -1,0 +1,51 @@
+$TITLE 'test for data errors caused by C compiler bug' (COMPILE2,SEQ=289)
+
+$ontext
+There is a bug in the Intel 9.1.XXX compilers (e.g. 9.1.043) that
+causes some floating point computations to be incorrect - not by a
+little, but just plain wrong.  This causes problems with many models.
+This example is taken from a model sent by Michael Ferris that was our
+first reported instance of this problem.
+
+Contributor: Steve Dirkse
+$offtext
+
+sets
+i        /o1*o10/
+j        /j1*j6/
+k        /k1*k3/;
+
+table JK(j,k)
+         k1      k2      k3
+j1       1
+j2       1
+j3               1
+j4               1
+j5                       1
+j6                       1;
+
+table
+Bmax(i,j)
+         j1      j2      j3      j4      j5      j6
+o1*o10   50      30      40      35      30      45
+;
+
+*forbidden assignment
+parameter FA(i,j);
+FA(i,j) = no;
+FA('o1','j2') = yes;
+FA('o3','j6') = yes;
+
+
+parameter lmin(i);
+lmin(i) = smin(k,smax(j$(JK(j,k) and (not FA(i,j))),Bmax(i,j)));
+
+execute_unload 'lmin', lmin;
+
+if {(lmin('o1') = 40),
+  display "OK - this is working fine";
+elseif (lmin('o1') = 0),
+  abort$1 "expected error in lmin: check compiler!";
+else
+  abort$1 "unexpected error in lmin - what's going on?";
+};

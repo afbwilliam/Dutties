@@ -1,0 +1,54 @@
+$title 'Demonstrate an inaccurate calculation' (MATH1,SEQ=228)
+
+$ontext
+While investigating an issue with the markov model from GAMS' modlib,
+I discovered the model generated differently on different machines.
+The cause of this was traced back to an "inaccurate" parameter
+calculation (more precisely, a calculation that gives significantly
+different results on different machines).
+
+In this model I exaggerate the difference in the results by changing
+pn only slightly.  The large relative error or difference arises in
+the usual way - by subtracting two quantities of nearly equal value.
+
+Contributor: Steve Dirkse, June 2005
+$offtext
+
+Scalars  b   discount factor             /   .95   /
+         e                               /    .1   /
+         q   supply                      / 110     /
+         d                               /-130     /
+         k                               / 342     /
+         pn  normal price (us$ per bbl)  /  34.5261889893 /;
+
+scalar p, c, cmin, cmax, mn, mx, relDiff;
+
+p = ( k / (q - d))**10;
+c = 1e5 * d * (p-pn);
+
+* cmin=-0.000556809709451045 computed with:
+*    22.0 Alfa on LNX, LEX, LNXonLEX, WEX, SOL
+$gdxin math1min
+$load cmin
+$gdxin
+
+* cmax=-0.000556624968339747 computed with:
+*    22.0 Alfa on WIN, WINonWEX
+$gdxin math1max
+$load cmax
+$gdxin
+
+mn=min(cmin,c);
+mx=max(cmax,c);
+relDiff = (mx-mn)/mx;
+option decimals = 8;
+display cmin, c, cmax, relDiff;
+
+if {(c < cmin),
+   execute_unload 'math1min_new.gdx' c=cmin;
+   abort "Computed c < previous minimum, check math1min_new.gdx";
+};
+if {(c > cmax),
+   execute_unload 'math1max_new.gdx' c=cmax;
+   abort "Computed c > previous maximum, check math1max_new.gdx";
+};

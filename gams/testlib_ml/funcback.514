@@ -1,0 +1,59 @@
+$Title Test function backward compatibility  (FUNCBACK,SEQ=514)
+
+$ontext
+GAMS Release 23.7 introduced the keyword FUNCTION(S)
+This mode ensures that older models/restart files which contain function(s) as
+an identifier still work.
+
+Contributor: L. Westermann
+$offtext
+
+
+* Function can be used as identifier
+$onecho > f.gms
+scalar function /1/;
+$offecho
+$call gams f.gms lo=%GAMS.lo%
+$if errorlevel 1 $abort '*** f1 failed'
+
+* Function can not be used as identifier after being used as keyword
+$onecho > f.gms
+$funclibin sto stodclib
+function SetSeed     /sto.SetSeed/;
+scalar function /1/;
+$offecho
+$call gams f.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort '*** f2 failed'
+
+* Function can not be used as keyword after being used as identifier
+$onecho > f.gms
+$funclibin sto stodclib
+scalar function /1/;
+function SetSeed     /sto.SetSeed/;
+$offecho
+$call gams f.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort '*** f3 failed'
+
+* Function can not be as identifier in restart file
+$onecho > f.gms
+scalar function /1/;
+$offecho
+$call gams f.gms lo=%GAMS.lo% s=0
+$onecho > f.gms
+display function;
+$offecho
+$call gams f.gms lo=%GAMS.lo% r=0
+$if errorlevel 1 $abort '*** f4 failed'
+
+* Function can not be used as keyword after being used as identifier in restart
+* file
+$onecho > f.gms
+scalar function /1/;
+$offecho
+$call gams f.gms lo=%GAMS.lo% s=0
+$onecho > f.gms
+$funclibin sto stodclib
+function SetSeed     /sto.SetSeed/;
+$offecho
+$call gams f.gms lo=%GAMS.lo% r=0
+$if not errorlevel 1 $abort '*** f5 failed'

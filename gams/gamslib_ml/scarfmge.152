@@ -1,0 +1,141 @@
+$TITLE  Tax Distortions in a Small Activity Analysis Model (SCARFMGE,SEQ=152)
+$Ontext
+
+Tax Distortions in a Small Activity Analysis Model
+
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.
+Yale University Press, 1973.
+
+       HERE WE CONSIDER THE EFFECTS OF TAXATION:
+
+$Offtext
+SET SC TAX RATE SCENARIOS /ZERO, LOW, MEDIUM, HIGH/;
+
+PARAMETER  T(SC)        TAX RATES / LOW 0.05, MEDIUM 0.20, HIGH 0.50/;
+
+SETS
+        C       COMMODITIES
+
+                /UNSKLAB, SKILLAB, CAPEOP, NONDURBL, DURABLE, CAPBOP/
+
+        K(C)    CAPITAL INPUT IDENTIFIER /CAPBOP/,
+
+        H       CONSUMERS /AGENT1,AGENT2,AGENT3,AGENT4,AGENT5/
+
+        S       SECTORS /D1, D2, N1, N2, N3, CD, C1, C2/;
+
+ALIAS (C,CC);
+
+TABLE E(C,H)  Commodity endowments
+
+             AGENT1     AGENT2     AGENT3     AGENT4     AGENT5
+CAPBOP         3         0.1         2          1           6
+SKILLAB        5         0.1         6          0.1         0.1
+UNSKLAB        0.1       7           0.1        8           0.5
+DURABLE        1         2           1.5        1           2
+
+PARAMETER       TR(H)   TAX DISTRIBUTION RULE /AGENT1 1/;
+
+SCALAR          TK      TAX ON CAPITAL IN CURRENT SCENARIO;
+
+TABLE D(C,H) Reference demands
+
+             AGENT1     AGENT2     AGENT3     AGENT4     AGENT5
+CAPEOP         4         0.4          2         5          3
+SKILLAB        0.2                    0.5
+UNSKLAB                  0.6                    0.2        0.2
+NONDURBL       2         4           2          5          4
+DURABLE        3.2       1           1.5        4.5        2
+
+PARAMETER  ESUB(H)  Elasticities in demand
+
+/       AGENT1          1.2,
+        AGENT2          1.6,
+        AGENT3          0.8,
+        AGENT4          0.5,
+        AGENT5          0.6  /;
+
+TABLE DATA(*,C,S)  Activity analysis matrix
+
+                         D1          D2          N1          N2          N3
+
+OUTPUT.NONDURBL                                 6.0         8.0         7.0
+OUTPUT.DURABLE          4.0         3.5
+OUTPUT.CAPEOP           4.0         4.0         1.6         1.6         1.6
+INPUT .CAPBOP           5.3         5.0         2.0         2.0         2.0
+INPUT .SKILLAB          2.0         1.0         2.0         4.0         1.0
+INPUT .UNSKLAB          1.0         6.0         3.0         1.0         8.0
+
+              +          CD          C1          C2
+
+OUTPUT.CAPEOP           0.9         7.0         8.0
+INPUT .CAPBOP           1.0         4.0         5.0
+INPUT .SKILLAB                      3.0         2.0
+INPUT .UNSKLAB                      1.0         8.0;
+
+
+$ONTEXT
+
+$MODEL: SCARF
+
+$SECTORS:
+        Y(S)    ! Activity level
+
+$COMMODITIES:
+        P(C)    ! Market price
+        PT$TK   ! Price index for lumpsum redistribution of tax revenue.
+
+$CONSUMERS:
+        HH(H)   ! Household income
+        GOVT$TK ! Government tax revenue (only included when taxes are levied).
+
+$REPORT:
+        V:WELFARE(H)    W:HH(H)
+
+$PROD:Y(S)
+        O:P(C)          Q:DATA("OUTPUT",C,S)
+        I:P(C)          Q:DATA("INPUT" ,C,S)  A:GOVT$TK  T:TK$K(C)
+
+$DEMAND:HH(H)  s:ESUB(H)
+        D:P(C)          Q:D(C,H)
+        E:P(C)          Q:E(C,H)
+        E:PT$TK         Q:TR(H)
+
+$DEMAND:GOVT$TK
+        D:PT
+
+$OFFTEXT
+
+*       READ THE HEADER:
+
+$SYSINCLUDE mpsgeset SCARF
+
+*       REPORT TABLE:
+
+PARAMETER EV(H,SC) HICKS-EQUIVALENT VARIATION (%);
+
+
+P.FX("UNSKLAB") = 1;
+LOOP(SC,
+
+*       SET THE CAPITAL TAX RATE:
+
+        TK = T(SC);
+
+*       GENERATE AND SOLVE THE MODEL:
+
+$INCLUDE SCARF.GEN
+
+        PT.L = 1;
+
+        SOLVE SCARF USING MCP;
+
+        EV(H,SC) = WELFARE.L(H);
+);
+
+*       AFTER COMPLETION, CONVERT TO TRUE EQUIVALENT VARIATIONS:
+
+EV(H,SC) = 100 * (EV(H,SC)/EV(H,"ZERO") - 1);
+
+DISPLAY EV;

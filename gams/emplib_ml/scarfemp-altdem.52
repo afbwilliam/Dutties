@@ -1,0 +1,138 @@
+$title  Scarf's Activity Analysis Example - non-closed form demand function (SCARFEMP-ALTDEM,SEQ=52)
+
+$Ontext
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.  Yale
+University Press, 1973.
+
+Rather than write the demand function explicitly (as in the GAMSLIB model
+scarfmcp), we instead
+
+max_x(c,h)  u_h(x)
+   s.t    p'*x <= i_h, x >= 0
+
+In this model we generate a new utility function
+   u_h(x) = sum_c gamma(c,h) * x(c,h)**beta(c,h)
+
+for which there is no closed form solution for the demand function
+(but which is chosen to have the same soln as the scarf model)
+
+Contributor: Michael Ferris, October 2010
+$Offtext
+
+$call gamslib -q scarfmcp
+$include scarfdata.inc
+
+option limrow = 0, limcol = 0;
+
+positive
+variables
+
+        p(c)    commodity price,
+        y(s)    production,
+        i(h)    income;
+
+equations
+        mkt(c)          commodity market,
+        profit(s)       zero profit,
+        income(h)       income index;
+
+*       distinguish ces and cobb-douglas demand functions:
+
+mkt(c)..        sum(s, a(c,s) * y(s)) + sum(h, e(c,h)) =g=
+
+                sum(h$(esub(h) ne 1),
+                (i(h)/sum(cc, alpha(cc,h) * p(cc)**(1-esub(h)))) *
+                alpha(c,h) * (1/p(c))**esub(h)) +
+
+                sum(h$(esub(h) eq 1),
+                i(h) * alpha(c,h) / p(c));
+
+profit(s)..     -sum(c, a(c,s) * p(c)) =g= 0;
+
+income(h)..     i(h) =g= sum(c, p(c) * e(c,h));
+
+model scarf / mkt.p, profit.y, income.i/;
+
+p.l(c) = 1;
+y.l(s) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+p.lo(c)  = 0.00001$(smax(h, alpha(c,h)));
+
+*       fix the price of numeraire commodity:
+
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+* For Cobb Douglas
+* esub(h) = 1;
+
+solve scarf using mcp;
+
+* Formulate an alternative version of the model which calibrate to the
+* common benchmark point but assumes a alternative utility function for
+* which demand functions are unavailable in closed form.
+
+parameter beta(c,h)  Elasticity terms
+          gamma(c,h) Utility function share parameters;
+
+option seed = 101;
+beta(c,h) = uniform(0.5,1.5);
+
+positive variables x(c,h) Consumption demand by commodity and household;
+
+x.l(c,h) = ((i.l(h)/sum(cc, alpha(cc,h) * p.L(cc)**(1-esub(h)))) *
+           alpha(c,h) * (1/p.L(c))**esub(h))$(esub(h)<>1) +
+           (i.l(h) * alpha(c,h) / p.l(c))$(esub(h)=1);
+
+gamma(c,h)$x.l(c,h) = p.l(c) / (beta(c,h) * x.l(c,h)**(beta(c,h)-1));
+
+variables z(h);
+equations objdef(h), budget(h), mktcons(c);
+
+objdef(h)..
+  z(h) =e= sum(c$gamma(c,h), gamma(c,h)*x(c,h)**beta(c,h));
+
+budget(h)..
+  sum(c$gamma(c,h), p(c)*x(c,h)) =l= i(h);
+
+mktcons(c)..        sum(s, a(c,s) * y(s)) + sum(h, e(c,h)) =g=
+                sum(h$gamma(c,h), x(c,h));
+
+model scarfemp /objdef, budget, mktcons, profit, income/;
+
+* set benchmark starting point for emp model
+* budget.m(h) = 1;
+
+* Set initial values for production (y)
+x.l(c,h) = 1$gamma(c,h);
+x.lo(c,h) = 0.00001$gamma(c,h);
+x.fx(c,h)$(not gamma(c,h)) = 0;
+
+file myinfo / '%emp.info%' /;
+put myinfo 'equilibrium';
+put / 'vi income i';
+put / 'vi mktcons p';
+put / 'vi profit y';
+loop(h,
+  put / 'max' z(h);
+  loop(c$gamma(c,h), put / x(c,h) );
+  put / objdef(h) budget(h);
+);
+putclose /;
+
+* determine good starting point for consumption variables
+p.l(c) = 1;
+y.l(s) = 1;
+i.fx(h) = sum(c, p.l(c) * e(c,h));
+
+solve scarfemp using emp;
+
+* now solve for real
+i.lo(h) = 0; i.up(h) = inf;
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+solve scarfemp using emp;
+
+display y.l;

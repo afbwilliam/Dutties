@@ -1,0 +1,53 @@
+$title Bad acronym merge in gdxmerge (GDXMERG2,SEQ=406)
+
+$ontext
+This started to work with 22.6 and acronym info in gdx.
+The acronym index values have to be remapped.
+
+Contributor: Alex
+$offtext
+
+$call "rm -f acr1.gdx acr2.gdx"
+
+$onecho > acr1.gms
+ACRONYM averLevels,anotherone;
+scalar x / averlevels /
+       y / anotherone /;
+parameter z / 1 averLevels,2 anotherone /;
+parameter w / 1 1,2 2 /;
+execute_unload "acr1.gdx";
+$offecho
+
+$onecho > acr2.gms
+ACRONYM anotherone,averLevels;
+scalar x / averlevels /
+       y / anotherone /;
+parameter z / 1 averLevels,2 anotherone /;
+parameter w / 1 1,2 2 /;
+execute_unload "acr2.gdx";
+$offecho
+
+$call gams acr1 lo=%gams.lo%
+$call gams acr2 lo=%gams.lo%
+$if not exist acr1.gdx $abort 'missing acr1.gdx'
+$if not exist acr2.gdx $abort 'missing acr2.gdx'
+$call gdxmerge acr1.gdx acr2.gdx output=acrm.gdx > %system.nullfile%
+$if errorlevel 1 $abort bad merging
+set m / acr1,acr2 /, i / 1,2 /;
+ACRONYM anotherone,averLevels;
+parameters xm(m) / (#m) averlevels /
+           ym(m) / (#m) anotherone /
+           zm(m,*)/ #m.(1 averLevels,2 anotherone) /
+           wm(m,*) / #m.(1 1,2 2) /;
+
+display xm,ym,zm,wm;
+
+parameters xg(m),yg(m),zg(m,*),wg(m,*);
+
+execute_load 'acrm.gdx',xg=x,yg=y,zg=z,wg=w;
+display xg,yg,zg,wg;
+
+abort$sum((m,i), wm(m,i) <> wg(m,i)) 'bad w';
+abort$sum(m, xm(m) <> xg(m)) 'bad x';
+abort$sum(m, ym(m) <> yg(m)) 'bad y';
+abort$sum((m,i), zm(m,i) <> zg(m,i)) 'bad z';

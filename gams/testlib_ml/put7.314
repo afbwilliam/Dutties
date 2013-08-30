@@ -1,0 +1,20 @@
+$title 'Test bad $on/offput in if statement'  (PUT7,SEQ=314)
+
+$ontext
+
+Contributor: Alex
+$offtext
+
+file f / temp.txt /; putclose f 'garbage' ;
+if(1,
+$onput
+this is true
+$offput
+else
+$onput
+this is false
+$offput
+);
+putclose;
+execute '=grep false temp.txt';
+abort$(errorlevel=0) 'should not be there';

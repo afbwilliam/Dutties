@@ -1,0 +1,45 @@
+$title 'Test correctness of edist intrinsic' (FNEDIST,SEQ=197)
+$ontext
+  Norm 2 function
+
+  f := sqrt(sqr(x1)+sqr(x2)+...)
+
+  g1.. = x1/f  x2/f  ...
+
+  hij = -xi*xj/f^3     for i<>j
+        (f^2-xi^2)/f^3 for i=j
+$offtext
+
+Sets 
+   arg / n0*n9 /
+   T   / p1*p1000 /;
+alias (arg,argp);
+Parameters
+   data(arg)
+   testi(*,*)
+   testm(*,*), a, b;
+
+loop {T,
+  data(arg) = uniform(-100,100);
+  testi(''  ,''  )   = edist.value(data('n0'),data('n1'),data('n2'),data('n3'),data('n4'),
+                                   data('n5'),data('n6'),data('n7'),data('n8'),data('n9'));
+  loop(arg, 
+    testi(arg,''  )  = edist.grad (ord(arg): data('n0'),data('n1'),data('n2'),data('n3'),data('n4'),
+                                             data('n5'),data('n6'),data('n7'),data('n8'),data('n9')));
+  loop((arg,argp), 
+    testi(arg,argp)  = edist.hess (ord(arg):ord(argp): data('n0'),data('n1'),data('n2'),data('n3'),data('n4'),
+                                                       data('n5'),data('n6'),data('n7'),data('n8'),data('n9')));
+
+                                                       
+  testm('','') = sqrt(sum(arg, sqr(data(arg))));
+  a = 1/testm('','');
+  b = a*a*a;
+  testm(arg,'')   = data(arg)*a;
+  testm(arg,argp) = -data(arg)*data(argp)*b;
+* Since we already calculated hess(xi,xi) with the formula for i<>j we can use: hess(xi,xi) = 1/f + hess(xi,xi)
+  testm(arg,arg)  = a + testm(arg,arg);
+
+  abort$(abs(                testi( '',  '')-testm( '',  '')) >1e-6) 'wrong function value', data, testi, testm;
+  abort$(abs(sum(arg,        testi(arg,  '')-testm(arg,  '')))>1e-6) 'wrong gradient value', data, testi, testm;
+  abort$(abs(sum((arg,argp), testi(arg,argp)-testm(arg,argp)))>1e-6) 'wrong hessian  value', data, testi, testm;
+};

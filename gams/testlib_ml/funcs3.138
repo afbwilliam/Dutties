@@ -1,0 +1,36 @@
+$title declaration via a table using function names (FUNCS3,SEQ=138)
+
+Set i /i1, i2/;
+Set j /j1, j2/;
+
+table OK
+    j1  j2
+i1  11  12
+i2  21  22
+
+table sameas
+    j1  j2
+i1  11  12
+i2  21  22
+
+abort$sum((i,j), Ok(i,j) <> sameas(i,j)) 'sameas is wrong', sameas;
+
+display sameas,diag
+
+Table cos
+    j1  j2
+i1  11  12
+i2  21  22
+
+abort$sum((i,j), Ok(i,j) <> cos(i,j)) 'cos is wrong', cos;
+
+set Table sin
+    j1  j2
+i1  11  12
+i2  21  22
+
+abort$sum((i,j), Ok(i,j) xor sin(i,j)) 'sin is wrong', sin;
+
+display sin,cos;
+
+$debug dmpsym

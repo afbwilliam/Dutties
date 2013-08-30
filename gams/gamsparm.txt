@@ -1,0 +1,10 @@
+                             GAMS Parameters
+
+GAMS parameters can be used on a GAMS command line or included in
+the gams parameter file to customize default values.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is no longer maintained. Please use the Option editor !!
+!! if your are using the GAMS IDE or check for optgams.html        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+

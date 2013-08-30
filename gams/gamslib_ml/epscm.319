@@ -1,0 +1,246 @@
+$TITLE eps-Constraint Method for Multiobjective Optimization (EPSCM,SEQ=319)
+$ontext
+The eps-Constraint Method
+
+This is a GAMS implementation of the augmented eps-constraint method
+for generating the efficient (Pareto optimal, nondominated) solutions
+in multiobjective problems. The eps-constraint method optimizes one of
+the objective functions using the remaining objective functions as
+constraints, varying their right hand side.
+
+The generated optimal solutions proved to be efficient solutions of
+the multiobjective problem under certain conditions.
+
+The eps-constraint method consists of two phases:
+1. Creation of the payoff table
+2. Use the ranges from the payoff table in order to apply the method
+
+The augmented eps-constraint uses lexicographic optimization in the
+construction of the payoff table (in order to secure the Pareto
+optimality of the individual optima) and a slightly modified objective
+function in order to ensure the production of Pareto optimal (and not
+weakly Pareto optimal) solutions. In addition, it performs early exit
+from infeasible loops improving the performance of the algorithm in
+multi-objective problems with several objective functions.
+
+The algorithm can work also with MIP models. Actually the advantages
+of the eps-constraint method over the weighting method are more
+apparent for MIP problems where the non supported Pareto optimal
+solutions can be produced.
+
+A simplified power generation problem is used to illustrate the
+method:
+
+Four types of power generation units are considered in a region,
+namely, lignite fired, oil fired, natural gas fired and units
+exploiting renewable energy sources (RES) which are mostly small hydro
+and wind.  The power generation characteristics of these units are
+shown in table pdata.
+
+The yearly demand is 64000 GWh and is characterized by a load duration
+curve which can be divided into three type of loads: base load (60%),
+medium load (30%) and peak load (10%). The lignite fired units can be
+used only for base and middle load, the oil fired units for middle and
+peak load, the RES units for base and peak load and the natural gas
+fired units for all type of loads. The endogenous sources are lignite
+and RES.
+
+We consider three objective functions: the minimization of production
+cost, the minimization of CO2 emissions and the minimization of
+external dependence (i.e. oil and natural gas) by maximizing the
+endogenous energy sources.  The task is to generate the payoff table
+and the Pareto optimal (efficient, non-dominated) solutions of the
+problem.
+
+Additional information can be found at:
+
+http://www.gams.com/modlib/adddocs/epscm.pdf
+
+
+Mavrotas, G, Effective implementation of the eps-constraint method in
+Multi-Objective Mathematical Programming problems. 
+Applied Mathematics and Computation 213, 2 (2009), 455-465.
+$offtext
+
+$inlinecom [ ]
+$eolcom //
+$STitle Example model definitions
+
+Sets
+   p       power generation units / Lignite, Oil, Gas, RES /
+   i       load areas / base, middle, peak /
+   pi(p,i) availability of unit for load types
+           / Lignite.(base,middle), Oil.(middle,peak), Gas.set.i, RES.(base, peak) /
+   es(p)   endogenous sources / Lignite, RES /
+   k       objective functions / cost, CO2emission, endogenous /
+
+$set min -1
+$set max +1
+Parameter dir(k) direction of the objective functions
+   / cost %min%, CO2emission %min%, endogenous %max% /;
+
+Set pheader / capacity, cost, CO2emission /;
+Table pdata(pheader,p)
+                      Lignite         Oil             Gas            RES
+capacity [GWh]          31000       15000           22000          10000
+cost [$/MWh]               30          75              60             90
+CO2emission [t/MWh]      1.44        0.72            0.45              0;
+
+Parameter
+   ad        annual demand in GWh / 64000 /
+   df(i)     demand fraction for load type / base 0.6, middle 0.3, peak 0.1 /
+   demand(i) demand for load type in GWh; demand(i) = ad*df(i);
+
+Variables
+   z(k)      objective function variables
+Positive Variables
+   x(p,i)    production level of unit in load area in GWh
+Equations
+   objcost   objective for minimizing cost in K$
+   objco2    objective for minimizing CO2 emissions in Kt
+   objes     objective for maximizing endogenous sources in GWh
+   defcap(p) capacity constraint
+   defdem(i) demand satisfaction
+;
+
+* Objective functions
+objcost.. sum(pi(p,i), pdata('cost',p)*x(pi)) =e= z('cost');
+objco2..  sum(pi(p,i), pdata('CO2emission',p)*x(pi)) =e= z('CO2emission');
+objes..   sum(pi(es,i), x(pi)) =e= z('endogenous');
+
+defcap(p).. sum(pi(p,i), x(pi)) =l=  pdata('capacity',p);
+defdem(i).. sum(pi(p,i), x(pi)) =g=  demand(i);
+
+Model example / all /;
+
+$STitle eps-constraint method
+
+Set k1(k) the first element of k, km1(k) all but the first elements of k;
+k1(k)$(ord(k)=1) = yes; km1(k)=yes; km1(k1) = no;
+Set kk(k)     active objective function in constraint allobj
+Parameter
+   rhs(k)     right hand side of the constrained obj functions in eps-constraint
+   maxobj(k)  maximum value from the payoff table
+   minobj(k)  minimum value from the payoff table
+Variables
+   a_objval   auxiliary variable for the objective function
+   obj        auxiliary variable during the construction of the payoff table
+Positive Variables
+   sl(k)      slack or surplus variables for the eps-constraints
+Equations
+   con_obj(k) constrained objective functions
+   augm_obj   augmented objective function to avoid weakly efficient solutions
+   allobj     all the objective functions in one expression;
+
+con_obj(km1)..   z(km1) - dir(km1)*sl(km1) =e= rhs(km1);
+
+* We optimize the first objective function and put the others as constraints
+* the second term is for avoiding weakly efficient points
+augm_obj..
+  sum(k1,dir(k1)*z(k1))+1e-3*sum(km1,sl(km1)/(maxobj(km1)-minobj(km1))) =e= a_objval;
+
+allobj..  sum(kk, dir(kk)*z(kk)) =e= obj;
+
+Model mod_payoff    / example, allobj / ;
+Model mod_epsmethod / example, con_obj, augm_obj / ;
+
+option limrow=0, limcol=0;
+option solprint=off, solvelink=%solvelink.CallModule%;
+
+Parameter
+  payoff(k,k)  payoff tables entries;
+Alias(k,kp);
+
+* Generate payoff table applying lexicographic optimization
+loop(kp,
+  kk(kp)=yes;
+  repeat
+    solve mod_payoff using lp maximizing obj;
+    payoff(kp,kk) = z.l(kk);
+    z.fx(kk) = z.l(kk); // freeze the value of the last objective optimized
+    kk(k++1) = kk(k);   // cycle through the objective functions
+  until kk(kp); kk(kp) = no;
+* release the fixed values of the objective functions for the new iteration
+  z.up(k) = inf; z.lo(k) =-inf;
+);
+if (mod_payoff.modelstat<>%modelstat.Optimal%, abort 'no optimal solution for mod_payoff');
+
+display payoff;
+minobj(k)=smin(kp,payoff(kp,k));
+maxobj(k)=smax(kp,payoff(kp,k));
+
+$set fname p.%gams.scrext%
+File fx solution points from eps-method / "%gams.scrdir%%fname%" /;
+
+$if not set gridpoints $set gridpoints 10
+Set g grid points /g0*g%gridpoints%/
+    grid(k,g) grid
+Parameter
+    gridrhs(k,g) rhs of eps-constraint at grid point
+    maxg(k) maximum point in grid for objective
+    posg(k) grid position of objective
+    firstOffMax, lastZero some counters
+    numk(k) ordinal value of k starting with 1
+    numg(g) ordinal value of g starting with 0;
+lastZero=1; loop(km1, numk(km1)=lastZero; lastZero=lastZero+1); numg(g) = ord(g)-1;
+
+grid(km1,g) = yes; // Here we could define different grid intervals for different objectives
+maxg(km1) = smax(grid(km1,g), numg(g));
+gridrhs(grid(km1,g))$(%min%=dir(km1)) = maxobj(km1) - numg(g)/maxg(km1)*(maxobj(km1)- minobj(km1));
+gridrhs(grid(km1,g))$(%max%=dir(km1)) = minobj(km1) + numg(g)/maxg(km1)*(maxobj(km1)- minobj(km1));
+display gridrhs;
+
+* Walk the grid points and take shortcuts if the model becomes infeasible
+posg(km1) = 0;
+repeat
+  rhs(km1) = sum(grid(km1,g)$(numg(g)=posg(km1)), gridrhs(km1,g));
+  solve mod_epsmethod maximizing a_objval using lp;
+  if (mod_epsmethod.modelstat<>%modelstat.Optimal%,  // not optimal is in this case infeasible
+    lastZero = 0; loop(km1$(posg(km1)>0 and lastZero=0), lastZero=numk(km1));
+    posg(km1)$(numk(km1)<=lastZero) = maxg(km1); // skip all solves for more demanding values of rhs(km1)
+  else
+    loop(k, put fx z.l(k):12:2); put /);
+
+* Proceed forward in the grid
+  firstOffMax = 0;
+  loop(km1$(posg(km1)<maxg(km1) and firstOffMax=0), posg(km1)=posg(km1)+1; firstOffMax=numk(km1));
+  posg(km1)$(numk(km1)<firstOffMax) = 0;
+until sum(km1$(posg(km1)=maxg(km1)),1)=card(km1) and firstOffMax=0;
+putclose fx; // close the point file
+
+* Get unique solutions from the point file using some Posix Tools (awk, (g)sort, uniq) that come with GAMS
+$set awkscript awk.%gams.scrext%
+file fa / "%gams.scrdir%%awkscript%" /; put fa 'BEGIN { printf("Table solutions(*,*)\n$ondelim\nsol';
+loop(k, put ',' k.tl:0); putclose '\n"); }' / '{ print NR,$0 }' / 'END { print ";" }';
+$if     %system.filesys% == UNIX execute 'cd "%gams.scrdir%" && sort %fname% | uniq | awk -f %awkscript% > g.%gams.scrext% && gams g.%gams.scrext% o=gx.%gams.scrext% lo=0 gdx=soleps';
+$if NOT %system.filesys% == UNIX execute 'cd "%gams.scrdir%" && gsort %fname% | uniq | awk -f %awkscript% > g.%gams.scrext% && gams g.%gams.scrext% o=gx.%gams.scrext% lo=0 gdx=soleps';
+execute 'mv -f "%gams.scrdir%soleps.gdx" .';
+
+Set s Solutions /1*50/; Parameter solutions(s,k) Unique solutions;
+execute_load 'soleps', solutions; display solutions;
+
+$exit
+* The display should produce a table with 18 unique solutions:
+
+----    203 PARAMETER solutions  Unique solutions
+
+          cost  CO2emissi~  endogenous
+
+1  3075000.000   62460.000   31000.000
+2  3078000.000   62316.000   31200.000
+3  3099000.000   61308.000   32600.000
+4  3111000.000   60732.000   33400.000
+5  3120000.000   60300.000   34000.000
+6  3141000.000   59292.000   35400.000
+7  3147000.000   59004.000   35800.000
+8  3162000.000   58284.000   36800.000
+9  3183000.000   57276.000   38200.000
+10 3204000.000   56268.000   39600.000
+11 3219000.000   55548.000   40600.000
+12 3225000.000   55260.000   41000.000
+13 3315000.000   53820.000   39000.000
+14 3423000.000   52092.000   36600.000
+15 3531000.000   50364.000   34200.000
+16 3639000.000   48636.000   31800.000
+17 3747000.000   46908.000   29400.000
+18 3855000.000   45180.000   27000.000

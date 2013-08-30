@@ -1,0 +1,60 @@
+$Title Minimum Spanning Tree (MST,SEQ=94)
+
+$Ontext
+
+   The problem is to find the minimum spanning tree in a network.
+   The network of the gamslib problem (sroute) is used as an example.
+   The algorithm is started at all nodes in order to demonstrate that
+   the algorithm can start from any node.
+
+
+Hillier, F S, and Lieberman G J, Introduction to Operations Research.
+Holden-Day, San Francisco, 1967.
+
+$Offtext
+
+ Set  i  cities  / boston, chicago, dallas, kansas-cty, losangeles
+                   memphis, portland, salt-lake, wash-dc           /
+
+ Alias(i,ip,ipp)
+
+ Parameter uarc(i,ip) undirected arcs  /
+
+    boston  .chicago      58,     kansas-cty .memphis       27
+    boston  .wash-dc      25,     kansas-cty .salt-lake     66
+    chicago .kansas-cty   29,     kansas-cty .wash-dc       62
+    chicago .memphis      32,     losangeles .portland      58
+    chicago .portland    130,     losangeles .salt-lake     43
+    chicago .salt-lake    85,     memphis    .wash-dc       53
+    dallas  .kansas-cty   29,     portland   .salt-lake     48
+    dallas  .losangeles   85
+    dallas  .memphis      28
+    dallas  .salt-lake    75    /
+
+Sets a(i)   assigned nodes
+     u(i)   unassigned nodes
+     nan(i) newly assigned node
+     s      sequence / 1*10 /
+
+Parameter mst(i,ip,ipp)   minimum spanning trees starting from all nodes
+          fold(i,ip,ipp)  folded minimum spanning trees
+          darc(i,ip)      directed arcs
+          dmin       min distance ;
+
+   darc(i,ip) = max(uarc(i,ip),uarc(ip,i));
+   Option darc:0; Display darc;
+
+
+Loop(ip, nan(ip) = yes; a(i) = nan(i); u(i) = not a(i);
+     Loop(s$card(nan), nan(nan) = no;
+          dmin   = smin((a,u)$darc(a,u), darc(a,u));
+          loop((a,u)$(darc(a,u) and dmin eq darc(a,u)), 
+             mst(a,u,ip) = ord(s); dmin=0);
+          nan(u) = sum(a$(mst(a,u,ip) eq ord(s)), yes);
+          u(nan) = no; a(nan) = yes ));
+
+Option mst:0:2:1; Display mst;
+
+fold(i,ip,ipp)$(ord(i) lt ord(ip)) =  mst(i,ip,ipp) - mst(ip,i,ipp);
+Option fold:0:2:1; Display fold;
+

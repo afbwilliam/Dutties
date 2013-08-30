@@ -1,0 +1,16 @@
+$title test basic $set scopting (SET1,SEQ=38)
+$setglobal b 'this is global b'
+$if Not '%b%' == 'this is global b' $error b should be global
+$set a 'set a'
+$set b 'set b'
+$if NOT '%a%' == 'set a' $error a should be == set a
+$if NOT '%b%' == 'set b' $error b should be == set b
+$set a 'set c'
+$if NOT '%a%' == 'set c' $error a should be == set c
+$set a
+$if NOT '%a%' == '' $error a should be == ''
+$setlocal a 'local a'
+$if Not '%a%' == 'local a' $error a should be local
+$setlocal b 'this is local b'
+$if Not '%b%' == 'this is local b' $error b should be local
+$show

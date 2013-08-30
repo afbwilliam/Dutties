@@ -1,0 +1,18 @@
+$title 'Test correctness of tanh intrinsic' (FNTANH,SEQ=163)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+$gdxin fntanh
+$load aeps reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = tanh.value (data(T,'x'));
+  data(T, 'fx')    = tanh.grad  (data(T,'x'));
+  data(T,'fxx')    = tanh.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

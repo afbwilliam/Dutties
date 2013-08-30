@@ -1,0 +1,57 @@
+$title Educational bilevel model with VI followers (MULTMPEC,SEQ=25)
+
+$ontext
+
+This model demonstrate how to use EMP for a bilevel model with multiple
+inner variational inequality followers.
+
+The actual model to solve is:
+
+min_{u,x,y,z}   z
+  s.t.   exp(z) + y = 2, z >= 1
+
+         (u,x) solves VI( [x+y+z-1; u-log(x)], {(u,x) | u >= 0, x >= 0 } )
+
+            y  solves VI(               y+z+3, {   y  |         y free } )
+
+Note that the two VI's (due to the definitional sets) correspond respectively
+to a complementarity problem:
+
+       0 <= u  \perp  x + y + z - 1 >= 0
+       0 <= x  \perp  u - log(x) >= 0
+
+and a linear equation:
+
+      y + z + 3 = 0
+
+The starting value for x is needed to protect the evaluation of log(x).
+
+Contributor: Michel Ferris and Jan-H. Jagla, December 2009
+
+$offtext
+
+variables x, y, z;
+positive variable u;
+equations f,f2,g,h;
+
+f.. x + y + z =n= 1;
+f2.. u =e= log(x);
+
+g.. y + z =n= -3;
+
+h.. exp(z) + y =e= 2;
+
+x.lo = 0;
+x.l  = 1;
+z.lo = 1;
+
+model mpec /all/;
+
+$onecho > %emp.info%
+bilevel
+ vi u f
+    x f2
+ vi g y
+$offecho
+
+solve mpec using emp min z;

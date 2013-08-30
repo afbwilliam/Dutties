@@ -1,0 +1,38 @@
+$TITLE 'Test centropy intrinsic on small inputs' (FNCENTR6,SEQ=362)
+
+$ontext
+Test the function values and derivatives of
+   centropy(x,y,delta) = x * log((x+delta)/(y+delta))
+on very small inputs :
+  x in [0,1e2]
+  y in [1e-298,1e2]
+  d in [0,1e2]
+
+Author: Steve Dirkse
+$offtext
+
+$include fnset_xy.inc
+
+$gdxin fncentr6
+$load aeps reps T data
+$gdxin
+relToInput = 0;
+aeps = 5e-13;
+
+loop {T,
+  data(T,  'f')  = centropy.value(   data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T, 'fx')  = centropy.grad(1:  data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T, 'fy')  = centropy.grad(2:  data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fxx')  = centropy.hess(1:1:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fxy')  = centropy.hess(1:2:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fyx')  = centropy.hess(2:1:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fyy')  = centropy.hess(2:2:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+* we may get evaluation errors: this should not cause the test to fail
+execerror = 0;
+
+display relToInput;
+$include fntest_xy.inc

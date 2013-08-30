@@ -1,0 +1,68 @@
+$title piped projections (PIPE3,SEQ=113)
+
+$ontext
+
+Contributor: Alex Meeraus
+$offtext
+
+$version 137 goto OK
+$clearerror
+$stop
+$label OK
+
+* the domains are all alike and we either match
+*
+* left to right  <=
+* right to left  <
+
+alias(*,u1,u2,u3,u4);
+set i / 1*5 /; alias(i,i1,i2,i3,i4);
+parameter p1(*),p4(*),r1(*),r4(*)
+          q12(*,*),q43(*,*), s12(*,*),s43(*,*)
+          u123(*,*,*),u432(*,*,*),t123(*,*,*),t432(*,*,*)
+          v1234(*,*,*,*),v4321(*,*,*,*),w1234(*,*,*,*),w4321(*,*,*,*);
+
+set a4(*,*,*,*);
+
+a4(i1,i2,i3,i4) = uniform(0,1) > .9;
+
+r1(u1) = sum(a4(u1,u2,u3,u4), 1);
+r4(u4) = sum(a4(u1,u2,u3,u4), 1);
+
+option p4 < a4, p1 <= a4;
+
+display r1,r4,p1,p4;
+
+abort$sum(u1, r1(u1) <> p1(u1)) 'wrong aggregation for dim 1', r1,p1;
+abort$sum(u1, r4(u1) <> p4(u1)) 'wrong aggregation for dum 4', r4,p4;
+
+s12(u1,u2) = sum(a4(u1,u2,u3,u4), 1);
+s43(u4,u3) = sum(a4(u1,u2,u3,u4), 1);
+
+option q12 <= a4, q43 < a4;
+
+display q12,q43,s12,s43;
+
+abort$sum((u1,u2), q12(u1,u2) <> s12(u1,u2)) 'wrong aggregation for dim 1', r1,p1;
+abort$sum((u4,u3), q43(u4,u3) <> s43(u4,u3)) 'wrong aggregation for dim 1', r1,p1;
+
+t123(u1,u2,u3) = sum(a4(u1,u2,u3,u4), 1);
+t432(u4,u3,u2) = sum(a4(u1,u2,u3,u4), 1);
+
+option u123 <= a4, u432 < a4;
+
+abort$sum((u1,u2,u3), u123(u1,u2,u3) <> t123(u1,u2,u3)) 'wrong aggregation for dim 1', r1,p1;
+abort$sum((u4,u3,u2), u432(u4,u3,u2) <> t432(u4,u3,u2)) 'wrong aggregation for dim 1', r1,p1;
+
+$exit
+
+137 emergency 138
+this gives a 603 error which has no text, werror should not be give
+
+w4321(u4,u3,u2,u1) = sum(a4(u1,u2,u3,u4), 1);
+w1234(u4,u3,u2,u1) = sum(a4(u1,u2,u3,u4), 1);
+
+option v1234 <= a4, v4321 < a4;
+
+abort$sum((u1,u2,u3,u4), v1234(u1,u2,u3,u4) <> w1234(u1,u2,u3,u4)) 'wrong aggregation for dim 1', r1,p1;
+abort$sum((u4,u3,u2,u1), v4321(u4,u3,u2,u1) <> w4321(u4,u3,u2,u1)) 'wrong aggregation for dim 1', r1,p1;

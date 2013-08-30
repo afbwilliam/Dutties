@@ -1,0 +1,12 @@
+$TITLE Generate GDX file for test of GDXMRW (GEN_R1,SEQ=483)
+
+$ontext
+Generate data for testing the GDXMRW function rgdx
+$offtext
+
+$set matout "'read1.gdx', I, J"
+
+set I/i1*i2/;
+set J/j1*j3/;
+
+execute_unload %matout%;

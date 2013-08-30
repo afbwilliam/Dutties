@@ -1,0 +1,104 @@
+$title Bilevel Programs in Engineering Example 7.4 (CCMG74,11)
+
+$ontext
+Example from Chapter 7, example 7.4, page 281
+
+Conejo A J, Castillo E, Minguez R, and Garcia-Bertrand R, Decomopsition
+Techniques in Mathematical Programming, Springer, Berlin, 2006.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+*The reported solution is
+scalar x_l /   1/
+       y_l /   6/
+       tol /1e-6/;
+
+*-------------------------------------------------------------------------------
+* Prepare reporting and comparison of different solutions
+
+Parameter rep comparison;
+sets
+   enames     / defobj,e1,f2*f5 /
+   vnames     / obj,x,y  /
+   evnames    / set.enames,set.vnames /
+* This model has a dual degeneracy, so we cannot test for the marginals reliably
+   suf        / l /;
+
+
+$gdxout "%gams.scrdir%repsets.%gams.scrext%"
+$unload evnames suf
+$gdxout
+
+$onecho > "%gams.scrdir%repmaker.%gams.scrext%"
+set evnames, suf;
+$gdxin "%gams.scrdir%repsets.%gams.scrext%"
+$load evnames suf
+
+file fx /"%gams.scrdir%report.%gams.scrext%"/; put fx;
+loop((evnames,suf),
+$escape =
+  put "rep('" evnames.te(evnames) "','" suf.te(suf) "','%=1')"
+  put " = " evnames.te(evnames) "." suf.te(suf) ";" /;
+$escape %
+);
+$offecho
+
+$call gams "%gams.scrdir%repmaker.%gams.scrext%" lo=0
+*-------------------------------------------------------------------------------
+* The Models
+
+variables obj,x,y; positive variable m1,m2;
+equation defobj,e1,f2,f3,f4,f5; equations a1,a2,a3;
+
+defobj.. obj =e= 4*y - x;
+e1.. y + 2*x =l= 8;
+f2.. y =g= 0;
+f3.. y + x =g= 7;
+f4.. x =g= 0;
+f5.. x =l= 4;
+a1.. -1 - m1 + m2 =e= 0;
+a2.. -y*m1 =e= 0;
+a3.. (y+x-7)*m2 =e= 0;
+
+model book / defobj,e1,f2,f3,f4,f5,a1,a2,a3/
+      emp1 / defobj,e1,f2,f3,f4,f5 /
+      emp2 / defobj,e1   ,f3 /;
+
+*Solve model as given in paper
+solve book us nlp min obj;
+$batinclude "%gams.scrdir%report.%gams.scrext%" book
+
+*Solve with EMP
+File emp extended MP info file handle / '%emp.info%' / ;
+putclose emp '* without simple bounds' / 'bilevel x max y * f2 f3 f4 f5';
+solve emp1 us emp min obj;
+abort$(emp1.solvestat <> %SOLVESTAT.NORMAL COMPLETION%) 'EMP has solver status <> 1';
+$batinclude "%gams.scrdir%report.%gams.scrext%" emp
+
+*Solve with EMP using simple bounds instead of explicit constraints
+x.lo = 0; x.up = 4; y.lo = 0;
+putclose emp '* with simple bounds' / 'bilevel x max y * f3';
+solve emp2 us emp min obj;
+abort$(emp2.solvestat <> %SOLVESTAT.NORMAL COMPLETION%) 'EMP with simple bounds has solver status <> 1';
+$batinclude "%gams.scrdir%report.%gams.scrext%" simpleemp
+
+*-------------------------------------------------------------------------------
+*Reporting Differences
+
+rep(evnames,suf,'book-emp') = abs(rep(evnames,suf,'book')
+                                    - rep(evnames,suf,'emp'));
+rep(evnames,suf,'book-emp')$(rep(evnames,suf,'book-emp') < 1e-5) = 0;
+
+rep(evnames,suf,'book-simpleemp') = abs(rep(evnames,suf,'book')
+                                    - rep(evnames,suf,'simpleemp'));
+rep(evnames,suf,'book-simpleemp')$(rep(evnames,suf,'book-simpleemp') < 1e-5) = 0;
+
+display rep;
+
+abort$sum((evnames,suf),rep(evnames,suf,'book-emp')) 'Solutions of book model and EMP are different';
+abort$sum((evnames,suf),rep(evnames,suf,'book-simpleemp')) 'Solutions of book model and EMP with simple bound are different';
+
+abort$(  (abs(x.l - x_l ) > tol)
+      or (abs(y.l - y_l ) > tol) ) 'Reported solution not found';

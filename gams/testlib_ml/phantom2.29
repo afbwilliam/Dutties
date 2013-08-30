@@ -1,0 +1,17 @@
+$title Phantoms can only have default values - ondelim (PHANTOM2,SEQ=29)
+$phantom empty
+$ondelim
+parameter x(*) /
+empty 0
+zero 0
+one 1
+empty 1
+/
+$offdelim
+$debug dmpuel
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error the second empty is wrong

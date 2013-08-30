@@ -1,0 +1,43 @@
+$title Simple stochastic model (SP3X2,SEQ=83)
+
+Variable obj, x, y, z;
+
+scalars d /1/, c /1/, a /1/;
+Equations defobj, e1, e2, e3;
+
+e1..     x     =l= 50;
+
+e2..     x + y =g= d;
+
+e3..     z     =e= 1.2*a*y;
+
+defobj.. 0.5*x + c*y - a*z =e= obj;
+
+model m /all/;
+
+x.lo = 0;
+y.lo = 0;
+z.lo = 5;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%' /;
+$onput
+randvar d discrete 0.2 30 0.5 40 0.3 55
+randvar c discrete 0.2 2.5 0.5 1.0 0.3 1.5
+randvar a discrete 0.4 0.2 0.6 0.8
+stage 2 d c y e2
+stage 3 a z obj e3 defobj
+$offput
+putclose;
+
+Set scen        scenarios / s1*s6 /;
+Parameter
+    s_d(scen)
+    s_c(scen)
+    s_a(scen);
+
+Set dict / scen .scenario.''
+           d    .randvar .s_d
+           c    .randvar .s_c
+           a    .randvar .s_a /;
+
+solve m min obj us emp scenario dict;

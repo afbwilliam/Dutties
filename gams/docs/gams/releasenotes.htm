@@ -1,0 +1,1298 @@
+<html>
+<body>
+
+<p><a name="24.0"></a>
+<table border="0" cellpadding="1" width="100%">
+<tbody>
+<tr>
+<th align="center" bgcolor="#E2414E"> <font color="#ffffff" size="+2">GAMS Distribution 24.0</font></th>
+</tr>
+</tbody>
+</table>
+<p>To use this distribution, the maintenance expiration date for your license must be later than December 24, 2012.</p>
+<h3>Distribution History</h3>
+<table border="0" cellpadding="1">
+<tbody>
+<tr><td><a href="#24.0.2">24.0.2</a> (Maintenance Release),</td><td> Release Date February 14, 2013</td></tr>
+<tr><td><a href="#24.0.1">24.0.1</a> (Major Release),</td><td> Release Date December 18, 2012</td></tr>
+</tbody>
+</table>
+
+<p><a name="24.0.2"></a>
+<table border="0" cellpadding="1" width="100%">
+<tbody>
+<tr>
+<th align="center" bgcolor="#eeeaee"> <font color="#777777" size="+1">GAMS Maintenance Release 24.0.2</font></th>
+</tr>
+</tbody>
+</table>
+<br>
+Maintenance releases do not provide many new features. They are issued
+to provide bug fixes, performance improvements and maintenance
+releases of solver libraries. The License Check Date remains the same
+as for the prior major release. This means that any license file that
+worked with major release <a href="#24.0.1">24.0.1</a> will also work
+with this maintenance release.
+
+<div class="toc">
+<ul class="toc">
+<li class="level2"><div class="li"><span class="li"><a href="#acknowledgments_24_0_2" class="toc">Acknowledgments</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#platforms_24_0_2" class="toc">Platforms</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#gams_system_24_0_2" class="toc">GAMS System</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#apis_24_0_2" class="toc">APIs</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gams_24_0_2" class="toc">GAMS</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gamside_24_0_2" class="toc">GAMS IDE</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#utilities_24_0_2" class="toc">Utilities</a></span></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><span class="li"><a href="#solvers_24_0_2" class="toc">Solvers</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#baron_24_0_2" class="toc">BARON</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#solvetrace_24_0_2" class="toc">BONMIN, CBC, Couenne, GloMIQO, SCIP</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#conopt_24_0_2" class="toc">CONOPT</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#glomiqo_24_0_2" class="toc">GloMIQO</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gurobi_24_0_2" class="toc">GUROBI</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#mosek_24_0_2" class="toc">MOSEK</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#mpsge_24_0_2" class="toc">MPSGE</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#msnlp_24_0_2" class="toc">MSNLP / OQNLP</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#scip_24_0_2" class="toc">SCIP</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#xpress_24_0_2" class="toc">XPRESS</a></span></div></li>
+</ul>
+<li class="level2"><div class="li"><span class="li"><a href="#tools_24_0_2" class="toc">Tools</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#convertd_24_0_2" class="toc">ConvertD</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#examiner_24_0_2" class="toc">EXAMINER</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#jams_24_0_2" class="toc">JAMS</a></span></div></li>
+</ul>
+</ul>
+</li>
+
+</ul>
+
+<h2 class="sectionedit2"><a name="acknowledgments_24_0_2" id="acknowledgments_24_0_2">Acknowledgments</a></h2>
+<div class="level2">
+
+<p>
+We would like to thank all of our users who have reported problems and made suggestions for improving this release. In particular, we thank Arne Drud, Michael Ferris, Erwin Kalvelagen, Aida Khajavirad, Ignacio Perez, Nick Sahinidis, and Dimitri Tomanos.
+</p>
+</div>
+
+<h2 class="sectionedit3"><a name="platforms_24_0_2" id="platforms_24_0_2">Platforms</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> removed dependency on GLIBC 2.7 in Linux systems</div>
+</li>
+</ul>
+</div>
+
+<h2 class="sectionedit1"><a name="gams_system_24_0_2" id="gams_system">GAMS System</a></h2>
+<div class="level2">
+</div>
+
+<h3 class="sectionedit2"><a name="apis_24_0_2" id="apis">APIs</a></h3>
+<div class="level3">
+
+<h4><a name="ooapis" id="ooapis">Object Oriented APIs</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> introduced new function CopySymbol (see individual languages for precise name)</div></li>
+<li class="level1"><div class="li"> label and symbol lookup is now case insensitve</div></li>
+<li class="level1"><div class="li"> fixed handling of infinite bounds for GAMSModifiers</div></li>
+</ul>
+
+<h5>.NET</h4>
+<div class="level5">
+<ul>
+<li class="level1"><div class="li"> added new function GAMSSymbol.CopySymbol</div></li>
+<li class="level1"><div class="li"> added new examples in Visual C++ and VB.NET</div></li>
+</ul>
+</div>
+
+
+<h5>Java</h4>
+<div class="level5">
+<ul>
+<li class="level1"><div class="li"> added new function GAMSSymbol.copySymbol</div></li>
+</ul>
+</div>
+
+<h5>Python</h4>
+<div class="level5">
+<ul>
+<li class="level1"><div class="li"> added new function _GamsSymbol.copy_symbol</div></li>
+<li class="level1"><div class="li"> on Windows and Linux, compiled libraries for both Python 2.6 and Python 2.7 are distributed<br>while the Python 2.7 version can be found in <tt>&lt;GAMSDir&gt;\apifiles\Python\api</tt> as before, the Python 2.6 version is in <tt>&lt;GAMSDir&gt;\apifiles\Python\api_26</tt></div></li>
+</ul>
+</div>
+
+</div> <!-- ooapis -->
+
+<h4>GDX</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> fixed a casing problems with the function <tt>gdxSymbolGet/SetDomainX</tt> for client languages C++, C#, Fortran, Java, Python, VBA, VB.NET</div></li>
+</ul>
+
+<h4>GMO</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> increased API version number to 11 (was forgotten in 24.0.1)</div></li>
+</ul>
+
+</div> <!-- apis -->
+
+<h3 class="sectionedit3"><a name="gams_24_0_2" id="gams">GAMS</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> the reason for ignoring an option in the GAMS options file reader is now printed</div></li>
+<li class="level1"><div class="li"> fix a bug when reading scalars from a compressed GDX file</div></li>
+</ul>
+</div>
+
+<h3 class="sectionedit3"><a name="gamside_24_0_2" id="gams">GAMS IDE</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> changed the interface for the Text Differ to look like the GDXDiff interface</div></li>
+<li class="level1"><div class="li"> moved menu for Text Diff under Utilities menu</div></li>
+</ul>
+</div>
+
+<h3 class="sectionedit3"><a name="utilities_24_0_2" id="utilities">Utilities</a></h3>
+<div class="level3">
+
+<h4 class="sectionedit4"><a name="gdxxrw_24_0_2" id="gdxxrw">GDXXRW</a></h3>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> gdxxrw works now with Excel Binary Workbook files (file extension <tt>.xlsb</tt>)</div></li>
+</ul>
+</div>
+
+</div> <!-- utilities -->
+</div> <!-- GAMS system -->
+
+
+<h2 class="sectionedit5"><a name="solvers_24_0_2" id="solvers">Solvers</a></h2>
+<div class="level2">
+
+<h3 class="sectionedit8"><a name="baron_24_0_2" id="baron">BARON</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> new library 11.9.1 </div>
+<li class="level1"><div class="li"> fixed handling of workspace and workfactor options</div>
+</li>
+</ul>
+</div>
+<h3 class="sectionedit8"><a name="solvetrace_24_0_2" id="solvetrace">BONMIN, CBC, Couenne, GloMIQO, SCIP</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> fixed too small value in 'seconds' column in solvetrace file</div>
+<li class="level1"><div class="li"> improved resolution of solvetrace file for Cbc and SCIP </div>
+</li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="conopt_24_0_2" id="conopt">CONOPT</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> new library 3.15I</div> </li>
+<li class="level1"><div class="li"> major update of the CONOPT solver manual (pdf file only) </div></li>
+<li class="level1"><div class="li"> revised definition of workspace and workfactor options: workfactor is now ignored if workspace is defined </div></li>
+<li class="level1"><div class="li"> minimum memory allocation adjusted for some smaller machines </div></li>
+<li class="level1"><div class="li"> removed no longer used options GCFORM, GCPTB1, GCPTB2</div></li>
+</ul>
+</div>
+
+
+<h3 class="sectionedit8"><a name="glomiqo_24_0_2" id="glomiqo">GloMIQO</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> fixed bug in reporting of dual bound when optca tolerance is larger in magnitude than optcr</div> </li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="gurobi_24_0_2" id="baron">GUROBI</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> new library 5.1</div>
+</li>
+<li class="level1"><div class="li"> new options</div>
+<ul>
+<li class="level2"><div class="li"> <code>ImproveStartNodes</code>: A new option for transitioning from tree exploration to solution improvement in MIP</div>
+</li>
+<li class="level2"><div class="li"> <code>Seed</code>: Modifies the random number seed. This acts as a minor perturbation to the solver, which typically leads to a different solution path. This can be useful for experimentation (e.g., for testing the robustness of a particular set of parameter changes)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Gurobi dropped support for Linux 32bit, so GAMS/Gurobi uses Gurobi library 5.0.2 on Linux 32bit</div>
+</li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="mosek_24_0_2" id="baron">MOSEK</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> write clearer text error message to log and listing file </div>
+</li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="mpsge_24_0_2" id="mpsge">MPSGE</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">fixed memory issues when both workspace and workfactor are set and when estimates are too high</div>
+</li>
+</ul>
+</div>
+
+
+<h3 class="sectionedit8"><a name="msnlp_24_0_2" id="msnlp">MSNLP / OQNLP</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">fixed problems with LSGRG on instances with more than 10000 variables or more than 10000 equations</div>
+</li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="scip_24_0_2" id="scip">SCIP</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">new SCIP library 3.0 #0134f8c </div></li>
+<li class="level1"><div class="li">fixed bug where the reported objective value did not equal the level value of the objective variable</div></li>
+<li class="level1"><div class="li">improved cleanup of SCIP solutions that are not feasible in the original problem; the model status is now adjusted accordingly</div></li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="xpress_24_0_2" id="xpress">XPRESS</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">fixed reporting of resused and iterused attributes for infeasible and unsolved models</div></li>
+</ul>
+</div>
+
+</div> <!-- solvers -->
+
+<h2 class="sectionedit5"><a name="tools_24_0_2" id="tools">Tools</a></h2>
+<div class="level2">
+
+<h3 class="sectionedit8"><a name="convertd_24_0_2" id="convertd">ConvertD</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">in LocalSolver output, long linear parts of equations are now printed by using the sum() operator</div></li>
+<li class="level1"><div class="li">added solution output option and functionality for LocalSolver (lspsol)</div></li>
+<li class="level1"><div class="li">fixed bug when using objvar option in conversion to GAMS format</div></li>
+<li class="level1"><div class="li">fixed bug with variable indices when writing nonlinear expressions</div></li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="examiner_24_0_2" id="examiner">EXAMINER</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">fixed check of complementarity slackness for discrete variables in MIQCPs</div></li>
+<li class="level1"><div class="li">added a consistency check on model attributes (currently only objval)</div></li>
+</ul>
+</div>
+
+<h3 class="sectionedit8"><a name="jams_24_0_2" id="jams">JAMS</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li">fixed many problems with objective functions in equilibrium followers, especially those arising when variables were skipped or when the objective var was reformulated out</div></li>
+<li class="level1"><div class="li">fixed problems with VI models and vars getting squeezed out that should not have been</div></li>
+</ul>
+</div>
+
+</div> <!-- tools -->
+
+<table border="0" cellpadding="1" width="100%">
+<tbody>
+<tr>
+<th align="center" bgcolor="#eeeaee"> <font color="#777777" size="+1"><a name="24.0.1">GAMS Major Release 24.0.1</a></font></th>
+</tr>
+</tbody>
+</table>
+<!-- TOC START -->
+<div class="toc">
+
+<ul class="toc">
+<li class="level2"><div class="li"><span class="li"><a href="#acknowledgments" class="toc">Acknowledgments</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#platforms" class="toc">Platforms</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#gams_system" class="toc">GAMS System</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#apis" class="toc"><acronym title="Application Programming Interfaces">APIs</acronym></a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#documentation" class="toc">Documentation</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#external_equations" class="toc">External Equations</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gams" class="toc">GAMS</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gamside" class="toc">GAMS IDE</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gdxrrw" class="toc">GDXRRW</a></span></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><span class="li"><a href="#solvers" class="toc">Solvers</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#baron" class="toc">BARON</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#bonmin" class="toc">Bonmin</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#cbc" class="toc">CBC</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#convertd" class="toc">ConvertD</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#couenne" class="toc">Couenne</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#cplex_cplexd" class="toc">Cplex/CplexD</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#conopt" class="toc">CONOPT</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#glomiqo" class="toc">GloMIQO</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gurobi" class="toc">GUROBI</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#ipopt_and_ipopth_bonmin_and_bonminh" class="toc">IPOPT and IPOPTH, BONMIN and BONMINH</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#logmip" class="toc">LogMIP</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#minos" class="toc">MINOS</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#mosek" class="toc">MOSEK</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#optimization_services" class="toc">Optimization Services</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#osixpress" class="toc">OsiXpress</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#scip" class="toc">SCIP</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#snopt" class="toc">SNOPT</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#soplex" class="toc">SoPlex</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#sulum" class="toc">Sulum</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#xpress" class="toc">Xpress</a></span></div></li>
+</ul>
+</li>
+<!--<li class="level2"><div class="li"><span class="li"><a href="#documentation" class="toc">Documentation</a></span></div></li>-->
+<li class="level2"><div class="li"><span class="li"><a href="#model_libraries" class="toc">Model Libraries</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#gams_data_library" class="toc">GAMS Data Library</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gams_emp_library" class="toc">GAMS EMP Library</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gams_model_library" class="toc">GAMS Model Library</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#gams_test_library" class="toc">GAMS Test Library</a></span></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><span class="li"><a href="#tools" class="toc">Tools</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#scenred2" class="toc">SCENRED2</a></span></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><span class="li"><a href="#solver_platform_availability_matrix" class="toc">Solver/Platform Availability  Matrix</a></span></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+</div>
+<h2 class="sectionedit2"><a name="acknowledgments" id="acknowledgments">Acknowledgments</a></h2>
+<div class="level2">
+
+<p>
+We would like to thank all of our users who have reported problems and made suggestions for improving this release. <!--In particular, we thank ...-->
+</p>
+
+</div>
+<h2 class="sectionedit3"><a name="platforms" id="platforms">Platforms</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Dropped Mac OS X 32bit build</div>
+</li>
+<li class="level1"><div class="li"> Mac OS X 64bit build now on Lion (10.7)</div>
+</li>
+</ul>
+
+</div>
+<h2 class="sectionedit4"><a name="gams_system" id="gams_system">GAMS System</a></h2>
+<div class="level2">
+
+</div>
+<h3 class="sectionedit5"><a name="apis" id="apis"><acronym title="Application Programming Interfaces">APIs</acronym></a></h3>
+<div class="level3">
+
+</div>
+
+<h4><a name="documentation" id="documentation">Documentation</a></h4>
+<div class="level4">
+
+<p>
+Moved existing documentation about the APIs to <code>&lt;Path/To/GAMS&gt;/docs/API</code>. Also added new documentation there. In the GAMSIDE this documentation can be accessed at <code>Help &rarr; Docs &rarr; API</code>.
+</p>
+
+</div>
+
+<h4><a name="net" id="net">.NET</a></h4>
+<div class="level4">
+
+<p>
+Add function <code>Interrupt</code> to <code>GAMSJob</code>: Sends interrupt signal to running GAMSJob
+</p>
+
+</div>
+
+<h4><a name="java" id="java">Java</a></h4>
+<div class="level4">
+
+<p>
+This release contains a beta version of the object-oriented Java API that can be used to control GAMS from a Java program. It allows the seamless integration of GAMS into Java by providing appropriate classes for the interaction with GAMS. GAMS Java API objects allow a convenient way to exchange input data and model results with in-memory representation of data (GAMSDatabase), and to create and run GAMS models (GAMSJob) that can be customized by GAMS options (GAMSOptions). Furthermore, they introduce a way to solve a sequence of closely related model instances in the more efficient way (GAMSModelInstance).  
+</p>
+<ul>
+<li class="level1"><div class="li"> A Java program that uses object-oriented Java API requires at least Java SE 5 to compile and run.</div>
+</li>
+<li class="level1"><div class="li"> All classes are distributed within one single jar file <code>GAMSJavaAPI.jar</code> with a namespace <code>com.gams.api</code>, located under the <code>&lt;Path/To/GAMS&gt;/apifiles/Java/api/</code> directory. </div>
+</li>
+<li class="level1"><div class="li"> Java program examples are distributed with a namespace <code>com.gams.examples</code>, located under the <code>&lt;Path/To/GAMS&gt;/apifiles/Java/</code> directory.
+<li class="level1"><div class="li"> Installation and detailed documents can be found in <code>&lt;Path/To/GAMS&gt;/apifiles/readme.txt</code> and <code>&lt;Path/To/GAMS&gt;/docs/API/GAMS_java.pdf</code>.</div>
+<li class="level1"><div class="li"> Javadoc for <code>GAMSJavaAPI.jar</code> can be found under the <code>&lt;Path/To/GAMS&gt;/apifiles/java/api/javadoc</code> directory.
+</li>
+</ul>
+
+</div>
+
+<h4><a name="python" id="python">Python</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> In the API to the option object the signature of the function <code>optGetStrStr</code> has changed from: <code>value = optGetStrStr(optHandle, "GDX", dummyString)</code> to <code>value = optGetStrStr(optHandle, "GDX")</code></div>
+</li>
+<li class="level1"><div class="li"> The compiled Python libraries are built with Python 2.7 now.</div>
+</li>
+<li class="level1"><div class="li"> This release contains a beta version of the object-oriented Python API that can be used to control GAMS from within Python 2.7. It allows the seamless integration of GAMS into Python by providing appropriate classes for the interaction with GAMS. The GamsDatabase class for in-memory representation of data can be used for convenient exchange of input data and model results. Models written in GAMS can be run with the GamsJob class and by using the GamsModelInstance class a sequence of closely related model instances can be solved in an efficient way. To use this API one has to perform one of the following steps:</div>
+</li>
+</ul>
+
+<p>
+Installing the API and the required low level APIs:
+</p>
+<pre class="code">cd &lt;Path/To/GAMS&gt;/apifiles/Python/api &amp;&amp; python setup.py install &amp;&amp; cd ..</pre>
+
+<p>
+Using the API without installing:
+</p>
+<pre class="code">export PYTHONPATH=&lt;Path/To/GAMS&gt;/apifiles/Python/api  (Unix)</pre>
+<pre class="code">set PYTHONPATH=&lt;Path\To\GAMS&gt;\apifiles\Python\api  (Windows)</pre>
+
+<p>
+Running transport1.py example:
+</p>
+<pre class="code">export LD_LIBRARY_PATH=&lt;Path/To/GAMS&gt;:$LD_LIBRARY_PATH (DYLD_LIBRARY_PATH on OS X, not required on Windows)
+python transport1.py</pre>
+
+<p>
+Documentation about this API can be found in &lt;Path/To/GAMS&gt;/docs/API/GAMS_python.pdf.
+</p>
+
+</div>
+
+<h3 class="sectionedit5b"><a name="documentation" id="documentation">Documentation</a></h3>
+<div class="level3">
+
+<ul>
+<li class="level1"><div class="li"> added separate GAMS installation notes for Mac OS X</div>
+</li>
+
+</div>
+
+<h3 class="sectionedit6"><a name="external_equations" id="external_equations">External Equations</a></h3>
+<div class="level3">
+
+<p>
+Added a list of examples to the <span class="curid"><a href="#gams_test_library">GAMS Test Library</a></span>.
+</p>
+
+</div>
+<h3 class="sectionedit7"><a name="gams" id="gams">GAMS</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> If Solvelink is set to a non-default value. The GAMS log prints out the solvelink selection: <code>--- Executing SOLVER (Solvelink=i): elapsed 0:00:00.000</code></div>
+</li>
+<li class="level1"><div class="li"> New date in audit line. Each GAMS component writes an audit line to the GAMS log, e.g. GAMS/Cplex write <code>IBM ILOG CPLEX   Jul 14, 2011 23.7.3 WIN 27723.27726 VS8 x86/MS Windows</code>. The date in this line used to be the license check date, which does not change with maintenance releases (23.9.X). Starting with 24.0.1 the date displayed in the audit line is the build date of the system and changes with every release including maintenance releases.  </div>
+</li>
+<li class="level1"><div class="li"> When GAMS is run from the command line on Windows systems and a solver is interrupted, the OS issued a message <code>Terminate batch job (Y/N)?</code> and the user had to interact. Now the message is still printed, but GAMS does not wait for a user action anymore. This has a rare side effect that solver keyboard interactions (e.g. in GAMS/Cplex with option <code>Interactive</code> and GAMS/SCIP with option <code>GAMS/Interactive</code>) will not work unless the new GAMS option <code>InteractiveSolver</code> is set to 1.</div>
+</li>
+<li class="level1"><div class="li"> For compile time commands like <code>$include</code>, the <code>$</code> had to be in column 1. Leading blanks are now allowed for such commands, but require an additonal <code>$</code>: <code>$$include</code>. The <code>$$</code> can only be used for the first dollar command in a line. For example, <code>$set a &#039;aa&#039; $$set b &#039;bb</code>&#039; does not work.</div>
+</li>
+<li class="level1"><div class="li"> GAMS has added UserName and ComputerName to the recorded fields of the GAMS Trace facility. Besides many uses in quality assurance testing, the trace facility e.g. can be used to audit the GAMS activities in a multi user environment with a shared GAMS installation. For details please check our <a href="http://support.gams.com/doku.php?id=gams:auditing_gams_runs_on_a_network_with_a_shared_gams_installation" class="urlextern" title="http://support.gams.com/doku.php?id=gams:auditing_gams_runs_on_a_network_with_a_shared_gams_installation"  rel="nofollow">support wiki</a></div>
+</li>
+<li class="level1"><div class="li"> Report equations with general non-linearity in lst file for QCP models</div>
+</li>
+<li class="level1"><div class="li"> New <code>put_utility</code> feature <code>WinMsg</code> allows to send a Windows message to a window: <pre class="code">put_utility fx &#039;WinMsg&#039; / &#039;WindowTitle&#039; / &#039;Message&#039;;</pre>
+<li class="level1"><div class="li"> Asynchronous calls on Windows can be started with a new console rather than sharing the console of the parent process. <code>$CALL.ASYNCNC</code>, <code>Execute.AsyncNC</code> and <code>Put_Utility</code> keywords <code>Exec.AsyncNC</code> and <code>Shell.AsyncNC</code> have been added. <code>NC</code> and non <code>NC</code> calls behave identical on non-Windows platforms.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit7"><a name="gamside" id="gamside">GAMS IDE</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> The IDE has now an integrated Text differ to compare two text files; see File | Diff Textfiles
+</div>
+</li>
+</ul>
+
+<h3 class="sectionedit32b"><a name="gdxrrw" id="gdxrrw">GDXRRW</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> GDXRRW is a suite of utilities to import/export data between GAMS and R and to call GAMS conveniently from R.  The software gives R users the ability to use all the optimization capabilities of GAMS, and allows visualization and other operations on GAMS data directly within R.</div>
+</li>
+<li class="level1"><div class="li"> GDXRRW is unique among the GDX interface utilities in that it is an R extension made available as an R package.  As such, it is run as part of an R session or script, not as part of a GAMS run, and it follows the usual R package conventions.</div>
+</li>
+<li class="level1"><div class="li"> Source and binary packages for GDXRRW are part of the GAMS distribution.  For the latest versions, along with a FAQ list, some hints and tips on common problems and solutions, and other helpful content, use the <a href="http://support.gams.com/doku.php?id=gdxrrw:interfacing_gams_and_r">GDXRRW Wiki</a></div>
+</li>
+</ul>
+</div>
+
+
+</div>
+<h2 class="sectionedit8"><a name="solvers" id="solvers">Solvers</a></h2>
+<div class="level2">
+
+</div>
+<h3 class="sectionedit9"><a name="baron" id="baron">BARON</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New libs 11.8.0</div>
+</li>
+<li class="level1"><div class="li"> new speed ups in parser/reformulator for large scale problems</div>
+</li>
+<li class="level1"><div class="li"> improvements in local search that results in higher quality solutions identified earlier in the search</div>
+<ul>
+<li class="level2"><div class="li"> a new dive-and-round heuristic has been implemented for MINLPs.  The number of rounds is selected dynamically and the search is activated and applied based on problem characteristics</div>
+</li>
+<li class="level2"><div class="li"> for continuous problems, an automated selection for NLP solvers has been implemented, this is now the default. Again, this is done in a dynamic strategy that exploits problem characteristics and solver performance for the problem at hand</div>
+</li>
+<li class="level2"><div class="li"> the nlpsol option can now take the value of -1 in addition to the previously allowed values.  -1, which is the default value, triggers the automatic NLP solver selection and switching strategy.  If the user sets nlpsol to a solver that is not licensed, BARON automatically set it to -1</div>
+</li>
+<li class="level2"><div class="li"> the dolocal option can now take only two values (0: no local search; 1: BARON&#039;s automatic strategy).  default is 1 and will determine when/how to apply local search</div>
+</li>
+<li class="level2"><div class="li"> BARON uses an improved link to Clp</div>
+</li>
+<li class="level2"><div class="li"> BARON uses latest SNOPT 7.2-12</div>
+</li>
+<li class="level2"><div class="li"> BARON uses latest IPOPT 3.10.3</div>
+</li>
+<li class="level2"><div class="li"> Memory requirements have been significantly reduced</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit10"><a name="bonmin" id="bonmin">Bonmin</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Faster reaction to user interrupt during solve of initial NLP relaxation.</div>
+</li>
+<li class="level1"><div class="li"> Changed default setting for parameters variable_selection and milp_strategy to strong-branching and solve_to_optimality, respectively.</div>
+</li>
+<li class="level1"><div class="li"> Renamed miptrace options to solvetrace.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit11"><a name="cbc" id="cbc">CBC</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 2.8</div>
+<ul>
+<li class="level2"><div class="li"> A new primal heuristic "Proximity Search" (proposed by Fischetti and Monaci, 2012) has been added. The idea is to define a sub-MIP without additional constraints but with a modified objective function intended to attract the search in the proximity of the incumbent. The heuristic is off by default and can be enabled by setting <code>proximitysearch 1</code> in a GAMS/Cbc options file.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Parallel branch-and-bound search (multithreading) is now also possible under Windows by using <a href="http://sourceware.org/pthreads-win32" class="urlextern" title="http://sourceware.org/pthreads-win32"  rel="nofollow">POSIX threads for Win32</a>.</div>
+</li>
+<li class="level1"><div class="li"> New option dumpsolutions to output alternative solutions to gdx files.</div>
+</li>
+<li class="level1"><div class="li"> The miptrace options have been renamed to solvetrace and activating them does not affect the solving process anymore.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit12"><a name="convertd" id="convertd">ConvertD</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Added option <code>localsolver</code> to convert GAMS models into <a href="http://www.localsolver.com" class="urlextern" title="http://www.localsolver.com"  rel="nofollow">LocalSolver language</a>. This is still an experimental feature, i.e., it may not always be possible to process the created .lsp files with LocalSolver. A major limitation is the restriction to binary and bounded integer variables in LocalSolver. To allow for continuous variables that can be defined via other variables, ConvertD can read information about <em>defined variables</em> from a ConvertD options file. In such an option file, a line <code>defvar x1 e1</code> denotes that the continuous variable x1 is defined via equation e1. Equation e1 then needs to be an equality constraint which contains x1 in a linear expression. Analogously, a statement <code>defvar y(n,i,j) e(n,i,j)</code> indicates that variable y(n,i,j) is defined via equation e(n,i,j) for all (n,i,j).</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit13"><a name="couenne" id="couenne">Couenne</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Couenne is now linked against the <a href="http://cs.anu.edu.au/~bdm/nauty" class="urlextern" title="http://cs.anu.edu.au/~bdm/nauty"  rel="nofollow">nauty library</a>, which enables symmetry recognition for MINLPs and their utilization for orbital branching.</div>
+</li>
+<li class="level1"><div class="li"> The miptrace options have been renamed to solvetrace.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit14"><a name="cplex_cplexd" id="cplex_cplexd">Cplex/CplexD</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 12.5</div>
+</li>
+<li class="level1"><div class="li"> The number of threads for CPLEX to use can now be set to any positive integer number, even if this number exceeds the number of cores on the machine. The default behavior of GAMS/CPLEX with respect to the number of threads and cores remains unchanged. That is, by default, GAMS/CPLEX continues to run with a single thread. Setting <code>THREADS</code> to 0, result in setting the threads to the number of cores.</div>
+</li>
+<li class="level1"><div class="li"> New parameters:</div>
+<ul>
+<li class="level2"><div class="li"> <code>ProbeDetTime</code>: Limits the amount of time (expressed in deterministic ticks) spent probing</div>
+</li>
+<li class="level2"><div class="li"> <code>PolishAfterDetTime</code>: Sets the amount of time expressed in deterministic ticks to spend during a normal mixed integer optimization after which CPLEX starts to polish a feasible solution</div>
+</li>
+<li class="level2"><div class="li"> <code>TuningDetTiLim</code>: Sets a time limit in deterministic ticks per model and per test set (that is, suite of models) applicable in tuning</div>
+</li>
+<li class="level2"><div class="li"> <code>RandomSeed</code>: Sets the random seed differently for diversity of solutions.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> GAMS/Cplex prints the time spend in Cplex optimization calls. The time is printed in elapsed seconds and elapsed deterministic time in ticks.</div>
+</li>
+<li class="level1"><div class="li"> GAMS/CplexD returns proper duals for QCP models</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit15"><a name="conopt" id="conopt">CONOPT</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> new library 3.15H</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit16"><a name="glomiqo" id="glomiqo">GloMIQO</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> new library GloMIQO 2.1:</div>
+<ul>
+<li class="level2"><div class="li"> improved reformulation strategies</div>
+</li>
+<li class="level2"><div class="li"> better recognition of special mathematical structure allowing for dominant polyhedral cuts</div>
+</li>
+<li class="level2"><div class="li"> additional strategies for deterministically inferring missing variable bounds</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> new option cplex_optfile specifies a GAMS/CPLEX options file that will be applied to every LP and MILP subsolve</div>
+</li>
+<li class="level1"><div class="li"> new option dumpsolutions to output alternative solutions to gdx files</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit17"><a name="gurobi" id="gurobi">GUROBI</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 5.0.2</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit18"><a name="ipopt_and_ipopth_bonmin_and_bonminh" id="ipopt_and_ipopth_bonmin_and_bonminh">IPOPT and IPOPTH, BONMIN and BONMINH</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> IPOPT is now available in two variations. The Open Source IPOPT is part of the Base Module. IPOPTH uses higher performance (but not Open Source) linear algebra routines (HSL) and is separately priced.</div>
+</li>
+<li class="level1"><div class="li"> Analogously, BONMIN is part of the Base Module and uses IPOPT. BONMINH requires a license for IPOPTH.</div>
+</li>
+<li class="level1"><div class="li"> For Couenne and SCIP, IPOPTH is used to solve NLP subproblems if a corresponding license is available, otherwise IPOPT is used.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit19"><a name="logmip" id="logmip">LogMIP</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Fixed a bug when reformulating disjunctions with terms that are indicated by a negated variable (disjunction not y1 e1 else ...).</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit19b"><a name="minos" id="minos">MINOS</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Maintenance updates, primarily for memory allocation issues.
+</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit20"><a name="mosek" id="mosek">MOSEK</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New libs Mosek 6 Rev 148, details in the Mosek release notes <a href="http://docs.mosek.com/6.0/toolsrelnotes/" class="urlextern" title="http://docs.mosek.com/6.0/toolsrelnotes/"  rel="nofollow">http://docs.mosek.com/6.0/toolsrelnotes/</a></div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit21"><a name="optimization_services" id="optimization_services">Optimization Services</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 2.6</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit22"><a name="osixpress" id="osixpress">OsiXpress</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> OsiXpress is now also available on Mac OS X.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit23"><a name="scip" id="scip">SCIP</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 3.0.1</div>
+<ul>
+<li class="level2"><div class="li"> New presolvers have been added, among them one that recognizes and utilizes block structures in an instance.</div>
+</li>
+<li class="level2"><div class="li"> New primal heuristics NLP diving (for MINLPs) and Zero-Objective ("Hail Mary") have been added.</div>
+</li>
+<li class="level2"><div class="li"> New propagators for optimization-based bound tightening for MINLPs have been added.</div>
+</li>
+<li class="level2"><div class="li"> The variable bounds propagator has been extended to cliques and implications.</div>
+</li>
+<li class="level2"><div class="li"> Memory limits are now better handled, especially for larger problems.</div>
+</li>
+<li class="level2"><div class="li"> The probing algorithm has been revised and should give better performance.</div>
+</li>
+<li class="level2"><div class="li"> The performance for pseudo-boolean optimization problems has been improved.</div>
+</li>
+<li class="level2"><div class="li"> The complete release notes can be found <a href="http://scip.zib.de/doc/html/RELEASENOTES.shtml" class="urlextern" title="http://scip.zib.de/doc/html/RELEASENOTES.shtml"  rel="nofollow">here</a> and a list of all changes (including changes to parameters and their default values) can be found <a href="http://scip.zib.de/doc/html/CHANGELOG.shtml" class="urlextern" title="http://scip.zib.de/doc/html/CHANGELOG.shtml"  rel="nofollow">here</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> The GAMS workspace option can now be used to set the SCIP memory limit (&#039;limits/memory&#039; in optionfile).</div>
+</li>
+<li class="level1"><div class="li"> The <code>gams/miptrace</code> options have been renamed to <code>gams/solvetrace</code>.</div>
+</li>
+<li class="level1"><div class="li"> The <code>gams/printstatistics</code> option has been renamed to <code>display/statistics</code>.</div>
+</li>
+<li class="level1"><div class="li"> The <code>gams/interactive</code> option is now a string option that takes commands for the SCIP shell as arguments. If the commands do not end with a &#039;quit&#039; command, the SCIP shell still open for user interaction. Note, that in order to be able to input commands interactively on Windows, you have to set the GAMS option interactivesolver to 1 (see above).</div>
+</li>
+<li class="level1"><div class="li">The LP solver in SCIP can now be changed by the <code>lp/solver</code> option. Supported values are "cplex", "soplex", and "clp". The default LP solver is now CPLEX, if a CPLEX license is available, and SoPlex otherwise.</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit23b"><a name="snopt" id="snopt">SNOPT</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 7.2-12 (maintenance release)</div>
+</li>
+<li class="level1"><div class="li"> Completely revamped linking code</div>
+<ul>
+<li class="level2"><div class="li"> The GAMS/SNOPT link is now thread-safe, allowing it to be used in multi-threaded applications built with the high-level GAMS APIs mentioned above.</div>
+</li>
+<li class="level2"><div class="li"> Updated memory allocation scheme to increase the amount of memory that can be allocated and used for problem solution, and to improve reporting when limits are reached.</div>
+</li>
+<li class="level2"><div class="li"> Miscellaneous bug fixes and usability improvements.</div>
+</li>
+</div>
+</li>
+
+</div>
+<h3 class="sectionedit24"><a name="soplex" id="soplex">SoPlex</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library 1.7.1</div>
+<ul>
+<li class="level2"><div class="li"> Performance improvements in pricing algorithms</div>
+</li>
+<li class="level2"><div class="li"> Many bugfixes and improvements in numerical stability and infeasibility detection</div>
+</li>
+<li class="level2"><div class="li"> Complete release notes <a href="http://soplex.zib.de/notes-170.txt" class="urlextern" title="http://soplex.zib.de/notes-170.txt"  rel="nofollow">here</a>.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit25"><a name="sulum" id="sulum">Sulum</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> GAMS 24.0 introduces the new LP/MIP Solver Sulum from Sulum Optimization ApS.</div>
+</li>
+<li class="level1"><div class="li"> While Sulum currently does not compete with the high-end LP/MIP solvers, Sulum offers a good cost-benefit ratio for LP and MIP solution technology.</div>
+</li>
+<li class="level1"><div class="li"> GAMS 24.0.1 features Sulum LP only, but as soon as Sulum Optimization releases their library including the MIP optimizer, a maintenance release will feature the full LP/MIP capabilities of Sulum.</div>
+</li>
+</ul>
+
+<h3 class="sectionedit25b"><a name="xpress" id="xpress">Xpress</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> New library Xpress Optimizer 23.01.06 (maintenance release).</div>
+</li>
+</ul>
+
+</div>
+<!--
+<h2 class="sectionedit26"><a name="documentation" id="documentation">Documentation</a></h2>
+<div class="level2">
+-->
+</div>
+<h2 class="sectionedit27"><a name="model_libraries" id="model_libraries">Model Libraries</a></h2>
+<div class="level2">
+
+</div>
+<h3 class="sectionedit28"><a name="gams_data_library" id="gams_data_library">GAMS Data Library</a></h3>
+<div class="level3">
+
+</div>
+<h3 class="sectionedit29"><a name="gams_emp_library" id="gams_emp_library">GAMS EMP Library</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.gams.com/emplib/libhtml/simplevi4.htm" class="urlextern" title="http://www.gams.com/emplib/libhtml/simplevi4.htm"  rel="nofollow">simplevi4 (93)</a>: Equilbrium model consisting of two VIs, one of which has a non-trivial constraint set</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.gams.com/emplib/libhtml/transsp.htm" class="urlextern" title="http://www.gams.com/emplib/libhtml/transsp.htm"  rel="nofollow">transsp (94)</a>: A Stochastic Transportation Problem</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.gams.com/emplib/libhtml/oa.htm" class="urlextern" title="http://www.gams.com/emplib/libhtml/oa.htm"  rel="nofollow">oa (95)</a>: Outer Approximation for Convex Minimization Problem with Binary Variables</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit30"><a name="gams_model_library" id="gams_model_library">GAMS Model Library</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/modlib/libhtml/powerset.htm" class="urlextern" title="http://www.gams.com/modlib/libhtml/powerset.htm"  rel="nofollow">powerset (381)</a></code>: PowerSetLeft and PowerSetRight examples</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/modlib/libhtml/linearne.htm" class="urlextern" title="http://www.gams.com/modlib/libhtml/linearne.htm"  rel="nofollow">linearne (382)</a></code>: Linearization techniques for extremal-Nash equilibria</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/modlib/libhtml/saras.htm" class="urlextern" title="http://www.gams.com/modlib/libhtml/saras.htm"  rel="nofollow">saras (383)</a></code>: South African Regionalized Farm-level Resource Use &amp; Output Supply Response (SARAS) model</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/modlib/libhtml/epscmmip.htm" class="urlextern" title="http://www.gams.com/modlib/libhtml/epscmmip.htm"  rel="nofollow">epscmmip (384)</a></code>: Improved version of eps-Constraint Method for Multiobjective Optimization</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/modlib/libhtml/bidpwl.htm" class="urlextern" title="http://www.gams.com/modlib/libhtml/bidpwl.htm"  rel="nofollow">bidpwl (385)</a></code>: Bid Evaluation with Piecewise Linear Functions</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/modlib/libhtml/trnspwlx.htm" class="urlextern" title="http://www.gams.com/modlib/libhtml/trnspwlx.htm"  rel="nofollow">trnspwlx (386)</a></code>: A Transportation Problem with Piecewise Linear Functions</div>
+</li>
+</ul>
+
+</div>
+<h3 class="sectionedit31"><a name="gams_test_library" id="gams_test_library">GAMS Test Library</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/testexeq.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/testexeq.htm"  rel="nofollow">testexeq (562)</a></code>: Test external equations</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex1.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex1.htm"  rel="nofollow">ex1 (563)</a></code>: External Function - Example 1</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex1x.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex1x.htm"  rel="nofollow">ex1x (564)</a></code>: External Function - Example 1x</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex2.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex2.htm"  rel="nofollow">ex2 (565)</a></code>: External Function - Example 2</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex3.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex3.htm"  rel="nofollow">ex3 (566)</a></code>: External Function - Example 3</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex4.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex4.htm"  rel="nofollow">ex4 (567)</a></code>: External Function - Example 4</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex4x.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex4x.htm"  rel="nofollow">ex4x (568)</a></code>: External Function - Example 4x</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/ex5.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/ex5.htm"  rel="nofollow">ex5 (569)</a></code>: External Function - Example 5</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/er1.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/er1.htm"  rel="nofollow">er1 (570)</a></code>: External Function - Error Example 1</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/er2.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/er2.htm"  rel="nofollow">er2 (571)</a></code>: External Function - Error Example 2</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/er3.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/er3.htm"  rel="nofollow">er3 (572)</a></code>: External Function - Error Example 3</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/exmcp1.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/exmcp1.htm"  rel="nofollow">exmcp1 (573)</a></code>: External Function - Example MCP 1</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/exmcp2.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/exmcp2.htm"  rel="nofollow">exmcp2 (574)</a></code>: External Function - Example MCP 2</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/exmcp3.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/exmcp3.htm"  rel="nofollow">exmcp3 (575)</a></code>: External Function - Example MCP 3</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/exmcp4.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/exmcp4.htm"  rel="nofollow">exmcp4 (576)</a></code>: Hansen/Koopmans: External Function - Example MCP 4</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/exmcp5.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/exmcp5.htm"  rel="nofollow">exmcp5 (577)</a></code>: Intermixed External Rows: External Function - Example MCP 5</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/complink.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/complink.htm"  rel="nofollow">complink (578)</a></code>: Compile and link external equation libraries</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/lindgl02.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/lindgl02.htm"  rel="nofollow">lindgl02 (579)</a></code>: Check that Lindo(Global) works with SOS variables</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/qcp10.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/qcp10.htm"  rel="nofollow">qcp10 (580)</a></code>: Test for QCP correctness</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/empdisj6.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/empdisj6.htm"  rel="nofollow">empdisj6 (581)</a></code>: Test disjunctions with negated equality equations</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/gdx9.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/gdx9.htm"  rel="nofollow">gdx9 (582)</a></code>: Test unloading and loading a GDX file with variable attributes</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/empdisj7.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/empdisj7.htm"  rel="nofollow">empdisj7 (583)</a></code>: Test disjunctions with negated variables</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/traceuc.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/traceuc.htm"  rel="nofollow">traceuc (584)</a></code>: Test if we can get the user and computer name in a trace file</div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://www.gams.com/testlib/libhtml/asynntrp.htm" class="urlextern" title="http://www.gams.com/testlib/libhtml/asynntrp.htm"  rel="nofollow">asynntrp (585)</a></code>: Start GAMS job asynchronously and send interrupt signal to it</div>
+</li>
+</ul>
+
+</div>
+<h2 class="sectionedit32"><a name="tools" id="tools">Tools</a></h2>
+<div class="level2">
+
+</div>
+<h3 class="sectionedit33"><a name="scenred2" id="scenred2">SCENRED2</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> fixed visualization output to work with recent versions of gnuplot</div>
+</li>
+</ul>
+</div>
+
+</div>
+<h2 class="sectionedit34"><a name="solver_platform_availability_matrix" id="solver_platform_availability_matrix">Solver/Platform Availability  Matrix</a></h2>
+<div class="level2">
+
+<p>
+
+<P>
+<TABLE WIDTH="100%" BGCOLOR="#f5f5f5" BORDER=0 CELLPADDING=0 CELLSPACING=0>
+<TH ALIGN=CENTER COLSPAN=10 BGCOLOR="#000000">
+<FONT COLOR="#ffffff">
+Solver/Platform availability - 24.0&nbsp;&nbsp;&nbsp; December 24, 2012
+<TR>
+<TH BGCOLOR="#e0e0e0">&nbsp;</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>x86<br>MS Windows</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>x86_64<br>MS Windows</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>x86<br>Linux</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>x86_64<br>Linux</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>Sun Sparc<br>SOLARIS</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>Sun Sparc64<br>SOLARIS</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>Sun Intel<br>SOLARIS</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>IBM RS-6000<br>AIX 5.3</TH>
+<TH ALIGN=CENTER VALIGN=TOP BGCOLOR="#e0e0e0"><font size=-1>Mac x86_64<br>Darwin</TH>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>ALPHAECP</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>BARON 11.8</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>BDMLP</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>COIN-OR</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>CONOPT 3</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>CPLEX 12.5</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>DECIS</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><font size=-1>32bit</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>DICOPT</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>GLOMIQO 2.1</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>GUROBI 5.1</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><font size=-1>5.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>KNITRO 8.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>LINDO 7.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>LINDOGLOBAL 7.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><font size=-1>6.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><font size=-1>6.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>LGO</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>MILES</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>MINOS</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>MOSEK 6</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>MPSGE</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>MSNLP</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><font size=-1>32bit</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>NLPEC</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>OQNLP</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><font size=-1>32bit</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><font size=-1>32bit</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>PATH</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>SBB</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>SCIP 3.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>SNOPT</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>SOPLEX 1.7</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>SULUM 1.0</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8">&nbsp;</TD>
+</TR>
+<TR>
+<TD BGCOLOR="#fefefe"><font size=-1>XA</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+<TD ALIGN=CENTER BGCOLOR="#fefefe">&nbsp;</TD>
+</TR>
+<TR>
+<TD BGCOLOR="#f8f8f8"><font size=-1>XPRESS 23.01</TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+<TD ALIGN=CENTER BGCOLOR="#f8f8f8"><IMG SRC="check.gif" ALT="x"></TD>
+</TR>
+</TABLE> 
+</p>

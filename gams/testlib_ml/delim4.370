@@ -1,0 +1,38 @@
+$title Drop dummy in column definition under $ondelim (DELIM4,SEQ=370)
+* AB01429
+* submitted by Franz
+set i /seattle,san-diego/,
+     j /new-york,chicago,topeka/,
+     a /a1/;
+table d1a(i,j)
+$ondelim
+dummy,new-york,chicago,topeka
+seattle,2.5,1.7,1.8
+san-diego,2.5,1.8,1.4
+$offdelim
+;
+table d1b(i,j)
+$ondelim
+,new-york,chicago,topeka
+seattle,2.5,1.7,1.8
+san-diego,2.5,1.8,1.4
+$offdelim
+;
+table d2a(a,i,j)
+$ondelim
+dummy1,dummy,new-york,chicago,topeka
+a1.seattle,2.5,1.7, 1.8
+a1.san-diego,2.5,1.8, 1.4
+$offdelim
+;
+table d2b(a,i,j)
+$ondelim
+,,new-york,chicago,topeka
+a1.seattle,2.5,1.7,1.8
+a1.san-diego,2.5,1.8,1.4
+$offdelim
+;
+parameter  d1c(i,j),d2c(a,i,j);
+d1c(i,j)=d1a(i,j)-d1b(i,j);
+d2c(a,i,j)=d2a(a,i,j)-d2b(a,i,j)
+abort$(sum((i,j), d1c(i,j)) or sum((a,i,j), d2c(a,i,j))) 'data read with and without dummy column should be the same', d1a,d1b, d2a, d2b;

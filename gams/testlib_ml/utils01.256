@@ -1,0 +1,64 @@
+$title 'test mps2gms - run it and solve the resulting model' (UTILS01,SEQ=256)
+
+$ontext
+In this model we:
+   1. create an MPS file with $onecho
+   2. run mps2gms on the MPS file, checking the return code
+   3. run gams on the output of mps2gms, checking the return code
+
+Contributor: Alex Meeraus
+
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$onecho > temp256.mps
+NAME Convert
+OBJSENSE
+ MIN
+OBJNAME
+ obj
+ROWS
+ N obj
+ E c1
+ L c2
+ L c3
+ G c4
+ G c5
+ G c6
+COLUMNS
+ x1 c1 -0.225
+ x1 c2 1
+ x1 c4 1
+ x2 c1 -0.153
+ x2 c2 1
+ x2 c5 1
+ x3 c1 -0.162
+ x3 c2 1
+ x3 c6 1
+ x4 c1 -0.225
+ x4 c3 1
+ x4 c4 1
+ x5 c1 -0.162
+ x5 c3 1
+ x5 c5 1
+ x6 c1 -0.126
+ x6 c3 1
+ x6 c6 1
+ x7 obj 1
+ x7 c1 1
+RHS
+ rhs c2 350
+ rhs c3 600
+ rhs c4 325
+ rhs c5 300
+ rhs c6 275
+BOUNDS
+ FR bnd x7
+ENDATA
+$offecho
+$call mps2gms temp256.mps temp256.gdx temp256.gms > %NUL%
+$if errorlevel 1 $abort mps2gms failed
+$call =gams temp256.gms lo=%GAMS.lo%
+$if errorlevel 1 $abort gams failed

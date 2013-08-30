@@ -1,0 +1,63 @@
+$title 'gdx2har and har2gdx test from Example 1' (HAR1,SEQ=355)
+
+$ontext
+
+This example shows how a GDX file can be written by a GAMS program and
+the results then transferred into a HAR file. In the small GAMS
+example two sets and three parameters are defined. The program output
+is then written to the GDX file. Set and parameter names are shorter
+than 12 characters and conform to GEMPACK syntax rules, so the
+translator retains all same names in the HAR file. In this case, set
+and parameter names have fewer than 4 characters, so the HEADER
+identifiers in the HAR file are identical to the GAMS names.  GDX2HAR
+infers domains of the parameters from the array elements, which are
+all non-zero in this case.
+
+Contributor: Alex Meeraus
+$offtext
+
+$if %system.platform% == WIN $goto runme
+$if %system.platform% == WEX $goto runme
+$log HAR utilities test skipped for this platform
+$exit
+
+$label runme
+
+sets i / a, b, c/
+     j / red, green, blue /;
+
+parameters
+     x        Scalar value /1.5/,
+     y(i)     Vector of values /a 10.2, b 1.3, c 1.5/,
+     z(i,j)   Matrix of random values;
+
+z(i,j) = uniform(0,1);
+
+execute_unload 'ex1.gdx';
+
+execute 'gdx2har ex1      /s > nul'; abort$errorlevel 'gdx2har failed';
+execute 'har2gdx ex1 ex1g /s > nul'; abort$errorlevel 'har2gdx failed';
+
+sets newi(*),newj(*);
+parameter newx, newy(i), newz(i,j)
+          errx, erry(i), errz(i,j);
+scalar newx;
+
+execute_load 'ex1g',newx=x,newy=y,newz=z,newi=i,newj=j;
+
+errx      = x-newx;
+erry(i)   = y(i)-newy(i);
+errz(i,j) = z(i,j)-newz(i,j);
+
+display newx,newy,newz,errx,erry,errz,newi,newj;
+
+scalar tol this is rather big / 1e-6 /;
+
+abort$(abs(errx) > tol) 'bad newx';
+abort$sum(i, abs(erry(i)) > tol) 'bad newy';
+abort$sum((i,j), abs(errz(i,j)) > tol) 'bad newz';
+
+alias(*,u);
+$onuni
+abort$sum(u, i(u) xor newi(u)) 'bad newi';
+abort$sum(u, j(u) xor newj(u)) 'bad newj';

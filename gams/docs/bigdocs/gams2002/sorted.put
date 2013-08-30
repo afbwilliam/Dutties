@@ -1,0 +1,16 @@
+In place 1 with a value of 47 is item    a5
+In place 2 with a value of 33 is item    a2
+In place 3 with a value of 22 are items  a1
+                                         a6
+In place 5 with a value of 15 is item    a4
+In place 6 with a value of 12 is item    a3
+
+
+After rank which sorts low
+
+In place 1 with a value of 12 is item    a3
+In place 2 with a value of 15 is item    a4
+In place 3 with a value of 22 is item    a6
+In place 4 with a value of 22 is item    a1
+In place 5 with a value of 33 is item    a2
+In place 6 with a value of 47 is item    a5

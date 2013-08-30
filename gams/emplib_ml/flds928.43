@@ -1,0 +1,47 @@
+$title Princeton Bilevel Optimization Example 9.2.8 (FLDS928,SEQ=43)
+
+$ontext
+
+  Test problem 9.3.9 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.2.8 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Yezza, A. (1996). First-order necessary optimality conditions for general bilevel
+programming problems. Journal of Optimization Theory and Applications, 89:189–
+219.
+
+Contributor: Jan-H. Jagla, January 2010
+
+$offtext
+
+*Solution of problem 9.2.8 on the web
+scalar  x_l / 0.25 /
+        y_l /    0 /
+        tol / 1e-6 /;
+
+variables z, z_in, y; positive variable x;
+equations ob, c0, c1, c2;
+
+ob.. 2*x + 3*y - 4*x*y + 1 =e=    z;
+
+c0..         y - 4*x*y     =e= z_in;
+c1..     -   y             =l=    0;
+c2..         y             =l=    1;
+
+model bilevel / all /;
+
+$echo bilevel x max z_in * c0 c1 c2 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l;
+y.l = y_l;
+
+solve bilevel using EMP minimizing z;
+
+abort$(   (abs(x.l - x_l) > tol)
+       or (abs(y.l - y_l) > tol) ) 'Deviated from reported solution';

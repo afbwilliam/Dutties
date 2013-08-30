@@ -1,0 +1,124 @@
+$title Cone Equation Errors (cerr1,SEQ=495)
+$Ontext
+
+This model checks if Cmex creates an error as expected when dealing with cone
+equations. The errors we want to get are:
+- RHS for =C= has to be 0.0
+- =C= equations cannot be scaled
+- Variables with =C= entries have to be continous
+- Variable enters more than one =C= equation
+
+Contributor: Lutz Westermann
+
+$Offtext
+
+$onecho > err.gms
+set n / n1*n4 /;
+parameter d(n), l(n), u(n);
+
+d(n) = uniform(1,2);
+l(n) = uniform(0.1,10);
+u(n) = l(n) + uniform(0,12-l(n));
+
+Variables x(n);
+x.l(n) = uniform(l(n), u(n));
+
+x.lo(n) = l(n);
+x.up(n) = u(n);
+
+Variables t(n), z(n), obj;
+Equations defobjc, cone(n);
+
+defobjc..     sum(n, d(n)*t(n)) =e= obj;
+cone(n)..     x(n) + t(n) =c= z(n) + 1;
+
+model clp  /all/;
+solve clp  min obj using lp;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo% lp=mosek
+$if not errorlevel 1 $abort should get error because of RHS <> 0
+
+$onecho > err.gms
+set n / n1*n4 /;
+parameter d(n), l(n), u(n);
+
+d(n) = uniform(1,2);
+l(n) = uniform(0.1,10);
+u(n) = l(n) + uniform(0,12-l(n));
+
+Variables x(n);
+x.l(n) = uniform(l(n), u(n));
+
+x.lo(n) = l(n);
+x.up(n) = u(n);
+
+Variables t(n), z(n), obj;
+Equations defobjc, cone(n);
+
+defobjc..     sum(n, d(n)*t(n)) =e= obj;
+cone(n)..     x(n) + t(n) =c= z(n);
+
+model clp  /all/;
+cone.scale(n) = 2;
+solve clp  min obj using lp;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo% lp=mosek
+$if not errorlevel 1 $abort should get error because of scaling
+
+$onecho > err.gms
+set n / n1*n4 /;
+parameter d(n), l(n), u(n);
+
+d(n) = uniform(1,2);
+l(n) = uniform(0.1,10);
+u(n) = l(n) + uniform(0,12-l(n));
+
+Variables x(n);
+x.l(n) = uniform(l(n), u(n));
+
+x.lo(n) = l(n);
+x.up(n) = u(n);
+
+Variables t(n), z(n), obj;
+Integer Variables t;
+Equations defobjc, cone(n);
+
+defobjc..     sum(n, d(n)*t(n)) =e= obj;
+cone(n)..     x(n) + t(n) =c= z(n);
+
+model clp  /all/;
+solve clp  min obj using mip;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo% mip=mosek
+$if not errorlevel 1 $abort should get error because of integer variables
+
+$onecho > err.gms
+set n / n1*n4 /;
+parameter d(n), l(n), u(n);
+
+d(n) = uniform(1,2);
+l(n) = uniform(0.1,10);
+u(n) = l(n) + uniform(0,12-l(n));
+
+Variables x(n);
+x.l(n) = uniform(l(n), u(n));
+
+x.lo(n) = l(n);
+x.up(n) = u(n);
+
+Variables t(n), z(n), obj;
+Equations defobjc, cone(n), cone2(n);
+
+defobjc ..     sum(n, d(n)*t(n)) =e= obj;
+cone(n) ..     x(n) + t(n) =c= z(n);
+cone2(n)..     x(n) + t(n) =c= z(n);
+
+model clp  /all/;
+solve clp  min obj using lp;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo% lp=mosek
+$if not errorlevel 1 $abort should get error because of variables in more than one =c= equation

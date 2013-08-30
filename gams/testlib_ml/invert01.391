@@ -1,0 +1,44 @@
+$title 'Test invert utility' (INVERT01,SEQ=391)
+
+$ontext
+
+Test the invert utility:
+  1. write a square matrix to a GDX file
+  2. call 'invert' (an external program) to do the inversion
+  3. read in the invert from a second GDX file
+  4. test that A * A-inv = I
+
+Contributor: Erwin Kalvelagen and Steve Dirkse, July 2008.
+
+$offtext
+
+set i  /i1*i3 /;
+alias (i,j,k);
+
+table a(i,j) 'original matrix'
+      i1     i2     i3
+i1    1      2      3
+i2    1      3      4
+i3    1      4      3
+;
+
+scalar rc;
+parameter
+  inva(i,j) 'inverse of a'
+  chk(i,j)  'check the product a * inva'
+  ;
+
+execute_unload 'a.gdx',i,a;
+execute 'invert a.gdx i a b.gdx inva >invert.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from invert', rc;
+
+execute_load 'b.gdx',inva;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading inverse from b.gdx', rc;
+
+chk(i,j) = sum{k, a(i,k)*inva(k,j)};
+chk(i,j) = round(chk(i,j),15);
+display a,inva,chk;
+chk(i,i) = chk(i,i) - 1;
+abort$[card(chk)] 'a * ainv <> identity';

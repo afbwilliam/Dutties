@@ -1,0 +1,232 @@
+$title 'Check correctness of NLP->MCP reform in EMP' (EMP03,SEQ=388)
+
+$ontext
+Test conventions for EMP rewriting as an MCP (aka NLPD).
+model 1 is a max model, model 2 a min.  They are identical
+except for 1 is max z=f(x), the other is min z=-f(x)
+and of course the equation duals have opposite sign
+
+Key observation: the NLPD option
+  dualVar x f
+essentially equates f.m with variable x, so we don't compute
+derivatives wrt. x as we would if x were a primal variable.  Since this
+is so, we assume x has the same sign as f.m would in the NLP model, and
+we need to do a reformulation that preserves the sign of f.m=x.
+
+The model shows how we can reformulate a max model and its equivalent min
+so that we preserve the sign of the equation duals in the MCP version.
+
+Contributor: Steve Dirkse, April 2008
+$offtext
+
+variable z;
+positive variables x, y;
+x.lo = 1e-2;
+
+equations
+  f1   'objective definition for max model'
+  f2   'objective definition for min model'
+  e    'equality'
+  up   'upper bound'
+  lo   'lower bound'
+  ;
+
+f1.. z =E=  x + y;
+f2.. z =E= -x - y;
+e..  y =E= sqrt(x);
+up.. exp(x) =L= 20;
+lo.. y =G= .1 * x;
+
+model nlp1 'max of z=f(x)'  / f1, e, up, lo /;
+model nlp2 'min of z=-f(x)' / f2, e, up, lo /;
+
+free     variables
+  v1   'perp to e in nlp1'
+  v2   'perp to e in nlp2';
+positive variables
+  uUp1 'perp to up in nlp1'
+  uLo2 'perp to lo in nlp2';
+negative variable
+  uLo1 'perp to lo in nlp1'
+  uUp2 'perp to up in nlp2';
+
+equations
+  dLdx1, dLdy1
+  dLdx2, dLdy2
+  eNeg
+  upNeg
+  loNeg
+  ;
+
+dLdx1.. -1 - v1*(0.5/sqrt(x)) + uUp1*exp(x) - uLo1*.1 =N= 0;
+dLdy1.. -1 + v1               + uUp1*0      + uLo1    =N= 0;
+dLdx2.. -1 + v2*(0.5/sqrt(x)) - uUp2*exp(x) + uLo2*.1 =N= 0;
+dLdy2.. -1 - v2               - uUp2*0      - uLo2    =N= 0;
+eNeg..   sqrt(x) =E= y;
+upNeg..  20 =G= exp(x);
+loNeg..  .1 * x =L= y;
+
+
+model mcp1 / dLdx1.x, dLdy1.y, eNeg.v1, upNeg.uUp1, loNeg.uLo1 /;
+model mcp2 / dLdx2.x, dLdy2.y, e.v2, up.uUp2, lo.uLo2 /;
+
+
+solve nlp1 using nlp max z;
+
+* now set all the duals:
+* the duals for mcp1 use the same sign as nlp1: THAT IS KEY!
+v1.l   = e.m;
+uUp1.l = up.m;
+uLo1.l = lo.m;
+
+* the duals for mcp2 flip sign
+v2.l   = -e.m;
+uUp2.l = -up.m;
+uLo2.l = -lo.m;
+
+* and of course the duals for nlp2 flip sign also
+z.l  = -z.l;
+f2.m = -f1.m;
+e.m  = -e.m;
+up.m = -up.m;
+lo.m = -lo.m;
+
+* these next three solves should not take any iterations
+option nlp = minos;
+solve nlp2 using nlp min z;
+abort$[nlp2.iterusd > 0] 'nlp2 took some iterations';
+
+option mcp = path;
+mcp1.iterlim = 0;
+solve mcp1 using mcp;
+abort$[mcp1.objval > 1e-4] 'mcp1 was not given a solution';
+
+mcp2.iterlim = 0;
+solve mcp2 using mcp;
+abort$[mcp2.objval > 1e-4] 'mcp2 was not given a solution';
+
+nlp1.optfile = 99;
+nlp2.optfile = 99;
+$onecho > jams.o99
+dict nlpDict.txt
+fileName genMCP.gms
+$offecho
+
+$echo modeltype mcp > "%emp.info%"
+
+solve nlp2 using emp min z;
+abort$[nlp2.iterusd > 0] 'nlp2 took some iterations';
+
+z.l  = -z.l;
+f1.m = -f2.m;
+e.m  = -e.m;
+up.m = -up.m;
+lo.m = -lo.m;
+
+solve nlp1 using emp max z;
+abort$[nlp1.iterusd > 0] 'nlp1 took some iterations';
+
+$if not set DUMPMCP $exit
+
+* now we make it really easy to debug this in case the nlp models
+* do not solve as expected with EMP.  The MCP models below were known
+* to work
+
+$onecho > emp03mcp1.gms
+* written by GAMS/EMP at 04/12/08 08:20:11
+*
+
+Variables  x2,x3,u2,u3,u4;
+
+Negative Variables  u4;
+
+Positive Variables  x3;
+
+Positive Variables  u3;
+
+Equations  e2,e3,e4,dLdx2,dLdx3;
+
+
+e2.. 0 =E=  - sqrt(x2) + x3;
+
+e3.. 20 =G= exp(x2);
+
+e4.. 0 =L=  - 0.1*x2 + x3;
+
+dLdx2.. -1 + ( - 0.5/sqrt(x2))*u2 + (exp(x2))*u3 - 0.1*u4 =N= 0;
+
+dLdx3.. -1 + u2 + u4 =N= 0;
+
+* set non default bounds
+
+x2.lo = 0.01;
+
+* set non default dual bounds
+
+
+* set non default levels
+
+x2.l = 2.99573227355399;
+x3.l = 1.73081838260229;
+u2.l = -1;
+u3.l = 0.0644440342506719;
+
+* set non default marginals
+
+
+Model m / e2.u2,e3.u3,e4.u4,dLdx2.x2,dLdx3.x3 /;
+
+m.limrow=0; m.limcol=0;
+
+Solve m using MCP;
+$offecho
+
+
+$onecho > emp03mcp2.gms
+* written by GAMS/EMP at 04/12/08 08:21:27
+*
+
+Variables  x2,x3,u2,u3,u4;
+
+Negative Variables  u3;
+
+Positive Variables  x3;
+
+Positive Variables  u4;
+
+Equations  e2,e3,e4,dLdx2,dLdx3;
+
+
+e2..  - sqrt(x2) + x3 =E= 0;
+
+e3.. exp(x2) =L= 20;
+
+e4..  - 0.1*x2 + x3 =G= 0;
+
+dLdx2.. -1 - ( - 0.5/sqrt(x2))*u2 - (exp(x2))*u3 + 0.1*u4 =N= 0;
+
+dLdx3.. -1 - u2 - u4 =N= 0;
+
+* set non default bounds
+
+x2.lo = 0.01;
+
+* set non default dual bounds
+
+
+* set non default levels
+
+x2.l = 2.99573227355399;
+x3.l = 1.73081838260229;
+u2.l = -1;
+u3.l = -0.0644440342506719;
+
+* set non default marginals
+
+
+Model m / e2.u2,e3.u3,e4.u4,dLdx2.x2,dLdx3.x3 /;
+
+m.limrow=0; m.limcol=0;
+
+Solve m using MCP;
+$offecho

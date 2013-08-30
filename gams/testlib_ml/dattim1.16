@@ -1,0 +1,22 @@
+$title basic day/time test for Thursday Jul 4, 2002 (DATTIM1,SEQ=16)
+
+parameters year, month, day, hour, minute, second, dow, leap
+           dattim,date;
+
+dattim := jdate(2002,7,4) + jtime(12,20,30);
+date   := trunc(dattim);
+year   := gyear(dattim);
+month  := gmonth(dattim);
+day    := gday(dattim);
+hour   := ghour(dattim);
+minute := gminute(dattim);
+second := gsecond(dattim);
+dow    := gdow(dattim);
+leap   := gleap(dattim);
+
+abort$(not((year=2002) and (month=7) and (day=4) and
+           (hour=12) and (minute=20) and (second=30) and
+           (date=37440) and (dow=4) and (leap=0)))
+      'something wrong with basic dat/time routines'
+      dattim,date,year,month,day,hour,minute,second,dow,leap;
+

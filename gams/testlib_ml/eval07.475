@@ -1,0 +1,23 @@
+$title test evaluation of real constants - string2Double conversion (EVAL07,SEQ=475)
+
+$ontext
+There were issues with CMEX converting strings to double on reading
+the input.  This tests that in a minimal way.
+
+Contributor: Steve
+$offtext
+
+scalars
+  x1 / 55.55 /
+  x2
+  xbar 'read from GDX'
+  d1
+  d2
+  ;
+x2 = 55.55;
+execute_load 'x5555', xbar;
+d1 = abs(x1-xbar);
+d2 = abs(x2-xbar);
+
+abort$d1 'x1 <> xbar', x1, xbar, d1;
+abort$d2 'x2 <> xbar', x2, xbar, d2;

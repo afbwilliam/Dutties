@@ -1,0 +1,10 @@
+$title Phantoms can only have default values (PHANTOM1,SEQ=28)
+$phantom empty
+parameter x / empty 0, zero 0, one 1, empty 1 /
+$debug dmpuel
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error the second empty is wrong

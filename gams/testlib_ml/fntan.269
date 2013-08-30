@@ -1,0 +1,21 @@
+$TITLE 'Test correctness of tan intrinsic' (FNTAN,SEQ=269)
+
+$include fnset_x.inc
+
+$gdxin fntan
+$load aeps0 aeps1 aeps2 reps T data
+* make the tolerances a bit wider - required for the old linux build
+$if %system.platform% == LNX scalar reps0 / 1e-12 /, reps1 / 1e-12 /, reps2 / 5e-11 /; aeps0 = 1e-15;
+* also the Windows system needs a wider tolerance
+$if %system.platform% == WIN scalar reps0 / 5e-12 /, reps1 / 5e-12 /, reps2 / 5e-11 /;
+$gdxin
+
+loop {T,
+  data(T,  'f')    = tan.value (data(T,'x'));
+  data(T, 'fx')    = tan.grad  (data(T,'x'));
+  data(T,'fxx')    = tan.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

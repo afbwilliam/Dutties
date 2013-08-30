@@ -1,0 +1,9 @@
+$TITLE 'TRAMP test suite - basic option reading test' (TRAMP01,SEQ=281)
+
+$call gamslib -q 1
+
+$echo "abort$(transport.solvestat <> %solvestat.IterationInterrupt%) 'problems with TRAMP option';" >> trnsport.gms
+
+$echo "itlim 1" > tramp.op2
+$call =gams trnsport lo=0 optfile=2 lp=tramp
+$if errorlevel 1 $abort 'problems with TRAMP options'

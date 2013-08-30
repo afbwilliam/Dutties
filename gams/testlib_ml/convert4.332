@@ -1,0 +1,33 @@
+$title 'CONVERT test suite - proper placing of parenthesis' (CONVERT4,SEQ=332)
+
+$ontext
+Tests the fix for AB01194:
+  e.. x1/(x1/x2) =e= 0;
+produced the convert output
+  e.. x1/x1/x2 =e= 0;
+
+Contributor: Alex Meeraus
+$offtext
+
+
+variables x1,x2;
+equations e1,e2;
+model m / e1,e2/;
+
+e1.. x2 =e= 2;
+e2.. x1/(x1/x2) =e= 2;
+
+x1.l=1;x2.l=1;
+
+solve m us nlp min x2;
+option nlp=convert;
+solve m us nlp min x2;
+
+
+$onecho > t1.gms
+$include gams.gms
+abort$(m.modelstat <> %modelstat.LocallyOptimal%) 'should be optimal'
+$offecho
+
+execute 'gams t1 lo=%gams.lo%';
+abort$errorlevel 'did not work';

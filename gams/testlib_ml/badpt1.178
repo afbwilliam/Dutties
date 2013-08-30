@@ -1,0 +1,26 @@
+$title 'Test rejection of models with generation errors' (BADPT1,SEQ=178)
+
+$ontext
+In this model we attempt to solve a number of models that have
+generation errors of various types.  By default, CMEX should
+reject these models - i.e. the solver is not called.
+
+Contributor: Steve Dirkse, Nov 2004
+$offtext
+
+* get the model definitions
+$include badpt.inc
+
+maxexecerror = 10;
+* assume sys12 switch for accepting bad models is at its default of 0
+* option sys12 = 0;
+
+solve logzero using nlp min z;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(logzero.solvestat <> %solvestat.SolveProcessingSkipped% or logzero.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;
+
+solve divzero using nlp min z;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(logzero.solvestat <> %solvestat.SolveProcessingSkipped% or logzero.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;

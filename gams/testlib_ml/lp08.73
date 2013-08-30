@@ -1,0 +1,18 @@
+$title Test the proper return of free equations (LP08,SEQ=73)
+
+variables x; equations f,g;
+
+f.. x =n= 100;
+g.. x =g=  50;
+
+model m /f,g/;
+
+solve m us lp min x;
+
+* if {(m.modelstat = %modelstat.Optimal% or m.modelstat = %modelstat.Optimal%) and (m.solvestat = %solvestat.NormalCompletion%),
+if {(m.modelstat = %modelstat.Optimal%) and (m.solvestat = %solvestat.NormalCompletion%),
+   abort$(abs(f.l+50) > 1e-6) 'wrong level value should be -50',f.l;
+else
+   abort$(not((m.modelstat = %modelstat.NoSolutionReturned%) and (m.solvestat = %solvestat.CapabilityProblems%))) 'wrong return codes'
+   m.solvestat,m.modelstat
+};

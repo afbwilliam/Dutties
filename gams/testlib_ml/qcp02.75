@@ -1,0 +1,164 @@
+$TITLE Test modsolstat & solution correctness - multiple QCons (QCP02,SEQ=75)
+
+$if not set DEMOSIZE      $set DEMOSIZE   0
+$if not set GLOBALSIZE    $set GLOBALSIZE 0
+$if not %DEMOSIZE% == 0   $set DEMOSIZE   1
+$if not %GLOBALSIZE% == 0 $set GLOBALSIZE 1
+
+* set default M and N based on license and type of solver
+$if %DEMOSIZE%%GLOBALSIZE% == 00 $set MM 16
+$if %DEMOSIZE%%GLOBALSIZE% == 00 $set NN 16
+$if %DEMOSIZE%%GLOBALSIZE% == 01 $set MM  4
+$if %DEMOSIZE%%GLOBALSIZE% == 01 $set NN  4
+$if %DEMOSIZE%%GLOBALSIZE% == 10 $set MM 15
+$if %DEMOSIZE%%GLOBALSIZE% == 10 $set NN  9
+$if %DEMOSIZE%%GLOBALSIZE% == 11 $set MM  2
+$if %DEMOSIZE%%GLOBALSIZE% == 11 $set NN  1
+
+$if not set M       $set M %MM%
+$if not set N       $set N %NN%
+$if not set MTYPE   $set MTYPE QCP
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not set QCPMCHECKS $goto qpmchecks
+$if not %QCPMCHECKS% == 0 mchecks = 1;
+$goto donemcheck
+$label qpmchecks
+$if not  %QPMCHECKS% == 0 mchecks = 1;
+$label donemcheck
+
+$eolcom //
+
+sets
+    I   / 0 * %M%, ilast /,
+    J   / 0 * %N%, jlast /,
+    bndry(I,J)  'boundary of (I,J) grid';
+
+alias(II,I);
+alias(JJ,J);
+
+bndry(I,J)$(ord(J) eq card(J) OR ord(J) eq 1) = YES;
+bndry(I,J)$(ord(I) eq card(I) OR ord(I) eq 1) = YES;
+
+scalars
+xlo     / 0 /,
+xhi     / 1 /,
+ylo     / 0 /,
+yhi     / 1 /,
+dx,
+dy,
+s       / 0.25 /,
+c 'force constant' / 1 /;
+
+dx = (xhi - xlo) / (card(I)-1);
+dy = (yhi - ylo) / (card(J)-1);
+
+variables
+energy,
+v(I,J)  'height of membrane';
+
+equations
+eq1(I,J),
+eq2(I,J),
+edef            'energy definition';
+
+edef..          energy =e=
+                .25 * sum {(I,J),
+                             power(v(I,J)-v(I+1,J),2)*dy/dx
+                           + power(v(I,J)-v(I-1,J),2)*dy/dx
+                           + power(v(I,J)-v(I,J+1),2)*dx/dy
+                           + power(v(I,J)-v(I,J-1),2)*dx/dy
+                          }
+                - sum {(I,J), c * dx * dy * v(I,J)};
+
+eq1(I,J)..  sqr(v(I,J)-v(I,J+1)) =L= sqr(s * dy);
+eq2(I,J)..  sqr(v(I,J)-v(I+1,J)) =L= sqr(s * dx);
+
+model m  / eq1, eq2, edef /;
+
+option decimals = 8;
+m.holdfixed = 1;
+
+parameter lb(I,J), ub(I,J);
+
+lb(I,J) = 0;
+ub(I,J) = sin(3.2*(xlo + dx*(ord(I)-1))) * sin(3.3*(ylo + dy*(ord(J)-1)));
+ub(I,J) = max(ub(I,J),1e-3);
+
+v.lo(I,J) = lb(I,J);
+v.up(I,J) = ub(I,J);
+v.l(I,J)  = 1;
+v.fx(bndry(I,J)) = 0;
+v.m(I,J) = 0;
+energy.m = 0;  energy.l = 0;
+edef.m = 0;
+solve m  using %MTYPE% min energy;
+
+scalars
+    vtol    /    1e-8 /,
+    tol     /    %TESTTOL% /,
+    objval;
+parameters
+    dLdv(I,J)  'dLangrangian/dv'
+    dLdvErr(I,J)
+    tmp(I,J)
+    eq1_l(I,J)
+    eq2_l(I,J);
+
+* capability problems is an OK return
+if {(m.solvestat = %solvestat.CapabilityProblems%),
+  abort$(m.modelstat <> %modelstat.NoSolutionReturned%)           'wrong modelstat for capability error';
+  display 'Solver capability error: further tests suppressed';
+else
+  // should we allow reslim or iterlim?
+  abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)           'wrong status codes';
+
+
+  objval = .25 * sum {(I,J),
+                        power(v.l(I,J)-v.l(I+1,J),2)*dy/dx
+                      + power(v.l(I,J)-v.l(I-1,J),2)*dy/dx
+                      + power(v.l(I,J)-v.l(I,J+1),2)*dx/dy
+                      + power(v.l(I,J)-v.l(I,J-1),2)*dx/dy
+                     }
+               - sum {(I,J), c * dx * dy * v.l(I,J)};
+
+  // first compute dLdv
+  dLdv(I,J) = -c * dx * dy
+             + (dy/dx) * (2*v.l(I,J) - v.l(I+1,J) - v.l(I-1,J))
+             + (dx/dy) * (2*v.l(I,J) - v.l(I,J+1) - v.l(I,J-1));
+  dLdv(I,J) = dLdv(I,J)
+     - 2*eq1.m(I,J)  *( v.l(I,J)  -v.l(I,J+1))
+     - 2*eq1.m(I,J-1)*(-v.l(I,J-1)+v.l(I,J)  )
+     - 2*eq2.m(I  ,J)*( v.l(I  ,J)-v.l(I+1,J))
+     - 2*eq2.m(I-1,J)*(-v.l(I-1,J)+v.l(I  ,J));
+  // dLdv perpto v.lo <= v <= v.up, so allow for this here
+  tmp(I,J) = max(dLdv(I,J), 0);
+  dLdvErr(I,J) = min(1, max(v.l(I,J)-v.lo(I,J),0)) * tmp(I,J);
+  tmp(I,J) = max(-dLdv(I,J), 0);
+  dLdvErr(I,J) = max [dLdvErr(I,J),
+                 min(1, max(v.up(I,J)-v.l(I,J),0)) * tmp(I,J) ];
+
+  eq1_l(I,J) = sqr(v.l(I,J)-v.l(I,J+1));
+  eq2_l(I,J) = sqr(v.l(I,J)-v.l(I+1,J));
+
+  abort$(abs(energy.l-objval) > tol)                    'bad energy.l';
+  abort$(abs(energy.m) > tol)                           'bad energy.m';
+  abort$(abs(edef.l) > tol)                             'bad edef.l';
+  abort$(abs(edef.m-1) > tol)                           'bad edef.m';
+
+  abort$(smin{(I,J),v.l (I,J)-v.lo(I,J)} < -vtol)       'bad v.lo test';
+  abort$(smin{(I,J),v.up(I,J)-v.l (I,J)} < -vtol)       'bad v.up test';
+
+  abort$(smax{(I,J),eq1_l(I,J) - sqr(s * dy)} > tol)    'bad eq1';
+  abort$(smax{(I,J),abs(eq1.l(I,J)-eq1_l(I,J))} > tol)  'bad eq1.l';
+  abort$(smax{(I,J),eq2_l(I,J) - sqr(s * dx)} > tol)    'bad eq2';
+  abort$(smax{(I,J),abs(eq2.l(I,J)-eq2_l(I,J))} > tol)  'bad eq2.l';
+
+  if {mchecks,
+    abort$(smax{(I,J),eq1.m(I,J)} > tol)                  'bad eq1.m';
+    abort$(smax{(I,J),eq2.m(I,J)} > tol)                  'bad eq2.m';
+    abort$(smax{(I,J),dLdvErr(I,J)} > tol)                'bad dLdvErr';
+  };
+
+  display 'All tests passed';
+};

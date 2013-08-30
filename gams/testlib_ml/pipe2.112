@@ -1,0 +1,36 @@
+$title piped assignment - permutation for two dimensions (PIPE2,SEQ=112)
+
+$ontext
+
+Contributor: Alex Meeraus
+$offtext
+
+$version 137 goto OK
+$clearerror
+$stop
+$label OK
+
+set i   / i1*i10/
+    j   / j1*j20/
+    ij(i,j)
+    ji(j,i)
+    ji(j,i)
+    ii(i)
+    jj(j);
+
+parameter ci(i),cj(j);
+scalar xx;
+
+ij(i,j) = uniform(0,1) > .9;
+
+
+option  ji < ij, ii < ij, jj < ij, xx < ij, ci < ij , cj < ij;
+
+display xx,ci,cj,ji,ii,jj;
+
+abort$(xx <> card(ij))                   'aggregation is wrong',xx,ij;
+abort$sum(i, ci(i) <> sum(ij(i,j),1))    'wrong counts', ci,ij;
+abort$sum(j, cj(j) <> sum(ij(i,j),1))    'wrong counts', cj,ij;
+abort$sum((i,j), ij(i,j) xor ji(j,i))    'wrong sort'  , ji,ij;
+abort$sum(i, ii(i) xor sum(ij(i,j), yes)) 'wrong projection', ii,ij;
+abort$sum(j, jj(j) xor sum(ij(i,j), yes)) 'wrong projection', jj,ij;

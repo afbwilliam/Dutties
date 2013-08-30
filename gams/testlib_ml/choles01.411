@@ -1,0 +1,60 @@
+$title Test cholesky utility (CHOLES01,SEQ=411)
+
+$ontext
+
+Finds the cholesky decomposition A=LL' of a positive definite symmetric matrix
+A through an external program
+
+Contributor: Erwin Kalvelagen, Amsterdam Optimization
+
+$offtext
+
+set i  / i1*i5 /;
+alias (i,j);
+
+
+table a(i,j) 'original matrix'
+      i1     i2     i3     i4     i5
+i1    64     48     24      8      8
+i2    48     72     42     54     36
+i3    24     42     89    107     95
+i4     8     54    107    210    186
+i5     8     36     95    186    187
+;
+
+scalar rc;
+parameter L(i,j) 'cholesky factor';
+
+execute_unload 'a.gdx',i,a;
+execute 'cholesky a.gdx i a b.gdx L > cholesky.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from cholesky', rc;
+execute_load 'b.gdx',L;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading Cholesky factor L2 from b.gdx', rc;
+
+display a,L;
+
+*
+* only lower triangular part of A is used
+*
+table a2(i,j) 'original matrix'
+      i1     i2     i3     i4     i5
+i1    64
+i2    48     72
+i3    24     42     89
+i4     8     54    107    210
+i5     8     36     95    186    187
+;
+
+parameter L2(i,j) 'cholesky factor';
+
+execute_unload 'a.gdx',i,a2;
+execute 'cholesky a.gdx i a2 b.gdx L2 > cholesky.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from cholesky', rc;
+execute_load 'b.gdx',L2;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading Cholesky factor L2 from b.gdx', rc;
+
+display a2,L2;

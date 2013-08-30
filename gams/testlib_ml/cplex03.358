@@ -1,0 +1,152 @@
+$Title  Test the GAMS/CPLEX link for propper handling of long UEL names and domains larger than 10 (cplex03,SEQ=358)
+$if not '%GAMS.lp%' == '' $set solver %GAMS.lp%
+$if not set solver        $set solver cplex
+$Ontext
+
+This problem finds a least cost shipping schedule that meets
+requirements at markets and supplies at factories where demand
+exceeds supply using the Cplex feature FeasOpt.
+
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions.
+Princeton University Press, Princeton, New Jersey, 1963.
+
+Contributor: Michael Bussieck
+$Offtext
+
+$ifi %system.platform% == AXU $exit No CPLEX 11 or higher for this platform
+$ifi %system.platform% == DAR $exit No CPLEX 11 or higher for this platform
+
+$set kkk k,k0,k1,k2,k3,k4,k5,k6,k7,k8,k9
+
+  Sets
+       i   canning plants   / seattle_in_washington_state_home_of_starbucks_coffee, san-diego /
+       j   markets          / new-york, chicago, topeka /
+       k   dummy            / k /
+  alias (%kkk%);
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle_in_washington_state_home_of_starbucks_coffee     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                                                                  new-york       chicago      topeka
+      seattle_in_washington_state_home_of_starbucks_coffee          2.5           1.7          1.8
+      san-diego                                                     2.5           1.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+  Variables
+       x(i,j,%kkk%)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i,%kkk%)   observe supply limit at plant i
+       demand(j,%kkk%)   satisfy demand at market j ;
+
+  cost ..        z  =e=  sum((i,j,%kkk%), c(i,j)*x(i,j,%kkk%)) ;
+
+  supply(i,%kkk%) ..   sum(j, x(i,j,%kkk%))  =l=  a(i) ;
+
+  demand(j,%kkk%) ..   sum(i, x(i,j,%kkk%))  =g=  b(j) ;
+
+  Model transport /all/ ;
+
+* Lets make a MIP;
+
+  Binary variable xb(i,j,%kkk%);
+  Equation minship(i,j,%kkk%);
+  Equation doship(i,j,%kkk%);
+
+  minship(i,j,%kkk%).. x(i,j,%kkk%) + eps*xb(i,j,%kkk%) =g= 90;
+
+  doship(i,j,%kkk%)..  x(i,j,%kkk%) =e= 0;
+
+  model miptransport /all/;
+
+  option lp=%solver%, mip=%solver%, limrow=0, limcol=0, optcr=0;
+  Solve transport using lp minimizing z ;
+
+  if (transport.modelstat <> %modelstat.Optimal% or transport.solvestat <> %solvestat.NormalCompletion%, abort 'problem solving first lp');
+
+  file fcpx Cplex Option file / %solver%.opt /; transport.optfile=1; miptransport.optfile=1;
+
+* Indicators
+  putclose fcpx / 'indic minship(i,j,%kkk%)$xb(i,j,%kkk%) 1'
+                / 'indic doship(i,j,%kkk%)$xb(i,j,%kkk%) 0';
+
+  Solve miptransport using mip minimizing z ;
+  if (transport.modelstat <> %modelstat.Optimal% or transport.solvestat <> %solvestat.NormalCompletion%, abort 'problem with indicators (1)');
+  abort$(smin((i,j,%kkk%)$(x.l(i,j,%kkk%)>1.e-6),x.l(i,j,%kkk%)) < 90) 'problems with indicators (2)';
+
+* Indicators and BCH
+  putclose fcpx / 'indic minship(i,j,%kkk%)$xb(i,j,%kkk%) 1'
+                / 'indic doship(i,j,%kkk%)$xb(i,j,%kkk%) 0'
+                / 'usercutcall xxxdim.inc' / 'cuts no' / 'preind 0'
+                / 'heurfreq -1' / 'mipinterval 1';
+
+$onecho > xxxdim.inc
+Sets
+     i   canning plants   / seattle_in_washington_state_home_of_starbucks_coffee, san-diego /
+     j   markets          / new-york, chicago, topeka /
+     k   dummy            / k /
+   cut   cuts             / 1 /
+alias (%kkk%);
+* This cut cuts away the optimal solution of value 153.675
+Parameters rhs_c(cut)     / 1 2 /
+           sense_c(cut)   / 1 1 /
+           numcuts        / 0 /
+           xb_c(cut,i,j,%kkk%) / 1.seattle_in_washington_state_home_of_starbucks_coffee.chicago.k.k.k.k.k.k.k.k.k.k.k 1
+                                 1.san-diego.new-york.k.k.k.k.k.k.k.k.k.k.k 1
+                                 1.san-diego.topeka  .k.k.k.k.k.k.k.k.k.k.k 1 /;
+* Only add the cut the very first time
+$if %ncalls% == 0 numcuts=1;
+$offecho
+
+  Solve miptransport using mip minimizing z ;
+  if (transport.modelstat <> %modelstat.Optimal% or transport.solvestat <> %solvestat.NormalCompletion%, abort 'problem with indicators and BCH (1)');
+  abort$(smin((i,j,%kkk%)$(x.l(i,j,%kkk%)>1.e-6),x.l(i,j,%kkk%)) < 90) 'problems with indicators and BCH (2)';
+  abort$(z.l < 156) 'problems with indicators and BCH (3)';
+
+* Sensitivity in LST file
+  putclose fcpx / 'objrng all' / 'rhsrng all';
+  Solve transport using lp minimizing z ;
+  execute '=grep -q "LOWER *CURRENT *UPPER" "%gams.scrdir%gamsstat.%gams.scrext%"';
+  abort$errorlevel 'problem with obj/rhsrng option in lst file';
+
+* Sensitivity in data file
+  putclose fcpx / 'objrng all' / 'rhsrng all' / 'rngrestart rng.txt';
+  Solve transport using lp minimizing z ;
+  execute '=grep -q "seattle_in_washington_state_home_of_starbucks_coffee.new-york.k.k.k.k.k.k.k.k.k.k.k" rng.txt';
+  abort$errorlevel 'problem with obj/rhsrng option in rng.txt';
+
+* Increase demand by 20% to make model infeasible
+  b(j) = 1.2*b(j);
+
+* FEASOPT
+  putclose fcpx / 'feasopt 1' / 'equation.feaspref 0' / 'demand.feaspref 1'
+                / "demand.feaspref('new-york','k','k','k','k','k','k','k','k','k','k','k') 0";
+  Solve transport using lp minimizing z ;
+  if (transport.modelstat <> %modelstat.Infeasible% or transport.solvestat <> %solvestat.NormalCompletion%, abort 'problem with feasopt option');
+  display 'All infeasibilities should be in the demand equations', x.infeas, supply.infeas, demand.infeas;
+  abort$(sum((i,j,%kkk%), x.infeas(i,j,%kkk%)) + sum((i,%kkk%),supply.infeas(i,%kkk%))) x.infeas, supply.infeas, demand.infeas;
+
+* IIS
+  putclose fcpx / 'iis yes';
+  Solve transport using lp minimizing z ;
+  execute '=grep -q "Number of equations in the IIS:  5" "%gams.scrdir%gamsstat.%gams.scrext%"';
+  abort$errorlevel 'problem with IIS option'

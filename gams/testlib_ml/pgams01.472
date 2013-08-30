@@ -1,0 +1,15 @@
+$title Test procdir deletion in pgams (PGAMS01,SEQ=472)
+
+$ontext
+Create a subdirectory in the process directory to see if
+gams.exe (aka pgams) will delete it.  Model pgams02 does the
+actual running of this file and the testing afterwards.
+
+Contributor: Steve Dirkse
+$offtext
+
+$set dirsep \
+$if %system.filesys% == UNIX $set dirsep /
+file fp / '%gams.scrdir%%dirsep%aa%dirsep%xx.txt' /;
+execute 'mkdir "%gams.scrdir%%dirsep%aa"';
+putclose fp 'testing';

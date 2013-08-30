@@ -1,0 +1,57 @@
+*
+* optdecis.def
+*
+
+EVSubSolver string 0 "" 1 1 Subsolver to run on expected value problem
+EVSubSolverOpt integer 0 1 1 maxint 1 1 Optfile value to pass to the subsolver for expected value problem
+FileName string 0 "decis.gms" 1 1 Filename of generated scalar GAMS model
+IBug enumint 1 0 1 2 Debug output
+ 0 1 DECIS does not write any debug output
+ 1 1 Solution of the master problem on each iteration
+ 2 1 1 plus scenario index and the optimal objective value for each subproblem solved
+ 3 1 2 plus information regarding importance sampling
+ 4 1 3 plus optimal dual variables of the cuts
+ 5 1 4 plus coeffcients and the right-hand side of the cuts
+ 6 1 5 plus dump of the master problem and the subproblem in MPS format
+IReg boolean 4 0 1 2 Indicator for regularized decomposition - MINOS only
+IScratch integer 5 17 1 maxint 1 2 Internal unit number for output and debug
+IStrat enumint 2 3 1 2 Solution strategy
+ 1 1 Solves the expected value problem
+ 2 1 Solves the stochastic problem using Monte Carlo importance sampling
+ 3 1 Refers to istrat = 1 plus istrat = 2
+ 4 1 Solves the stochastic universe problem
+ 5 1 Refers to istrat = 1 plus istrat = 4
+ 6 1 Solves the stochastic problem using crude Monte Carlo sampling
+ 7 1 Refers to istrat = 1 plus istrat = 6
+ 8 1 Solves the stochastic problem using Monte Carlo pre-sampling
+ 9 1 Refers to istrat = 1 plus istrat = 8
+ 10 1 Solves the stochastic problem using control variates
+ 11 1 Refers to istrat = 1 plus istrat = 10
+IWrite boolean 3 0 1 2 Subproblem output
+NSamples integer 6 100 30 maxint 1 2 Sample size used for the estimation
+NZRows integer 7 100 1 maxint 1 2 Number of rows reserved for cuts in the master problem
+Rho double 8 1000 0 maxdouble 1 2 rho parameter of regularization term in the objective function
+ScenarioLog enumint 0 0 1 1 Select log option for scenario solves
+ 0 1 Quiet
+ 1 1 Summary
+ 2 1 Full log
+SolveEVProb boolean.nv 0 0 1 1 Solve and report the expected value solution
+SolveScenarios integer 0 100 0 maxint 1 1 Maximum number of scenarios solved
+SubSolver enumstr 0 "decisc" 1 1 Subsolver to run
+ "decisc" 1 Decis using Cplex
+ "decism" 1 Decis using Minos
+SubSolvePar string 0 "" 1 1 User defined GAMS parameters for subsolve
+Terminate boolean.nv 0 0 1 1 Generate the GAMS source code of the reformulated Model
+TolBen double 9 1e-7 0 maxdouble 1 2 Tolerance for stopping the decomposition algorithm
+TolW double 10 1e-9 0 maxdouble 1 2 tolerance when writing debug solution output
+*
+* indicator section
+*
+myeolchar EOLCOMM #
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+General group 1 1 General Options
+DECIS group 2 1 DECIS Solver Options
+*** End of file

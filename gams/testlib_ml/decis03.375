@@ -1,0 +1,284 @@
+$title 'Test of correctness for levels & marginals of LP' (DECIS03,SEQ=375)
+
+$ontext
+This model is an extension of DECIS02 to allow duplicate blocks.
+Test of correctness of the levels and marginals returned.
+All cases are considered, e.g.
+  1) =L=, =G=, =E= constraints (should we add =N=?)
+  2) variables at lower and upper bound, and not at bound
+  3) min or max
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = cx + b where cz and b take different values
+
+The unique wrinkles with this model are:
+1. It is set up to be a trivial 2-stage model: s2 is the only 2nd-stage var,
+s2con the only 2nd-stage constraint.  Any LP solver can solve the
+core model given here, and we formulate the deterministic version
+so that each scenario is identical and we can test results from
+stochastic solvers since we know the expected result.
+2. The model is made up of duplicate blocks so the size can be
+adjusted easily.  The set I controls the duplicate blocks.
+
+Author: Steven Dirkse, March 2007
+$offtext
+
+$if not set MTYPE   $set MTYPE lp
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not %QPMCHECKS% == 0 mchecks = 1;
+
+scalar failed / 0 /;
+$escape =
+$echo if{%=1, display '%=1 failed', '%=2'; failed=1}; > gtest.gms
+$escape %
+
+* FYI, m=n=8*(card(I)) + 1
+* where for each I, 7 cons are first level and 1 second level
+*                   7 vars are first level and 1 second level
+$set isize 40
+$if set demo $set isize 3
+$if not set lictest $set isize 3
+
+set I 'size control: duplicate vars/constraints for each i' /
+  i1 * i%isize%
+/;
+set J / j1 * j7 /;
+set GT / gt1 * gt2 /;
+set LT / lt1 * lt2 /;
+set EQ / eq1 * eq3 /;
+
+scalars
+    n  'number of duplicate blocks in the model'
+    cz,
+    cb;
+
+n = card(I);
+
+parameters
+    c(J) / j1   -1
+           j2   1
+           j3   5
+           j4   -6
+           j5   6
+           j6   -1
+           j7   1 /
+    bgt(GT) /
+           gt1  2
+           gt2  4 /,
+    blt(LT) /
+           lt1  -17
+           lt2  10 /,
+    beq(EQ) /
+           eq1  9
+           eq2  0
+           eq3  0  /,
+    s2conRHS  / 2 /;
+
+table Agt(GT,J)
+        j1      j2
+gt1     1       1
+gt2     4       1 ;
+
+table Alt(LT,J)
+        j3      j4
+lt1     -6      1
+lt2     1       2 ;
+
+parameter Aeq(EQ,J) /
+eq2.j5  2
+eq2.j7  2
+eq3.j1  -1
+eq3.j4  -2
+eq3.j6  1
+/;
+Aeq('eq1',j)$(ord(j) le 7) = 1;
+
+
+variable
+    s2(I)
+    x(I,J)
+    z;
+
+* these bounds should never be active - but they help the global solvers
+x.lo(I,J) = -2;
+x.up(I,J) =  5;
+s2.lo(I)  = -2;
+s2.up(I)  = 5;
+
+* these are active and tested to be so
+x.lo(I,'j5') = 1;
+x.up(I,'j6') = 3;
+
+* intentionally mix up first-stage rows with obj and second-stage row
+equations
+    gte(I,GT)
+    s2con
+    lte(I,LT)
+    obj
+    eqe(I,EQ)
+    ;
+
+obj..   cz*z =E=  cb + sum{I, sum{J,c(J)*x(I,J)} + s2(I)};
+gte(I,GT)..  sum{J, Agt(GT,J)*x(I,J)} =G= bgt(GT);
+lte(I,LT)..  sum{J, Alt(LT,J)*x(I,J)} =L= blt(LT);
+eqe(I,EQ)..  sum{J, Aeq(EQ,J)*x(I,J)} =E= beq(EQ);
+s2con(I)..   x(I,'j5') + s2(I) =G= s2conRHS;
+
+model m / all /;
+
+* DECIS requires setting the stage for each row/col,
+* apart from the objective row/col which can be skipped
+x.stage(I,j) = 1;
+s2.stage(I) = 2;
+
+gte.stage(I,GT) = 1;
+lte.stage(I,LT) = 1;
+eqe.stage(I,EQ) = 1;
+s2con.stage(I)  = 2;
+
+* DECIS requires a stage file describing the stochastic parameters
+* in this case, the RHS of s2con takes two identical values, each with
+* probability 1/2.
+file stg / MODEL.STG /;
+put stg;
+
+put "INDEP DISCRETE" /;
+loop{I,
+  put "RHS s2con ", I.tl, " ", s2conRHS, " period2 0.5" /;
+  put "RHS s2con ", I.tl, " ", s2conRHS, " period2 0.5" /;
+}
+putclose;
+
+* output a MINOS option file in case we run old DECISM
+file mopt / MINOS.SPC /;
+put mopt;
+put "begin"/;
+put "rows 250"/;
+put "columns 250"/;
+put "elements 10000"/;
+put "end"/;
+putclose;
+
+set czvals 'obj multipliers' /
+'cz=1',
+'cz=0.5'
+'cz=3'
+'cz=-1'
+'cz=-0.5'
+'cz=-3'
+/;
+parameter czv(czvals) /
+'cz=1'          1
+'cz=0.5'        0.5
+'cz=3'          3
+'cz=-1'                -1
+'cz=-0.5'       -0.5
+'cz=-3'                -3
+/;
+
+set cbvals 'obj constants' /
+'cb=0'
+'cb=2'
+'cb=-2'
+/;
+parameter cbv(cbvals) /
+'cb=0'          0
+'cb=2'          2
+'cb=-2'                -2
+/;
+
+scalars
+    isMin   /    0 /,
+    tol     /    %TESTTOL% /,
+    obj_l   /    0.0 /
+    obj_m   /    1.0 /
+    objval  /   12.0 /;
+
+parameters
+   x_l(J)    / j1       1.0
+               j2       1.0
+               j3       3.0
+               j4       1.0
+               j5       1.0
+               j6       3.0
+               j7       -1.0 /
+   x_m(J)    / j1       0.0
+               j2       0.0
+               j3       0.0
+               j4       0.0
+               j5       4.0
+               j6       -2.0
+               j7       0.0 /
+   s2_l      / 1 /,
+   s2_m      / 0 /,
+   gte_l(GT) / gt1      2.0
+               gt2      5.0 /
+   gte_m(GT) / gt1      2.0
+               gt2      0.0 /
+   lte_l(LT) / lt1      -17.0
+               lt2      5.0 /
+   lte_m(LT) / lt1      -1.0
+               lt2      0.0 /
+   eqe_l(EQ) / eq1      9.0
+               eq2      0
+               eq3      0  /
+   eqe_m(EQ) / eq1      -1.0
+               eq2      1
+               eq3      2  /;
+
+$set cond <=INF
+$if set lictest $set cond =1
+
+loop {czvals$[ord(czvals) %cond%],
+ cz = czv(czvals);
+ loop {cbvals$[ord(cbvals) %cond%],
+  cb = cbv(cbvals);
+  if {(cz > 0),
+    isMin = 1;
+    solve m using %MTYPE% min z;
+  else
+    isMin = -1;
+    solve m using %MTYPE% max z;
+  };
+
+$if not set lictest $goto skiplicstuff
+*fix for decism
+m.solvestat$(m.solvestat = 0) = %solvestat.System Failure%;
+$if     set expectfail abort$(not ((m.solvestat = %solvestat.LicensingProblems% or m.solvestat = %solvestat.SetupFailure% or m.solvestat = %solvestat.System Failure%) and (m.modelstat = %modelstat.LicensingProblem% or m.modelstat = %modelstat.ErrorNoSolution% or m.modelstat = %ModelStat.ErrorUnknown%))) 'Expected license failure';
+$if not set expectfail abort$(    ((m.solvestat = %solvestat.LicensingProblems% or m.solvestat = %solvestat.SetupFailure% or m.solvestat = %solvestat.System Failure%) and (m.modelstat = %modelstat.LicensingProblem% or m.modelstat = %modelstat.ErrorNoSolution% or m.modelstat = %ModelStat.ErrorUnknown%))) 'Expected working license';
+}}
+$exit
+
+$label skiplicstuff
+*  abort$1 "just one solve for now";
+$ batinclude gtest "( m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)" "wrong status codes"
+
+$ batinclude gtest "(abs(cz*z.l-cb-objval*n) > tol)"           "bad z.l"
+$ batinclude gtest "(abs(z.m) > tol)"                          "bad z.m"
+
+$ batinclude gtest "(abs(obj.l-cb) > tol)"                     "bad obj.l"
+  loop{I,
+$   batinclude gtest "(smax(J, abs(x.l(I,j)-x_l(j))) > tol)"       "bad x.l"
+$   batinclude gtest "(abs(s2.l(I)-s2_l) > tol)"                   "bad s2.l"
+$   batinclude gtest "(smax(GT,abs(gte.l(I,GT)-gte_l(GT))) > tol)" "bad gte.l"
+$   batinclude gtest "(smax(LT,abs(lte.l(I,LT)-lte_l(LT))) > tol)" "bad lte.l"
+$   batinclude gtest "(smax(EQ,abs(eqe.l(I,EQ)-eqe_l(EQ))) > tol)" "bad eqe.l"
+  };
+
+  if {mchecks,
+$   batinclude gtest "(abs(cz*obj.m-obj_m) > tol)"                  "bad obj.m"
+* $   batinclude gtest "(smax(J, abs(cz*x.m(j)-x_m(j))) > tol)"       "bad x.m"
+    loop{I,
+$     batinclude gtest "(abs(cz*s2.m(I)-s2_m) > tol)"                    "bad s2.m"
+$     batinclude gtest "(smax(GT,abs(cz*gte.m(I,GT)-gte_m(GT))) > tol)"  "bad gte.m"
+$     batinclude gtest "(smax(LT,abs(cz*lte.m(I,LT)-lte_m(LT))) > tol)"  "bad lte.m"
+$     batinclude gtest "(smax(EQ,abs(cz*eqe.m(I,EQ)-eqe_m(EQ))) > tol)"  "bad eqe.m"
+    };
+  };
+
+$if set doscalar
+  if (failed, option %MTYPE%=convert; if {(cz > 0), solve m using %MTYPE% min z; else solve m using %MTYPE% max z;})
+  abort$failed 'test failed', cz, cb;
+
+ };
+};

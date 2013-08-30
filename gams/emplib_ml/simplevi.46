@@ -1,0 +1,72 @@
+$Title Simple Variational Inequality (SIMPLEVI,SEQ=46)
+
+$ontext
+This model shows how to solve a simple VI using EMP
+
+VI is to find x in X:
+F(x) (y - x) >= 0, for all y in X
+X is a closed convex set, e.g. X = { x >= 0 | g(x) >= 0 }
+
+Subsequently, the model 'reform' illustrates the MCP that EMP solves internally.
+
+Contributor: Michael Ferris, February 2010
+$offtext
+
+sets
+ I  / i1, i2 /
+ J  / j1 * j3 /
+ ;
+
+table A(I,J)
+       j1        j2     j3
+i1      1         1
+i2                1      1 ;
+
+parameter b(I) /
+i1   6
+i2   9
+/;
+
+positive variable
+ x(J)  'primal vars, perp to f(J)'
+ ;
+
+equations
+ F(J)
+ g(I)
+ ;
+
+F(J)..      2 * x(J)             =n= 0    ;
+g(I)..      sum {j, A(I,J)*x(J)} =g= b(I) ;
+
+model simpleVI / F, g/;
+
+file fx /"%emp.info%"/;
+putclose fx 'vi F x';
+
+solve simpleVI using emp;
+
+
+$ontext
+This could be reformulated as an MCP:
+
+0 <= F(x) - \grad g(x) u  \perp x >= 0
+0 <= g(x)                                  \perp u >= 0
+$offtext
+
+positive variable
+ u(I)  'auxiliary vars, perp to g(I)'
+ ;
+
+equation
+ F_aux(J)
+ ;
+
+F_aux(J)..  2 * x(J) + sum{I, -A(I,J)*u(I)} =n= 0 ;
+u.l(I) = g.m(I);
+model reform / F_aux.x, g.u/;
+
+*benchmark the solution obtained from simpleVI
+reform.iterlim = 0;
+solve reform using mcp;
+abort$(reform.objval > 1e-9) 'Solutions differ'

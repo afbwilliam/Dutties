@@ -1,0 +1,5 @@
+$title split a gams name into components (SET6,SEQ=43)
+$setcomps 'abc.cde.efg'  . two three
+$if NOT %two% == cde   $error should be cde but is %two%
+$if NOT %three% == efg $error should be efg but is %three%
+$show

@@ -1,0 +1,729 @@
+$TITLE  Increasing returns in intermediate inputs (CIRIMGE, SEQ=141)
+$Ontext
+     This program first solves a system of nonlinear equations which
+     jointly determines fixed costs, marginal costs, markup rates for
+     NA firms. It then employs MPS/GE to solve for counter-factual
+     equilibria.
+
+
+     Florencio Lopez-de-Silanes, James R. Markusen and Thomas
+     F. Rutherford  (1993)   "Complementarity and Increasing
+     Returns in Intermediate Inputs: A Theoretical and Applied
+     General-Equilibrium Analysis", Journal of Development Economics.
+
+
+Lopez de Silanes, F, Markusen, J R, and Rutherford, T F,
+Complementarity and Increasing Returns in Intermediate Inputs: A
+Theoretical and Applied General-Equilibrium Analysis. Journal of
+Development Economics 45 (1994), 133-151.
+
+     NB        Watch out for red herrings!  -- This dataset includes
+               some superfluous data tables.
+
+$Offtext
+
+SET     R       REGIONS /CAN, USA, MEX, ROW/,
+      ROW(R)    REST OF WORLD REGION / ROW/,
+        N(R)    NORTH-AMERICAN REGIONS /CAN, USA, MEX/
+        G       GOODS  /CARS, PARTS, ENGINES/;
+
+ALIAS (R,RR), (N,NN);
+
+TABLE  MACRO(R,*)  Macro economic parameters
+
+               GNP     ELS
+CAN         543.63     0.2
+USA        5166.09     0.2
+MEX         211.97     0.2
+ROW       17495.40     0.2
+
+*     ELS   Elasticity of labor supply from Y
+
+PARAMETER ZSHR(R)  Parts share of auto production cost
+      /CAN  0.4, USA 0.4, MEX 0.6, ROW 0.3/;
+
+TABLE PRICES(R,*)  National market price indices
+
+             CARS         PARTS        ENGINES
+CAN         1.15          1.05         1.05
+USA         1.0           1.00         1.00
+MEX         1.4           1.20         1.00
+ROW         1.0           1.05         1.05
+
+TABLE COST(R,*) National markets marginal costs
+
+             CARS         PARTS        ENGINES
+CAN        0.95           0.95         1.20
+USA        1.00           1.00         1.10
+MEX        0.80           0.70         1.20
+ROW        0.90           0.90         1.10
+
+*  NOTE: THESE MARGINAL COST VALUES FOR CARS ARE USED ONLY FOR ROW.
+
+SCALAR MRGNIDLE  LOSS MARGIN ASSUMED ON IDLE TRADE LINKS /0.10/;
+
+TABLE TARIFF(R,R,*)  Bilateral trade protection (rate)
+
+         CAN.CARS      USA.CARS       MEX.CARS       ROW.CARS
+CAN                                       0.20          0.125
+USA                                       0.20          0.125
+MEX         0.095         0.038                         0.125
+ROW         0.095         0.038           0.20
+
++       CAN.PARTS     USA.PARTS      MEX.PARTS      ROW.PARTS
+CAN                                       0.13          0.065
+USA                                       0.13          0.065
+MEX         0.092         0.040                         0.065
+ROW         0.092         0.034           0.13
+
++     CAN.ENGINES   USA.ENGINES    MEX.ENGINES    ROW.ENGINES
+CAN                                       0.10          0.075
+USA                                       0.10          0.075
+MEX         0.092         0.031                         0.075
+ROW         0.092         0.031           0.10
+
+TABLE BARRIER(R,R,*)  Effective protection rates
+
+         CAN.CARS      USA.CARS       MEX.CARS       ROW.CARS
+CAN                                       .335           .125
+USA                                       .335           .125
+MEX         0.095         0.038                          .125
+ROW         0.095         0.038           .335
+
++       CAN.PARTS     USA.PARTS      MEX.PARTS      ROW.PARTS
+CAN                                       0.17          0.065
+USA                                       0.17          0.065
+MEX         0.092         0.040                         0.065
+ROW         0.092         0.034           0.16
+
++     CAN.ENGINES   USA.ENGINES    MEX.ENGINES    ROW.ENGINES
+CAN                                       0.10          0.075
+USA                                       0.10          0.075
+MEX         0.092         0.031                         0.075
+ROW         0.092         0.031           0.10
+
+ABORT$(SMAX((R,G), ABS(TARIFF(R,R,G))) GT EPS)
+      " TARIFF ON DOMESTIC SALES NOT PERMITTED.";
+
+ABORT$(SMAX((R,G), ABS(BARRIER(R,R,G))) GT EPS)
+      " BARRIER ON DOMESTIC SALES NOT PERMITTED.";
+
+TABLE SCALE(R,*)  Elasticities of scale
+
+             CARS         PARTS        ENGINES
+CAN           1.15        1.2          1.2
+USA           1.1         1.1          1.1
+MEX           1.7         1.5          1.2
+ROW           1.1         1.1          1.1
+
+TABLE NFIRM(R,*)  Number of firms operating in each market
+
+             CARS         PARTS        ENGINES
+CAN          5            650          5
+USA          8            2291         11
+MEX          5            500          7
+ROW         12            13000        20
+
+TABLE  TRADE(R,R,G)  Benchmark trade patterns
+
+         CAN.CARS      USA.CARS       MEX.CARS       ROW.CARS
+CAN         3.347        20.485                         0.154
+USA         8.515       140.345          0.298          4.562
+MEX                       2.287          4.430          0.290
+ROW         3.650        36.589          0.047        400.199
+
++       CAN.PARTS     USA.PARTS      MEX.PARTS      ROW.PARTS
+CAN         2.713         6.392          0.090          0.190
+USA         9.984        78.348          3.213          4.202
+MEX         0.054         0.372          3.300          0.039
+ROW         1.641        11.584          0.534        166.188
+
++     CAN.ENGINES   USA.ENGINES    MEX.ENGINES    ROW.ENGINES
+CAN         0.510         1.278
+USA         1.682         8.589          0.094          0.170
+MEX         0.242         0.572          0.865          0.556
+ROW         0.616         2.297                        16.217;
+
+*     DECLARE BENCHMARK PARAMETERS:
+
+PARAMETERS
+      ELSX(R)           ELASTICITY OF SCALE IN X SECTOR
+      ELSZ(R)           ELASTICITY OF SCALE IN Z SECTOR
+      PX0(R)            CONSUMER PRICE FOR X
+      CY0(R)            CONSUMPTION
+      CX0(R)
+      X0(R)             OUTPUT
+      Y0(R)
+      Z0(R)
+      XI0(R)            X INPUTS (LABOR AND PARTS)
+      LX0(R)            LABOR INPUTS AND SUPPLIES
+      LY0(R)
+      LZ0(R)
+      LT0(R)
+      L(R)
+      KY0(R)            MACRO CAPITAL
+      KY(R)
+      N0(R)             NUMBERS OF X SECTOR FIRMS
+      XT0(R,R)          BASE YEAR TRADE
+      ZT0(R,R)
+      CZ0(R)            END-USE CONSUMPTION OF Z
+      SN0(R)            NA FIRMS MARKET SHARE
+      NX0(R)            NUMBER OF X SECTOR FIRMS
+      MC0(R)            CALIBRATED MARGINAL COST
+      MN0(R)            CALIBRATED MARKUP RATE FOR NA FIRMS
+      FC0(R)            CALIBRATED FIXED COST
+      MR0(R)            CALIBRATED ROW MARKUP RATES
+      MZ0(R)            BASE YEAR MARKUP ON Z
+      OMEGA(R)          CALIBRATED CONJECTURAL VARIATIONS
+      TCOST(R,R)        UNIT TRANSPORT COSTS
+      TX(R,R)           TARIFF RATES
+      TX0(R,R)          TARIFF RATES
+      TZ(R,R)
+      TZ0(R,R)          BASE YEAR TARIFF RATE
+      PXMIN(R,RR)       MINIMUM SELLING PRICE
+      TCSHR(R,RR)       TRANSPORT COST SHARE
+      MARGIN(R,R)       PROFIT MARGINS ON INACTIVE TRADE LINKS;
+
+*     LOAD THE BENCHMARK DATA:
+
+      ELSX(R) = SCALE(R,"CARS");
+      ELSZ(R) = SCALE(R,"PARTS");
+
+      PX0(R) = PRICES(R,"CARS");
+
+*     LOAD BENCHMARK VALUES:
+
+
+      TX0(R,RR) = TARIFF(R,RR,"CARS");
+
+*     INCLUDE NTB OF TARIFF RESTRICTION ON Z:
+
+      TZ0(R,RR) = BARRIER(R,RR,"PARTS");
+
+*     FOR THE PRESENT MODEL WE NET OUT ANY CROSS-HAULING:
+
+      XT0(R,RR) = MAX(TRADE(R,RR,"CARS")-TRADE(RR,R,"CARS"), 0);
+      XT0(R,R)  = TRADE(R,R,"CARS");
+
+*     Parts and engines are combined in this version of the model.
+
+      ZT0(R,RR) = TRADE(R,RR,"PARTS") + TRADE(R,RR,"ENGINES");
+
+      SN0(R) = SUM(N, XT0(N,R))/ SUM(RR, XT0(RR,R));
+
+      X0(R) = SUM(RR, XT0(R,RR));
+      Y0(R) = MACRO(R,"GNP");
+      Z0(R) = SUM(RR, ZT0(R,RR));
+      N0(R) = NFIRM(R,"CARS");
+      MZ0(R) = SCALE(R,"PARTS") - 1;
+
+*     THE FOLLOWING EQUATIONS PERFORM THE CALIBRATION - SOLVING
+*     A NONLINEAR SYSTEM OF 9 EQUATIONS IN 9 UNKNOWNS.
+
+*     EXOGENOUS VARIABLES:
+
+*     ELSX  ELASTICITY OF SCALE,
+*     PX0   CONSUMER PRICE,
+*     XT0   BASE YEAR TRADE PATTERN.
+
+VARIABLES   FC(N)       FIXED COSTS IN X
+            MC(N)       MARGINAL COST
+            MN(N)       MARKUP ON NA FIRM SALES
+
+EQUATIONS   ELSCALE(R)  ELASTICITY OF SCALE
+            PROFIT(R)   FREE ENTRY ZERO PROFIT CONDITION
+            MCDEF(N)    SETS VALUE FOR MC;
+
+ELSCALE(N)..      MC(N) * X0(N) * ELSX(N) =E= MC(N) * X0(N) + FC(N);
+
+PROFIT(N)..       SUM(NN, MC(NN) * XT0(N,NN) * MN(NN)) =E= FC(N);
+
+MCDEF(N)..        (1 + MN(N)) * MC(N) =E= PX0(N);
+
+MODEL CALIB /ELSCALE.FC, PROFIT.MN, MCDEF.MC/;
+
+        FC.L(N) = 1;
+        MN.L(N) = 1;
+        MC.L(N) = 1;
+        MC.LO(N) = 0.1;
+        MC.UP(N) = 2;
+        SOLVE CALIB USING MCP;
+
+*     READ THE SOLUTION, INFER AND CONJECTURES:
+
+      MN0(N) = MN.L(N);
+      MC0(N) = MC.L(N);
+      FC0(N) = FC.L(N);
+
+      NX0(R) = NFIRM(R,"CARS");
+      OMEGA(N)$SN0(N) = NX0(N) * MN0(N) / (SN0(N) * (1 + MN0(N)));
+      OMEGA("ROW") = 1;
+
+*     COMPUTE MARKUPS FOR ROW PRODUCER:
+
+      MR0(R) =  1/(1-OMEGA(R)*(1-SN0(R))/N0("ROW")) - 1;
+
+*     DETERMINE IMPLICIT MARGINAL COST IN ROW BASE ON DOMESTIC
+*     PRICES AND THE MARKUP RATE:
+
+      MC0(ROW) = PX0(ROW) / (1 + MR0(ROW));
+
+      PARAMETER MKTPARM(*,R)  CALIBRATED MARKET STRUCTURE PARAMETERS;
+
+      MKTPARM("ELSX",R)  = ELSX(R);
+      MKTPARM("PX0",R)   = PX0(R);
+      MKTPARM("MC0",R)   = MC0(R);
+      MKTPARM("MN0",R)  = MN0(R);
+      MKTPARM("MR0",R)  = MR0(R);
+      MKTPARM("OMEGA",R) = OMEGA(R);
+      DISPLAY MKTPARM,"ELSX         ELASTICITY OF SCALE (EXOGENOUS)",
+                  "PX0  CONSUMER PRICE (EXOGENOUS)",
+                  "MC0  MARGINAL COST OF SUPPLY ",
+                  "MN0  NORTH-AMERICAN MARKUP",
+                  "MR0  ROW MARKUP",
+                  "OMEGA      CONJECTURAL VARIATION";
+
+
+*       FOR RUNNING A SET OF RELATED CASES, USE AN INCLUDE STATEMENT
+*       TO HOLD THE FOLLOWING SECTION IN A SEPARATE FILE:
+
+*$INCLUDE CASE.GMS
+
+*       --------------------------------------------------------------
+*     READ CASE PARAMETERS (IRTS, ELS AND INTERZ):
+
+*==>TABLE5.GMS
+
+*       CASE FILE FOR TABLE 5: NAFTA - ALL PROTECTION REMOVED
+
+
+MACRO(R,"ELS") = 0.2;
+
+SCALAR      INTERZ  Intermediate share of parts /0.20/;
+
+ZSHR("ROW") = 0.35;
+ZSHR("USA") = 0.50;
+ZSHR("CAN") = 0.70;
+ZSHR("MEX") = 0.70;
+
+*     SPECIFY THE SCENARIOS - BENCHMARK REPLICATION AND
+*     THEN FOUR ALTERNATIVE NAFTA CASE WITH INCREASING VALUES
+*     FOR THE MEXICAN ARMINGTON ELASTICITY:
+
+SET SC /BENCH, NAFTA1*NAFTA4/;
+
+PARAMETER       VTZ(SC,R,RR), VTX(SC,R,RR), ESUBV(SC);
+
+*       ASSIGN THE ARMINGTON ELASTICITY HERE:
+
+ESUBV(SC) = ORD(SC) - 1;
+ESUBV("BENCH") = 1;
+
+VTZ(SC,R,RR) = TZ0(R,RR);
+VTX(SC,R,RR) = TX0(R,RR);
+VTZ(SC,N,NN) = 0;
+VTX(SC,N,NN) = 0;
+VTZ("BENCH",N,NN) = TZ0(N,NN);
+VTX("BENCH",N,NN) = TX0(N,NN);
+*       --------------------------------------------------------------
+
+*     ACCOUNT FOR INTERMEDIATE Z INPUTS:
+
+      ZT0(R,RR) = (1-INTERZ) * TRADE(R,RR,"PARTS") + TRADE(R,RR,"ENGINES");
+      Z0(R) = SUM(RR, ZT0(R,RR));
+
+*     USE THIS FLAG FOR COMPARING IRTS WITH CRTS MODEL:
+
+SCALAR      IRTS  Flag for IRTS in parts production /1/;
+
+*     DECLARE PARAMETERS FOR CONSISTENCY CHECK:
+
+PARAMETER   YMKT                Y MARKET CLEARANCE
+            XMKT(R)             X MARKET CLEARANCE
+            XPRF(R)             X SECTOR EXCESS PROFIT
+            LMKT(R)             L MARKET,
+            INCM(R)             INCOME BALANCE,
+            VARCOST(R,*)        COST ACCOUNTS FOR AUTO SECTOR,
+            TRX(R)              TARIFF REVENUE ON X,
+            TRZ(R)              TARIFF REVENUE FOR Z,
+            ESUBZ(R)            ARMINGTON ELASTICITY IN PARTS;
+
+*     MAKE AN ADJUSTMENT IN SCALE DATA IN ORDER TO
+*     PROVIDE CONVERGENCE:
+
+      ELSZ("MEX") = 1.5;
+
+*       MINIMUM SALES PRICE GIVEN MARKUPS AND TARIFFS:
+
+        PXMIN(R,RR) = (MC0(R) * (1 + TX0(R,RR))) *
+                  (1 + MN0(RR)$N(R) + MR0(RR)$ROW(R));
+
+*       DETERMINE TRANSPORT COSTS AS A RESIDUAL, FIRST ONLY
+*       FOR ACTIVE TRADE SECTORS:
+*
+        TCOST(R,RR)$XT0(R,RR) = PX0(RR)/ ((1+TX0(R,RR)) *
+            (1 + MN0(RR)$N(R) + MR0(RR)$ROW(R))) - MC0(R);
+        TCOST(R,R) = 0;
+
+*     CALIBRATE FIXED COSTS IN ROW BASED ON MARKUPS AND TRANSPORT
+*     COSTS:
+
+        FC0("ROW") = SUM(RR, MR0(RR) * (1 + TX0("ROW",RR)) *
+                 (MC0("ROW") + TCOST("ROW",RR)) * XT0("ROW",RR));
+
+*       CHECK THAT THE TRANSPORT COSTS FOR ACTIVE MARKETS ARE NON-NEGATIVE.
+*       EXIT WITH AN ERROR MESSAGE IF THIS IS VIOLATED:
+
+        ABORT$(SMIN((R,RR), TCOST(R,RR)) LT -EPS)
+            "INCONSISTENCY IN IMPLIED TRANSPORT COSTS:", TCOST;
+
+*       NEXT, INFER TRADE COST DIFFERENTIALS ON TRADE LINKS WHICH
+*       ARE INACTIVE IN THE BENCHMARK:
+
+        TCOST(R,RR)$(XT0(R,RR) EQ 0) =
+          MAX( 0, PX0(RR) * (1 + MRGNIDLE) /
+            ( (1 + TX0(R,RR)) *
+              (1 + MN0(RR)$N(R) + MR0(RR)$ROW(R)) ) - MC0(R));
+
+*     NO TRANSPORT COST ON DOMESTIC SUPPLIES:
+
+        TCOST(R,R) = 0;
+
+*     COMPUTE AND REPORT THE IMPLIED COST MARGINS:
+
+        MARGIN(R,RR)$(XT0(R,RR) EQ 0) = 100 *
+            (PX0(RR) -  (MC0(R) + TCOST(R,RR)) * (1 + TX0(R,RR)) *
+            (1 + MN0(RR)$N(R) + MR0(RR)$ROW(R))) / PX0(RR);
+
+*     COMPUTE TRANSPORT COST SHARES:
+
+        TCSHR(R,RR)$TCOST(R,RR) = TCOST(R,RR) / (TCOST(R,RR)+MC0(R));
+
+*     FINISH UP THE CALIBRATION
+
+*     FINAL CONSUMPTION OF Z DETERMINED RESIDUALLY:
+
+        PARAMETER ZU0, ZX0;
+
+        ZU0(R) = SUM(RR, ZT0(RR,R) * (1 + TZ0(RR,R)));
+        CZ0(R) = ZU0(R) - ZSHR(R) * (FC0(R) + X0(R)*MC0(R));
+        ZX0(R) = ZU0(R) - CZ0(R);
+
+        PARAMETER ZS;
+        ZS("MAX",R)   = ZU0(R) / (FC0(R) + X0(R)*MC0(R));
+        ZS("VALUE",R) = ZSHR(R)
+        ABORT$(SMIN(R, CZ0(R)) LT 0) " CZ0 IS NEGATIVE:",ZS;
+
+*     IMPUTED VALUE OF DOMESTIC Z INPUTS TO AUTO PRODUCTION:
+
+        LX0(R) = FC0(R) + X0(R) * MC0(R) - ZX0(R);
+        XI0(R) = FC0(R) + X0(R) * MC0(R);
+        VARCOST(R,"FC")   = FC0(R);
+        VARCOST(R,"MC*X") = X0(R) * MC0(R);
+        VARCOST(R,"ZT*T") = ZX0(R);
+        VARCOST(R,"LX0")  = LX0(R);
+        VARCOST(R,"ZSHR")  = 100 * VARCOST(R,"ZT*T")/(FC0(R) + X0(R)*MC0(R));
+        ABORT$(SMIN(R, LX0(R)) LT 0)
+          ' IMPLIED LABOR INPUTS TO X ARE NEGATIVE.', LX0, VARCOST;
+
+        LT0(R) = SUM(RR, XT0(R,RR) * TCOST(R,RR));
+        LZ0(R) = Z0(R);
+        KY0(R) = Y0(R) * MACRO(R,"ELS") * Y0(R) /
+                (XI0(R) + MACRO(R,"ELS") * Y0(R));
+        LY0(R) = Y0(R) - KY0(R);
+
+        L(R) = LT0(R) + LX0(R) + LY0(R) + LZ0(R);
+
+        CX0(R) = SUM(RR, XT0(RR,R));
+        CY0(R) = L(R) + KY0(R) + SUM(RR, ZT0(RR,R) * TZ0(RR,R)) +
+                SUM(RR, TX0(RR,R) * XT0(RR,R) * (MC0(RR)+TCOST(RR,R)))
+                - PX0(R) * CX0(R) - CZ0(R);
+
+        YMKT    = SUM(R, Y0(R) - CY0(R));
+        XMKT(R) = CX0(R) - SUM(RR, XT0(RR,R));
+        XPRF(R) = XI0(R) - LX0(R) - ZX0(R);
+        LMKT(R) = L(R) - LX0(R) - LY0(R) - LZ0(R)  - LT0(R);
+        INCM(R) = PX0(R)*CX0(R) + CY0(R) + CZ0(R) - L(R) - KY0(R)
+              - SUM(RR, ZT0(RR,R) * TZ0(RR,R))
+              - SUM(RR, XT0(RR,R) * (MC0(RR)+TCOST(RR,R)) * TX0(RR,R));
+        TRX(R) = SUM(RR, XT0(RR,R) * (MC0(RR)+TCOST(RR,R)) * TX0(RR,R));
+        TRZ(R) = SUM(RR, ZT0(RR,R) * TZ0(RR,R));
+
+TZ(R,RR) = TZ0(R,RR);
+TX(R,RR) = TX0(R,RR);
+
+$ONTEXT
+
+$MODEL:CARS
+
+$SECTORS:
+        W(R) X(R) Y(R) Z(R) C(R) CZ(R) NX(R) XT(R,RR)
+
+$COMMODITIES:
+        PY PW(R) PL(R) PK(R) PS(R) PX(R) PZ(R) PZU(R) PC(R) PF(R)
+
+$AUXILIARY:
+        MKN(R)$N(R) MR(R) SN(R)
+        TXZ(R)$IRTS
+        SZ(R)$IRTS
+        RZ(R)$IRTS
+        XZ(R)$IRTS
+
+$CONSUMERS:
+        RA(R)
+        ENT(R)
+
+$REPORT:
+        V:EZ(R,RR)  I:PZ(R)  PROD:CZ(RR)
+        V:ZX(R)     I:PZU(R)  PROD:C(R)
+
+$PROD:W(R) s:1 a:2
+        O:PW(R)    Q:(PX0(R)*CX0(R) + CY0(R) + CZ0(R))
+        I:PY       Q:CY0(R)
+        I:PZU(R)   Q:CZ0(R)  a:
+        I:PX(R)    Q:(PX0(R)*CX0(R)) a:
+
+$PROD:X(R)
+        O:PS(R)    Q:(MC0(R)*X0(R))
+        I:PC(R)    Q:(MC0(R)*X0(R))
+
+$PROD:C(R)
+        O:PC(R)    Q:XI0(R)
+        I:PL(R)    Q:LX0(R)
+        I:PZU(R)   Q:ZX0(R)
+
+$PROD:CZ(R)  s:ESUBZ(R)
+        O:PZU(R)   Q:ZU0(R)
+        I:PZ(RR)   Q:ZT0(RR,R)  P:(1+TZ0(RR,R)) A:RA(R) T:TZ(RR,R)
+
+$PROD:Y(R) s:1
+        O:PY       Q:Y0(R)
+        I:PL(R)    Q:LY0(R)
+        I:PK(R)    Q:KY0(R)
+
+$PROD:Z(R)
+        O:PZ(R)$IRTS            Q:Z0(R)  A:RA(R) N:TXZ(R) M:1 N:SZ(R) M:-1
+        O:PZ(R)$(NOT IRTS)      Q:Z0(R)
+        I:PL(R)                 Q:Z0(R)
+
+$PROD:NX(R)
+        O:PF(R)    Q:FC0(R)
+        I:PC(R)    Q:FC0(R)
+
+$PROD:XT(R,RR)
+        O:PX(RR)   Q:PX0(RR)
+        I:PS(R)    Q:MC0(R)  A:RA(RR)  T:TX(R,RR)
++               A:ENT(R) N:MKN(RR)$(N(R)*N(RR)) M:(1+TX(R,RR))$(N(R)*N(RR))
++               A:ENT(R) N:MR(RR)$(NOT N(R))    M:(1+TX(R,RR))$(NOT N(R))
+        I:PL(R)  Q:TCOST(R,RR)   A:RA(RR) T:TX(R,RR)
++               A:ENT(R) N:MKN(RR)$(N(R)*N(RR)) M:(1+TX(R,RR))$(N(R)*N(RR))
++               A:ENT(R) N:MR(RR)$(NOT N(R)) M:(1+TX(R,RR))$(NOT N(R))
+
+$DEMAND:RA(R)
+        E:PL(R)    Q:L(R)
+        E:PK(R)    Q:KY0(R)
+        E:PZ(R)$IRTS  Q:Z0(R) R:XZ(R)
+        D:PW(R)       Q:(CY0(R)+PX0(R)*CX0(R)+CZ0(R))
+
+$DEMAND:ENT(R)
+        D:PF(R)     Q:FC0(R)
+
+*       AUXILIARY CONSTRAINTS FOLLOW:
+
+$CONSTRAINT:XZ(R)$IRTS
+        XZ(R) =E= Z(R)**ELSZ(R) - Z(R);
+
+$CONSTRAINT:RZ(R)$IRTS
+        RZ(R) =E= Z(R) -  Z(R)**ELSZ(R);
+
+$CONSTRAINT:TXZ(R)$IRTS
+        TXZ(R) =E= RZ(R) / Z(R);
+
+$CONSTRAINT:SZ(R)$IRTS
+        SZ(R) =E= XZ(R) / Z(R);
+
+$CONSTRAINT:MKN(R)$N(R)
+        MKN(R) =E= OMEGA(R) * SN(R) / (NX0(R) * NX(R) - OMEGA(R) * SN(R));
+
+$CONSTRAINT: MR(R)
+        MR(R)  =E= OMEGA(R) * (1 - SN(R)) /
+                  (NX0("ROW") * NX("ROW") - OMEGA(R) * (1 - SN(R)));
+
+$CONSTRAINT:SN(R)
+        SN(R) =E= SUM(N, XT(N,R)) / SUM(RR, XT(RR,R));
+
+$OFFTEXT
+
+*       READ THE MODEL HEADER.
+
+$SYSINCLUDE mpsgeset CARS
+
+*       INSTALL INITIAL LEVEL VALUES:
+
+XT.L(R,RR) = XT0(R,RR);
+MKN.L(N) = MN0(N);
+MR.L(R) = MR0(R);
+SN.L(R) = SN0(R);
+TXZ.L(R) = 0;
+SZ.L(R)  = 0;
+RZ.L(R)  = 0;
+XZ.L(R)  = 0;
+
+*       NORMALIZE PRICES USING ROW INCOME:
+
+RA.FX("ROW") = CY0("ROW")+PX0("ROW")*CX0("ROW")+CZ0("ROW");
+
+*     DISPLAY RESULTS OF BENCHMARK:
+
+DISPLAY TCSHR, MARGIN;
+DISPLAY YMKT, XMKT, XPRF, LMKT, INCM, TRX, TRZ;
+
+
+PARAMETER
+          SUMMARY(SC,*)         SUMMARY REPORT OF CONVERGENCE AND WELFARE,
+          PCTREPORT(SC,*,R)     SUMMARY REPORT - PERCENTAGE FORM
+          LVLREPORT(SC,*,R)     SUMMARY REPORT - LEVEL FORM,
+          VXT(SC,R,R)           AUTO TRADE - BILATERAL FLOWS,
+          VZT(SC,R,R)           PARTS TRADE - BILATERAL FLOWS,
+          EX0(R)                BENCHMARK AUTO EXPORT,
+          MX0(R)                BENCHMARK AUTO IMPORT,
+          EZ0(R)                BENCHMARK PARTS EXPORTS,
+          MZ0(R)                BENCHMARK PARTS IMPORTS;
+
+OPTION LVLREPORT:2:1:1, PCTREPORT:2:1:1, VXT:3:1:1, VZT:3:1:1;
+
+EX0(R) = SUM(RR$(ORD(RR) NE ORD(R)), XT0(R,RR));
+MX0(R) = SUM(RR$(ORD(RR) NE ORD(R)), XT0(RR,R));
+EZ0(R) = SUM(RR$(ORD(RR) NE ORD(R)), ZT0(R,RR));
+MZ0(R) = SUM(RR$(ORD(RR) NE ORD(R)), ZT0(RR,R));
+
+*       COMPUTE:
+
+LOOP(SC,
+
+*       SET TAX RATES FOR THIS SCENARIO:
+
+        TX(R,RR) = VTX(SC,R,RR);
+        TZ(R,RR) = VTZ(SC,R,RR);
+
+*       SET MEXICO'S Z SECTOR ESUB:
+
+        ESUBZ("MEX") = ESUBV(SC);
+
+$INCLUDE CARS.GEN
+        SOLVE CARS USING MCP;
+
+*       EXTRACT REPORT VALUES:
+
+        SUMMARY(SC,"STATUS") = CARS.MODELSTAT;
+        SUMMARY(SC,"ITERS") = CARS.ITERUSD;
+        SUMMARY(SC,"CPU") = CARS.RESUSD;
+        SUMMARY(SC,"CONTOL") = CARS.OBJVAL;
+        SUMMARY(SC,R) = 100 * (W.L(R)-1);
+
+        PCTREPORT(SC,"W",R) = 100 * (W.L(R)-1);
+        PCTREPORT(SC,"NX",R) = 100 * (NX.L(R)-1);
+        PCTREPORT(SC,"X",R) = 100 * (X.L(R)-1);
+        PCTREPORT(SC,"X/N",R)$NX.L(R) = 100 * (X.L(R)/NX.L(R) - 1);
+        PCTREPORT(SC,"Z",R) = 100 * (Z.L(R)-1);
+        PCTREPORT(SC,"EX",R)$EX0(R) = 100 *
+                SUM(RR$(ORD(RR) NE ORD(R)),XT.L(R,RR)-XT0(R,RR))/ EX0(R);
+        PCTREPORT(SC,"MX",R)$MX0(R) = 100 *
+                SUM(RR$(ORD(RR) NE ORD(R)),XT.L(RR,R)-XT0(RR,R))/ MX0(R);
+        PCTREPORT(SC,"EZ",R)$EZ0(R) = 100 *
+                (SUM(RR$(ORD(RR) NE ORD(R)),EZ.L(R,RR)) - EZ0(R)) / EZ0(R);
+        PCTREPORT(SC,"MZ",R)$EZ0(R) = 100 *
+                (SUM(RR$(ORD(RR) NE ORD(R)),EZ.L(RR,R)) - MZ0(R)) / MZ0(R);
+        PCTREPORT(SC,"ZX",R)$ZX0(R) = 100 * (ZX.L(R) - ZX0(R)) / ZX0(R);
+        PCTREPORT(SC,"ZF",R)$CZ0(R) = 100 *
+                (CZ.L(R)*ZU0(R)-ZX.L(R)-CZ0(R)) / CZ0(R);
+
+        PCTREPORT(SC,"PX",R)$PY.L = 100 * (PX.L(R)/PY.L - 1);
+        PCTREPORT(SC,"CX",R)$PY.L = 100 * (PC.L(R)/PY.L - 1);
+        PCTREPORT(SC,"PZ",R)$PY.L = 100 * (PZ.L(R)/PY.L - 1);
+        PCTREPORT(SC,"PZU",R)$PY.L = 100 * (PZU.L(R)/PY.L - 1);
+        PCTREPORT(SC,"PL",R)$PY.L = 100 * (PL.L(R)/PY.L - 1);
+        PCTREPORT(SC,"SHRN",R) = 100 * SN.L(R);
+        PCTREPORT(SC,"MKN",R) = 100 * MKN.L(R);
+        PCTREPORT(SC,"MKR",R) = 100 * MR.L(R);
+        PCTREPORT(SC,"ZX/X",R)$C.L(R) = 100 * ZX.L(R) * PZU.L(R) /
+               (C.L(R) * XI0(R) * PC.L(R));
+        PCTREPORT(SC,"ZF/Z",R)$C.L(R) = 100 *
+                (CZ.L(R)*ZU0(R)-ZX.L(R)) / (CZ.L(R)*ZU0(R));
+        PCTREPORT(SC,"X/GDP",R) = 100 *
+                C.L(R) * XI0(R) * PC.L(R) /
+                (PL.L(R) * L(R) + PK.L(R) * KY0(R));
+
+        LVLREPORT(SC,"NX",R) = NX0(R) * NX.L(R);
+        LVLREPORT(SC,"X",R) = X0(R) * X.L(R);
+        LVLREPORT(SC,"X/N",R)$NX.L(R) =
+                X0(R) * X.L(R) / (NX0(R) * NX.L(R));
+        LVLREPORT(SC,"Z",R) = Z0(R) * Z.L(R);
+        LVLREPORT(SC,"EX",R) = SUM(RR$(ORD(RR) NE ORD(R)),XT.L(R,RR));
+        LVLREPORT(SC,"MX",R) =
+                SUM(RR$(ORD(RR) NE ORD(R)),XT.L(RR,R)-XT0(RR,R));
+        LVLREPORT(SC,"EZ",R) = SUM(RR$(ORD(RR) NE ORD(R)), EZ.L(R,RR));
+        LVLREPORT(SC,"MZ",R) = SUM(RR$(ORD(RR) NE ORD(R)), EZ.L(RR,R));
+        LVLREPORT(SC,"VEZ",R) =
+                SUM(RR, PZ.L(R)*EZ.L(R,RR)-PZ.L(RR)*EZ.L(RR,R)) /
+                PY.L;
+        LVLREPORT(SC,"ZX",R)$ZX0(R) = ZX.L(R);
+        LVLREPORT(SC,"ZF",R)$CZ0(R) = CZ.L(R)*ZU0(R)-ZX.L(R);
+
+        VXT(SC,R,RR) = XT.L(R,RR);
+        VZT(SC,R,RR) = EZ.L(R,RR);
+);
+
+SET  REPROW/ W, NX, X, "X/N", Z, EX, MX, EZ, VEZ, PX, CX, PZ, PZU, PL,
+           SHRN, MKN, MKR, "ZX/X","ZF/Z" "X/GDP", ZX, ZF/;
+
+*     SUPPRESS
+
+SUMMARY(SC,R) = ROUND(SUMMARY(SC,R),3);
+PCTREPORT(SC,REPROW,R) = ROUND(PCTREPORT(SC,REPROW,R), 2);
+LVLREPORT(SC,REPROW,R) = ROUND(LVLREPORT(SC,REPROW,R), 2);
+
+DISPLAY SUMMARY;
+
+DISPLAY PCTREPORT,
+            "KEY FOR PCTREPORT",
+            "=================",
+            "W    WELFARE INDEX (% EV)",
+            "NX   NUMBER OF AUTO FIRMS (% CHANGE)",
+            "X    AUTO SECTOR OUTPUT (% CHANGE)",
+            "X/N  OUTPUT PER FIRM (% CHANGE)",
+            "Z    PARTS SECTOR OUTPUT (% CHANGE)",
+            "EX   AUTO EXPORTS (% CHANGE)",
+            "MX   AUTO IMPORTS (% CHANGE)",
+            "EZ   PARTS EXPORTS (% CHANGE)",
+            "MZ   PARTS IMPORTS (% CHANGE)",
+            "ZX   PARTS INPUTS TO AUTOS (% CHANGE)",
+            "ZF   PARTS INPUTS TO FINAL DEMAND (% CHANGE)",
+            "PX   CONSUMER PRICE OF AUTOS (% CHANGE)",
+            "CX   MARGINAL COST OF AUTOS (% CHANGE)",
+            "PZ   PRODUCER PRICE OF Z (% CHANGE)",
+            "PZU  CONSUMER PRICE OF Z AGGREGATE (% CHANGE)",
+            "PL   PRICE OF L (% CHANGE)",
+            "SHRN       NORTH-AMERICAN SHARE OF AUTO MARKET (%)"
+            "MKN        MARKUP RATE FOR NORTH-AMERICAN FIRMS (%)"
+            "MKR        MARKUP RATE FOR ROW FIRMS (%)"
+            "ZX/X       PARTS VALUE SHARE OF AUTO COST (%)"
+            "ZF/Z       FINAL DEMAND SHARE OF PARTS DEMAND (%)"
+            "X/GDP      AUTO SECTOR SHARE OF GDP (%)";
+
+DISPLAY LVLREPORT,
+            "KEY FOR LVLREPORT",
+            "=================",
+            "N    NUMBER OF FIRMS ",
+            "X    AUTO SECTOR OUTPUT ",
+            "X/N  OUTPUT PER FIRM ",
+            "Z    PARTS SECTOR OUTPUT",
+            "EX   AUTO EXPORTS",
+            "MX   AUTO IMPORTS",
+            "EZ   PARTS EXPORTS",
+            "MZ   PARTS IMPORTS",
+            "ZX   PARTS INPUTS TO AUTOS",
+            "ZF   PARTS INPUTS TO FINAL DEMAND",
+            "VEZ  NET VALUE OF PARTS EXPORTS";
+
+DISPLAY VXT, VZT;

@@ -1,0 +1,115 @@
+$Title Test the use of FITPACK inside GAMS (FITLIB01,SEQ=528)
+
+$ontext
+This test uses the library fitfclib. This library packs FITPACK, written by
+Prof. P. Dierckx, in a way that it can be used inside GAMS with the function
+library facility.
+We test that splines of a certain degree (in this case 3 and 4) can interpolate
+polynomial functions of the same degree exactly. This is done for a curve as
+well as for a surface.
+
+Contributor: L. Westermann
+$offtext
+
+
+* Generate data and write it to a GDX file
+$onecho > data.gms
+set m    /0*120/
+set n(m) /0*10 /
+parameter nv(m);
+nv(n) = 5*(ord(n)-1)/(card(n)-1);
+nv(n)$(nv(n)=0) = eps;
+parameter fitdata(*,m,*);
+fitdata('1',n,'x') = nv(n);
+fitdata('1',n,'y') = 1 + 2*nv(n) + 3*nv(n)**2 + 4*nv(n)**3;
+
+fitdata('2',n,'x') = nv(n);
+fitdata('2',n,'y') = 1 + 2*nv(n) + 3*nv(n)**2 + 4*nv(n)**3 + 5*nv(n)**4 ;
+
+
+alias (n,nn);
+scalar cnt /1/;
+loop(n,
+  loop(nn,
+    fitdata('3',m,'x')$(ord(m)=cnt) = nv(n);
+    fitdata('3',m,'y')$(ord(m)=cnt) = nv(nn);
+    fitdata('3',m,'z')$(ord(m)=cnt) = 1 + 2*nv(n)*nv(nn) + 3*(nv(n)*nv(nn))**2 + 4*(nv(n)*nv(nn))**3;
+
+    fitdata('4',m,'x')$(ord(m)=cnt) = nv(n);
+    fitdata('4',m,'y')$(ord(m)=cnt) = nv(nn);
+    fitdata('4',m,'z')$(ord(m)=cnt) = 1 + 2*nv(n)*nv(nn) + 3*(nv(n)*nv(nn))**2 + 4*(nv(n)*nv(nn))**3 + 5*(nv(n)*nv(nn))**4;
+
+    cnt = cnt + 1;
+  );
+);
+
+execute_unload 'fit' fitdata;
+$offecho
+
+$call gams data.gms lo=%gams.lo%
+
+set n nodes /0*100/;
+alias (n,nn);
+parameter nv(n);
+nv(n) = 5*(ord(n)-1)/(card(n)-1);
+
+* Load extrinsic functions
+$funclibin fitlib fitfclib
+function fitp /fitlib.fitparam/
+         fit  /fitlib.fitfunc /;
+
+set funcs functions /ord3, ord4 /
+    h     header    /func, grad, hess /;
+
+parameter fittestC(funcs,*,h,n)   Test Curve results
+          fittestS(funcs,*,h,n,n) Test Surface results;
+
+fittestC('ord3','orig'  ,'func',n) = 1 + 2*nv(n) + 3*nv(n)**2 +  4*nv(n)**3;
+fittestC('ord3','orig'  ,'grad',n) =     2       + 6*nv(n)    + 12*nv(n)**2;
+fittestC('ord3','orig'  ,'hess',n) =               6          + 24*nv(n)   ;
+
+fittestC('ord3','spline','func',n) = fit     (    1,nv(n));
+fittestC('ord3','spline','grad',n) = fit.grad(2  :1,nv(n));
+fittestC('ord3','spline','hess',n) = fit.hess(2:2:1,nv(n));
+
+scalar rc;
+* Set Degree of Spline for x in function 2 to 4
+rc = fitp(2,2,4);
+fittestC('ord4','orig'  ,'func',n) = 1 + 2*nv(n) + 3*nv(n)**2 +  4*nv(n)**3 +  5*nv(n)**4 ;
+fittestC('ord4','orig'  ,'grad',n) =     2       + 6*nv(n)    + 12*nv(n)**2 + 20*nv(n)**3 ;
+fittestC('ord4','orig'  ,'hess',n) =               6          + 24*nv(n)    + 60*nv(n)**2 ;
+
+fittestC('ord4','spline','func',n) = fit     (    2,nv(n));
+fittestC('ord4','spline','grad',n) = fit.grad(2  :2,nv(n));
+fittestC('ord4','spline','hess',n) = fit.hess(2:2:2,nv(n));
+
+fittestS('ord3','orig  ','func',n,nn) = 1 + 2*nv(n)*nv(nn) + 3*(nv(n)*nv(nn))**2 +  4*(nv(n)    * nv(nn))**3;
+* Grad and Hess for x/n only
+fittestS('ord3','orig  ','grad',n,nn) =     2*nv(nn)       + 6* nv(n)*nv(nn)**2  + 12* nv(n)**2 * nv(nn)**3;
+fittestS('ord3','orig  ','hess',n,nn) =                    + 6*       nv(nn)**2  + 24* nv(n)    * nv(nn)**3;
+
+fittestS('ord3','spline','func',n,nn) = fit     (    3,nv(n),nv(nn));
+fittestS('ord3','spline','grad',n,nn) = fit.grad(2  :3,nv(n),nv(nn));
+fittestS('ord3','spline','hess',n,nn) = fit.hess(2:2:3,nv(n),nv(nn));
+
+* Set Degree of Spline for x and y in function 4 to 4
+rc = fitp(4,2,4);
+rc = fitp(4,3,4);
+
+fittestS('ord4','orig  ','func',n,nn) = 1 + 2*nv(n)*nv(nn) + 3*(nv(n)*nv(nn))**2 +  4*(nv(n)    * nv(nn))**3 + 5 *(nv(n)    * nv(nn))**4;
+* Grad and Hess for x/n only
+fittestS('ord4','orig  ','grad',n,nn) =     2*nv(nn)       + 6* nv(n)*nv(nn)**2  + 12* nv(n)**2 * nv(nn)**3  + 20* nv(n)**3 * nv(nn)**4;
+fittestS('ord4','orig  ','hess',n,nn) =                    + 6*       nv(nn)**2  + 24* nv(n)    * nv(nn)**3  + 60* nv(n)**2 * nv(nn)**4;
+
+fittestS('ord4','spline','func',n,nn) = fit     (    4,nv(n),nv(nn));
+fittestS('ord4','spline','grad',n,nn) = fit.grad(2  :4,nv(n),nv(nn));
+fittestS('ord4','spline','hess',n,nn) = fit.hess(2:2:4,nv(n),nv(nn));
+
+parameter MeanAbsDiffC(funcs,h)
+          MeanAbsDiffS(funcs,h);
+
+MeanAbsDiffC(funcs,h)   = sum(n,abs(fittestC(funcs,'orig',h,n)-fittestC(funcs,'spline',h,n)))/card(n);
+MeanAbsDiffS(funcs,h)   = sum((n,nn),abs(fittestS(funcs,'orig',h,n,nn)-fittestS(funcs,'spline',h,n,nn)))/(card(n)*card(nn));
+
+abort$(smax((funcs,h),MeanAbsDiffC(funcs,h))>1e-8) 'Spline did not interpolate curve precisely', MeanAbsDiffC;
+abort$(smax((funcs,h),MeanAbsDiffS(funcs,h))>1e-8) 'Spline did not interpolate surface precisely', MeanAbsDiffS;

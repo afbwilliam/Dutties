@@ -1,0 +1,50 @@
+$title Test disjunctions using negated equality equations (EMPDISJ6, SEQ=581)
+$ontext
+This test is based on bug report send by Silvia Tomasi.
+
+The disjunctive program to solve is
+minimize x
+such that (A1 or (x=0)) and
+          (not A2 or not (x <= 3)) and
+          (not A1 or A2)
+
+An optimal solution is x = 0:
+A1 = false, A2 = false, (x=0) = true, (x<=3) = true.
+
+Contributor: Stefan Vigerske, November 2012
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+
+variables z, x;
+binary variables A1, A2, A3, A4;
+
+equations e0, e1, e2, e3, e4;
+
+e0.. z  =e= x;
+e1.. A1 =e= 1;
+e2.. A2 =e= 1;
+e3.. x  =e= 0;
+e4.. x  =l= 3;
+
+model m / all /; 
+
+option optcr = 0;
+
+set forms / bigm, indic /;
+
+file empinfo / '%emp.info%' /;
+loop(forms,
+ put empinfo;
+ put 'default ' forms.tl /;
+ put 'disjunction * e1 else e3' /;
+ put 'disjunction * Not e2 else Not e4' /;
+ put 'disjunction * Not e1 else e2';
+ putclose;
+
+ solve m us emp min z;
+
+ abort$(abs(z.l) > %TESTTOL%) "wrong optimal value, expected 0"
+ abort$(abs(x.l) > %TESTTOL%) "wrong solution value for x, expected 0"
+);
+

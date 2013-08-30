@@ -1,0 +1,68 @@
+$title 'Test level/marginal correctness and conventions for MCP'  (MCP06,SEQ=340)
+
+$ontext
+
+This model illustrates and tests the convention for returning
+equation/variable levels/marginals for an MCP.
+
+Assume we have a complementarity problem defined by
+model m /f.x/.  The values to expect in GAMS are:
+  x.l: solution computed by the solver
+  f.l: computed as for all GAMS models (plug and chug)
+  x.m: f.l - f.up/f.lo (whichever is not infinity)
+       what if both are infinity??
+  f.m: x.l
+
+AFAIK, what is illustrated here has been the accepted behavior,
+consistently implemented, for quite some time.
+
+Contributor: Steve Dirkse, June 2006
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalars
+  tol / %TESTTOL% /,
+  failed / 0 /;
+
+$escape =
+$echo if{%=1, display '%=1 failed', '%=2'; failed=1}; > gtest.gms
+$escape %
+
+set J / j1 * j4 /;
+
+parameters
+   erhs(J)   /  j1      -1.0
+                j2      1.0
+                j3      -1.0
+                j4      1.0 /
+   ex_lo(J)   / j3      1.0 /
+   ex_up(J)   / j4      -1.0 /
+   ex_l(J)    / j1      -1.0
+                j2      1.0
+                j3      1.0
+                j4      -1.0 /
+   ex_m(J)    / j1      0
+                j2      0
+                j3      2.0
+                j4      -2.0 /
+   ;
+
+equations
+  ef(J);
+
+variable
+  ex(J);
+
+ef(J).. ex(J) =e= erhs(J);
+
+model m / ef.ex /;
+
+ex.lo(J) $= ex_lo(J);
+ex.up(J) $= ex_up(J);
+
+solve m using mcp;
+
+$ batinclude gtest "( m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)" "wrong status codes"
+$ batinclude gtest "(smax(J, abs(ex.l(J)-ex_l(J))) > tol)"    "bad ex.l"
+$ batinclude gtest "(smax(J, abs(ex.m(J)-ex_m(J))) > tol)"    "bad ex.m"
+abort$failed 'test failed';

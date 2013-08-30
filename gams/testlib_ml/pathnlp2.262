@@ -1,0 +1,12 @@
+$TITLE 'PATHNLP test suite - basic option reading test' (PATHNLP2,SEQ=262)
+
+$call gamslib -q 1
+
+$echo "abort$(transport.solvestat <> %solvestat.NormalCompletion% or transport.modelstat <> %modelstat.Optimal%) 'problems with PATHNLP solver';" >> trnsport.gms
+
+* test the path option reading mode:
+*  this should not reset the major_iteration_limit
+$echo "major_iteration_limit_nofourthword 1"  > pathnlp.op2
+$echo "minor_iteration_limit 1"              >> pathnlp.op2
+$call =gams trnsport lp=pathnlp lo=0 optfile=2
+$if errorlevel 1 $abort 'problems with PATHNLP options'

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>GAMSX (GAMSX) API Documentation</h1>
+
+<p>Generated for GAMS 24.0.2</p>
+
+<h2>Functions, Procedures and Properties</h2>
+
+<h3>Execute GAMS</h3>
+<dl>
+
+<dt><a href="#gamsxSW">gamsxSW(Set)</a></dt> <dd>Show Window Option</dd>
+<dt><a href="#gamsxRunExecDLL">gamsxRunExecDLL</a></dt> <dd>Execute GAMS</dd>
+<dt><a href="#gamsxShowError">gamsxShowError</a></dt> <dd>Get Error strings</dd>
+</dl>
+
+
+<h3>Debugging (Internal Use)</h3>
+<dl>
+
+<dt><a href="#gamsxStepThrough">gamsxStepThrough(Set)</a></dt> <dd>Step from line to line in debug mode</dd>
+<dt><a href="#gamsxRunToEnd">gamsxRunToEnd(Set)</a></dt> <dd>Ignore break points and run to the end</dd>
+<dt><a href="#gamsxCB1Defined">gamsxCB1Defined</a></dt> <dd>True if CB1 was set</dd>
+<dt><a href="#gamsxCB2Defined">gamsxCB2Defined</a></dt> <dd>True if CB2 was set</dd>
+<dt><a href="#gamsxAddBreakPoint">gamsxAddBreakPoint</a></dt> <dd>Add break point</dd>
+<dt><a href="#gamsxClearBreakPoints">gamsxClearBreakPoints</a></dt> <dd>Remove all break points</dd>
+<dt><a href="#gamsxSystemInfo">gamsxSystemInfo</a></dt> <dd>Get system counts</dd>
+<dt><a href="#gamsxSymbolInfo">gamsxSymbolInfo</a></dt> <dd>Get symbol information</dd>
+<dt><a href="#gamsxUelName">gamsxUelName</a></dt> <dd>Get unique element name</dd>
+<dt><a href="#gamsxFindSymbol">gamsxFindSymbol</a></dt> <dd>Get symbol index</dd>
+<dt><a href="#gamsxDataReadRawStart">gamsxDataReadRawStart</a></dt> <dd>Initialize reading of a symbol</dd>
+<dt><a href="#gamsxDataReadRaw">gamsxDataReadRaw</a></dt> <dd>Read next record</dd>
+<dt><a href="#gamsxDataReadDone">gamsxDataReadDone</a></dt> <dd>Finish reading of a symbol</dd>
+<dt><a href="#gamsxDataWriteRawStart">gamsxDataWriteRawStart</a></dt> <dd>Initialize writing of a symbol</dd>
+<dt><a href="#gamsxDataWriteRaw">gamsxDataWriteRaw</a></dt> <dd>Write next record</dd>
+<dt><a href="#gamsxDataWriteDone">gamsxDataWriteDone</a></dt> <dd>Finish writing of a symbol</dd>
+<dt><a href="#gamsxRegisterCB1">gamsxRegisterCB1</a></dt> <dd>Register callback function 1 executed at break point</dd>
+<dt><a href="#gamsxRegisterCB2">gamsxRegisterCB2</a></dt> <dd>Register callback function 2 executed at break point</dd>
+<dt><a href="#gamsxGetCB1">gamsxGetCB1</a></dt> <dd>Get address of callback function 1</dd>
+<dt><a href="#gamsxGetCB2">gamsxGetCB2</a></dt> <dd>Get address of callback function 2</dd>
+<dt><a href="#gamsxGetCB1UM">gamsxGetCB1UM</a></dt> <dd>Get pointer to user memory of callback function 1</dd>
+<dt><a href="#gamsxGetCB2UM1">gamsxGetCB2UM1</a></dt> <dd>Get pointer to user memory 1 of callback function 2</dd>
+<dt><a href="#gamsxGetCB2UM2">gamsxGetCB2UM2</a></dt> <dd>Get pointer to user memory 2 of callback function 2</dd>
+</dl>
+
+
+<h2>Arguments</h2>
+<dl>
+
+<dt>AVerbose  </dt> <dd>Verbosity level</dd>
+<dt>CB1       </dt> <dd>Callback function 1</dd>
+<dt>CB2       </dt> <dd>Callback function 2</dd>
+<dt>DoMerge   </dt> <dd>True: merge into existing symbol, False: overwrite existing symbol</dd>
+<dt>Elements  </dt> <dd>Index array of the record</dd>
+<dt>errorLine </dt> <dd>One line of log containing the error message</dd>
+<dt>errorTyp  </dt> <dd>Compilation or execution error</dd>
+<dt>FDim      </dt> <dd>First index position in Elements that changed</dd>
+<dt>fn        </dt> <dd>Filename</dd>
+<dt>fNameLog  </dt> <dd>Name of a log file</dd>
+<dt>gmsLine   </dt> <dd>Line of gms file with error</dd>
+<dt>lineNr    </dt> <dd>Original line number</dd>
+<dt>Msg       </dt> <dd>Message</dd>
+<dt>NrSy      </dt> <dd>Number of symbols</dd>
+<dt>NrUel     </dt> <dd>Number of unique elements</dd>
+<dt>optPtr    </dt> <dd>Pointer to option object</dd>
+<dt>result    </dt> <dd>Return value</dd>
+<dt>SyCount   </dt> <dd>Symbol: Number of records</dd>
+<dt>SyDim     </dt> <dd>Symbol: Dimension</dd>
+<dt>SyExplTxt </dt> <dd>Symbol: Explanatory text</dd>
+<dt>SyName    </dt> <dd>Symbol: Name</dd>
+<dt>SyNr      </dt> <dd>Symbol: Number</dd>
+<dt>sysDir    </dt> <dd>GAMS system directory</dd>
+<dt>SyTyp     </dt> <dd>Symbol: Type</dd>
+<dt>SyUserInfo</dt> <dd>User field value</dd>
+<dt>uel       </dt> <dd>Unique element index</dd>
+<dt>userMem   </dt> <dd>Pointer to user memory</dd>
+<dt>userMem1  </dt> <dd>Pointer to user memory</dd>
+<dt>userMem2  </dt> <dd>Pointer to user memory</dd>
+<dt>Vals      </dt> <dd>Data of the record</dd>
+</dl>
+
+<h2>Calling Sequences</h2>
+
+<h3><a id="gamsxAddBreakPoint">gamsxAddBreakPoint</a></h3>
+<ul>
+<li>Add break point</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const fn        : ShortString</dt> <dd>Filename</dd>
+<dt>          lineNr    : Integer    </dt> <dd>Original line number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxCB1Defined">gamsxCB1Defined</a></h3>
+<ul>
+<li>True if CB1 was set</li>
+<li>Property of type Boolean</li>
+<li>Actions
+<ul><li>r</li>
+</ul>
+</ul>
+
+<h3><a id="gamsxCB2Defined">gamsxCB2Defined</a></h3>
+<ul>
+<li>True if CB2 was set</li>
+<li>Property of type Boolean</li>
+<li>Actions
+<ul><li>r</li>
+</ul>
+</ul>
+
+<h3><a id="gamsxClearBreakPoints">gamsxClearBreakPoints</a></h3>
+<ul>
+<li>Remove all break points</li>
+<li>Procedure</li>
+</ul>
+
+<h3><a id="gamsxDataReadDone">gamsxDataReadDone</a></h3>
+<ul>
+<li>Finish reading of a symbol</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gamsxDataReadRaw">gamsxDataReadRaw</a></h3>
+<ul>
+<li>Read next record</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      var Elements  : TgdxUELIndex</dt> <dd>Index array of the record</dd>
+<dt>      var Vals      : TgdxValues  </dt> <dd>Data of the record</dd>
+<dt>      var FDim      : Integer     </dt> <dd>First index position in Elements that changed</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxDataReadRawStart">gamsxDataReadRawStart</a></h3>
+<ul>
+<li>Initialize reading of a symbol</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr      : Integer</dt> <dd>Symbol: Number</dd>
+<dt>      var SyCount   : Integer</dt> <dd>Symbol: Number of records</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxDataWriteDone">gamsxDataWriteDone</a></h3>
+<ul>
+<li>Finish writing of a symbol</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gamsxDataWriteRaw">gamsxDataWriteRaw</a></h3>
+<ul>
+<li>Write next record</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const Elements  : TgdxUELIndex</dt> <dd>Index array of the record</dd>
+<dt>    const Vals      : TgdxValues  </dt> <dd>Data of the record</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxDataWriteRawStart">gamsxDataWriteRawStart</a></h3>
+<ul>
+<li>Initialize writing of a symbol</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr      : Integer</dt> <dd>Symbol: Number</dd>
+<dt>    const DoMerge   : Boolean</dt> <dd>True: merge into existing symbol, False: overwrite existing symbol</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxFindSymbol">gamsxFindSymbol</a></h3>
+<ul>
+<li>Get symbol index</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const SyName    : ShortString</dt> <dd>Symbol: Name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxGetCB1">gamsxGetCB1</a></h3>
+<ul>
+<li>Get address of callback function 1</li>
+<li>Function returns </li>
+</ul>
+
+<h3><a id="gamsxGetCB1UM">gamsxGetCB1UM</a></h3>
+<ul>
+<li>Get pointer to user memory of callback function 1</li>
+<li>Function returns Pointer</li>
+</ul>
+
+<h3><a id="gamsxGetCB2">gamsxGetCB2</a></h3>
+<ul>
+<li>Get address of callback function 2</li>
+<li>Function returns </li>
+</ul>
+
+<h3><a id="gamsxGetCB2UM1">gamsxGetCB2UM1</a></h3>
+<ul>
+<li>Get pointer to user memory 1 of callback function 2</li>
+<li>Function returns Pointer</li>
+</ul>
+
+<h3><a id="gamsxGetCB2UM2">gamsxGetCB2UM2</a></h3>
+<ul>
+<li>Get pointer to user memory 2 of callback function 2</li>
+<li>Function returns Pointer</li>
+</ul>
+
+<h3><a id="gamsxRegisterCB1">gamsxRegisterCB1</a></h3>
+<ul>
+<li>Register callback function 1 executed at break point</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          CB1       : TBrkPCallBack1</dt> <dd>Callback function 1                        Function(const fn:ShortString, linNr:Integer, lstNr:Integer, usrMem:Pointer) returns Integer</dd>
+<dt>          userMem   : Pointer</dt> <dd>Pointer to user memory</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxRegisterCB2">gamsxRegisterCB2</a></h3>
+<ul>
+<li>Register callback function 2 executed at break point</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          CB2       : TBrkPCallBack2</dt> <dd>Callback function 2                        Function(const fn:ShortString, linNr:Integer, lstNr:Integer, userMem1:Pointer, userMem2:Pointer) returns Integer</dd>
+<dt>          userMem1  : Pointer</dt> <dd>Pointer to user memory</dd>
+<dt>          userMem2  : Pointer</dt> <dd>Pointer to user memory</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxRunExecDLL">gamsxRunExecDLL</a></h3>
+<ul>
+<li>Execute GAMS</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          optPtr    : Pointer    </dt> <dd>Pointer to option object</dd>
+<dt>    const sysDir    : ShortString</dt> <dd>GAMS system directory</dd>
+<dt>          AVerbose  : Integer    </dt> <dd>Verbosity level</dd>
+<dt>      out Msg       : ShortString</dt> <dd>Message</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxRunToEnd">gamsxRunToEnd(Set)</a></h3>
+<ul>
+<li>Ignore break points and run to the end</li>
+<li>Property of type Boolean</li>
+<li>Actions
+<ul><li>r</li><li>w</li>
+</ul>
+</ul>
+
+<h3><a id="gamsxShowError">gamsxShowError</a></h3>
+<ul>
+<li>Get Error strings</li>
+<li>Function returns Boolean</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const fNameLog  : ShortString</dt> <dd>Name of a log file</dd>
+<dt>      out errorLine : ShortString</dt> <dd>One line of log containing the error message</dd>
+<dt>      out errorTyp  : ShortString</dt> <dd>Compilation or execution error</dd>
+<dt>      out gmsLine   : ShortString</dt> <dd>Line of gms file with error</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxStepThrough">gamsxStepThrough(Set)</a></h3>
+<ul>
+<li>Step from line to line in debug mode</li>
+<li>Property of type Boolean</li>
+<li>Actions
+<ul><li>r</li><li>w</li>
+</ul>
+</ul>
+
+<h3><a id="gamsxSW">gamsxSW(Set)</a></h3>
+<ul>
+<li>Show Window Option</li>
+<li>Property of type Integer</li>
+<li>Actions
+<ul><li>w</li>
+</ul>
+</ul>
+
+<h3><a id="gamsxSymbolInfo">gamsxSymbolInfo</a></h3>
+<ul>
+<li>Get symbol information</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr      : Integer    </dt> <dd>Symbol: Number</dd>
+<dt>      out SyName    : ShortString</dt> <dd>Symbol: Name</dd>
+<dt>      out SyExplTxt : ShortString</dt> <dd>Symbol: Explanatory text</dd>
+<dt>      var SyDim     : Integer    </dt> <dd>Symbol: Dimension</dd>
+<dt>      var SyTyp     : Integer    </dt> <dd>Symbol: Type</dd>
+<dt>      var SyCount   : Integer    </dt> <dd>Symbol: Number of records</dd>
+<dt>      var SyUserInfo: Integer    </dt> <dd>User field value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxSystemInfo">gamsxSystemInfo</a></h3>
+<ul>
+<li>Get system counts</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      var NrSy      : Integer</dt> <dd>Number of symbols</dd>
+<dt>      var NrUel     : Integer</dt> <dd>Number of unique elements</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gamsxUelName">gamsxUelName</a></h3>
+<ul>
+<li>Get unique element name</li>
+<li>Function returns ShortString</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          uel       : Integer</dt> <dd>Unique element index</dd>
+</dl> </ul>
+</ul></body>
+</html>

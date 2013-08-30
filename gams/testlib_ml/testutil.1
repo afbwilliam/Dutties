@@ -1,0 +1,90 @@
+$title Generates some useful files from the Test Model Library (TESTUTIL,SEQ=1)
+$Ontext
+Generates some useful files from the Test Model Library
+
+
+GAMS Development Coorporation, Modeling Tool Box.
+
+  The following system configuration/document files are written:
+
+      testlib.glb   IDE index and documentaion
+      testlibfs.txt Makefile input file
+
+  All files $included, read and written have to be in the same
+  directory. This program can be execute from another location
+  by using the GAMS parameter U1, for example:
+
+   >gams testutil.1 U1=c:\oldd\alex\gams\gamslib\ver008\test\  --version=1.0
+
+$Offtext
+
+$setglobal gamslib '%gams.u1%'
+
+files glb      IDE model library index / '%gamslib%testlib.glb'   /
+      glist    makefile index file     / '%gamslib%testlibfs.txt' / ;
+
+scalar first;
+
+$offlisting
+$include testmod.inc
+$onlisting
+*
+*  IDE testlib file
+*
+glb.pw = 1024;
+put glb
+    'Version = 5'
+ /  'LibraryName = GAMS Test Library'
+ /  'Columns = 4'
+ /  '4 = SeqNr'
+ /  '1 = Name'
+ /  '2 = Type'
+ /  '3 = Description'
+ /  'InitialSort = 2'
+ /  '*$*$*$';
+
+glb.lcase=1;
+loop{(s,m)$sm(s,m),
+   put / 'Files = ' m.tl:0 '.' s.tl:0;
+   loop(incmap(inc,s), put ',',inc.tl:0 '.inc');
+   loop{incmap(minc,s),
+       put ',[',minc.tl:0,']';
+   };
+   glb.lcase=0;
+    loop{incmap(oinc,s),
+      put ',',oinc.tl:0;
+   };
+   loop{incmap(linc,s),
+      put ',',linc.tl:0;
+   };
+   glb.lcase=2;
+   put / '1 = ' m.tl:0;
+   put / '2 = '; loop(tss(t,s), put t.tl );
+   glb.lcase=0;
+   put / '3 = ' m.te(m);
+   glb.lcase=1;
+   put / '4 = ' '000000':ceil(log10(card(s)+1));
+   put   @(glb.cc-card(s.tl)) s.tl:0;
+   put_utilities 'glb'/ '%gamslib%' m.tl:0 '.' s.tl:0;
+   put / '*$*$*$'
+};
+putclose;
+$if NOT %system.filesys% == UNIX execute 'rename TESTLIB.GLB testlib.glb';
+*
+*  makefile input
+*
+$stitle list of all files in makefile format
+put glist 'TESTLIBFILES = \'
+        / 'testlib.glb \'
+        / 'testlib.log \';
+loop{inc,
+   put / inc.tl:0 '.inc \'
+};
+loop{oinc,
+   put / oinc.tl:0 ' \'
+};
+glist.lcase=1;
+loop(sm(s,m),
+   put  / m.tl:0 '.' s.tl:0 ' \' )
+putclose // glist;
+$if NOT %system.filesys% == UNIX execute 'rename TESTLIBFS.TXT testlibfs.txt';

@@ -1,0 +1,103 @@
+$title  Scarf's Activity Analysis Example (SCARFEXPEND,SEQ=55)
+
+$Ontext
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.
+Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp),
+we instead
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    A'p <= 0, p >= 0
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_x  p'*x   s.t.  u_h(x) >= 1, x >= 0
+(or equivalently:
+   expend_h(p)  = min_x  p'*x   s.t.  log(u_h(x)) >= 0, x >=0
+)
+
+The EMPLIB model uses a closed form of the expenditure function.  In
+this model we use the definition of the expenditure model in terms of
+the utility function to generate the MCP model using an NLP with KKT
+conditions in it.
+
+ie replace the expenditure function by its KKT conditions (utillev, dedp)
+in the defn of the max_p problem above.
+
+Contributor: Michael Ferris, October 2010
+$Offtext
+
+$call gamslib -q scarfmcp
+$include scarfdata.inc
+
+option limrow = 0, limcol = 0;
+
+positive
+variables
+
+        p(c)    commodity price,
+        i(h)    income;
+
+equations
+        profit(s)       zero profit,
+        income(h)       income index;
+
+*       distinguish ces and cobb-douglas demand functions:
+
+profit(s)..     sum(c, a(c,s) * p(c)) =l= 0;
+
+income(h)..     i(h) =g= sum(c, p(c) * e(c,h));
+
+positive variables x(c,h) Marshallian demand;
+positive variables utilmul(h) utility multiplier;
+equations utillev(h), dedp(c,h);
+
+utillev(h)..
+  ((1/rho(h))*log(sum(c$alpha(c,h), lambda(c,h)*x(c,h)**rho(h))))$(esub(h) ne 1)
+  + sum(c$alpha(c,h), alpha(c,h)*log(x(c,h)))$(esub(h) eq 1)
+  =e= 0;
+
+dedp(c,h)$alpha(c,h)..
+  (p(c) - utilmul(h)*lambda(c,h)*x(c,h)**(rho(h)-1))$(esub(h) ne 1)
+  + (p(c) - utilmul(h)*alpha(c,h)/x(c,h))$(esub(h) eq 1) =e= 0;
+
+variables z;
+equations objdef;
+
+* following works for Cobb Douglas functions (esub(h) = 1)
+
+objdef..
+  z =e=
+  sum(h, i(h)*log(sum(c$alpha(c,h), p(c)*x(c,h))))
+  - sum(c, sum(h, e(c,h))*p(c));
+
+model scarf /objdef, profit, income, dedp, utillev /;
+
+* Set initial values
+p.l(c) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+p.lo(c)  = 0.00001$(smax(h, alpha(c,h)));
+
+*       fix the price of numeraire commodity:
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+* For Cobb Douglas
+* esub(h) = 1;
+
+x.l(c,h) = 0.1;
+x.lo(c,h) = 0.00001$alpha(c,h);
+x.fx(c,h)$(not alpha(c,h)) = 0;
+utilmul.l(h) = smax(c$alpha(c,h), p.l(c)*x.l(c,h)/alpha(c,h))$(esub(h) eq 1)
+ + smax(c$alpha(c,h), p.l(c)/(lambda(c,h)*x.l(c,h)**(rho(h)-1)))$(esub(h) ne 1);
+
+file myinfo / '%emp.info%' /;
+put myinfo 'equilibrium';
+put      / 'vi income i';
+putclose / 'max z p utilmul x objdef profit utillev dedp';
+
+solve scarf using emp;
+parameter y(s) production;
+y(s) = profit.m(s);
+display y;

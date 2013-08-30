@@ -1,0 +1,1234 @@
+<html>
+<head>
+<title>SNOPT Options</title>
+</head>
+<body>
+<h2>SNOPT Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/snopt.pdf">SNOPT manual</a>.
+
+<h2>Summary of SNOPT Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Printing</h3></th></tr>
+<tr><td><a href="#SNOPTmajor_print_level">
+" "" "" " major" "print" "level</a></td>
+<td>Amount of information printed during optimization (listing file)</td></tr>
+<tr><td><a href="#SNOPTminor_print_level">
+" "" "" " minor" "print" "level</a></td>
+<td>Amount of information printed during optimization (listing file)</td></tr>
+<tr><td><a href="#SNOPTprint_frequency">
+" "" "" " print" "frequency</a></td>
+<td>Number of iterations between each log line (listing file)</td></tr>
+<tr><td><a href="#SNOPTsolution">
+" "" "" " solution</a></td>
+<td>Prints SNOPT solution (listing file)</td></tr>
+<tr><td><a href="#SNOPTsummary_frequency">
+" "" "" " summary" "frequency</a></td>
+<td>Number of iterations between each log line (log file)</td></tr>
+<tr><td><a href="#SNOPTsuppress_parameters">
+" "" "" " suppress" "parameters</a></td>
+<td>Suppress printing of parameters (listing file)</td></tr>
+<tr><td><a href="#SNOPTsystem_information">
+" "" "" " system" "information</a></td>
+<td>Provides additional information on the progress of the iterations (listing file)</td></tr>
+<tr><td><a href="#SNOPTtiming_level">
+" "" "" " timing" "level</a></td>
+<td>Amount of timing information (listing file)</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Problem specification</h3></th></tr>
+<tr><td><a href="#SNOPTfeasible_point">
+" "" "" " feasible" "point</a></td>
+<td>Ignore objective function and find a feasible point</td></tr>
+<tr><td><a href="#SNOPTinfinite_bound">
+" "" "" " infinite" "bound</a></td>
+<td>Bounds larger than this number are considered Infinity</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Convergence tolerances</h3></th></tr>
+<tr><td><a href="#SNOPTmajor_feasibility_tolerance">
+" "" "" " major" "feasibility" "tolerance</a></td>
+<td>Specifies how accurately the nonlinear constraints should be satisfied</td></tr>
+<tr><td><a href="#SNOPTmajor_optimality_tolerance">
+" "" "" " major" "optimality" "tolerance</a></td>
+<td>Specifies the final accuracy of the dual variables</td></tr>
+<tr><td><a href="#SNOPTminor_feasibility_tolerance">
+" "" "" " minor" "feasibility" "tolerance</a></td>
+<td>Feasibility tolerance applied to all variables and linear constraints</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Derivative checking</h3></th></tr>
+<tr><td><a href="#SNOPTstart_constraint_check">
+" "" "" " start" "constraint" "check</a></td>
+<td>Can be used to reduce the range of finite-difference checks</td></tr>
+<tr><td><a href="#SNOPTstart_objective_check">
+" "" "" " start" "objective" "check</a></td>
+<td>Can be used to reduce the range of finite-difference checks</td></tr>
+<tr><td><a href="#SNOPTstop_constraint_check">
+" "" "" " stop" "constraint" "check</a></td>
+<td>Can be used to reduce the range of finite-difference checks</td></tr>
+<tr><td><a href="#SNOPTstop_objective_check">
+" "" "" " stop" "objective" "check</a></td>
+<td>Can be used to reduce the range of finite-difference checks</td></tr>
+<tr><td><a href="#SNOPTverify_level">
+" "" "" " verify" "level</a></td>
+<td>Finite-difference checks on the derivatives</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Scaling</h3></th></tr>
+<tr><td><a href="#SNOPTscale_option">
+" "" "" " scale" "option</a></td>
+<td>Scaling of linear/nonlinear variables</td></tr>
+<tr><td><a href="#SNOPTscale_print">
+" "" "" " scale" "print</a></td>
+<td>Print scaling factors (listing file)</td></tr>
+<tr><td><a href="#SNOPTscale_tolerance">
+" "" "" " scale" "tolerance</a></td>
+<td>Scale tolerance</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Other tolerances</h3></th></tr>
+<tr><td><a href="#SNOPTcrash_tolerance">
+" "" "" " crash" "tolerance</a></td>
+<td>Allow crash procedure to ignore small elements in eligible columns</td></tr>
+<tr><td><a href="#SNOPTlinesearch_tolerance">
+" "" "" " linesearch" "tolerance</a></td>
+<td>Accuracy required for steplength</td></tr>
+<tr><td><a href="#SNOPTpivot_tolerance">
+" "" "" " pivot" "tolerance</a></td>
+<td>Used to prevent columns entering the basis making it almost singular</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>QP subproblems</h3></th></tr>
+<tr><td><a href="#SNOPTcrash_option">
+" "" "" " crash" "option</a></td>
+<td>Controls the basis crash algorithm</td></tr>
+<tr><td><a href="#SNOPTelastic_weight">
+" "" "" " elastic" "weight</a></td>
+<td>Used only during elastic mode</td></tr>
+<tr><td><a href="#SNOPTiterations_limit">
+" "" "" " iterations" "limit</a></td>
+<td>Minor iteration limit (ITERLIM)</td></tr>
+<tr><td><a href="#SNOPTpartial_price">
+" "" "" " partial" "price</a></td>
+<td>Number of segments in partial pricing strategy</td></tr>
+<tr><td><a href="#SNOPTqpsolver">
+" "" "" " qpsolver</a></td>
+<td>QP Solver</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>SQP method</h3></th></tr>
+<tr><td><a href="#SNOPTcentral_difference_interval">
+" "" "" " central" "difference" "interval</a></td>
+<td>Not applicable: GAMS provides analytic derivatives</td></tr>
+<tr><td><a href="#SNOPTcold_start">
+" "" "" " cold" "start</a></td>
+<td>Ignore advanced basis and use CRASH procedure</td></tr>
+<tr><td><a href="#SNOPTderivative_level">
+" "" "" " derivative" "level</a></td>
+<td>Specifies which derivatives are provided</td></tr>
+<tr><td><a href="#SNOPTderivative_linesearch">
+" "" "" " derivative" "linesearch</a></td>
+<td>Linesearch method (safeguarded cubic interpolation) with use of derivatives</td></tr>
+<tr><td><a href="#SNOPTdifference_interval">
+" "" "" " difference" "interval</a></td>
+<td>Not applicable: GAMS provides analytic derivatives</td></tr>
+<tr><td><a href="#SNOPTfunction_precision">
+" "" "" " function" "precision</a></td>
+<td>Relative accuracy with which the nonlinear functions are evaluated</td></tr>
+<tr><td><a href="#SNOPTmajor_iterations_limit">
+" "" "" " major" "iterations" "limit</a></td>
+<td>Max number of major iterations</td></tr>
+<tr><td><a href="#SNOPTmajor_step_limit">
+" "" "" " major" "step" "limit</a></td>
+<td>Limits the change in x during a linesearch</td></tr>
+<tr><td><a href="#SNOPTminor_iterations_limit">
+" "" "" " minor" "iterations" "limit</a></td>
+<td>Max number of minor iterations between linearizations of nonlinear constraints</td></tr>
+<tr><td><a href="#SNOPTnew_superbasics_limit">
+" "" "" " new" "superbasics" "limit</a></td>
+<td>Limit on new superbasics when a QP subproblem is solved</td></tr>
+<tr><td><a href="#SNOPTnonderivative_linesearch">
+" "" "" " nonderivative" "linesearch</a></td>
+<td>Linesearch method (safeguarded quadratic interpolation) without use of derivatives</td></tr>
+<tr><td><a href="#SNOPTpenalty_parameter">
+" "" "" " penalty" "parameter</a></td>
+<td>Initial penalty parameter</td></tr>
+<tr><td><a href="#SNOPTproximal_point_method">
+" "" "" " proximal" "point" "method</a></td>
+<td>Satisfies linear constraints near x0</td></tr>
+<tr><td><a href="#SNOPTreduced_hessian_dimension">
+" "" "" " reduced" "hessian" "dimension</a></td>
+<td>Size of Hessian matrix</td></tr>
+<tr><td><a href="#SNOPTsuperbasics_limit">
+" "" "" " superbasics" "limit</a></td>
+<td>Maximum number of superbasics</td></tr>
+<tr><td><a href="#SNOPTunbounded_objective_value">
+" "" "" " unbounded" "objective" "value</a></td>
+<td>Determines when a problem is called unbounded</td></tr>
+<tr><td><a href="#SNOPTunbounded_step_size">
+" "" "" " unbounded" "step" "size</a></td>
+<td>Determines when a problem is called unbounded</td></tr>
+<tr><td><a href="#SNOPTviolation_limit">
+" "" "" " violation" "limit</a></td>
+<td>Limit on maximum constraint violation after the linesearch</td></tr>
+<tr><td><a href="#SNOPTwarm_start">
+" "" "" " warm" "start</a></td>
+<td>Use advanced basis provided by GAMS</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Hessian approximation</h3></th></tr>
+<tr><td><a href="#SNOPThessian_frequency">
+" "" "" " hessian" "frequency</a></td>
+<td>How often the full Hessian is reset to the identity matrix</td></tr>
+<tr><td><a href="#SNOPThessian_full_memory">
+" "" "" " hessian" "full" "memory</a></td>
+<td>Approximate Hessian is treated as a dense matrix</td></tr>
+<tr><td><a href="#SNOPThessian_limited_memory">
+" "" "" " hessian" "limited" "memory</a></td>
+<td>Limited-memory procedure is used to update a diagonal Hessian approximation</td></tr>
+<tr><td><a href="#SNOPThessian_updates">
+" "" "" " hessian" "updates</a></td>
+<td>How often the limited memory Hessian is reset</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Frequencies</h3></th></tr>
+<tr><td><a href="#SNOPTcheck_frequency">
+" "" "" " check" "frequency</a></td>
+<td>Number of iterations between numerical accuracy check</td></tr>
+<tr><td><a href="#SNOPTexpand_frequency">
+" "" "" " expand" "frequency</a></td>
+<td>Setting for anti-cycling mechanism</td></tr>
+<tr><td><a href="#SNOPTfactorization_frequency">
+" "" "" " factorization" "frequency</a></td>
+<td>Number of iterations between basis factorizations</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>LUSOL options</h3></th></tr>
+<tr><td><a href="#SNOPTLU_complete_pivoting">
+" "" "" " LU" "complete" "pivoting</a></td>
+<td>LUSOL pivoting strategy</td></tr>
+<tr><td><a href="#SNOPTLU_density_tolerance">
+" "" "" " LU" "density" "tolerance</a></td>
+<td>When to use dense factorization</td></tr>
+<tr><td><a href="#SNOPTLU_factor_tolerance">
+" "" "" " LU" "factor" "tolerance</a></td>
+<td>Trade-off between stability and sparsity in basis factorization</td></tr>
+<tr><td><a href="#SNOPTLU_partial_pivoting">
+" "" "" " LU" "partial" "pivoting</a></td>
+<td>LUSOL pivoting strategy</td></tr>
+<tr><td><a href="#SNOPTLU_rook_pivoting">
+" "" "" " LU" "rook" "pivoting</a></td>
+<td>LUSOL pivoting strategy</td></tr>
+<tr><td><a href="#SNOPTLU_singularity_tolerance">
+" "" "" " LU" "singularity" "tolerance</a></td>
+<td>Protection against ill-conditioned basis matrices</td></tr>
+<tr><td><a href="#SNOPTLU_update_tolerance">
+" "" "" " LU" "update" "tolerance</a></td>
+<td>Trade-off between stability and sparsity in basis factorization</td></tr></table>
+<h2>Detailed Descriptions of SNOPT Options</h2>
+
+<h4><a name="SNOPTcentral_difference_interval">
+" "" "" " central" "difference" "interval</a>
+<i> (real)</i> Not applicable: GAMS provides analytic derivatives</h4><p>
+
+When <i>Derivative level < 3</i>
+the <i>central-difference interval r</i> is used near an optimal solution to
+obtain more accurate (but more expensive) estimates of gradients. Twice as many function
+evaluations are required compared to forward differencing. The interval used for the <i>j<sup>th</sup></i>
+variable is <i>h<sub>j</sub> = r(1+|x<sub>j</sub>|)</i>. The resulting derivative estimates should be accurate to <i>O(r<sup>2</sup>)</i>,
+unless the functions are badly scaled.
+
+<br><i>(default = 6.0e-6)</i>
+
+<h4><a name="SNOPTcheck_frequency">
+" "" "" " check" "frequency</a>
+<i> (integer)</i> Number of iterations between numerical accuracy check</h4><p>
+
+Every <i>i</i><sup>th</sup> iteration after the most recent basis factorization, a numerical
+test is made to see if the current solution <i>x</i> satisfies the general linear
+constraints (including linearized nonlinear constraints, if any). The constraints
+are of the form <i>Ax+s = 0</i> where <i>s</i> is the set of slack variables. To
+perform the numerical test, the residual vector <i>r = Ax + s</i> is computed.
+If the largest component of <i>r</i> is judged to be too large, the current basis is
+refactorized and the basic variables are recomputed to satisfy the general
+constraints more accurately.
+
+<br><i>(default = 60)</i>
+
+<h4><a name="SNOPTcold_start">
+" "" "" " cold" "start</a>
+<i> (string)</i> Ignore advanced basis and use CRASH procedure</h4><p>
+
+Requests that the CRASH procedure be used to choose an initial basis. Overrides the
+GAMS <i>BRATIO</i> option.
+
+
+<h4><a name="SNOPTcrash_option">
+" "" "" " crash" "option</a>
+<i> (integer)</i> Controls the basis crash algorithm</h4><p>
+
+Except on restarts, a CRASH procedure is used to select an initial basis from certain rows
+and columns of the constraint matrix <i>(A -I)</i>. The <i>Crash option i</i> determines which rows
+and columns of <i>A </i>are eligible initially, and how many times CRASH is called. Columns of
+<i>-I</i> are used to pad the basis where necessary. <br>
+If <i>i >= 1</i>, certain slacks on inequality rows are selected for the basis first. (If <i>i >= 2</i>,
+numerical values are used to exclude slacks that are close to a bound.) CRASH then makes
+several passes through the columns of <i>A</i>, searching for a basis matrix that is essentially
+triangular. A column is assigned to "pivot" on a particular row if the column contains
+a suitably large element in a row that has not yet been assigned. (The pivot elements
+ultimately form the diagonals of the triangular basis.) For remaining unassigned rows, slack
+variables are inserted to complete the basis.
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Initial basis will be a slack basis.
+The initial basis contains only slack variables: <i>B = I</i>.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>One phase CRASH.
+CRASH is called once, looking for a triangular basis in all rows and columns of <i>A</i>.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Two phase CRASH.
+CRASH is called twice (if there are nonlinear constraints). The first call looks for a
+triangular basis in linear rows, and the iteration proceeds with simplex iterations until
+the linear constraints are satisfied. The Jacobian is then evaluated for the first major
+iteration and CRASH is called again to find a triangular basis in the nonlinear rows
+(retaining the current basis for linear rows).</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Three phase CRASH.
+CRASH is called up to three times (if there are nonlinear constraints). The first two
+calls treat linear equalities and linear inequalities separately. As before, the last call
+treats nonlinear rows before the first major iteration.</td></tr>
+</table>
+
+<h4><a name="SNOPTcrash_tolerance">
+" "" "" " crash" "tolerance</a>
+<i> (real)</i> Allow crash procedure to ignore small elements in eligible columns</h4><p>
+
+The <i>Crash tolerance r</i> allows the starting procedure <i>CRASH</i> to ignore
+certain small nonzeros in each column of <i>A</i>. If <i>a<sub>max</sub></i> is the largest element
+in column <i>j</i>, other nonzeros <i>a<sub>i,j</sub></i> in the column are ignored if <i>|a<sub>i,j</sub>| <
+a<sub>max</sub> * r</i>. To be meaningful, the parameter <i>r</i> should be in the range <i>0 <= r < 1</i>).
+When <i>r > 0.0</i> the basis obtained by <i>CRASH</i> may not be strictly triangular,
+but it is likely to be nonsingular and almost triangular. The intention is to
+obtain a starting basis containing more columns of <i>A</i> and fewer (arbitrary)
+slacks. A feasible solution may be reached sooner on some problems.
+For example, suppose the first <i>m</i> columns of <i>A</i> are the matrix shown under
+LU factor tolerance; i.e., a tridiagonal matrix with entries -1, 4, -1. To
+help <i>CRASH</i> choose all <i>m</i> columns for the initial basis, we could specify
+<i>Crash tolerance r</i> for some value of <i>r > 0.25</i>.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="SNOPTderivative_level">
+" "" "" " derivative" "level</a>
+<i> (integer)</i> Specifies which derivatives are provided</h4><p>
+
+In a GAMS environment this should be kept at its default of 3.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="SNOPTderivative_linesearch">
+" "" "" " derivative" "linesearch</a>
+<i> (string)</i> Linesearch method (safeguarded cubic interpolation) with use of derivatives</h4><p>
+
+At each major iteration a linesearch is used to improve the merit function. A <i>Derivative
+linesearch</i> uses safeguarded cubic interpolation and requires both function and gradient
+values to compute estimates of the step <i>alpha<sub>k</sub></i>.
+
+
+<h4><a name="SNOPTdifference_interval">
+" "" "" " difference" "interval</a>
+<i> (real)</i> Not applicable: GAMS provides analytic derivatives</h4><p>
+
+This alters the interval <i>h<sub>1</sub></i> that is used to estimate gradients by forward differences in the
+following circumstances:
+<ul>
+<li>In the initial ("cheap") phase of verifying the problem derivatives.
+<li>For verifying the problem derivatives.
+<li>For estimating missing derivatives.
+</ul>
+In all cases, a derivative with respect to <i>x<sub>j</sub></i> is estimated by perturbing that component of
+<i>x</i> to the value <i>x<sub>j</sub> + h<sub>1</sub>(1 + |x<sub>j</sub>|)</i>, and then evaluating <i>f<sub>0</sub>(x)</i> or <i>f(x)</i> at the perturbed point.The resulting gradient estimates should be accurate to O(h1) unless the functions are badly
+scaled. Judicious alteration of <i>h<sub>1</sub></i> may sometimes lead to greater accuracy.
+
+<br><i>(default = 1.5e-8)</i>
+
+<h4><a name="SNOPTelastic_weight">
+" "" "" " elastic" "weight</a>
+<i> (real)</i> Used only during elastic mode</h4><p>
+
+This keyword determines the initial weight associated with the elastic mode problem
+<blockquote>
+<table>
+<tr><td>minimize</td><td><i>f<sub>0</sub>(x) + gamma*e<sup>T</sup>(v+w)</i></td></tr>
+<tr><td>subject to</td><td><i>L<sub>1</sub> <= x <= U<sub>1</sub></i></td></tr>
+<tr><td></td><td><i>L<sub>2</sub> <= f(x) - v + w  <= U<sub>2</sub></i></td></tr>
+<tr><td></td><td><i>L<sub>3</sub> <= A<sub>L</sub>x  <= U<sub>3</sub></i></td></tr>
+<tr><td></td><td><i>v,w >= 0</i></td></tr>
+</table>
+</blockquote>
+At major iteration <i>k</i>, if elastic mode has not yet started, a scale factor <i>sigma<sub>k</sub> = 1+||g(x<sub>k</sub>)||</i>
+is defined from the current objective gradient. Elastic mode is then started if the QP
+subproblem is infeasible, or the QP dual variables are larger in magnitude than <i>sigma<sub>k</sub>w</i>. The
+QP is re-solved in elastic mode with  <i>gamma=sigma<sub>k</sub>w</i>.
+Thereafter, major iterations continue in elastic mode until they converge to a point that
+is optimal for the elastic problem. If the point is feasible for the problem with <i>v = w = 0</i>, it is declared
+locally optimal. Otherwise, is increased by a factor of 10 and major iterations continue.
+If <i>gamma</i> has already reached a maximum allowable value, the problem is declared locally infeasible.
+
+<br><i>(default = 1.0e4)</i>
+
+<h4><a name="SNOPTexpand_frequency">
+" "" "" " expand" "frequency</a>
+<i> (integer)</i> Setting for anti-cycling mechanism</h4><p>
+
+This option is part of anti-cycling procedure designed to guarantee progress
+even on highly degenerate problems.
+For linear models, the strategy is to force a positive step at every iteration,
+at the expense of violating the bounds on the variables by a small
+amount. Suppose the specified feasibility tolerance is <i>delta</i>. Over a period of
+<i>i</i> iterations, the tolerance actually used by GAMS/SNOPT increases from
+<i>0.5*delta</i> to  <i>delta</i> (in steps <i>0.5*delta/i</i>).
+For nonlinear models, the same procedure is used for iterations in which
+there is only one superbasic variable. (Cycling can occur only when the
+current solution is at a vertex of the feasible region.) Thus, zero steps
+are allowed if there is more than one superbasic variable, but otherwise
+positive steps are enforced.
+Increasing <i>i</i> helps reduce the number of slightly infeasible nonbasic basic
+variables (most of which are eliminated during a resetting procedure).
+However, it also diminishes the freedom to choose a large pivot element
+(see Pivot tolerance).
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="SNOPTfactorization_frequency">
+" "" "" " factorization" "frequency</a>
+<i> (integer)</i> Number of iterations between basis factorizations</h4><p>
+
+At most <i>factorization frequency=i</i> basis changes will occur between factorizations of the basis
+matrix.
+<ul>
+<li>With linear programs, the basis factors are usually updated every iteration.
+The default <i>i</i> is reasonable for typical problems. Higher values up to
+<i>i = 100</i> (say) may be more efficient on problems that are extremely sparse
+and well scaled.
+<li>When the objective function is nonlinear, fewer basis updates will occur as
+an optimum is approached. The number of iterations between basis factorizations
+will therefore increase. During these iterations a test is made
+regularly (according to the Check frequency) to ensure that the general
+constraints are satisfied. If necessary the basis will be re-factorized before
+the limit of <i>i</i> updates is reached.
+<li>Default = 100 (LP) or 50 (NLP)
+</ul>
+
+<br><i>(default = 100)</i>
+
+<h4><a name="SNOPTfeasible_point">
+" "" "" " feasible" "point</a>
+<i> (string)</i> Ignore objective function and find a feasible point</h4><p>
+
+The keyword <i>feasible point</i> means "Ignore the objective function" while finding a
+feasible point for the linear and nonlinear constraints.
+
+
+<h4><a name="SNOPTfunction_precision">
+" "" "" " function" "precision</a>
+<i> (real)</i> Relative accuracy with which the nonlinear functions are evaluated</h4><p>
+
+The relative function precision is intended to be a measure of the relative accuracy
+with which the nonlinear functions can be computed. For example, if <i>f(x)</i> is computed as
+1000.56789 for some relevant <i>x</i> and if the first 6 significant digits are known to be correct,
+the appropriate value for <i>function precision</i> would be 1.0e-6.
+(Ideally the functions <i>f(x)</i> or <i>F<sub>i</sub>(x)</i> should have magnitude of order 1. If all functions are
+substantially less than 1 in magnitude, <i>function precision</i> should be the absolute precision. For example,
+if <i>f(x) = 1.23456789e-4</i> at some point and if the first 6 significant digits are known to be
+correct, the appropriate value for <i>function precision</i> would be 1.0e-10.)
+<ul>
+<li> The default is suited for simple analytic functions.
+<li> In some cases the function values will be the result of extensive computation, possibly
+involving an iterative procedure that can provide rather few digits of precision at
+reasonable cost. Specifying an appropriate <i>Function precision</i> may lead to savings,
+by allowing the linesearch procedure to terminate when the difference between function
+values along the search direction becomes as small as the absolute error in the values.
+</ul>
+
+<br><i>(default = 3.00e-13)</i>
+
+<h4><a name="SNOPThessian_frequency">
+" "" "" " hessian" "frequency</a>
+<i> (integer)</i> How often the full Hessian is reset to the identity matrix</h4><p>
+
+If <i>Hessian Full</i> is selected and <i>Hessian Frequency=i</i> BFGS updates have already been carried out, the Hessian
+approximation is reset to the identity matrix. (For certain problems, occasional resets may
+improve convergence, but in general they should not be necessary.)
+
+<br><i>(default = 999999)</i>
+
+<h4><a name="SNOPThessian_full_memory">
+" "" "" " hessian" "full" "memory</a>
+<i> (string)</i> Approximate Hessian is treated as a dense matrix</h4><p>
+
+This option selects the method for storing and updating the approximate Hessian. (SNOPT
+uses a quasi-Newton approximation to the Hessian of the Lagrangian. A BFGS update is
+applied after each major iteration.) If <i>Hessian full memory</i> is specified,
+the approximate Hessian is treated as a dense
+matrix and the BFGS updates are applied explicitly. This option is most efficient when the
+number of nonlinear variables <i>n<sub>1</sub></i> is not too large (say, less than 75). In this case, the storage
+requirement is fixed and one can expect Q-superlinear convergence to the solution.
+
+
+<h4><a name="SNOPThessian_limited_memory">
+" "" "" " hessian" "limited" "memory</a>
+<i> (string)</i> Limited-memory procedure is used to update a diagonal Hessian approximation</h4><p>
+
+This option selects the method for storing and updating the approximate Hessian. (SNOPT
+uses a quasi-Newton approximation to the Hessian of the Lagrangian. A BFGS update is
+applied after each major iteration.)
+Hessian limited memory should be used on problems where <i>n<sub>1</sub></i> is very large. In this
+case a limited-memory procedure is used to update a diagonal Hessian approximation <i>H<sub>r</sub></i>
+a limited number of times. (Updates are accumulated as a list of vector pairs. They are
+discarded at regular intervals after <i>H<sub>r</sub></i> has been reset to their diagonal.)
+
+
+<h4><a name="SNOPThessian_updates">
+" "" "" " hessian" "updates</a>
+<i> (integer)</i> How often the limited memory Hessian is reset</h4><p>
+
+If <i>Hessian Limited memory</i> is selected and <i>Hessian Frequency=i</i> BFGS updates have already been carried out,
+all but the diagonal elements of the accumulated updates are discarded and the updating
+process starts again.
+Broadly speaking, the more updates stored, the better the quality of the approximate
+Hessian. However, the more vectors stored, the greater the cost of each QP iteration. The
+default value is likely to give a robust algorithm without significant expense, but faster
+convergence can sometimes be obtained with significantly fewer updates (e.g., <i>i = 5</i>).
+
+<br><i>(default = 10)</i>
+
+<h4><a name="SNOPTinfinite_bound">
+" "" "" " infinite" "bound</a>
+<i> (real)</i> Bounds larger than this number are considered Infinity</h4><p>
+
+The parameter <i>r</i> defines the "infinite" bound <tt>infBnd</tt> in the definition of the problem constraints.
+Any upper bound greater than or equal to <tt>infBnd</tt> will be regarded as plus infinity (and
+similarly for a lower bound less than or equal to <tt>-infBnd</tt>).
+
+<br><i>(default = 1.0e20)</i>
+
+<h4><a name="SNOPTiterations_limit">
+" "" "" " iterations" "limit</a>
+<i> (integer)</i> Minor iteration limit (ITERLIM)</h4><p>
+
+This is maximum number of minor iterations allowed (i.e., iterations of
+the simplex method or the QP algorithm), summed over all major iterations. This option, if set,
+overrides the GAMS <i>ITERLIM</i> specification.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="SNOPTlinesearch_tolerance">
+" "" "" " linesearch" "tolerance</a>
+<i> (real)</i> Accuracy required for steplength</h4><p>
+
+For nonlinear problems, this controls the accuracy with which a steplength
+<i>alpha</i> is located in the one-dimensional problem
+<blockquote>
+minimize <i>F(x+alpha*p)</i><br>
+subject to <i>0 < alpha <= beta</i>
+</blockquote>
+A linesearch occurs on most minor iterations for which <i>x</i> is feasible. (If the
+constraints are nonlinear, the function being minimized is the augmented
+Lagrangian.)
+<i>r</i> must be a real value in the range <i>0.0 < r < 1.0</i>.
+The default value <i>r = 0.1</i> requests a moderately accurate search. It should
+be satisfactory in most cases.
+If the nonlinear functions are cheap to evaluate, a more accurate search
+may be appropriate: try <i>r = 0.01</i> or <i>r = 0.001</i>. The number of iterations
+should decrease, and this will reduce total run time if there are many linear
+or nonlinear constraints.
+If the nonlinear function are expensive to evaluate, a less accurate search
+may be appropriate; try <i>r = 0.5</i> or perhaps <i>r = 0.9</i>. (The number of iterations
+will probably increase but the total number of function evaluations
+may decrease enough to compensate.)
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="SNOPTLU_complete_pivoting">
+" "" "" " LU" "complete" "pivoting</a>
+<i> (string)</i> LUSOL pivoting strategy</h4><p>
+
+The LUSOL factorization implements a Markowitz-style search for pivots that locally
+minimize fill-in subject to a threshold pivoting stability criterion. The <i>rook</i> and
+<i>complete pivoting</i> options are more expensive than <i>partial pivoting</i> but are more
+stable and better at revealing rank, as long as the <i>LU factor tolerance</i> is not too
+large (say <i>< 2.0</i>).
+
+
+<h4><a name="SNOPTLU_density_tolerance">
+" "" "" " LU" "density" "tolerance</a>
+<i> (real)</i> When to use dense factorization</h4><p>
+
+The density tolerance is used during LUSOL"s basis factorization <i>B=LU</i>.
+Columns of <i>L</i> and rows of <i>U</i> are formed one at the time, and the remaining
+rows and columns of the basis are altered appropriately. At any stage, if the density
+of the remaining matrix exceeds this tolerance, the Markowitz strategy for choosing pivots
+is terminated and the remaining matrix is factored by a dense <i>LU</i> procedure. Raising
+the tolerance towards 1.0 may give slightly sparser factors, with a slight increase in
+factorization time.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="SNOPTLU_factor_tolerance">
+" "" "" " LU" "factor" "tolerance</a>
+<i> (real)</i> Trade-off between stability and sparsity in basis factorization</h4><p>
+
+This tolerances affect the stability and sparsity of the basis factorization
+<i>B = LU</i> during factorization. The value <i>r</i> specified must satisfy <i>r >= 1.0</i>.
+<ul>
+<li>The default value <i>r = 100.0</i> usually strikes a good compromise between
+stability and sparsity.</li>
+<li>For large and relatively dense problems, a larger value may give
+a useful improvement in sparsity without impairing stability to a
+serious degree.</li>
+<li>For certain very regular structures (e.g., band matrices) it may be
+necessary to set <i>r</i> to a value smaller than the default
+in order to achieve stability.</li>
+</ul>
+
+<br><i>(default = 3.99)</i>
+
+<h4><a name="SNOPTLU_partial_pivoting">
+" "" "" " LU" "partial" "pivoting</a>
+<i> (string)</i> LUSOL pivoting strategy</h4><p>
+
+The LUSOL factorization implements a Markowitz-style search for pivots that locally
+minimize fill-in subject to a threshold pivoting stability criterion. The <i>rook</i> and
+<i>complete pivoting</i> options are more expensive than <i>partial pivoting</i> but are more
+stable and better at revealing rank, as long as the <i>LU factor tolerance</i> is not too
+large (say <i>< 2.0</i>).
+
+
+<h4><a name="SNOPTLU_rook_pivoting">
+" "" "" " LU" "rook" "pivoting</a>
+<i> (string)</i> LUSOL pivoting strategy</h4><p>
+
+The LUSOL factorization implements a Markowitz-style search for pivots that locally
+minimize fill-in subject to a threshold pivoting stability criterion. The <i>rook</i> and
+<i>complete pivoting</i> options are more expensive than <i>partial pivoting</i> but are more
+stable and better at revealing rank, as long as the <i>LU factor tolerance</i> is not too
+large (say <i>< 2.0</i>).
+
+
+<h4><a name="SNOPTLU_singularity_tolerance">
+" "" "" " LU" "singularity" "tolerance</a>
+<i> (real)</i> Protection against ill-conditioned basis matrices</h4><p>
+
+When the basis is refactorized, the
+diagonal elements of <i>U</i> are tested as follows: if <i>|U<sub>j,j</sub> | <= r</i> or
+<i> |U<sub>j,j</sub>| < r * max<sub>i</sub> |U<sub>j,j</sub>|</i>, the <i>j</i><sup>th</sup> column of the basis is replaced by the corresponding
+slack variable. (This is most likely to occur after a restart,
+or at the start of a major iteration.)
+In some cases, the Jacobian matrix may converge to values that make
+the basis could become very ill-conditioned and the optimization could
+progress very slowly (if at all). Setting <i>r = 1.0<sup>-5</sup></i>, say, may help cause a
+judicious change of basis.
+
+<br><i>(default = 3.2e-11)</i>
+
+<h4><a name="SNOPTLU_update_tolerance">
+" "" "" " LU" "update" "tolerance</a>
+<i> (real)</i> Trade-off between stability and sparsity in basis factorization</h4><p>
+
+This tolerances affect the stability and sparsity of the basis factorization
+<i>B = LU</i> during updates. The value <i>r</i> specified must satisfy <i>r >= 1.0</i>.
+<ul>
+<li>The default value <i>r = 10.0</i> usually strikes a good compromise between
+stability and sparsity.</li>
+<li>For large and relatively dense problems, <i>r = 25.0</i> (say) may give
+a useful improvement in sparsity without impairing stability to a
+serious degree.</li>
+<li>For certain very regular structures (e.g., band matrices) it may be
+necessary to set <i>r</i> to a value smaller than the default
+in order to achieve stability.</li>
+</ul>
+
+<br><i>(default = 3.99)</i>
+
+<h4><a name="SNOPTmajor_feasibility_tolerance">
+" "" "" " major" "feasibility" "tolerance</a>
+<i> (real)</i> Specifies how accurately the nonlinear constraints should be satisfied</h4><p>
+
+This specifies how accurately the nonlinear constraints should be satisfied. The default value
+of <i>1.0e-6</i> is appropriate when the linear and nonlinear constraints contain data to about
+that accuracy.
+Let <i>rowerr</i> be the maximum nonlinear constraint violation, normalized by the size of
+the solution. It is required to satisfy
+<blockquote>
+<i>rowerr = max<sub>i</sub> viol<sub>i</sub>/||x|| &lt;= tol</i>
+</blockquote>
+where <i>viol<sub>i</sub></i> is the violation of the <i>i<sup>th</sup></i> nonlinear constraint.
+In the major iteration log, rowerr appears as the quantity labeled "Feasibl". If some
+of the problem functions are known to be of low accuracy, a larger <i>Major feasibility
+tolerance</i> may be appropriate.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="SNOPTmajor_iterations_limit">
+" "" "" " major" "iterations" "limit</a>
+<i> (integer)</i> Max number of major iterations</h4><p>
+
+This is maximum number of major iterations allowed. It is intended to
+guard against an excessive number of linearizations of the constraints.
+If <i>Major iterarions limit = 0</i>, both feasibility and optimality are checked.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="SNOPTmajor_optimality_tolerance">
+" "" "" " major" "optimality" "tolerance</a>
+<i> (real)</i> Specifies the final accuracy of the dual variables</h4><p>
+
+This specifies the final accuracy of the dual variables. On successful termination, SNOPT
+will have computed a solution <i>(x, s, pi)</i> such that
+<blockquote>
+<i>maxComp = max<sub>j</sub> Comp<sub>j</sub>/||pi|| &lt;= tol</i>
+</blockquote>
+where <i>Comp<sub>j</sub></i> is an estimate of the complementarity slackness for variable <i>j</i>.
+The values <i>Comp<sub>j</sub></i> are computed from the final QP solution using the reduced gradients
+<i>d<sub>j</sub> = g<sub>j</sub> -pi<sup>T</sup> a<sub>j</sub></i> (where <i>g<sub>j</sub></i> is the <i>j<sup>th</sup></i> component of the objective gradient, <i>a<sub>j</sub></i> is the associated
+column of the constraint matrix <i>(A -I)</i>, and <i>pi</i> is the set of QP dual variables):
+<blockquote>
+<table>
+  <tr>
+     <td><i>Comp<sub>j</sub> =</i></td>
+     <td><i>d<sub>j</sub> min{x<sub>j</sub> - l<sub>j</sub> , 1}</i></td>
+     <td>if <i>d<sub>j</sub> >= 0</i></td>
+  </tr>
+  <tr>
+     <td></td>
+     <td><i>-d<sub>j</sub> min{u<sub>j</sub> - x<sub>j</sub> , 1}</i></td>
+     <td>if <i>d<sub>j</sub> < 0</i></td>
+  </tr>
+</table>
+</blockquote>
+In the major iteration log, <i>maxComp</i> appears as the quantity labeled "Optimal".
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="SNOPTmajor_print_level">
+" "" "" " major" "print" "level</a>
+<i> (integer)</i> Amount of information printed during optimization (listing file)</h4><p>
+
+This controls the amount of output to the listing file each major iteration.
+<i>Major print level 1</i> gives normal output for linear and nonlinear problems, and <i>Major
+print level 11</i> gives addition details of the Jacobian factorization that commences each
+major iteration.
+In general, the value being specified may be thought of as a binary number of the form
+<blockquote>
+   <i>Major print level</i> <tt>JFDXbs</tt>
+</blockquote>
+where each letter stands for a digit that is either 0 or 1 as follows:
+<ul>
+<li><b>s</b>a single line that gives a summary of each major iteration. (This entry in <tt>JFDXbs</tt> is
+not strictly binary since the summary line is printed whenever <tt>JFDXbs</tt> >= 1).
+<li><b>b</b> Basis statistics, i.e. information relating to the basis matrix whenever it is
+refactorized. (This output is always provided if <tt>JFDXbs</tt> >= 10).</li>
+<li><b>X</b> <i>x<sub>k</sub></i>, the nonlinear variables involved in the objective function or the
+constraints.</li>
+<li><b>D</b> <i>pi<sub>k</sub></i>, the dual variables for the nonlinear constraints.
+(Suppressed if <i>Lagrangian=No</i>, since then  <i>lambda<sub>k</sub> = 0</i>.)
+<li><b>F</b> <i>f(x<sub>k</sub>)</i>, the values of the nonlinear constraint functions.
+<li><b>J</b> <i>J(x<sub>k</sub>)</i>, the Jacobian matrix.
+</ul>
+To obtain output of any items <tt>JFDXbs</tt>, set the corresponding digit to 1, otherwise
+to 0.
+If <tt>J = 1</tt>, the Jacobian matrix will be output column-wise at the start
+of each major iteration. Column <i>j</i> will be preceded by the value of the
+corresponding variable <i>x<sub>j</sub></i> and a key to indicate whether the variable is
+basic, superbasic or nonbasic. (Hence if <tt>J = 1</tt>, there is no reason to
+specify <tt>X = 1</tt> unless the objective contains more nonlinear variables than
+the Jacobian.) A typical line of output is
+<blockquote>
+  <tt>3 1.250000D+01 BS 1 1.00000D+00 4 2.00000D+00</tt>
+</blockquote>
+which would mean that <i>x<sub>3</sub></i> is basic at value 12.5, and the third column
+of the Jacobian has elements of 1.0 and 2.0 in rows 1 and 4. (Note:
+the GAMS/SNOPT row numbers are usually different from the GAMS row
+numbers; see the Solution option.)
+The SNOPT listing is made visible in the GAMS listing file only when
+<tt>OPTION SYSOUT=on;</tt> us used.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SNOPTmajor_step_limit">
+" "" "" " major" "step" "limit</a>
+<i> (real)</i> Limits the change in x during a linesearch</h4><p>
+
+This parameter limits the change in <i>x</i> during a linesearch. It applies to all nonlinear problems,
+once a "feasible solution" or "feasible subproblem" has been found.
+<ol>
+<li> A linesearch determines a step <i>alpha</i> over the range <i>0 < alpha <= beta</i>, where <i>beta</i> is 1 if there are
+nonlinear constraints, or the step to the nearest upper or lower bound on <i>x</i> if all the
+constraints are linear. Normally, the first steplength tried is <i>alpha<sub>1</sub> = min(1, beta)</i>.
+<li> In some cases, such as <i>f(x) = ae<sup>bx</sup></i> or <i>f(x) = ax<sup>b</sup></i>, even a moderate change in the
+components of <i>x</i> can lead to floating-point overflow. The parameter <i>major step limit = r</i> is therefore
+used to define a limit <i>beta<sup>*</sup> = r(1 + ||x||)/||p||</i> (where <i>p</i> is the search direction), and the
+first evaluation of <i>f(x)</i> is at the potentially smaller steplength <i>alpha<sub>1</sub> = min(1, beta<sup>*</sup>, beta)</i>.
+<li> Wherever possible, upper and lower bounds on <i>x</i> should be used to prevent evaluation
+of nonlinear functions at meaningless points. The <i>Major step limit</i> provides
+an additional safeguard. The default value <i>r = 2.0</i> should not affect progress on well
+behaved problems, but setting <i>r = 0.1</i> or <i>0.01</i> may be helpful when rapidly varying
+functions are present. A "good" starting point may be required. An important
+application is to the class of nonlinear least-squares problems.
+<li> In cases where several local optima exist, specifying a small value for <i>r</i> may help locate
+an optimum near the starting point.
+</ol>
+
+<br><i>(default = 2.0)</i>
+
+<h4><a name="SNOPTminor_feasibility_tolerance">
+" "" "" " minor" "feasibility" "tolerance</a>
+<i> (real)</i> Feasibility tolerance applied to all variables and linear constraints</h4><p>
+
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="SNOPTminor_iterations_limit">
+" "" "" " minor" "iterations" "limit</a>
+<i> (integer)</i> Max number of minor iterations between linearizations of nonlinear constraints</h4><p>
+
+If the number of minor iterations for the optimality phase of the QP subproblem exceeds
+<i>Minor iterations limit = k</i>,
+then all nonbasic QP variables that have not yet moved are frozen at their current values
+and the reduced QP is solved to optimality.
+Note that more than <i>k</i> minor iterations may be necessary to solve the reduced QP to
+optimality. These extra iterations are necessary to ensure that the terminated point gives a
+suitable direction for the linesearch.
+In the major iteration log, a <tt>t</tt> at the end of a line indicates that the corresponding QP
+was artificially terminated using the limit <i>k</i>.
+Note that <i>Iterations limit</i> defines an independent absolute limit on the total number
+of minor iterations (summed over all QP subproblems).
+
+<br><i>(default = 500)</i>
+
+<h4><a name="SNOPTminor_print_level">
+" "" "" " minor" "print" "level</a>
+<i> (integer)</i> Amount of information printed during optimization (listing file)</h4><p>
+
+This controls the amount of output to the listing file during solution of the
+QP subproblems. The value of the argument <i>k</i> has the following effect:
+<ul>
+<li><i>0</i> No minor iteration output except error messages.
+<li><i> >= 1</i> A single line of output each minor iteration (controlled by <i>Print frequency</i> and
+<i>Summary frequency</i>).
+<li><i> >= 10</i> Basis factorization statistics generated during the periodic refactorization of the basis
+(see <i>Factorization frequency</i>). Statistics for the first factorization each major
+iteration are controlled by the <i>Major print level</i>.
+</ul>
+The SNOPT listing is made visible in the GAMS listing file only when
+<tt>OPTION SYSOUT=on;</tt> us used.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SNOPTnew_superbasics_limit">
+" "" "" " new" "superbasics" "limit</a>
+<i> (integer)</i> Limit on new superbasics when a QP subproblem is solved</h4><p>
+
+This option causes early termination of the QP subproblems if the number of free variables
+has increased significantly since the first feasible point. If the number of new superbasics is
+greater than <i>new superbasics limit</i> the nonbasic variables that have not yet moved are frozen and the resulting
+smaller QP is solved to optimality.
+In the major iteration log, a "<tt>T</tt>" at the end of a line indicates that the QP was terminated
+early in this way.
+
+<br><i>(default = 99)</i>
+
+<h4><a name="SNOPTnonderivative_linesearch">
+" "" "" " nonderivative" "linesearch</a>
+<i> (string)</i> Linesearch method (safeguarded quadratic interpolation) without use of derivatives</h4><p>
+
+At each major iteration a linesearch is used to improve the merit function.
+If a <i>Nonderivative linesearch</i> is specified, SNOPT employs a linesearch based upon
+safeguarded quadratic interpolation, which does not require gradient evaluations.
+A nonderivative linesearch can be slightly less robust on difficult problems, and it is
+recommended that the default be used if the functions and derivatives can be computed at
+approximately the same cost. If the gradients are very expensive relative to the functions,
+a nonderivative linesearch may give a significant decrease in computation time. In
+a GAMS environment this option is not expected to be efficient.
+
+
+<h4><a name="SNOPTpartial_price">
+" "" "" " partial" "price</a>
+<i> (integer)</i> Number of segments in partial pricing strategy</h4><p>
+
+This parameter is recommended for large problems that have significantly
+more variables than constraints. It reduces the work required for each
+"pricing" operation (when a nonbasic variable is selected to become basic or
+superbasic).
+<ul>
+<li>When <i>i = 1</i>, all columns of the constraints matrix <i>(A I)</i> are searched.
+<li>Otherwise, <i>A<sub>j</sub></i> and <i>I</i> are partitioned to give <i>i</i> roughly equal segments <i>A<sub>j</sub></i>, <i>I<sub>j</sub></i>
+(<i>j = 1</i> to <i>i</i>). If the previous search was successful on <i>A<sub>j-1</sub></i>, <i>I<sub>j-1</sub></i>, the
+next search begins on the segments <i>A<sub>j</sub></i>, <i>I<sub>j</sub></i>. (All subscripts here are modulo
+<i>i</i>.)
+<li>If a reduced gradient is found that is large than some dynamic tolerance,
+the variable with the largest such reduced gradient (of appropriate sign) is
+selected to become superbasic. (Several may be selected if multiple pricing
+has been specified.) If nothing is found, the search continues on the next
+segments <i>A<sub>j+1</sub></i>, <i>I<sub>j+1</sub></i> and so on.
+<li> <i>Partial price t</i> (or <i>t/2</i> or <i>t/3</i>) may be appropriate for time-stage models
+having <i>t</i> time periods
+</ul>
+
+<br><i>(default = 10)</i>
+
+<h4><a name="SNOPTpenalty_parameter">
+" "" "" " penalty" "parameter</a>
+<i> (real)</i> Initial penalty parameter</h4><p>
+
+After a QP subproblem has been solved, new estimates of the NLP solution are computed
+using a linesearch on the augmented Lagrangian merit function. This functions
+contains penalty parameters, which may be increased to ensure descent.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="SNOPTpivot_tolerance">
+" "" "" " pivot" "tolerance</a>
+<i> (real)</i> Used to prevent columns entering the basis making it almost singular</h4><p>
+
+During solution of QP subproblems, the pivot tolerance is used to prevent columns entering
+the basis if they would cause the basis to become almost singular.
+<ul>
+<li>When <i>x</i> changes to x<i>+alpha*p</i> for some search direction <i>p</i>, a "ratio test" determines which
+component of <i>x</i> reaches an upper or lower bound first. The corresponding element of
+<i>p</i> is called the <i>pivot element</i>.
+<li>Elements of <i>p</i> are ignored (and therefore cannot be pivot elements) if they are smaller
+than the pivot tolerance <i>t</i>.
+<li> It is common for two or more variables to reach a bound at essentially the same time. In
+such cases, the <i>Feasibility tolerance</i> provides some freedom to maximize the pivot
+element and thereby improve numerical stability. An excessively small <i>Feasibility
+tolerance</i> should therefore not be specified.
+<li> To a lesser extent, the <i>Expand frequency</i> also provides some freedom to maximize the
+pivot element. Hence, an excessively large <i>Expand frequency</i> should not be specified.
+</ul>
+
+<br><i>(default = 3.7e-11)</i>
+
+<h4><a name="SNOPTprint_frequency">
+" "" "" " print" "frequency</a>
+<i> (integer)</i> Number of iterations between each log line (listing file)<br>&nbsp;&nbsp;&nbsp;Synonym:
+" "" "" " log" "frequency</h4><p>
+
+If option <i>Minor print level > 0</i>, a line of the
+QP iteration log is output every <i>k<sup>th</sup></i> iteration.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="SNOPTproximal_point_method">
+" "" "" " proximal" "point" "method</a>
+<i> (integer)</i> Satisfies linear constraints near x0</h4><p>
+
+The objective to be used when the starting point <i>x<sub>0</sub></i> is
+changed to satisfy the linear constraints (where <i>x<sub>0</sub></i>
+refers to nonlinear variables).
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>one-norm.
+Use <i>||x-x<sub>0</sub>||<sub>1</sub></i>.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>two-norm.
+Use <i>||x-x<sub>0</sub>||<sub>2</sub><sup>2</sup></i>.</td></tr>
+</table>
+
+<h4><a name="SNOPTqpsolver">
+" "" "" " qpsolver</a>
+<i> (string)</i> QP Solver</h4><p>
+
+This specifies the method used to solve the system
+<blockquote><i>
+Z<sup>T</sup>HZp<sub>s</sub> = -Z<sup>T</sup>g
+</i></blockquote>
+for the search directions in phase 2 of the QP subproblem.
+<ul>
+<li>The Cholesky QP solver is the most robust, but may require a significant amount of
+computation if the number of superbasics is large.
+<li>The quasi-Newton QP solver does not require the computation of the <i>R</i> at the start of
+each QP subproblem. It may be appropriate when the number of superbasics is large
+but relatively few major iterations are needed to reach a solution (e.g., if SNOPT is
+called with a Warm start).
+<li>The conjugate-gradient QP solver is appropriate for problems with large numbers of
+degrees of freedom (say, more than 2000 superbasics).
+</ul>
+
+<br><i>(default = Cholesky)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Cholesky</td><td>full Cholesky factor.
+<tt>QPSolver Cholesky</tt> holds the full Cholesky factor <i>R</i> of the reduced Hessian <i>Z<sup>T</sup>HZ</i>. As
+the minor iterations proceed, the dimension of <i>R</i> changes with the number of superbasic
+variables. If the number of superbasic variables needs to increase beyond the value of
+<i>Reduced Hessian dimension</i>, the reduced Hessian cannot be stored and the solver switches
+to <i>QPSolver CG</i>. The Cholesky solver is reactivated if the number of superbasics stabilizes
+at a value less than <i>Reduced Hessian dimension</i>.</td></tr>
+<tr valign="top"><td width=20 align=right>CG</td><td>quasi-Newton method.
+<tt>QPSolver CG</tt> uses an active-set method similar to <i>QPSolver QN</i>, but uses the conjugate-gradient
+method to solve all systems involving the reduced Hessian.</td></tr>
+<tr valign="top"><td width=20 align=right>QN</td><td>conjugate-gradient method.
+<tt>QPSolver QN</tt> solves the QP using a quasi-Newton method similar to that of MINOS. In
+this case, <i>R</i> is the factor of a quasi-Newton approximate Hessian.</td></tr>
+</table>
+
+<h4><a name="SNOPTreduced_hessian_dimension">
+" "" "" " reduced" "hessian" "dimension</a>
+<i> (integer)</i> Size of Hessian matrix<br>&nbsp;&nbsp;&nbsp;Synonym:
+" "" "" " hessian" "dimension</h4><p>
+
+<i>Reduced_hessian_dimension = i</i> specifies that an <i>i x i</i> triangular matrix <i>R</i> is to be available for use by the <i>QPSolver
+Cholesky</i> option (to define the reduced Hessian according to <i>R<sup>T</sup>R = Z<sup>T</sup>HZ</i>). The value of
+<i>i</i> affects when <i>QPSolver CG</i> is activated. The default is determined by GAMS based on certain
+model characteristics.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SNOPTscale_option">
+" "" "" " scale" "option</a>
+<i> (integer)</i> Scaling of linear/nonlinear variables</h4><p>
+
+Three scale options are available.
+If nonlinear constraints are present, the scales depend on the Jacobian at the first point
+that satisfies the linear constraints. Scale <i>option 2</i> should therefore be used only if
+(a) a good starting point is provided, and (b) the problem is not highly nonlinear.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No scaling.
+This is recommended if it is known that <i>x</i> and the constraint matrix (and
+Jacobian) never have very large elements (say, larger than 100).</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Scale linear variables.
+Linear constraints and variables are scaled by an iterative procedure
+that attempts to make the matrix coefficients as close as possible to
+1.0. This will sometimes improve the performance of the
+solution procedures.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Scale linear + nonlinear variables.
+All constraints and variables are scaled by the iterative procedure.
+Also, a certain additional scaling is performed that may be helpful if
+the right-hand side <i>b</i> or the solution <i>x</i> is large. This takes into account
+columns of <i>(A I)</i> that are fixed or have positive lower bounds
+or negative upper bounds.</td></tr>
+</table>
+
+<h4><a name="SNOPTscale_print">
+" "" "" " scale" "print</a>
+<i> (string)</i> Print scaling factors (listing file)</h4><p>
+
+This causes the row-scales <i>r(i)</i> and column-scales <i>c(j)</i> to be printed. The
+scaled matrix coefficients are <i>a"<sub>ij</sub> = a<sub>ij</sub>c(j)/r(i)</i>, and the scaled bounds
+on the variables, and slacks are <i>l"<sub>j</sub> = l<sub>j</sub>/c(j), u"<sub>j</sub> = u<sub>j</sub>/c(j)</i>, where <i>c(j) =
+r(j - n)</i> if <i>j > n</i>.
+If a Scale option has not already been specified, <i>Scale print</i> sets the default
+scaling.
+
+
+<h4><a name="SNOPTscale_tolerance">
+" "" "" " scale" "tolerance</a>
+<i> (real)</i> Scale tolerance</h4><p>
+
+All forms except <i>Scale option</i> may specify a tolerance <i>r</i> where <i>0 < r < 1</i>
+(for example: <i>Scale Print Tolerance = 0.99</i>). This affects how many
+passes might be needed through the constraint matrix. On each pass, the
+scaling procedure computes the ration of the largest and smallest nonzero
+coefficients in each column:
+<blockquote>
+<i>rho<sub>j</sub> = max<sub>i</sub> |a<sub>ij</sub>|/min<sub>i</sub> |a<sub>ij</sub>| (a<sub>ij</sub> &ne; 0) </i>
+</blockquote>
+If <i>max<sub>j</sub> rho<sub>j</sub></i> is less than <i>r</i> times its previous value, another scaling pass is
+performed to adjust the row and column scales. Raising <i>r</i> from 0.9 to 0.99
+(say) usually increases the number of scaling passes through <i>A</i>. At most
+10 passes are made.
+If a <i>Scale option</i> has not already been specified, <i>Scale tolerance</i> sets the
+default scaling.
+
+<br><i>(default = 0.9)</i>
+
+<h4><a name="SNOPTsolution">
+" "" "" " solution</a>
+<i> (string)</i> Prints SNOPT solution (listing file)</h4><p>
+
+This controls whether or not GAMS/SNOPT prints the final solution obtained.
+There is one line of output for each constraint and variable. The
+lines are in the same order as in the GAMS solution, but the constraints
+and variables labeled with internal GAMS/SNOPT numbers rather than
+GAMS names. (The numbers at the left of each line are GAMS/SNOPT
+column numbers, and those at the right of each line in the rows section
+are GAMS/SNOPT slacks.)
+The GAMS/SNOPT solution may be useful occasionally to interpret certain
+messages that occur during the optimization, and to determine the
+final status of certain variables (basic, superbasic or nonbasic).
+
+<br><i>(default = NO)</i>
+<table>
+<tr valign="top"><td width=20 align=right>NO</td><td>Turn off printing of solution</td></tr>
+<tr valign="top"><td width=20 align=right>YES</td><td>Turn on printing of solution</td></tr>
+</table>
+
+<h4><a name="SNOPTstart_constraint_check">
+" "" "" " start" "constraint" "check</a>
+<i> (integer)</i> Can be used to reduce the range of finite-difference checks</h4><p>
+
+If <i>Verify level > 0</i>, this option may be used to abbreviate the verification of individual
+derivative elements. This is the starting column number for the check.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SNOPTstart_objective_check">
+" "" "" " start" "objective" "check</a>
+<i> (integer)</i> Can be used to reduce the range of finite-difference checks</h4><p>
+
+If <i>Verify level > 0</i>, this option may be used to abbreviate the verification of individual
+derivative elements. This is the starting column number for the check.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SNOPTstop_constraint_check">
+" "" "" " stop" "constraint" "check</a>
+<i> (integer)</i> Can be used to reduce the range of finite-difference checks</h4><p>
+
+If <i>Verify level > 0</i>, this option may be used to abbreviate the verification of individual
+derivative elements. This is the final column number for the check.
+
+<br><i>(default = MAXINT)</i>
+
+<h4><a name="SNOPTstop_objective_check">
+" "" "" " stop" "objective" "check</a>
+<i> (integer)</i> Can be used to reduce the range of finite-difference checks</h4><p>
+
+If <i>Verify level > 0</i>, this option may be used to abbreviate the verification of individual
+derivative elements. This is the final column number for the check.
+
+<br><i>(default = MAXINT)</i>
+
+<h4><a name="SNOPTsummary_frequency">
+" "" "" " summary" "frequency</a>
+<i> (integer)</i> Number of iterations between each log line (log file)</h4><p>
+
+A brief form of the iteration log is output to the summary file. In general,
+one line is output every <i>i<sup>th</sup></i> minor iteration. In an interactive environment,
+the output normally appears at the terminal and allows a run to be monitored.
+If something looks wrong, the run can be manually terminated.
+The Summary frequency controls summary output in the same as the log
+frequency controls output to the print file.
+A value such as <i>Summary Frequency = 10</i> or <i>100</i> is often adequate to determine if the SOLVE
+is making progress. If <i>Print level = 0</i>, the default value of <i>Summary Frequency</i> is 100. If
+<i>Print level > 0</i>, the default value of <i>Summary Frequency</i> is 1. If <i>Print level = 0</i> and the
+constraints are nonlinear, the <i>Summary Frequency</i> is ignored. Instead, one
+line is printed at the beginning of each major iteration.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="SNOPTsuperbasics_limit">
+" "" "" " superbasics" "limit</a>
+<i> (integer)</i> Maximum number of superbasics</h4><p>
+
+This places a limit on the storage allocated for superbasic variables. Ideally,
+the parameter <i>i</i> should be set slightly larger than the number of degrees of freedom
+expected at an optimal solution.
+For linear problems, an optimum is normally a basic solution with no degrees
+of freedom. (The number of variables lying strictly between their
+bounds is not more than <i>m</i>, the number of general constraints.) The default
+value of <i>i</i> is therefore 1.
+For nonlinear problems, the number of degrees of freedom is often called
+the number of independent variables.
+Normally, <i>i</i> need not be greater than <i>n<sub>1</sub> + 1</i>, where <i>n<sub>1</sub></i> is the number of
+nonlinear variables.
+For many problems, <i>i</i> may be considerably smaller than <i>n<sub>1</sub></i>. This will save
+storage if <i>n<sub>1</sub></i> is very large.
+This parameter also sets the Hessian dimension, unless the latter is specified
+explicitly (and conversely). If neither parameter is specified, GAMS
+chooses values for both, using certain characteristics of the problem.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SNOPTsuppress_parameters">
+" "" "" " suppress" "parameters</a>
+<i> (string)</i> Suppress printing of parameters (listing file)</h4><p>
+
+Suppress printing of parameters to the listing file. Only useful
+in combination with the GAMS setting <tt>OPTION SYSOUT=on;</tt>.
+
+
+<h4><a name="SNOPTsystem_information">
+" "" "" " system" "information</a>
+<i> (string)</i> Provides additional information on the progress of the iterations (listing file)</h4><p>
+
+The <i>System information Yes</i> option provides additional information on the progress of the iterations, including
+Basis Repair details when ill-conditioned bases are encountered and the LU factorization
+parameters are strengthened.
+
+<br><i>(default = NO)</i>
+<table>
+<tr valign="top"><td width=20 align=right>NO</td><td>Turn off additional printing of information on progress of algorithm</td></tr>
+<tr valign="top"><td width=20 align=right>YES</td><td>Turn on additional printing of information on progress of algorithm</td></tr>
+</table>
+
+<h4><a name="SNOPTtiming_level">
+" "" "" " timing" "level</a>
+<i> (integer)</i> Amount of timing information (listing file)</h4><p>
+
+Amount of timing information written to the listing file. This is visible
+in combination with the GAMS setting <tt>OPTION SYSOUT=on;</tt>.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="SNOPTunbounded_objective_value">
+" "" "" " unbounded" "objective" "value</a>
+<i> (real)</i> Determines when a problem is called unbounded</h4><p>
+
+This parameter is intended to detect unboundedness in nonlinear problems. (It may
+not achieve that purpose!) During a linesearch, <i>f<sub>0</sub></i> is evaluated at points of the form <i>x+alpha*p</i>,
+where <i>x</i> and <i>p</i> are fixed and <i>alpha</i> varies. If <i>|f<sub>0</sub>|</i>
+exceeds the <i>unbounded objective value f<sub>max</sub></i> or <i>alpha</i> exceeds the <i>unbounded step size alpha<sub>max</sub></i>, iterations are
+terminated with the exit message <tt>Problem is unbounded (or badly scaled)</tt>.
+If singularities are present, unboundedness in <i>f<sub>0</sub>(x)</i> may be manifested by a floating point
+overflow (during the evaluation of <i>f<sub>0</sub>(x + alpha*p)</i>), before the test against <i>f<sub>max</sub></i> can be
+made.
+Unboundedness in <i>x</i> is best avoided by placing finite upper and lower bounds on the
+variables.
+
+<br><i>(default = 1.0e15)</i>
+
+<h4><a name="SNOPTunbounded_step_size">
+" "" "" " unbounded" "step" "size</a>
+<i> (real)</i> Determines when a problem is called unbounded</h4><p>
+
+This parameter is intended to detect unboundedness in nonlinear problems. (It may
+not achieve that purpose!) During a linesearch, <i>f<sub>0</sub></i> is evaluated at points of the form <i>x+alpha*p</i>,
+where <i>x</i> and <i>p</i> are fixed and <i>alpha</i> varies. If <i>|f<sub>0</sub>|</i>
+exceeds the <i>unbounded objective value f<sub>max</sub></i> or <i>alpha</i> exceeds the <i>unbounded step size alpha<sub>max</sub></i>, iterations are
+terminated with the exit message <tt>Problem is unbounded (or badly scaled)</tt>.
+If singularities are present, unboundedness in <i>f<sub>0</sub>(x)</i> may be manifested by a floating point
+overflow (during the evaluation of <i>f<sub>0</sub>(x + alpha*p)</i>), before the test against <i>f<sub>max</sub></i> can be
+made.
+Unboundedness in <i>x</i> is best avoided by placing finite upper and lower bounds on the
+variables.
+
+<br><i>(default = 1.0e18)</i>
+
+<h4><a name="SNOPTverify_level">
+" "" "" " verify" "level</a>
+<i> (integer)</i> Finite-difference checks on the derivatives</h4><p>
+
+This option refers to finite-difference checks on the derivatives computed by the GAMS provided
+routines. Derivatives are checked at the first point that satisfies all bounds and
+linear constraints.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Cheap test</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Check individual gradients</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Check individual columns of the Jacobian</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Combines verify level 1 and 2</td></tr>
+<tr valign="top"><td width=20 align=right>-1</td><td>Derivative checking is disabled</td></tr>
+</table>
+
+<h4><a name="SNOPTviolation_limit">
+" "" "" " violation" "limit</a>
+<i> (integer)</i> Limit on maximum constraint violation after the linesearch</h4><p>
+
+This keyword <i>violation limit = t</i> defines an absolute limit on the magnitude of the maximum constraint violation
+after the linesearch. On completion of the linesearch, the new iterate <i>x<sub>k+1</sub></i> satisfies the
+condition
+<blockquote><i>
+v<sub>i</sub>(x<sub>k</sub>+1) <= t max{1, v<sub>i</sub>(x<sub>0</sub>)}
+</i></blockquote>
+where <i>x<sub>0</sub></i> is the point at which the nonlinear constraints are first evaluated and <i>v<sub>i</sub>(x)</i> is the
+<i>i<sup>th</sup></i> nonlinear constraint violation <i>v<sub>i</sub>(x) = max(0, l<sub>i</sub> - f<sub>i</sub>(x), f<sub>i</sub>(x) - u<sub>i</sub>)</i>.
+The effect of this violation limit is to restrict the iterates to lie in an expanded feasible
+region whose size depends on the magnitude of <i>t</i>. This makes it possible to keep the iterates
+within a region where the objective is expected to be well-defined and bounded below. If the
+objective is bounded below for all values of the variables, then <i>t</i> may be any large positive
+value.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="SNOPTwarm_start">
+" "" "" " warm" "start</a>
+<i> (string)</i> Use advanced basis provided by GAMS</h4><p>
+
+This parameter indicates that a basis is to be used provided by GAMS. Overrides the
+GAMS <i>BRATIO</i> option.
+
+</body></html>

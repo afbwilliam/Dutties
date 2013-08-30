@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>OPT (OPT) API Documentation</h1>
+
+<p>Generated for GAMS 24.0.2</p>
+
+<h2>Functions, Procedures and Properties</h2>
+
+<dt><a href="#optCount">optCount</a></dt> <dd>Number of options.</dd>
+<dt><a href="#optMessageCount">optMessageCount</a></dt> <dd>Number of messages in buffer.</dd>
+<dt><a href="#optGroupCount">optGroupCount</a></dt> <dd>Number of option groups.</dd>
+<dt><a href="#optRecentEnabled">optRecentEnabled(Set)</a></dt> <dd>When enabled (default), Defined and DefinedR will be set when assigning to an option. When disabled, only Defined will be set</dd>
+<dt><a href="#optReadDefinition">optReadDefinition</a></dt> <dd>Read definition file. Returns -1 if there was a definition error.</dd>
+<dt><a href="#optReadParameterFile">optReadParameterFile</a></dt> <dd>Read parameters from file.</dd>
+<dt><a href="#optReadFromStr">optReadFromStr</a></dt> <dd>Read options from string. In the case of errors, messages will be added to the message queue (see OptGetMessage).</dd>
+<dt><a href="#optWriteParameterFile">optWriteParameterFile</a></dt> <dd>Write modified parameters to a file. In the case of errors, messages will be added to the message queue (see OptGetMessage).</dd>
+<dt><a href="#optClearMessages">optClearMessages</a></dt> <dd>Clear all messages stored in the message queue.</dd>
+<dt><a href="#optAddMessage">optAddMessage</a></dt> <dd>Add a message to the message queue.</dd>
+<dt><a href="#optGetMessage">optGetMessage</a></dt> <dd>Read from message queue.</dd>
+<dt><a href="#optResetAll">optResetAll</a></dt> <dd>Reset all defined and definedR flags and clear the message queue.</dd>
+<dt><a href="#optResetAllRecent">optResetAllRecent</a></dt> <dd>Reset all definedR flags.</dd>
+<dt><a href="#optResetRecentChanges">optResetRecentChanges</a></dt> <dd>Reset all options with definedR flag set.</dd>
+<dt><a href="#optShowHelp">optShowHelp</a></dt> <dd>Write help for option(s)</dd>
+<dt><a href="#optResetNr">optResetNr</a></dt> <dd>Reset option value to default.</dd>
+<dt><a href="#optFindStr">optFindStr</a></dt> <dd>Find option by name, return number and ref nr.</dd>
+<dt><a href="#optGetInfoNr">optGetInfoNr</a></dt> <dd>Get information about option by option number.</dd>
+<dt><a href="#optGetValuesNr">optGetValuesNr</a></dt> <dd>Read values.</dd>
+<dt><a href="#optSetValuesNr">optSetValuesNr</a></dt> <dd>Set values.</dd>
+<dt><a href="#optSetValues2Nr">optSetValues2Nr</a></dt> <dd>Set second values.</dd>
+<dt><a href="#optVersion">optVersion</a></dt> <dd>Get version number of object.</dd>
+<dt><a href="#optDefinitionFile">optDefinitionFile</a></dt> <dd>Get last processed definition file.</dd>
+<dt><a href="#optGetFromAnyStrList">optGetFromAnyStrList</a></dt> <dd>Read string list element name and value and remove the value. Returns 0 if no string list option found</dd>
+<dt><a href="#optGetFromListStr">optGetFromListStr</a></dt> <dd>Read and remove queued strings from specified option. Return values are: -2 if option not found, -1 if option is not a string list, 0 if string list is empty, 1 if item returned and remove.</dd>
+<dt><a href="#optListCountStr">optListCountStr</a></dt> <dd>Number of elements stored in list.</dd>
+<dt><a href="#optReadFromListStr">optReadFromListStr</a></dt> <dd>Read element iPos from list without removal.</dd>
+<dt><a href="#optSynonymCount">optSynonymCount</a></dt> <dd>Number of synonyms.</dd>
+<dt><a href="#optGetSynonym">optGetSynonym</a></dt> <dd>Get synonym and original option name.</dd>
+<dt><a href="#optEchoSet">optEchoSet</a></dt> <dd>Set echo of input on or off.</dd>
+<dt><a href="#optEOLOnlySet">optEOLOnlySet</a></dt> <dd>Set EOLOnly and return previous value.</dd>
+<dt><a href="#optNoBoundsSet">optNoBoundsSet</a></dt> <dd>Set bound checking on or off.</dd>
+<dt><a href="#optErrorCount">optErrorCount</a></dt> <dd>Retrieve number of errors / warnings from message queue.</dd>
+<dt><a href="#optGetBoundsInt">optGetBoundsInt</a></dt> <dd>Bounds and default for integer option.</dd>
+<dt><a href="#optGetBoundsDbl">optGetBoundsDbl</a></dt> <dd>Bounds and default for double option.</dd>
+<dt><a href="#optGetDefaultStr">optGetDefaultStr</a></dt> <dd>Default value for a given string option.</dd>
+<dt><a href="#optGetIntNr">optGetIntNr</a></dt> <dd>Read integer option by option number.</dd>
+<dt><a href="#optGetInt2Nr">optGetInt2Nr</a></dt> <dd>Read second integer option by option number.</dd>
+<dt><a href="#optSetIntNr">optSetIntNr</a></dt> <dd>Set integer option by option number.</dd>
+<dt><a href="#optSetInt2Nr">optSetInt2Nr</a></dt> <dd>Set second integer option by option number.</dd>
+<dt><a href="#optGetStrNr">optGetStrNr</a></dt> <dd>Read string by option number.</dd>
+<dt><a href="#optGetOptHelpNr">optGetOptHelpNr</a></dt> <dd>Get option name, help context and group number.</dd>
+<dt><a href="#optGetEnumHelp">optGetEnumHelp</a></dt> <dd>Get help text for enumerated value.</dd>
+<dt><a href="#optGetEnumStrNr">optGetEnumStrNr</a></dt> <dd>Get enumerated string value and ordinal.</dd>
+<dt><a href="#optGetEnumCount">optGetEnumCount</a></dt> <dd>Number of enumerations in option.</dd>
+<dt><a href="#optGetEnumValue">optGetEnumValue</a></dt> <dd>Enumerated value by ordinal number.</dd>
+<dt><a href="#optGetStr2Nr">optGetStr2Nr</a></dt> <dd>Read second string by option number.</dd>
+<dt><a href="#optSetStrNr">optSetStrNr</a></dt> <dd>Set string by option number.</dd>
+<dt><a href="#optSetStr2Nr">optSetStr2Nr</a></dt> <dd>Set second string by option number.</dd>
+<dt><a href="#optGetDblNr">optGetDblNr</a></dt> <dd>Read double by option number.</dd>
+<dt><a href="#optGetDbl2Nr">optGetDbl2Nr</a></dt> <dd>Read second double by option number.</dd>
+<dt><a href="#optSetDblNr">optSetDblNr</a></dt> <dd>Set double by option number.</dd>
+<dt><a href="#optSetDbl2Nr">optSetDbl2Nr</a></dt> <dd>Set second double by option number.</dd>
+<dt><a href="#optGetValStr">optGetValStr</a></dt> <dd>Read value as string by option name.</dd>
+<dt><a href="#optGetVal2Str">optGetVal2Str</a></dt> <dd>Read second value as string by option name.</dd>
+<dt><a href="#optGetNameNr">optGetNameNr</a></dt> <dd>Get option name by option number.</dd>
+<dt><a href="#optGetDefinedNr">optGetDefinedNr</a></dt> <dd>Get defined status by option number.</dd>
+<dt><a href="#optGetHelpNr">optGetHelpNr</a></dt> <dd>Get option name and help by option number.</dd>
+<dt><a href="#optGetGroupNr">optGetGroupNr</a></dt> <dd>Get group information by option number.</dd>
+<dt><a href="#optGetGroupGrpNr">optGetGroupGrpNr</a></dt> <dd>Get group record by group number.</dd>
+<dt><a href="#optGetOptGroupNr">optGetOptGroupNr</a></dt> <dd>Get group number of an option by option number.</dd>
+<dt><a href="#optGetDotOptNr">optGetDotOptNr</a></dt> <dd>Dot option info.</dd>
+<dt><a href="#optGetDotOptUel">optGetDotOptUel</a></dt> <dd>Retrieve a single element from a dot option.</dd>
+<dt><a href="#optGetVarEquMapNr">optGetVarEquMapNr</a></dt> <dd>Variable equation mapping info.</dd>
+<dt><a href="#optGetEquVarEquMapNr">optGetEquVarEquMapNr</a></dt> <dd>Equation part of variable equation mapping.</dd>
+<dt><a href="#optGetVarVarEquMapNr">optGetVarVarEquMapNr</a></dt> <dd>Variable part of variable equation mapping.</dd>
+<dt><a href="#optVarEquMapCount">optVarEquMapCount</a></dt> <dd>Variable equation mappings available and number ignored.</dd>
+<dt><a href="#optGetIndicatorNr">optGetIndicatorNr</a></dt> <dd>Indicator info.</dd>
+<dt><a href="#optGetEquIndicatorNr">optGetEquIndicatorNr</a></dt> <dd>Equation part of indicator.</dd>
+<dt><a href="#optGetVarIndicatorNr">optGetVarIndicatorNr</a></dt> <dd>Variable part of indicator.</dd>
+<dt><a href="#optIndicatorCount">optIndicatorCount</a></dt> <dd>Indicators available and number ignored.</dd>
+<dt><a href="#optDotOptCount">optDotOptCount</a></dt> <dd>Dot options available and number ignored.</dd>
+<dt><a href="#optSetRefNr">optSetRefNr</a></dt> <dd>Set reference number by option number.</dd>
+<dt><a href="#optSetRefNrStr">optSetRefNrStr</a></dt> <dd>Set reference number by option name.</dd>
+<dt><a href="#optGetConstName">optGetConstName</a></dt> <dd>Get the name of a constant.</dd>
+<dt><a href="#optGetTypeName">optGetTypeName</a></dt> <dd>Get option type name by type number.</dd>
+<dt><a href="#optLookUp">optLookUp</a></dt> <dd>Index number of an option.</dd>
+<dt><a href="#optReadFromPChar">optReadFromPChar</a></dt> <dd>Read options from a PChar. In the case of errors, messages will be added to the message queue (see OptGetMessage).</dd>
+<dt><a href="#optGetNameOpt">optGetNameOpt</a></dt> <dd>Extract solver name and optfile number from string option.</dd>
+<dt><a href="#optGetDefinedStr">optGetDefinedStr</a></dt> <dd>Get defined status by option name.</dd>
+<dt><a href="#optGetIntStr">optGetIntStr</a></dt> <dd>Read integer by option name.</dd>
+<dt><a href="#optGetDblStr">optGetDblStr</a></dt> <dd>Read double by option name.</dd>
+<dt><a href="#optGetStrStr">optGetStrStr</a></dt> <dd>Read string by option name.</dd>
+<dt><a href="#optSetIntStr">optSetIntStr</a></dt> <dd>Set integer by option name.</dd>
+<dt><a href="#optSetDblStr">optSetDblStr</a></dt> <dd>Set double by option name.</dd>
+<dt><a href="#optSetStrStr">optSetStrStr</a></dt> <dd>Set string by option name.</dd>
+
+<h2>Arguments</h2>
+<dl>
+
+<dt>ACount   </dt> <dd>Number of enumerations</dd>
+<dt>ADataType</dt> <dd>Data type</dd>
+<dt>ADefined </dt> <dd>Flag: 0 if not defined and <>0 if defined</dd>
+<dt>ADefinedR</dt> <dd>Flag: 0 if not recently defined and <>0 if recently defined</dd>
+<dt>ADim     </dt> <dd>Number of indices of variable or equation</dd>
+<dt>ADVal    </dt> <dd>Option double value</dd>
+<dt>AGroup   </dt> <dd>Group number</dd>
+<dt>AHc      </dt> <dd>Help Context number</dd>
+<dt>AHelp    </dt> <dd>One line help text</dd>
+<dt>AHelpStr </dt> <dd>Help string</dd>
+<dt>AIndex   </dt> <dd>Domain index string</dd>
+<dt>AIVal    </dt> <dd>Option integer value</dd>
+<dt>AName    </dt> <dd>Option name</dd>
+<dt>ANr      </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>ANrErrors</dt> <dd>Number of syntactically incorrect dot options</dd>
+<dt>AObjNr   </dt> <dd>Numeric index of suffix in dot option</dd>
+<dt>AOpt     </dt> <dd>Option name</dd>
+<dt>AOptType </dt> <dd>Option type</dd>
+<dt>AOrd     </dt> <dd>Ordinal position</dd>
+<dt>ARefNr   </dt> <dd>Option reference number</dd>
+<dt>ASHelp   </dt> <dd>Help string</dd>
+<dt>ASName   </dt> <dd>Option name</dd>
+<dt>ASOpt    </dt> <dd>Option name</dd>
+<dt>ASubType </dt> <dd>Option sub type</dd>
+<dt>ASVal    </dt> <dd>Option string value</dd>
+<dt>AUEL     </dt> <dd>Single element from a dot option</dd>
+<dt>AValInt  </dt> <dd>Option value as integer</dd>
+<dt>AValStr  </dt> <dd>Option value as string</dd>
+<dt>AValue   </dt> <dd>Option value</dd>
+<dt>cgroup   </dt> <dd>Constant group: 1 = Data types, 2 = Option types, 3 = Option sub-type, 4 = Message type</dd>
+<dt>cindex   </dt> <dd>Constant index</dd>
+<dt>cname    </dt> <dd>Constant name</dd>
+<dt>ddval    </dt> <dd>Default value</dd>
+<dt>dhval    </dt> <dd>Upper bound</dd>
+<dt>dlval    </dt> <dd>Lower bound</dd>
+<dt>EquDim   </dt> <dd>Equation dimension in indicator option</dd>
+<dt>EquName  </dt> <dd>Equation name in indicator option</dd>
+<dt>fn       </dt> <dd>File name</dd>
+<dt>HlpID    </dt> <dd>Help level flags (can be combined): 1 = summary by group, 2 = alphabetical listing, 4 = include large help, 8 = include deprecated and obsolete</dd>
+<dt>idash    </dt> <dd>Dashed names flag: 0 = do not look for dashed names, 1 = look for dashed names</dd>
+<dt>idval    </dt> <dd>Default value</dd>
+<dt>iErrors  </dt> <dd>Number of errors</dd>
+<dt>ihval    </dt> <dd>Upper bound</dd>
+<dt>ilval    </dt> <dd>Lower bound</dd>
+<dt>info     </dt> <dd>Message string</dd>
+<dt>iPos     </dt> <dd>Position in list</dd>
+<dt>iType    </dt> <dd>Message type value (see enumerated constants)</dd>
+<dt>iWarnings</dt> <dd>Number of warnings</dd>
+<dt>maptype  </dt> <dd>Type of variable equation mapping (see enumerated constants)</dd>
+<dt>NrMsg    </dt> <dd>Number of messages in message queue</dd>
+<dt>NrSyn    </dt> <dd>Number of the synoym</dd>
+<dt>opt      </dt> <dd>Optfile number</dd>
+<dt>p        </dt> <dd>PChar: pointer to first character</dd>
+<dt>result   </dt> <dd>Result/Return code of function</dd>
+<dt>s        </dt> <dd>String</dd>
+<dt>sfilename</dt> <dd>File name</dd>
+<dt>skey     </dt> <dd>String list</dd>
+<dt>SName    </dt> <dd>Option name</dd>
+<dt>solver   </dt> <dd>Solver name</dd>
+<dt>SSyn     </dt> <dd>Option synomyn</dd>
+<dt>sTName   </dt> <dd>Type name</dd>
+<dt>sval     </dt> <dd>String list element value</dd>
+<dt>sversion </dt> <dd>Version number</dd>
+<dt>TNr      </dt> <dd>Type number</dd>
+<dt>VarDim   </dt> <dd>Variable dimension in indicator option</dd>
+<dt>VarName  </dt> <dd>Variable name in indicator option</dd>
+<dt>VEName   </dt> <dd>Variable or equation name</dd>
+</dl>
+
+<h2>Calling Sequences</h2>
+
+<h3><a id="optAddMessage">optAddMessage</a></h3>
+<ul>
+<li>Add a message to the message queue.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const info     : ShortString</dt> <dd>Message string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optClearMessages">optClearMessages</a></h3>
+<ul>
+<li>Clear all messages stored in the message queue.</li>
+<li>Procedure</li>
+</ul>
+
+<h3><a id="optCount">optCount</a></h3>
+<ul>
+<li>Number of options.</li>
+<li>Property of type Integer</li>
+<li>Actions
+<ul><li>r</li>
+</ul>
+</ul>
+
+<h3><a id="optDefinitionFile">optDefinitionFile</a></h3>
+<ul>
+<li>Get last processed definition file.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out sfilename: ShortString</dt> <dd>File name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optDotOptCount">optDotOptCount</a></h3>
+<ul>
+<li>Dot options available and number ignored.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out ANrErrors: Integer</dt> <dd>Number of syntactically incorrect dot options</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optEchoSet">optEchoSet</a></h3>
+<ul>
+<li>Set echo of input on or off.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optEOLOnlySet">optEOLOnlySet</a></h3>
+<ul>
+<li>Set EOLOnly and return previous value.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optErrorCount">optErrorCount</a></h3>
+<ul>
+<li>Retrieve number of errors / warnings from message queue.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out iErrors  : Integer</dt> <dd>Number of errors</dd>
+<dt>      out iWarnings: Integer</dt> <dd>Number of warnings</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optFindStr">optFindStr</a></h3>
+<ul>
+<li>Find option by name, return number and ref nr.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+<dt>      out ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ARefNr   : Integer    </dt> <dd>Option reference number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetBoundsDbl">optGetBoundsDbl</a></h3>
+<ul>
+<li>Bounds and default for double option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out dlval    : Double </dt> <dd>Lower bound</dd>
+<dt>      out dhval    : Double </dt> <dd>Upper bound</dd>
+<dt>      out ddval    : Double </dt> <dd>Default value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetBoundsInt">optGetBoundsInt</a></h3>
+<ul>
+<li>Bounds and default for integer option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ilval    : Integer</dt> <dd>Lower bound</dd>
+<dt>      out ihval    : Integer</dt> <dd>Upper bound</dd>
+<dt>      out idval    : Integer</dt> <dd>Default value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetConstName">optGetConstName</a></h3>
+<ul>
+<li>Get the name of a constant.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          cgroup   : Integer    </dt> <dd>Constant group: 1 = Data types, 2 = Option types, 3 = Option sub-type, 4 = Message type</dd>
+<dt>          cindex   : Integer    </dt> <dd>Constant index</dd>
+<dt>      out cname    : ShortString</dt> <dd>Constant name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDbl2Nr">optGetDbl2Nr</a></h3>
+<ul>
+<li>Read second double by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ADVal    : Double </dt> <dd>Option double value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDblNr">optGetDblNr</a></h3>
+<ul>
+<li>Read double by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ADVal    : Double </dt> <dd>Option double value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDblStr">optGetDblStr</a></h3>
+<ul>
+<li>Read double by option name.</li>
+<li>Function returns Double</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDefaultStr">optGetDefaultStr</a></h3>
+<ul>
+<li>Default value for a given string option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out sval     : ShortString</dt> <dd>String list element value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDefinedNr">optGetDefinedNr</a></h3>
+<ul>
+<li>Get defined status by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDefinedStr">optGetDefinedStr</a></h3>
+<ul>
+<li>Get defined status by option name.</li>
+<li>Function returns Boolean</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDotOptNr">optGetDotOptNr</a></h3>
+<ul>
+<li>Dot option info.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out VEName   : ShortString</dt> <dd>Variable or equation name</dd>
+<dt>      out AObjNr   : Integer    </dt> <dd>Numeric index of suffix in dot option</dd>
+<dt>      out ADim     : Integer    </dt> <dd>Number of indices of variable or equation</dd>
+<dt>      out AValue   : Double     </dt> <dd>Option value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetDotOptUel">optGetDotOptUel</a></h3>
+<ul>
+<li>Retrieve a single element from a dot option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADim     : Integer    </dt> <dd>Number of indices of variable or equation</dd>
+<dt>      out AUEL     : ShortString</dt> <dd>Single element from a dot option</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetEnumCount">optGetEnumCount</a></h3>
+<ul>
+<li>Number of enumerations in option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ACount   : Integer</dt> <dd>Number of enumerations</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetEnumHelp">optGetEnumHelp</a></h3>
+<ul>
+<li>Get help text for enumerated value.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          AOrd     : Integer    </dt> <dd>Ordinal position</dd>
+<dt>      out AHc      : Integer    </dt> <dd>Help Context number</dd>
+<dt>      out AHelpStr : ShortString</dt> <dd>Help string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetEnumStrNr">optGetEnumStrNr</a></h3>
+<ul>
+<li>Get enumerated string value and ordinal.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ASVal    : ShortString</dt> <dd>Option string value</dd>
+<dt>      out AOrd     : Integer    </dt> <dd>Ordinal position</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetEnumValue">optGetEnumValue</a></h3>
+<ul>
+<li>Enumerated value by ordinal number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          AOrd     : Integer    </dt> <dd>Ordinal position</dd>
+<dt>      out AValInt  : Integer    </dt> <dd>Option value as integer</dd>
+<dt>      out AValStr  : ShortString</dt> <dd>Option value as string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetEquIndicatorNr">optGetEquIndicatorNr</a></h3>
+<ul>
+<li>Equation part of indicator.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADim     : Integer    </dt> <dd>Number of indices of variable or equation</dd>
+<dt>      out AIndex   : ShortString</dt> <dd>Domain index string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetEquVarEquMapNr">optGetEquVarEquMapNr</a></h3>
+<ul>
+<li>Equation part of variable equation mapping.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          maptype  : Integer    </dt> <dd>Type of variable equation mapping (see enumerated constants)</dd>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADim     : Integer    </dt> <dd>Number of indices of variable or equation</dd>
+<dt>      out AIndex   : ShortString</dt> <dd>Domain index string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetFromAnyStrList">optGetFromAnyStrList</a></h3>
+<ul>
+<li>Read string list element name and value and remove the value. Returns 0 if no string list option found</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          idash    : Integer    </dt> <dd>Dashed names flag: 0 = do not look for dashed names, 1 = look for dashed names</dd>
+<dt>      out skey     : ShortString</dt> <dd>String list</dd>
+<dt>      out sval     : ShortString</dt> <dd>String list element value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetFromListStr">optGetFromListStr</a></h3>
+<ul>
+<li>Read and remove queued strings from specified option. Return values are: -2 if option not found, -1 if option is not a string list, 0 if string list is empty, 1 if item returned and remove.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const skey     : ShortString</dt> <dd>String list</dd>
+<dt>      out sval     : ShortString</dt> <dd>String list element value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetGroupGrpNr">optGetGroupGrpNr</a></h3>
+<ul>
+<li>Get group record by group number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          AGroup   : Integer</dt> <dd>Group number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetGroupNr">optGetGroupNr</a></h3>
+<ul>
+<li>Get group information by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out AName    : ShortString</dt> <dd>Option name</dd>
+<dt>      out AGroup   : Integer    </dt> <dd>Group number</dd>
+<dt>      out AHc      : Integer    </dt> <dd>Help Context number</dd>
+<dt>      out AHelp    : ShortString</dt> <dd>One line help text</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetHelpNr">optGetHelpNr</a></h3>
+<ul>
+<li>Get option name and help by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ASOpt    : ShortString</dt> <dd>Option name</dd>
+<dt>      out ASHelp   : ShortString</dt> <dd>Help string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetIndicatorNr">optGetIndicatorNr</a></h3>
+<ul>
+<li>Indicator info.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out EquName  : ShortString</dt> <dd>Equation name in indicator option</dd>
+<dt>      out VarName  : ShortString</dt> <dd>Variable name in indicator option</dd>
+<dt>      out EquDim   : Integer    </dt> <dd>Equation dimension in indicator option</dd>
+<dt>      out VarDim   : Integer    </dt> <dd>Variable dimension in indicator option</dd>
+<dt>      out AValue   : Integer    </dt> <dd>Option value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetInfoNr">optGetInfoNr</a></h3>
+<ul>
+<li>Get information about option by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ADefined : Integer</dt> <dd>Flag: 0 if not defined and <>0 if defined</dd>
+<dt>      out ADefinedR: Integer</dt> <dd>Flag: 0 if not recently defined and <>0 if recently defined</dd>
+<dt>      out ARefNr   : Integer</dt> <dd>Option reference number</dd>
+<dt>      out ADataType: Integer</dt> <dd>Data type</dd>
+<dt>      out AOptType : Integer</dt> <dd>Option type</dd>
+<dt>      out ASubType : Integer</dt> <dd>Option sub type</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetInt2Nr">optGetInt2Nr</a></h3>
+<ul>
+<li>Read second integer option by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetIntNr">optGetIntNr</a></h3>
+<ul>
+<li>Read integer option by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetIntStr">optGetIntStr</a></h3>
+<ul>
+<li>Read integer by option name.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetMessage">optGetMessage</a></h3>
+<ul>
+<li>Read from message queue.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          NrMsg    : Integer    </dt> <dd>Number of messages in message queue</dd>
+<dt>      out info     : ShortString</dt> <dd>Message string</dd>
+<dt>      out iType    : Integer    </dt> <dd>Message type value (see enumerated constants)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetNameNr">optGetNameNr</a></h3>
+<ul>
+<li>Get option name by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ASName   : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetNameOpt">optGetNameOpt</a></h3>
+<ul>
+<li>Extract solver name and optfile number from string option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const ASVal    : ShortString</dt> <dd>Option string value</dd>
+<dt>      out solver   : ShortString</dt> <dd>Solver name</dd>
+<dt>      out opt      : Integer    </dt> <dd>Optfile number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetOptGroupNr">optGetOptGroupNr</a></h3>
+<ul>
+<li>Get group number of an option by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetOptHelpNr">optGetOptHelpNr</a></h3>
+<ul>
+<li>Get option name, help context and group number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out AName    : ShortString</dt> <dd>Option name</dd>
+<dt>      out AHc      : Integer    </dt> <dd>Help Context number</dd>
+<dt>      out AGroup   : Integer    </dt> <dd>Group number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetStr2Nr">optGetStr2Nr</a></h3>
+<ul>
+<li>Read second string by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetStrNr">optGetStrNr</a></h3>
+<ul>
+<li>Read string by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetStrStr">optGetStrStr</a></h3>
+<ul>
+<li>Read string by option name.</li>
+<li>Function returns ShortString</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetSynonym">optGetSynonym</a></h3>
+<ul>
+<li>Get synonym and original option name.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          NrSyn    : Integer    </dt> <dd>Number of the synoym</dd>
+<dt>      out SSyn     : ShortString</dt> <dd>Option synomyn</dd>
+<dt>      out SName    : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetTypeName">optGetTypeName</a></h3>
+<ul>
+<li>Get option type name by type number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          TNr      : Integer    </dt> <dd>Type number</dd>
+<dt>      out sTName   : ShortString</dt> <dd>Type name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetVal2Str">optGetVal2Str</a></h3>
+<ul>
+<li>Read second value as string by option name.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+<dt>      out ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetValStr">optGetValStr</a></h3>
+<ul>
+<li>Read value as string by option name.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+<dt>      out ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetValuesNr">optGetValuesNr</a></h3>
+<ul>
+<li>Read values.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out ASName   : ShortString</dt> <dd>Option name</dd>
+<dt>      out AIVal    : Integer    </dt> <dd>Option integer value</dd>
+<dt>      out ADVal    : Double     </dt> <dd>Option double value</dd>
+<dt>      out ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetVarEquMapNr">optGetVarEquMapNr</a></h3>
+<ul>
+<li>Variable equation mapping info.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          maptype  : Integer    </dt> <dd>Type of variable equation mapping (see enumerated constants)</dd>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>      out EquName  : ShortString</dt> <dd>Equation name in indicator option</dd>
+<dt>      out VarName  : ShortString</dt> <dd>Variable name in indicator option</dd>
+<dt>      out EquDim   : Integer    </dt> <dd>Equation dimension in indicator option</dd>
+<dt>      out VarDim   : Integer    </dt> <dd>Variable dimension in indicator option</dd>
+<dt>      out AValue   : Integer    </dt> <dd>Option value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetVarIndicatorNr">optGetVarIndicatorNr</a></h3>
+<ul>
+<li>Variable part of indicator.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADim     : Integer    </dt> <dd>Number of indices of variable or equation</dd>
+<dt>      out AIndex   : ShortString</dt> <dd>Domain index string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGetVarVarEquMapNr">optGetVarVarEquMapNr</a></h3>
+<ul>
+<li>Variable part of variable equation mapping.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          maptype  : Integer    </dt> <dd>Type of variable equation mapping (see enumerated constants)</dd>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADim     : Integer    </dt> <dd>Number of indices of variable or equation</dd>
+<dt>      out AIndex   : ShortString</dt> <dd>Domain index string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optGroupCount">optGroupCount</a></h3>
+<ul>
+<li>Number of option groups.</li>
+<li>Property of type Integer</li>
+<li>Actions
+<ul><li>r</li>
+</ul>
+</ul>
+
+<h3><a id="optIndicatorCount">optIndicatorCount</a></h3>
+<ul>
+<li>Indicators available and number ignored.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out ANrErrors: Integer</dt> <dd>Number of syntactically incorrect dot options</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optListCountStr">optListCountStr</a></h3>
+<ul>
+<li>Number of elements stored in list.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const skey     : ShortString</dt> <dd>String list</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optLookUp">optLookUp</a></h3>
+<ul>
+<li>Index number of an option.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AOpt     : ShortString</dt> <dd>Option name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optMessageCount">optMessageCount</a></h3>
+<ul>
+<li>Number of messages in buffer.</li>
+<li>Property of type Integer</li>
+<li>Actions
+<ul><li>r</li>
+</ul>
+</ul>
+
+<h3><a id="optNoBoundsSet">optNoBoundsSet</a></h3>
+<ul>
+<li>Set bound checking on or off.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optReadDefinition">optReadDefinition</a></h3>
+<ul>
+<li>Read definition file. Returns -1 if there was a definition error.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const fn       : ShortString</dt> <dd>File name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optReadFromListStr">optReadFromListStr</a></h3>
+<ul>
+<li>Read element iPos from list without removal.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const skey     : ShortString</dt> <dd>String list</dd>
+<dt>          iPos     : Integer    </dt> <dd>Position in list</dd>
+<dt>      out sval     : ShortString</dt> <dd>String list element value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optReadFromPChar">optReadFromPChar</a></h3>
+<ul>
+<li>Read options from a PChar. In the case of errors, messages will be added to the message queue (see OptGetMessage).</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          p        : PChar</dt> <dd>PChar: pointer to first character</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optReadFromStr">optReadFromStr</a></h3>
+<ul>
+<li>Read options from string. In the case of errors, messages will be added to the message queue (see OptGetMessage).</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const s        : ShortString</dt> <dd>String</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optReadParameterFile">optReadParameterFile</a></h3>
+<ul>
+<li>Read parameters from file.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const fn       : ShortString</dt> <dd>File name</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optRecentEnabled">optRecentEnabled(Set)</a></h3>
+<ul>
+<li>When enabled (default), Defined and DefinedR will be set when assigning to an option. When disabled, only Defined will be set</li>
+<li>Property of type Integer</li>
+<li>Actions
+<ul><li>r</li><li>w</li>
+</ul>
+</ul>
+
+<h3><a id="optResetAll">optResetAll</a></h3>
+<ul>
+<li>Reset all defined and definedR flags and clear the message queue.</li>
+<li>Procedure</li>
+</ul>
+
+<h3><a id="optResetAllRecent">optResetAllRecent</a></h3>
+<ul>
+<li>Reset all definedR flags.</li>
+<li>Procedure</li>
+</ul>
+
+<h3><a id="optResetNr">optResetNr</a></h3>
+<ul>
+<li>Reset option value to default.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optResetRecentChanges">optResetRecentChanges</a></h3>
+<ul>
+<li>Reset all options with definedR flag set.</li>
+<li>Procedure</li>
+</ul>
+
+<h3><a id="optSetDbl2Nr">optSetDbl2Nr</a></h3>
+<ul>
+<li>Set second double by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADVal    : Double </dt> <dd>Option double value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetDblNr">optSetDblNr</a></h3>
+<ul>
+<li>Set double by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ADVal    : Double </dt> <dd>Option double value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetDblStr">optSetDblStr</a></h3>
+<ul>
+<li>Set double by option name.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+<dt>          ADVal    : Double     </dt> <dd>Option double value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetInt2Nr">optSetInt2Nr</a></h3>
+<ul>
+<li>Set second integer option by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetIntNr">optSetIntNr</a></h3>
+<ul>
+<li>Set integer option by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          AIVal    : Integer</dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetIntStr">optSetIntStr</a></h3>
+<ul>
+<li>Set integer by option name.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+<dt>          AIVal    : Integer    </dt> <dd>Option integer value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetRefNr">optSetRefNr</a></h3>
+<ul>
+<li>Set reference number by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer</dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          ARefNr   : Integer</dt> <dd>Option reference number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetRefNrStr">optSetRefNrStr</a></h3>
+<ul>
+<li>Set reference number by option name.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AOpt     : ShortString</dt> <dd>Option name</dd>
+<dt>          ARefNr   : Integer    </dt> <dd>Option reference number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetStr2Nr">optSetStr2Nr</a></h3>
+<ul>
+<li>Set second string by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>    const ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetStrNr">optSetStrNr</a></h3>
+<ul>
+<li>Set string by option number.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>    const ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetStrStr">optSetStrStr</a></h3>
+<ul>
+<li>Set string by option name.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName    : ShortString</dt> <dd>Option name</dd>
+<dt>    const ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetValues2Nr">optSetValues2Nr</a></h3>
+<ul>
+<li>Set second values.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          AIVal    : Integer    </dt> <dd>Option integer value</dd>
+<dt>          ADVal    : Double     </dt> <dd>Option double value</dd>
+<dt>    const ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSetValuesNr">optSetValuesNr</a></h3>
+<ul>
+<li>Set values.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ANr      : Integer    </dt> <dd>Ordinal option number - an integer between 1..optCount</dd>
+<dt>          AIVal    : Integer    </dt> <dd>Option integer value</dd>
+<dt>          ADVal    : Double     </dt> <dd>Option double value</dd>
+<dt>    const ASVal    : ShortString</dt> <dd>Option string value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optShowHelp">optShowHelp</a></h3>
+<ul>
+<li>Write help for option(s)</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const HlpID    : ShortString</dt> <dd>Help level flags (can be combined): 1 = summary by group, 2 = alphabetical listing, 4 = include large help, 8 = include deprecated and obsolete</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optSynonymCount">optSynonymCount</a></h3>
+<ul>
+<li>Number of synonyms.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="optVarEquMapCount">optVarEquMapCount</a></h3>
+<ul>
+<li>Variable equation mappings available and number ignored.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          maptype  : Integer</dt> <dd>Type of variable equation mapping (see enumerated constants)</dd>
+<dt>      out ANrErrors: Integer</dt> <dd>Number of syntactically incorrect dot options</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optVersion">optVersion</a></h3>
+<ul>
+<li>Get version number of object.</li>
+<li>Procedure</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out sversion : ShortString</dt> <dd>Version number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="optWriteParameterFile">optWriteParameterFile</a></h3>
+<ul>
+<li>Write modified parameters to a file. In the case of errors, messages will be added to the message queue (see OptGetMessage).</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const fn       : ShortString</dt> <dd>File name</dd>
+</dl> </ul>
+</ul>
+
+<h2>Enumerated Constants</h2>
+<ul>
+<li>optDataType</li>
+<ul>
+<li>optDataNone  = 0</li>
+<li>optDataInteg = 1</li>
+<li>optDataDoubl = 2</li>
+<li>optDataStrin = 3</li>
+<li>optDataStrLi = 4</li>
+</ul>
+<li>optOptionType</li>
+<ul>
+<li>optTypeInteger = 0</li>
+<li>optTypeDouble  = 1</li>
+<li>optTypeString  = 2</li>
+<li>optTypeBoolean = 3</li>
+<li>optTypeEnumStr = 4</li>
+<li>optTypeEnumInt = 5</li>
+<li>optTypeMultiLi = 6</li>
+<li>optTypeStrList = 7</li>
+<li>optTypeMacro   = 8</li>
+<li>optTypeImmedia = 9</li>
+</ul>
+<li>optOptionSubType</li>
+<ul>
+<li>optsubRequir = 0</li>
+<li>optsubNoValu = 1</li>
+<li>optsubOption = 2</li>
+<li>optsub2Value = 3</li>
+</ul>
+<li>optMsgType</li>
+<ul>
+<li>optMsgInputEcho  = 0</li>
+<li>optMsgHelp       = 1</li>
+<li>optMsgDefineErro = 2</li>
+<li>optMsgValueError = 3</li>
+<li>optMsgValueWarni = 4</li>
+<li>optMsgDeprecated = 5</li>
+<li>optMsgFileEnter  = 6</li>
+<li>optMsgFileLeave  = 7</li>
+<li>optMsgTooManyMsg = 8</li>
+<li>optMsgUserError  = 9</li>
+</ul>
+<li>optVarEquMapType</li>
+<ul>
+<li>optMapIndicato = 0</li>
+<li>optMapDefinedV = 1</li>
+</ul>
+</ul></body>
+</html>

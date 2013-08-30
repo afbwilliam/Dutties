@@ -1,0 +1,136 @@
+$Title NoMatchLimit GUSS Test (SCENSOL3,SEQ=535)
+
+$Ontext
+Contributor: Michael Bussieck
+$Offtext
+
+
+Sets
+     ii      super set of i    / seattle, san-diego, phoenix /
+     i(ii)   canning plants    / seattle, san-diego /
+     j       markets           / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(ii,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5                        1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+         c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars ;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j),  f * d(i,j) / 1000 *x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+Equation e dummy n row;  e.. sum((i,j), x(i,j)) =n= 3;
+
+Model transport /all/ ;
+
+* The DICT set has three dimensions
+* 1 Model symbol
+* 2 Action type
+* 3 Update parameter
+* DICT needs to be specified by a data statement
+
+set dict   / s.scenario   . ''
+             o.   opt     .srep
+             d.   param   .ds
+             a.   param   .as
+             x.   upper   .xup
+             f.   param   .fs
+             cost.marginal.xcost
+             x.   level   .xx /
+
+* Problems:
+*   1 QCP will not work, nor MCP, MPECS.
+
+set sX /s1*s10/;
+$if not set dim $set dim 1
+$ife (%dim%>3)or(%dim%<1) $abort dim must be 1 to 3
+
+$if %dim%==1 $set s "sX"       set sx #SX
+$if %dim%==2 $set s "sX,sX"    set sx #SX:#SX
+$if %dim%==3 $set s "sX,sX,sX" set sx #SX:#SX:#SX
+
+Set s(%s%) /%sx%/;
+
+Parameter
+    ds(%s%,ii,j) updater for d
+    as(%s%,i)    updater for a
+    xup(%s%,i,j) updater for x.up
+    fs(%s%)      updater for f
+    xcost(%s%)   collector for marginal of cost
+    xx(%s%,i,j)  collector for level of x
+
+$eolcom //
+Parameter
+    o(*)         GUSS options
+       / OptfileInit  0   // Read solver options for initial solve
+         Optfile      0   // Read solver options for successive solves
+         LogOption    1   // 0 - Moderate log (default)
+                          // 1 - Minimal log
+                          // 2 - Detailed log\
+         SkipBaseCase 0   // Switch for solving the base case
+         UpdateType   0   // Scenario update mechanism:
+                          // 0 - set everything to 0 and apply changes
+                          // 1 - reestablish base case and apply changes
+                          // 2 - build on top of last scenario and apply changes
+       /
+    srep(%s%,*)  Solution attributes / #s.(ModelStat na, SolveStat na, ObjVal na) /;
+
+* This enters record with ii='phoenix'
+ds(s,ii,j) = max(0,uniform(-5,2)) + eps;
+as(s,i)    = a(i)*(1+normal(0.05,0.1));
+xup(s,i,j) = uniform(120,300);
+fs(s)      = uniform(80,100);
+
+Solve transport using lp minimizing z scenario dict;
+
+* If we get a license error (global solver) just terminate
+if (transport.modelstat=%modelstat.LicensingProblem%,
+    abort.noerror 'too big for global solvers');
+
+abort$(transport.solvestat<>%solvestat.TerminatedBySolver%) 'Expect solve status "TERMINATED BY SOLVER"';
+
+o('NoMatchLimit') = 6;
+Solve transport using lp minimizing z scenario dict;
+abort$(transport.solvestat<>%solvestat.TerminatedBySolver%) 'Expect solve status "TERMINATED BY SOLVER"';
+abort$(sum(s$(srep(s,'ModelStat')=NA),1)<>card(s)-2) 'Expect only two successful scenarios';
+
+o('NoMatchLimit') = 3*card(s)-1;
+Solve transport using lp minimizing z scenario dict;
+abort$(transport.solvestat<>%solvestat.TerminatedBySolver%) 'Expect solve status "TERMINATED BY SOLVER"';
+abort$(sum(s$(srep(s,'ModelStat')=NA),1)<>1) 'Expect only one unsuccessful scenario';
+
+o('NoMatchLimit') = 3*card(s);
+Solve transport using lp minimizing z scenario dict;
+abort$(transport.solvestat<>%solvestat.NormalCompletion%) 'Expect solve status "NORMAL COMPLETION"';
+abort$(sum(s$(srep(s,'ModelStat')=NA),1)<>0) 'Expect no unsuccessful scenario';
+

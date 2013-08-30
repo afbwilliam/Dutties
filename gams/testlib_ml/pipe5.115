@@ -1,0 +1,61 @@
+$title piped projection and counts to 1,2,3 dimensions (PIPE5,SEQ=115)
+
+$ontext
+
+Contributor: Alex Meeraus
+$offtext
+
+$version 137 goto OK
+$clearerror
+$stop
+$label OK
+
+set i / 1*5 /; alias(i,i1,i2,i3,i4);
+
+parameter a4(i1,i2,i3,i4);
+
+a4(i1,i2,i3,i4)$(uniform(0,1) > .9) = uniform(1,2);
+
+parameters three123(i1,i2,i3)
+           three432(i4,i3,i2)
+           three312(i3,i1,i2)
+           two12(i1,i2)
+           two34(i3,i4)
+           two41(i4,i1)
+           two23(i2,i3)
+           two24(i2,i4)
+           one1(i1)
+           one2(i2)
+           one3(i3)
+           one4(i4);
+
+option one1 < a4
+       one2 < a4
+       one3 < a4
+       one4 < a4 ;
+
+abort$sum(i1, one1(i1) <> sum((   i2,i3,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum(i2, one2(i2) <> sum((i1,   i3,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum(i3, one3(i3) <> sum((i1,i2,   i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum(i4, one4(i4) <> sum((i1,i2,i3   )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+
+
+option two12 < a4
+       two34 < a4
+       two41 < a4
+       two23 < a4
+       two24 < a4
+
+abort$sum((i1,i2), two12(i1,i2) <> sum((      i3,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i3,i4), two34(i3,i4) <> sum((i1,i2      )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i4,i1), two41(i4,i1) <> sum((   i2,i3   )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i2,i3), two23(i2,i3) <> sum((i1      ,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i2,i4), two24(i2,i4) <> sum((i1   ,i3   )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+
+option three123 < a4
+       three432 < a4
+       three312 < a4;
+
+abort$sum((i1,i2,i3), three123(i1,i2,i3) <> sum(i4$a4(i1,i2,i3,i4), 1)) 'bad sort';
+abort$sum((i4,i3,i2), three432(i4,i3,i2) <> sum(i1$a4(i1,i2,i3,i4), 1)) 'bad sort';
+abort$sum((i3,i1,i2), three312(i3,i1,i2) <> sum(i4$a4(i1,i2,i3,i4), 1)) 'bad sort';

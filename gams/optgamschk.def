@@ -1,0 +1,30 @@
+*
+* optgamschk.def
+*
+
+LP string 0 "" 1 1 solver for LP problems
+MIP string 0 "" 1 1 solver for MIP problems
+RMIP string 0 "" 1 1 solver for RMIP problems
+NLP string 0 "" 1 1 solver for NLP problems
+MCP string 0 "" 1 1 solver for MCP problems
+MPEC string 0 "" 1 1 solver for MPEC problems
+RMPEC string 0 "" 1 1 solver for RMPEC problems
+CNS string 0 "" 1 1 solver for CNS problems
+DNLP string 0 "" 1 1 solver for DNLP problems
+RMINLP string 0 "" 1 1 solver for RMINLP problems
+MINLP string 0 "" 1 1 solver for MINLP problems
+SOLVERNAME string 0 "" 1 1 solver for any problems
+DESCALE string 0 "part" 1 1 controls treatment of scaling
+OPTFILE string 0 "" 1 1 solver options file number
+SOLVE string.nv 0 "" 1 1 forces solution of the problem
+VARBLOCK integer 0 -5 minint maxint 1 1 maximum number of variable blocks allowed
+EQUBLOCK integer 0 -5 minint maxint 1 1 maximum number of equation blocks allowed
+NOSOLVE string.nv 0 "" 1 1 suppresses solution of the problem
+LEVELFILT integer 0 6 1 maxint 1 1 numerical value of exponent on "unbounded levels"
+MARGFILT integer 0 6 1 maxint 1 1 numerical value of exponent on "infeasible marginals"
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General GAMSCHK options
+*** End of file

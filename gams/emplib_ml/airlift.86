@@ -1,0 +1,127 @@
+$Title  Airlift operations schedule (AIRLIFT,SEQ=86)
+$Ontext
+In scheduling monthly airlift operations, demands for specific routes
+can be predicted. Actual requirements will be known in the future, and
+they may not agree with predicted requirements. Recourse actions are
+then required to meet the actual requirements. The actual requirements
+are expressed in tons, or any other appropriate measure, and they can
+be represented by a random variable. Aircraft of several different
+types are available for service.  Each of these types of aircraft has
+its own restriction on number of flight hours available during the
+month.
+
+The recourse actions available include allowing available flight time
+to go unused, switching aircraft from one route to another, and buying
+commercial flights. Each of these has its associated cost, depending
+on the type(s) of aircraft involved.
+
+
+Midler, J L, and Wollmer, R D, Stochastic programming models
+for airlift operations, Naval Research Logistics Quarterly 16,
+315-330, 1969.
+
+Ariyawansa, K A, and Felt, A J, On a New Collection of Stochastic
+Linear Programming Test Problems, INFORMS Journal on Computing 16(3),
+291-299, 2004
+
+$Offtext
+
+Sets
+   i  aircraft type  / f1*f2 /
+   j  routes         / r1*r2 /
+Alias (j,k);
+
+Parameter
+* Felt has 7200 but that's never binding ...
+   F(i)      maximum number of flight hours for aircraft type / #i 7200 /
+   a(i,j)    flying hours per round trip
+   b(i,j)    carrying capacity in tons
+   c(i,j)    cost per flight in $
+   d(j)      demand / r1 1000, r2 1500 /
+   as(i,j,k) flying hours per round trip - switched flights
+   cs(i,j,k) cost per flight in $ - switched flights
+   pplus(j)  cost for commerically contracted flight in $ / r1 500, r2 250 /
+   pminus(j) cost for unused capacity in $ / #j 0 /;
+
+Table data(i,j,*,*)
+        a.''   b.''  c.''  as.r1  as.r2  cs.r1 cs.r2
+f1.r1   24     50     7200         19           7000
+f2.r1   49     20     7200         36           5500
+f1.r2   14     75     6000    29          8200
+f2.r2   29     20     4000    56          8700
+;
+
+a(i,j)    = data(i,j,'a' ,'');
+b(i,j)    = data(i,j,'b' ,'');
+c(i,j)    = data(i,j,'c' ,'');
+as(i,j,k) = data(i,j,'as',k);
+cs(i,j,k) = data(i,j,'cs',k);
+
+Variables
+   obj          objective
+   x(i,j)       number of flights originally planned
+   xs(i,j,k)    increase in number of flights on k switched from j
+   slackp(j)    contracted flights
+   slackn(j)    unused capacity
+Positive variable x, xs, slackp, slackn;
+
+Equations
+   defobj       objective
+   defcap(i)    capacity
+   defcaps(i,j) limit the number of switches by original assignment
+   defdem(j)    demand fullfilment;
+
+defobj..         sum((i,j), c(i,j)*x(i,j) + sum(k$(not sameas(j,k)),
+                  (cs(i,j,k)-c(i,j)*as(i,j,k)/a(i,j))*xs(i,j,k)))
+                  + sum(j, (pplus(j)*slackp(j) + pminus(j)*slackn(j))) =e= obj;
+
+defcap(i)..      sum(j, a(i,j)*x(i,j)) =l= F(i);
+
+defcaps(i,j)..   sum(k$(not sameas(j,k)), as(i,j,k)*xs(i,j,k)) =l= a(i,j)*x(i,j);
+
+defdem(j)..      sum(i, b(i,j)*x(i,j) - sum(k$(not sameas(j,k)),
+                  b(i,j)*as(i,j,k)/a(i,j)*xs(i,j,k) - b(i,j)*xs(i,k,j)))
+                  + slackp(j) - slackn(j) =e= d(j);
+
+model airlift /all/;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$onput
+randvar d('r1') lognormal 1000  50
+randvar d('r2') lognormal 1500 300
+stage 2 d xs slackp slackn defcaps defdem
+$offput
+putclose emp;
+
+Set s            scenarios / s1*s36 /;
+Parameter
+    s_d(s,j)     demand by scenario
+    s_x(s,i,j), s_xs(s,i,j,k) flights planned and switched;
+
+Set dict / s     .scenario.''
+           d     .randvar. s_d
+           x     .level.   s_x
+           xs    .level.   s_xs /;
+
+$ifi %gams.emp%==lindo
+solve airlift min obj using emp scenario dict;
+
+* Stochastic demand as Independent random variables
+Set r realization / x1*x5 /
+Table dRV(r,*) stochastic demand
+         r1    pr1      r2    pr2
+x1   988.16 0.0668 1428.94 0.0668
+x2   989.98 0.2417 1439.86 0.2417
+x3   994.92 0.3830 1469.54 0.3830
+x4  1008.37 0.2417 1550.22 0.2417
+x5  1044.92 0.0668 1769.54 0.0668;
+
+put emp '* problem %gams.i%';
+put / "randvar d('r1') discrete "; loop(r, put dRV(r,'pr1') dRV(r,'r1'));
+put / "randvar d('r2') discrete "; loop(r, put dRV(r,'pr2') dRV(r,'r2'));
+put / 'stage 2 d xs slackp slackn defcaps defdem'
+putclose emp;
+
+solve airlift min obj using emp scenario dict;
+
+

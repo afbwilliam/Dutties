@@ -1,0 +1,27 @@
+$title 'checks +/- INF on =L=, =G=, and =N= equations using EMP' (EMPLP13,SEQ=385)
+
+$ontext
+
+This model tests lp12 from the Test Library with solver EMP. In the first test
+EMP generates a standard scalar model which is solved by the default lp solver.
+For the second test EMP rewrites the model as MCP and solves it with the default
+MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+$offtext
+
+$set modelname lp13
+
+*use default EMP to solve lp13
+$log !!!!!!! try modeltype EMP !!!!!!!
+$call gams %modelname% lo=%gams.lo% --MTYPE=emp
+$if errorlevel 1 $abort Default EMP failed on %modelname%
+
+*use EMP with NLP2MCP reformulation to solve lp13
+$echo ModelType MCP           > empinfo.txt
+$echo EmpInfoFile empinfo.txt > jams.opt
+
+$log !!!!!!! try modeltype EMP with optfile=1 !!!!!!!
+$call gams %modelname% lo=%gams.lo% optfile=1 --solvedasmcp=1 --MTYPE=emp
+$if errorlevel 1 $abort EMP with MCP reformulation failed on %modelname%

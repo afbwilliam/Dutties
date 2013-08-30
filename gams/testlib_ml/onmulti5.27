@@ -1,0 +1,48 @@
+$title Test set table and onmulti with deletes (ONMULTI5,SEQ=27)
+
+$version 137
+$if errorfree $goto doit
+$clearerror
+$exit
+
+$label doit
+
+acronym abc;
+
+set table m
+   aaa  bbbb   ccc
+1  0     1     -1
+2  0.0  1.1    no
+3  abc  na    yes
+4  eps   na    yes
+
+table o
+   aaa  bbbb   ccc
+1  0     1     -1
+2  0.0  1.1    no
+3  abc  na    yes
+4  eps   na    yes
+
+$onmulti
+
+table m
+   aaa  bbbb   ccc
+1  1    0
+3             no
+4  no    na   0
+
+table o
+   aaa  bbbb   ccc
+1  1    0
+3             no
+4  no    na   0
+$offmulti
+
+display  m,o;
+
+alias(*,u1,u2);
+set err elemenst different from par;
+
+* because of NA we need to cast parameter o
+err(u1,u2) = m(u1,u2) xor yes$o(u1,u2);
+abort$card(err) 'something wrong', err;

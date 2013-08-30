@@ -1,0 +1,42 @@
+*
+* optlgo.def
+*
+
+acc_tr double 0 -1e10 mindouble maxdouble 1 1 Global search termination - acceptability threshold
+con_tol double 0 1e-6 0 maxdouble 1 1 Maximal constraint violation tolerance in local search
+fct_trg double 0 -1e10 mindouble maxdouble 1 1 Partial stopping criterion in second local search phase
+fi_tol double 0 1e-6 0 maxdouble 1 1 Local search (merit function improvement) tolerance
+g_maxfct integer 0 -1 -1 maxint 1 1 Maximum number of function evaluations in global search
+irngs integer 0 0 0 maxint 1 1 Random number seed
+kt_tol double 0 1e-6 0 maxdouble 1 1 Kuhn-Tucker local optimality condition violation tolerance
+max_nosuc integer 0 -1 -1 maxint 1 1 Maximum number of function evaluations without improvement
+opmode enumint 0 3 1 1 Operational mode
+ 0 1 LS
+ 1 1 BB + LS
+ 2 1 RS+LS
+ 3 1 MS+LS
+penmult double 0 100 0 maxdouble 1 1 Constraint penalty multiplier.
+tlimit double 0 1000 0 maxdouble 1 1 Time limit in seconds.
+bad_obj double 0 1e8 0 maxdouble 1 2 Default value for objective function, if evaluation errors occur
+bptol double 0 1e-4 0 maxdouble 0 2 Bound projection tolerance
+debug boolean 0 0 1 2 Debug option.
+log_err integer 0 10 0 maxint 1 2 Log first log_err errors
+log_iter integer 0 10 0 maxint 1 2 Iteration log time interval.
+log_time double 0 0.5 0 maxdouble 1 2 Iteration log time interval in seconds.
+penbnd double 0 5 0 maxdouble 0 2 Bound penalties
+point integer 0 0 0 maxint 0 2 Write points after N evaluations
+skiplgo boolean 0 0 0 2 Skip calling of LGO
+var_lo double 0 -1e6 mindouble maxdouble 1 2 Smallest (default) lower bound, unless set by user.
+var_up double 0 1e6 mindouble maxdouble 1 2 Largest (default) upper bound, unless set by user.
+Include immediate ReadFile 1 2 Start reading from a new file
+CallConopt double 0 5 0 maxdouble 1 2 call CONOPT to get duals for final point
+conOptFile string 0 "" 0 2 option filename for final CONOPT run
+reslim synonym tlimit
+myeolchar EOLCOMM #
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+General group 1 1 General LGOoptions
+GamsOnly group 2 1 Gams system interface only
+*** End of file

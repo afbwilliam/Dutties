@@ -1,0 +1,50 @@
+$title fast shifting of set elements (SET9,SEQ=448)
+
+
+$ontext
+
+The execution time depends on the size of the reference set i and
+the position of the dynamic set elements in the reference set. The
+old implementation has an execution time that is proportional to the
+size of the reference set. The new coding depends on the position of
+the element in the reference set. At the expense of memory, we could
+make the time proportional to the number of elements in the dynamic
+set only.
+   k(i) = k(i-1)        candidate for fast execution but only inside a loop
+   k(i) = k(i-1) + no   the +no makes it slow
+
+Contributor: Alex
+
+$offtext
+
+set i reference set / 1*1000000 /, k(i), m(i) / 1,10000,50000/;
+
+parameter s, rep execution counts;
+
+loop(m,
+   k(i) = no; k(m) = yes; s = timeExec;
+   repeat
+      k(i) = k(i-1) until (timeExec-s) > 0.5 ;
+   rep(m,'fast') = sum(k, k.val)-m.val; display k;
+   k(i) = no; k(m) = yes; s = timeExec;
+   repeat
+      k(i) = k(i-1) + no until (timeExec-s) > 0.5 ;
+   rep(m,'slow') = sum(k, k.val)-m.val; display k );
+
+rep(m,'ratio') = rep(m,'fast')/rep(m,'slow');
+
+display rep;
+
+* We cannot do this test, because of old machines with timing/memory issues
+* abort$sum(m, rep(m,'ratio') < 50) 'something looks funny';
+abort$(smax(m, rep(m,'ratio')) < 50) 'something looks funny';
+
+$exit
+
+----     28 PARAMETER rep  execution counts
+
+             fast        slow       ratio
+
+1       10115.000       3.000    3371.667
+10000    4366.000       3.000    1455.333
+50000     830.000       3.000     276.667

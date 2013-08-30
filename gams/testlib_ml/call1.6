@@ -1,0 +1,27 @@
+$title Check return codes for spawns of gams $call =string (CALL1,SEQ=6)
+*
+* remember  $if errorlevel N     true if errolevel >= n
+*
+$ondollar
+$echo * ok run > temp.gms
+$call =gams temp.gms lo=%GAMS.lo%
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+$echo garbage > temp.gms
+$call =gams temp.gms lo=%GAMS.lo%
+$if NOT errorlevel 2 $error errorlevel not 2 but is %system.errorlevel%
+$if     errorlevel 3 $error errorlevel not 2 but is %system.errorlevel%
+$echo scalar x; x=1/0; > temp.gms
+$call =gams temp.gms lo=%GAMS.lo%
+$if NOT errorlevel 3 $error errorlevel not 3 but is %system.errorlevel%
+$if     errorlevel 4 $error errorlevel not 3 but is %system.errorlevel%
+$echo * ok run > temp.gms
+$call =gams temp.gms garbage=garbage lo=%GAMS.lo%
+$if NOT errorlevel 6 $error errorlevel not 6 but is %system.errorlevel%
+$if     errorlevel 7 $error errorlevel not 6 but is %system.errorlevel%
+$exit
+* we removed the limit on UELs with 137
+$echo set i / 1*10000 / > temp.gms
+$call =gams temp.gms license=garbage lo=%GAMS.lo%
+$if NOT errorlevel 7 $error errorlevel not 7 but is %system.errorlevel%
+$if     errorlevel 8 $error errorlevel not 7 but is %system.errorlevel%

@@ -1,0 +1,294 @@
+*
+* optconopt4.def
+*
+
+threads integer 0 1 0 maxint 1 5 Number of threads used by Conopt internally
+Lim_Err_2DDir integer 0 10 0 maxint 1 1  Limit on errors in Directional Second Derivative evaluation.
+LF2DRV integer 0 10 0 maxint 0 4
+LFBLCK integer 0 0 minint maxint 0 4
+LFBSLP integer 0 0 minint maxint 0 4
+LFBSQP integer 0 0 minint maxint 0 4
+LFCON3 integer 0 0 minint maxint 0 4
+Lim_Start_Degen integer 0 10 0 maxint 1 1  Limit on number of degenerate iterations before starting degeneracy breaking strategy.
+LFDEGI integer 0 10 0 maxint 0 4
+Lim_Msg_Dbg_1Drv integer 0 10 1 maxint 1 2  Limit on number of error messages from function and derivative debugger.
+LFDERR integer 0 10 1 maxint 0 4
+LFDLIM integer 0 0 minint maxint 0 4
+Lim_Err_Fnc_Drv integer 0 0 0 maxint 1 1  Limit on number of function evaluation errors. Overwrites GAMS Domlim option
+LFEERR integer 0 0 0 maxint 0 4
+Lim_Msg_LargeDrv integer 0 10 1 maxint 1 3  Limit on number of error messages related to large Jacobian elements.
+LFEMSG integer 0 10 1 maxint 0 4
+LFHDIS integer 0 0 minint maxint 0 4
+Lim_Err_Hessian integer 0 10 0 maxint 1 1  Limit on errors in Hessian evaluation.
+LFHSOK integer 0 10 0 maxint 0 4
+Frq_Log_Simple integer 0 1 1 maxint 1 3  Frequency for log-lines for non-SLP/SQP iterations.
+LFILOG integer 0 1 1 maxint 0 4
+Frq_Log_SlpSqp integer 0 1 1 maxint 1 3  Frequency for log-lines for SLP or SQP iterations.
+LFILOS integer 0 1 1 maxint 0 4
+LFINCR integer 0 0 minint maxint 0 4
+LFINVL integer 0 0 minint maxint 0 4
+LFIST1 integer 0 0 minint maxint 0 4
+LFIST2 integer 0 0 minint maxint 0 4
+Lim_Iteration integer 0 10000 0 maxint 1 1  Maximum number of iterations. Overwrites GAMS Iterlim option.
+LFITER integer 0 10000 0 maxint 0 4
+LFLERR integer 0 0 minint maxint 0 4
+LFMARK integer 0 0 minint maxint 0 4
+LFMAXP integer 0 0 minint maxint 0 4
+LFMIDL integer 0 0 minint maxint 0 4
+Lim_NewSuper integer 0 0 0 maxint 1 1  Maximum number of new superbasic variables added in one iteration.
+LFMXNS integer 0 0 0 maxint 0 4
+LFMXP4 integer 0 0 minint maxint 0 4
+LFMXQN integer 0 0 minint maxint 0 4
+LFMXST integer 0 0 minint maxint 0 4
+Lim_SlowPrg integer 0 20 2 maxint 1 1  Limit on number of iterations with slow progress (relative less than Tol_Obj_Change).
+LFNICR integer 0 20 2 maxint 0 4
+LFNOUI integer 0 0 minint maxint 0 4
+Lim_RedHess integer 0 5 5 maxint 1 1  Maximum number of superbasic variables in the approximation to the Reduced Hessian.
+LFNSUP integer 0 5 5 maxint 0 4
+LFNUPD integer 0 0 minint maxint 0 4
+LFNWIT integer 0 0 minint maxint 0 4
+LFONEB integer 0 0 minint maxint 0 4
+LFONEW integer 0 0 minint maxint 0 4
+LFRINL integer 0 0 minint maxint 0 4
+LFRINQ integer 0 0 minint maxint 0 4
+LFRINS integer 0 0 minint maxint 0 4
+LFRSCN integer 0 0 minint maxint 0 4
+Frq_Rescale integer 0 5 1 maxint 1 1  Rescaling frequency.
+LFSCAL integer 0 5 1 maxint 0 4
+LFSHRT integer 0 0 minint maxint 0 4
+LFSLIM integer 0 0 minint maxint 0 4
+LFSLOP integer 0 0 minint maxint 0 4
+LFSQPM integer 0 0 minint maxint 0 4
+LFSQPP integer 0 0 minint maxint 0 4
+LFSQPS integer 0 0 minint maxint 0 4
+LFSQPL integer 0 0 minint maxint 0 4
+Lim_StallIter integer 0 100 2 maxint 1 1  Limit on the number of stalled iterations.
+LFSTAL integer 0 100 2 maxint 0 4
+LFTABU integer 0 0 minint maxint 0 4
+LFTEST integer 0 0 minint maxint 0 4
+NewPhase0 boolean 0 1 0 4
+Phase0_2 boolean 0 1 0 4
+LKDEB2 integer 0 0 minint maxint 0 4
+Lim_Dbg_1Drv integer 0 0 -1 maxint 1 2  Flag for debugging of first derivatives
+ -1
+ 0
+ +n
+LKDEBG integer 0 0 -1 maxint 0 4
+LKDUM1 integer 0 0 minint maxint 0 4
+LKDUMI integer 0 0 minint maxint 0 4
+LKDUMM integer 0 0 minint maxint 0 4
+LKDUMP integer 0 0 minint maxint 0 4
+LFLOG integer 0 0 minint maxint 0 4
+LFSUMM integer 0 0 minint maxint 0 4
+Mtd_Dbg_1Drv integer 0 0 0 1 1 1  Method used by the function and derivative debugger.
+ 0
+ 1
+LMDEBG integer 0 0 0 1 0 4
+LMDEGI integer 0 0 minint maxint 0 4
+Mtd_RedHess integer 0 0 0 1 1 1  Method for initializing the diagonal of the approximate Reduced Hessian
+ 0
+ 1
+LMNDIA integer 0 0 0 1 0 4
+Mtd_Step_Phase0 integer 0 0 0 1 1 1  Method used to determine the step in Phase 0.
+ 0
+ 1
+LMMXSF integer 0 0 0 1 0 4
+Mtd_Step_Tight integer 0 0 0 1 1 1  Method used to determine the maximum step while tightening tolerances.
+ 0
+ 1
+LMMXST integer 0 0 0 1 0 4
+Scale_Infeas boolean 0 1 0 4
+Mtd_Scale integer 0 3 0 3 1 1  Method used for scaling.
+ 0
+ 1
+ 2
+ 3
+LMSCAL integer 0 3 0 3 0 4
+LOANRM integer 0 0 minint maxint 0 4
+LOBDTG integer 0 0 minint maxint 0 4
+LOCLMX integer 0 0 minint maxint 0 4
+LOCNPT integer 0 0 minint maxint 0 4
+LOCON3 integer 0 0 minint maxint 0 4
+LOCON4 integer 0 0 minint maxint 0 4
+LOCORP integer 0 0 minint maxint 0 4
+LODEGI integer 0 0 minint maxint 0 4
+LOFFS integer 0 0 minint maxint 0 4
+LOGMSI integer 0 0 minint maxint 0 4
+LOGMSO integer 0 0 minint maxint 0 4
+LOHESS integer 0 0 minint maxint 0 4
+LOINIB integer 0 0 minint maxint 0 4
+LOINIP integer 0 0 minint maxint 0 4
+LOINVL integer 0 0 minint maxint 0 4
+LONEWT integer 0 0 minint maxint 0 4
+LOOLDB integer 0 0 minint maxint 0 4
+LOONED integer 0 0 minint maxint 0 4
+LOOPTC integer 0 0 minint maxint 0 4
+LOREDG integer 0 0 minint maxint 0 4
+LORHES integer 0 0 minint maxint 0 4
+LOSCAL integer 0 0 minint maxint 0 4
+LOSLP integer 0 0 minint maxint 0 4
+LOSQP integer 0 0 minint maxint 0 4
+LOSTAT integer 0 0 minint maxint 0 4
+LOSTPM integer 0 0 minint maxint 0 4
+LOTANG integer 0 0 minint maxint 0 4
+LOTIGH integer 0 0 minint maxint 0 4
+LOTRIA integer 0 0 minint maxint 0 4
+LOUPDT integer 0 0 minint maxint 0 4
+Flg_RedHess boolean 0 0 1 1  Flag for approximating Reduced Hessian information for incoming superbasics.
+LS2NDI boolean 0 0 0 4
+Flg_Perturb boolean 0 1 1 1  Flag for use of perturbations to compute 2nd derivatives in SQP method.
+LS2PTJ boolean 0 1 0 4
+LSADDS boolean 0 1 0 4
+Flg_SteepEdge boolean 0 0 1 1  Flag for turning Steepest Edge on.
+LSANRM boolean 0 0 0 4
+LSAZCL boolean 0 1 0 4
+LSAZRW boolean 0 1 0 4
+Flg_Crash_Basis boolean 0 1 1 1  Flag for crashing an initial basis without fixed slacks
+LSCRSH boolean 0 1 0 4
+LSDNLP boolean 0 1 0 4
+LSDNSL boolean 0 1 0 4
+LSEDIA boolean 0 1 0 4
+Flg_SLPMode boolean 0 1 1 1  Flag for enabling SLP mode.
+LSESLP boolean 0 1 0 4
+Flg_SQPMode boolean 0 1 1 1  Flag for enabling of SQP mode.
+LSESQP boolean 0 1 0 4
+LSFCSQ boolean 0 1 0 4
+LSFCZE boolean 0 1 0 4
+LSFLSH boolean 0 1 0 4
+LSFVLN boolean 0 1 0 4
+Flg_Crash_Slack boolean 0 0 1 1  Flag for selecting initial basis as Crash-triangular variables plus slacks.
+LSLACK boolean 0 0 0 4
+LSMXBS boolean 0 1 0 4
+LSNOP2 boolean 0 1 0 4
+LSPFBS boolean 0 1 0 4
+Flg_PostTria boolean 0 1 1 1  Pre-processor flag for identifying and using post-triangular equations.
+LSPOST boolean 0 1 0 4
+LSPRES boolean 0 1 0 4
+Flg_Pretria boolean 0 1 1 1  Pre-processor flag for identifying and using pre-triangular equations.
+LSPRET boolean 0 1 0 4
+Flg_LinMod boolean 0 1 1 1  Flag for allowing the Linear Feasibility Model.
+DoLinMod boolean 0 1 0 4
+Flg_NoPen boolean 0 1 1 1  Flag for allowing the Model without penalty constraints
+DoNoPen boolean 0 1 0 4
+LSPRZE boolean 0 1 0 4
+LSPSBS boolean 0 1 0 4
+Flg_Square boolean 0 0 1 1  Flag for Square System. Alternative to defining modeltype=CNS in GAMS
+LSSQRS boolean 0 0 0 4
+Flg_Crash_Tria boolean 0 0 1 1  Flag for using the triangular crash method.
+LSTCRS boolean 0 0 0 4
+LSTSLU boolean 0 1 0 4
+LSTSRI boolean 0 1 0 4
+LSTSUP boolean 0 1 0 4
+MAXMEM boolean 0 1 0 4
+Lim_Variable double 0 1.e15 1.e5 1.e30 1 1  Upper bound on solution values and equation activity levels
+RTMAXV double 0 1.e15 1.e5 1.e30 0 4
+Tol_Jac_Min double 0 1.e-5 1.e-7 1.e-3 1 1  Filter for small Jacobian elements to be ignored during scaling.
+RTMINJ double 0 1.e-5 1.e-7 1.e-3 0 4
+Tol_Scale_Min double 0 1 1.e-10 1 1 1  Lower bound for scale factors computed from values and 1st derivatives.
+RTMINS double 0 1 1.e-10 1 0 4
+Tol_Scale_Max double 0 1.e25 1 1.e30 1 1  Upper bound on scale factors.
+RTMAXS double 0 1.e25 1 1.e30 0 4
+Tol_Scale2D_Min double 0 1.e-6 1.e-9 1 1 1  Lower bound for scale factors based on large 2nd derivatives.
+RTMNS2 double 0 1.e-6 1.e-9 1 0 4
+Tol_Scale_Var double 0 1.e-5 1.e-8 1 1 1  Lower bound on x in x*Jac used when scaling.
+RTMINV double 0 1.e-5 1.e-8 1 0 4
+RT2DRV double 0 0 mindouble maxdouble 0 4
+Tol_Feas_Max double 0 1.e-7 1.e-10 1.e-3 1 1  Maximum feasibility tolerance (after scaling).
+RTNWMA double 0 1.e-7 1.e-10 1.e-3 0 4
+Tol_Feas_Min double 0 4.e-10 4.e-11 1.e-5 1 1  Minimum feasibility tolerance (after scaling).
+RTNWMI double 0 4.e-10 4.e-11 1.e-5 0 4
+Tol_Feas_Tria double 0 2.0e-8 3.e-13 1.e-4 1 1  Feasibility tolerance for triangular equations.
+RTNWTR double 0 2.0e-8 3.e-13 1.e-4 0 4
+RVOBJL double 0 0 mindouble maxdouble 0 4
+Tol_Optimality double 0 1.e-7 3.e-13 1 1 1  Optimality tolerance for reduced gradient when feasible.
+RTREDG double 0 1.e-7 3.e-13 1 0 4
+Tol_Opt_Infeas double 0 1.e-7 3.e-13 1 1 1  Optimality tolerance for reduced gradient when infeasible.
+RTREDI double 0 1.e-7 3.e-13 1 0 4
+Tol_Piv_Abs double 0 1.e-10 2.2e-16 1.e-7 1 1  Absolute pivot tolerance.
+RTPIVA double 0 1.e-10 2.2e-16 1.e-7 0 4
+Tol_Piv_Rel double 0 0.05 1.e-3 0.9 1 1  Relative pivot tolerance during basis factorizations.
+RTPIVR double 0 0.05 1.e-3 0.9 0 4
+Tol_Piv_Abs_NLTr double 0 1.e-5 2.2e-16 1.e-3 1 1  Absolute pivot tolerance for nonlinear elements in pre-triangular equations.
+RTPIVT double 0 1.e-5 2.2e-16 1.e-3 0 4
+Tol_Piv_Rel_Updt double 0 0.05 1.e-3 0.9 1 1  Relative pivot tolerance during basis updates.
+RTPIVU double 0 0.05 1.e-3 0.9 0 4
+Tol_Piv_Abs_Ini double 0 1.e-7 3.e-13 1.e-3 1 1  Absolute Pivot Tolerance for building initial basis.
+RTIPVA double 0 1.e-7 3.e-13 1.e-3 0 4
+Tol_Piv_Rel_Ini double 0 1.e-3 1.e-4 0.9 1 1  Relative Pivot Tolerance for building initial basis
+RTIPVR double 0 1.e-3 1.e-4 0.9 0 4
+RVDLIM double 0 0 mindouble maxdouble 0 4
+RVLUFC double 0 0 mindouble maxdouble 0 4
+RTLUPS double 0 0 mindouble maxdouble 0 4
+Tol_Bound double 0 1.e-7 3.e-13 1.e-5 1 1  Bound filter tolerance for solution values close to a bound.
+RTBND1 double 0 1.e-7 3.e-13 1.e-5 0 4
+Tol_Fixed double 0 1.e-7 3.e-13 1.e-5 1 1  Bound tolerance for defining variables as fixed.
+RTBNDT double 0 1.e-7 3.e-13 1.e-5 0 4
+Tol_Linesearch double 0 0.2 0.05 0.8 1 1  Accuracy of One-dimensional search.
+RTONED double 0 0.2 0.05 0.8 0 4
+RTGRDR double 0 0 mindouble maxdouble 0 4
+RTOBJD double 0 0 mindouble maxdouble 0 4
+RTOBJF double 0 0 mindouble maxdouble 0 4
+RTOBJN double 0 0 mindouble maxdouble 0 4
+Tol_Obj_Acc double 0 3.0e-13 3.0e-14 10.e-6 1 1  Relative accuracy of the objective function.
+RTOBJR double 0 3.0e-13 3.0e-14 10.e-6 0 4
+Tol_Obj_Change double 0 3.0e-12 3.0e-13 1.0e-5 1 1  Limit for relative change in objective for well-behaved iterations.
+RTOBJL double 0 3.0e-12 3.0e-13 1.0e-5 0 4
+Tol_Zero double 0 1.e-20 1.e-30 maxdouble 1 1  Zero filter for Jacobian elements and inversion results.
+RTMINA double 0 1.e-20 1.e-30 maxdouble 0 4
+RTDOBW double 0 0 mindouble maxdouble 0 4
+RVSTLM double 0 0 mindouble maxdouble 0 4
+RVSTLN double 0 0 mindouble maxdouble 0 4
+RTZERN double 0 0 mindouble maxdouble 0 4
+RTSFC1 double 0 0 mindouble maxdouble 0 4
+RTSFC2 double 0 0 mindouble maxdouble 0 4
+RTSFC3 double 0 0 mindouble maxdouble 0 4
+RTSFC4 double 0 0 mindouble maxdouble 0 4
+RTERRF double 0 0 mindouble maxdouble 0 4
+RTGLRD double 0 0 mindouble maxdouble 0 4
+RTGLSL double 0 0 mindouble maxdouble 0 4
+Lim_Time double 0 10000 0 maxdouble 1 1  Time Limit. Overwrites the GAMS Reslim option.
+RVTIME double 0 10000 0 maxdouble 0 4
+RVNLMX double 0 0 mindouble maxdouble 0 4
+RVNLWG double 0 0 mindouble maxdouble 0 4
+RVPLIM double 0 0 mindouble maxdouble 0 4
+RVULIM double 0 0 mindouble maxdouble 0 4
+RTLCND double 0 0 mindouble maxdouble 0 4
+RTDCND double 0 0 mindouble maxdouble 0 4
+RT2NRM double 0 0 mindouble maxdouble 0 4
+RV2MXS double 0 0 mindouble maxdouble 0 4
+Lim_Hess_Est double 0 1.e4 1 maxdouble 1 2  Upper bound on second order terms.
+RTMXJ2 double 0 1.e4 1 maxdouble 0 4
+HessianMemFac double 0 10 0 maxdouble 1 5  Memory factor for Hessian generation: Skip if #Hessian elements > #Nonlinear Jacobian elements*HessianMemFac, 0 means unlimited.
+RVHESS double 0 10 0 maxdouble 0 4
+Flg_Hessian boolean 0 1 1 5  Flag for computing and using 2nd derivatives as Hessian of Lagrangian.
+DOHESS boolean 0 1 0 4
+Flg_2DDir boolean 0 1 1 5  Flag for computing and using directional 2nd derivatives.
+DO2DIR boolean 0 1 0 4
+DOINTV boolean 0 1 0 4
+TESTLG boolean 0 1 0 4
+TESTZM boolean 0 1 0 4
+NOCLOCK boolean 0 1 0 4
+DUMPHEX boolean 0 1 0 4
+nobounds immediate nobounds 0 4
+readfile immediate readfile 0 4
+cooptfile string 0 "" 1 5
+HEAPLIMIT double 0 1e20 0 maxdouble 1 5 Maximum Heap size in MB allowed
+THREADF integer 0 1 0 maxint 1 5 Number of threads used for function evaluation
+THREAD2D integer 0 1 0 maxint 1 5 Number of threads used for second derivatives
+domlim synonym LFEERR
+iterlim synonym LFITER
+reslim synonym RVTIME
+*
+* indicator section
+*
+myeolchar EOLCOMM ;#!
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+a group 1 1 Algorithmic options
+d group 2 1 Debugging options
+o group 3 1 Output options
+h group 4 0 Hidden options
+l group 5 1 Interface options
+*** End of file

@@ -1,0 +1,21 @@
+$title Exercise new XPRESS return code for unbounded MIP (MIP04,SEQ=525)
+
+$ontext
+In the model we make sure the XPRESS link is properly handling the
+XPRS_MIP_UNBOUNDED code - new in XPVERSION 22.
+
+Contributor: Steve Dirkse, May 2011
+$offtext
+
+
+variable x, y, z;
+equations f, g;
+
+f.. z =e= x + 2*y;
+g.. x - 2*y =L= 2;
+
+model m / f, g /;
+
+solve m using mip max z;
+abort$[m.solvestat <> %solvestat.NormalCompletion%] 'Unexpected solvestat', m.solvestat;
+abort$[(m.modelstat <> %modelstat.Unbounded%) and (m.modelstat <> %modelstat.Unbounded - No Solution%)] 'Unexpected modelstat', m.modelstat;

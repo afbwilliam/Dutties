@@ -1,0 +1,41 @@
+$title $set and $drop scoping (SET3,SEQ=40)
+$if set       a $error a scoped should be undefined
+$if setlocal  a $error a local  should be undefined
+$if setglobal a $error a global should be undefined
+
+$setglobal    a 'this is global a'
+
+$if NOT set       a $error a is defined if local scoped or global
+$if     setlocal  a $error a local should be undefined
+$if NOT setglobal a $error a global should be defined
+
+$setlocal     a 'this is local a'
+
+$if NOT set       a $error a is defined if local scoped or global
+$if NOT setlocal  a $error a local should be defined
+$if NOT setglobal a $error a global should be defined
+
+$set          a 'this is scoped a'
+
+$if NOT set       a $error a is defined if local scoped or global
+$if NOT setlocal  a $error a local should be defined
+$if NOT setglobal a $error a global should be defined
+
+$show
+
+$drop      a
+$droplocal a
+
+$if NOT set       a $error a is defined if local scoped or global
+$if     setlocal  a $error a local should be undefined
+$if NOT setglobal a $error a global should be defined
+
+$show
+
+$dropglobal a
+
+$if set       a $error a scoped should be undefined
+$if setlocal  a $error a local  should be undefined
+$if setglobal a $error a global should be undefined
+
+$show

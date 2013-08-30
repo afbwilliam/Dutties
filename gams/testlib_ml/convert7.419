@@ -1,0 +1,71 @@
+$TITLE CONVERT test suite - test hessian info correctness (CONVERT7,SEQ=419)
+
+$ONTEXT
+Do some consistency checks on the full Hessian and the
+Hessian-vector products dumped out by CONVERT.
+
+Currently, there are flags to do this for NLP models in gamslib.
+Run it like this:
+gams convert7.gms
+    --gmsName=chenery
+    --modelName=chenrad
+    --modelType=NLP
+    --objName=td
+
+Contributor: Steve Dirkse
+$OFFTEXT
+
+
+$if not set gmsName   $set gmsName   chenery
+$if not set modelName $set modelName chenrad
+$if not set modelType $set modelType NLP
+$if not set objName   $set objName   td
+
+$call gamslib -q %gmsName%
+$if errorlevel 1 $abort 'gamslib %gmsName% failed'
+$echo hessian %gmsName%.gdx > convertd.opt
+
+$onecho > %gmsName%TestHess.gms
+$include %gmsName%HessDump.gms
+alias(j,jj);
+scalar
+  tol / 1e-9 /;
+parameters
+  testW(j,j)     'Hession of the Lagrangian - upper triangle - calculated'
+  testFullW(j,j) 'full version of testW'
+  testWe(j)      'product testW * e'
+  diffW(j,j), errW(j,j)
+  diffWe(j),  errWe(j)
+  ;
+
+testW(j,jj) = sum(i, h(i,j,jj)* (-e.m(i)));
+
+testFullW(j,jj) = testW(j,jj) + testW(jj,j);  testFullW(j,j) = testW(j,j);
+testWe(j) = sum(jj, testFullW(j,jj) * 1);
+
+diffW(j,jj) = testW(j,jj) - W(j,jj);
+errW(j,jj) = diffW(j,jj);
+errW(j,jj)$[abs(errW(j,jj)) < tol] = 0;
+
+diffWe(j) = testWe(j) - We(j);
+errWe(j) = diffWe(j);
+errWe(j)$[abs(errWe(j)) < tol] = 0;
+
+execute_unload '%gmsName%HessFinal'
+
+abort$[card(errW ) > 0] 'errors comparing testW and W';
+abort$[card(errWe) > 0] 'errors comparing testWe and We';
+$offecho
+
+
+$include %gmsName%
+option %modelType%=convertd;
+%modelName%.optfile=1;
+Solve %modelName% using %modelType% maximizing %objName% ;
+abort$(%modelName%.solvestat <> %solvestat.NormalCompletion% or %modelName%.modelstat <> %modelstat.NoSolutionReturned%) 'wrong status codes';
+scalar rc;
+execute 'gdxdump %gmsName%.gdx > %gmsName%HessDump.gms';
+execute 'gams %gmsName%TestHess.gms lo=%GAMS.lo%';
+rc=errorlevel;
+display rc;
+abort$(rc <> 0) '"gams %gmsName%TestHess.gms" gave nonzero return';

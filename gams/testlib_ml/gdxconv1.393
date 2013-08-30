@@ -1,0 +1,91 @@
+$TITLE 'Compare all combinations of GDXCOMPRESS and GDXCONVERT' (GDXCONV1,SEQ=393)
+
+$ontext
+Diffs gdx files produced with all combinations of GDXCOMPRESS and GDXCONVERT
+and checks whether compressed files are smaller than non-compressed
+
+Contributor: Jan-Hendrik Jagla, June 2008
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$call gamslib -q 1
+$call gams trnsport lp=bdmlp gdx=t0.gdx lo=0
+$call wc -c t0.gdx | sed s/t.*// > "%gams.scrdir%t0.%gams.scrext%"
+
+scalar t0 size of GDX file t0.gdx /
+$include "%gams.scrdir%t0.%gams.scrext%"
+/
+display t0;
+
+*test for GAMS parameters gdxconvert and gdxcompress
+$onechoV > "%gams.scrdir%test.%gams.scrext%"
+$call gams trnsport lp=bdmlp gdx=t%1.gdx lo=0 GDXCOMPRESS=%2 GDXCONVERT=%3
+$if errorlevel 1 $abort 'trnsport run with parameters GDXCOMPRESS=%2 GDXCONVERT=%3 failed'
+*$call gdxdump t%1.gdx -V
+$call gdxdiff t0.gdx t%1.gdx > %NUL%
+$if errorlevel 1 $abort 't0.gdx and t%1.gdx are different
+$call wc -c t%1.gdx | sed s/t.*// > "%gams.scrdir%t%1.%gams.scrext%"
+scalar t%1 size of GDX file t%1.gdx /
+$include "%gams.scrdir%t%1.%gams.scrext%"
+/
+display t%1
+$offecho
+
+*test for environment variables gdxconvert and gdxcompress
+$onechoV > "%gams.scrdir%test2.%gams.scrext%"
+$setenv GDXCOMPRESS %2
+$setenv GDXCONVERT %3
+$call gams trnsport lp=bdmlp gdx=t%1.gdx lo=0
+$if errorlevel 1 $abort 'trnsport run with setenv GDXCOMPRESS=%2 and GDXCONVERT=%3 failed'
+*$call gdxdump t%1.gdx -V
+$call gdxdiff t0.gdx t%1.gdx > %NUL%
+$if errorlevel 1 $abort 't0.gdx and t%1.gdx are different
+$call wc -c t%1.gdx | sed s/t.*// > "%gams.scrdir%t%1.%gams.scrext%"
+scalar t%1 size of GDX file t%1.gdx /
+$include "%gams.scrdir%t%1.%gams.scrext%"
+/
+display t%1
+$offecho
+
+$if %system.platform% == SIS $goto asofv6
+$if %system.platform% == AIX $goto asofv7
+$if %system.platform% == BGP $goto asofv7
+$if %system.platform% == DEX $goto asofv7
+$if %system.platform% == DII $goto asofv7
+$if %system.platform% == SOX $goto asofv7
+
+
+$setenv GDXCOMPRESS
+$setenv GDXCONVERT
+$batinclude "%gams.scrdir%test.%gams.scrext%"  1 0 v5
+$batinclude "%gams.scrdir%test.%gams.scrext%"  2 1 v5
+*with GDX version 5 there is no compress, file must have the same size
+abort$(t1<>t2)  "wrong file sizes, t1<>t2"
+$batinclude "%gams.scrdir%test2.%gams.scrext%"  3 0 v5
+$batinclude "%gams.scrdir%test2.%gams.scrext%"  4 1 v5
+*with GDX version 5 there is no compress, file must have the same size
+abort$(t3<>t4)  "wrong file sizes, t3<>t4"
+
+$label asofv6
+
+$setenv GDXCOMPRESS
+$setenv GDXCONVERT
+$batinclude "%gams.scrdir%test.%gams.scrext%"  5 0 v6
+$batinclude "%gams.scrdir%test.%gams.scrext%"  6 1 v6
+abort$(t5<=t6)  "wrong file sizes, t5<=t6"
+$batinclude "%gams.scrdir%test2.%gams.scrext%"  7 0 v6
+$batinclude "%gams.scrdir%test2.%gams.scrext%"  8 1 v6
+abort$(t7<=t8)  "wrong file sizes, t7<=t8"
+
+$label asofv7
+
+$setenv GDXCOMPRESS
+$setenv GDXCONVERT
+$batinclude "%gams.scrdir%test.%gams.scrext%"  9 0 v7
+$batinclude "%gams.scrdir%test.%gams.scrext%"  10 1 v7
+abort$(t9<=t10)  "wrong file sizes, t9<=t10"
+$batinclude "%gams.scrdir%test2.%gams.scrext%"  11 0 v7
+$batinclude "%gams.scrdir%test2.%gams.scrext%"  12 1 v7
+abort$(t11<=t12)  "wrong file sizes, t11<=t12"

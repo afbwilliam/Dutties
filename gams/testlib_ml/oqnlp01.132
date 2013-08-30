@@ -1,0 +1,7 @@
+$title OQNLP/MSNLP test suite (OQNLP01,SEQ=132)
+$call gams nlplp02 nlp %system.nlp% lo=2 lf=%system.nlp%02.log o=%system.nlp%02.lst
+$if errorlevel 1 $abort 'nlplp02 failed check %system.nlp%02.lst'
+$echo nlpsolver conopt > oqnlp.opt
+$echo nlpsolver conopt > msnlp.opt
+$call gams nlplp02 nlp %system.nlp% lo=2 lf=%system.nlp%02.log o=%system.nlp%02.lst optfile 1
+$if errorlevel 1 $abort 'nlplp02 with optfile 1 failed check %system.nlp%02.lst'

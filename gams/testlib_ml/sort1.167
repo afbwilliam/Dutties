@@ -1,0 +1,356 @@
+$title 'Test optimization with lags' (SORT1,SEQ=167)
+
+* when using the sorting option sys11 we drop a number of records
+
+sets
+$ontext
+* original sets
+  IT   Zeitschritte Rechnung  /  1*8800  /
+  izone /1*10/
+  ikl /knl1*knl10/
+  ik /k0*k20/
+$offtext
+  IT   Zeitschritte Rechnung  /  1*5  /
+  izone /1*3/
+  ikl /knl1*knl5/
+  ik /k0*k5 /
+;
+  SETS
+    IV   Prozessobjektskennung  /
+  CP_BEZlgfr
+  CP_RULlgfr
+  CP1_GASBEZ
+  CP2_GASBEZ
+  DT_Gegendr
+  DTEK-Entn
+  DTEK-Kond
+  FWLeit_A_B
+  FWLeit_B_A
+  GasEntlad
+  GasLadung
+  GuD_AbhSt1
+  GuD_AbhSt2
+  GuD_DampfT
+  GuD_GasTur
+  HEIZOEL
+  HilfsKes
+  HW_Kessel
+  KW_OBS_A
+  KW_PUM_A
+  KW_UNS_A
+  NetzA_Aufh
+  NetzA_Entl
+  NetzB_Aufh
+  NetzB_Entl
+  OTC_TYP1
+  OTC_TYP2
+  OTC_TYP3
+  OTC_UMSCH
+  ResVertrag
+  SPOT_EINK
+  SPOT_VERK
+  VEigEL_A
+  VEigEL_B
+  XNEG_FWA
+  XNEG_FWB
+  XPOS_FWA
+  XPOS_FWB
+    /
+    IAC   Achsenkennung  /
+  P_EL
+  P_POT
+  P_TH
+  P_ABH_GT
+  P_DAMPF
+  P_ABH_KS
+  Q_HS
+  Q_GAS
+  P_EL_EB
+  P_TH_EB
+  STAT
+  P_EL_RES
+  CO2
+    /
+    IZB   Zeitbereiche Kennung  /
+  PLANHOR
+  WIN-HT
+  WIN-NT
+  TAEGLICH
+  MONTAG
+  DIENSTAG
+  MITTWOCH
+  DONNERSTAG
+  FREITAG
+  SAMSTAG
+  SONNTAG
+    /
+    IV_POD_ZB(IV, IAC, IZB)   Zuordnung der Prozessobjektsachsen zu den Zeitbereichen /
+  CP1_GASBEZ.Q_GAS.PLANHOR
+  CP2_GASBEZ.Q_GAS.PLANHOR
+  DT_Gegendr.P_EL.PLANHOR
+  DTEK-Entn.P_TH.PLANHOR
+  DTEK-Kond.P_EL.PLANHOR
+  GuD_DampfT.P_EL.PLANHOR
+  KW_OBS_A.P_EL.PLANHOR
+  KW_UNS_A.P_EL.PLANHOR
+    /
+    IZB_KLZ(IV, IZB, IZONE, IKL)   Zuordnung der Prozessobjekte zu den Zeitbereichen /
+  CP_BEZlgfr.WIN-HT.1.KNL1
+  CP_BEZlgfr.WIN-NT.1.KNL1
+  CP_RULlgfr.WIN-HT.1.KNL1
+  CP_RULlgfr.WIN-NT.1.KNL1
+  CP1_GASBEZ.PLANHOR.1.KNL1
+  CP2_GASBEZ.WIN-HT.1.KNL1
+  CP2_GASBEZ.WIN-NT.1.KNL1
+  DT_Gegendr.PLANHOR.1.KNL1
+  DTEK-Entn.PLANHOR.1.KNL1
+  DTEK-Kond.PLANHOR.1.KNL1
+  FWLeit_A_B.PLANHOR.1.KNL1
+  FWLeit_B_A.PLANHOR.1.KNL1
+  GasEntlad.PLANHOR.1.KNL1
+  GasLadung.PLANHOR.1.KNL1
+  GuD_AbhSt1.PLANHOR.1.KNL1
+  GuD_AbhSt2.PLANHOR.1.KNL1
+  GuD_DampfT.PLANHOR.1.KNL1
+  GuD_GasTur.PLANHOR.1.KNL1
+  GuD_GasTur.PLANHOR.2.KNL1
+  HEIZOEL.PLANHOR.1.KNL1
+  HilfsKes.PLANHOR.1.KNL1
+  HW_Kessel.PLANHOR.1.KNL1
+  KW_OBS_A.PLANHOR.1.KNL1
+  KW_PUM_A.PLANHOR.1.KNL1
+  KW_UNS_A.PLANHOR.1.KNL1
+  NetzA_Aufh.PLANHOR.1.KNL1
+  NetzA_Entl.PLANHOR.1.KNL1
+  NetzB_Aufh.PLANHOR.1.KNL1
+  NetzB_Entl.PLANHOR.1.KNL1
+  OTC_TYP1.PLANHOR.1.KNL1
+  OTC_TYP2.PLANHOR.1.KNL1
+  OTC_TYP3.PLANHOR.1.KNL1
+  OTC_UMSCH.WIN-HT.1.KNL1
+  OTC_UMSCH.WIN-NT.1.KNL1
+  OTC_UMSCH.WIN-HT.1.KNL2
+  OTC_UMSCH.WIN-NT.1.KNL2
+  OTC_UMSCH.WIN-HT.1.KNL3
+  OTC_UMSCH.WIN-NT.1.KNL3
+  ResVertrag.PLANHOR.1.KNL1
+  SPOT_EINK.PLANHOR.1.KNL1
+  SPOT_VERK.PLANHOR.1.KNL1
+  VEigEL_A.PLANHOR.1.KNL1
+  VEigEL_B.PLANHOR.1.KNL1
+  XNEG_FWA.PLANHOR.1.KNL1
+  XNEG_FWB.PLANHOR.1.KNL1
+  XPOS_FWA.PLANHOR.1.KNL1
+  XPOS_FWB.PLANHOR.1.KNL1
+    /
+;
+parameters
+    PMAX_H(IV, IAC, IZB, IZONE, IKL, IK)   Kennlinienstuetzpunkte Leistung  /
+  CP_BEZlgfr.P_EL.WIN-HT.1.KNL1.K0                                    50
+  CP_BEZlgfr.P_EL.WIN-HT.1.KNL1.K1                                    50
+  CP_BEZlgfr.P_EL.WIN-NT.1.KNL1.K0                                    50
+  CP_BEZlgfr.P_EL.WIN-NT.1.KNL1.K1                                    50
+  CP_RULlgfr.P_EL.WIN-HT.1.KNL1.K0                                    100
+  CP_RULlgfr.P_EL.WIN-NT.1.KNL1.K0                                    100
+  CP1_GASBEZ.Q_GAS.PLANHOR.1.KNL1.K0                                  100
+  CP2_GASBEZ.Q_GAS.WIN-HT.1.KNL1.K0                                   10
+  CP2_GASBEZ.Q_GAS.WIN-HT.1.KNL1.K1                                   70
+  CP2_GASBEZ.Q_GAS.WIN-NT.1.KNL1.K0                                   10
+  CP2_GASBEZ.Q_GAS.WIN-NT.1.KNL1.K1                                   70
+  DT_Gegendr.P_EL.PLANHOR.1.KNL1.K0                                   4
+  DT_Gegendr.P_EL.PLANHOR.1.KNL1.K1                                   3.4
+  DT_Gegendr.P_TH.PLANHOR.1.KNL1.K0                                   13
+  DT_Gegendr.P_TH.PLANHOR.1.KNL1.K1                                   12
+  DT_Gegendr.Q_HS.PLANHOR.1.KNL1.K0                                   22.3
+  DT_Gegendr.Q_HS.PLANHOR.1.KNL1.K1                                   15.6
+  DT_Gegendr.P_EL_EB.PLANHOR.1.KNL1.K0                                0.12
+  DT_Gegendr.P_EL_EB.PLANHOR.1.KNL1.K1                                0.102
+  DT_Gegendr.CO2.PLANHOR.1.KNL1.K0                                    7.136
+  DT_Gegendr.CO2.PLANHOR.1.KNL1.K1                                    4.992
+  DTEK-Entn.P_TH.PLANHOR.1.KNL1.K0                                    20
+  DTEK-Entn.P_TH.PLANHOR.1.KNL1.K1                                    20
+  DTEK-Entn.Q_HS.PLANHOR.1.KNL1.K0                                    17
+  DTEK-Entn.Q_HS.PLANHOR.1.KNL1.K1                                    18
+  DTEK-Entn.P_EL_EB.PLANHOR.1.KNL1.K0                                 0.2
+  DTEK-Entn.P_EL_EB.PLANHOR.1.KNL1.K1                                 0.2
+  DTEK-Entn.CO2.PLANHOR.1.KNL1.K0                                     5.44
+  DTEK-Entn.CO2.PLANHOR.1.KNL1.K1                                     5.76
+  DTEK-Kond.P_EL.PLANHOR.1.KNL1.K0                                    1
+  DTEK-Kond.P_EL.PLANHOR.1.KNL1.K1                                    12
+  DTEK-Kond.P_EL.PLANHOR.1.KNL1.K2                                    13
+  DTEK-Kond.Q_HS.PLANHOR.1.KNL1.K0                                    3.4
+  DTEK-Kond.Q_HS.PLANHOR.1.KNL1.K1                                    40.6
+  DTEK-Kond.Q_HS.PLANHOR.1.KNL1.K2                                    32
+  DTEK-Kond.P_EL_EB.PLANHOR.1.KNL1.K0                                 0.03
+  DTEK-Kond.P_EL_EB.PLANHOR.1.KNL1.K1                                 0.36
+  DTEK-Kond.P_EL_EB.PLANHOR.1.KNL1.K2                                 0.39
+  DTEK-Kond.CO2.PLANHOR.1.KNL1.K0                                     1.088
+  DTEK-Kond.CO2.PLANHOR.1.KNL1.K1                                     12.992
+  DTEK-Kond.CO2.PLANHOR.1.KNL1.K2                                     10.24
+  FWLeit_A_B.P_TH.PLANHOR.1.KNL1.K0                                   100
+  FWLeit_B_A.P_TH.PLANHOR.1.KNL1.K0                                   100
+  GasEntlad.Q_GAS.PLANHOR.1.KNL1.K0                                   200
+  GasLadung.Q_GAS.PLANHOR.1.KNL1.K0                                   200
+  GuD_AbhSt1.P_DAMPF.PLANHOR.1.KNL1.K0                                44.8
+  GuD_AbhSt1.P_DAMPF.PLANHOR.1.KNL1.K1                                9.90000000000001
+  GuD_AbhSt1.P_ABH_KS.PLANHOR.1.KNL1.K0                               10.5
+  GuD_AbhSt1.P_ABH_KS.PLANHOR.1.KNL1.K1                               6.5
+  GuD_AbhSt1.P_ABH_GT.PLANHOR.1.KNL1.K0                               62
+  GuD_AbhSt1.P_ABH_GT.PLANHOR.1.KNL1.K1                               21
+  GuD_AbhSt1.P_EL_EB.PLANHOR.1.KNL1.K0                                0.448
+  GuD_AbhSt1.P_EL_EB.PLANHOR.1.KNL1.K1                                9.90000000000001E-02
+  GuD_AbhSt2.P_TH.PLANHOR.1.KNL1.K0                                   5
+  GuD_AbhSt2.P_TH.PLANHOR.1.KNL1.K1                                   15
+  GuD_AbhSt2.P_ABH_KS.PLANHOR.1.KNL1.K0                               5
+  GuD_AbhSt2.P_ABH_KS.PLANHOR.1.KNL1.K1                               15
+  GuD_AbhSt2.P_EL_EB.PLANHOR.1.KNL1.K0                                0.05
+  GuD_AbhSt2.P_EL_EB.PLANHOR.1.KNL1.K1                                0.15
+  GuD_DampfT.P_EL.PLANHOR.1.KNL1.K0                                   9.9
+  GuD_DampfT.P_EL.PLANHOR.1.KNL1.K1                                   3
+  GuD_DampfT.P_TH.PLANHOR.1.KNL1.K0                                   30.75
+  GuD_DampfT.P_TH.PLANHOR.1.KNL1.K1                                   9.35
+  GuD_DampfT.P_DAMPF.PLANHOR.1.KNL1.K0                                39.7
+  GuD_DampfT.P_DAMPF.PLANHOR.1.KNL1.K1                                12.1
+  GuD_DampfT.P_EL_EB.PLANHOR.1.KNL1.K0                                0.099
+  GuD_DampfT.P_EL_EB.PLANHOR.1.KNL1.K1                                0.03
+  GuD_GasTur.P_EL.PLANHOR.1.KNL1.K0                                   22.6
+  GuD_GasTur.P_EL.PLANHOR.1.KNL1.K1                                   22.6
+  GuD_GasTur.P_ABH_GT.PLANHOR.1.KNL1.K0                               61.4
+  GuD_GasTur.P_ABH_GT.PLANHOR.1.KNL1.K1                               21.5
+  GuD_GasTur.Q_GAS.PLANHOR.1.KNL1.K0                                  84.2
+  GuD_GasTur.Q_GAS.PLANHOR.1.KNL1.K1                                  56.16
+  GuD_GasTur.P_EL_EB.PLANHOR.1.KNL1.K0                                0.678
+  GuD_GasTur.P_EL_EB.PLANHOR.1.KNL1.K1                                0.678
+  GuD_GasTur.CO2.PLANHOR.1.KNL1.K0                                    15.998
+  GuD_GasTur.CO2.PLANHOR.1.KNL1.K1                                    10.6704
+  GuD_GasTur.P_EL.PLANHOR.2.KNL1.K0                                   18.6
+  GuD_GasTur.P_EL.PLANHOR.2.KNL1.K1                                   18.4
+  GuD_GasTur.P_ABH_GT.PLANHOR.2.KNL1.K0                               58.3
+  GuD_GasTur.P_ABH_GT.PLANHOR.2.KNL1.K1                               19.2
+  GuD_GasTur.Q_GAS.PLANHOR.2.KNL1.K0                                  71.4
+  GuD_GasTur.Q_GAS.PLANHOR.2.KNL1.K1                                  47.6
+  GuD_GasTur.P_EL_EB.PLANHOR.2.KNL1.K0                                0.558
+  GuD_GasTur.P_EL_EB.PLANHOR.2.KNL1.K1                                0.552
+  GuD_GasTur.CO2.PLANHOR.2.KNL1.K0                                    13.566
+  GuD_GasTur.CO2.PLANHOR.2.KNL1.K1                                    9.044
+  HEIZOEL.Q_HS.PLANHOR.1.KNL1.K0                                      1000
+  HilfsKes.P_TH.PLANHOR.1.KNL1.K0                                     6.5
+  HilfsKes.P_TH.PLANHOR.1.KNL1.K1                                     13
+  HilfsKes.Q_GAS.PLANHOR.1.KNL1.K0                                    7.3
+  HilfsKes.Q_GAS.PLANHOR.1.KNL1.K1                                    14.6
+  HilfsKes.P_EL_EB.PLANHOR.1.KNL1.K0                                  0.065
+  HilfsKes.P_EL_EB.PLANHOR.1.KNL1.K1                                  0.13
+  HilfsKes.CO2.PLANHOR.1.KNL1.K0                                      1.387
+  HilfsKes.CO2.PLANHOR.1.KNL1.K1                                      2.774
+  HW_Kessel.P_TH.PLANHOR.1.KNL1.K0                                    13
+  HW_Kessel.P_TH.PLANHOR.1.KNL1.K1                                    67
+  HW_Kessel.Q_HS.PLANHOR.1.KNL1.K0                                    14.2
+  HW_Kessel.Q_HS.PLANHOR.1.KNL1.K1                                    73.8
+  HW_Kessel.P_EL_EB.PLANHOR.1.KNL1.K0                                 0.39
+  HW_Kessel.P_EL_EB.PLANHOR.1.KNL1.K1                                 2.01
+  HW_Kessel.CO2.PLANHOR.1.KNL1.K0                                     4.544
+  HW_Kessel.CO2.PLANHOR.1.KNL1.K1                                     23.616
+  KW_OBS_A.P_POT.PLANHOR.1.KNL1.K0                                    23.5294117647059
+  KW_OBS_A.P_POT.PLANHOR.1.KNL1.K1                                    152.941176470588
+  KW_OBS_A.P_EL.PLANHOR.1.KNL1.K0                                     20
+  KW_OBS_A.P_EL.PLANHOR.1.KNL1.K1                                     130
+  KW_PUM_A.P_POT.PLANHOR.1.KNL1.K0                                    -17
+  KW_PUM_A.P_POT.PLANHOR.1.KNL1.K1                                    -51
+  KW_PUM_A.P_EL.PLANHOR.1.KNL1.K0                                     20
+  KW_PUM_A.P_EL.PLANHOR.1.KNL1.K1                                     60
+  KW_UNS_A.P_POT.PLANHOR.1.KNL1.K0                                    9.41176470588235
+  KW_UNS_A.P_POT.PLANHOR.1.KNL1.K1                                    61.1764705882353
+  KW_UNS_A.P_EL.PLANHOR.1.KNL1.K0                                     8
+  KW_UNS_A.P_EL.PLANHOR.1.KNL1.K1                                     52
+  NetzA_Aufh.P_TH.PLANHOR.1.KNL1.K0                                   5
+  NetzA_Entl.P_TH.PLANHOR.1.KNL1.K0                                   10
+  NetzB_Aufh.P_TH.PLANHOR.1.KNL1.K0                                   5
+  NetzB_Entl.P_TH.PLANHOR.1.KNL1.K0                                   10
+  OTC_TYP1.P_EL.PLANHOR.1.KNL1.K0                                     20
+  OTC_TYP1.P_EL.PLANHOR.1.KNL1.K1                                     20
+  OTC_TYP1.P_EL.PLANHOR.1.KNL1.K2                                     20
+  OTC_TYP1.P_EL.PLANHOR.1.KNL1.K3                                     20
+  OTC_TYP1.P_EL.PLANHOR.1.KNL1.K4                                     20
+  OTC_TYP2.P_EL.PLANHOR.1.KNL1.K0                                     100
+  OTC_TYP3.P_EL.PLANHOR.1.KNL1.K0                                     100
+  OTC_UMSCH.P_EL.WIN-HT.1.KNL1.K0                                     40
+  OTC_UMSCH.P_EL.WIN-NT.1.KNL1.K0                                     40
+  OTC_UMSCH.P_EL.WIN-HT.1.KNL2.K0                                     40
+  OTC_UMSCH.P_EL.WIN-NT.1.KNL2.K0                                     40
+  OTC_UMSCH.P_EL.WIN-HT.1.KNL3.K0                                     40
+  OTC_UMSCH.P_EL.WIN-NT.1.KNL3.K0                                     40
+  ResVertrag.P_EL_RES.PLANHOR.1.KNL1.K0                               100
+  SPOT_EINK.P_EL.PLANHOR.1.KNL1.K0                                    100
+  SPOT_VERK.P_EL.PLANHOR.1.KNL1.K0                                    100
+  VEigEL_A.P_EL_EB.PLANHOR.1.KNL1.K0                                  100
+  VEigEL_B.P_EL_EB.PLANHOR.1.KNL1.K0                                  100
+  XNEG_FWA.P_TH.PLANHOR.1.KNL1.K0                                     1000
+  XNEG_FWB.P_TH.PLANHOR.1.KNL1.K0                                     1000
+  XPOS_FWA.P_TH.PLANHOR.1.KNL1.K0                                     1000
+  XPOS_FWB.P_TH.PLANHOR.1.KNL1.K0                                     1000
+    /
+  ;
+
+sets
+  IZU_ICT_IT (IV, IT, IT)
+  IZU_ICTX   (IV, IT)
+  IVIAC_ZBT(IV, IAC, IZB, IT)
+  IKZ(IV, IKL, IK, IT)
+  IKZ_1(IV, IKL, IK, IT)
+  IKZ_2(IV, IKL, IK, IT)
+;
+
+alias (it, it_cp);
+izu_ict_it(iv, it, it_cp)              = no;
+izu_ict_it(iv, it, it)$(ord(it) lt 49) = yes;
+IZU_ICTX(IV, IT)$(ord(it) lt 49)       = yes;
+IVIAC_ZBT(IV, IAC, IZB, IT)$IV_POD_ZB(IV, IAC, IZB)=yes;
+
+* sys11 = 1  no resort
+*         2  force resort
+
+option sys11=2;
+LOOP((IZB, IZONE),
+   IKZ_2(IV, IKL, IK, IT)$(IZB_KLZ(IV, IZB, IZONE, IKL)
+                         and IZU_ICTX(IV, IT)
+                         and SUM(IAC, ABS(PMAX_H(IV, IAC, IZB, IZONE, IKL, IK)))) = YES );
+option sys11=1;
+LOOP((IZB, IZONE),
+   IKZ_1(IV, IKL, IK, IT)$(IZB_KLZ(IV, IZB, IZONE, IKL)
+                         and IZU_ICTX(IV, IT)
+                         and SUM(IAC, ABS(PMAX_H(IV, IAC, IZB, IZONE, IKL, IK)))) = YES );
+
+set ikz_diff(iv,ikl,ik,it);
+ikz_diff(iv,ikl,ik,it) = ikz_1(iv,ikl,ik,it) xor ikz_2(iv,ikl,ik,it);
+
+abort$card(ikz_diff) 'ikz is different', ikz_diff;
+
+option sys11=1;
+LOOP((IZB, IZONE),
+   IKZ(IV, IKL, IK, IT)$(IZB_KLZ(IV, IZB, IZONE, IKL)
+                         and IZU_ICTX(IV, IT)
+                         and SUM(IAC, ABS(PMAX_H(IV, IAC, IZB, IZONE, IKL, IK)))) = YES );
+
+file debuglog_1 /debug_1.log/;
+file debuglog_2 /debug_2.log/;
+
+option sys11=1; put debuglog_1;
+loop((IV, IAC, IZB, IT)$(ORD(IT) GT 1 AND IZU_ICTX(IV, IT) AND IV_POD_ZB(IV, IAC, IZB) AND IVIAC_ZBT(IV, IAC, IZB, IT)),
+put 'level 1   ' iv.tl iac.tl izb.tl it.tl /;
+   loop((IKL, IK,it_cp)$(IKZ(IV, IKL, IK, IT_CP) and (IZU_ICT_IT(IV, IT_CP, IT-1) or IZU_ICT_IT(IV, IT_CP, IT))),
+put 'level 2   ' ikl.tl ik.tl it_cp.tl /;
+      if((ord(iv) eq 5 and ord(iac) eq 1 and ord(it) eq 2),
+         put iv.tl, iac.tl, it.tl, it_cp.tl, ikl.tl, ik.tl, IZU_ICT_IT(IV, IT_CP, IT), IZU_ICT_IT(IV, IT_CP, IT-1)/ ) ) );
+putclose;
+
+option sys11=2; put debuglog_2;
+loop((IV, IAC, IZB, IT)$(ORD(IT) GT 1 AND IZU_ICTX(IV, IT) AND IV_POD_ZB(IV, IAC, IZB) AND IVIAC_ZBT(IV, IAC, IZB, IT)),
+put 'level 1   ' iv.tl iac.tl izb.tl it.tl /;
+   loop((IKL, IK,it_cp)$(IKZ(IV, IKL, IK, IT_CP) and (IZU_ICT_IT(IV, IT_CP, IT-1) or IZU_ICT_IT(IV, IT_CP, IT))),
+put 'level 2   ' ikl.tl ik.tl it_cp.tl /;
+      if((ord(iv) eq 5 and ord(iac) eq 1 and ord(it) eq 2),
+         put iv.tl, iac.tl, it.tl, it_cp.tl, ikl.tl, ik.tl, IZU_ICT_IT(IV, IT_CP, IT), IZU_ICT_IT(IV, IT_CP, IT-1)/ ) ) );
+putclose;
+
+execute 'diff debug_1.log debug_2.log > debug_diff.log';
+abort$errorlevel 'put files are different';

@@ -1,0 +1,35 @@
+$title test Gxxx functions (DATTIM5,SEQ=121)
+set i / 1*12 /
+
+table tvals(i,*) test values
+         x   bad       y       m       d
+ 1 -693596     1
+ 2 -693595     1
+ 3 -693594             1       1       1
+ 4 -693593             1       1       2
+ 5       0          1899      12      31
+ 6       1          1900       1       1
+ 7 2958461          9999      12      28
+ 8 2958462          9999      12      29
+ 9 2958463          9999      12      30
+10 2958464          9999      12      31
+11 2958465     1
+12 2958466     1  ;
+
+
+tvals(i,'year')  = gyear(tvals(i,'x'));
+tvals(i,'month') = gmonth(tvals(i,'x'));
+tvals(i,'day')   = gday(tvals(i,'x'));
+
+* make entries UNDF (don't want to use $onundf)
+
+tvals(i,'y')$tvals(i,'bad') = 1/0;
+tvals(i,'m')$tvals(i,'bad') = 1/0;
+tvals(i,'d')$tvals(i,'bad') = 1/0;
+
+display tvals;
+execerror = 0;
+
+abort$sum(i, tvals(i,'year' ) <> tvals(i,'y')) 'bad results';
+abort$sum(i, tvals(i,'month') <> tvals(i,'m')) 'bad results';
+abort$sum(i, tvals(i,'day')   <> tvals(i,'d')) 'bad results';

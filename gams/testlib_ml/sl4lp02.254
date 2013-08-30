@@ -1,0 +1,30 @@
+$title 'Simple level and sign test, with solvelink=1,2,4,5' (SL4LP02,SEQ=254)
+
+$ontext
+Run lp02 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+$offtext
+
+$set XX 95
+$if %system.platform% == WIN $set XX NT
+$if %system.platform% == WEX $set XX NT
+$if %system.filesys% == UNIX $set XX un
+$set q '"'
+$if %system.filesys% == UNIX $set q "'"
+
+$call grep -iv scrdir "%gams.scrdir%gmsprm%XX%.%gams.scrext%" | grep -iv scriptnext | grep -iv sysdir | grep -iv JobTrace > "%gams.scrdir%mypf.%gams.scrext%"
+
+$call gams lp02.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=lp02.gms solvelink=%SOLVELINK.CallScript% reslim=10
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.CallScript%
+
+$call gams lp02.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=lp02.gms solvelink=%SOLVELINK.CallModule% reslim=10
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.CallModule%
+
+$call cat "%GAMS.sysdir%gmscmp%XX%.txt" | grep -v "^\*" | awk %q%NF>4 {if ($7>1) print $0 }%q% | grep -vi scensolver | cut -d" " -f1 | grep -iwq %system.LP%
+$if errorlevel 1 $goto skipsl5
+
+$call gams lp02.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=lp02.gms solvelink=%SOLVELINK.LoadLibrary% reslim=10
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.LoadLibrary%
+
+$label skipsl5
+$call gams lp02.gms pf="%gams.scrdir%mypf.%gams.scrext%" i=lp02.gms solvelink=%SOLVELINK.AsyncSimulate% reslim=10
+$if errorlevel 1 $abort problems with sl=%SOLVELINK.AsyncSimulate%

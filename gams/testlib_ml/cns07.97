@@ -1,0 +1,40 @@
+$title CNS model with globally unique solution (cns07,SEQ=97)
+
+$ontext
+  The following model has a globally unique solution even though it
+  is nonlinear and simultaneous.
+  Not all solvers will recognize that the solution is globally unique
+  (hardly any will).
+
+  The Jacobian of the model
+
+  exp(x1)   +1
+   -1     exp(x2)
+
+  has the determinant exp(x1)*exp(x2)+1 and is therefore always strictly
+  positive (bounded away from zero) and if a solution exist it is
+  therefore unique.
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+scalars rhs1, rhs2;
+rhs1 = exp(-1) +    (-1);
+rhs2 =   -(-1) + exp(-1);
+
+variable x1, x2;
+equation e1, e2;
+
+
+e1 .. exp(x1) +     x2  =e= rhs1;
+e2 ..    -x1  + exp(x2) =e= rhs2;
+
+model cns07 / all /;
+option limrow = 0, limcol = 0;
+solve cns07 using cns;
+abort$(cns07.solvestat <> %solvestat.NormalCompletion%
+    or (cns07.modelstat <> %modelstat.SolvedUnique%) and (cns07.modelstat <> %modelstat.Solved%))  'bad return codes';
+abort$(abs(x1.l+1) > tol)       'bad x1.l';
+abort$(abs(x2.l+1) > tol)       'bad x2.l';
+abort$(abs(e1.l-rhs1) > tol)    'bad e1.l';
+abort$(abs(e2.l-rhs2) > tol)    'bad e2.l';

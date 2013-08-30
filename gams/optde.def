@@ -1,0 +1,31 @@
+*
+* optde.def
+*
+
+nobounds immediate nobounds 0 1 Ignores bounds on options
+readfile immediate readfile 0 1 Read secondary option file
+ccreform string 0 "bigM" 1 2 Reformulation option passed to JAMS
+correlationtype enumint 0 0 1 1 Sample correlation type
+ 0 1 Pearson
+ 1 1 Kendall
+ 2 1 Spearman
+evsubsolver string 0 "" 1 3 Subsolver to run on expected value problem
+evsubsolveropt integer 0 1 1 999 1 3 Optfile value to pass to the subsolver for expected value problem
+jamsopt string 0 "" 1 2 JAMS option file
+maxnodes integer 0 100000 1000 maxint 1 3 Tree size limit
+samplelibrary enumstr 0 "Lindo" 0 1 Sample library
+ "Lindo" 1
+svr_ls_montecarlo string 0 "" 1 1 Sample variance reduction map to Lindo Montecarlo algorithm
+svr_ls_latinsquare string 0 "" 1 1 Sample variance reduction map to Lindo Latin Square algorithm
+svr_ls_antithetic string 0 "" 1 1 Sample variance reduction map to Lindo Antithetic algorithm
+solveEVProb boolean.nv 0 0 1 3 Solve and report the expected value solution
+subsolver string 0 "" 1 1 Subsolver to run
+subsolveropt integer 0 1 1 999 1 1 Optfile value to pass to the subsolver
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General Options
+chance group 2 1 Options for chance constraint models
+recourse group 3 1 Options for recourse models
+*** End of file

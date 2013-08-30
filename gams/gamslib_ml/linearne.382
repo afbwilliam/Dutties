@@ -1,0 +1,238 @@
+$title Linearization techniques for extremal-Nash equilibria  (LINEARNE,SEQ=382)
+$ontext
+This model proposes a new approach to the computation
+of extremal-Nash equilibria in a wholesale power market with
+transmission constraints. The approach uses linearization techniques
+to formulate the extremal-Nash equilibrium problem as
+a single-stage mixed-integer linear programming problem which
+can be solved with standard software. Through the introduced
+concept of extremal-Nash equilibria, the derived structure can
+efficiently locate all Nash equilibria of the game.
+
+This example is loosely based on the NSW market. There are 7 portfolios
+each controlling 2 units.
+
+
+Reference:
+Hesamzadeh, M R, and Biggar, D R, Computation of extremal-nash equilibria
+in a wholesale power market using a single-stage MILP.
+IEEE Transactions on Power Systems 27, 3 (2012), 1706-1707.
+
+This code has been developed by:
+
+ Dr. Mohammad R. Hesamzadeh,
+ School of Electrical Engineering,
+ KTH Royal Institute of Technology, Sweden
+ (email:mrhesamzadeh@ee.kth.se)
+
+ Dr. Darryl R. Biggar,
+ Regulatory Development Branch,
+ Australian Competition and Consumer Commission, Australia
+ (email:darryl.biggar@accc.gov.au)
+$offtext
+
+Sets
+   p portfolios owning strategic generating units /
+       delta, eraringp, macgen, sithe, uranq, redbank, snowy/
+   u generating units /
+       colongra, munmorah, eraring, shoalhaven,
+       bayswater, huntvgt, sithe1, sithe2, uranq1, uranq2,
+       redbank1,redbank2, snowy1, snowy2
+       delta-con, eraring-con, macgen-con, tallawarra, VOLL/
+   owns(p,u) ownership relation between portfolios and units /
+       delta.(colongra, munmorah), eraringp.(eraring, shoalhaven),
+       macgen.(bayswater, huntvgt), sithe.(sithe1, sithe2),
+       uranq.(uranq1, uranq2), redbank.(redbank1, redbank2),
+       snowy.(snowy1, snowy2) /
+   us(u) list of strategic generators
+   un(u) list of non-strategic generators;
+
+option us<owns; un(u) = not us(u);
+
+Table unitData(u,*) unit data
+                cost   cap
+colongra        87.19   560
+munmorah        19.87  1080
+eraring         17.42   660
+shoalhaven     300.00   240
+bayswater       12.78  1200
+huntvgt        383.47    44
+sithe1          37.16    80
+sithe2          37.16    80
+uranq1          78.32   320
+uranq2          78.32   320
+redbank1        12.49   100
+redbank2        12.49    45
+snowy1         300.00  1250
+snowy2         300.00   666
+delta-con       19.87  3240
+eraring-con     17.42  1980
+macgen-con      12.78  3600
+tallawarra      27.54   422
+VOLL         10000.00 90000;
+
+Set
+   ds         range of demands to be considered /d1*d35/
+Parameters
+   cost(u)    variable cost of generating unit u dollars per MWh
+   cap(u)     maximum production capacity for unit u in MW
+   Demand(ds) demand in each run of the model
+   D          total demand;
+
+cost(u) = unitData(u,'cost'); cap(u) = unitData(u,'cap');
+Demand(ds) = 8000 + (ord(ds)-1)*200;
+
+* The following variables will need to be changed according to the
+* number of actions per unit
+Sets
+   a possible actions for each unit /q1*q4/
+   s enumeration of strategies for each portfolio /s1*s16/
+   k index of binary digits - b1 LSB /b1*b2/
+Set
+   sl(p,s,u,a) list of allowed strategies for each portfolio
+   ps(p,s) list of strategies defined for each portfolio;
+
+abort$(round(card(a)**smax(p,sum(owns(p,u),1))) <> card(s))
+                      "scenarios and max number units in portfolio don't match";
+
+abort$(round(2**card(k))<>card(a)) "action and binary digits don't match";
+
+* Enumeration all strategies
+parameter pow(u), pu(p), cont;
+pu(p) = sum(owns(p,u), 1);
+loop(p,
+   pow(u) = 0;
+   loop(s$(ord(s)<=round(card(a)**pu(p))),
+      loop((owns(p,u),a)$sameas('q1',a), sl(p,s,u,a+pow(u)) = yes);
+      cont = 1;
+      loop(owns(p,u)$cont,
+         if (pow(u)<card(a)-1, pow(u) = pow(u)+1; cont=0;
+         else pow(u) = 0));
+   );
+);
+display sl;
+option ps<sl;
+
+alias(p,cp), (s,cs);
+
+Parameters
+   b0     additive offset for constant
+   b(k)   conversion factor from binary to production;
+
+b0 = power(2,-card(k));
+b(k) = power(2,-(card(k)-ord(k)+1));
+
+Set
+   y(a,k) mapping from unit action to share of output;
+y(a,k) = mod(trunc(ord(a)/power(2,ord(k)-1)),2);
+
+Variables
+   social_cost        objective variable
+   pi0(p)             profit of portfolio p
+   pi(cp,cs,p)        ditto in case (cp cs)
+
+Positive Variables
+   g0(u)              production of unit
+   g(cp,cs,u)         ditto in case (cp cs)
+   gh0(u)             volume of capacity offered to the market of stragegic unit
+   gh(cp,cs,u)        ditto in case (cp cs)
+   pr0                'dual of "sum(u,g0(u)) = D"'
+   pr(cp,cs)          ditto in case (cp cs)
+   v0(u)              dual of "g0(u) >= 0"
+   v(cp,cs,u)         ditto in case (cp cs)
+   w0(u)              dual of "g0(u) <= gh0"
+   w(cp,cs,u)         ditto in case (cp cs)
+   z0(u,k)            "z0(u,k) = w0(u)*x0(u,k)"
+   z(cp,cs,u,k)       ditto in case (cp cs)
+
+Binary Variables
+   x0(u,k)            select digits for volume offered
+   x(cp,cs,u,k)       ditto in case (cp cs);
+
+Equations
+   obj                objective worst social cost
+   kkt0(u)            KKT system
+   kkt(cp,cs,u)       ditto in case (cp cs)
+   demandsat0         demand satisfaction
+   demandsat(cp,cs)   ditto in case (cp cs)
+   caplimit0(u)       capacity limit
+   caplimit(cp,cs,u)  ditto in case (cp cs)
+   defcap0(u)         capacity definition for stratgic units
+   defcap(cp,cs,u)    ditto in case (cp cs)
+   defprofit0(p)      profit definition
+   defprofit(cp,cs,p) ditto in case (cp cs)
+   defscen(cp,cs,u,k) scenario capacity fixing
+   defNE(cp,cs)       Nash equilibrium;
+
+obj ..                social_cost =e= sum(u,cost(u)*g0(u));
+
+* Optimal dispatch for the candidate WNE
+kkt0(u)..             -cost(u) + pr0 + v0(u) - w0(u) =e= 0;
+demandsat0..          sum(u, g0(u)) =e= D;
+caplimit0(u)..        gh0(u) =g= g0(u);
+defcap0(us)..         gh0(us) =e= (b0 + sum(k,b(k)*x0(us,k)))*cap(us);
+gh0.fx(un) = cap(un);
+defprofit0(p)..       pi0(p) =e= sum(owns(p,us),(w0(us)*b0
+                                              + sum(k,b(k)*z0(us,k)))*cap(us));
+
+* Complementary conditions
+* disjunction: v0()=0 or g0()=0 hold, w0()=0 or g0()=gh0()
+Equation v0is0(u);    v0is0(u)..   v0(u) =e= 0;
+Equation g0is0(u);    g0is0(u)..   g0(u) =e= 0;
+Equation w0is0(u);    w0is0(u)..   w0(u) =e= 0;
+Equation g0isgh0(u);  g0isgh0(u).. g0(u) =e= gh0(u);
+
+* z0(us,k) = w0(us)*x0(us,k)
+* Disjunction if x0()=1 then z0isw0() holds else z0is0 holds
+Equation z0is0(u,k);  z0is0(us,k)..   z0(us,k) =e= 0;
+Equation z0isw0(u,k); z0isw0(us,k)..  z0(us,k) =e= w0(us);
+
+* Optimal dispatch for the alternative case cp ss
+kkt(ps,u)..           -cost(u) + pr(ps) + v(ps,u) - w(ps,u) =e= 0;
+demandsat(ps)..       sum(u,g(ps,u)) =e= D;
+caplimit(ps,u)..      gh(ps,u) =g= g(ps,u);
+defcap(ps,us)..       gh(ps,us) =e= (b0 + sum(k,b(k)*x(ps,us,k)))*cap(us);
+gh.fx(ps,un) = cap(un);
+defprofit(ps,p)..     pi(ps,p) =e= sum(owns(p,us),(w(ps,us)*b0
+                                             + sum(k,b(k)*z(ps,us,k)))*cap(us));
+defscen(ps(cp,cs),us,k)..  x(ps,us,k) =e= x0(us,k)            $(not owns(cp,us))
+                               + sum((sl(ps,us,a),y(a,k)),1)  $owns(cp,us);
+
+* Complementary conditions
+* disjunction: v()=0 or g()=0 hold, w()=0 or g()=gh()
+Equation vis0(cp,cs,u);   vis0(ps(cp,cs),u)..  v(ps,u) =e= 0;
+Equation gis0(cp,cs,u);   gis0(ps(cp,cs),u)..  g(ps,u) =e= 0;
+Equation wis0(cp,cs,u);   wis0(ps(cp,cs),u)..  w(ps,u) =e= 0;
+Equation gisgh(cp,cs,u);  gisgh(ps(cp,cs),u).. g(ps,u) =e= gh(ps,u);
+
+
+* z(ps,us,k) = w(ps,us)*x(ps,us,k)
+* Disjunction if x()=1 then zisw() holds else zis0 holds
+Equation zis0(cp,cs,u,k);   zis0(ps,us,k)..   z(ps,us,k) =e= 0;
+Equation zisw(cp,cs,u,k);   zisw(ps,us,k)..   z(ps,us,k) =e= w0(us);
+
+* These equations ensure that the selected strategy combination is a NE
+defNE(ps(cp,cs))..     pi0(cp) =g= pi(ps,cp);
+
+Model LinearNE /all/;
+
+file emp / '%emp.info%' /;
+put emp '* problem %gams.i%' / 'default bigM 1e5';
+loop(u,
+   put / 'disjunction *' v0is0(u) 'else' g0is0(u);
+   put / 'disjunction *' w0is0(u) 'else' g0isgh0(u));
+loop((us,k),
+   put / 'disjunction ' x0(us,k) z0isw0(us,k) 'else' z0is0(us,k));
+
+loop((ps,u),
+   put / 'disjunction *' vis0(ps,u) 'else' gis0(ps,u);
+   put / 'disjunction *' wis0(ps,u) 'else' gisgh(ps,u));
+loop((ps,us,k),
+   put / 'disjunction ' x(ps,us,k) zisw(ps,us,k) 'else' zis0(ps,us,k));
+putclose;
+
+option optcr=0, limrow=0, limcol=0;
+Loop (ds,
+   D=Demand(ds);
+   Solve LinearNE using emp minimizing social_cost;
+);

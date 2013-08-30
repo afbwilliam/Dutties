@@ -1,0 +1,11 @@
+$TITLE 'CPLEX test suite - basic option reading test' (CPLEX01,SEQ=263)
+$if not '%GAMS.lp%' == '' $set solver %GAMS.lp%
+$if not set solver        $set solver cplex
+
+$call gamslib -q 1
+
+$echo "abort$(transport.solvestat <> %solvestat.IterationInterrupt%) 'problems with %solver% option';" >> trnsport.gms
+
+$echo "itlim 1" > %solver%.op2
+$call =gams trnsport lo=0 optfile=2 lp=%solver%
+$if errorlevel 1 $abort 'problems with %solver% options'

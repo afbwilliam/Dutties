@@ -1,0 +1,185 @@
+$title Test of correctness for levels & marginals of NLP (NLP01,SEQ=415)
+
+$ontext
+Test of correctness of the levels and marginals returned.
+Although this test should work for all NLP solvers,
+it is designed specifically to test a MINOS-style link.
+It includes most/all of the different sorts of variables and
+constraints one finds in such links.
+
+Contributor: Steve
+$offtext
+
+$if not set MTYPE   $set MTYPE nlp
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not %MCHECKS% == 0 mchecks = 1;
+
+$escape =
+$echo if{%=1, display '%=1 failed', '%=2'; failed=1}; > tmp.gms
+$escape %
+
+scalars
+  cz / 1 /
+  cb / 0 /;
+
+variables
+  t   'linear in obj, nonlinear in constraints'
+  u   'nonlinear in obj and constraints'
+  v   'nonlinear in obj, linear in constraints'
+  w   'not in obj, nonlinear in constraints'
+  x   'linear in obj and constraints'
+  y   'not in obj, linear in constraints'
+  z   'objective var'
+  ;
+equations
+  obj
+  e   'linear, equality'
+  f   'nonlinear, less-than'
+  g   'nonlinear, greater-than'
+  h   'nonlinear, equality'
+  L   'linear, less-than'
+  ;
+
+obj.. cz * z =E= cb + 2*t + sqr(u) + sin(v/10) + 5*x;
+e..   w =E= 2*t;
+L..   x + y =L= 7;
+f..   u**1.5 + y =L= 3;
+g..   1 =G= log(t) + v;
+h..   w**1.1 =E= y;
+
+model m / e, L, obj, f, g, h /;
+
+t.lo = .1;    t.up = 2;
+u.lo = 1e-3;  u.up = 3;
+v.lo = 1e-3;  v.up = 4;
+w.lo = 1e-3;  w.up = 1;
+x.lo = 0;     x.up = 10;
+y.lo = 0;     y.up = 10;
+
+* solve m using nlp max z;
+* $exit
+
+scalars
+  failed  /    0 /
+  isMax   /    0 /
+  tol     /    %TESTTOL% /
+  obj_l   /    0.0 /
+  obj_m   /    1.0 /
+  objval  /   38.67540837055 /
+  e_l     /    0 /
+  e_m     /   -6.448473234922 /
+  f_l     /    3 /
+  f_m     /    1.8859080143051 /
+  g_l     /   -1 /
+  g_m     /   -0.094595854378246 /
+  h_l     /    0 /
+  h_m     /    6.8859080143051 /
+  L_l     /    7 /
+  L_m     /    5 /
+  t_l     /    0.1 /
+  t_m     /  -11.842905013627 /
+  u_l     /    2.00061508410989 /
+  u_m     /    0 /
+  v_l     /    3.30258509299405 /
+  v_m     /    0 /
+  w_l     /    0.2 /
+  w_m     /    0 /
+  x_l     /    6.82973201549584 /
+  x_m     /    0 /
+  y_l     /    0.170267984504157 /
+  y_m     /    0 /
+  ;
+
+set czvals 'obj multipliers' /
+'cz=1',
+'cz=0.5'
+'cz=3'
+'cz=-1'
+'cz=-0.5'
+'cz=-3'
+/;
+parameter czv(czvals) /
+'cz=1'          1
+'cz=0.5'        0.5
+'cz=3'          3
+'cz=-1'        -1
+'cz=-0.5'      -0.5
+'cz=-3'        -3
+/;
+
+set cbvals 'obj constants' /
+'cb=0'
+'cb=2'
+'cb=-2'
+/;
+parameter cbv(cbvals) /
+'cb=0'          0
+'cb=2'          2
+'cb=-2'        -2
+/;
+
+loop {czvals$[ord(czvals) <= INF],
+ cz = czv(czvals);
+ loop {cbvals$[ord(cbvals) <= INF],
+  cb = cbv(cbvals);
+  if {(cz > 0),
+    isMax = 1;
+    solve m using %MTYPE% max z;
+  else
+    isMax = -1;
+    solve m using %MTYPE% min z;
+  }
+
+  if {(m.modelstat = %modelstat.NoSolutionReturned%) and (m.solvestat = %solvestat.CapabilityProblems%),
+*   capability problems due to sin() or non-convex model
+    abort.noerror 'Capability problems: further testing skipped: TEST PASSED';
+  };
+$ batinclude tmp "( m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)" "wrong status codes"
+
+$ batinclude tmp "(abs(cz*z.l-cb-objval) > tol)"          "bad z.l"
+$ batinclude tmp "(abs(z.m) > tol)"                       "bad z.m"
+
+$ batinclude tmp "(abs(t.l-t_l) > tol)"                   "bad t.l"
+$ batinclude tmp "(abs(u.l-u_l) > tol)"                   "bad u.l"
+$ batinclude tmp "(abs(v.l-v_l) > tol)"                   "bad v.l"
+$ batinclude tmp "(abs(w.l-w_l) > tol)"                   "bad w.l"
+$ batinclude tmp "(abs(x.l-x_l) > tol)"                   "bad x.l"
+$ batinclude tmp "(abs(y.l-y_l) > tol)"                   "bad y.l"
+
+$ batinclude tmp "(abs(obj.l-cb) > tol)"                  "bad obj.l"
+$ batinclude tmp "(abs(e.l-e_l) > tol)"                   "bad e.l"
+$ batinclude tmp "(abs(f.l-f_l) > tol)"                   "bad f.l"
+$ batinclude tmp "(abs(g.l-g_l) > tol)"                   "bad g.l"
+$ batinclude tmp "(abs(h.l-h_l) > tol)"                   "bad h.l"
+$ batinclude tmp "(abs(L.l-L_l) > tol)"                   "bad L.l"
+
+  if {mchecks,
+$   batinclude tmp "(abs(cz*t.m -t_m) > tol)"             "bad t.m"
+$   batinclude tmp "(abs(cz*u.m -u_m) > tol)"             "bad u.m"
+$   batinclude tmp "(abs(cz*v.m -v_m) > tol)"             "bad v.m"
+$   batinclude tmp "(abs(cz*w.m -w_m) > tol)"             "bad w.m"
+$   batinclude tmp "(abs(cz*x.m -x_m) > tol)"             "bad x.m"
+$   batinclude tmp "(abs(cz*y.m -y_m) > tol)"             "bad y.m"
+
+$   batinclude tmp "(abs(cz*obj.m-obj_m) > tol)"          "bad obj.m"
+$   batinclude tmp "(abs(cz*e.m -e_m) > tol)"             "bad e.m"
+$   batinclude tmp "(abs(cz*f.m -f_m) > tol)"             "bad f.m"
+$   batinclude tmp "(abs(cz*g.m -g_m) > tol)"             "bad g.m"
+$   batinclude tmp "(abs(cz*h.m -h_m) > tol)"             "bad h.m"
+$   batinclude tmp "(abs(cz*L.m -L_m) > tol)"             "bad L.m"
+  };
+
+$ifthen set doscalar
+  if {failed,
+    option %MTYPE%=convert;
+    if {(cz > 0),
+      solve m using %MTYPE% max z;
+    else
+      solve m using %MTYPE% min z;
+    };
+  };
+$endif
+  abort$failed 'test failed', cz, cb;
+ };
+};

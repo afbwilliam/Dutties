@@ -1,0 +1,24 @@
+$Title  Start GAMS job asynchronously and send interrupt signal to it (ASYNNTRP,SEQ=585)
+
+$ontext
+'$Call.ASyncNC' starts a job in a new, minimized console. With 'JobHandle' one
+gets the process ID of that job and the put_utility 'WinMsg' sends an interrupt
+signal to that PID.
+
+Contributor: Lutz Westermann
+$offtext
+
+$if %system.filesys% == UNIX $abort.noerror WinMsg works on Windows only
+
+$call gamslib -q bearing
+$echo scalar sstat; sstat = m.solvestat; >> bearing.gms
+$Call.ASyncNC =gams bearing nlp=snopt gdx=bearingout lo=0
+$eval jh JobHandle
+
+file fx;
+display$sleep(1) 'wait';
+put_utility fx 'winmsg' / '___GAMSMSGWINDOW___%jh%' / "GAMS Message Interrupt";
+display$sleep(1) 'wait';
+
+scalar sstat; execute_load 'bearingout' sstat;
+abort$(sstat<>%Solvestat.User Interrupt%) 'Wrong status code', sstat;

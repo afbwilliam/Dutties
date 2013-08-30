@@ -1,0 +1,19 @@
+$TITLE Generate GDX file for test of GDXMRW (GEN_R2,SEQ=484)
+
+$ontext
+Generate data for testing the GDXMRW function rgdx
+$offtext
+
+set I/i1*i2/;
+set J/j1*j2/;
+set K(I, J);
+
+K(I,J) = yes;
+
+parameter P(I, J);
+
+P(I,J) = 2*ord(I) + ord(J);
+
+display K, P;
+
+execute_unload 'read2';

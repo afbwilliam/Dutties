@@ -1,0 +1,69 @@
+$title External Function Errors: Aij wrong (xerr1,SEQ=494)
+$Ontext
+
+This model checks if Cmex creates an error as expected when dealing with
+external equations. The errors we want to get are:
+- Aij in variable has non integer value in =X= equation
+- Aij out of range in variable in =X= equation
+- Aij not unique in variable in =X= equation
+- Aij not the same in variable in =X= equation
+
+Contributor: Lutz Westermann
+
+$Offtext
+
+$call gmsunzip -q xerr.zip
+$if %system.buildcode% == VS8 $call mv -f vs8.dll xerr.dll
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef;
+
+zdef.. sum(i, (ord(i)+ord(i)/10)*x(i) ) + (card(i)+1)* z =X= 1;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of Aij not integer
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef;
+
+zdef.. sum(i, (ord(i)+1)*x(i) ) + (card(i)+2)* z =X= 1;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of Aij out of range
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef;
+
+zdef.. sum(i, (card(i)+1)*x(i) ) + (card(i)+1)* z =X= 1;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of Aij not unique
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef, zdef2;
+
+zdef..  sum(i,  ord(i)   *x(i) ) + (card(i)+1)* z =X= 1;
+zdef2.. sum(i, (ord(i)+1)*x(i) )                  =X= 2;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of Aij not the same in variable

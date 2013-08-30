@@ -1,0 +1,21 @@
+$title 'Test exec time loading with missing filter' (LOAD3,SEQ=249)
+
+$ontext
+AB01028: We should get a compilation error since the domain d is empty
+System 22.2 gave a runtime error.
+$offtext
+
+set i /i1, i2, i3/;
+parameter A(i) /i1=1, i2=2, i3=3/;
+$gdxout test.gdx
+$unload A I
+$gdxout
+
+set d 'has no data';
+parameter B(d);
+
+* we should get a compile error here, not a runtime error
+execute_load 'test.gdx', B=A;
+$if errorfree $abort this should have give a compilation error
+$clearerror
+$terminate

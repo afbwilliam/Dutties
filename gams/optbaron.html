@@ -1,0 +1,1184 @@
+<html>
+<head>
+<title>BARON Options</title>
+</head>
+<body>
+<h2>BARON Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/baron.pdf">BARON manual</a>.
+
+<h2>Summary of BARON Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Termination options</h3></th></tr>
+<tr><td><a href="#BARONBoxTol">
+BoxTol</a></td>
+<td>Box elimination tolerance.</td></tr>
+<tr><td><a href="#BARONConTol">
+ConTol</a></td>
+<td>Constraint satisfaction tolerance.</td></tr>
+<tr><td><a href="#BARONEpsA">
+EpsA</a></td>
+<td>Absolute termination tolerance.</td></tr>
+<tr><td><a href="#BARONEpsR">
+EpsR</a></td>
+<td>Relative termination tolerance.</td></tr>
+<tr><td><a href="#BARONFirstFeas">
+FirstFeas</a></td>
+<td>Changes the search for first numsol solutions</td></tr>
+<tr><td><a href="#BARONIntTol">
+IntTol</a></td>
+<td>Integrality satisfaction tolerance.</td></tr>
+<tr><td><a href="#BARONISolTol">
+ISolTol</a></td>
+<td>Solution Distance</td></tr>
+<tr><td><a href="#BARONMaxIter">
+MaxIter</a></td>
+<td>Maximum number of BB iterations allowed</td></tr>
+<tr><td><a href="#BARONMaxPreTime">
+MaxPreTime</a></td>
+<td>Maximum CPU time allowed in presolve</td></tr>
+<tr><td><a href="#BARONMaxTime">
+MaxTime</a></td>
+<td>Maximum CPU time allowed</td></tr>
+<tr><td><a href="#BARONNumSol">
+NumSol</a></td>
+<td>Number of solutions to be reported</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Relaxation options</h3></th></tr>
+<tr><td><a href="#BARONmipgap">
+mipgap</a></td>
+<td>Relative optimality tolerance for MIP relaxations</td></tr>
+<tr><td><a href="#BARONmipnodes">
+mipnodes</a></td>
+<td>Number of nodes allowed in the MIP relaxation solution</td></tr>
+<tr><td><a href="#BARONmiprel">
+miprel</a></td>
+<td>Switch to use MIP relaxations</td></tr>
+<tr><td><a href="#BARONmultmsize">
+multmsize</a></td>
+<td>Maximum allowable size of multilinear</td></tr>
+<tr><td><a href="#BARONmultrel">
+multrel</a></td>
+<td>Rounds of cuts of multilinears</td></tr>
+<tr><td><a href="#BARONnlpdolin">
+nlpdolin</a></td>
+<td>Linearization option for relaxation</td></tr>
+<tr><td><a href="#BARONNouter1">
+Nouter1</a></td>
+<td>Number of outer approximators of convex univariant functions.</td></tr>
+<tr><td><a href="#BARONNoutIter">
+NoutIter</a></td>
+<td>Number of rounds of cutting plane generation at LP relaxation.</td></tr>
+<tr><td><a href="#BARONnoutitermip">
+noutitermip</a></td>
+<td>Number of outer approximation rounds with MIP relaxation.</td></tr>
+<tr><td><a href="#BARONNoutPerVar">
+NoutPerVar</a></td>
+<td>Number of outer approximations per variable</td></tr>
+<tr><td><a href="#BARONOutGrid">
+OutGrid</a></td>
+<td>per variable number of grid points</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Range Reduction Options - 6.4</h3></th></tr>
+<tr><td><a href="#BARONlbttdo">
+lbttdo</a></td>
+<td>Linear-feasibility-based range reduction option (poor man's LPs)</td></tr>
+<tr><td><a href="#BARONmaxnodepass">
+maxnodepass</a></td>
+<td>Maximum number of passes allowed through a node</td></tr>
+<tr><td><a href="#BARONmaxredpass">
+maxredpass</a></td>
+<td>Maximum number of times range reduction is performed at a node before a new relaxation is constructed</td></tr>
+<tr><td><a href="#BARONmdo">
+mdo</a></td>
+<td>Marginals-based reduction option</td></tr>
+<tr><td><a href="#BARONobttdo">
+obttdo</a></td>
+<td>Optimality based tightening option</td></tr>
+<tr><td><a href="#BARONPBin">
+PBin</a></td>
+<td>Probing on binary variables option</td></tr>
+<tr><td><a href="#BARONpdo">
+pdo</a></td>
+<td>Number of probing problems allowed</td></tr>
+<tr><td><a href="#BARONpEnd">
+pEnd</a></td>
+<td>Level of branch-and-reduce tree where probing ends</td></tr>
+<tr><td><a href="#BARONpFreq">
+pFreq</a></td>
+<td>Level-frequency of probing applications</td></tr>
+<tr><td><a href="#BARONprofra">
+profra</a></td>
+<td>Fraction of probe to bound distance from relaxed solution when forced probing is done</td></tr>
+<tr><td><a href="#BARONpStart">
+pStart</a></td>
+<td>Level of branch-and-reduce tree where probing begins</td></tr>
+<tr><td><a href="#BARONpxdo">
+pxdo</a></td>
+<td>Number of probing variables fully optimized (not fixed at bound)</td></tr>
+<tr><td><a href="#BARONredabstol">
+redabstol</a></td>
+<td>Absolute improvement in the objective to reconstruct the relaxation of the current node</td></tr>
+<tr><td><a href="#BARONredreltol">
+redreltol</a></td>
+<td>Relative improvement in the objective to reconstruct the relaxation of the current node</td></tr>
+<tr><td><a href="#BARONtdo">
+tdo</a></td>
+<td>Bounds tightening option</td></tr>
+<tr><td><a href="#BARONtwoways">
+twoways</a></td>
+<td>Determines whether probing on both bounds is done or not</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Branching Options  - 6.2</h3></th></tr>
+<tr><td><a href="#BARONBrPtStra">
+BrPtStra</a></td>
+<td>Branching point selection strategy</td></tr>
+<tr><td><a href="#BARONBrVarStra">
+BrVarStra</a></td>
+<td>Branching variable selection strategy</td></tr>
+<tr><td><a href="#BARONConvexRatio">
+ConvexRatio</a></td>
+<td>The branching point ratio</td></tr>
+<tr><td><a href="#BARONModBrPt">
+ModBrPt</a></td>
+<td>Branch point modification option</td></tr>
+<tr><td><a href="#BARONNumBranch">
+NumBranch</a></td>
+<td>Number of Variables to be branched on</td></tr>
+<tr><td><a href="#BARONNumStore">
+NumStore</a></td>
+<td>Number of variables whose bounds are to be stored at every node of the tree</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Heuristic Local Search Options - 6.3</h3></th></tr>
+<tr><td><a href="#BARONDoLocal">
+DoLocal</a></td>
+<td>Local search option for upper bounding</td></tr>
+<tr><td><a href="#BARONhAbsTol">
+hAbsTol</a></td>
+<td>Absolute improvement in the objective to repeat heuristic</td></tr>
+<tr><td><a href="#BARONhRelTol">
+hRelTol</a></td>
+<td>Relative improvement in the objective to repeat heuristic</td></tr>
+<tr><td><a href="#BARONLocRes">
+LocRes</a></td>
+<td>Option to control output from local search</td></tr>
+<tr><td><a href="#BARONMaxHeur">
+MaxHeur</a></td>
+<td>Maximum number of passes allowed for heuristic</td></tr>
+<tr><td><a href="#BARONNumLoc">
+NumLoc</a></td>
+<td>Number of local searches done in NLP preprocessing</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Output Options - 6.6</h3></th></tr>
+<tr><td><a href="#BARONprfreq">
+prfreq</a></td>
+<td>Log output frequency in number of nodes</td></tr>
+<tr><td><a href="#BARONprlevel">
+prlevel</a></td>
+<td>Level of results printed. A larger value produces more output</td></tr>
+<tr><td><a href="#BARONprtimefreq">
+prtimefreq</a></td>
+<td>Log output frequency in number of seconds</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Other Options - 6.7</h3></th></tr>
+<tr><td><a href="#BARONBasFra">
+BasFra</a></td>
+<td>Similarity measure between bases for basis update not to occur</td></tr>
+<tr><td><a href="#BARONBasKp">
+BasKp</a></td>
+<td>Indicates whether basis information is to be save</td></tr>
+<tr><td><a href="#BARONBilRel">
+BilRel</a></td>
+<td>Controls rounds of bilinear relaxations</td></tr>
+<tr><td><a href="#BARONCutOff">
+CutOff</a></td>
+<td>Eliminate solutions that are no better than this value</td></tr>
+<tr><td><a href="#BARONCvxBt">
+CvxBt</a></td>
+<td>Controls cvx-based tightening</td></tr>
+<tr><td><a href="#BARONCvxInitOA">
+CvxInitOA</a></td>
+<td>Controls cvx-based initial outer approximation</td></tr>
+<tr><td><a href="#BARONCvxRel">
+CvxRel</a></td>
+<td>Do cvxrel rounds of convexification cuts at every node</td></tr>
+<tr><td><a href="#BARONlpalg">
+lpalg</a></td>
+<td>Specifies the LP algorithm to be used (available only with CPLEX as the LP solver)</td></tr>
+<tr><td><a href="#BARONlpsol">
+lpsol</a></td>
+<td>Specifies the LP Solver to be used</td></tr>
+<tr><td><a href="#BARONMIPCuts">
+MIPCuts</a></td>
+<td>Do MIPCuts rounds of MIP cuts at every node</td></tr>
+<tr><td><a href="#BARONnlpsol">
+nlpsol</a></td>
+<td>Specifies the NLP solver to be used</td></tr>
+<tr><td><a href="#BARONNodeSel">
+NodeSel</a></td>
+<td>Node selection scheme</td></tr>
+<tr><td><a href="#BARONpostabstol">
+postabstol</a></td>
+<td>Absolute tolerance for postponing a node</td></tr>
+<tr><td><a href="#BARONpostreltol">
+postreltol</a></td>
+<td>Realtive tolerance for postponing a node</td></tr>
+<tr><td><a href="#BARONprelpdo">
+prelpdo</a></td>
+<td>Solve preprocessing LPs at root</td></tr>
+<tr><td><a href="#BARONRLTRel">
+RLTRel</a></td>
+<td>Do RLTRel rounds of RLT cuts at every node</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Gams system interface only</h3></th></tr>
+<tr><td><a href="#BARONOptName">
+OptName</a></td>
+<td>temp option file name</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>None Baron options - interface and convert only</h3></th></tr>
+<tr><td><a href="#BARONDotBar">
+DotBar</a></td>
+<td>Name of BARON problem file to be written</td></tr>
+<tr><td><a href="#BARON.EquClass">
+.EquClass</a></td>
+<td>Equation Classification</td></tr>
+<tr><td><a href="#BARONExtMINLPsolver">
+ExtMINLPsolver</a></td>
+<td>External GAMS MINLP solver and option file (e.g. sbb.1)</td></tr>
+<tr><td><a href="#BARONExtNLPsolver">
+ExtNLPsolver</a></td>
+<td>External GAMS NLP solver and option file (e.g. conopt.1)</td></tr>
+<tr><td><a href="#BARONInfBnd">
+InfBnd</a></td>
+<td>infinity value to be used on bounds</td></tr>
+<tr><td><a href="#BARON.Lo">
+.Lo</a></td>
+<td>Variable Lower Bound</td></tr>
+<tr><td><a href="#BARONmipsolopt">
+mipsolopt</a></td>
+<td>Read MIP solvers options</td></tr>
+<tr><td><a href="#BARONObjName">
+ObjName</a></td>
+<td>Obj variable name</td></tr>
+<tr><td><a href="#BARON.Prior">
+.Prior</a></td>
+<td>Variable Branching Priority</td></tr>
+<tr><td><a href="#BARONReform">
+Reform</a></td>
+<td>Reformulation level</td></tr>
+<tr><td><a href="#BARONSecret">
+Secret</a></td>
+<td>Pass secret option to BARON</td></tr>
+<tr><td><a href="#BARON.Up">
+.Up</a></td>
+<td>Variable Upper Bound</td></tr>
+<tr><td><a href="#BARONWorkFactor">
+WorkFactor</a></td>
+<td>Memory allocation multiplier in Mb - overrides automatic default</td></tr>
+<tr><td><a href="#BARONWorkSpace">
+WorkSpace</a></td>
+<td>Memory allocation in Mb - overrides automatic default</td></tr></table>
+<h2>Detailed Descriptions of BARON Options</h2>
+
+<h4><a name="BARONBasFra">
+BasFra</a>
+<i> (real)</i> Similarity measure between bases for basis update not to occur</h4><p>
+
+
+<br><i>(default = 0.7)</i>
+
+<h4><a name="BARONBasKp">
+BasKp</a>
+<i> (integer)</i> Indicates whether basis information is to be save</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no basis information is saved</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>LP solver working basis will not be modified if at least basfra *n of its basic variables are also basic in the saved basis for the node that is about to be solved.
+LP solver working basis will not be modified if at least <tt>BasFra * n</tt> of its
+basic variables are also basic in the saved basis for the node that is about
+to be solved.</td></tr>
+</table>
+
+<h4><a name="BARONBilRel">
+BilRel</a>
+<i> (integer)</i> Controls rounds of bilinear relaxations</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="BARONBoxTol">
+BoxTol</a>
+<i> (real)</i> Box elimination tolerance.</h4><p>
+
+
+<br><i>(default = 1e-5)</i>
+
+<h4><a name="BARONBrPtStra">
+BrPtStra</a>
+<i> (integer)</i> Branching point selection strategy</h4><p>
+
+Defines the branching point selection strategy.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>BARONs dynamic strategy</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>w-branching</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>bisection-branching</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>convex combination of 1 and 2 as dictated by convexratio</td></tr>
+</table>
+
+<h4><a name="BARONBrVarStra">
+BrVarStra</a>
+<i> (integer)</i> Branching variable selection strategy</h4><p>
+
+Defines the branching variable selection strategy.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>BARONs dynamic strategy</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>largest violation</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>longest edge</td></tr>
+</table>
+
+<h4><a name="BARONConTol">
+ConTol</a>
+<i> (real)</i> Constraint satisfaction tolerance.</h4><p>
+
+
+<br><i>(default = 1e-5)</i>
+
+<h4><a name="BARONConvexRatio">
+ConvexRatio</a>
+<i> (real)</i> The branching point ratio</h4><p>
+
+ The branching point under <tt>brptstra=3</tt> is set to
+  <tt>ConvexRatio</tt> * omega + (1 - <tt>ConvexRatio</tt>) * beta,
+  where omega and beta are the omega- and bisection-branching points.
+
+<br><i>(default = 0.7)</i>
+
+<h4><a name="BARONCutOff">
+CutOff</a>
+<i> (real)</i> Eliminate solutions that are no better than this value</h4><p>
+
+Ignore solutions that are no better than this value.
+  Can also be used as GAMS model suffix option:
+  <tt>(modelname).CutOff = (value)</tt>.
+
+<br><i>(default = GAMS CutOff)</i>
+
+<h4><a name="BARONCvxBt">
+CvxBt</a>
+<i> (integer)</i> Controls cvx-based tightening</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONCvxInitOA">
+CvxInitOA</a>
+<i> (integer)</i> Controls cvx-based initial outer approximation</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONCvxRel">
+CvxRel</a>
+<i> (integer)</i> Do cvxrel rounds of convexification cuts at every node</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONDoLocal">
+DoLocal</a>
+<i> (integer)</i> Local search option for upper bounding</h4><p>
+
+Defines the local search option for upper bounding.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no local search is done during upper bounding</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>BARON's dynamic local search decision rule</td></tr>
+</table>
+
+<h4><a name="BARONDotBar">
+DotBar</a>
+<i> (string)</i> Name of BARON problem file to be written</h4><p>
+
+Defines the name of BARON problem file to be written.
+
+<br><i>(default = gams.bar)</i>
+
+<h4><a name="BARONEpsA">
+EpsA</a>
+<i> (real)</i> Absolute termination tolerance.<br>&nbsp;&nbsp;&nbsp;Synonym:
+optca</h4><p>
+
+BARON terminates if
+<tt>U-L &lt;= epsilon_a</tt>,
+where <tt>U</tt> and <tt>L</tt> are the lower and upper bounds to the
+optimization problem at the current iteration. This is
+equivalent to the GAMS option <tt>OptCA</tt>.
+
+<br><i>(default = GAMS OptCA)</i>
+
+<h4><a name="BARONEpsR">
+EpsR</a>
+<i> (real)</i> Relative termination tolerance.<br>&nbsp;&nbsp;&nbsp;Synonym:
+optcr</h4><p>
+
+BARON terminates if
+   <tt>L &gt; INF </tt> and <tt>U-L &lt;= epsilon_r|L|</tt>,
+   where <tt>U</tt> and <tt>L</tt> are the lower and upper bounds to the
+   optimization problem at the current iteration. This
+   is equivalent to the GAMS option <tt>OptCR</tt>.
+
+<br><i>(default = GAMS OptCR)</i>
+
+<h4><a name="BARON.EquClass">
+.EquClass</a>
+<i> (integer <a href="#dotopt">dot option</a>)</i> Equation Classification</h4><p>
+
+Specifies nature of constraint named <tt>EqName</tt> in the users model.
+  Slices like <tt>supply.EquClass("new-york") 1</tt> are allowed.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>general.
+Regular constraint.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>relax.
+ Relaxation-only constraint.  These constraints are provided to
+   BARON as <tt>RELAXATION_ONLY_EQUATIONS</tt> and used to help
+   strengthen the relaxation bound but are not considered as part of the user
+   model and thus not used for feasibility testing of solutions or local
+search.
+   Adding, for instance,
+   the first-order optimality conditions as relaxation-only constraints often
+expedites convergence.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>convex.
+Convex constraint.  These constraints are provided to
+   BARON as <tt>CONVEX_EQUATIONS</tt> and used to generate cutting
+   planes from the set of outer approximating supporting hyperplanes
+   of the convex constraint set.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>relax+convex.
+ Convex constraint that is relaxation-only.</td></tr>
+</table>
+
+<h4><a name="BARONExtMINLPsolver">
+ExtMINLPsolver</a>
+<i> (string)</i> External GAMS MINLP solver and option file (e.g. sbb.1)</h4><p>
+
+
+<br><i>(default = sbb)</i>
+
+<h4><a name="BARONExtNLPsolver">
+ExtNLPsolver</a>
+<i> (string)</i> External GAMS NLP solver and option file (e.g. conopt.1)</h4><p>
+
+
+<br><i>(default = conopt)</i>
+
+<h4><a name="BARONFirstFeas">
+FirstFeas</a>
+<i> (integer)</i> Changes the search for first numsol solutions</h4><p>
+
+If set to 1, BARON will terminate once it finds
+  <tt>NumSol</tt> feasible solutions, irrespective of solution quality.
+  By default, <tt>FirstFeas</tt>
+  is 0, meaning that BARON will search for
+  the <i>best</i> <tt>NumSol</tt> feasible solutions.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>search for the best numsol solutions</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>find numsol solutions irrespective of solution quality</td></tr>
+</table>
+
+<h4><a name="BARONhAbsTol">
+hAbsTol</a>
+<i> (real)</i> Absolute improvement in the objective to repeat heuristic</h4><p>
+
+Absolute improvement requirement in the objective for continuation
+  of local search heuristic.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BARONhRelTol">
+hRelTol</a>
+<i> (real)</i> Relative improvement in the objective to repeat heuristic</h4><p>
+
+Relative improvement requirement in the objective for continuation
+  of local search heuristic.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BARONInfBnd">
+InfBnd</a>
+<i> (real)</i> infinity value to be used on bounds</h4><p>
+
+If set to 0, then no bounds are used.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BARONIntTol">
+IntTol</a>
+<i> (real)</i> Integrality satisfaction tolerance.</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="BARONISolTol">
+ISolTol</a>
+<i> (real)</i> Solution Distance</h4><p>
+
+Separation distance between solutions.  This option is used in conjunction
+  with <tt>NumSol</tt>.  For combinatorial optimization problems, feasible solutions are
+  isolated.  For continuous problems, feasible solution points within an
+  l_INF distance that does not exceed <tt>ISolTol &gt; 0</tt> will be treated
+  as identical by BARON.
+
+<br><i>(default = 1e-5)</i>
+
+<h4><a name="BARONlbttdo">
+lbttdo</a>
+<i> (integer)</i> Linear-feasibility-based range reduction option (poor man's LPs)</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no range reduction based on feasibility.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>range reduction done based on feasibility.</td></tr>
+</table>
+
+<h4><a name="BARON.Lo">
+.Lo</a>
+<i> (real <a href="#dotopt">dot option</a>)</i> Variable Lower Bound</h4><p>
+
+
+
+<h4><a name="BARONLocRes">
+LocRes</a>
+<i> (integer)</i> Option to control output from local search</h4><p>
+
+Option to control output to log from local search.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no local search output</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>detailed results from local search will be printed to res.dat file</td></tr>
+</table>
+
+<h4><a name="BARONlpalg">
+lpalg</a>
+<i> (integer)</i> Specifies the LP algorithm to be used (available only with CPLEX as the LP solver)</h4><p>
+
+Specifies the LP algorithm to be used (available only with CPLEX or XA as the
+LP solver).
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic selection of LP algorithm</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>primal simplex</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>barrier</td></tr>
+</table>
+
+<h4><a name="BARONlpsol">
+lpsol</a>
+<i> (integer)</i> Specifies the LP Solver to be used</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>3</td><td>CPLEX</td></tr>
+<tr valign="top"><td width=20 align=right>7</td><td>XPRESS</td></tr>
+<tr valign="top"><td width=20 align=right>8</td><td>CLP</td></tr>
+</table>
+
+<h4><a name="BARONMaxHeur">
+MaxHeur</a>
+<i> (integer)</i> Maximum number of passes allowed for heuristic</h4><p>
+
+Maximum number of passes allowed for local search heuristic,
+  provided the upper bound improvement during two consecutive
+  passes satisfies either the relative or absolute improvement
+  tolerance (see <tt>HRelTol</tt> and <tt>HAbsTol</tt>).
+
+<br><i>(default = 5)</i>
+
+<h4><a name="BARONMaxIter">
+MaxIter</a>
+<i> (integer)</i> Maximum number of BB iterations allowed<br>&nbsp;&nbsp;&nbsp;Synonym:
+nodlim</h4><p>
+
+ Maximum number of branch-and-reduce iterations allowed.
+  -1 implies unlimited. This is equivalent to the GAMS option
+  <tt>NodLim</tt>. Setting <tt>MaxIter</tt> to 0 will force BARON to terminate
+  after root node preprocessing.  Setting <tt>MaxIter</tt> to 1 will result in
+  termination after the solution of the root node.
+
+<br><i>(default = GAMS NodeLim)</i>
+
+<h4><a name="BARONmaxnodepass">
+maxnodepass</a>
+<i> (integer)</i> Maximum number of passes allowed through a node</h4><p>
+
+Maximum number of passes (relaxation constructions) allowed
+  through a node. If postprocessing improves
+  the nodes lower bound in a way that satisfies the absolute
+  or relative tolerances, <tt>RedAbsTol</tt> or <tt>RedRelTol</tt>,
+  respectively, the process of lower bounding followed
+  by postprocessing is repeated up to <tt>MaxNodePass</tt>
+  times.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="BARONMaxPreTime">
+MaxPreTime</a>
+<i> (real)</i> Maximum CPU time allowed in presolve</h4><p>
+
+Maximum CPU time allowed (sec) to be spent in preprocessing.
+  If set to -1, the <tt>MaxTime</tt> limit applies.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="BARONmaxredpass">
+maxredpass</a>
+<i> (integer)</i> Maximum number of times range reduction is performed at a node before a new relaxation is constructed</h4><p>
+
+  At any given node, at most <tt>MaxRedPass</tt> calls of the
+  range reduction heuristics will be performed for
+  tightening based on feasibility, marginals, and
+  probing in accordance to the options <tt>tdo</tt>, <tt>mdo</tt>,
+  and <tt>pdo</tt>, respectively.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="BARONMaxTime">
+MaxTime</a>
+<i> (real)</i> Maximum CPU time allowed<br>&nbsp;&nbsp;&nbsp;Synonym:
+reslim</h4><p>
+
+ Maximum CPU time allowed (sec). This is equivalent to the
+  GAMS option <tt>ResLim</tt>. If unspecified, the GAMS
+  resource limit is enforced.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="BARONmdo">
+mdo</a>
+<i> (integer)</i> Marginals-based reduction option</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no range reduction based on marginals.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>range reduction done based on marginals.</td></tr>
+</table>
+
+<h4><a name="BARONMIPCuts">
+MIPCuts</a>
+<i> (integer)</i> Do MIPCuts rounds of MIP cuts at every node</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONmipgap">
+mipgap</a>
+<i> (real)</i> Relative optimality tolerance for MIP relaxations</h4><p>
+
+
+<br><i>(default = 0.05)</i>
+
+<h4><a name="BARONmipnodes">
+mipnodes</a>
+<i> (integer)</i> Number of nodes allowed in the MIP relaxation solution</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="BARONmiprel">
+miprel</a>
+<i> (integer)</i> Switch to use MIP relaxations</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONmipsolopt">
+mipsolopt</a>
+<i> (integer)</i> Read MIP solvers options</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BARONModBrPt">
+ModBrPt</a>
+<i> (integer)</i> Branch point modification option</h4><p>
+
+Defines the branching point modification option.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>brstra-dictated branching point is used without any modifications</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>allows BARON to occasionally modify the brstra-dictated branching point, if deemed necessary</td></tr>
+</table>
+
+<h4><a name="BARONmultmsize">
+multmsize</a>
+<i> (integer)</i> Maximum allowable size of multilinear</h4><p>
+
+
+<br><i>(default = 2)</i>
+
+<h4><a name="BARONmultrel">
+multrel</a>
+<i> (integer)</i> Rounds of cuts of multilinears</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="BARONnlpdolin">
+nlpdolin</a>
+<i> (integer)</i> Linearization option for relaxation</h4><p>
+
+Linearization option for relaxation. A value of 0 will result in the
+use of nonlinear relaxations whenever possible. This option should
+be avoided. It is offered as an alternative for hard problems but
+may lead to incorrect results depending on the performance of the
+local search solver for the problem at hand. The default value of 1 is
+to use a linear programming relaxation, which represents the most
+reliable approach under BARON.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>use nonlinear relaxation whenever possible</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>use linear programming relaxation</td></tr>
+</table>
+
+<h4><a name="BARONnlpsol">
+nlpsol</a>
+<i> (integer)</i> Specifies the NLP solver to be used</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Automatic NLP solver selection and switching strategy</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>MINOS</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>SNOPT</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>GAMS NLP solver (see ExtNLPsolver)</td></tr>
+<tr valign="top"><td width=20 align=right>9</td><td>IPOPT</td></tr>
+</table>
+
+<h4><a name="BARONNodeSel">
+NodeSel</a>
+<i> (integer)</i> Node selection scheme</h4><p>
+
+Specifies the node selection rule to be used for exploring the search tree.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>BARONs mixed selection scheme</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>best bound</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>last in first out [LIFO]</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>minimum infeasibility</td></tr>
+</table>
+
+<h4><a name="BARONNouter1">
+Nouter1</a>
+<i> (integer)</i> Number of outer approximators of convex univariant functions.</h4><p>
+
+Defines the number of outer approximators of convex univariate functions.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="BARONNoutIter">
+NoutIter</a>
+<i> (integer)</i> Number of rounds of cutting plane generation at LP relaxation.</h4><p>
+
+Defines the number of rounds of cutting plane generation at LP relaxation.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="BARONnoutitermip">
+noutitermip</a>
+<i> (integer)</i> Number of outer approximation rounds with MIP relaxation.</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="BARONNoutPerVar">
+NoutPerVar</a>
+<i> (integer)</i> Number of outer approximations per variable</h4><p>
+
+Defines the number of outer approximators per variable for convex multivariate functions.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="BARONNumBranch">
+NumBranch</a>
+<i> (integer)</i> Number of Variables to be branched on</h4><p>
+
+Defines the number of variables to be branched on. This option requires knowledge about variable orders and is recommended
+for advanced users only.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>consider the model variables as well as variables introduced by BARON's lower bounding procedure</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>consider only the original model variables for branching</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>consider only the first n variables for branching</td></tr>
+</table>
+
+<h4><a name="BARONNumLoc">
+NumLoc</a>
+<i> (integer)</i> Number of local searches done in NLP preprocessing</h4><p>
+
+Number of local searches done in NLP preprocessing.
+  The first one begins with the user-specified starting
+  point as long as it is feasible. Subsequent local
+  searches are done from judiciously chosen
+  random starting points.  If <tt>NumLoc</tt> is set to -1,
+  local searches in preprocessing will be done until proof
+  of globality or <tt>MaxPreTime</tt> is reached.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="BARONNumSol">
+NumSol</a>
+<i> (integer)</i> Number of solutions to be reported</h4><p>
+
+Number of feasible solutions to be found.
+  Solutions found will be listed in the <tt>res.dat</tt>
+  file in the <tt>gamskeep</tt> directory.  As long as
+  <tt>ISolTol &lt;&gt; -1</tt>, these solutions will be sorted from
+  best to worse.  If <tt>NumSol</tt> is set to
+  -1, BARON will search for all feasible solutions to
+  the given model and print them, in the order in which they are found,
+  in <tt>res.dat</tt>.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONNumStore">
+NumStore</a>
+<i> (integer)</i> Number of variables whose bounds are to be stored at every node of the tree</h4><p>
+
+Defines the number of variables whose bounds are to be stored at every node of
+the tree. This option requires knowledge about variable orders and is recommended
+for advanced users only.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>store all variables</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>store numbranch variables</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>store n variables</td></tr>
+</table>
+
+<h4><a name="BARONObjName">
+ObjName</a>
+<i> (string)</i> Obj variable name</h4><p>
+
+Name of objective variable to be optimized. By default,
+  BARON writes the complete objective function to be optimized.
+  If the user specifies an <tt>ObjName</tt>, this will be written
+  in place of an objective function in the <tt>DotBar</tt> file,
+  provided a <tt>Reform</tt> level of 0 is used.
+<p>
+<p>Useful only in conjunction with <tt>DotBar</tt> and if <tt>Reform</tt>
+  is set to 0.
+
+
+<h4><a name="BARONobttdo">
+obttdo</a>
+<i> (integer)</i> Optimality based tightening option</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no range reduction based on optimality.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>range reduction done based on optimality.</td></tr>
+</table>
+
+<h4><a name="BARONOptName">
+OptName</a>
+<i> (string)</i> temp option file name</h4><p>
+
+
+
+<h4><a name="BARONOutGrid">
+OutGrid</a>
+<i> (integer)</i> per variable number of grid points</h4><p>
+
+Defines the number of grid points per variable for convex multivariate approximators.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="BARONPBin">
+PBin</a>
+<i> (integer)</i> Probing on binary variables option</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no probing on binary variables.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>probing on binary variables.</td></tr>
+</table>
+
+<h4><a name="BARONpdo">
+pdo</a>
+<i> (integer)</i> Number of probing problems allowed</h4><p>
+
+Defines the number of probing problems allowed.
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>probing on all numbranch variables.</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>no range reduction by probing.</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>probing on n variables.</td></tr>
+</table>
+
+<h4><a name="BARONpEnd">
+pEnd</a>
+<i> (integer)</i> Level of branch-and-reduce tree where probing ends</h4><p>
+
+Defines the level of branch-and-reduce tree where probing ends.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>probing never ends</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>probing ends at level n</td></tr>
+</table>
+
+<h4><a name="BARONpFreq">
+pFreq</a>
+<i> (integer)</i> Level-frequency of probing applications</h4><p>
+
+Defines the level-frequency of probing applications.
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>probing is done at every level of the search tree.</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>probing is done every n levels, beginning at level pstart and ending at level pend.</td></tr>
+</table>
+
+<h4><a name="BARONpostabstol">
+postabstol</a>
+<i> (real)</i> Absolute tolerance for postponing a node</h4><p>
+
+
+<br><i>(default = 1e30)</i>
+
+<h4><a name="BARONpostreltol">
+postreltol</a>
+<i> (real)</i> Realtive tolerance for postponing a node</h4><p>
+
+  Instead of branching after solving a node, it is often
+  advantageous to postpone the current node if its lower
+  bound is sufficiently above the (previously) second best
+  lower bound in the branch-and-bound tree. Let <tt>z</tt> and <tt>z2</tt>
+  denote the current nodes lower bound and the previously
+  second best lower bound in the branch-and-bound tree,
+  respectively. Postponement of a node will take place
+  if any of the following two conditions holds:
+<ul>
+   <li> <tt>z-z2 &gt;= PostAbsTol</tt>
+
+<br><i>(default = 1e30)</i>
+
+<h4><a name="BARONprelpdo">
+prelpdo</a>
+<i> (integer)</i> Solve preprocessing LPs at root</h4><p>
+
+Number of preprocessing LPs to be solved in preprocessing.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-n</td><td>preprocess the first n problem variables</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>no preprocessing LPs should be solved</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>preprocess all problem variables including those introduced by BARON's reformulator</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>preprocess the first numstore problem variables</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>preprocess all original problem variables</td></tr>
+</table>
+
+<h4><a name="BARONprfreq">
+prfreq</a>
+<i> (integer)</i> Log output frequency in number of nodes</h4><p>
+
+Defines the log output frequency in number of nodes.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="BARON.Prior">
+.Prior</a>
+<i> (real <a href="#dotopt">dot option</a>)</i> Variable Branching Priority</h4><p>
+
+
+
+<h4><a name="BARONprlevel">
+prlevel</a>
+<i> (integer)</i> Level of results printed. A larger value produces more output</h4><p>
+
+Defines the level of results printed. A larger value produces more output.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right><=0</td><td>all log output is suppressed</td></tr>
+<tr valign="top"><td width=20 align=right>>0</td><td>print log output</td></tr>
+</table>
+
+<h4><a name="BARONprofra">
+profra</a>
+<i> (real)</i> Fraction of probe to bound distance from relaxed solution when forced probing is done</h4><p>
+
+Defines the fraction of probe to bound distance from relaxed solution when
+forced probing is done.
+
+<br><i>(default = 0.67)</i>
+
+<h4><a name="BARONprtimefreq">
+prtimefreq</a>
+<i> (real)</i> Log output frequency in number of seconds</h4><p>
+
+Defines the lLog output frequency in number of seconds.
+
+<br><i>(default = 30)</i>
+
+<h4><a name="BARONpStart">
+pStart</a>
+<i> (integer)</i> Level of branch-and-reduce tree where probing begins</h4><p>
+
+Defines the level of branch-and-reduce tree where probing begins.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>probing begins at root node.</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>probing begins at level n.</td></tr>
+</table>
+
+<h4><a name="BARONpxdo">
+pxdo</a>
+<i> (integer)</i> Number of probing variables fully optimized (not fixed at bound)</h4><p>
+
+Defines the number of probing variables beeing fully optimized (not fixed at bound).
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BARONredabstol">
+redabstol</a>
+<i> (real)</i> Absolute improvement in the objective to reconstruct the relaxation of the current node</h4><p>
+
+Defiens the absolute improvement in the objective to reconstruct the relaxation
+of the current node.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BARONredreltol">
+redreltol</a>
+<i> (real)</i> Relative improvement in the objective to reconstruct the relaxation of the current node</h4><p>
+
+Defines the relative improvement in the objective to reconstruct the relaxation
+of the current node.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BARONReform">
+Reform</a>
+<i> (integer)</i> Reformulation level</h4><p>
+
+Reformulation level of problem. A value of 0 indicates no
+  reformulation: the complete objective function is listed as an
+  additional constraint and the model minimizes an objective variable.
+  A value of 1 replaces the objective variable
+  by the objective  constraint. This is sometimes useful for reducing
+  the model size. A larger <tt>Reform</tt> value indicates a more aggressive
+  reformulation (if possible).
+
+<br><i>(default = 100)</i>
+
+<h4><a name="BARONRLTRel">
+RLTRel</a>
+<i> (integer)</i> Do RLTRel rounds of RLT cuts at every node</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONSecret">
+Secret</a>
+<i> (string)</i> Pass secret option to BARON</h4><p>
+
+
+
+<h4><a name="BARONtdo">
+tdo</a>
+<i> (integer)</i> Bounds tightening option</h4><p>
+
+Nonlinear-feasibility-based range reduction option (poor mans NLPs).
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no bounds tightening is performed.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>bounds tightening is performed.</td></tr>
+</table>
+
+<h4><a name="BARONtwoways">
+twoways</a>
+<i> (integer)</i> Determines whether probing on both bounds is done or not</h4><p>
+
+Determines wether probing on both bounds is done or not.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>probing to be done by farthest bound</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>probing to be done at both bounds</td></tr>
+</table>
+
+<h4><a name="BARON.Up">
+.Up</a>
+<i> (real <a href="#dotopt">dot option</a>)</i> Variable Upper Bound</h4><p>
+
+
+
+<h4><a name="BARONWorkFactor">
+WorkFactor</a>
+<i> (real)</i> Memory allocation multiplier in Mb - overrides automatic default</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BARONWorkSpace">
+WorkSpace</a>
+<i> (integer)</i> Memory allocation in Mb - overrides automatic default</h4><p>
+
+
+<br><i>(default = 0)</i><h2><a name="dotopt">Dot Options</a></h2>
+
+Dot options allow users to associate values to variables and equations using the
+GAMS name of the variables and equations. The general syntax of a dot option in
+the option file is as follows:
+<pre>
+<i>variable/equation-name.optionname value</i>
+</pre>
+Dot options can be specified for <b>all</b>, a <b>block</b>, a <b>slice</b>, and
+a <b>single</b> variable and equation. The following example makes the use of
+the dot option clear.
+
+<pre>
+Set i /i1*i3/;
+Set j /j2*j4/;
+variable v(i,j), w(i); equation e(i,j);
+</pre>
+
+Consider the following lines in an option file with the imaginary option name <tt>dotopt</tt>:
+<table>
+<tr><td><b>Line in option file</b></td><td><b>Explanation</b></td>
+<tr><td><tt>variables.dotopt 1</tt></td><td>Sets the value of <i>all</i> variables to 1</td>
+<tr><td><tt>equations.dotopt 2</tt></td><td>Sets the value of <i>all</i> equations to 2</td>
+<tr><td><tt>v.dotopt 3</tt></td>        <td>Sets the value of the variables in <i>block</i> <tt>v</tt> to 3</td>
+<tr><td><tt>e.dotopt(*,*) 4</tt></td>   <td>Sets the value of the equations in <i>block</i> <tt>e</tt> to 4</td>
+<tr><td><tt>v.dotopt(*,'j2') 5</tt></td><td>Sets the value of the variables <tt>v</tt> that have j2 in the second index position (<i>slice</i>) to 5</td>
+<tr><td><tt>e.dotopt('i3',*) 6</tt></td><td>Sets the value of the equations <tt>e</tt> that have i3 in the first index position (<i>slice</i>) to 6</td>
+<tr><td><tt>w.dotopt('i2') 7</tt></td>  <td>Sets the value of the <i>single</i> variables <tt>v('i2')</tt> to 7</td>
+<tr><td><tt>e.dotopt('i3','j3') 8</tt>&nbsp;&nbsp;</td><td>Sets the value of the <i>single</i> equations <tt>e('i3','i3')</tt> to 8</td>
+</table>
+
+<p>The values of the dot option are applied in correspondence to the sequence they appear in the option file. In the current example, the values of dotopt for the equation <tt>e</tt> would be as follows:
+
+<table>
+<tr><td><tt>e.dotopt</tt></td><td><tt>i1</tt></td><td><tt>i2</tt></td><td><tt>i3</tt></td>
+<tr><td><tt>j2</tt></td><td>4</td><td>4</td><td>6</td>
+<tr><td><tt>j3</tt></td><td>4</td><td>4</td><td>8</td>
+<tr><td><tt>j4</tt></td><td>4</td><td>4</td><td>6</td>
+</table>
+
+</body></html>

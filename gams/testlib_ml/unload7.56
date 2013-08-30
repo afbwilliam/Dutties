@@ -1,0 +1,8 @@
+$title ignore gdx suffix (UNLOAD7,SEQ=56)
+variable x; parameter a;
+
+a   = 2;
+x.l = 1;
+
+$gdxout gdx1
+$unload x=new x=new.garb

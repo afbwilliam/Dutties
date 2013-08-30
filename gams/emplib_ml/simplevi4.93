@@ -1,0 +1,30 @@
+$Title Another simple VI example (SIMPLEVI4,SEQ=62)
+
+$ontext
+This model shows how to model an equilbrium consisting of two VIs 
+one of which has a non-trivial constraint set.
+
+Contributor: Michael C. Ferris, September 2012
+$offtext
+
+set I / 1 * 2 /;
+
+$macro FUN(I) ord(I)*(x(I) - 1) + 1.5
+
+positive variables x(I);
+variables y;
+equations f(I), g, h;
+
+f(I)..  FUN(I) =N= 0;
+g..     sum {I, x(I)} =G= 1;
+h..     x('1') - y =e= 2;
+
+model vi    / f, g, h /;
+
+file myinfo / '%emp.info%' /;
+put myinfo 'equilibrium' /;
+put 'vi f x g'/;
+put 'vi h y'/;
+putclose;
+
+solve vi    using emp;

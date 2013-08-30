@@ -1,0 +1,9 @@
+$title $clear cannot clear predefined symbols (CLEAR4,SEQ=12)
+$clear sameas diag
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$problem
+$error cannot clear predefined symbols
+

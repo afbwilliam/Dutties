@@ -1,0 +1,82 @@
+$title Compares alternative EMP-VI models (EMPVI03,SEQ=425)
+
+$ontext
+
+This model compares three alternative EMP variational inequality formulations
+with the corresponding complementarity problems
+
+Contributor: Steven Dirkse and Jan-H. Jagla , January 2009
+
+$offtext
+
+
+$ontext
+Example showing how to write a VI as an MCP
+We want to write the VI using EMP to avoid manual translation to MCP
+We use the definitions of VI and MCP from pages 4-6 of the Dirkse Ph.D. thesis
+$offtext
+positive variables x, y;
+free variable t 'alternate way to specify feasible region';
+t.up = 1;
+equations
+  fx        'defines VI-function, perp to x'
+  fy        'defines VI-function, perp to y'
+  g1        'defines feasible region'
+  g2        'negative of g1'
+  g3        'alternate way to write g1 - must also handle this'
+  ;
+
+fx..     1 =N= 0;
+fy..    -2 =N= 0;
+g1..     x + y =L= 1;
+g2..    -x - y =G= -1;
+g3..     x + y - t =E= 0;
+
+model vi1 / fx, fy, g1 /;
+model vi2 / fx, fy, g2 /;
+model vi3 / fx, fy, g3 /;
+
+* complementarity pairs for vi1, vi2 and vi3
+file myinfo / '%emp.info%' /;
+putclose myinfo 'vi' / '  fx x' / '  fy y';
+
+negative variable u1;
+positive variable u2;
+free variable     v3;
+equations
+  fx1       'augmented fx in 1st formulation'
+  fy1       'augmented fy in 1st formulation'
+  fx2       'augmented fx in 2nd formulation'
+  fy2       'augmented fy in 2nd formulation'
+  fx3       'augmented fx in 3rd formulation'
+  fy3       'augmented fy in 3rd formulation'
+  ft        'zero function'
+  ;
+
+fx1..  1 - u1 =N= 0;
+fy1.. -2 - u1 =N= 0;
+fx2..  1 + u2 =N= 0;
+fy2.. -2 + u2 =N= 0;
+fx3..  1 - v3 =N= 0;
+fy3.. -2 - v3 =N= 0;
+ft ..  0 + v3 =N= 0;
+
+model mcp1 'MCP version of vi1' / fx1.x, fy1.y, g1.u1 /;
+model mcp2 'MCP version of vi2' / fx2.x, fy2.y, g2.u2 /;
+model mcp3 'MCP version of vi3' / fx3.x, fy3.y, ft.t, g3.v3 /;
+
+solve mcp1 using mcp;
+vi1.iterlim = 0;
+solve vi1 using emp;
+abort$[vi1.objVal > 1e-6] 'Input for model vi1 should be optimal, was not';
+
+solve mcp2 using mcp;
+vi2.iterlim = 0;
+solve vi2 using emp;
+abort$[vi2.objVal > 1e-6] 'Input for model vi2 should be optimal, was not';
+
+solve mcp3 using mcp;
+vi3.iterlim = 0;
+solve vi3 using emp;
+abort$[vi3.objVal > 1e-6] 'Input for model vi3 should be optimal, was not';
+

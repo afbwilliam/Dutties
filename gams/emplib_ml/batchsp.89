@@ -1,0 +1,184 @@
+$Title Design of batch chemical plants with stochastic demand and price (BATCHSP,SEQ=89)
+
+$ontext
+Subrahmanyam, Pekny, and Reklaitis describe the design of a batch
+type chemical plant to produce products for which we do not know the
+future demand.
+
+We present here only half of the problem. We must decide how many
+plants to build, of what type, when to build them, and how to operate
+them.
+
+
+S. Subrahmanyam, J. F. Pekny, and G. V. Reklaitis. Design of batch
+chemical plants under market uncertainty. Ind. Eng. Chem. Res., 33, 
+2688-2701, 1994.
+
+Ariyawansa, K A, and Felt, A J, On a New Collection of Stochastic
+Linear Programming Test Problems, INFORMS Journal on Computing 16(3),
+291-299, 2004.
+$offtext
+
+
+Sets
+   i           tasks                  / i1*i4 /
+   j           equipment types        / j1*j3 /
+   t           time periods           / t1*t2 /
+   s           resources              / s1*s7 /
+   sb(s)       resources for purchase / s1,s2 /
+   ss(s)       resources for sale     / s4,s7 /
+   ijmap(i,j)  tasks that can be performed by equipment types j;
+
+Alias(t,tt);
+
+Parameter
+   h(t)      length of time period t in days / t1 80, t2 80 /
+   p(i,j)    processing time for task i with equipment type j
+   m(i,j)    capacity of equipment type j to perform task i (measured in units of reaction per batch)
+   q_s(ss,t) demand for resource s in time period t
+   q_b(sb,t) maximum purchase of resource s in time period t
+   vs(ss,t)  price for sold resources ss in time period t
+   vb(sb,t)  price for bought resources sb in time period t
+   budget(t) total operating budget per plant in time period t / #t 100 /
+   cc(i,j,t) operating expense for using equipment type j for task i in time period t / #i.#j.#t 0 /;
+
+Table ijData(i,j,*)
+           procTime  capacity
+   i1.j1       4        100
+   i1.j2       4        200
+   i2.j3       4        150
+   i3.j3       4        150
+   i4.j1       4        100
+   i4.j2       4        200;
+
+p(i,j) = ijData(i,j,'procTime');
+m(i,j) = ijData(i,j,'capacity');
+ijmap(i,j)$p(i,j) = yes;
+
+Table ssData(ss,t,*)
+        (t1*t2).demand t1.price  t2.price
+   s4    150           58        59
+   s7    200           80        81;
+
+q_s(ss,t) = ssData(ss,t,'demand');
+vs(ss,t) = ssData(ss,t,'price');
+
+Table sbData(sb,t,*)
+        (t1*t2).purchase t1.price  t2.price
+   s1    200             23        24
+   s2    250             25        26;
+
+q_b(sb,t) = sbData(sb,t,'purchase');
+vb(sb,t) = sbData(sb,t,'price');
+
+Table c(j,t) capital investment cost for equipment type j at stage t
+         t1      t2
+   j1   2500    2600
+   j2   3000    3100
+   j3   2800    2900;
+
+Table f(s,i) input-output coefficients
+        i1      i2      i3      i4
+   s1   -1
+   s2    1              -1
+   s3    1      -1
+   s4            1
+   s5            1      -1
+   s6                    1      -1
+   s7                            1;
+
+Variables
+   N(j,t)        new units of type j
+   TOTALN(j,t)   cumulative number of units of type j
+   Y(i,j,t)      number of times task i is performed by equipment type j during time period t
+   A(s,t)        mass of resource s in inventory at the end of time period t
+   B(i,j,t)      amount of task i performed on type j in time period t (measured in units of reaction)
+   QS(s,t)       mass of resource s sold in time period t
+   QS0(s,t)      mass of resource s sold in time period t below demand
+   QSPLUS(s,t)   mass of resource s sold in time period t above demand
+   QB(s,t)       mass of resource s bought in time period t
+   Z             objective function value
+   ;
+
+Positive variables A,QB,QS,QS0,QSPLUS,B;
+Integer variable n,totalN,y;
+
+ Equations
+   obj                   objective function
+   procTime(j,t)         processing time
+   opExp(t)              operating expense
+   cumulUnits(j,t)       cumulative number of units
+   matBal(s,t)           material balance
+   tasklim(i,j,t)        task limit
+   sales(ss,t)           sales
+   salesLim(ss,t)        sales limit;
+
+obj..                    Z =e=   sum((t,ss), vs(ss,t)*QS0(ss,t))
+                               - sum((t,sb), vb(sb,t)*QB(sb,t))
+                               - sum((j,t), N(j,t)*c(j,t))
+                               - sum((i,j,t), cc(i,j,t)*Y(i,j,t));
+
+procTime(j,t)..          sum(ijmap(i,j), p(i,j)*Y(i,j,t)) =l= h(t)*TOTALN(j,t) ;
+
+opExp(t)..               sum(ijmap(i,j), cc(i,j,t)*Y(i,j,t)) =l= budget(t)*sum(j,TOTALN(j,t)) ;
+
+cumulUnits(j,t)..        TOTALN(j,t) =e=  sum(tt$(ord(tt)<=ord(t)), N(j,tt)) ;
+
+matBal(s,t)..            A(s,t) =e= A(s,t-1) + sum(ijmap(i,j), f(s,i)*B(i,j,t)) - QS(s,t)$ss(s) + QB(s,t)$sb(s) ;
+
+taskLim(ijmap(i,j),t)..  B(i,j,t) =l= m(i,j)*Y(i,j,t) ;
+
+sales(ss,t)..            QS(ss,t) =e= QS0(ss,t) + QSPLUS(ss,t) ;
+
+salesLim(ss,t)..         QS0(ss,t) =l= q_s(ss,t) ;
+
+model chem /all/;
+
+A.up(s,t) = 400;
+QB.up(sb,t) = q_b(sb,t);
+
+Solve chem using mip maximizing Z ;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$onput
+jrandvar q_s('s4','t1') q_s('s7','t1') vs('s4','t1') vs('s7','t1')
+         0.4   0   0 51 70
+         0.6 150 200 58 80
+jrandvar q_s('s4','t2') q_s('s7','t2') vs('s4','t2') vs('s7','t2')
+         0.4   0   0 50 71
+         0.6 150 200 59 81
+stage 2 q_s('s4','t1') q_s('s7','t1') vs('s4','t1') vs('s7','t1')
+stage 3 q_s('s4','t2') q_s('s7','t2') vs('s4','t2') vs('s7','t2')
+$offput
+loop(t,
+   put / 'stage ' (ord(t)+1):0:0;
+   if (ord(t)<card(t), loop(j, put N(j,t+1), TOTALN(j,t+1), cumulUnits(j,t+1)));
+   loop(sb, put QB(sb,t));
+   loop(ss, put QS(ss,t), QS0(ss,t), QSPLUS(ss,t) sales(ss,t) salesLim(ss,t));
+   loop(s, put A(s,t) matBal(s,t));
+   loop(ijmap(i,j), put Y(i,j,t) B(i,j,t) taskLim(i,j,t) );
+   loop(j, put procTime(j,t) );
+   put opexp(t);
+);
+putclose emp;
+
+Set scen Scenarios / sc1*sc4 /;
+Parameter
+   sc_q_s(scen,ss,t)       demand by scenario
+   sc_vs(scen,ss,t)        price for sellable resources by scenario
+   sc_Y(scen,i,j,t)        number of times task i is performed by equipment type j during time period t by scenario
+   sc_N(scen,j,t)          new units of type j by scenario
+   sc_QS0(scen,s,t)        mass of resource s sold in time period t below demand by scenario
+   sc_QSPLUS(scen,s,t)     mass of resource s sold in time period t below demand by scenario ;
+
+Set dict / scen         .scenario.''
+           q_s          .randvar.       sc_q_s
+           vs           .randvar.       sc_vs
+           Y            .level.         sc_Y
+           N            .level.         sc_N
+           QS0          .level.         sc_QS0
+           QSPLUS       .level.         sc_QSPLUS /;
+
+solve chem max Z use emp scenario dict;
+
+display sc_q_s, sc_vs, sc_Y, sc_N, sc_QS0, sc_QSPLUS;

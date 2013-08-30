@@ -1,0 +1,93 @@
+$title Bilevel Programs in Engineering Example 7.1 (CCMG71,10)
+
+$ontext
+Example from Chapter 7, example 7.1, page 274
+
+Conejo A J, Castillo E, Minguez R, and Garcia-Bertrand R, Decomopsition
+Techniques in Mathematical Programming, Springer, Berlin, 2006.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+variables z,x1,x2,x3,x4,h1,h2,u1,u2,u3,u4,v1,v2,v3,v4;
+equations defobj,defh1,defh2,a0,a1,a2,e1,e2;
+
+scalar h1_0 / 1.2 /
+       h2_0 / 6   /;
+
+defobj.. z =e= sqr(x1+x2-2) + sqr(x3+x4-2);
+a0.. h1 =e= h1_0;
+a1.. h2 =e= h2_0;
+a2.. x1-x2 =e= 3;
+
+defh1.. h1 =e= sqr(u1-x1) + sqr(u2-x2) + sqr(u3-x3) + sqr(u4-x4);
+e1.. 3*u1 + u2 + 2*u3 + u4 =e= 6;
+
+defh2.. h2 =e= sqr(v1-x1) + sqr(v2-x2) + sqr(v3-x3) + sqr(v4-x4);
+e2.. v1 + v2 + v3 + 2*v4 =e= 7;
+
+model master    / defobj, a0, a1, a2 /
+      submodel1 / defh1, e1 /
+      submodel2 / defh2, e2 /;
+
+
+*Solve the problem with the relaxtion method described in the paper
+set v iteration counter / v1*v15 /;
+parameter report(v,*) iteration report;
+scalar rho     / 0.9 /
+       r1      / 7 /
+       r2      / 4 /
+       epsilon / 1e-6 /;
+
+
+equation sub1,sub2;
+
+sub1.. 3*x1 + x2 + 2*x3 +   x4 =e= r1;
+sub2..   x1 + x2 +   x3 + 2*x4 =e= r2;
+
+model master2 / defobj,a2,sub1,sub2 /;
+
+option nlp=conopt,solvelink=%SOLVELINK.CallModule%,solprint=off,limrow=0,limcol=0;
+h1.l = 0;
+h2.l = 0;
+loop(v$(((h1_0-h1.l) + (h2_0-h2.l)) > epsilon),
+   solve master2 us nlp min z;
+   report(v,'z')  =  z.l;
+   report(v,'x1') = x1.l;
+   report(v,'x2') = x2.l;
+   report(v,'x3') = x3.l;
+   report(v,'x4') = x4.l;
+   report(v,'r1') = r1;
+   report(v,'r2') = r2;
+   x1.fx = x1.l;
+   x2.fx = x2.l;
+   x3.fx = x3.l;
+   x4.fx = x4.l;
+   solve submodel1 min h1 us nlp;
+   report(v,'h1') = h1.l;
+   solve submodel2 min h2 us nlp;
+   report(v,'h2') = h2.l;
+* Relax
+   x1.lo = -inf; x1.up = inf;
+   x2.lo = -inf; x2.up = inf;
+   x3.lo = -inf; x3.up = inf;
+   x4.lo = -inf; x4.up = inf;
+* Update
+   r1 = r1 + rho*(h1_0-h1.l);
+   r2 = r2 + rho*(h2_0-h2.l);
+);
+
+display report;
+
+*Now we use EMP to sole the model
+model emp / master, submodel1, submodel2 /;
+$onecho > "%emp.info%"
+bilevel x1 x2 x3 x4
+min h1 * defh1 e1
+min h2 * defh2 e2
+$offecho
+
+option solvelink=%SOLVELINK.CallScript%,solprint=on;
+
+solve emp us emp min z;

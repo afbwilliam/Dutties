@@ -1,0 +1,249 @@
+$title Test of correctness for levels & marginals of LP (DECIS02,SEQ=374)
+
+$ontext
+Test of correctness of the levels and marginals returned.
+All cases are considered, e.g.
+  1) =L=, =G=, =E= constraints (should we add =N=?)
+  2) variables at lower and upper bound, and not at bound
+  3) min or max
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = cx + b where cz and b take different values
+
+The unique wrinkle with this model is that it's set up to be
+a trivial 2-stage model: s2 is the only 2nd-stage var,
+s2con the only 2nd-stage constraint.  Any LP solver can solve the
+core model given here, and we formulate the deterministic version
+so that each scenario is identical and we can test results from
+stochastic solvers since we know the expected result.
+
+Author: Steven Dirkse, February 2006
+$offtext
+
+$if not set MTYPE   $set MTYPE lp
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not %QPMCHECKS% == 0 mchecks = 1;
+
+scalar failed / 0 /;
+$escape =
+$echo if{%=1, display '%=1 failed', '%=2'; failed=1}; > gtest.gms
+$escape %
+
+set J / j1 * j7 /;
+set GT / gt1 * gt2 /;
+set LT / lt1 * lt2 /;
+set EQ / eq1 * eq3 /;
+
+scalars
+    cz,
+    cb;
+
+parameters
+    c(J) / j1   -1
+           j2   1
+           j3   5
+           j4   -6
+           j5   6
+           j6   -1
+           j7   1 /
+    bgt(GT) /
+           gt1  2
+           gt2  4 /,
+    blt(LT) /
+           lt1  -17
+           lt2  10 /,
+    beq(EQ) /
+           eq1  9
+           eq2  0
+           eq3  0  /,
+    s2conRHS  / 2 /;
+
+table Agt(GT,J)
+        j1      j2
+gt1     1       1
+gt2     4       1 ;
+
+table Alt(LT,J)
+        j3      j4
+lt1     -6      1
+lt2     1       2 ;
+
+parameter Aeq(EQ,J) /
+eq2.j5  2
+eq2.j7  2
+eq3.j1  -1
+eq3.j4  -2
+eq3.j6  1
+/;
+Aeq('eq1',j)$(ord(j) le 7) = 1;
+
+
+variable
+    s2
+    x(J)
+    z;
+
+* these bounds should never be active - but they help the global solvers
+x.lo(J) = -2;
+x.up(J) =  5;
+s2.lo   = -2;
+s2.up   = 5;
+
+* these are active and tested to be so
+x.lo('j5') = 1;
+x.up('j6') = 3;
+
+* intentionally mix up first-stage rows with obj and second-stage row
+equations
+    gte(GT)
+    s2con
+    lte(LT)
+    obj
+    eqe(EQ)
+    ;
+
+obj..   cz*z =E= cb + sum{J,c(J)*x(J)} + s2;
+gte(GT)..  sum{J, Agt(GT,J)*x(J)} =G= bgt(GT);
+lte(LT)..  sum{J, Alt(LT,J)*x(J)} =L= blt(LT);
+eqe(EQ)..  sum{J, Aeq(EQ,J)*x(J)} =E= beq(EQ);
+s2con..    x('j5') + s2 =G= s2conRHS;
+
+model m / all /;
+
+* DECIS requires setting the stage for each row/col,
+* apart from the objective row/col which can be skipped
+x.stage(j) = 1;
+s2.stage = 2;
+
+gte.stage(GT) = 1;
+lte.stage(LT) = 1;
+eqe.stage(EQ) = 1;
+s2con.stage = 2;
+
+* DECIS requires a stage file describing the stochastic parameters
+* in this case, the RHS of s2con takes two identical values, each with
+* probability 1/2.
+file stg / MODEL.STG /;
+put stg;
+
+put "INDEP DISCRETE" /;
+put "RHS s2con ", s2conRHS, " period2 0.5" /;
+put "RHS s2con ", s2conRHS, " period2 0.5" /;
+putclose;
+
+* output a MINOS option file in case we run old DECISM
+file mopt / MINOS.SPC /;
+put mopt;
+put "begin"/;
+put "rows 250"/;
+put "columns 250"/;
+put "elements 10000"/;
+put "end"/;
+putclose;
+
+set czvals 'obj multipliers' /
+'cz=1',
+'cz=0.5'
+'cz=3'
+'cz=-1'
+'cz=-0.5'
+'cz=-3'
+/;
+parameter czv(czvals) /
+'cz=1'          1
+'cz=0.5'        0.5
+'cz=3'          3
+'cz=-1'         -1
+'cz=-0.5'       -0.5
+'cz=-3'         -3
+/;
+
+set cbvals 'obj constants' /
+'cb=0'
+'cb=2'
+'cb=-2'
+/;
+parameter cbv(cbvals) /
+'cb=0'          0
+'cb=2'          2
+'cb=-2'         -2
+/;
+
+scalars
+    isMin   /    0 /,
+    tol     /    %TESTTOL% /,
+    obj_l   /    0.0 /
+    obj_m   /    1.0 /
+    objval  /   12.0 /;
+
+parameters
+   x_l(J)    / j1       1.0
+               j2       1.0
+               j3       3.0
+               j4       1.0
+               j5       1.0
+               j6       3.0
+               j7       -1.0 /
+   x_m(J)    / j1       0.0
+               j2       0.0
+               j3       0.0
+               j4       0.0
+               j5       4.0
+               j6       -2.0
+               j7       0.0 /
+   s2_l      / 1 /,
+   s2_m      / 0 /,
+   gte_l(GT) / gt1      2.0
+               gt2      5.0 /
+   gte_m(GT) / gt1      2.0
+               gt2      0.0 /
+   lte_l(LT) / lt1      -17.0
+               lt2      5.0 /
+   lte_m(LT) / lt1      -1.0
+               lt2      0.0 /
+   eqe_l(EQ) / eq1      9.0
+               eq2      0
+               eq3      0  /
+   eqe_m(EQ) / eq1      -1.0
+               eq2      1
+               eq3      2  /;
+
+loop {czvals$[ord(czvals) <= INF],
+ cz = czv(czvals);
+ loop {cbvals$[ord(cbvals) <= INF],
+  cb = cbv(cbvals);
+  if {(cz > 0),
+    isMin = 1;
+    solve m using %MTYPE% min z;
+  else
+    isMin = -1;
+    solve m using %MTYPE% max z;
+  }
+*  abort$1 "just one solve for now";
+$ batinclude gtest "( m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)" "wrong status codes"
+
+$ batinclude gtest "(abs(cz*z.l-cb-objval) > tol)"             "bad z.l"
+$ batinclude gtest "(abs(z.m) > tol)"                          "bad z.m"
+
+$ batinclude gtest "(abs(obj.l-cb) > tol)"                     "bad obj.l"
+$ batinclude gtest "(smax(J, abs(x.l(j)-x_l(j))) > tol)"       "bad x.l"
+$ batinclude gtest "(abs(s2.l-s2_l) > tol)"                    "bad s2.l"
+$ batinclude gtest "(smax(GT,abs(gte.l(GT)-gte_l(GT))) > tol)" "bad gte.l"
+$ batinclude gtest "(smax(LT,abs(lte.l(LT)-lte_l(LT))) > tol)" "bad lte.l"
+$ batinclude gtest "(smax(EQ,abs(eqe.l(EQ)-eqe_l(EQ))) > tol)" "bad eqe.l"
+
+  if {mchecks,
+$   batinclude gtest "(abs(cz*obj.m-obj_m) > tol)"                  "bad obj.m"
+* $   batinclude gtest "(smax(J, abs(cz*x.m(j)-x_m(j))) > tol)"       "bad x.m"
+$   batinclude gtest "(abs(cz*s2.m-s2_m) > tol)"                    "bad s2.m"
+$   batinclude gtest "(smax(GT,abs(cz*gte.m(GT)-gte_m(GT))) > tol)" "bad gte.m"
+$   batinclude gtest "(smax(LT,abs(cz*lte.m(LT)-lte_m(LT))) > tol)" "bad lte.m"
+$   batinclude gtest "(smax(EQ,abs(cz*eqe.m(EQ)-eqe_m(EQ))) > tol)" "bad eqe.m"
+  };
+
+$if set doscalar
+  if (failed, option %MTYPE%=convert; if {(cz > 0), solve m using %MTYPE% min z; else solve m using %MTYPE% max z;})
+  abort$failed 'test failed', cz, cb;
+
+ };
+};

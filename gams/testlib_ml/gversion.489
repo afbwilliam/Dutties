@@ -1,0 +1,15 @@
+$TITLE test the Matlab mex-file gams (GVERSION,SEQ=489)
+
+$ontext
+Write the GAMS version to GDX to test the gams() mex-file.
+
+Contributor: Steve
+$offtext
+
+$set matout "'matsol.gdx', gversion "
+
+scalar gversion / -1 /;
+
+gversion = gamsversion;
+
+execute_unload %matout%

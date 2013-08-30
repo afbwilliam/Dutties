@@ -1,0 +1,98 @@
+$Title Long Range Forest Planning (STOCFOR3,SEQ=87)
+$Ontext
+The job of a long range forest planner is to decide what parts of the forest
+will be harvested when. Important criteria for such a decision are the age
+of the trees, and the likelihood that trees left standing will be destroyed by
+fire.
+
+Gassmann creates a set of K age classifications of equal length (e.g.
+20 years), and places each portion of the forest into one of the classes,
+according to the age of the trees within. He also divides the future planning
+horizon into T rounds, each with a time length equal to that of each age
+classification. That is, in one time round, any trees that are not destroyed
+or harvested will move to the next age class.
+
+
+Gassmann, H I, Optimal harvest of a forest in the presence of uncertainty.
+Canadian Journal of Forest Research, 19, 1267-1274, 1989
+
+Ariyawansa, K A, and Felt, A J, On a New Collection of Stochastic
+Linear Programming Test Problems, INFORMS Journal on Computing 16(3),
+291-299, 2004
+$Offtext
+
+Set t time steps / t1*t7 /
+    k age class  / c1*c8 /
+    kn(k) age class that is not harvested / c1,c2 /
+Alias (k,kk)
+Parameter
+    d(t)  discouting rate
+    dlast discouting rate after last period
+    f(t)  probability of fire         / #t 0.06258 /
+    a /0.9/, b limit on change from period to period / 1.1 /
+    p     penalty for violating limit for yield change / 50 /
+    si(k) area of forest in first period
+                / c1 0.241, c2  0.125, c3 1.404, c4  2.004
+                  c5 9.768, c6 16.385, c7 2.815, c8 61.995 /
+    y(k)  yield / c1   0, c2   0, c3  16, c4 107
+                  c5 217, c6 275, c7 298, c8 306 /
+    v(k)  value / c1 320.342, c2 356.187, c3 398.437, c4 448.235
+                  c5 506.929, c6 564.929, c7 587.929, c8 595.929 /;
+
+* 20 years and 0.005 inflation
+d(t)  = (1-0.004975124)**(20*(ord(t)-1));
+dlast =  (1-0.004975124)**(20*card(t));
+
+Variables
+    obj        objective
+    x(t,k)     harvested forest
+    s(t,k)     area of forest
+    rf(t,k)    remaining forest
+    z(t)       yield
+    slack(t)   slack for violating defchglo
+Positive variables x, s, rf, slack;
+
+Equations
+    defobj      objective
+    defbnd(t,k) limit harvest by area
+    defbal(t,k) material balance
+    defyield(t) yield
+    defchglo(t) limit change on yield
+    defchgup(t) limit change on yield;
+
+defobj..          obj      =e= sum(t, d(t)*(z(t) - p*slack(t))) + dlast*sum(k, v(k)*rf('t7',k));
+defbnd(t,k)..     rf(t,k)  =e= s(t,k) - x(t,k);
+defbal(t-1,k)..   s(t,k)   =e= (1-f(t))*(rf(t-1,k-1) + rf(t-1,k)$sameas('c8',k))
+                               + sum(kk, x(t-1,kk) + f(t)*rf(t-1,kk))$sameas(k,'c1');
+defyield(t)..     z(t)     =e= sum(k, y(k)*x(t,k));
+defchglo(t-1)..   a*z(t-1) =l= z(t) + slack(t-1);
+defchgup(t-1)..   b*z(t-1) =g= z(t);
+
+model forest /all/;
+
+s.fx('t1',k) = si(k);
+x.fx(t,kn) = 0;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%' /;
+$onput
+randvar f('t2') discrete .1736 .00000 .0299 .20268 .5128 .06258 .2837 .08612
+randvar f('t3') discrete .1736 .00000 .0299 .20268 .5128 .06258 .2837 .08612
+randvar f('t4') discrete .1736 .00000 .0299 .20268 .5128 .06258 .2837 .08612
+randvar f('t5') discrete .6912 .00000 .3088 .20268
+randvar f('t6') discrete .6912 .00000 .3088 .20268
+randvar f('t7') discrete .6912 .00000 .3088 .20268
+$offput
+loop(t$(ord(t)>1),
+   put / 'stage ' ord(t):2:0 z(t) slack(t-1) defyield(t) defchglo(t-1) defchgup(t-1);
+   loop(k, put x(t,k) s(t,k) rf(t,k) defbnd(t,k) defbal(t-1,k)));
+emp.pc=0; loop(t$(ord(t)>1), put / 'stage ' ord(t):2:0 ' f(' t.tl:0 ')');
+putclose;
+
+Set scen         scenarios / s1*s512 /;
+Parameter
+    s_f(scen,t)  probability of fire by scenario;
+
+Set dict / scen .scenario.''
+           f    .randvar. s_f /;
+
+solve forest max obj using emp scenario dict;

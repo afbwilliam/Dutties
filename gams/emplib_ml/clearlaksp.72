@@ -1,0 +1,100 @@
+$TITLE Scenario Reduction: ClearLake exercise (CLEARLAKSP,SEQ=72)
+
+$ontext
+
+Exercise, p. 44:
+
+The Clear Lake Dam controls the water level in Clear Lake, a
+well-known resort in Dreamland.  The Dam Commission is trying to
+decide how much water to release in each of the next four months.
+The Lake is currently 150 mm below flood stage.  The dam is capable
+of lowering the water level 200 mm each month, but additional
+precipitation and evaporation affect the dam.  The weather near Clear
+Lake is highly variable.  The Dam Commission has divided the months
+into two two-month blocks of similar weather.  The months within each
+block have the same probabilities for weather, which are assumed
+independent of one another.  In each month of the first block, they
+assign a probability of 1/2 to having a natural 100-mm increase in
+water levels and probabilities of 1/4 to having a 50-mm decrease or a
+250-mm increase in water levels.  All these figures correspond to
+natural changes in water level without dam releases.  In each month
+of the second block, they assign a probability of 1/2 to having a
+natural 150-mm increase in water levels and probabilities of 1/4 to
+having a 50-mm increase or a 350-mm increase in water levels.  If a
+flood occurs, then damage is assessed at $10,000 per mm above flood
+level.  A water level too low leads to costly importation of water.
+These costs are $5000 per mm less than 250 mm below flood stage.  The
+commission first considers an overall goal of minimizing expected
+costs.  This model only considers this first objective.
+
+
+Birge, R, and Louveaux, F V, Introduction to Stochastic Programming.
+Springer, 1997.
+
+$offtext
+
+Sets p       Precipitation levels in each month / low, normal, high /
+     t       Time periods / dec, jan, feb, mar, apr /;
+
+Table deltastoch(t,p)  reservoir level change data for each season
+             low     normal  high
+     jan      50     150     350
+     feb      50     150     350
+     mar     -50     100     250
+     apr     -50     100     250;
+
+Parameter
+     pr(p)     Probability distribution / low 0.25, normal 0.50, high 0.25 /
+     floodCost 'K$/mm for amounts over flood level' / 10 /
+     lowCost   'K$/mm for amounts 250mm below flood level' / 5 /
+     linit     initial water level /100/
+     delta(t)  random changes in reservoir level for each season;
+
+Variable
+     obj   cost
+     l(t)  level of water in dam end of period
+     r(t)  mm released normally
+     f(t)  mm of floodwater released
+     z(t)  mm of water imported;
+Positive variable l, r, f, z;
+
+r.up(t) = 200;
+* water level l is relative to 250mm below flood stage
+l.up(t) = 250;
+l.fx('dec') = linit;
+delta(t) = sum(p, pr(p)*deltastoch(t,p));
+
+Equations defobj, ldef(t);
+
+defobj.. obj =e= sum(t$(ord(t)>1), floodCost * f(t) + lowCost * z(t));
+
+ldef(t)$(ord(t)>1)..
+        l(t) =e= l(t-1) + delta(t) + z(t) - r(t) - f(t);
+
+model mincost / defobj, ldef /;
+
+file emp / '%emp.info%' /; emp.nd=2; put emp '* problem %gams.i%';
+loop(t$(ord(t)>1),
+   put / 'stage ' ord(t):2:0 ' ' l.tn(t) ' ' r.tn(t) ' ' f.tn(t) ' ' z.tn(t) ' ' ldef.tn(t) ' ' delta.tn(t)
+   put / 'randvar ' delta.tn(t) ' discrete ';
+   loop(p, put pr(p) deltastoch(t,p)));
+putclose;
+
+Set  s scenarios / s1*s81 /
+Parameter
+     s_delta(s,t) random variable realization
+     s_l(s,t)     level of water in dam end of period by scenario
+     s_r(s,t)     mm released normally by scenario
+     s_f(s,t)     mm of floodwater released by scenario
+     s_z(s,t)     mm of water imported by scenario
+     s_obj(s)     cost by scenario;
+
+Set  dict / s.    scenario.''
+            delta.randvar. s_delta
+            l.    level.   s_l
+            r.    level.   s_r
+            f.    level.   s_f
+            z.    level.   s_z
+            obj.  level.   s_obj /;
+
+solve mincost min obj using emp scenario dict;

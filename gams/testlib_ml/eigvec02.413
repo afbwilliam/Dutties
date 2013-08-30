@@ -1,0 +1,60 @@
+$title Test eigenvector/eigenvalue utilities (EIGVEC02,SEQ=413)
+
+$ontext
+Eigenvalue/vector test.
+Construct A to have known eigenvalues/vectors: A X = X lam
+
+A = 2 1   X = 1  1   lam =  1
+    1 2      -1  1            3
+
+Contributor: Steve Dirkse, October 2008
+$offtext
+
+set I / i1 * i2 /;
+alias (I,J,K);
+
+parameters
+  A(I,J)     'constructed to have known eigenvectors/values'
+  X0(I,J)    'known eigenvectors'
+  X(I,J)
+  lam0(I)    'known eigenvalues' /
+    i1       1
+    i2       3
+  /,
+  lam(I)
+  s(J)       'scales for the eigenvector comparison'
+  ;
+
+table A(I,J)
+      i1        i2
+i1    2         1
+i2    1         2   ;
+
+table X0(I,J)
+      i1        i2
+i1     1         1
+i2    -1         1 ;
+
+
+scalar rc;
+execute_unload 'A.gdx', I, A;
+
+execute 'eigenvalue A.gdx I A tmp1.gdx lam > tmp1.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from eigenvalue', rc;
+execute_load 'tmp1.gdx', lam;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading eigenvalue from tmp1.gdx', rc;
+abort$[smax{I, abs(lam(I)-lam0(I))} > 1e-8] 'Bad eigenvalues in tmp1.gdx';
+
+execute 'eigenvector A.gdx I A tmp2.gdx lam X > tmp2.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from eigenvector', rc;
+execute_load 'tmp2.gdx', lam, X;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading eigenvalues/vectors from tmp2.gdx', rc;
+execute_unload 'all.gdx';
+abort$[smax{I, abs(lam(I)-lam0(I))} > 1e-8] 'Bad eigenvalues in tmp2.gdx';
+s(J) = X0('i1',J) / X('i1',J);
+X(I,J) = X(I,J) * s(J);
+abort$[smax{(I,J), abs(X(I,J)-X0(I,J))} > 1e-8] 'Bad eigenvectors in tmp2.gdx';

@@ -1,0 +1,167 @@
+$title rules for getting derivs/intervals of intrinsics (FUNCS4,SEQ=148)
+
+$ontext
+In this model we test the syntax and symantics for getting the
+derivatives and intervals for the GAMS intrinsic functions
+
+For a given function func, GAMS has always allowed its use as:
+
+f = func(x)
+
+We can now test the derivatives and intervals that are defined
+along with function func using GAMS syntax (new with Rev 139):
+
+ df = func.grad(x)   - gradient of func
+ df = func.gradn(x)  - gradient of func, computed numerically
+d2f = func.hess(x)   - Hessian of func
+d2f = func.hessn(x)      - Hessian of func, computed numerically
+  L = func.low(xlo:xup)  - lower bound for func(x) on [xlo,xup]
+  H = func.high(xlo:xup)  - upper bound for func(x) on [xlo,xup]
+ gL = func.gradl(xlo:xup)  - lower bound for gradient on [xlo,xup]
+ gH = func.gradh(xlo:xup)  - upper bound for gradient on [xlo,xup]
+
+An extended syntax from that above allows for multivariate functions
+and is illustrated below.
+
+Contributor: Steven Dirkse, July 2004
+$offtext
+
+* the following requires at least version 139
+$version 139
+
+Set i / i1 * i6 /;
+Set j / j1 * j6 /;
+
+* first check using a scalar function
+
+* set delta for computing gradients numerically
+* this is a better value than the default for exp(x)
+option real1=1e-4;
+
+$onundf
+scalar undef / UNDF /;
+$offundf
+scalar ntol / 1e-8 /;
+scalar x, f, df, d2f, L, H, gL, gH;
+
+  x = 0;
+  f = exp(x);              abort$(  f ne 1) 'should get 1';
+ df = exp.grad(1:x);       abort$( df ne 1) 'should get 1';
+ df = exp.gradn(1:x);      abort$(abs(df-1) gt ntol) 'should get near 1';
+d2f = exp.hess(1:1:x);     abort$(d2f ne 1) 'should get 1';
+d2f = exp.hessn(1:1:x);    abort$(abs(d2f-1)gt ntol) 'should get near 1';
+  L = exp.low(x:x+1);      abort$(  L ne 1) 'should get 1';
+  H = exp.high(x-1:x);     abort$(  H ne 1) 'should get 1';
+ gL = exp.gradl(1:x:x+1);  abort$( gL ne 1) 'should get 1';
+ gH = exp.gradh(1:x-1:x);  abort$( gH ne 1) 'should get 1';
+
+$ontext
+set k / 1 * 16 /;
+parameter dat(k,*);
+scalar delta / 1 /;
+loop {k,
+  delta = delta * .1;
+  option optcr = delta;
+  option real1 = delta;
+  dat(k,'delta') = delta;
+  df = exp.gradn(x);
+  dat(k,'df') = df;
+  dat(k,'dfm1') = df-1;
+};
+option decimals = 8;
+option real1 = 1e-1;
+dat('1','delta') = 1e-1;
+df = exp.hessn(x);
+dat('1','df') = df;
+dat('1','dfm1') = df-1;
+
+option real1 = 1e-2;
+dat('2','delta') = 1e-2;
+df = exp.hessn(x);
+dat('2','df') = df;
+dat('2','dfm1') = df-1;
+
+option real1 = 1e-3;
+dat('3','delta') = 1e-3;
+df = exp.hessn(x);
+dat('3','df') = df;
+dat('3','dfm1') = df-1;
+
+option real1 = 1e-4;
+dat('4','delta') = 1e-4;
+df = exp.hessn(x);
+dat('4','df') = df;
+dat('4','dfm1') = df-1;
+
+option real1 = 1e-5;
+dat('5','delta') = 1e-5;
+df = exp.hessn(x);
+dat('5','df') = df;
+dat('5','dfm1') = df-1;
+
+option real1 = 1e-6;
+dat('6','delta') = 1e-6;
+df = exp.hessn(x);
+dat('6','df') = df;
+dat('6','dfm1') = df-1;
+
+option real1 = 1e-7;
+dat('7','delta') = 1e-7;
+df = exp.hessn(x);
+dat('7','df') = df;
+dat('7','dfm1') = df-1;
+
+display dat;
+$offtext
+
+* if no index list is given, 1's are assumed
+ df = exp.grad(x);         abort$( df ne 1) 'should get 1';
+ df = exp.gradn(x);        abort$(abs(df-1) gt ntol) 'should get near 1';
+d2f = exp.hess(x);         abort$(d2f ne 1) 'should get 1';
+d2f = exp.hessn(x);        abort$(abs(d2f-1)gt ntol) 'should get near 1';
+d2f = exp.hess(1:x);       abort$(d2f ne 1) 'should get 1';
+d2f = exp.hessn(1:x);      abort$(abs(d2f-1)gt ntol) 'should get near 1';
+ gL = exp.gradl(x:x+1);    abort$( gL ne 1) 'should get 1';
+ gH = exp.gradh(x-1:x);    abort$( gH ne 1) 'should get 1';
+
+* if index list values are out of range, 0 is returned sometimes
+* and sometimes, UNDF is returned
+ df = exp.grad(-1:x);      abort$( df ne 0) 'should get 0';
+ df = exp.gradn(0:x);      abort$( df ne 0) 'should get 0';
+ df = exp.gradn(2:x);      abort$( df ne 0) 'should get 0';
+ df = exp.gradn(INF:x);    abort$( df ne 0) 'should get 0';
+d2f = exp.hess(1:0:x);     abort$(d2f ne 0) 'should get 0';
+d2f = exp.hessn(0:1:x);    abort$(d2f ne 0) 'should get 0';
+ gH = exp.gradh(INF:x-1:x);abort$( gH ne undef) 'should get UNDF';
+ gL = exp.gradl(NA:x:x+1); abort$( gL ne undef) 'should get UNDF';
+
+* EPS works like 0, for funcs & derivs & ranges
+  x = EPS;
+  f = exp(x);              abort$(  f ne 1) 'should get 1';
+ df = exp.grad(1:x);       abort$( df ne 1) 'should get 1';
+ df = exp.gradn(1:x);      abort$(abs(df-1) gt ntol) 'should get near 1';
+d2f = exp.hess(1:1:x);     abort$(d2f ne 1) 'should get 1';
+d2f = exp.hessn(1:1:x);    abort$(abs(d2f-1)gt ntol) 'should get near 1';
+  L = exp.low(x:x+1);      abort$(  L ne 1) 'should get 1';
+  H = exp.high(x-1:x);     abort$(  H ne 1) 'should get 1';
+ gL = exp.gradl(1:x:x+1);  abort$( gL ne 1) 'should get 1';
+ gH = exp.gradh(1:x-1:x);  abort$( gH ne 1) 'should get 1';
+
+
+* do some tests with non-EPS special values
+x = NA;
+
+* function vals work one way - they take special vals as input
+f = exp(x);              abort$(f ne NA) 'should get NA';
+
+* derivatives do not work like the functions vis-a-vis special vals
+* if special values are used as input, we get execution errors
+abort$(execerror>0) 'no previous errors expected';
+ df = exp.grad(x);  abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+ df = exp.gradn(x); abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+d2f = exp.hess(x);  abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+d2f = exp.hessn(x); abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+  L = exp.low(x:x+1);  abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+  H = exp.high(x-1:x); abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+ gL = exp.gradl(x:x+1); abort$(execerror=0) 'execErrorExpected'; execerror = 0;
+ gH = exp.gradh(x-1:x); abort$(execerror=0) 'execErrorExpected'; execerror = 0;

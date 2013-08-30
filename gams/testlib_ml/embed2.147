@@ -1,0 +1,10 @@
+$title 'Compare equivalent data statements'  (EMBED2,SEQ=147)
+$version 139
+$if not errorfree $exit
+$onembedded
+Parameter y / (a 2, b).(a 3) 4, (c 2,d 3).((a,b) 2) / ;
+$offembedded
+Parameter x / a.a 24, b.a 12, c.a 4, c.b 4, d.a 6, d.b 6 / ;
+alias(*,i,j);
+Parameter w; w(i,j) = y(i,j) - x(i,j); display w,y,x;
+abort$card(w) 'y not equal x';

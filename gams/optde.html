@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>DE Options</title>
+</head>
+<body>
+<h2>DE Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/de.pdf">DE manual</a>.
+
+<h2>Summary of DE Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#DEcorrelationtype">
+correlationtype</a></td>
+<td>Sample correlation type</td></tr>
+<tr><td><a href="#DEsubsolver">
+subsolver</a></td>
+<td>Subsolver to run</td></tr>
+<tr><td><a href="#DEsubsolveropt">
+subsolveropt</a></td>
+<td>Optfile value to pass to the subsolver</td></tr>
+<tr><td><a href="#DEsvr_ls_antithetic">
+svr_ls_antithetic</a></td>
+<td>Sample variance reduction map to Lindo Antithetic algorithm</td></tr>
+<tr><td><a href="#DEsvr_ls_latinsquare">
+svr_ls_latinsquare</a></td>
+<td>Sample variance reduction map to Lindo Latin Square algorithm</td></tr>
+<tr><td><a href="#DEsvr_ls_montecarlo">
+svr_ls_montecarlo</a></td>
+<td>Sample variance reduction map to Lindo Montecarlo algorithm</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for chance constraint models</h3></th></tr>
+<tr><td><a href="#DEccreform">
+ccreform</a></td>
+<td>Reformulation option passed to JAMS</td></tr>
+<tr><td><a href="#DEjamsopt">
+jamsopt</a></td>
+<td>JAMS option file</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for recourse models</h3></th></tr>
+<tr><td><a href="#DEevsubsolver">
+evsubsolver</a></td>
+<td>Subsolver to run on expected value problem</td></tr>
+<tr><td><a href="#DEevsubsolveropt">
+evsubsolveropt</a></td>
+<td>Optfile value to pass to the subsolver for expected value problem</td></tr>
+<tr><td><a href="#DEmaxnodes">
+maxnodes</a></td>
+<td>Tree size limit</td></tr>
+<tr><td><a href="#DEsolveEVProb">
+solveEVProb</a></td>
+<td>Solve and report the expected value solution</td></tr></table>
+<h2>Detailed Descriptions of DE Options</h2>
+
+<h4><a name="DEccreform">
+ccreform</a>
+<i> (string)</i> Reformulation option passed to JAMS</h4><p>
+
+This option determines how to formulate the indicator contraints of
+the chance constraints in the deterministic equivalent. The model is
+passed to JAMS for the actual reformulation and solution with a
+subsolver. The possible reformulation options are <tt>bigM [big eps
+threshold]</tt>, <tt>chull [big eps]</tt>, and <tt>indic</tt>. The
+<tt>indic</tt> setting only works with solver that under stand the
+indicator syntax in a GAMS option file.
+
+<br><i>(default = bigM)</i>
+
+<h4><a name="DEcorrelationtype">
+correlationtype</a>
+<i> (integer)</i> Sample correlation type</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Pearson</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Kendall</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Spearman</td></tr>
+</table>
+
+<h4><a name="DEevsubsolver">
+evsubsolver</a>
+<i> (string)</i> Subsolver to run on expected value problem</h4><p>
+
+
+
+<h4><a name="DEevsubsolveropt">
+evsubsolveropt</a>
+<i> (integer)</i> Optfile value to pass to the subsolver for expected value problem</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="DEjamsopt">
+jamsopt</a>
+<i> (string)</i> JAMS option file</h4><p>
+
+
+
+<h4><a name="DEmaxnodes">
+maxnodes</a>
+<i> (integer)</i> Tree size limit</h4><p>
+
+
+<br><i>(default = 100000)</i>
+
+<h4><a name="DEsolveEVProb">
+solveEVProb</a>
+<i> (integer)</i> Solve and report the expected value solution</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="DEsubsolver">
+subsolver</a>
+<i> (string)</i> Subsolver to run</h4><p>
+
+
+
+<h4><a name="DEsubsolveropt">
+subsolveropt</a>
+<i> (integer)</i> Optfile value to pass to the subsolver</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="DEsvr_ls_antithetic">
+svr_ls_antithetic</a>
+<i> (string)</i> Sample variance reduction map to Lindo Antithetic algorithm</h4><p>
+
+
+
+<h4><a name="DEsvr_ls_latinsquare">
+svr_ls_latinsquare</a>
+<i> (string)</i> Sample variance reduction map to Lindo Latin Square algorithm</h4><p>
+
+
+
+<h4><a name="DEsvr_ls_montecarlo">
+svr_ls_montecarlo</a>
+<i> (string)</i> Sample variance reduction map to Lindo Montecarlo algorithm</h4><p>
+
+
+</body></html>

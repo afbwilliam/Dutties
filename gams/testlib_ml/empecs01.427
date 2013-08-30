@@ -1,0 +1,86 @@
+$title Test for EMP-Embedded Complementarity System (EMPECS01,SEQ=427)
+
+$ontext
+
+  Embedded Complementarity System
+  -------------------------------
+
+  The problem to solve is:
+    min_x  f(x,y)  st  g(x,y) \leq 0
+  plus the constraint that
+    H(x,y,\lambda) = 0
+  where \lambda is the multiplier on the g(x,y) \leq 0 constraint.
+
+  EMP enables to write this problem simply by specifying the nlp
+  and the side constraint H. Using the mappings
+
+  dualequ H y
+  dualvar lambda g
+
+  EMP considers the side constraint H defining the dual of y and
+  the side variable lambda defining the dual of g.
+
+References:
+Ferris et al, An extended mathematical programming framework,
+Computers and Chemical Engineering 33, p.1973-1982, 2009
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+Variables obj, x, y;
+Positive variable lambda;
+Equations defobj, g, H;
+
+defobj.. obj =e= sqr(x-y);
+g.. y =g= x + 1;
+
+H.. y + lambda =e= 2;
+
+*------------------------------------------------------
+* pure NLP2MCP without regard to side constraint and variable
+Positive Variables  u2;
+Equations  dLdx,dLdy;
+
+dLdx.. ( - 2*(x - y))/(-1) + u2 =N= 0;
+dLdy.. (2*(x - y))/(-1) - u2 =N= 0;
+
+Model mcp / g.u2,dLdx.x,dLdy.y /;
+Solve mcp using MCP;
+
+*------------------------------------------------------
+* now consider side constraint H defining the dual of y
+* and the side variable lambda defining the dual of g
+Equations  dLdx_mod;
+
+*dldx needs to use lambda instead of u2
+dLdx_mod.. ( - 2*(x - y))/(-1) + lambda =N= 0;
+
+Model mcpd / defobj.obj,g.lambda,dLdx_mod.x,H.y /;
+Solve mcpd using MCP;
+
+Scalar modelstat,solvestat;
+*modelstat = mcpd.modelstat;
+solvestat = mcpd.solvestat;
+execute_unload 'manual' x,y,obj,lambda,defobj,g,H,modelstat,solvestat;
+
+*------------------------------------------------------
+* now we let EMP do the reformulation
+$onecho > "%emp.info%"
+dualequ H y
+dualvar lambda g
+$offecho
+
+model nlpd /defobj, g, H/;
+
+nlpd.iterlim=0;
+solve nlpd using emp minimizing obj;
+
+*modelstat = nlpd.modelstat;
+solvestat = nlpd.solvestat;
+execute_unload 'emp' x,y,obj,lambda,defobj,g,H,modelstat,solvestat;
+
+*------------------------------------------------------
+*compare solutions
+execute 'gdxdiff manual.gdx emp.gdx RelEps=1e-6 Eps=1e-9 > diff.log';
+abort$errorlevel 'Solutions differ see diffile.gdx';

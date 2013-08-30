@@ -1,0 +1,113 @@
+$title SPE model from Harker - oligopoly version (HARK-OLIGOP,SEQ=65)
+
+$ontext
+
+A spatial price equilibrium model is used to demonstrate different
+ways of modeling market behavior. In this variant, we look at
+the Cournot-Nash model that arises when we assume an oligopoly,
+i.e. the production in each region is controlled by a single firm,
+where the regional firms are independent.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations
+Research 34, 3 (1986), 410-425.
+
+Contributor: Steven Dirkse, June 2011
+$offtext
+
+$eolcom //
+
+$include hark-data.inc
+
+positive variables
+  t(n,n,Q)   'transport quantity of firm Qs good'
+  dl(L,Q)    'total demand in region L in Qs model'
+  dlq(L,Q)   'demand for firm Qs goods in region L in Qs model'
+  s(Q)        supply quantity
+  ;
+variable
+  ttVar(i,j)     'total flow on arcs'
+  cVar(i,j)      'unit transportation cost on arc'
+  dlqVar(L,Q)    'demand for firm Qs goods in region L in firm QQs model'
+  z(Q);
+t.up(arc(i,j),Q)=100;
+
+equations
+  flowBal(n,Q) flow balance for Qs good in Qs model
+  sBal(Q)      supply balance
+  in(L,Q)      inflow balance
+  out(Q)       outflow balance
+
+  objDefD(Q)   'with transport cost allowed to vary'
+  dlBalD(L,Q)  'with dlqBar allowed to vary'
+  ttVarDef(i,j)
+  cVarDef(i,j)
+  dlqVarDef(L,Q)
+  ;
+
+objDefD(Q).. z(Q) =e=
+    sum {L, (rho(L) - eta(L)*dl(L,Q)) * dlq(L,Q) }
+   - (alpha(Q)*s(Q) + beta(Q)*sqr(s(Q)))
+   -sum{arc(i,j), cVar(i,j) * t(i,j,Q)};
+
+flowBal(NL(n),Q)..  sum(arc(n,j), t(n,j,Q)) =e= sum(arc(i,n), t(i,n,Q));
+
+sBal(Q).. s(Q) =e= sum{L, dlq(L,Q)};
+
+dlBalD(L,Q)..  dl(L,Q) =E= dlq(L,Q) + sum{QQ$[not sameas(Q,QQ)], dlqVar(L,QQ)};
+
+in(L,Q)$[not sameas(L,Q)].. dlq(L,Q) =e= sum{arc(i,L), t(i,L,Q)};
+
+out(Q).. s(Q) =E= dlq(Q,Q) + sum{arc(Q,j), t(Q,j,Q)};
+
+ttVarDef(arc(i,j)).. ttVar(i,j) =E= sum{Q, t(i,j,Q)};
+
+cVarDef(arc(i,j))..  cVar(i,j) =E= kappa(i,j) + nu(i,j)*sqr(ttVar(i,j));
+
+dlqVarDef(L,Q).. dlqVar(L,Q) =E= dlq(L,Q);
+
+model nash / objDefD, flowBal, sBal, dlBalD, in, out,
+             ttVarDef, cVarDef, dlqVarDef /;
+
+file myinfo / '%emp.info%' /;
+put myinfo '* Cournot-Nash equilibrium version of Harker model';
+put / 'equilibrium'
+loop {Q,
+  put / 'max' z(Q)/' ';
+  loop{L,
+    put dl(L,Q) dlq(L,Q);
+  };
+  put s(Q) /' ';
+  loop{arc(i,j),
+    put t(i,j,Q);
+  };
+  put /' ' objDefD(Q);
+  loop{NL(n),
+    put flowBal(n,Q);
+  };
+  put /' ';
+  loop{L,
+    put dlBalD(L,Q);
+  };
+  put /' ';
+  loop{L$[not sameas(L,Q)],
+    put in(L,Q);
+  };
+  put / ' ' out(Q) sBal(Q);
+};
+put / 'vi';
+put / '  ttVarDef  ttVar';
+put / '  cVarDef   cVar';
+put / '  dlqVarDef dlqVar';
+putclose;
+
+solve nash using emp;
+
+parameters tab6 table VI from page 422 Harker paper;
+
+tab6("totProfit","oligop") = sum{Q, z.l(Q)};
+tab6("totSupply","oligop") = sum{Q, s.l(Q)};
+tab6("theta1","oligop") = rho('one') - eta('one')*dl.l('one','one');
+tab6("theta2","oligop") = rho('two') - eta('two')*dl.l('two','two');
+tab6("theta3","oligop") = rho('three') - eta('three')*dl.l('three','three');
+
+display tab6;

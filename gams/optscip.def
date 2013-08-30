@@ -1,0 +1,6 @@
+* SCIP option definition file
+* <name> <type> <refnr> <default> <lower> <upper> <group> <help context> <description>
+*.prior double 0 1 1 maxdouble 1 1 branching priority
+indic  indicator
+* Groups
+general group 1 1 Dot options and indicators

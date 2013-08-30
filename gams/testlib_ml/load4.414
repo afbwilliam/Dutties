@@ -1,0 +1,112 @@
+$Title Tests various file opening options for GDX files
+
+$ontext
+
+This was triggered by resetting the gdx file name during execution
+and using an execute_loadpoint, which got the wrong file name
+Fixed with #7403
+
+Contributor: Alex, Steve
+
+$offtext
+
+
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka / ;
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        2.5           1.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j ;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model transport /all/ ;
+
+Solve transport using lp minimizing z ;
+
+execute_unload 'sol.gdx';
+
+
+* below does nothing: execute_load wants an explicit list
+z.l=na; execute_load 'sol.gdx';
+abort$(z.l<>na) 'from line %system.line%';
+
+* below replaces z
+z.l=na; execute_load 'sol.gdx', z;
+abort$(z.l=na) 'from line %system.line%';
+
+* below loads all equs and vars and merges
+z.l=na; execute_loadpoint 'sol.gdx';
+abort$(z.l=na) 'from line %system.line%';
+
+* below only loads symbols specified but merges, so the assigned na sticks
+z.l=na; execute_loadpoint 'sol.gdx', x;
+abort$(z.l<>na) 'from line %system.line%';
+
+* this should fail
+abort$(execerror<>0) 'from line %system.line%';
+z.l=na; execute_loadhandle transport;
+abort$(execerror=0) 'from line %system.line%';
+execerror=0;
+
+
+* -----------------------------------------------------------------
+* now try all the same tests over again, but with a reset GDX name
+file fx; put_utility fx 'gdxin' / 'sol.gdx';
+* -----------------------------------------------------------------
+
+* below does nothing: execute_load wants an explicit list
+z.l=na; execute_load;
+abort$(z.l<>na) 'from line %system.line%';
+
+* below replaces z
+z.l=na; execute_load z;
+abort$(z.l=na) 'from line %system.line%';
+
+* below loads all equs and vars and merges
+z.l=na; execute_loadpoint;
+abort$(z.l=na) 'from line %system.line%';
+
+* below only loads symbols specified but merges, so the assigned na sticks
+z.l=na; execute_loadpoint x;
+abort$(z.l<>na) 'from line %system.line%';
+
+* this should fail
+abort$(execerror<>0) 'from line %system.line%';
+z.l=na; execute_loadhandle transport;
+abort$(execerror=0) 'from line %system.line%';
+execerror=0;

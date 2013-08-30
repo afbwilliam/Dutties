@@ -1,0 +1,682 @@
+*
+* optmosek.def
+*
+
+MSK_IPAR_CACHE_SIZE_L1 integer 11 -1 minint maxint 1 1 L1 cache size used
+MSK_IPAR_CACHE_SIZE_L2 integer 12 -1 minint maxint 1 1 L2 cache size used
+MSK_IPAR_CONCURRENT_NUM_OPTIMIZERS integer 15 2 0 maxint 1 1 maximum number of optimizers during concurrent run
+MSK_IPAR_CONCURRENT_PRIORITY_DUAL_SIMPLEX integer 16 2 0 maxint 1 1 priority of dual simplex algorithm in concurrent run
+MSK_IPAR_CONCURRENT_PRIORITY_FREE_SIMPLEX integer 17 3 0 maxint 1 1 priority of free simplex algorithm in concurrent run
+MSK_IPAR_CONCURRENT_PRIORITY_INTPNT integer 18 4 0 maxint 1 1 priority of interior point algorithm in concurrent run
+MSK_IPAR_CONCURRENT_PRIORITY_PRIMAL_SIMPLEX integer 19 1 0 maxint 1 1 priority of primal simplex algorithm in concurrent run
+MSK_IPAR_CPU_TYPE enumstr 20 "MSK_CPU_AMD_ATHLON" 1 1 specifies the CPU type
+ "MSK_CPU_AMD_ATHLON" 1
+ "MSK_CPU_AMD_OPTERON" 1
+ "MSK_CPU_GENERIC" 1
+ "MSK_CPU_HP_PARISC20" 0
+ "MSK_CPU_INTEL_CORE2" 1
+ "MSK_CPU_INTEL_ITANIUM2" 0
+ "MSK_CPU_INTEL_P3" 1
+ "MSK_CPU_INTEL_P4" 1
+ "MSK_CPU_INTEL_PM" 1
+ "MSK_CPU_POWERPC_G5" 1
+ "MSK_CPU_UNKNOWN" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+ "6" 0 This is a deprecated setting. Please use the symbolic constants
+ "7" 0 This is a deprecated setting. Please use the symbolic constants
+ "8" 0 This is a deprecated setting. Please use the symbolic constants
+ "9" 0 This is a deprecated setting. Please use the symbolic constants
+ "10" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_INFEAS_REPORT_AUTO boolean 25 0 1 1 switch for infeasibility report
+MSK_IPAR_INFEAS_REPORT_LEVEL integer 26 1 0 maxint 1 1 output level for infeasibility report
+MSK_IPAR_OPTIMIZER enumstr 112 "MSK_OPTIMIZER_CONCURRENT" 1 1 optimizer selection
+ "MSK_OPTIMIZER_CONCURRENT" 1
+ "MSK_OPTIMIZER_CONIC" 1
+ "MSK_OPTIMIZER_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_FREE" 1
+ "MSK_OPTIMIZER_FREE_SIMPLEX" 1
+ "MSK_OPTIMIZER_INTPNT" 1
+ "MSK_OPTIMIZER_MIXED_INT" 1
+ "MSK_OPTIMIZER_NONCONVEX" 0
+ "MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_PRIMAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_QCONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+ "6" 0 This is a deprecated setting. Please use the symbolic constants
+ "7" 0 This is a deprecated setting. Please use the symbolic constants
+ "8" 0 This is a deprecated setting. Please use the symbolic constants
+ "9" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_OPTIMIZER_MAX_TIME double 57 -1.0 mindouble maxdouble 1 1 time limit
+MSK_SPAR_PARAM_READ_FILE_NAME string 9 "" 1 1 name of a secondary MOSEK option file
+MSK_IPAR_PRESOLVE_ELIMINATOR_USE boolean 117 1 1 1 switch for free variable elimination
+MSK_IPAR_PRESOLVE_ELIM_FILL integer 115 1 0 maxint 1 1 fill-in control during presolve
+MSK_IPAR_PRESOLVE_LINDEP_USE boolean 119 1 1 1 linear dependency check
+MSK_IPAR_PRESOLVE_LINDEP_WORK_LIM integer 120 1 0 maxint 1 1 maximum work for finding linear dependencies
+MSK_IPAR_PRESOLVE_USE enumstr 121 "MSK_PRESOLVE_MODE_FREE" 1 1 switch for presolve
+ "MSK_PRESOLVE_MODE_FREE" 1
+ "MSK_PRESOLVE_MODE_OFF" 1
+ "MSK_PRESOLVE_MODE_ON" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_CHECK_CONVEXITY enumstr 13 "MSK_CHECK_CONVEXITY_FULL" 1 2 level of convexity check for quadratic problems
+ "MSK_CHECK_CONVEXITY_FULL" 1
+ "MSK_CHECK_CONVEXITY_NONE" 1
+ "MSK_CHECK_CONVEXITY_SIMPLE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_DATA_TOL_AIJ double 6 1.0e-12 1.0e-16 1.0e-6 1 2 zero tolerance for matrix coefficients
+MSK_DPAR_DATA_TOL_AIJ_HUGE double 7 1.0e20 0.0 maxdouble 1 2 error for large coefficients in matrix
+MSK_DPAR_DATA_TOL_AIJ_LARGE double 8 1.0e10 0.0 maxdouble 1 2 warning for large coefficients in matrix
+MSK_DPAR_DATA_TOL_BOUND_INF double 9 1.0e16 0.0 maxdouble 1 2 bound value for infinity
+MSK_DPAR_DATA_TOL_BOUND_WRN double 10 1.0e8 0.0 maxdouble 1 2 warning for large bounds
+MSK_DPAR_DATA_TOL_CJ_LARGE double 12 1.0e8 0.0 maxdouble 1 2 warning for large coefficients in objective
+MSK_DPAR_DATA_TOL_C_HUGE double 11 1.0e16 0.0 maxdouble 1 2 error for huge coefficients in objective
+MSK_DPAR_DATA_TOL_QIJ double 13 1.0e-16 0.0 maxdouble 1 2 zero tolerance for Q matrix coefficients
+MSK_DPAR_DATA_TOL_X double 14 1.0e-8 0.0 maxdouble 1 2 tolerance for fixed variables
+MSK_DPAR_LOWER_OBJ_CUT double 39 -1.0e30 mindouble maxdouble 1 2 lower objective limit
+MSK_DPAR_LOWER_OBJ_CUT_FINITE_TRH double 40 -0.5e30 mindouble maxdouble 1 2 upper objective limit threashold
+MSK_DPAR_UPPER_OBJ_CUT double 65 1.0e30 mindouble maxdouble 1 2 upper objective limit
+MSK_DPAR_UPPER_OBJ_CUT_FINITE_TRH double 66 0.5e30 mindouble maxdouble 1 2 lower objective limit threashold
+MSK_IPAR_LOG_BI integer 50 4 0 maxint 1 3 output control for basis identification
+MSK_IPAR_LOG_BI_FREQ integer 51 2500 0 maxint 1 3 frequency of log output of basis identification
+MSK_IPAR_LOG_INTPNT integer 60 4 0 maxint 1 3 output level of the interior-point optimizer
+MSK_IPAR_LOG_MIO integer 61 4 0 maxint 1 3 output level for mixed integer optimizer
+MSK_IPAR_LOG_MIO_FREQ integer 62 1000 minint maxint 1 3 frequency of log output of mixed integer optimizer
+MSK_IPAR_LOG_PRESOLVE integer 67 1 0 maxint 1 3 output level for presolve
+MSK_IPAR_LOG_SIM integer 71 4 0 maxint 1 3 output level for simplex
+MSK_IPAR_LOG_SIM_FREQ integer 72 500 0 maxint 1 3 frequency of log output of simplex optimizer
+MSK_IPAR_MAX_NUM_WARNINGS integer 77 10 0 maxint 1 3 maximum number of warnings
+MSK_IPAR_WARNING_LEVEL integer 184 1 0 maxint 1 3 warning level
+MSK_IPAR_INTPNT_BASIS enumstr 27 "MSK_BI_ALWAYS" 1 4 switch for basis identification
+ "MSK_BI_ALWAYS" 1
+ "MSK_BI_IF_FEASIBLE" 1
+ "MSK_BI_NEVER" 1
+ "MSK_BI_NO_ERROR" 1
+ "MSK_BI_OTHER" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_INTPNT_CO_TOL_DFEAS double 16 1.0e-8 0.0 1.0 1 4 dual feasibility tolerance for the conic interior-point optimizer
+MSK_DPAR_INTPNT_CO_TOL_INFEAS double 17 1.0e-8 0.0 1.0 1 4 infeasibility control for the conic interior-point optimizer
+MSK_DPAR_INTPNT_CO_TOL_MU_RED double 18 1.0e-8 0.0 1.0 1 4 relative complementarity tolerance for the conic interior-point optimizer
+MSK_DPAR_INTPNT_CO_TOL_NEAR_REL double 19 100 1.0 maxdouble 1 4 termination tolerances for near optimal for the conic interior-point optimizer
+MSK_DPAR_INTPNT_CO_TOL_PFEAS double 20 1.0e-8 0.0 1.0 1 4 primal feasibility tolerance for the conic interior-point optimizer
+MSK_DPAR_INTPNT_CO_TOL_REL_GAP double 21 1.0e-8 0.0 1.0 1 4 relative optimality tolerance for the conic interior-point optimizer
+MSK_IPAR_INTPNT_DIFF_STEP boolean 28 1 1 4 switch for different step sizes
+MSK_IPAR_INTPNT_MAX_ITERATIONS integer 31 400 0 maxint 1 4 iteration limit for the interior-point optimizer
+MSK_IPAR_INTPNT_MAX_NUM_COR integer 32 -1 -1 maxint 1 4 maximum number of correctors
+MSK_IPAR_INTPNT_MAX_NUM_REFINEMENT_STEPS integer 33 -1 minint maxint 1 4 number of steps to be used by the iterative refinement
+MSK_DPAR_INTPNT_NL_MERIT_BAL double 22 1.0e-4 0.0 0.99 1 4 balance for complementarity and infeasibility
+MSK_DPAR_INTPNT_NL_TOL_DFEAS double 23 1.0e-8 0.0 1.0 1 4 dual feasibility tolerance for nonlinear problems
+MSK_DPAR_INTPNT_NL_TOL_MU_RED double 24 1.0e-12 0.0 1.0 1 4 relative complementarity tolerance for nonlinear problems
+MSK_DPAR_INTPNT_NL_TOL_PFEAS double 26 1.0e-8 0.0 1.0 1 4 primal feasibility tolerance for nonlinear problems
+MSK_DPAR_INTPNT_NL_TOL_REL_GAP double 27 1.0e-6 1.0e-14 maxdouble 1 4 relative optimality tolerance for nonlinear problems
+MSK_IPAR_INTPNT_NUM_THREADS integer 34 1 0 maxint 1 4 number of threads for interior-point optimizer
+MSK_IPAR_INTPNT_OFF_COL_TRH integer 35 40 0 maxint 1 4 offending column selection
+MSK_IPAR_INTPNT_ORDER_METHOD enumstr 36 "MSK_ORDER_METHOD_APPMINLOC1" 1 4 ordering strategy selection
+ "MSK_ORDER_METHOD_APPMINLOC1" 1
+ "MSK_ORDER_METHOD_APPMINLOC2" 1
+ "MSK_ORDER_METHOD_FREE" 1
+ "MSK_ORDER_METHOD_GRAPHPAR1" 1
+ "MSK_ORDER_METHOD_GRAPHPAR2" 1
+ "MSK_ORDER_METHOD_NONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_INTPNT_REGULARIZATION_USE boolean 37 1 1 4 switch for regularization
+MSK_IPAR_INTPNT_SCALING enumstr 38 "MSK_SCALING_AGGRESSIVE" 1 4 scaling selection for interior-point optimizer
+ "MSK_SCALING_AGGRESSIVE" 1
+ "MSK_SCALING_FREE" 1
+ "MSK_SCALING_MODERATE" 1
+ "MSK_SCALING_NONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_INTPNT_SOLVE_FORM enumstr 39 "MSK_SOLVE_DUAL" 1 4 solve primal or the dual problem  with interior-point optimizer
+ "MSK_SOLVE_DUAL" 1
+ "MSK_SOLVE_FREE" 1
+ "MSK_SOLVE_PRIMAL" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_INTPNT_STARTING_POINT enumstr 40 "MSK_STARTING_POINT_CONSTANT" 1 4 starting point for interior-point optimizer
+ "MSK_STARTING_POINT_CONSTANT" 1
+ "MSK_STARTING_POINT_FREE" 1
+ "MSK_STARTING_POINT_GUESS" 1
+ "MSK_STARTING_POINT_SATISFY_BOUNDS" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_INTPNT_TOL_DFEAS double 29 1.0e-8 0.0 1.0 1 4 dual feasibility tolerance
+MSK_DPAR_INTPNT_TOL_DSAFE double 30 1.0 1.0e-4 maxdouble 1 4 initial dual starting control
+MSK_DPAR_INTPNT_TOL_INFEAS double 31 1.0e-8 0.0 1.0 1 4 infeasibility control
+MSK_DPAR_INTPNT_TOL_MU_RED double 32 1.0e-16 0.0 1.0 1 4 relative complementarity tolerance
+MSK_DPAR_INTPNT_TOL_PATH double 33 1.0e-8 0.0 0.9999 1 4 central path following for interior-point optimizer
+MSK_DPAR_INTPNT_TOL_PFEAS double 34 1.0e-8 0.0 1.0 1 4 primal feasibility tolerance
+MSK_DPAR_INTPNT_TOL_PSAFE double 35 1.0 1.0e-4 maxdouble 1 4 initial primal starting control
+MSK_DPAR_INTPNT_TOL_REL_GAP double 36 1.0e-8 1.0e-14 maxdouble 1 4 relative optimality tolerance
+MSK_DPAR_INTPNT_TOL_REL_STEP double 37 0.9999 1.0e-4 0.999999 1 4 relative step size to boundary
+USE_BASIS_EST boolean 0 0 1 4 use MOSEK basis estimation in case of an interior solution
+MSK_IPAR_BI_CLEAN_OPTIMIZER enumstr 6 "MSK_OPTIMIZER_CONCURRENT" 1 5 simplex optimizer section after basis identification
+ "MSK_OPTIMIZER_CONCURRENT" 1
+ "MSK_OPTIMIZER_CONIC" 1
+ "MSK_OPTIMIZER_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_FREE" 1
+ "MSK_OPTIMIZER_FREE_SIMPLEX" 1
+ "MSK_OPTIMIZER_INTPNT" 1
+ "MSK_OPTIMIZER_MIXED_INT" 1
+ "MSK_OPTIMIZER_NONCONVEX" 0
+ "MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_PRIMAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_QCONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+ "6" 0 This is a deprecated setting. Please use the symbolic constants
+ "7" 0 This is a deprecated setting. Please use the symbolic constants
+ "8" 0 This is a deprecated setting. Please use the symbolic constants
+ "9" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_BI_IGNORE_MAX_ITER boolean 7 0 1 5 continues BI in case of iteration limit
+MSK_IPAR_BI_IGNORE_NUM_ERROR boolean 8 0 1 5 continues BI in case of numerical error
+MSK_IPAR_BI_MAX_ITERATIONS integer 9 1000000 0 maxint 1 5 maximum number of simplex iterations after basis identification
+MSK_IPAR_SIM_DUAL_CRASH integer 151 90 0 maxint 1 5 dual simplex crash
+MSK_IPAR_SIM_DUAL_SELECTION enumstr 154 "MSK_SIM_SELECTION_ASE" 1 5 dual simplex pricing selection
+ "MSK_SIM_SELECTION_ASE" 1
+ "MSK_SIM_SELECTION_DEVEX" 1
+ "MSK_SIM_SELECTION_FREE" 1
+ "MSK_SIM_SELECTION_FULL" 1
+ "MSK_SIM_SELECTION_PARTIAL" 1
+ "MSK_SIM_SELECTION_SE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_SIM_HOTSTART enumstr 156 "MSK_SIM_HOTSTART_FREE" 1 5 controls simplex hotstart
+ "MSK_SIM_HOTSTART_FREE" 1
+ "MSK_SIM_HOTSTART_NONE" 1
+ "MSK_SIM_HOTSTART_STATUS_KEYS" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_SIM_LU_TOL_REL_PIV double 63 0.01 1.0e-6 0.999999 1 5 relative pivot tolerance for simplex and basis identification
+MSK_IPAR_SIM_MAX_ITERATIONS integer 159 10000000 0 maxint 1 5 simplex iteration limit
+MSK_IPAR_SIM_MAX_NUM_SETBACKS integer 160 250 0 maxint 1 5 maximum number of setbacks
+MSK_IPAR_SIM_PRIMAL_CRASH integer 165 90 0 maxint 1 5 primal simplex crash
+MSK_IPAR_SIM_PRIMAL_SELECTION enumstr 168 "MSK_SIM_SELECTION_ASE" 1 5 primal simplex pricing selection
+ "MSK_SIM_SELECTION_ASE" 1
+ "MSK_SIM_SELECTION_DEVEX" 1
+ "MSK_SIM_SELECTION_FREE" 1
+ "MSK_SIM_SELECTION_FULL" 1
+ "MSK_SIM_SELECTION_PARTIAL" 1
+ "MSK_SIM_SELECTION_SE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_SIM_REFACTOR_FREQ integer 169 0 0 maxint 1 5 refactorization frequency
+MSK_IPAR_SIM_REFORMULATION enumstr 170 "MSK_SIM_REFORMULATION_AGGRESSIVE" 1 5 controls if the simplex optimizers are allowed to reformulate
+ "MSK_SIM_REFORMULATION_AGGRESSIVE" 1
+ "MSK_SIM_REFORMULATION_FREE" 1
+ "MSK_SIM_REFORMULATION_OFF" 1
+ "MSK_SIM_REFORMULATION_ON" 1
+MSK_IPAR_SIM_SCALING enumstr 172 "MSK_SCALING_AGGRESSIVE" 1 5 scaling selection for simplex optimizer
+ "MSK_SCALING_AGGRESSIVE" 1
+ "MSK_SCALING_FREE" 1
+ "MSK_SCALING_MODERATE" 1
+ "MSK_SCALING_NONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_SIM_SCALING_METHOD enumstr 173 "MSK_SCALING_METHOD_FREE" 1 5 controls how the problem is scaled before a simplex optimizer is used
+ "MSK_SCALING_METHOD_FREE" 1
+ "MSK_SCALING_METHOD_POW2" 1
+MSK_IPAR_SIM_SOLVE_FORM enumstr 174 "MSK_SOLVE_DUAL" 1 5 solve primal or the dual problem  with simplex optimizer
+ "MSK_SOLVE_DUAL" 1
+ "MSK_SOLVE_FREE" 1
+ "MSK_SOLVE_PRIMAL" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_MIO_BRANCH_DIR enumstr 78 "MSK_BRANCH_DIR_DOWN" 1 6 control branching directions
+ "MSK_BRANCH_DIR_DOWN" 1
+ "MSK_BRANCH_DIR_FREE" 1
+ "MSK_BRANCH_DIR_UP" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_MIO_CONSTRUCT_SOL boolean 80 0 1 6 switch for mip start
+MSK_IPAR_MIO_CUT_LEVEL_ROOT integer 82 -1 minint maxint 1 6 cut level control at root for mixed integer optimizer
+MSK_IPAR_MIO_CUT_LEVEL_TREE integer 83 -1 minint maxint 1 6 cut level control in tree for mixed integer optimizer
+MSK_IPAR_MIO_HEURISTIC_LEVEL integer 85 -1 minint maxint 1 6 heuristic control for mixed integer optimizer
+MSK_DPAR_MIO_HEURISTIC_TIME double 42 -1.0 mindouble maxdouble 1 6 time limit for heuristic search
+MSK_IPAR_MIO_KEEP_BASIS boolean 87 1 1 6 switch for basis saving
+MSK_IPAR_MIO_MAX_NUM_BRANCHES integer 89 -1 minint maxint 1 6 maximum number of branches
+MSK_IPAR_MIO_MAX_NUM_RELAXS integer 90 -1 minint maxint 1 6 maximum number of relaxations solved
+MSK_DPAR_MIO_MAX_TIME double 43 -1.0 mindouble maxdouble 1 6 time limit for mixed integer optimizer
+MSK_DPAR_MIO_MAX_TIME_APRX_OPT double 44 60 0.0 maxdouble 1 6 time limit before some relaxation
+MSK_DPAR_MIO_NEAR_TOL_ABS_GAP double 45 0.0 0.0 maxdouble 1 6 termination criterion on absolute optimality tolerance
+MSK_DPAR_MIO_NEAR_TOL_REL_GAP double 46 1.0e-3 0.0 maxdouble 1 6 termination criterion on relative optimality tolerance
+MSK_IPAR_MIO_NODE_OPTIMIZER enumstr 93 "MSK_OPTIMIZER_CONCURRENT" 1 6 solver for the sub problems
+ "MSK_OPTIMIZER_CONCURRENT" 1
+ "MSK_OPTIMIZER_CONIC" 1
+ "MSK_OPTIMIZER_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_FREE" 1
+ "MSK_OPTIMIZER_FREE_SIMPLEX" 1
+ "MSK_OPTIMIZER_INTPNT" 1
+ "MSK_OPTIMIZER_MIXED_INT" 1
+ "MSK_OPTIMIZER_NONCONVEX" 0
+ "MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_PRIMAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_QCONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+ "6" 0 This is a deprecated setting. Please use the symbolic constants
+ "7" 0 This is a deprecated setting. Please use the symbolic constants
+ "8" 0 This is a deprecated setting. Please use the symbolic constants
+ "9" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_MIO_NODE_SELECTION enumstr 94 "MSK_MIO_NODE_SELECTION_BEST" 1 6 node selection strategy
+ "MSK_MIO_NODE_SELECTION_BEST" 1
+ "MSK_MIO_NODE_SELECTION_FIRST" 1
+ "MSK_MIO_NODE_SELECTION_FREE" 1
+ "MSK_MIO_NODE_SELECTION_HYBRID" 1
+ "MSK_MIO_NODE_SELECTION_PSEUDO" 1
+ "MSK_MIO_NODE_SELECTION_WORST" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_MIO_PRESOLVE_AGGREGATE boolean 96 1 1 6 switch for aggregation during mixed integer presolve
+MSK_IPAR_MIO_PRESOLVE_PROBING boolean 97 1 1 6 switch for probing
+MSK_IPAR_MIO_PRESOLVE_USE boolean 98 1 1 6 switch for mixed integer presolve
+MSK_DPAR_MIO_REL_ADD_CUT_LIMITED double 47 0.75 0.0 2.0 1 6 cuts factor
+MSK_IPAR_MIO_ROOT_OPTIMIZER enumstr 99 "MSK_OPTIMIZER_CONCURRENT" 1 6 solver for the root problem
+ "MSK_OPTIMIZER_CONCURRENT" 1
+ "MSK_OPTIMIZER_CONIC" 1
+ "MSK_OPTIMIZER_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_FREE" 1
+ "MSK_OPTIMIZER_FREE_SIMPLEX" 1
+ "MSK_OPTIMIZER_INTPNT" 1
+ "MSK_OPTIMIZER_MIXED_INT" 1
+ "MSK_OPTIMIZER_NONCONVEX" 0
+ "MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_PRIMAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_QCONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+ "6" 0 This is a deprecated setting. Please use the symbolic constants
+ "7" 0 This is a deprecated setting. Please use the symbolic constants
+ "8" 0 This is a deprecated setting. Please use the symbolic constants
+ "9" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_MIO_STRONG_BRANCH integer 100 -1 minint maxint 1 6 strong branching control
+MSK_DPAR_MIO_TOL_ABS_GAP double 49 0.0 0.0 maxdouble 1 6 absolute optimality tolerance in the mixed integer optimizer
+MSK_DPAR_MIO_TOL_ABS_RELAX_INT double 50 1.0e-5 0.0 maxdouble 1 6 absolute integrality tolerance
+MSK_DPAR_MIO_TOL_FEAS double 51 1.0e-7 0.0 maxdouble 1 6 feasibility tolerance for mixed integer solver
+MSK_DPAR_MIO_TOL_REL_GAP double 52 1.0e-4 0.0 maxdouble 1 6 relative optimality tolerance in the mixed integer optimizer
+MSK_DPAR_MIO_TOL_REL_RELAX_INT double 53 1.0e-6 0.0 maxdouble 1 6 relative integrality tolerance
+MIPSTART enumint 0 0 1 6 use integer solution provided by user
+ 0 1 No mipstart
+ 1 1 Mipstart with discrete variables only. Solve fixed problem first
+ 2 1 Mipstart with all variables, including continuous
+MSK_IPAR_SIM_DEGEN enumstr 150 "MSK_SIM_DEGEN_AGGRESSIVE" 0 7 controls degeneration treatment
+ "MSK_SIM_DEGEN_AGGRESSIVE" 1
+ "MSK_SIM_DEGEN_FREE" 1
+ "MSK_SIM_DEGEN_MINIMUM" 1
+ "MSK_SIM_DEGEN_MODERATE" 1
+ "MSK_SIM_DEGEN_NONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_SIM_DUAL_RESTRICT_SELECTION integer 153 50 0 100 0 7 controls restricted selection of dual simplex
+MSK_IPAR_SIM_PRIMAL_RESTRICT_SELECTION integer 167 50 0 100 0 7 controls restricted selection of dual simplex
+MSK_IPAR_SIM_NETWORK_DETECT integer 161 101 0 maxint 0 7 controls detection of network
+MSK_IPAR_SIM_NETWORK_DETECT_METHOD enumstr 163 "MSK_NETWORK_DETECT_ADVANCED" 0 7 control method for network detection
+ "MSK_NETWORK_DETECT_ADVANCED" 1
+ "MSK_NETWORK_DETECT_FREE" 1
+ "MSK_NETWORK_DETECT_SIMPLE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_SIM_STABILITY_PRIORITY integer 175 50 0 100 0 7 control stability importance in simplex
+MSK_IPAR_SIM_SWITCH_OPTIMIZER boolean 176 0 0 7 controls use of primal and dual simplex
+MSK_DPAR_INTPNT_NL_TOL_REL_STEP double 28 0.995 1.0e-4 0.9999999 0 7 relative step size to boundary for nonlinear problems
+MSK_DPAR_INTPNT_NL_TOL_NEAR_REL double 25 1000.0 1.0 maxdouble 0 7 termination tolerances for near optimal for nonlinear problems
+MSK_DPAR_INTPNT_TOL_STEP_SIZE double 38 1.0e-10 0.0 1.0 0 7 control for step size
+MSK_IPAR_MIO_FEASPUMP_LEVEL integer 84 -1 minint 3 0 7 Feasibility pump control
+MSK_IPAR_MIO_MAX_NUM_SOLUTIONS integer 91 -1 minint maxint 0 7 terminate after a certain number of solutions are found
+MSK_IPAR_ALLOC_ADD_QNZ integer 0 5000 0 maxint 0 7
+MSK_DPAR_BASIS_REL_TOL_S double 1 1.0e-12 0.0 maxdouble 0 7
+MSK_DPAR_BASIS_TOL_S double 2 1.0e-6 1.0e-9 maxdouble 0 7
+MSK_DPAR_BASIS_TOL_X double 3 1.0e-6 1.0e-9 maxdouble 0 7
+MSK_SPAR_BAS_SOL_FILE_NAME string 0 "" 0 7
+MSK_IPAR_CACHE_LICENSE boolean 10 0 0 7
+MSK_DPAR_CALLBACK_FREQ double 4 -1.0 mindouble maxdouble 0 7
+MSK_IPAR_CHECK_TASK_DATA boolean 14 1 0 7
+MSK_IPAR_DATA_CHECK boolean 21 1 0 7
+MSK_SPAR_DATA_FILE_NAME string 1 "" 0 7
+MSK_SPAR_DEBUG_FILE_NAME string 2 "" 0 7
+MSK_SPAR_FEASREPAIR_NAME_PREFIX string 3 "MSK-" 0 7
+MSK_SPAR_FEASREPAIR_NAME_SEPARATOR string 4 "-" 0 7
+MSK_SPAR_FEASREPAIR_NAME_WSUMVIOL string 5 "WSUMVIOL" 0 7
+MSK_IPAR_FEASREPAIR_OPTIMIZE enumstr 22 "MSK_FEASREPAIR_OPTIMIZE_COMBINED" 0 7
+ "MSK_FEASREPAIR_OPTIMIZE_COMBINED" 1
+ "MSK_FEASREPAIR_OPTIMIZE_NONE" 1
+ "MSK_FEASREPAIR_OPTIMIZE_PENALTY" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_FEASREPAIR_TOL double 15 1.0e-10 1.0e-16 1.0e+16 0 7
+MSK_IPAR_LP_WRITE_IGNORE_INCOMPATIBLE_ITEMS boolean 76 0 0 7
+MSK_IPAR_INFEAS_GENERIC_NAMES boolean 23 0 0 7
+MSK_IPAR_INFEAS_PREFER_PRIMAL boolean 24 1 0 7
+MSK_IPAR_INTPNT_FACTOR_DEBUG_LVL integer 29 0 0 maxint 0 7
+MSK_IPAR_INTPNT_FACTOR_METHOD integer 30 0 0 maxint 0 7
+MSK_SPAR_INT_SOL_FILE_NAME string 6 "" 0 7
+MSK_SPAR_ITR_SOL_FILE_NAME string 7 "" 0 7
+MSK_IPAR_LICENSE_ALLOW_OVERUSE boolean 42 1 0 7
+MSK_IPAR_LICENSE_CACHE_TIME integer 43 5 0 65555 0 7
+MSK_IPAR_LICENSE_CHECK_TIME integer 44 1 1 120 0 7
+MSK_IPAR_LICENSE_DEBUG boolean 45 0 0 7
+MSK_IPAR_LICENSE_PAUSE_TIME integer 46 100 0 1000000 0 7
+MSK_IPAR_LICENSE_SUPPRESS_EXPIRE_WRNS boolean 47 0 0 7
+MSK_IPAR_LICENSE_WAIT boolean 48 0 0 7
+MSK_IPAR_LOG integer 49 10 0 maxint 0 7
+MSK_IPAR_LOG_CONCURRENT integer 53 1 0 maxint 0 7
+MSK_IPAR_LOG_CUT_SECOND_OPT integer 54 1 0 maxint 0 7
+MSK_IPAR_LOG_FACTOR integer 55 1 0 maxint 0 7
+MSK_IPAR_LOG_FEASREPAIR integer 56 0 0 maxint 0 7
+MSK_IPAR_LOG_FILE integer 57 1 0 maxint 0 7
+MSK_IPAR_LOG_HEAD integer 58 1 0 maxint 0 7
+MSK_IPAR_LOG_INFEAS_ANA integer 59 1 0 maxint 0 7
+MSK_IPAR_LOG_NONCONVEX integer 63 1 0 maxint 0 7
+MSK_IPAR_LOG_OPTIMIZER integer 64 1 0 maxint 0 7
+MSK_IPAR_LOG_ORDER integer 65 1 0 maxint 0 7
+MSK_IPAR_LOG_PARAM integer 66 0 0 maxint 0 7
+MSK_IPAR_LOG_RESPONSE integer 68 0 0 maxint 0 7
+MSK_IPAR_LOG_SENSITIVITY integer 69 1 0 maxint 0 7
+MSK_IPAR_LOG_SENSITIVITY_OPT integer 70 0 0 maxint 0 7
+MSK_IPAR_LOG_SIM_MINOR integer 73 1 0 maxint 0 7
+MSK_IPAR_LOG_SIM_NETWORK_FREQ integer 74 50 0 maxint 0 7
+MSK_IPAR_LOG_STORAGE integer 75 0 0 maxint 0 7
+MSK_IPAR_MIO_BRANCH_PRIORITIES_USE boolean 79 1 0 7
+MSK_IPAR_MIO_CONT_SOL enumstr 81 "MSK_MIO_CONT_SOL_ITG" 0 7
+ "MSK_MIO_CONT_SOL_ITG" 1
+ "MSK_MIO_CONT_SOL_ITG_REL" 1
+ "MSK_MIO_CONT_SOL_NONE" 1
+ "MSK_MIO_CONT_SOL_ROOT" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_MIO_DISABLE_TERM_TIME double 41 -1.0 mindouble maxdouble 0 7
+MSK_IPAR_MIO_LOCAL_BRANCH_NUMBER integer 88 -1 minint maxint 0 7
+MSK_IPAR_MIO_MODE enumstr 92 "MSK_MIO_MODE_IGNORED" 0 7
+ "MSK_MIO_MODE_IGNORED" 1
+ "MSK_MIO_MODE_LAZY" 1
+ "MSK_MIO_MODE_SATISFIED" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_MIO_REL_GAP_CONST double 48 1.0e-10 1.0e-15 maxdouble 0 7
+MSK_DPAR_MIO_TOL_X double 54 1.0e-6 0.0 maxdouble 0 7
+MSK_IPAR_NONCONVEX_MAX_ITERATIONS integer 101 100000 0 maxint 0 7
+MSK_DPAR_NONCONVEX_TOL_FEAS double 55 1.0e-6 0.0 maxdouble 0 7
+MSK_DPAR_NONCONVEX_TOL_OPT double 56 1.0e-7 0.0 maxdouble 0 7
+MSK_IPAR_OBJECTIVE_SENSE enumstr 102 "MSK_OBJECTIVE_SENSE_MAXIMIZE" 0 7
+ "MSK_OBJECTIVE_SENSE_MAXIMIZE" 1
+ "MSK_OBJECTIVE_SENSE_MINIMIZE" 1
+ "MSK_OBJECTIVE_SENSE_UNDEFINED" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_OPF_MAX_TERMS_PER_LINE integer 103 5 0 maxint 0 7
+MSK_IPAR_OPF_WRITE_HEADER boolean 104 1 0 7
+MSK_IPAR_OPF_WRITE_HINTS boolean 105 1 0 7
+MSK_IPAR_OPF_WRITE_PARAMETERS boolean 106 0 0 7
+MSK_IPAR_OPF_WRITE_PROBLEM boolean 107 1 0 7
+MSK_IPAR_OPF_WRITE_SOLUTIONS boolean 111 0 0 7
+MSK_IPAR_OPF_WRITE_SOL_BAS boolean 108 1 0 7
+MSK_IPAR_OPF_WRITE_SOL_ITG boolean 109 1 0 7
+MSK_IPAR_OPF_WRITE_SOL_ITR boolean 110 1 0 7
+MSK_SPAR_PARAM_COMMENT_SIGN string 8 "%%" 0 7
+MSK_IPAR_PARAM_READ_CASE_NAME boolean 113 1 0 7
+MSK_IPAR_PARAM_READ_IGN_ERROR boolean 114 0 0 7
+MSK_SPAR_PARAM_WRITE_FILE_NAME string 10 "" 0 7
+MSK_IPAR_PRESOLVE_LEVEL integer 118 -1 minint maxint 0 7
+MSK_DPAR_PRESOLVE_TOL_AIJ double 58 1.0e-12 0.0 maxdouble 0 7
+MSK_DPAR_PRESOLVE_TOL_LIN_DEP double 59 1.0e-6 0.0 maxdouble 0 7
+MSK_DPAR_PRESOLVE_TOL_S double 60 1.0e-8 0.0 maxdouble 0 7
+MSK_DPAR_PRESOLVE_TOL_X double 61 1.0e-8 0.0 maxdouble 0 7
+MSK_IPAR_READ_ADD_ANZ integer 123 0 0 maxint 0 7
+MSK_IPAR_READ_ADD_CON integer 124 0 0 maxint 0 7
+MSK_IPAR_READ_ADD_CONE integer 125 0 0 maxint 0 7
+MSK_IPAR_READ_ADD_QNZ integer 126 0 0 maxint 0 7
+MSK_IPAR_READ_ADD_VAR integer 127 0 0 maxint 0 7
+MSK_IPAR_READ_ANZ integer 128 100000 0 maxint 0 7
+MSK_IPAR_READ_CON integer 129 10000 0 maxint 0 7
+MSK_IPAR_READ_CONE integer 130 2500 0 maxint 0 7
+MSK_IPAR_READ_DATA_COMPRESSED boolean 131 0 0 7
+MSK_IPAR_READ_DATA_FORMAT enumstr 132 "MSK_DATA_FORMAT_EXTENSION" 0 7
+ "MSK_DATA_FORMAT_EXTENSION" 1
+ "MSK_DATA_FORMAT_FREE_MPS" 1
+ "MSK_DATA_FORMAT_LP" 1
+ "MSK_DATA_FORMAT_MBT" 1
+ "MSK_DATA_FORMAT_MPS" 1
+ "MSK_DATA_FORMAT_OP" 1
+ "MSK_DATA_FORMAT_XML" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_READ_KEEP_FREE_CON boolean 133 0 0 7
+MSK_IPAR_READ_LP_DROP_NEW_VARS_IN_BOU boolean 134 0 0 7
+MSK_IPAR_READ_LP_QUOTED_NAMES boolean 135 1 0 7
+MSK_SPAR_READ_MPS_BOU_NAME string 11 "" 0 7
+MSK_IPAR_READ_MPS_FORMAT enumstr 136 "MSK_MPS_FORMAT_FREE" 0 7
+ "MSK_MPS_FORMAT_FREE" 1
+ "MSK_MPS_FORMAT_RELAXED" 1
+ "MSK_MPS_FORMAT_STRICT" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_READ_MPS_KEEP_INT boolean 137 1 0 7
+MSK_SPAR_READ_MPS_OBJ_NAME string 12 "" 0 7
+MSK_IPAR_READ_MPS_OBJ_SENSE boolean 138 1 0 7
+MSK_IPAR_READ_MPS_QUOTED_NAMES boolean 139 1 0 7
+MSK_SPAR_READ_MPS_RAN_NAME string 13 "" 0 7
+MSK_IPAR_READ_MPS_RELAX boolean 140 1 0 7
+MSK_SPAR_READ_MPS_RHS_NAME string 14 "" 0 7
+MSK_IPAR_READ_MPS_WIDTH integer 141 1024 0 maxint 0 7
+MSK_IPAR_READ_QNZ integer 143 20000 0 maxint 0 7
+MSK_IPAR_READ_Q_MODE enumstr 142 "MSK_Q_READ_ADD" 0 7
+ "MSK_Q_READ_ADD" 1
+ "MSK_Q_READ_DROP_LOWER" 1
+ "MSK_Q_READ_DROP_UPPER" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_READ_TASK_IGNORE_PARAM boolean 144 0 0 7
+MSK_IPAR_READ_VAR integer 145 10000 0 maxint 0 7
+MSK_IPAR_SENSITIVITY_ALL boolean 146 0 0 7
+MSK_SPAR_SENSITIVITY_FILE_NAME string 15 "" 0 7
+MSK_IPAR_SENSITIVITY_OPTIMIZER enumstr 147 "MSK_OPTIMIZER_CONCURRENT" 0 7
+ "MSK_OPTIMIZER_CONCURRENT" 1
+ "MSK_OPTIMIZER_CONIC" 1
+ "MSK_OPTIMIZER_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_FREE" 1
+ "MSK_OPTIMIZER_FREE_SIMPLEX" 1
+ "MSK_OPTIMIZER_INTPNT" 1
+ "MSK_OPTIMIZER_MIXED_INT" 1
+ "MSK_OPTIMIZER_NONCONVEX" 1
+ "MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_PRIMAL_SIMPLEX" 1
+ "MSK_OPTIMIZER_QCONE" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+ "6" 0 This is a deprecated setting. Please use the symbolic constants
+ "7" 0 This is a deprecated setting. Please use the symbolic constants
+ "8" 0 This is a deprecated setting. Please use the symbolic constants
+ "9" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_SPAR_SENSITIVITY_RES_FILE_NAME string 16 "" 0 7
+MSK_IPAR_SENSITIVITY_TYPE enumstr 148 "MSK_SENSITIVITY_TYPE_BASIS" 0 7
+ "MSK_SENSITIVITY_TYPE_BASIS" 1
+ "MSK_SENSITIVITY_TYPE_OPTIMAL_PARTITION" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_SIMPLEX_ABS_TOL_PIV double 64 1.0e-7 1.0e-12 maxdouble 0 7
+MSK_IPAR_SIM_NETWORK_DETECT_HOTSTART integer 162 100 0 maxint 0 7
+MSK_IPAR_SIM_NON_SINGULAR boolean 164 1 0 7
+MSK_IPAR_SIM_SAVE_LU boolean 171 0 0 7
+MSK_IPAR_SOLUTION_CALLBACK boolean 182 0 0 7
+MSK_IPAR_SOL_FILTER_KEEP_BASIC boolean 177 0 0 7
+MSK_IPAR_SOL_FILTER_KEEP_RANGED boolean 178 0 0 7
+MSK_SPAR_SOL_FILTER_XC_LOW string 17 "" 0 7
+MSK_SPAR_SOL_FILTER_XC_UPR string 18 "" 0 7
+MSK_SPAR_SOL_FILTER_XX_LOW string 19 "" 0 7
+MSK_SPAR_SOL_FILTER_XX_UPR string 20 "" 0 7
+MSK_IPAR_SOL_QUOTED_NAMES boolean 179 0 0 7
+MSK_IPAR_SOL_READ_NAME_WIDTH integer 180 -1 minint maxint 0 7
+MSK_IPAR_SOL_READ_WIDTH integer 181 1024 0 maxint 0 7
+MSK_SPAR_STAT_FILE_NAME string 21 "" 0 7
+MSK_SPAR_STAT_KEY string 22 "" 0 7
+MSK_SPAR_STAT_NAME string 23 "" 0 7
+MSK_IPAR_WRITE_BAS_CONSTRAINTS boolean 185 1 0 7
+MSK_IPAR_WRITE_BAS_HEAD boolean 186 1 0 7
+MSK_IPAR_WRITE_BAS_VARIABLES boolean 187 1 0 7
+MSK_IPAR_WRITE_DATA_COMPRESSED integer 188 0 0 maxint 0 7
+MSK_IPAR_WRITE_DATA_FORMAT enumstr 189 "MSK_DATA_FORMAT_EXTENSION" 0 7
+ "MSK_DATA_FORMAT_EXTENSION" 1
+ "MSK_DATA_FORMAT_FREE_MPS" 1
+ "MSK_DATA_FORMAT_LP" 1
+ "MSK_DATA_FORMAT_MBT" 1
+ "MSK_DATA_FORMAT_MPS" 1
+ "MSK_DATA_FORMAT_OP" 1
+ "MSK_DATA_FORMAT_XML" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+ "2" 0 This is a deprecated setting. Please use the symbolic constants
+ "3" 0 This is a deprecated setting. Please use the symbolic constants
+ "4" 0 This is a deprecated setting. Please use the symbolic constants
+ "5" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_IPAR_WRITE_DATA_PARAM boolean 190 0 0 7
+MSK_IPAR_WRITE_FREE_CON boolean 191 0 0 7
+MSK_IPAR_WRITE_GENERIC_NAMES boolean 192 0 0 7
+MSK_IPAR_WRITE_GENERIC_NAMES_IO integer 193 1 0 maxint 0 7
+MSK_IPAR_WRITE_INT_CONSTRAINTS boolean 194 1 0 7
+MSK_IPAR_WRITE_INT_HEAD boolean 195 1 0 7
+MSK_IPAR_WRITE_INT_VARIABLES boolean 196 1 0 7
+MSK_SPAR_WRITE_LP_GEN_VAR_NAME string 24 "xmskgen" 0 7
+MSK_IPAR_WRITE_LP_LINE_WIDTH integer 197 80 40 maxint 0 7
+MSK_IPAR_WRITE_LP_QUOTED_NAMES boolean 198 1 0 7
+MSK_IPAR_WRITE_LP_STRICT_FORMAT boolean 199 0 0 7
+MSK_IPAR_WRITE_LP_TERMS_PER_LINE integer 200 10 0 maxint 0 7
+MSK_IPAR_WRITE_MPS_INT boolean 201 1 0 7
+MSK_IPAR_WRITE_MPS_OBJ_SENSE boolean 202 1 0 7
+MSK_IPAR_WRITE_MPS_QUOTED_NAMES boolean 203 1 0 7
+MSK_IPAR_WRITE_MPS_STRICT boolean 204 0 0 7
+MSK_IPAR_WRITE_PRECISION integer 205 8 0 maxint 0 7
+MSK_IPAR_WRITE_SOL_CONSTRAINTS boolean 206 1 0 7
+MSK_IPAR_WRITE_SOL_HEAD boolean 207 1 0 7
+MSK_IPAR_WRITE_SOL_VARIABLES boolean 208 1 0 7
+MSK_IPAR_WRITE_TASK_INC_SOL boolean 209 1 0 7
+MSK_IPAR_WRITE_XML_MODE enumstr 210 "MSK_WRITE_XML_MODE_COL" 0 7
+ "MSK_WRITE_XML_MODE_COL" 1
+ "MSK_WRITE_XML_MODE_ROW" 1
+ "0" 0 This is a deprecated setting. Please use the symbolic constants
+ "1" 0 This is a deprecated setting. Please use the symbolic constants
+MSK_DPAR_QCQO_REFORMULATE_REL_DROP_TOL double 62 1e-15 0 maxdouble 0 7
+MSK_IPAR_AUTO_SORT_A_BEFORE_OPT boolean 3 0 0 7
+MSK_IPAR_AUTO_UPDATE_SOL_INFO boolean 4 1 0 7
+MSK_IPAR_BASIS_SOLVE_USE_PLUS_ONE boolean 5 0 0 7
+MSK_IPAR_LIC_TRH_EXPIRY_WRN integer 41 7 0 maxint 0 7
+MSK_IPAR_MIO_OPTIMIZER_MODE integer 95 0 0 1 0 7
+MSK_IPAR_PRESOLVE_ELIMINATOR_MAX_NUM_TRIES integer 116 -1 minint maxint 0 7
+MSK_IPAR_QO_SEPARABLE_REFORMULATION boolean 122 0 0 7
+MSK_IPAR_SIM_BASIS_FACTOR_USE boolean 149 1 0 7
+MSK_IPAR_SIM_DUAL_PHASEONE_METHOD integer 152 0 0 10 0 7
+MSK_IPAR_SIM_EXPLOIT_DUPVEC enumstr 155 "MSK_SIM_EXPLOIT_DUPVEC_FREE" 0 7
+ "MSK_SIM_EXPLOIT_DUPVEC_FREE" 1
+ "MSK_SIM_EXPLOIT_DUPVEC_OFF" 1
+ "MSK_SIM_EXPLOIT_DUPVEC_ON" 1
+MSK_IPAR_SIM_HOTSTART_LU boolean 157 1 0 7
+MSK_IPAR_SIM_INTEGER integer 158 0 0 10 0 7
+MSK_IPAR_SIM_PRIMAL_PHASEONE_METHOD integer 166 0 0 10 0 7
+MSK_IPAR_TIMING_LEVEL integer 183 0 0 maxint 0 7
+MSK_IPAR_MIO_HOTSTART boolean 86 1 0 7
+MSK_IPAR_LOG_CHECK_CONVEXITY integer 52 0 0 maxint 0 7
+MSK_IPAR_ANA_SOL_BASIS boolean 1 1 0 7
+MSK_IPAR_ANA_SOL_PRINT_VIOLATED boolean 2 0 0 7
+MSK_DPAR_CHECK_CONVEXITY_REL_TOL double 5 1e-14 0 maxdouble 0 7
+MSK_DPAR_ANA_SOL_INFEAS_TOL double 0 +1e-8 0.0 maxdouble 0 7
+secret strlist 0 0 7 secret way of setting MOSEK options
+readfile immediate readfile 0 7 read secondary option file
+nobounds immediate nobounds 0 7 ignores bounds on options
+writembt string 0 "" 0 7 create gams.mbt file
+*
+* synonym section
+*
+MSK_IPAR_BI_LOG_FREQ synonym MSK_IPAR_LOG_BI_FREQ
+MSK_IPAR_MIO_PRINT_FREQ synonym MSK_IPAR_LOG_MIO_FREQ
+MSK_IPAR_SIM_LOG_FREQ synonym MSK_IPAR_LOG_SIM_FREQ
+MSK_IPAR_MIO_CUT_LEVEL synonym MSK_IPAR_MIO_CUT_LEVEL_ROOT
+reslim synonym MSK_DPAR_OPTIMIZER_MAX_TIME
+iterlim synonym MSK_IPAR_SIM_MAX_ITERATIONS
+nodlim synonym MSK_IPAR_MIO_MAX_NUM_RELAXS
+optca synonym MSK_DPAR_MIO_NEAR_TOL_ABS_GAP
+optcr synonym MSK_DPAR_MIO_NEAR_TOL_REL_GAP
+*
+* indicator section
+*
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General and Preprocessing Options
+data group 2 1 Problem Data Options
+output group 3 1 Output Options
+interior group 4 1 Interior Point Optimizer Options
+simplex group 5 1 Simplex Optimizer and Basis Identification Options
+mixed group 6 1 Mixed Integer Optimizer Options
+other group 7 0 Other Options
+*** End of file

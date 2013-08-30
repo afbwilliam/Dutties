@@ -1,0 +1,24 @@
+$title more NL testing when code is deleted (NLCODE4,SEQ=438)
+
+$ontext
+Contributor: Alex
+$offtext
+
+variables u,v,x,y; equations e1,e2;
+
+e1..  u*v =g= 0*(1-x)*y;
+e2..  u*v =e= 2*(1-x)*y;
+
+model m / e1,e2 /;
+
+x.fx = .1;
+
+u.l=.1;v.l=.2;
+
+y.lo=1;
+
+$echo tester tester.log > convert.opt
+option nlp=convert; m.optfile=1;
+
+solve m us nlp min y;
+abort$(m.solvestat <> %solvestat.NormalCompletion%) 'bad derivatives';

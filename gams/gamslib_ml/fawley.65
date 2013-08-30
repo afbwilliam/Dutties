@@ -1,0 +1,289 @@
+$Title Platoform Example Refinery (FAWLEY,SEQ=65)
+
+$Ontext
+
+  This simple example refinery is taken from EXXONs Platoform monograph.
+  Three major units, a pipestill, a powerformer and a catalytic cracker
+  are present. the refinery has a choice of three crude oils and sells
+  four final products. The blending is done by recipe and quality
+  specifications. All product flows are measured by weight. the original
+  Platoform version does not give values for the research octane and
+  viscosity blending formulas because of its proprietary nature. A simple
+  functional form has been estimated from the Platoform results for
+  illustrative purposes and the lower specification of "ron" for motor-gas
+  had to be lowered from 99.3 to 99.0 in order to maintain feasibility.
+
+
+Palmer, K H, A Model Management Framework for Mathematical Programming,
+EXXON Monograph Series. John Wiley and Sons, 1984.
+
+$Offtext
+
+ Sets   c     commodities            /  arabian-l    crude
+                                        arabian-h    crude
+                                        brega        crude
+                                        lv-naphtha   light virgin naphtha
+                                        v-heat-oil   virgin heating oil
+                                        iv-naphtha   intermediate virgin naphtha
+                                        vacuum-dst   vacuum distillate
+                                        vacuum-res   vacuum residue
+                                        res-arab-l   vacuum residue - arabian light
+                                        res-arab-h   vacuum residue - arabian heavy
+                                        res-brega    vacuum residue - brega
+                                        butane
+                                        reformate
+                                        cc-naph-l    catalytic-cracked naphtha - low severity
+                                        cc-naph-h    catalytic-cracked npahtha - high severity
+                                        cc-dist      catalytic-cracked distillate
+                                        fuel-imp     imported fuel
+                                        fuel-equiv   fuel equivalent  /
+
+        cr(c) crude oils             /  arabian-l, arabian-h, brega  /
+
+        ci(c) components imported    /  fuel-imp /
+
+        cf     final products        /  motor-gas    motor gasoline
+                                        jet-fuel     jet fuel
+                                        heat-oil     heating oil
+                                        fuel-oil     fuel oil    /
+
+        cfq(cf)  final products quality blended
+
+        cfr(cf)  final products recipe blended
+
+        k        productive units    /  pipestill, reformer, c-cracker  /
+
+
+        p     processes  /  d-arab-l  distilling arabian light crude
+                            d-arab-h  distilling arabian heavy crude
+                            d-brega   distilling brega crude
+                            reform    reforming
+                            ho-low-s  cc of heating oil - low severity
+                            ho-high-s cc of heating oil - high severity
+                            vd-low-s  cc of vacuum distillate - low severity
+                            vd-high-s cc of vacuum distillate - high severity   /
+
+        kuse(k,p)        /  pipestill .(d-arab-l,d-arab-h,d-brega)
+                            reformer  .(reform)
+                            c-cracker .(ho-low-s,ho-high-s,vd-low-s,vd-high-s)  /
+
+        bposs(cf,c)   blending possibilities for quality blends  /
+                           motor-gas.(lv-naphtha,butane,reformate,cc-naph-l,cc-naph-h)
+                           fuel-oil.(v-heat-oil,vacuum-dst,res-arab-l,res-arab-h,res-brega,cc-dist
+                                     fuel-equiv,fuel-imp)    /
+
+        s     product specification  /  rvp      reid vapor pressure
+                                        ron      research octane number
+                                        pct-212f percent distilled at 21 degrees f
+                                        sulfur   sulfur content
+                                        vbn      viscosity blending number             /
+
+        m     product measure        /  volume, weight  /
+
+        ms(m,s)  measure of specs    /  volume.(rvp, ron, pct-212f),  weight.(sulfur, vbn)  /
+
+        cfm(cf,m)      required measure
+
+        l     quality limits         /  lower, upper  /
+
+        r     recipes                /  recipe-1*recipe-3  /
+
+       tr    transfer options        /  tr-1, tr-2 /
+
+
+ Table crdat(cr,*) crude oil information table
+
+           supply    price    transport    gravity
+*     (1000 tons)    ($/bbl)   ($/ton)    (tons/m3)
+ arabian-l   110       35        24.15       .858
+ arabian-h   165       34        24.15       .886
+ brega        80       42        10.05       .823
+
+
+ Table  ddat(cf,*)  demand data
+
+             demand   price
+*       (1000 tons)   ($/ton)
+ motor-gas   40         430
+ jet-fuel    20         300
+ heat-oil    50         315
+ fuel-oil   145         250
+
+
+ Table kdat(k,*)  capacity data
+
+             capacity   oper-cost    oper-days
+*         (1000bbl/d)   ($/bbl f)     (days/period)
+ pipestill     65.0        .15           31
+ reformer       7.5        .60           28
+ c-cracker      8.0        .65           28
+
+
+ Table  ap(c,p)   process yields  (proportion weight of crude feed)
+
+             d-arab-l   d-arab-h   d-brega
+ arabian-l   -1.0
+ arabian-h               -1.0
+ brega                            -1.0
+ lv-naphtha    .035        .030     .045
+ iv-naphtha    .100        .075     .135
+ v-heat-oil    .390        .300     .430
+ vacuum-dst    .285        .230     .280
+ res-arab-l    .165
+ res-arab-h                .335
+ res-brega                          .100
+
+    +         reform  ho-low-s  ho-high-s  vd-low-s  vd-high-s
+ iv-naphtha    -1.
+ v-heat-oil            -1.      -1.
+ vacuum-dst                                 -1.       -1.
+ butane          .02     .02      .0325       .05       .06
+ reformate       .90
+ cc-naph-l               .275                 .325
+ cc-naph-h                        .3775                 .45
+ cc-dist                 .68      .555        .585      .44
+ fuel-equiv      .08     .025     .035        .040      .050
+
+
+ Table  recipes(cf,c,r)  blending recipes (proportions of weight)
+
+                       recipe-1  recipe-2  recipe-3
+ heat-oil.v-heat-oil      1.0
+ heat-oil.cc-dist                  1.0
+ jet-fuel.lv-naphtha                .2
+ jet-fuel.iv-naphtha       .3                 .1
+ jet-fuel.v-heat-oil       .7       .8        .1
+ jet-fuel.cc-dist                             .8
+
+
+ Table at(c,tr)  transfer processes (proportion of weight)
+
+              tr-1   tr-2
+ lv-naphtha    -1
+ butane               -1
+ fuel-equiv    1.11  1.07
+
+
+ Table  specs(cf,l,s)  product specifications for quality blend
+
+                   rvp   ron   pct-212f  sulfur   vbn
+ motor-gas.lower    10     99
+ motor-gas.upper                  60
+ fuel-oil.upper                             3     37.5
+
+ Table  prop(c,*)  properties
+
+             rvp   ron   pct-212f   sulfur   vbn    gravity
+ butane       75  101.6    100                        .570
+ lv-naphtha   12   86.3     95                        .650
+ iv-naphtha                                           .737
+ reformate     6  102.5     35                        .865
+ cc-naph-l     7   94.9     60                        .730
+ cc-naph-h     9   99.1     64                        .750
+ v-heat-oil                          1.0      14.8    .886
+ vacuum-dst                          1.7      21.8    .920
+ res-arab-l                          4.0      48
+ res-arab-h                          5.0      51
+ res-brega                            .6      44
+ cc-dist                             1.5      18.0
+ fuel-imp                            3.0      37.5
+ fuel-equiv                          3.5      44
+
+ Scalars  m3tob  conversion of barrels to m3 (barrels per m3)  / 6.29 /
+          pbmg  lead content in motor gas  (gramms per liter)  / .4 /
+          ppb   lead price  ($ per kg)                         / 7.8 /
+          ocpb  lead cost   ($ per m3 of gasoline)
+
+ Parameters  char(c,m)      conversion for product balance
+             bp(k,p)        capacity utilization           (m3 per ton)
+             kp(k)          capacity                       (1000 m3)
+             oc(k)          operating costs                ($ per m3)
+             pcr(cr)        plantgate crude price          ($ per ton)
+             pimp(c)        price of imported components   ($ per ton) / fuel-imp  245 /
+             invent(c)      inventory change  (1000 tons - buildup positive)  / cc-naph-l  -.58, reformate  1.65 /
+             dir(l)         sign of over-under specs  /  lower  -1,  upper  +1  / ;
+
+ cfr(cf)   = sum((c,r)$recipes(cf,c,r), yes);
+ cfq(cf)   = not cfr(cf);
+ cfm(cf,m) = sum((l,s)$specs(cf,l,s), ms(m,s));  cfm(cf,"weight") = yes;
+
+ char(c,"weight")  = 1 ; char(c,"volume")$prop(c,"gravity") = 1/prop(c,"gravity");
+ prop(cr,"gravity") = crdat(cr,"gravity");
+ bp(k,p)$kuse(k,p)  = 1/sum(c$(ap(c,p) lt 0), -ap(c,p)*prop(c,"gravity"));
+ kp(k) = kdat(k,"capacity")*kdat(k,"oper-days")/m3tob;
+
+ ocpb    = pbmg*ppb;
+ oc(k)   = kdat(k,"oper-cost")*m3tob ;
+ pcr(cr) = crdat(cr,"price")*m3tob/crdat(cr,"gravity");
+
+ Display cfr, cfq, cfm, char, bp, kp, oc, ocpb, pcr;
+
+ Variables  u(c)      crude purchase            (1000 tons)
+            z(p)      production levels         (1000 tons)
+            cap(k)    capacity use              (1000 m3)
+            trans(tr) transfer activities       (1000 tons)
+            import(c) import of components      (1000 tons)
+            bq(c,cf)  quality blending activity (1000 tons)
+            rb(cf,r)  recipe blending activity  (1000 tons)
+            q(cf,m)   final product measure     (1000 tons)
+            ov(cf,l,s) over or under blending   (1000 units)
+            sales(cf) final product sales       (1000 tons)
+            revenue   final product revenue     (1000 $)
+            recurrent operating cost            (1000 $)
+            purchase  external product purchase (1000 $)
+            transport transport cost            (1000 $)
+            profit    operating profit          (1000 $)
+
+ Positive Variables u, cap, z, bq, rb, q, sales, ov, trans, import
+
+ Equations  mbal(c)     component balance                  (1000 tons)
+            kbal(k)     capacity constraints               (1000 m3)
+            dbal(cf)    demand balance                     (1000 tons)
+            qsb(cf,l,s) quality constraint                 (1000 units)
+            pbal(cf,m)  product balance                    (1000 units)
+            drev        revenue definition                 (1000 $)
+            doper       recurrent cost definition          (1000 $)
+            dpur        purchase cost definition           (1000 $)
+            dtran       transport cost definition          (1000 $)
+            dprof       profit definition                  (1000 $);
+
+
+ mbal(c)..  u(c)$cr(c) + sum(p, ap(c,p)*z(p)) + sum(tr, at(c,tr)*trans(tr)) + import(c)$ci(c)
+              =e= sum(cfq$bposs(cfq,c), bq(c,cfq)) + invent(c) + sum((cfr,r), recipes(cfr,c,r)*rb(cfr,r)) ;
+
+ kbal(k)..  cap(k) =e= sum(p, bp(k,p)*z(p));
+
+ dbal(cf).. sales(cf)  =e= q(cf,"weight")$cfq(cf) + sum((c,r), recipes(cf,c,r)*rb(cf,r))$cfr(cf) ;
+
+ qsb(cfq,l,s)$specs(cfq,l,s)..   sum(c$bposs(cfq,c), prop(c,s)*sum(m$ms(m,s), char(c,m)*bq(c,cfq)))
+                               + dir(l)*ov(cfq,l,s) =e= sum(m$ms(m,s), specs(cfq,l,s)*q(cfq,m)) ;
+
+ pbal(cfq,m)$cfm(cfq,m)..    q(cfq,m) =e= sum(c$bposs(cfq,c), char(c,m)*bq(c,cfq));
+
+ drev..  revenue   =e= sum(cf, ddat(cf,"price")*sales(cf));
+
+ doper.. recurrent =e= sum(k, oc(k)*cap(k)) + ocpb*q("motor-gas","volume");
+
+ dpur..  purchase  =e= sum(cr, pcr(cr)*u(cr)) + sum(ci, pimp(ci)*import(ci)) ;
+
+ dtran.. transport =e= sum(cr, crdat(cr,"transport")*u(cr));
+
+ dprof.. profit    =e= revenue - recurrent - purchase - transport;
+
+ Model exxon /all/;
+
+ u.up(cr) = crdat(cr,"supply");  sales.fx(cf) = ddat(cf,"demand");
+ cap.up(k) = kp(k);
+
+ Solve exxon maximizing profit using lp;
+
+ Parameter fblend    summary of blending operation for fuel oil;
+
+   fblend(c,"weight")  = bq.l(c,"fuel-oil");  fblend("**total**","weight")  =q.l("fuel-oil","weight");
+   fblend(c,"percent") = fblend(c,"weight")/fblend("**total**","weight")*100; fblend("**total**","percent") = 100;
+   fblend(c,"sulfur")$bposs("fuel-oil",c) = prop(c,"sulfur") ;
+   fblend("**total**","sulfur")           = sum(c, fblend(c,"percent")*fblend(c,"sulfur"))/100;
+   fblend(c,"vbn")$bposs("fuel-oil",c)    = prop(c,"vbn");
+   fblend("**total**","vbn")              = sum(c, fblend(c,"percent")*fblend(c,"vbn"))/100;
+
+    Display fblend;

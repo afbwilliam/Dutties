@@ -1,0 +1,52 @@
+$title 'Test GDXCOPY utility with -V6C and V6u options' (GDXCOPY2,SEQ=350)
+
+$ontext
+
+Gdxcopy should write a version 6 GDX file
+(i.e. one compatible with Distribution 22.5) if the -v6c or -v6u
+flags are used.
+
+Contributor: Steve Dirkse
+$offtext
+
+$ifi %system.platform% == AIX $exit No V6 GDX exists for this platform
+$ifi %system.platform% == BGP $exit No V6 GDX exists for this platform
+$ifi %system.platform% == DEX $exit No V6 GDX exists for this platform
+$ifi %system.platform% == DII $exit No V6 GDX exists for this platform
+$ifi %system.platform% == SOX $exit No V6 GDX exists for this platform
+
+* so many timing issues with directories, use separate ones
+$set subdirC gdxcopyC.dir
+$set subdirU gdxcopyU.dir
+$set dirsep \
+$if %system.filesys% == UNIX $set dirsep /
+
+$onecho > makegdx.gms
+set I / 1 * 10 /;
+parameter c(I);
+c(I) = ord(I);
+positive variable x(I);
+x.up(I) = 2 * c(I);
+x.l(I)  = c(I);
+x.m(I) = 3 * c(I);
+$offecho
+
+$call =gams makegdx.gms lo=%GAMS.lo% gdx=tcopy.gdx
+
+$if dexist %subdirC% $call rm -r %subdirC%
+$if dexist %subdirC% $abort directory %subdirC% still exists!
+$call gdxcopy -v6c tcopy.gdx %subdirC%
+$if not dexist %subdirC%                  $abort directory %subdirC% should exist after gdxdopy call
+$if not  exist %subdirC%%dirsep%tcopy.gdx $abort file %subdirC%%dirsep%tcopy.gdx should exist after gdxdopy call
+$call gdxdiff tcopy.gdx %subdirC%%dirsep%tcopy.gdx > %system.nullfile%
+$if errorlevel 1 $abort "Files differ: bad gdxcopy -v6c or gdxdiff"
+
+$if dexist %subdirU% $call rm -r %subdirU%
+$if dexist %subdirU% $abort directory %subdirU% still exists!
+$call gdxcopy -v6u tcopy.gdx %subdirU%
+$if not dexist %subdirU%                  $abort directory %subdirU% should exist after gdxdopy call
+$if not  exist %subdirU%%dirsep%tcopy.gdx $abort file %subdirU%%dirsep%tcopy.gdx should exist after gdxdopy call
+$call gdxdiff tcopy.gdx %subdirU%%dirsep%tcopy.gdx > %system.nullfile%
+$if errorlevel 1 $abort "Files differ: bad gdxcopy -v6u or gdxdiff"
+
+$log All done: the test passed

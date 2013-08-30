@@ -1,0 +1,148 @@
+$title Illustrate correct naming in MPSGE - old rules (MPSGE02,SEQ=79)
+
+$ontext
+
+This model illustrates the OLD naming rules for labels and identifiers
+in MPSGE.  See the model mpsge01 for the new rules and more
+explanation.
+
+Since the old rules are not overly restrictive, you might consider
+following these rules to be sure your models run with both the
+new-style and old-style MPSGE engines.
+
+Old rules for names in MPSGE models
+-----------------------------------
+
+  Labels must:
+    be at most 10 characters long,
+    not contain the following characters:  set i / ' !.:"', "'" /
+      or in English space, bang, dot, colon, double-quote, single-quote
+    not be empty: set i / '' /;
+
+  Other identifiers (e.g. parameters, model name, variables) must:
+    be at most 10 characters long
+
+
+Last update 20 Jan 2004 - Steve Dirkse
+
+$offtext
+
+$eolcom //
+
+SETS
+i /
+*          1
+* 1234567890
+  weOnlyDo10  // labels may up to 10 characters long
+  i-+-+-____   // -, +, or _ OK
+  'i4         '// can end with spaces: GAMS/Base will trim trailing whitespace
+               // before MPSGE (or anybody) gets a chance to see it
+* this next block was created by taking all the legal UEL characters
+* as of GAMS CD 21.3 (GAMS Rev 137) and removing those known to cause
+* trouble for MPSGE.  The chars legal in GAMS UELs but not in MPSGE
+* are tested in mpsge03 * mpsge09.
+  '#OK#'
+  '$OK$'
+  '%OK%'
+  '&OK&'
+  '(OK('
+  ')OK)'
+  '*OK*'
+  '+OK+'
+  ',OK,'
+  '-OK-'
+  '/OK/'
+  '0OK9'
+  ';OK;'
+  '<OK<'
+  '=OK='
+  '>OK>'
+  '?OK?'
+  '@OK@'
+  'aOKA'
+  '[OK['
+  '\OK\'
+  ']OK]'
+  '^OK^'
+  '_OK_'
+  '`OK`'
+  '{OK{'
+  '|OK|'
+* if we run with a demo license, cut down the size of the test
+$if set DEMOSIZE $ontext
+  '}OK}'
+  '~OK~'
+  '#'
+  '$'
+  '%'
+  '&'
+  '('
+  ')'
+  '*'
+  '+'
+  ','
+  '-'
+  '/'
+  '0'
+  ';'
+  '<'
+  '='
+  '>'
+  '?'
+  '@'
+  'A'
+  '['
+  '\'
+  ']'
+  '^'
+  '_'
+  '`'
+  '{'
+  '|'
+  '}'
+  '~'
+$if not set DEMOSIZE $ontext
+$offtext
+
+/,
+j       / j1
+$if not set DEMOSIZE * j2
+/,
+h       / h1
+$if not set DEMOSIZE * h2
+/;
+
+* the existence of nasty labels should only matter if they are part of
+* the MPSGE model
+SET notusedinmpsge / 'a = b            a' /;
+
+parameter       d034567890(i,h)         Reference demands,
+                e0(i,h)         Reference endowments;
+
+d034567890(i,h) = uniform(0,1);
+e0(i,h) = uniform(0,1);
+
+$ontext
+
+$model:exchange90
+
+$commodities:
+        price67890(i,j)
+
+$consumers:
+        ra34567890(h)
+
+
+$demand:ra34567890(h) s:1
+        d:price67890(i,j)       q:d034567890(i,h)
+        e:price67890(i,j)       q:e0(i,h)
+
+$offtext
+
+$sysinclude mpsgeset exchange90
+
+
+$include EXCHANGE90.GEN
+solve exchange90 using mcp;
+
+abort$( exchange90.solvestat <> %solvestat.NormalCompletion% or exchange90.modelstat <> %modelstat.Optimal%) 'wrong status codes';

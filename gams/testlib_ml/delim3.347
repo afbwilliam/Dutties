@@ -1,0 +1,23 @@
+$title 'Bug test: missing elements not reported' (DELIM3,SEQ=347)
+
+$ontext
+AB01354:cmex:problem with $ondelim
+
+Contributor: Alex
+$offtext
+
+* without ondelim we get 161 error, which is OK
+$ondelim
+set i(*,*,*,*,*,*,*,*,*) nine dimensions /
+one.a.b.c.d.e.f.g.h first line
+two.a.b.c.dd
+/
+option i:0:0:1;display i;
+$if errorfree $abort 'accepted a wrong line'
+$clearerrors
+$terminate
+
+----      7 SET i  nine dimensions
+
+one.a.b.c.d .e .f .g .h
+two.a.b.c.dd.dd.dd.dd.dd

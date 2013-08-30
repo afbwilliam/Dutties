@@ -1,0 +1,138 @@
+$ontext
+Example of saving a basis file
+$offtext
+
+*  SUPPRESS THE PRINTOUT OF SYMBOL LIST
+*    AND CROSS REFERENCE MAP
+$OFFSYMLIST OFFSYMXREF
+
+*  SUPPRESS PRINTOUT OF MODEL ROWS AND COLUMNS
+OPTION LIMROW = 0
+OPTION LIMCOL =0
+
+*     SECTION A       SET DEFINITON
+
+ SET  PRODUCT       PRODUCTS             /TABLES, CHAIRS/
+      TYPE          TYPES OF PRODUCT     /FUNCT ,FANCY/
+      RESOURCE      TYPES OF RESOURCES   /SMLLATHE,LRGLATHE,CARVER,LABOR,TOP/
+      METHOD        PRODUCTION METHODS   /NORMAL,MAXSML,MAXLRG/
+      PLANT         DIFFERENT PLANTS     /PLANT1, PLANT2/;
+  ALIAS(PLANT,PLANTS);
+*     SECTION B       DATA DEFINITION
+
+ TABLE  PRODCOST(PRODUCT,METHOD,TYPE)  PRODUCTION COST FOR DIFFERENT METHOD
+
+                                  FUNCT         FANCY
+         CHAIRS.NORMAL             15             25
+         CHAIRS.MAXSML             16             26
+         CHAIRS.MAXLRG             17             27
+         TABLES.NORMAL             80            100;
+
+TABLE RES(RESOURCE,PRODUCT,TYPE,METHOD) USE OF RESOURCES IN PRODUCTION
+
+           CHAIRS.FUNCT.NORMAL CHAIRS.FUNCT.MAXSML CHAIRS.FUNCT.MAXLRG
+SMLLATHE           8                 13                     2
+LRGLATHE           5                  2                    13
+CARVER             4                  4                     4
+LABOR             10                 11                    11
+ +         CHAIRS.FANCY.NORMAL CHAIRS.FANCY.MAXSML CHAIRS.FANCY.MAXLRG
+SMLLATHE          12                 17                     5
+LRGLATHE           7                  3                    15
+CARVER            10                 10                    10
+LABOR              8                  8                     8
++          TABLES.FUNCT.NORMAL TABLES.FANCY.NORMAL
+   LABOR           3                  5
+   TOP             1                  1   ;
+
+ TABLE TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS) TRANSPORT COST TO PLANTS
+
+                 PLANT1.PLANT2   PLANT2.PLANT1
+    CHAIRS.FUNCT       5                5
+    TABLES.FUNCT      14
+    CHAIRS.FANCY       5                5
+    TABLES.FANCY      18                        ;
+
+
+ TABLE PRICE(PLANT,TYPE) PRICE OF SETS
+                          FUNCT          FANCY
+        PLANT1             400            800
+        PLANT2             425            850
+
+ TABLE RESORAVAIL(RESOURCE,PLANT) RESOURCES AVAILABLE
+                 PLANT1      PLANT2
+     TOP           500
+     SMLLATHE     1100         1400
+     LRGLATHE      880          900
+     CARVER        500         1200
+     LABOR        1750         1250      ;
+
+ TABLE PRODPERSET(PRODUCT,TYPE)  PRODUCTS PER SET
+
+          FANCY    FUNCT
+  CHAIRS    6        4
+  TABLES    1        1
+
+ TABLE ACTIVITY(PLANT,PRODUCT,METHOD) TELLS IF A PLANT MAKES A PRODUCT
+           TABLES.NORMAL  CHAIRS.(NORMAL,MAXSML,MAXLRG)
+   PLANT1     1                    1
+   PLANT2                          1
+
+*   SECTION     C      MODEL  DEFINITION
+
+ POSITIVE VARIABLES
+      MAKE(PLANT,PRODUCT,METHOD,TYPE)     NUMBER OF ITEMS MADE
+      TRNSPORT(PRODUCT,TYPE,PLANT,PLANTS) NUMBER OF ITEMS TRANSPORTED
+      SELL(PLANT,TYPE)                    NUMBER OF SETS SOLD;
+ VARIABLES
+      NETINCOME                           PROFIT;
+ EQUATIONS
+      OBJT                                OBJECTIVE FUNCTION ( PROFIT )
+      RESOUREQ(PLANT,RESOURCE)            RESOURCES AVAILABLE
+      PLANTPROD(PLANT,PRODUCT,TYPE)       PRODUCT BALANCE FOR A PLANT;
+
+OBJT..      NETINCOME =E=
+   SUM((PLANT,TYPE),
+         PRICE(PLANT,TYPE) * SELL(PLANT,TYPE))
+ - SUM((PLANT,PRODUCT,METHOD,TYPE)$ACTIVITY(PLANT,PRODUCT,METHOD),
+        MAKE(PLANT,PRODUCT,METHOD,TYPE)*PRODCOST(PRODUCT,METHOD,TYPE))
+ - SUM((PRODUCT,TYPE,PLANT,PLANTS)$TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS),
+         TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS)
+        *TRNSPORT(PRODUCT,TYPE,PLANT,PLANTS));
+
+  RESOUREQ(PLANT,RESOURCE)..
+         SUM((PRODUCT,TYPE,METHOD)$ACTIVITY(PLANT,PRODUCT,METHOD),
+              RES(RESOURCE,PRODUCT,TYPE,METHOD)
+             *MAKE(PLANT,PRODUCT,METHOD,TYPE) )
+             =l= RESORAVAIL(RESOURCE,PLANT) ;
+
+  PLANTPROD(PLANT,PRODUCT,TYPE)..
+             SUM(PLANTS$TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS)
+                        ,TRNSPORT(PRODUCT,TYPE,PLANT,PLANTS))
+           - SUM(PLANTS$TRANSCOST(PRODUCT,TYPE,PLANTS,PLANT)
+                 ,TRNSPORT(PRODUCT,TYPE,PLANTS,PLANT))
+           + SELL(PLANT,TYPE)*PRODPERSET(PRODUCT,TYPE)
+           =L= SUM(METHOD$ACTIVITY(PLANT,PRODUCT,METHOD),
+                        MAKE(PLANT,PRODUCT,METHOD,TYPE));
+
+ MODEL FIRM /ALL/;
+ OPTION SOLPRINT = ON ;
+ TRNSPORT.up(PRODUCT,TYPE,PLANT,PLANTS)
+      $TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS)=1000;
+ TRNSPORT.lo(PRODUCT,TYPE,PLANT,PLANTS)
+      $TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS)=1;
+ TRNSPORT.scale(PRODUCT,TYPE,PLANT,PLANTS)
+      $TRANSCOST(PRODUCT,TYPE,PLANT,PLANTS)=10;
+
+* SECTION D    SOLVE THE PROBLEM
+ OPTION Savepoint=1;
+ SOLVE FIRM USING LP MAXIMIZING NETINCOME;
+
+$ontext
+#this text entry documents file and allows automatic
+#building of mccarl advanced class model library file
+Description
+Example of saving a basis file
+Notebook Section AdvBasis
+GAMS Points Saving a Basis
+include gamsbas.opt
+$offtext

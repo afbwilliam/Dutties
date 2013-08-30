@@ -1,0 +1,47 @@
+$Title Test EMP Disjunction - Negated variables in disjunctive terms (EMPDISJ7,SEQ=583)
+
+$ontext
+This test is based on bug found in EMP from GAMS 23.9.5.
+
+The disjunctive program to solve is
+minimize 10*y1 + 10*y2 + y3
+such that y1 or y2 or not y3
+
+An optimal solution is clearly y3 = 0.
+However, due to a bug, a 'not y3' in a disjunctive term was
+not handled correctly.
+
+Contributor: Stefan Vigerske, November 2012
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+
+Set i /1*3/;
+Binary Variable y(i);
+Variable z;
+
+Equation dummy(i);
+Equation obj;
+
+dummy(i).. y(i) =g= 0;
+
+obj.. z =e= 10 * y('1') + 10 * y('2') + y('3');
+
+model m / all /;
+
+option optcr = 0;
+
+set forms / chull, bigm, indic /;
+
+file empinfo / '%emp.info%' /;
+loop(forms,
+ put empinfo;
+ put 'default ' forms.tl /;
+ put "disjunction y('1') dummy('1') ELSEIF y('2') dummy('2') ELSEIF not y('3') dummy('3')" /;
+ putclose;
+
+ solve m us emp min z;
+
+ abort$(abs(z.l) > %TESTTOL%) "wrong optimal value, expected 0"
+);
+

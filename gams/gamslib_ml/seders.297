@@ -1,0 +1,286 @@
+$title ERS Data Manipulations with SED (SEDERS,SEQ=297)
+$ontext
+
+Data files are often not in the form that can be read by another
+program and/or transformations have to be made. The example below
+shows how to manipulate an input output matrix in comma delimited
+form. A sample file is shown below:
+
+BAS1,1 Dairyfarmprd,2 PoultryEggs,3 Meatanimals,4 livestckmisc, ... 512 Wat2,513 Air2,Total,
+1 Dairyfarmprd,0,0,265.7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, ... 0,0,0,0,0,0,0,0,0,26452.6,
+2 PoultryEggs,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,523.8,0,0, ... 0,0,0,0,0,0,,17623.5,
+...
+503 Air2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.2,0.7,1.7,0.3, ... 8,18859.6,470.4,0,0.5,5.4,33699.3,
+Total,18728.2,14814.9,50839.5,2670.9,2693.7,3421.0,1831, ... ,3593.4,12052.2,6520145.5,
+
+This file is the result of a routine process to take a raw file from a
+web site and attach custom labels to rows and columns
+( http://www.bea.doc.gov/bea/dn2/i-o_benchmark.htm ).  The rows and
+columns have the form '<number> space <text>'. Some of the rows have
+been dropped and the <number> on the row labels does not match the
+corresponding column label.  Note that the row named Air2 has number
+503, whereas the column Air2 has number 513.  Since the aggregations
+are done by column numbers, the row numbers need to be reassigned to
+use the column order. Furthermore, there are three row labels that
+have no matching column labels.
+
+Finally, the matrix needs to be aggregated from a size of 513 to a
+much smaller size.
+
+We use the unix tool SED to manipulate the text files into a format
+suitable to be read by GAMS. For more details on SED please an SED
+book.
+
+
+Doufherty, D, and Robbins, A, SED and AWK. O'Reilly & Associates,
+Sebastobol, 1997.
+
+This problem is due to: Agapi Somwaru, ERS, US Department of
+Agriculture, Washington, DC
+
+$offtext
+
+$set raw f001.inc
+$set out product
+
+* We need the Posix compatible sed
+$set sed sed
+$ifi %system.platform% == "sol" $set sed /usr/xpg4/bin/sed
+
+* 1. Extract column headers and write to colnumber
+
+$onecho > sedscript
+# insert before line 1
+1i\
+$offlisting
+# drop first token
+s/^[^,]*,//
+# drop last item followed by comma
+s/,[^,]*,$//
+# replace comma with newline
+s/,/\
+/g
+# quit after first line
+1q
+$offecho
+
+$call %sed% -f sedscript %raw% > colnumber
+
+* 2. Extract row names write to rowname
+
+$onecho > sedscript
+# insert before line 1
+1i\
+$offlisting
+# drop first line
+1d
+# drop last line
+$d
+# remove row number
+s/^[0-9]* //
+# remove everything following the comma
+s/,.*$//
+$offecho
+
+$call %sed% -f sedscript %raw% > rowname
+
+
+* 3. Prepare matrix and write to mat1 using row names and column numbers
+
+$onecho > sedscript
+# insert before line 1
+1i\
+$offlisting\
+$ondelim
+# drop trailing comma
+s/,$//
+# remove the column names following the numbers on first line
+1s/ [^,]*,/,/g
+# remove numbers on other rows
+1!s/^[^ ]* //
+#insert after last line
+$a\
+;
+$offecho
+
+$call %sed% -f sedscript %raw% > mat1
+
+* 4. Read transformed data and perform some basic checks
+
+sets   j column numbers /
+$      include colnumber
+              /
+       row row names /
+$      include rowname
+            /
+      col column names  /
+$         call %sed% -e "s/^[0-9]* //"  colnumber > temp
+$         include temp
+                       /
+     jmap(j,col) number name map /
+$                ondelim
+$                include colnumber
+$                offdelim
+                          / ;
+
+table mat1(*,*) data including row and column totals
+$ include mat1
+
+parameter rowtot(row),rowdiff(row),coltot(j),coldiff(j);
+
+rowtot(row) = sum(j, mat1(row,j));
+coltot(j) = sum(row, mat1(row,j));
+rowdiff(row) = rowtot(row) - mat1(row,'total');
+coldiff(j) = coltot(j) - mat1('total',j);
+
+*display rowdiff,coldiff;
+
+* check to make sure the totals are OK, note the rounding!
+
+parameter rowerr(row) relative row errors
+          colerr(j)   relative column errors ;
+
+rowerr(row) = round(rowdiff(row)/(1+rowtot(row)),1);
+colerr(j)   = round(coldiff(j)/(1+coltot(j)),1);
+
+display rowerr,colerr;
+
+abort$(card(rowerr)+card(colerr)) 'likely data errors';
+
+* update row and column totals
+
+mat1(row,'total') = rowtot(row);
+mat1('total',j)   = coltot(j);
+
+sets zerorows(row) rows with zero total;
+
+zerorows(row) = rowtot(row) = 0;
+
+display zerorows;
+
+* 5. Find additional row names and add to row OthSLGentpr
+
+set rowx(*) additional row names;
+
+rowx(row) = yes - col(row); display rowx;
+
+mat1('OthSLGentpr',j) = mat1('OthSLGentpr',j) + sum(rowx,
+mat1(rowx,j));
+mat1(rowx,j) = 0;
+
+* 6. Map the rownames into the proper column numbers and store in mat2
+
+alias (i,j);
+
+Parameter mat2(i,j) matrix using column numbers;
+
+mat2(i,j) = sum(jmap(i,col), mat1(col,j));
+
+* 7. Final aggregation mapping and tests
+
+    SET Iagg  AGGREGATION OF IC SECTORS /
+
+ADRY  DAIRYFARPRD
+AOMT  POULTRY
+ACTL  MEATANIM
+ACOT  COTTON
+AFOD  FOODGRAIN
+
+AFED  FEEDGRAIN
+ATOB  TOBACCO
+AFRT  FRUITS AND TREENUTS
+AVEG  VEG AND GREENHOUSE
+ASUG  SUGARCROPS
+
+AOCR  OTHERCROPS
+AOIS  OILBEARCROPS
+ACMP  CATTLE PROD PROC
+AOMP  OTHER MEAT PROC
+ADRP  DAIRY PROD PROC
+
+AFOP FOOD GRAIN PROC
+AFEP FEED GRAIN PROC
+ASUP SUGAR PROD PROC
+AFSH FISH PRE PROC
+AOIP OIL PROD PROC
+AFRP FRUIT PROD PROC
+
+ABEV BEVERAGES
+ATOP TOBACCO PROC
+AFDP OTHER FOOD PROC
+ATEX TEXTILE
+AAPR APPAREL
+
+ALTP LEATHER PROD PROC
+
+AACH  AGRCHEMICALS
+AFFS  FOREST FISHING AGR SERV
+AMNF  MANUFACTURING
+ASRV  SERVICES
+      /
+
+    IaggMap(Iagg,J) aggregation Mapping  /
+
+ADRY. (1)
+AOMT. (2)
+ACTL. (3,4)
+ACOT. (5)
+AFOD. (6)
+AFED. (7)
+ATOB. (9)
+AFRT. (10,11)
+AVEG. (12,17)
+ASUG. (13)
+AOCR. (8,14)
+
+AOIS. (15)
+
+AFFS. (16,18*21)
+AACH. (30,179,180,181)
+ACMP. (53,54)
+AOMP. (55)
+ADRP. (56*60)
+AFSH. (61,66)
+AFRP. (62,64*65,67)
+AFOP. (69*71,76*78,96,97)
+AFEP. (72*75)
+ASUP. (79,82,80)
+ABEV. (83*88,93)
+AOIP. (89*92,94)
+AFDP. (63,68,81,95,98)
+ATOP. (99*102)
+ATEX. (103*114)
+AAPR. (115*127)
+ALTP. (209*217)
+
+AMNF.(22*29,31*52,128*178,182*208,218*407)
+ASRV.(408*513)/ ;
+
+set iaggTest(Iagg) unmapped aggregated sectors
+    JZero(j)       sectors without mapping
+    JTest(j)       sectors with multiple mappings;
+
+iaggtest(iagg) =  sum(j$IaggMap(Iagg,j), 1) = 0;
+
+JZero(j) =  sum(iagg$IaggMap(Iagg,j), 1) = 0;
+JTest(j) =  sum(iagg$IaggMap(Iagg,j), 1) > 1;
+
+display iaggtest,jzero,jtest;
+
+abort$(card(iaggtest)+card(jzero)+card(jtest)) 'the aggregation mapping is incorrect';
+
+* 8. Aggregate into amat and store all data in a gdx file
+
+alias(iagg,jagg),(j,jj);
+
+parameter amat(iagg,jagg) aggregate table;
+
+amat(iagg,jagg) = sum((j,jj)$(iaggmap(iagg,j)*iaggmap(jagg,jj)), mat2(j,jj));
+display amat;
+
+execute_unload '%out%' i,amat;
+$if %system.filesys% == UNIX $exit
+$call msappavail -Excel
+$if errorlevel 1 $exit
+
+execute "gdxxrw %out%.gdx trace=0 par=amat rng=prod!b4"

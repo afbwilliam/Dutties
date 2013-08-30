@@ -1,0 +1,1304 @@
+<html>
+<head>
+<title>BONMIN Options</title>
+</head>
+<body>
+<h2>BONMIN Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/bonmin.pdf">BONMIN manual</a>.
+
+<h2>Summary of BONMIN Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Algorithm choice</h3></th></tr>
+<tr><td><a href="#BONMINalgorithm">
+algorithm</a></td>
+<td>Choice of the algorithm.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Branch-and-bound options</h3></th></tr>
+<tr><td><a href="#BONMINallowable_fraction_gap">
+allowable_fraction_gap</a></td>
+<td>Specify the value of relative gap under which the algorithm stops.</td></tr>
+<tr><td><a href="#BONMINallowable_gap">
+allowable_gap</a></td>
+<td>Specify the value of absolute gap under which the algorithm stops.</td></tr>
+<tr><td><a href="#BONMINcutoff">
+cutoff</a></td>
+<td>Specify cutoff value.</td></tr>
+<tr><td><a href="#BONMINcutoff_decr">
+cutoff_decr</a></td>
+<td>Specify cutoff decrement.</td></tr>
+<tr><td><a href="#BONMINenable_dynamic_nlp">
+enable_dynamic_nlp</a></td>
+<td>Enable dynamic linear and quadratic rows addition in nlp</td></tr>
+<tr><td><a href="#BONMINinteger_tolerance">
+integer_tolerance</a></td>
+<td>Set integer tolerance.</td></tr>
+<tr><td><a href="#BONMINiteration_limit">
+iteration_limit</a></td>
+<td>Set the cumulated maximum number of iteration in the algorithm used to process nodes continuous relaxations in the branch-and-bound.</td></tr>
+<tr><td><a href="#BONMINnlp_failure_behavior">
+nlp_failure_behavior</a></td>
+<td>Set the behavior when an NLP or a series of NLP are unsolved by Ipopt (we call unsolved an NLP for which Ipopt is not able to guarantee optimality within the specified tolerances).</td></tr>
+<tr><td><a href="#BONMINnode_comparison">
+node_comparison</a></td>
+<td>Choose the node selection strategy.</td></tr>
+<tr><td><a href="#BONMINnode_limit">
+node_limit</a></td>
+<td>Set the maximum number of nodes explored in the branch-and-bound search.</td></tr>
+<tr><td><a href="#BONMINnumber_before_trust">
+number_before_trust</a></td>
+<td>Set the number of branches on a variable before its pseudo costs are to be believed in dynamic strong branching.</td></tr>
+<tr><td><a href="#BONMINnumber_strong_branch">
+number_strong_branch</a></td>
+<td>Choose the maximum number of variables considered for strong branching.</td></tr>
+<tr><td><a href="#BONMINnum_cut_passes">
+num_cut_passes</a></td>
+<td>Set the maximum number of cut passes at regular nodes of the branch-and-cut.</td></tr>
+<tr><td><a href="#BONMINnum_cut_passes_at_root">
+num_cut_passes_at_root</a></td>
+<td>Set the maximum number of cut passes at regular nodes of the branch-and-cut.</td></tr>
+<tr><td><a href="#BONMINrandom_generator_seed">
+random_generator_seed</a></td>
+<td>Set seed for random number generator (a value of -1 sets seeds to time since Epoch).</td></tr>
+<tr><td><a href="#BONMINread_solution_file">
+read_solution_file</a></td>
+<td>Read a file with the optimal solution to test if algorithms cuts it.</td></tr>
+<tr><td><a href="#BONMINsolution_limit">
+solution_limit</a></td>
+<td>Abort after that much integer feasible solution have been found by algorithm</td></tr>
+<tr><td><a href="#BONMINtime_limit">
+time_limit</a></td>
+<td>Set the global maximum computation time (in secs) for the algorithm.</td></tr>
+<tr><td><a href="#BONMINtree_search_strategy">
+tree_search_strategy</a></td>
+<td>Pick a strategy for traversing the tree</td></tr>
+<tr><td><a href="#BONMINvariable_selection">
+variable_selection</a></td>
+<td>Chooses variable selection strategy</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>ECP cuts generation</h3></th></tr>
+<tr><td><a href="#BONMINecp_abs_tol">
+ecp_abs_tol</a></td>
+<td>Set the absolute termination tolerance for ECP rounds.</td></tr>
+<tr><td><a href="#BONMINecp_max_rounds">
+ecp_max_rounds</a></td>
+<td>Set the maximal number of rounds of ECP cuts.</td></tr>
+<tr><td><a href="#BONMINecp_probability_factor">
+ecp_probability_factor</a></td>
+<td>Factor appearing in formula for skipping ECP cuts.</td></tr>
+<tr><td><a href="#BONMINecp_rel_tol">
+ecp_rel_tol</a></td>
+<td>Set the relative termination tolerance for ECP rounds.</td></tr>
+<tr><td><a href="#BONMINfilmint_ecp_cuts">
+filmint_ecp_cuts</a></td>
+<td>Specify the frequency (in terms of nodes) at which some a la filmint ecp cuts are generated.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Feasibility checker using OA cuts</h3></th></tr>
+<tr><td><a href="#BONMINfeas_check_cut_types">
+feas_check_cut_types</a></td>
+<td>Choose the type of cuts generated when an integer feasible solution is found</td></tr>
+<tr><td><a href="#BONMINfeas_check_discard_policy">
+feas_check_discard_policy</a></td>
+<td>How cuts from feasibility checker are discarded</td></tr>
+<tr><td><a href="#BONMINgenerate_benders_after_so_many_oa">
+generate_benders_after_so_many_oa</a></td>
+<td>Specify that after so many oa cuts have been generated Benders cuts should be generated instead.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MILP Solver</h3></th></tr>
+<tr><td><a href="#BONMINcpx_parallel_strategy">
+cpx_parallel_strategy</a></td>
+<td>Strategy of parallel search mode in CPLEX.</td></tr>
+<tr><td><a href="#BONMINmilp_solver">
+milp_solver</a></td>
+<td>Choose the subsolver to solve MILP sub-problems in OA decompositions.</td></tr>
+<tr><td><a href="#BONMINmilp_strategy">
+milp_strategy</a></td>
+<td>Choose a strategy for MILPs.</td></tr>
+<tr><td><a href="#BONMINnumber_cpx_threads">
+number_cpx_threads</a></td>
+<td>Set number of threads to use with cplex.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MILP cutting planes in hybrid algorithm (B-Hyb)</h3></th></tr>
+<tr><td><a href="#BONMIN2mir_cuts">
+2mir_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating 2-MIR cuts in branch-and-cut</td></tr>
+<tr><td><a href="#BONMINclique_cuts">
+clique_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating clique cuts in branch-and-cut</td></tr>
+<tr><td><a href="#BONMINcover_cuts">
+cover_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating cover cuts in branch-and-cut</td></tr>
+<tr><td><a href="#BONMINflow_cover_cuts">
+flow_cover_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating flow cover cuts in branch-and-cut</td></tr>
+<tr><td><a href="#BONMINGomory_cuts">
+Gomory_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating Gomory cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#BONMINlift_and_project_cuts">
+lift_and_project_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating lift-and-project cuts in branch-and-cut</td></tr>
+<tr><td><a href="#BONMINmir_cuts">
+mir_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating MIR cuts in branch-and-cut</td></tr>
+<tr><td><a href="#BONMINreduce_and_split_cuts">
+reduce_and_split_cuts</a></td>
+<td>Frequency (in terms of nodes) for generating reduce-and-split cuts in branch-and-cut</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MINLP Heuristics</h3></th></tr>
+<tr><td><a href="#BONMINfeasibility_pump_objective_norm">
+feasibility_pump_objective_norm</a></td>
+<td>Norm of feasibility pump objective function</td></tr>
+<tr><td><a href="#BONMINfp_pass_infeasible">
+fp_pass_infeasible</a></td>
+<td>Say whether feasibility pump should claim to converge or not</td></tr>
+<tr><td><a href="#BONMINheuristic_dive_fractional">
+heuristic_dive_fractional</a></td>
+<td>if yes runs the Dive Fractional heuristic</td></tr>
+<tr><td><a href="#BONMINheuristic_dive_MIP_fractional">
+heuristic_dive_MIP_fractional</a></td>
+<td>if yes runs the Dive MIP Fractional heuristic</td></tr>
+<tr><td><a href="#BONMINheuristic_dive_MIP_vectorLength">
+heuristic_dive_MIP_vectorLength</a></td>
+<td>if yes runs the Dive MIP VectorLength heuristic</td></tr>
+<tr><td><a href="#BONMINheuristic_dive_vectorLength">
+heuristic_dive_vectorLength</a></td>
+<td>if yes runs the Dive VectorLength heuristic</td></tr>
+<tr><td><a href="#BONMINheuristic_feasibility_pump">
+heuristic_feasibility_pump</a></td>
+<td>whether the heuristic feasibility pump should be used</td></tr>
+<tr><td><a href="#BONMINheuristic_RINS">
+heuristic_RINS</a></td>
+<td>if yes runs the RINS heuristic</td></tr>
+<tr><td><a href="#BONMINpump_for_minlp">
+pump_for_minlp</a></td>
+<td>if yes runs FP for MINLP</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>NLP interface</h3></th></tr>
+<tr><td><a href="#BONMINsolvefinal">
+solvefinal</a></td>
+<td>Switch to disable solving MINLP with discrete variables fixed to solution values after solve.</td></tr>
+<tr><td><a href="#BONMINwarm_start">
+warm_start</a></td>
+<td>Select the warm start method</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>NLP solution robustness</h3></th></tr>
+<tr><td><a href="#BONMINmax_consecutive_failures">
+max_consecutive_failures</a></td>
+<td>(temporarily removed) Number $n$ of consecutive unsolved problems before aborting a branch of the tree.</td></tr>
+<tr><td><a href="#BONMINmax_random_point_radius">
+max_random_point_radius</a></td>
+<td>Set max value r for coordinate of a random point.</td></tr>
+<tr><td><a href="#BONMINnum_iterations_suspect">
+num_iterations_suspect</a></td>
+<td>Number of iterations over which a node is considered 'suspect' (for debugging purposes only, see detailed documentation).</td></tr>
+<tr><td><a href="#BONMINnum_retry_unsolved_random_point">
+num_retry_unsolved_random_point</a></td>
+<td>Number $k$ of times that the algorithm will try to resolve an unsolved NLP with a random starting point (we call unsolved an NLP for which Ipopt is not able to guarantee optimality within the specified tolerances).</td></tr>
+<tr><td><a href="#BONMINrandom_point_perturbation_interval">
+random_point_perturbation_interval</a></td>
+<td>Amount by which starting point is perturbed when choosing to pick random point by perturbating starting point</td></tr>
+<tr><td><a href="#BONMINrandom_point_type">
+random_point_type</a></td>
+<td>method to choose a random starting point</td></tr>
+<tr><td><a href="#BONMINresolve_on_small_infeasibility">
+resolve_on_small_infeasibility</a></td>
+<td>If a locally infeasible problem is infeasible by less than this, resolve it with initial starting point.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>NLP solves in hybrid algorithm (B-Hyb)</h3></th></tr>
+<tr><td><a href="#BONMINnlp_solves_per_depth">
+nlp_solves_per_depth</a></td>
+<td>Set average number of nodes in the tree at which NLP relaxations are solved in B-Hyb for each depth.</td></tr>
+<tr><td><a href="#BONMINnlp_solve_frequency">
+nlp_solve_frequency</a></td>
+<td>Specify the frequency (in terms of nodes) at which NLP relaxations are solved in B-Hyb.</td></tr>
+<tr><td><a href="#BONMINnlp_solve_max_depth">
+nlp_solve_max_depth</a></td>
+<td>Set maximum depth in the tree at which NLP relaxations are solved in B-Hyb.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Nonconvex problems</h3></th></tr>
+<tr><td><a href="#BONMINcoeff_var_threshold">
+coeff_var_threshold</a></td>
+<td>Coefficient of variation threshold (for dynamic definition of cutoff_decr).</td></tr>
+<tr><td><a href="#BONMINdynamic_def_cutoff_decr">
+dynamic_def_cutoff_decr</a></td>
+<td>Do you want to define the parameter cutoff_decr dynamically?</td></tr>
+<tr><td><a href="#BONMINfirst_perc_for_cutoff_decr">
+first_perc_for_cutoff_decr</a></td>
+<td>The percentage used when, the coeff of variance is smaller than the threshold, to compute the cutoff_decr dynamically.</td></tr>
+<tr><td><a href="#BONMINmax_consecutive_infeasible">
+max_consecutive_infeasible</a></td>
+<td>Number of consecutive infeasible subproblems before aborting a branch.</td></tr>
+<tr><td><a href="#BONMINnum_resolve_at_infeasibles">
+num_resolve_at_infeasibles</a></td>
+<td>Number $k$ of tries to resolve an infeasible node (other than the root) of the tree with different starting point.</td></tr>
+<tr><td><a href="#BONMINnum_resolve_at_node">
+num_resolve_at_node</a></td>
+<td>Number $k$ of tries to resolve a node (other than the root) of the tree with different starting point.</td></tr>
+<tr><td><a href="#BONMINnum_resolve_at_root">
+num_resolve_at_root</a></td>
+<td>Number $k$ of tries to resolve the root node with different starting points.</td></tr>
+<tr><td><a href="#BONMINsecond_perc_for_cutoff_decr">
+second_perc_for_cutoff_decr</a></td>
+<td>The percentage used when, the coeff of variance is greater than the threshold, to compute the cutoff_decr dynamically.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Outer Approximation Decomposition (B-OA)</h3></th></tr>
+<tr><td><a href="#BONMINoa_decomposition">
+oa_decomposition</a></td>
+<td>If yes do initial OA decomposition</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Outer Approximation cuts generation</h3></th></tr>
+<tr><td><a href="#BONMINadd_only_violated_oa">
+add_only_violated_oa</a></td>
+<td>Do we add all OA cuts or only the ones violated by current point?</td></tr>
+<tr><td><a href="#BONMINoa_cuts_scope">
+oa_cuts_scope</a></td>
+<td>Specify if OA cuts added are to be set globally or locally valid</td></tr>
+<tr><td><a href="#BONMINoa_rhs_relax">
+oa_rhs_relax</a></td>
+<td>Value by which to relax OA cut</td></tr>
+<tr><td><a href="#BONMINtiny_element">
+tiny_element</a></td>
+<td>Value for tiny element in OA cut</td></tr>
+<tr><td><a href="#BONMINvery_tiny_element">
+very_tiny_element</a></td>
+<td>Value for very tiny element in OA cut</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Output</h3></th></tr>
+<tr><td><a href="#BONMINbb_log_interval">
+bb_log_interval</a></td>
+<td>Interval at which node level output is printed.</td></tr>
+<tr><td><a href="#BONMINbb_log_level">
+bb_log_level</a></td>
+<td>specify main branch-and-bound log level.</td></tr>
+<tr><td><a href="#BONMINfp_log_frequency">
+fp_log_frequency</a></td>
+<td>display an update on lower and upper bounds in FP every n seconds</td></tr>
+<tr><td><a href="#BONMINfp_log_level">
+fp_log_level</a></td>
+<td>specify FP iterations log level.</td></tr>
+<tr><td><a href="#BONMINlp_log_level">
+lp_log_level</a></td>
+<td>specify LP log level.</td></tr>
+<tr><td><a href="#BONMINmilp_log_level">
+milp_log_level</a></td>
+<td>specify MILP solver log level.</td></tr>
+<tr><td><a href="#BONMINnlp_log_at_root">
+nlp_log_at_root</a></td>
+<td> Specify a different log level for root relaxtion.</td></tr>
+<tr><td><a href="#BONMINnlp_log_level">
+nlp_log_level</a></td>
+<td>specify NLP solver interface log level (independent from ipopt print_level).</td></tr>
+<tr><td><a href="#BONMINoa_cuts_log_level">
+oa_cuts_log_level</a></td>
+<td>level of log when generating OA cuts.</td></tr>
+<tr><td><a href="#BONMINoa_log_frequency">
+oa_log_frequency</a></td>
+<td>display an update on lower and upper bounds in OA every n seconds</td></tr>
+<tr><td><a href="#BONMINoa_log_level">
+oa_log_level</a></td>
+<td>specify OA iterations log level.</td></tr>
+<tr><td><a href="#BONMINprint_funceval_statistics">
+print_funceval_statistics</a></td>
+<td>Switch to enable printing statistics on number of evaluations of GAMS functions/gradients/Hessian.</td></tr>
+<tr><td><a href="#BONMINsolvetrace">
+solvetrace</a></td>
+<td>Name of file for writing solving progress information.</td></tr>
+<tr><td><a href="#BONMINsolvetracenodefreq">
+solvetracenodefreq</a></td>
+<td>Frequency in number of nodes for writing solving progress information.</td></tr>
+<tr><td><a href="#BONMINsolvetracetimefreq">
+solvetracetimefreq</a></td>
+<td>Frequency in seconds for writing solving progress information.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Strong branching setup</h3></th></tr>
+<tr><td><a href="#BONMINcandidate_sort_criterion">
+candidate_sort_criterion</a></td>
+<td>Choice of the criterion to choose candidates in strong-branching</td></tr>
+<tr><td><a href="#BONMINmaxmin_crit_have_sol">
+maxmin_crit_have_sol</a></td>
+<td>Weight towards minimum in of lower and upper branching estimates when a solution has been found.</td></tr>
+<tr><td><a href="#BONMINmaxmin_crit_no_sol">
+maxmin_crit_no_sol</a></td>
+<td>Weight towards minimum in of lower and upper branching estimates when no solution has been found yet.</td></tr>
+<tr><td><a href="#BONMINmin_number_strong_branch">
+min_number_strong_branch</a></td>
+<td>Sets minimum number of variables for strong branching (overriding trust)</td></tr>
+<tr><td><a href="#BONMINnumber_before_trust_list">
+number_before_trust_list</a></td>
+<td>Set the number of branches on a variable before its pseudo costs are to be believed during setup of strong branching candidate list.</td></tr>
+<tr><td><a href="#BONMINnumber_look_ahead">
+number_look_ahead</a></td>
+<td>Sets limit of look-ahead strong-branching trials</td></tr>
+<tr><td><a href="#BONMINnumber_strong_branch_root">
+number_strong_branch_root</a></td>
+<td>Maximum number of variables considered for strong branching in root node.</td></tr>
+<tr><td><a href="#BONMINsetup_pseudo_frac">
+setup_pseudo_frac</a></td>
+<td>Proportion of strong branching list that has to be taken from most-integer-infeasible list.</td></tr>
+<tr><td><a href="#BONMINtrust_strong_branching_for_pseudo_cost">
+trust_strong_branching_for_pseudo_cost</a></td>
+<td>Whether or not to trust strong branching results for updating pseudo costs.</td></tr></table>
+<h2>Detailed Descriptions of BONMIN Options</h2>
+
+<h4><a name="BONMIN2mir_cuts">
+2mir_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating 2-MIR cuts in branch-and-cut</h4><p>
+
+If $k > 0$, cuts are generated every $k$ nodes, if $-99 < k < 0$ cuts are
+generated every $-k$ nodes but Cbc may decide to stop generating cuts, if not
+enough are generated at the root node, if $k=-99$ generate cuts only at the
+root node, if $k=0$ or $100$ do not generate cuts.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINadd_only_violated_oa">
+add_only_violated_oa</a>
+<i> (string)</i> Do we add all OA cuts or only the ones violated by current point?</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>Add all cuts</td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Add only violated Cuts</td></tr>
+</table>
+
+<h4><a name="BONMINalgorithm">
+algorithm</a>
+<i> (string)</i> Choice of the algorithm.</h4><p>
+
+This will preset some of the options of bonmin depending on the algorithm
+choice.
+
+<br><i>(default = B-BB)</i>
+<table>
+<tr valign="top"><td width=20 align=right>B-BB</td><td>simple branch-and-bound algorithm,</td></tr>
+<tr valign="top"><td width=20 align=right>B-Ecp</td><td>ecp cuts based branch-and-cut a la FilMINT.</td></tr>
+<tr valign="top"><td width=20 align=right>B-Hyb</td><td>hybrid outer approximation based branch-and-cut,</td></tr>
+<tr valign="top"><td width=20 align=right>B-OA</td><td>OA Decomposition algorithm,</td></tr>
+<tr valign="top"><td width=20 align=right>B-QG</td><td>Quesada and Grossmann branch-and-cut algorithm,</td></tr>
+<tr valign="top"><td width=20 align=right>B-iFP</td><td>Iterated Feasibility Pump for MINLP.</td></tr>
+</table>
+
+<h4><a name="BONMINallowable_fraction_gap">
+allowable_fraction_gap</a>
+<i> (real)</i> Specify the value of relative gap under which the algorithm stops.</h4><p>
+
+Stop the tree search when the gap between the objective value of the best known
+solution and the best bound on the objective of any solution is less than this
+fraction of the absolute value of the best known solution value.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BONMINallowable_gap">
+allowable_gap</a>
+<i> (real)</i> Specify the value of absolute gap under which the algorithm stops.</h4><p>
+
+Stop the tree search when the gap between the objective value of the best known
+solution and the best bound on the objective of any solution is less than this.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINbb_log_interval">
+bb_log_interval</a>
+<i> (integer)</i> Interval at which node level output is printed.</h4><p>
+
+Set the interval (in terms of number of nodes) at which a log on node
+resolutions (consisting of lower and upper bounds) is given.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="BONMINbb_log_level">
+bb_log_level</a>
+<i> (integer)</i> specify main branch-and-bound log level.</h4><p>
+
+Set the level of output of the branch-and-bound : 0 - none, 1 - minimal, 2 -
+normal low, 3 - normal high
+
+<br><i>Range: [0,5]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINcandidate_sort_criterion">
+candidate_sort_criterion</a>
+<i> (string)</i> Choice of the criterion to choose candidates in strong-branching</h4><p>
+
+
+<br><i>(default = best-ps-cost)</i>
+<table>
+<tr valign="top"><td width=20 align=right>best-ps-cost</td><td>Sort by decreasing pseudo-cost</td></tr>
+<tr valign="top"><td width=20 align=right>least-fractional</td><td>Sort by increasing integer infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>most-fractional</td><td>Sort by decreasing integer infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>worst-ps-cost</td><td>Sort by increasing pseudo-cost</td></tr>
+</table>
+
+<h4><a name="BONMINclique_cuts">
+clique_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating clique cuts in branch-and-cut</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = -5)</i>
+
+<h4><a name="BONMINcoeff_var_threshold">
+coeff_var_threshold</a>
+<i> (real)</i> Coefficient of variation threshold (for dynamic definition of cutoff_decr).</h4><p>
+
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BONMINcover_cuts">
+cover_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating cover cuts in branch-and-cut</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINcpx_parallel_strategy">
+cpx_parallel_strategy</a>
+<i> (integer)</i> Strategy of parallel search mode in CPLEX.</h4><p>
+
+-1 = opportunistic, 0 = automatic, 1 = deterministic (refer to CPLEX
+documentation)
+
+<br><i>Range: [-1,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINcutoff">
+cutoff</a>
+<i> (real)</i> Specify cutoff value.</h4><p>
+
+cutoff should be the value of a feasible solution known by the user (if any).
+The algorithm will only look for solutions better than cutoff.
+
+<br><i>Range: [-1e+100,1e+100]</i>
+
+<br><i>(default = 1e+100)</i>
+
+<h4><a name="BONMINcutoff_decr">
+cutoff_decr</a>
+<i> (real)</i> Specify cutoff decrement.</h4><p>
+
+Specify the amount by which cutoff is decremented below a new best upper-bound
+(usually a small positive value but in non-convex problems it may be a negative
+value).
+
+<br><i>Range: [-1e+10,1e+10]</i>
+
+<br><i>(default = 1e-05)</i>
+
+<h4><a name="BONMINdynamic_def_cutoff_decr">
+dynamic_def_cutoff_decr</a>
+<i> (string)</i> Do you want to define the parameter cutoff_decr dynamically?</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINecp_abs_tol">
+ecp_abs_tol</a>
+<i> (real)</i> Set the absolute termination tolerance for ECP rounds.</h4><p>
+
+
+<br><i>(default = 1e-06)</i>
+
+<h4><a name="BONMINecp_max_rounds">
+ecp_max_rounds</a>
+<i> (integer)</i> Set the maximal number of rounds of ECP cuts.</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="BONMINecp_probability_factor">
+ecp_probability_factor</a>
+<i> (real)</i> Factor appearing in formula for skipping ECP cuts.</h4><p>
+
+Choosing -1 disables the skipping.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="BONMINecp_rel_tol">
+ecp_rel_tol</a>
+<i> (real)</i> Set the relative termination tolerance for ECP rounds.</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINenable_dynamic_nlp">
+enable_dynamic_nlp</a>
+<i> (string)</i> Enable dynamic linear and quadratic rows addition in nlp</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINfeasibility_pump_objective_norm">
+feasibility_pump_objective_norm</a>
+<i> (integer)</i> Norm of feasibility pump objective function</h4><p>
+
+
+<br><i>Range: [1,2]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINfeas_check_cut_types">
+feas_check_cut_types</a>
+<i> (string)</i> Choose the type of cuts generated when an integer feasible solution is found</h4><p>
+
+If it seems too much memory is used should try Benders to use less
+
+<br><i>(default = outer-approx)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Benders</td><td>Generate a single Benders cut.</td></tr>
+<tr valign="top"><td width=20 align=right>outer-approx</td><td>Generate a set of Outer Approximations cuts.</td></tr>
+</table>
+
+<h4><a name="BONMINfeas_check_discard_policy">
+feas_check_discard_policy</a>
+<i> (string)</i> How cuts from feasibility checker are discarded</h4><p>
+
+Normally to avoid cycle cuts from feasibility checker should not be discarded
+in the node where they are generated. However Cbc sometimes does it if no care
+is taken which can lead to an infinite loop in Bonmin (usualy on simple
+problems). To avoid this one can instruct Cbc to never discard a cut but if we
+do that for all cuts it can lead to memory problems. The default policy here is
+to detect cycles and only then impose to Cbc to keep the cut. The two other
+alternative are to instruct Cbc to keep all cuts or to just ignore the problem
+and hope for the best
+
+<br><i>(default = detect-cycles)</i>
+<table>
+<tr valign="top"><td width=20 align=right>detect-cycles</td><td>Detect if a cycle occurs and only in this case force not to discard.</td></tr>
+<tr valign="top"><td width=20 align=right>keep-all</td><td>Force cuts from feasibility checker not to be discarded (memory hungry but sometimes better).</td></tr>
+<tr valign="top"><td width=20 align=right>treated-as-normal</td><td>Cuts from memory checker can be discarded as any other cuts (code may cycle then)</td></tr>
+</table>
+
+<h4><a name="BONMINfilmint_ecp_cuts">
+filmint_ecp_cuts</a>
+<i> (integer)</i> Specify the frequency (in terms of nodes) at which some a la filmint ecp cuts are generated.</h4><p>
+
+A frequency of 0 amounts to to never solve the NLP relaxation.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINfirst_perc_for_cutoff_decr">
+first_perc_for_cutoff_decr</a>
+<i> (real)</i> The percentage used when, the coeff of variance is smaller than the threshold, to compute the cutoff_decr dynamically.</h4><p>
+
+
+<br><i>(default = -0.02)</i>
+
+<h4><a name="BONMINflow_cover_cuts">
+flow_cover_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating flow cover cuts in branch-and-cut</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = -5)</i>
+
+<h4><a name="BONMINfp_log_frequency">
+fp_log_frequency</a>
+<i> (real)</i> display an update on lower and upper bounds in FP every n seconds</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="BONMINfp_log_level">
+fp_log_level</a>
+<i> (integer)</i> specify FP iterations log level.</h4><p>
+
+Set the level of output of OA decomposition solver : 0 - none, 1 - normal, 2 -
+verbose
+
+<br><i>Range: [0,2]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINfp_pass_infeasible">
+fp_pass_infeasible</a>
+<i> (string)</i> Say whether feasibility pump should claim to converge or not</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>When master MILP is infeasible just bail out (don't stop all algorithm). This is the option for using in B-Hyb.</td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Claim convergence, numerically dangerous.</td></tr>
+</table>
+
+<h4><a name="BONMINgenerate_benders_after_so_many_oa">
+generate_benders_after_so_many_oa</a>
+<i> (integer)</i> Specify that after so many oa cuts have been generated Benders cuts should be generated instead.</h4><p>
+
+It seems that sometimes generating too many oa cuts slows down the optimization
+compared to Benders due to the size of the LP. With this option we specify that
+after so many OA cuts have been generated we should switch to Benders cuts.
+
+<br><i>(default = 5000)</i>
+
+<h4><a name="BONMINGomory_cuts">
+Gomory_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating Gomory cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = -5)</i>
+
+<h4><a name="BONMINheuristic_dive_fractional">
+heuristic_dive_fractional</a>
+<i> (string)</i> if yes runs the Dive Fractional heuristic</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINheuristic_dive_MIP_fractional">
+heuristic_dive_MIP_fractional</a>
+<i> (string)</i> if yes runs the Dive MIP Fractional heuristic</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINheuristic_dive_MIP_vectorLength">
+heuristic_dive_MIP_vectorLength</a>
+<i> (string)</i> if yes runs the Dive MIP VectorLength heuristic</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINheuristic_dive_vectorLength">
+heuristic_dive_vectorLength</a>
+<i> (string)</i> if yes runs the Dive VectorLength heuristic</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINheuristic_feasibility_pump">
+heuristic_feasibility_pump</a>
+<i> (string)</i> whether the heuristic feasibility pump should be used</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINheuristic_RINS">
+heuristic_RINS</a>
+<i> (string)</i> if yes runs the RINS heuristic</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINinteger_tolerance">
+integer_tolerance</a>
+<i> (real)</i> Set integer tolerance.</h4><p>
+
+Any number within that value of an integer is considered integer.
+
+<br><i>(default = 1e-06)</i>
+
+<h4><a name="BONMINiteration_limit">
+iteration_limit</a>
+<i> (integer)</i> Set the cumulated maximum number of iteration in the algorithm used to process nodes continuous relaxations in the branch-and-bound.</h4><p>
+
+value 0 deactivates option.
+
+<br><i>(default = maxint)</i>
+
+<h4><a name="BONMINlift_and_project_cuts">
+lift_and_project_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating lift-and-project cuts in branch-and-cut</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINlp_log_level">
+lp_log_level</a>
+<i> (integer)</i> specify LP log level.</h4><p>
+
+Set the level of output of the linear programming sub-solver in B-Hyb or B-QG :
+0 - none, 1 - minimal, 2 - normal low, 3 - normal high, 4 - verbose
+
+<br><i>Range: [0,4]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINmaxmin_crit_have_sol">
+maxmin_crit_have_sol</a>
+<i> (real)</i> Weight towards minimum in of lower and upper branching estimates when a solution has been found.</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="BONMINmaxmin_crit_no_sol">
+maxmin_crit_no_sol</a>
+<i> (real)</i> Weight towards minimum in of lower and upper branching estimates when no solution has been found yet.</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.7)</i>
+
+<h4><a name="BONMINmax_consecutive_failures">
+max_consecutive_failures</a>
+<i> (integer)</i> (temporarily removed) Number $n$ of consecutive unsolved problems before aborting a branch of the tree.</h4><p>
+
+When $n > 0$, continue exploring a branch of the tree until $n$ consecutive
+problems in the branch are unsolved (we call unsolved a problem for which Ipopt
+can not guarantee optimality within the specified tolerances).
+
+<br><i>(default = 10)</i>
+
+<h4><a name="BONMINmax_consecutive_infeasible">
+max_consecutive_infeasible</a>
+<i> (integer)</i> Number of consecutive infeasible subproblems before aborting a branch.</h4><p>
+
+Will continue exploring a branch of the tree until
+"max_consecutive_infeasible"consecutive problems are infeasibles by the NLP
+sub-solver.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINmax_random_point_radius">
+max_random_point_radius</a>
+<i> (real)</i> Set max value r for coordinate of a random point.</h4><p>
+
+When picking a random point, coordinate i will be in the interval
+[min(max(l,-r),u-r), max(min(u,r),l+r)] (where l is the lower bound for the
+variable and u is its upper bound)
+
+<br><i>(default = 100000)</i>
+
+<h4><a name="BONMINmilp_log_level">
+milp_log_level</a>
+<i> (integer)</i> specify MILP solver log level.</h4><p>
+
+Set the level of output of the MILP subsolver in OA : 0 - none, 1 - minimal, 2
+- normal low, 3 - normal high
+
+<br><i>Range: [0,4]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINmilp_solver">
+milp_solver</a>
+<i> (string)</i> Choose the subsolver to solve MILP sub-problems in OA decompositions.</h4><p>
+
+To use Cplex, a valid license is required.
+
+<br><i>(default = Cbc_D)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Cbc_D</td><td>Coin Branch and Cut with its default</td></tr>
+<tr valign="top"><td width=20 align=right>Cbc_Par</td><td>Coin Branch and Cut with passed parameters</td></tr>
+<tr valign="top"><td width=20 align=right>Cplex</td><td>IBM Cplex</td></tr>
+</table>
+
+<h4><a name="BONMINmilp_strategy">
+milp_strategy</a>
+<i> (string)</i> Choose a strategy for MILPs.</h4><p>
+
+
+<br><i>(default = solve_to_optimality)</i>
+<table>
+<tr valign="top"><td width=20 align=right>find_good_sol</td><td>Stop sub milps when a solution improving the incumbent is found</td></tr>
+<tr valign="top"><td width=20 align=right>solve_to_optimality</td><td>Solve MILPs to optimality</td></tr>
+</table>
+
+<h4><a name="BONMINmin_number_strong_branch">
+min_number_strong_branch</a>
+<i> (integer)</i> Sets minimum number of variables for strong branching (overriding trust)</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINmir_cuts">
+mir_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating MIR cuts in branch-and-cut</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = -5)</i>
+
+<h4><a name="BONMINnlp_failure_behavior">
+nlp_failure_behavior</a>
+<i> (string)</i> Set the behavior when an NLP or a series of NLP are unsolved by Ipopt (we call unsolved an NLP for which Ipopt is not able to guarantee optimality within the specified tolerances).</h4><p>
+
+If set to "fathom", the algorithm will fathom the node when Ipopt fails to find
+a solution to the nlp at that node whithin the specified tolerances. The
+algorithm then becomes a heuristic, and the user will be warned that the
+solution might not be optimal.
+
+<br><i>(default = stop)</i>
+<table>
+<tr valign="top"><td width=20 align=right>fathom</td><td>Continue when failure happens.</td></tr>
+<tr valign="top"><td width=20 align=right>stop</td><td>Stop when failure happens.</td></tr>
+</table>
+
+<h4><a name="BONMINnlp_log_at_root">
+nlp_log_at_root</a>
+<i> (integer)</i>  Specify a different log level for root relaxtion.</h4><p>
+
+
+<br><i>Range: [0,12]</i>
+
+<br><i>(default = 5)</i>
+
+<h4><a name="BONMINnlp_log_level">
+nlp_log_level</a>
+<i> (integer)</i> specify NLP solver interface log level (independent from ipopt print_level).</h4><p>
+
+Set the level of output of the OsiTMINLPInterface : 0 - none, 1 - normal, 2 -
+verbose
+
+<br><i>Range: [0,2]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINnlp_solves_per_depth">
+nlp_solves_per_depth</a>
+<i> (real)</i> Set average number of nodes in the tree at which NLP relaxations are solved in B-Hyb for each depth.</h4><p>
+
+
+<br><i>(default = 1e+100)</i>
+
+<h4><a name="BONMINnlp_solve_frequency">
+nlp_solve_frequency</a>
+<i> (integer)</i> Specify the frequency (in terms of nodes) at which NLP relaxations are solved in B-Hyb.</h4><p>
+
+A frequency of 0 amounts to to never solve the NLP relaxation.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="BONMINnlp_solve_max_depth">
+nlp_solve_max_depth</a>
+<i> (integer)</i> Set maximum depth in the tree at which NLP relaxations are solved in B-Hyb.</h4><p>
+
+A depth of 0 amounts to to never solve the NLP relaxation.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="BONMINnode_comparison">
+node_comparison</a>
+<i> (string)</i> Choose the node selection strategy.</h4><p>
+
+Choose the strategy for selecting the next node to be processed.
+
+<br><i>(default = best-bound)</i>
+<table>
+<tr valign="top"><td width=20 align=right>best-bound</td><td>choose node with the smallest bound,</td></tr>
+<tr valign="top"><td width=20 align=right>best-guess</td><td>choose node with smallest guessed integer solution</td></tr>
+<tr valign="top"><td width=20 align=right>breadth-first</td><td>Perform breadth first search,</td></tr>
+<tr valign="top"><td width=20 align=right>depth-first</td><td>Perform depth first search,</td></tr>
+<tr valign="top"><td width=20 align=right>dynamic</td><td>Cbc dynamic strategy (starts with a depth first search and turn to best bound after 3 integer feasible solutions have been found).</td></tr>
+</table>
+
+<h4><a name="BONMINnode_limit">
+node_limit</a>
+<i> (integer)</i> Set the maximum number of nodes explored in the branch-and-bound search.</h4><p>
+
+
+<br><i>(default = maxint)</i>
+
+<h4><a name="BONMINnumber_before_trust">
+number_before_trust</a>
+<i> (integer)</i> Set the number of branches on a variable before its pseudo costs are to be believed in dynamic strong branching.</h4><p>
+
+A value of 0 disables pseudo costs.
+
+<br><i>(default = 8)</i>
+
+<h4><a name="BONMINnumber_before_trust_list">
+number_before_trust_list</a>
+<i> (integer)</i> Set the number of branches on a variable before its pseudo costs are to be believed during setup of strong branching candidate list.</h4><p>
+
+The default value is that of "number_before_trust"
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINnumber_cpx_threads">
+number_cpx_threads</a>
+<i> (integer)</i> Set number of threads to use with cplex.</h4><p>
+
+(refer to CPLEX documentation)
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINnumber_look_ahead">
+number_look_ahead</a>
+<i> (integer)</i> Sets limit of look-ahead strong-branching trials</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINnumber_strong_branch">
+number_strong_branch</a>
+<i> (integer)</i> Choose the maximum number of variables considered for strong branching.</h4><p>
+
+Set the number of variables on which to do strong branching.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="BONMINnumber_strong_branch_root">
+number_strong_branch_root</a>
+<i> (integer)</i> Maximum number of variables considered for strong branching in root node.</h4><p>
+
+
+<br><i>(default = maxint)</i>
+
+<h4><a name="BONMINnum_cut_passes">
+num_cut_passes</a>
+<i> (integer)</i> Set the maximum number of cut passes at regular nodes of the branch-and-cut.</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINnum_cut_passes_at_root">
+num_cut_passes_at_root</a>
+<i> (integer)</i> Set the maximum number of cut passes at regular nodes of the branch-and-cut.</h4><p>
+
+
+<br><i>(default = 20)</i>
+
+<h4><a name="BONMINnum_iterations_suspect">
+num_iterations_suspect</a>
+<i> (integer)</i> Number of iterations over which a node is considered 'suspect' (for debugging purposes only, see detailed documentation).</h4><p>
+
+When the number of iterations to solve a node is above this number, the
+subproblem at this node is considered to be suspect and it will be outputed in
+a file (set to -1 to deactivate this).
+
+<br><i>(default = -1)</i>
+
+<h4><a name="BONMINnum_resolve_at_infeasibles">
+num_resolve_at_infeasibles</a>
+<i> (integer)</i> Number $k$ of tries to resolve an infeasible node (other than the root) of the tree with different starting point.</h4><p>
+
+The algorithm will solve all the infeasible nodes with $k$ different random
+starting points and will keep the best local optimum found.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINnum_resolve_at_node">
+num_resolve_at_node</a>
+<i> (integer)</i> Number $k$ of tries to resolve a node (other than the root) of the tree with different starting point.</h4><p>
+
+The algorithm will solve all the nodes with $k$ different random starting
+points and will keep the best local optimum found.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINnum_resolve_at_root">
+num_resolve_at_root</a>
+<i> (integer)</i> Number $k$ of tries to resolve the root node with different starting points.</h4><p>
+
+The algorithm will solve the root node with $k$ random starting points and will
+keep the best local optimum found.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINnum_retry_unsolved_random_point">
+num_retry_unsolved_random_point</a>
+<i> (integer)</i> Number $k$ of times that the algorithm will try to resolve an unsolved NLP with a random starting point (we call unsolved an NLP for which Ipopt is not able to guarantee optimality within the specified tolerances).</h4><p>
+
+When Ipopt fails to solve a continuous NLP sub-problem, if $k > 0$, the
+algorithm will try again to solve the failed NLP with $k$ new randomly chosen
+starting points  or until the problem is solved with success.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINoa_cuts_log_level">
+oa_cuts_log_level</a>
+<i> (integer)</i> level of log when generating OA cuts.</h4><p>
+
+0: outputs nothing,
+1: when a cut is generated, its violation and index of row from which it
+originates,
+2: always output violation of the cut.
+3: output generated cuts incidence vectors.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINoa_cuts_scope">
+oa_cuts_scope</a>
+<i> (string)</i> Specify if OA cuts added are to be set globally or locally valid</h4><p>
+
+
+<br><i>(default = global)</i>
+<table>
+<tr valign="top"><td width=20 align=right>global</td><td>Cuts are treated as globally valid</td></tr>
+<tr valign="top"><td width=20 align=right>local</td><td>Cuts are treated as locally valid</td></tr>
+</table>
+
+<h4><a name="BONMINoa_decomposition">
+oa_decomposition</a>
+<i> (string)</i> If yes do initial OA decomposition</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINoa_log_frequency">
+oa_log_frequency</a>
+<i> (real)</i> display an update on lower and upper bounds in OA every n seconds</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="BONMINoa_log_level">
+oa_log_level</a>
+<i> (integer)</i> specify OA iterations log level.</h4><p>
+
+Set the level of output of OA decomposition solver : 0 - none, 1 - normal, 2 -
+verbose
+
+<br><i>Range: [0,2]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINoa_rhs_relax">
+oa_rhs_relax</a>
+<i> (real)</i> Value by which to relax OA cut</h4><p>
+
+RHS of OA constraints will be relaxed by this amount times the absolute value
+of the initial rhs if it is >= 1 (otherwise by this amount).
+
+<br><i>(default = 1e-08)</i>
+
+<h4><a name="BONMINprint_funceval_statistics">
+print_funceval_statistics</a>
+<i> (string)</i> Switch to enable printing statistics on number of evaluations of GAMS functions/gradients/Hessian.</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINpump_for_minlp">
+pump_for_minlp</a>
+<i> (string)</i> if yes runs FP for MINLP</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINrandom_generator_seed">
+random_generator_seed</a>
+<i> (integer)</i> Set seed for random number generator (a value of -1 sets seeds to time since Epoch).</h4><p>
+
+
+<br><i>(default = 42)</i>
+
+<h4><a name="BONMINrandom_point_perturbation_interval">
+random_point_perturbation_interval</a>
+<i> (real)</i> Amount by which starting point is perturbed when choosing to pick random point by perturbating starting point</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="BONMINrandom_point_type">
+random_point_type</a>
+<i> (string)</i> method to choose a random starting point</h4><p>
+
+
+<br><i>(default = Jon)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Andreas</td><td>perturb the starting point of the problem within a prescribed interval</td></tr>
+<tr valign="top"><td width=20 align=right>Claudia</td><td>perturb the starting point using the perturbation radius suffix information</td></tr>
+<tr valign="top"><td width=20 align=right>Jon</td><td>Choose random point uniformly between the bounds</td></tr>
+</table>
+
+<h4><a name="BONMINread_solution_file">
+read_solution_file</a>
+<i> (string)</i> Read a file with the optimal solution to test if algorithms cuts it.</h4><p>
+
+For Debugging purposes only.
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINreduce_and_split_cuts">
+reduce_and_split_cuts</a>
+<i> (integer)</i> Frequency (in terms of nodes) for generating reduce-and-split cuts in branch-and-cut</h4><p>
+
+See option \texttt{2mir_cuts} for a detailed description.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINresolve_on_small_infeasibility">
+resolve_on_small_infeasibility</a>
+<i> (real)</i> If a locally infeasible problem is infeasible by less than this, resolve it with initial starting point.</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BONMINsecond_perc_for_cutoff_decr">
+second_perc_for_cutoff_decr</a>
+<i> (real)</i> The percentage used when, the coeff of variance is greater than the threshold, to compute the cutoff_decr dynamically.</h4><p>
+
+
+<br><i>(default = -0.05)</i>
+
+<h4><a name="BONMINsetup_pseudo_frac">
+setup_pseudo_frac</a>
+<i> (real)</i> Proportion of strong branching list that has to be taken from most-integer-infeasible list.</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="BONMINsolution_limit">
+solution_limit</a>
+<i> (integer)</i> Abort after that much integer feasible solution have been found by algorithm</h4><p>
+
+value 0 deactivates option
+
+<br><i>(default = maxint)</i>
+
+<h4><a name="BONMINsolvefinal">
+solvefinal</a>
+<i> (string)</i> Switch to disable solving MINLP with discrete variables fixed to solution values after solve.</h4><p>
+
+If enabled, then the dual values from the resolved NLP are made available in
+GAMS.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINsolvetrace">
+solvetrace</a>
+<i> (string)</i> Name of file for writing solving progress information.</h4><p>
+
+
+
+<h4><a name="BONMINsolvetracenodefreq">
+solvetracenodefreq</a>
+<i> (integer)</i> Frequency in number of nodes for writing solving progress information.</h4><p>
+
+giving 0 disables writing of N-lines to trace file
+
+<br><i>(default = 100)</i>
+
+<h4><a name="BONMINsolvetracetimefreq">
+solvetracetimefreq</a>
+<i> (real)</i> Frequency in seconds for writing solving progress information.</h4><p>
+
+giving 0.0 disables writing of T-lines to trace file
+
+<br><i>(default = 5)</i>
+
+<h4><a name="BONMINtime_limit">
+time_limit</a>
+<i> (real)</i> Set the global maximum computation time (in secs) for the algorithm.</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="BONMINtiny_element">
+tiny_element</a>
+<i> (real)</i> Value for tiny element in OA cut</h4><p>
+
+We will remove "cleanly" (by relaxing cut) an element lower than this.
+
+<br><i>(default = 1e-08)</i>
+
+<h4><a name="BONMINtree_search_strategy">
+tree_search_strategy</a>
+<i> (string)</i> Pick a strategy for traversing the tree</h4><p>
+
+All strategies can be used in conjunction with any of the node comparison
+functions. Options which affect dfs-dive are max-backtracks-in-dive and
+max-dive-depth. The dfs-dive won't work in a non-convex problem where objective
+does not decrease down branches.
+
+<br><i>(default = probed-dive)</i>
+<table>
+<tr valign="top"><td width=20 align=right>dfs-dive</td><td>Dive in the tree if possible doing a depth first search. Backtrack on leaves or when a prescribed depth is attained or when estimate of best possible integer feasible solution in subtree is worst than cutoff.</td></tr>
+<tr valign="top"><td width=20 align=right>dfs-dive-dynamic</td><td>Same as dfs-dive but once enough solution are found switch to best-bound and if too many nodes switch to depth-first.</td></tr>
+<tr valign="top"><td width=20 align=right>dive</td><td>Dive in the tree if possible, otherwise pick top node as sorted by the tree comparison function.</td></tr>
+<tr valign="top"><td width=20 align=right>probed-dive</td><td>Dive in the tree exploring two childs before continuing the dive at each level.</td></tr>
+<tr valign="top"><td width=20 align=right>top-node</td><td> Always pick the top node as sorted by the node comparison function</td></tr>
+</table>
+
+<h4><a name="BONMINtrust_strong_branching_for_pseudo_cost">
+trust_strong_branching_for_pseudo_cost</a>
+<i> (string)</i> Whether or not to trust strong branching results for updating pseudo costs.</h4><p>
+
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="BONMINvariable_selection">
+variable_selection</a>
+<i> (string)</i> Chooses variable selection strategy</h4><p>
+
+
+<br><i>(default = strong-branching)</i>
+<table>
+<tr valign="top"><td width=20 align=right>lp-strong-branching</td><td>Perform strong branching with LP approximation</td></tr>
+<tr valign="top"><td width=20 align=right>most-fractional</td><td>Choose most fractional variable</td></tr>
+<tr valign="top"><td width=20 align=right>nlp-strong-branching</td><td>Perform strong branching with NLP approximation</td></tr>
+<tr valign="top"><td width=20 align=right>osi-simple</td><td>Osi method to do simple branching</td></tr>
+<tr valign="top"><td width=20 align=right>osi-strong</td><td>Osi method to do strong branching</td></tr>
+<tr valign="top"><td width=20 align=right>qp-strong-branching</td><td>Perform strong branching with QP approximation</td></tr>
+<tr valign="top"><td width=20 align=right>random</td><td>Method to choose branching variable randomly</td></tr>
+<tr valign="top"><td width=20 align=right>reliability-branching</td><td>Use reliability branching</td></tr>
+<tr valign="top"><td width=20 align=right>strong-branching</td><td>Perform strong branching</td></tr>
+</table>
+
+<h4><a name="BONMINvery_tiny_element">
+very_tiny_element</a>
+<i> (real)</i> Value for very tiny element in OA cut</h4><p>
+
+Algorithm will take the risk of neglecting an element lower than this.
+
+<br><i>(default = 1e-17)</i>
+
+<h4><a name="BONMINwarm_start">
+warm_start</a>
+<i> (string)</i> Select the warm start method</h4><p>
+
+This will affect the function getWarmStart(), and as a consequence the warm
+starting in the various algorithms.
+
+<br><i>(default = none)</i>
+<table>
+<tr valign="top"><td width=20 align=right>fake_basis</td><td>builds fake basis, useful for cut management in Cbc (warm start is the same as in none)</td></tr>
+<tr valign="top"><td width=20 align=right>interior_point</td><td>Warm start with an interior point of direct parent</td></tr>
+<tr valign="top"><td width=20 align=right>none</td><td>No warm start, just start NLPs from optimal solution of the root relaxation</td></tr>
+<tr valign="top"><td width=20 align=right>optimum</td><td>Warm start with direct parent optimum</td></tr>
+</table>
+</body></html>

@@ -1,0 +1,83 @@
+$Title Transportation model as equilibrium problem using embedded complementarity (TRANSECS,SEQ=14)
+
+$Ontext
+Dantzig's original transportation model TRNSPORT (in GAMS Model Library) is
+reformulated using EMP's embedded complementarity system. It reproduces the
+results of TRANSMCP (in GAMS Model Library) which uses a linear complementarity
+approach.
+
+As in TRANSMCP, we solve four models:
+   1. original fixed-demand LP to get calibration data
+   2. reproduce fixed-demand results with flexible-demand model
+   3. counter-factual with fixed-demand model
+   4. counter-factual with flexible-demand model
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions.
+Princeton University Press, Princeton, New Jersey, 1963.
+
+Contributor: Steven Dirkse, January 2009
+
+$Offtext
+
+Parameter report(*,*,*)  summary report;
+
+$call gamslib -q trnsport
+
+* --- 1. now we solve the original fixed-demand trnsport model
+$include trnsport
+report(i,j,'fixed')       = x.l(i,j);
+report(i,"price",'fixed') = supply.m(i);
+report("price",j,'fixed') = demand.m(j);
+
+* now we introduce a flexible demand function
+parameters esub(j) price elasticity of demand (at prices equal to unity)
+                   / new-york 1.5, chicago 1.2, topeka 2.0  /
+           pbar(j) reference price at demand node j;
+
+variable  p(j)             shadow price at demand node j;
+Equations flexdemand(j)  price-responsive demand at market j
+          flexprofit     profit definition ;
+
+flexdemand(j)..   sum(i, x(i,j)) =l= b(j)*(pbar(j)/p(j))**esub(j);
+
+flexprofit.. z =e= sum((i,j), (p(j)-c(i,j))*x(i,j));
+
+model emp trnsport model with flexible demand / flexprofit,supply,flexdemand /;
+
+p.lo(j) = 1e-3; option limcol=0,limrow=0;
+
+* use the EMP info file to define the price to be equal to the
+* dual of the flexible demand equation
+file fx / '%emp.info%' /;
+put fx '* p(j) = flexdemand.m(j)';
+putclose / 'dualvar p flexdemand';
+
+*  calibrate the demand functions:
+pbar(j) = demand.m(j);
+
+* --- 2. replicate the fixed demand equilibrium
+solve emp us emp max z;
+report(i,j,"flex")        = x.l(i,j);
+report(i,"price",'flex') = supply.m(i);
+report("price",j,"flex")  = p.l(j);
+report("profit",'',"flex") = sum((i,j), (p.l(j)-c(i,j))*x.l(i,j));
+
+*  prepare data for counter-factual
+c("seattle","chicago") = 0.5 * c("seattle","chicago");
+
+* --- 3. counter-factual with fixed demand
+Solve transport min z us lp;
+report(i,j,'fixed CF')       = x.l(i,j);
+report(i,"price",'fixed CF') = supply.m(i);
+report("price",j,'fixed CF') = demand.m(j);
+
+* --- 4. counter-factual with flexible demand
+Solve emp max z us emp;
+report(i,j,"flex CF")        = x.l(i,j);
+report(i,"price",'flex CF') = supply.m(i);
+report("price",j,"flex CF")  = p.l(j);
+report("profit",'',"flex CF") = sum((i,j), (p.l(j)-c(i,j))*x.l(i,j));
+
+Display report;
+execute_unload 'ecsReport.gdx', report;
+

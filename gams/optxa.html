@@ -1,0 +1,478 @@
+<html>
+<head>
+<title>XA Options</title>
+</head>
+<body>
+<h2>XA Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/xa.pdf">XA manual</a>.
+
+<h2>Summary of XA Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General options</h3></th></tr>
+<tr><td><a href="#XAbasis">
+" "" "" " basis</a></td>
+<td>controls writing of advanced basis file for restarts</td></tr>
+<tr><td><a href="#XAforce">
+" "" "" " force</a></td>
+<td>force internal relaxation of bounds if infeasible</td></tr>
+<tr><td><a href="#XAlimitsearch">
+" "" "" " limitsearch</a></td>
+<td>limit searching of the branch-and-bound tree</td></tr>
+<tr><td><a href="#XAmatlist">
+" "" "" " matlist</a></td>
+<td>display the problem for debugging</td></tr>
+<tr><td><a href="#XAset_barrier">
+" "" "" " set" "barrier</a></td>
+<td>control the primal-dual interior point algorithm</td></tr>
+<tr><td><a href="#XAset_bell">
+" "" "" " set" "bell</a></td>
+<td>controls the termination bell</td></tr>
+<tr><td><a href="#XAset_bvpriority">
+" "" "" " set" "bvpriority</a></td>
+<td>set default priority of all binary variables</td></tr>
+<tr><td><a href="#XAset_crash">
+" "" "" " set" "crash</a></td>
+<td>control basis-crashing method</td></tr>
+<tr><td><a href="#XAset_degeniter">
+" "" "" " set" "degeniter</a></td>
+<td>consecutive degenerate pivots before anti-cycling code is activated</td></tr>
+<tr><td><a href="#XAset_dualsimplex">
+" "" "" " set" "dualsimplex</a></td>
+<td>controls use of dual simplex method on restarts</td></tr>
+<tr><td><a href="#XAset_freqlog">
+" "" "" " set" "freqlog</a></td>
+<td>time frequency for printing the iteration log</td></tr>
+<tr><td><a href="#XAset_intgap">
+" "" "" " set" "intgap</a></td>
+<td>Minimum objective improvement between incumbents</td></tr>
+<tr><td><a href="#XAset_intlimit">
+" "" "" " set" "intlimit</a></td>
+<td>limit number of incumbents found</td></tr>
+<tr><td><a href="#XAset_intpct">
+" "" "" " set" "intpct</a></td>
+<td>% of available integer columns to consider fixing at each node</td></tr>
+<tr><td><a href="#XAset_iround">
+" "" "" " set" "iround</a></td>
+<td>control rounding of integer vars when XA reports solutions</td></tr>
+<tr><td><a href="#XAset_iteration">
+" "" "" " set" "iteration</a></td>
+<td>sets limit on simplex iterations</td></tr>
+<tr><td><a href="#XAset_ltolerance">
+" "" "" " set" "ltolerance</a></td>
+<td>lower tolerance for integrality: (i-utol,i+ltol) is integral</td></tr>
+<tr><td><a href="#XAset_markowitz">
+" "" "" " set" "markowitz</a></td>
+<td>larger values favor sparsity over numeric stability</td></tr>
+<tr><td><a href="#XAset_maxcpu">
+" "" "" " set" "maxcpu</a></td>
+<td>limits the number of processors to use</td></tr>
+<tr><td><a href="#XAset_maxnodes">
+" "" "" " set" "maxnodes</a></td>
+<td>sets the estimate of the number of nodes in the branch-and-bound tree</td></tr>
+<tr><td><a href="#XAset_nodelimit">
+" "" "" " set" "nodelimit</a></td>
+<td>limits the number of nodes in the branch-and-bound tree</td></tr>
+<tr><td><a href="#XAset_perturbate">
+" "" "" " set" "perturbate</a></td>
+<td>controls perturbation on highly degenerate problems</td></tr>
+<tr><td><a href="#XAset_pricing">
+" "" "" " set" "pricing</a></td>
+<td>controls the variable pricing strategy</td></tr>
+<tr><td><a href="#XAset_reducedcost">
+" "" "" " set" "reducedcost</a></td>
+<td>zero tolerance for the primal marginals</td></tr>
+<tr><td><a href="#XAset_reinvertfreq">
+" "" "" " set" "reinvertfreq</a></td>
+<td>set basis re-inversion frequency</td></tr>
+<tr><td><a href="#XAset_relaxed">
+" "" "" " set" "relaxed</a></td>
+<td>relax integrality requirement in MIP models - solve as an RMIP</td></tr>
+<tr><td><a href="#XAset_scale">
+" "" "" " set" "scale</a></td>
+<td>set scaling method</td></tr>
+<tr><td><a href="#XAset_stickwithit">
+" "" "" " set" "stickwithit</a></td>
+<td>controls how XA follows branching advice from an integer basis</td></tr>
+<tr><td><a href="#XAset_tctolerance">
+" "" "" " set" "tctolerance</a></td>
+<td>zero tolerance for technology coefficients</td></tr>
+<tr><td><a href="#XAset_timelimit">
+" "" "" " set" "timelimit</a></td>
+<td>set the time limit</td></tr>
+<tr><td><a href="#XAset_tolerance_dual">
+" "" "" " set" "tolerance" "dual</a></td>
+<td>dual feasibility tolerance</td></tr>
+<tr><td><a href="#XAset_tolerance_primal">
+" "" "" " set" "tolerance" "primal</a></td>
+<td>primal feasibility tolerance</td></tr>
+<tr><td><a href="#XAset_utolerance">
+" "" "" " set" "utolerance</a></td>
+<td>upper tolerance for integrality: (i-utol,i+ltol) is integral</td></tr>
+<tr><td><a href="#XAset_ypivot">
+" "" "" " set" "ypivot</a></td>
+<td>sets a pivot tolerance</td></tr>
+<tr><td><a href="#XAstopafter">
+" "" "" " stopafter</a></td>
+<td>post-integer-feasible time limit for MIP models</td></tr>
+<tr><td><a href="#XAstrategy">
+" "" "" " strategy</a></td>
+<td>controls the MIP search strategy</td></tr>
+<tr><td><a href="#XAtomps">
+" "" "" " tomps</a></td>
+<td>write an MPS file (gams.mps) for the problem</td></tr></table>
+<h2>Detailed Descriptions of XA Options</h2>
+
+<h4><a name="XAbasis">
+" "" "" " basis</a>
+<i> (string)</i> controls writing of advanced basis file for restarts</h4><p>
+
+After XA has solved your problem, the solution is saved for the next
+time the problem is solved. This can greatly reduce the number of
+iterations and execution time required. The Dual Simplex algorithm is
+used when XA detects advance basis restarts. You can instruct XA to
+not use the Dual Simplex algorithm for restarts as follows, set
+<tt>DualSimplex</tt> to No.
+
+
+<h4><a name="XAforce">
+" "" "" " force</a>
+<i> (integer)</i> force internal relaxation of bounds if infeasible</h4><p>
+
+If your LP model is infeasible, XA makes adjustments in column and row
+bounds to make the problem feasible. No adjustments are made to binary
+columns or RHS values of SOS sets. Depending upon how tightly
+constrained the problem is, XA may be prevented from making additional
+adjustment that would lead to an integer solution. No adjustments are
+made to make a column's lower bound less than zero.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XAlimitsearch">
+" "" "" " limitsearch</a>
+<i> (string)</i> limit searching of the branch-and-bound tree</h4><p>
+
+
+
+<h4><a name="XAmatlist">
+" "" "" " matlist</a>
+<i> (string)</i> display the problem for debugging</h4><p>
+
+Problem is displayed in equation format. This is probably the most
+useful command when debugging the model. The GAMS equation and
+variable listings perform a similar function.
+
+<br><i>(default = none)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Var</td><td>List columns in each row</td></tr>
+<tr valign="top"><td width=20 align=right>Con</td><td>List rows in each column</td></tr>
+<tr valign="top"><td width=20 align=right>Both</td><td>Do both Var and Con</td></tr>
+<tr valign="top"><td width=20 align=right>None</td><td>No debugging display</td></tr>
+</table>
+
+<h4><a name="XAset_barrier">
+" "" "" " set" "barrier</a>
+<i> (string)</i> control the primal-dual interior point algorithm</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Yes</td><td>Use barrier, with crossover on MIP only</td></tr>
+<tr valign="top"><td width=20 align=right>No</td><td>Use simplex</td></tr>
+<tr valign="top"><td width=20 align=right>X</td><td>Use barrier, with crossover</td></tr>
+</table>
+
+<h4><a name="XAset_bell">
+" "" "" " set" "bell</a>
+<i> (integer)</i> controls the termination bell</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XAset_bvpriority">
+" "" "" " set" "bvpriority</a>
+<i> (real)</i> set default priority of all binary variables</h4><p>
+
+By default, all variables have priority 1600, so a value < 1600 causes
+binary variables to be branched on before general integer variables. A
+value > 1600 has the opposite affect.
+
+<br><i>(default = 1600)</i>
+
+<h4><a name="XAset_crash">
+" "" "" " set" "crash</a>
+<i> (integer)</i> control basis-crashing method</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Minimize primal infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Minimize dual infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Both 0 & 1</td></tr>
+</table>
+
+<h4><a name="XAset_degeniter">
+" "" "" " set" "degeniter</a>
+<i> (integer)</i> consecutive degenerate pivots before anti-cycling code is activated</h4><p>
+
+
+
+<h4><a name="XAset_dualsimplex">
+" "" "" " set" "dualsimplex</a>
+<i> (integer)</i> controls use of dual simplex method on restarts</h4><p>
+
+By default, XA uses the dual simplex algorithm to restart from an
+advanced basis (e.g. on nodes in the B&amp;B tree). If
+<tt>DualSimplex</tt> is set to No, it will use primal simplex instead.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XAset_freqlog">
+" "" "" " set" "freqlog</a>
+<i> (string)</i> time frequency for printing the iteration log</h4><p>
+
+
+
+<h4><a name="XAset_intgap">
+" "" "" " set" "intgap</a>
+<i> (real)</i> Minimum objective improvement between incumbents</h4><p>
+
+Minimum objective function improvement between each new integer
+solution.  Reported integer solution may not be the optimal integer
+solution because of premature termination.
+
+
+<h4><a name="XAset_intlimit">
+" "" "" " set" "intlimit</a>
+<i> (integer)</i> limit number of incumbents found</h4><p>
+
+After finding # improving integer solutions, XA terminates with the
+best solution found thus far. Reported integer solution may not be the
+optimal integer solution because of premature termination.
+
+
+<h4><a name="XAset_intpct">
+" "" "" " set" "intpct</a>
+<i> (real)</i> % of available integer columns to consider fixing at each node</h4><p>
+
+Useful on very large binary problems. If 100 is entered then all
+integer columns that are integer at the end of solving the relaxed LP
+problem are fixed at the current integer bounds.
+
+
+<h4><a name="XAset_iround">
+" "" "" " set" "iround</a>
+<i> (integer)</i> control rounding of integer vars when XA reports solutions</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XAset_iteration">
+" "" "" " set" "iteration</a>
+<i> (integer)</i> sets limit on simplex iterations</h4><p>
+
+XA terminates if limit is exceeded, and if solving an integer problem
+the best integer solution found thus far is returned. Reported integer
+solution may not be the optimal integer solution because of premature
+termination.
+
+
+<h4><a name="XAset_ltolerance">
+" "" "" " set" "ltolerance</a>
+<i> (real)</i> lower tolerance for integrality: (i-utol,i+ltol) is integral</h4><p>
+
+The tolerances XA uses to decide that an integer column.s value is
+integral. For instance, you might consider using a <tt>UTOLERANCE</tt>
+of 0.02 (a boat 98% full is for all practical purposes really 100%
+full). But beware, these integer activities within the specified
+tolerances are used in calculating constraint relationships and the
+objective function value. For example, if <tt>LTOLERANCE</tt> = 0.001,
+<tt>UTOLERANCE</tt> = 0.05, and Y has a reported (rounded) activity of
+4.0, then 3 * Y is in the range [3 * 3.95, 3 * 4.001].
+
+<br><i>(default = 5e-6)</i>
+
+<h4><a name="XAset_markowitz">
+" "" "" " set" "markowitz</a>
+<i> (real)</i> larger values favor sparsity over numeric stability</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="XAset_maxcpu">
+" "" "" " set" "maxcpu</a>
+<i> (integer)</i> limits the number of processors to use</h4><p>
+
+In general, MIP models should solve # times faster than on a single
+processor machine. Consider requesting 50% more memory per
+processor. Defaults to the number of processors on the machine. This
+number can be greater than the number of physical processors.
+
+
+<h4><a name="XAset_maxnodes">
+" "" "" " set" "maxnodes</a>
+<i> (integer)</i> sets the estimate of the number of nodes in the branch-and-bound tree</h4><p>
+
+Default value: 4,000 plus the number of binary variables plus square
+root of the number of integer columns.
+
+
+<h4><a name="XAset_nodelimit">
+" "" "" " set" "nodelimit</a>
+<i> (integer)</i> limits the number of nodes in the branch-and-bound tree</h4><p>
+
+
+
+<h4><a name="XAset_perturbate">
+" "" "" " set" "perturbate</a>
+<i> (real)</i> controls perturbation on highly degenerate problems</h4><p>
+
+A positive value allows XA to generate a uniformly distributive random
+variable between 0 and #. A negative value uses a constant
+perturbation of the absolute value of #. Note: This option should not
+be used except when all else fails. XA has build-in routines to handle
+degeneracy.
+
+
+<h4><a name="XAset_pricing">
+" "" "" " set" "pricing</a>
+<i> (integer)</i> controls the variable pricing strategy</h4><p>
+
+Variable pricing strategies, useful if XA appears to make a
+substantial number (rows/2) of pivots that do not move the objective
+function or reduce the sum of infeasibilities. This feature requires
+more memory because an additional set of matrix coefficient are loaded
+into memory.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Standard reduced cost pricing</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Automatic DEVEX pricing switch over</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Infeasible DEVEX pricing</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Feasible DEVEX pricing  (our next choice)</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Both infeasible and feasible DEVEX pricing</td></tr>
+</table>
+
+<h4><a name="XAset_reducedcost">
+" "" "" " set" "reducedcost</a>
+<i> (real)</i> zero tolerance for the primal marginals</h4><p>
+
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="XAset_reinvertfreq">
+" "" "" " set" "reinvertfreq</a>
+<i> (integer)</i> set basis re-inversion frequency</h4><p>
+
+
+<br><i>(default = 40)</i>
+
+<h4><a name="XAset_relaxed">
+" "" "" " set" "relaxed</a>
+<i> (integer)</i> relax integrality requirement in MIP models - solve as an RMIP</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XAset_scale">
+" "" "" " set" "scale</a>
+<i> (string)</i> set scaling method</h4><p>
+
+
+
+<h4><a name="XAset_stickwithit">
+" "" "" " set" "stickwithit</a>
+<i> (integer)</i> controls how XA follows branching advice from an integer basis</h4><p>
+
+If an integer basis (.b01) file is reloaded to indicate branching
+direction for the current XA solve, this branching advice is following
+until # infeasible branches are made. After # infeasible branches, the
+standard branching direction for the particular branch & bound
+strategy is used.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="XAset_tctolerance">
+" "" "" " set" "tctolerance</a>
+<i> (real)</i> zero tolerance for technology coefficients</h4><p>
+
+The smallest technological coefficient allowed in your matrix
+array. This tolerance is useful when extensive calculations are
+performed on these coefficients, where the results should be zero (but
+because of rounding errors) ends up being something like 1.0e-15.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="XAset_timelimit">
+" "" "" " set" "timelimit</a>
+<i> (real)</i> set the time limit</h4><p>
+
+Maximum time allowed to solving the problem. XA terminates if this
+limit is exceeded, and if solving an integer problem the best integer
+solution found thus far is returned. Units are wall clock time. If set
+too low, reported integer solutions may not be the optimal integer
+solution because of premature termination.
+
+
+<h4><a name="XAset_tolerance_dual">
+" "" "" " set" "tolerance" "dual</a>
+<i> (real)</i> dual feasibility tolerance</h4><p>
+
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="XAset_tolerance_primal">
+" "" "" " set" "tolerance" "primal</a>
+<i> (real)</i> primal feasibility tolerance</h4><p>
+
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="XAset_utolerance">
+" "" "" " set" "utolerance</a>
+<i> (real)</i> upper tolerance for integrality: (i-utol,i+ltol) is integral</h4><p>
+
+
+<br><i>(default = 5e-6)</i>
+
+<h4><a name="XAset_ypivot">
+" "" "" " set" "ypivot</a>
+<i> (real)</i> sets a pivot tolerance</h4><p>
+
+When selecting a column to leave the basis, columns with absolute
+marginal values less than <tt>ypivot</tt> are rejected. Pivoting in
+columns with very small values can lead to numeric instability and
+should be avoided when possible. Setting <tt>ypivot</tt> too large can
+lead to infeasible pivoting. Extreme caution should be exercised when
+changing this value because of the overall effect on problem
+feasibility.
+
+<br><i>(default = 1e-9)</i>
+
+<h4><a name="XAstopafter">
+" "" "" " stopafter</a>
+<i> (string)</i> post-integer-feasible time limit for MIP models</h4><p>
+
+Amount of time (hh:mm:ss) to continue solving after finding the first
+integer solution. Reported integer solution may not be the optimal
+integer solution because of premature termination.
+
+
+<h4><a name="XAstrategy">
+" "" "" " strategy</a>
+<i> (string)</i> controls the MIP search strategy</h4><p>
+
+
+
+<h4><a name="XAtomps">
+" "" "" " tomps</a>
+<i> (string)</i> write an MPS file (gams.mps) for the problem</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>Yes</td><td>Write problem in MPS format</td></tr>
+<tr valign="top"><td width=20 align=right>No</td><td>Do not write an MPS formatted file</td></tr>
+<tr valign="top"><td width=20 align=right>Secure</td><td>Write problem in MPS format with names C0, C1, ... and R0, R1, ...</td></tr>
+</table>
+</body></html>

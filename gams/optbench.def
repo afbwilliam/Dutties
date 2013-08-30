@@ -1,0 +1,26 @@
+*
+* optbench.def
+*
+
+allsolvers boolean 0 0 1 1 run all valid solvers
+btrace string 0 "" 0 1 ask Armin about this
+cumulative boolean 0 0 1 1 apply limits cumulatively across runs of multiple solvers
+dualcstol double 0 1e-7 0 maxdouble 1 1 dual complementary slackness tolerance: passed to EXAMINER
+dualfeastol double 0 1e-6 0 maxdouble 1 1 dual feasibility tolerance: passed to EXAMINER
+examiner boolean 0 0 1 1 call EXAMINER to verify solution
+outlev enumint 0 2 1 1 log output level
+ 1 1 BENCH summary log output only
+ 2 1 BENCH summary log output and log output of each solver
+paver boolean 0 0 1 1 write PAVER trace files
+paverex boolean 0 0 1 1 write PAVER trace files for the EXAMINER run
+primalcstol double 0 1e-7 0 maxdouble 1 1 primal complementary slackness tolerance: passed to EXAMINER
+primalfeastol double 0 1e-6 0 maxdouble 1 1 primal feasibility tolerance: passed to EXAMINER
+returnlastsol boolean 0 0 1 1 return solution from the last solver
+solvers string 0 "" 1 1 list of solvers to benchmark
+useoptfile boolean 0 0 0 1 use default option file for all solvers
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General options
+*** End of file

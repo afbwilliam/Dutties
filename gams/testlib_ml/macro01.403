@@ -1,0 +1,86 @@
+$title several macro tests (MACRO01,SEQ=403)
+
+$ontext
+Contributor: Alex
+$offtext
+
+* 1 %xx% are replaced before we recognize a comment or $control
+$set star * this is a comment
+$set dco $show
+%star%
+%dco%
+
+* 2 macro expansion does not reset the system to recognize comments and $control
+$macro star * this is a comment
+$macro dco  $show
+dco
+star
+;
+$if errorfree $abort we should have an error
+$clearerrors
+
+* 3 macro names do not clash with environment varaiables
+$set   setid this is in a different names space
+$macro setid display 'something different'
+$show
+setid;
+display '%setid%';
+
+* 4 no macro expansion on $ controls
+$macro remark garbage
+$remark this is a comment
+$if not errorfree $abort wrong macro substitution
+
+* 5 no subtitutions on $macro
+$macro oldname newname
+$macro oldname display 'this should not be dco';
+$if errorfree $abort wrong macro substitution on macro
+$clearerrors
+$show
+
+* 6 offtext remains untouched
+$macro offtext this is weird
+$macro ontext  this is weird too
+$ontext
+setid
+remark
+$remark
+$offtext
+
+$onecho > macro2.inc
+setid
+oldname
+$offecho
+
+* 7 check if defined decalred and of right type
+$if NOT defined  setid $abort missed macro definition test
+$if NOT declared setid $abort missed macro declaration test
+$if NOT mactype  setid $abort missed macro type test
+
+* 8 declaration list test
+$macro macroname newname2
+set oldname
+    macroname;
+$if errorfree $abort should not have done substitution
+$clearerrors
+
+* 9 .local is recognized
+set q /1*3/,i /2*4/; alias (q,w); parameter b(*) / 1 2, 3 8 /, c(*);
+$macro qq(i) sum(i.local, b(i))
+c(q) = qq(q); abort$sum(q, c(q) - sum(w, b(w))) c;
+
+* 10 default is not to expand aruments
+variable x(*,*);
+$macro  f(i)   sum(q, x(i,q))
+$macro equ(x)  equation equ_&x; equ_&x.. &x =e= 0;
+* equation equ_f(I); equ_f(i).. f(i) =e= 0;
+equ(f(i))
+
+* 11 $onexpand will process/expand the macro arguments
+$onexpand
+* equation equ_sum(q, x(i,q)); equ_sum(q, x(i,q)).. sum(q, x(i,q)) =e= 0;
+equ(f(i))
+$if errorfree $abort this should give errors
+$clearerrors
+
+$terminate

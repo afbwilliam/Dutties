@@ -1,0 +1,19 @@
+$title Many free variables and restart with EMP (EMPLP03,SEQ=381)
+
+$ontext
+
+This model tests lp03 from the Test Library with solver EMP. In the first test
+EMP generates a standard scalar model which is solved by the default lp solver.
+A second test with EMP rewriting the model as MCP is not done since lp03 is a
+simplex-only test.
+
+Contributor: Jan-H. Jagla, March 2007
+
+$offtext
+
+$set modelname lp03
+
+*use default EMP to solve lp03
+$log !!!!!!! try modeltype EMP !!!!!!!
+$call gams %modelname% lo=%gams.lo% --MTYPE=emp
+$if errorlevel 1 $abort Default EMP failed on %modelname%           

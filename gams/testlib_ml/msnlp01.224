@@ -1,0 +1,43 @@
+$TITLE 'Test for MSNLP/OQNLP and external NLP codes' (MSNLP01,SEQ=224)
+
+$onecho > dummy.gms
+variable x,z; equation e1,e2; e1.. z=e=1; e2.. z=e=sqr(x);
+model m /all/; solve m min z using nlp;
+$offecho
+
+Sets ModelTypes        / system.ModelTypes  /
+     SolverNames       / system.SolverNames /
+     Platforms         / system.Platforms   /
+     glbSolverDB(SolverNames,ModelTypes,Platforms) / system.SolverTypePlatformMap /
+
+Set  ss(SolverNames)   Solvers to try / baron, conopt, knitro, lgo, minos,
+     pathnlp, snopt, convert /
+     s(SolverNames)    Solvers available for this platform
+     m                 models to try  / circle m, dummy m /
+     sl                solve links / 1, 2, 4, 5 /
+     addparms(m)       additional parameters / circle '--size 8', dummy '' /
+     ms(m,SolverNames) model solver map;
+
+$call rm -f mstfail.gms
+file fr / mstrun.gms /; fr.case = 2;
+Scalar fail /0/;
+
+s(ss) = sum(glbSolverDB(ss,'NLP','%system.platform%'), yes);
+ms('circle',s)=yes; ms(m,'convert')=no; ms('dummy','convert')=yes;
+loop((ms(m,s),sl),
+  put$sameas('circle',m) fr "$call gamslib -q " m.tl:0;
+  if (sameas('convert',s),
+   put / "$echo 'if (" m.te(m):0 '.modelstat <> %modelstat.Infeasible-NoSolution%, abort "stop");' "' >> " m.tl:0 '.gms';
+  else
+   put / "$echo 'if (" m.te(m):0 '.modelstat <> %modelstat.Optimal% and '
+                       m.te(m):0 '.modelstat <> %modelstat.LocallyOptimal%, abort "stop");' "' >> " m.tl:0 '.gms');
+   put / '$echo nlpsolver ' s.tl:0 ' > %system.nlp%.opt'
+       / '$echo iteration_limit 300      >> %system.nlp%.opt'
+       / '$echo solver_log_to_gams_log 1 >> %system.nlp%.opt'
+       / '$echo solvelink ' sl.tl:0 '    >> %system.nlp%.opt'
+       / '$call gams ' m.tl:0 ' lo=2 nlp %system.nlp% optfile 1 ' addparms.te(m)
+       / '$if errorlevel 1 $abort "Solver ' s.tl:0 ' failed"';
+  putclose fr; execute '=gams mstrun.gms lo=0';
+  if (errorlevel, fail=1; execute 'cat mstrun.gms | sed s/lo=2// >> mstfail.gms');
+);
+abort$fail 'Some solver for this test failed. Inspect mstfail.gms for details.';

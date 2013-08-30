@@ -1,0 +1,93 @@
+$title 'Test the m.handle functionality: submit, wait, resubmit' (HANDLE01,SEQ=238)
+
+$ontext
+In this model we test the model.handle mechanisms by running the same model
+several times.  In particular, the resubmission via m.handlesubmit is tested
+
+Contributor: Alex Meeraus
+$offtext
+
+$if NOT set libfile  $set libfile  trnsport
+$if NOT set libmodel $set libmodel transport
+$if NOT set libobj   $set libobj   lp minimizing z
+
+$call gamslib -q %libfile%
+$include      %libfile%
+
+$eolcom //
+set scen scenarios / 1*10 /;
+scalar timer,delta;
+
+parameter handle(scen)  store the instance handle
+          xhandle(scen) extra handle;
+option handle:0;
+
+%libmodel%.solvelink = %SOLVELINK.AsyncGrid%;  // turn on grid option
+%libmodel%.limcol    = 0;
+%libmodel%.limrow    = 0;
+%libmodel%.solprint  = %SOLPRINT.quiet%;
+
+* create models and submit jobs
+timer = timeelapsed;
+loop(scen,
+   Solve %libmodel% using %libobj%;
+   handle(scen) = %libmodel%.handle );    // save instance handle
+delta = timeelapsed-timer; display 'time to submit jobs ',delta;
+
+* wait until all jobs have completed using handelstatus
+*
+*   handlestatus = %HANDLESTATUS.Unknown% (0)  bad handle
+*                  %HANDLESTATUS.Running% (1)  ok handle but not ready
+*                  %HANDLESTATUS.Ready%   (2)  model solved  (we found a directory \finished)
+xhandle(scen) = handle(scen);
+timer = timeelapsed;
+while(card(xhandle) and (timeelapsed-timer) < 10,
+   xhandle(scen)$(handlestatus(handle(scen))=%HANDLESTATUS.Ready%) = 0;
+   execute$card(xhandle) 'sleep 1' );
+delta = timeelapsed-timer; display 'time to wait for completion',delta;
+
+abort$card(xhandle) 'jobs did not complete', xhandle;
+
+* now we resubmit all jobs using the function handlesubmit
+* this assumes the resubmit script gmsrerun.cmd (or the Unix
+* equivalent) is sitting in the grid dir
+*
+*  handlesubmit = 0  submitted gmsrerun.cmd OK and ..\finished has been removed
+*                 n  any kind of bad thing, will raise an exec error
+
+timer = timeelapsed;
+xhandle(scen) = handlesubmit(handle(scen));
+delta = timeelapsed-timer; display 'time to resubmit jobs',delta;
+abort$card(xhandle) 'some resubmits failed', xhandle;
+
+parameter repy(scen,*)  summary report;
+
+repy(scen,'solvestat') = na;
+repy(scen,'modelstat') = na;
+
+parameter shandle(scen) Copy of handle; shandle(scen) = handle(scen);
+
+* we use the handle parameter to indicate that the solution has been loaded.
+timer = timeelapsed;
+while(card(handle) and (timeelapsed-timer) < 10, // try to recover all solutions
+   loop(scen$handle(scen),
+      if(handlestatus(handle(scen))=%HANDLESTATUS.Ready%,     // process solutions which are ready
+         %libmodel%.handle = handle(scen);  // assign handle to extract solution
+         execute_loadhandle %libmodel%;  // load point
+         repy(scen,'solvestat') = %libmodel%.solvestat;
+         repy(scen,'modelstat') = %libmodel%.modelstat;
+         repy(scen,'resusd'   ) = %libmodel%.resusd;
+         repy(scen,'objval')    = %libmodel%.objval;
+         handle(scen) = 0)) ;    // indicate that we have loaded the solution
+   display 'remaining handles', handle;
+   execute$card(handle) 'sleep 1' );
+delta = timeelapsed-timer; display 'time to extract solutions',delta;
+
+display repy;
+
+abort$card(handle) 'Some jobs did not complete',handle;
+
+* Delete Grid directories
+handle(scen) = handledelete(shandle(scen));
+abort$card(handle) 'Some job directories could not be removed', handle;
+

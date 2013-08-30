@@ -1,0 +1,304 @@
+$Title 'test selected binary operations and functions' (BINARY2,SEQ=5)
+
+$onundf
+
+Set op1 / minus-inf, neg-4, zero, pos+2, plus-inf, epsilon, missing
+          undefined, acron /;
+
+Alias(op1,op2); acronym acr;
+
+
+Parameter a(op1) / minus-inf -inf, neg-4 -4   , zero     0, pos+2 2
+                   plus-inf  +inf, epsilon eps, missing na
+                   undefined undf, acron   acr /
+
+set bin / plus,minus,rpower,mult,div,eq,le,ge,ne,lt,gt,or,and,xor,imp,eqv,
+          ipower,max,min,normal,mod,round,uniform,dollarop,dollarcntr /
+    rand(bin) random numeric results
+        / uniform,normal /
+
+parameter binop(bin,op1,op2)    results of binary operations
+          binopref(bin,op1,op2) refernce values
+          binrep(bin,op1,op2,*) error report;
+
+binop('plus'      ,op1,op2) = a(op1) + a(op2);
+binop('minus'     ,op1,op2) = a(op1) - a(op2);
+binop('rpower'    ,op1,op2) = a(op1)**a(op2);
+binop('ipower'    ,op1,op2) = power(a(op1),a(op2));
+binop('mult'      ,op1,op2) = a(op1)*a(op2);
+binop('div'       ,op1,op2) = a(op1)/a(op2);
+binop('eq'        ,op1,op2) = a(op1) eq a(op2);
+binop('le'        ,op1,op2) = a(op1) le a(op2);
+binop('ge'        ,op1,op2) = a(op1) ge a(op2);
+binop('ne'        ,op1,op2) = a(op1) ne a(op2);
+binop('lt'        ,op1,op2) = a(op1) lt a(op2);
+binop('gt'        ,op1,op2) = a(op1) gt a(op2);
+binop('or'        ,op1,op2) = a(op1) or a(op2);
+binop('and'       ,op1,op2) = a(op1) and a(op2);
+binop('xor'       ,op1,op2) = a(op1) xor a(op2);
+binop('imp'       ,op1,op2) = a(op1) imp a(op2);
+binop('eqv'       ,op1,op2) = a(op1) eqv a(op2);
+binop('max'       ,op1,op2) = max(a(op1),a(op2));
+binop('min'       ,op1,op2) = min(a(op1),a(op2));
+binop('normal'    ,op1,op2) = normal(a(op1),a(op2));
+binop('mod'       ,op1,op2) = mod(a(op1),a(op2));
+binop('round'     ,op1,op2) = round(a(op1),a(op2));
+binop('uniform'   ,op1,op2) = uniform(a(op1),a(op2));
+binop('dollarop'  ,op1,op2) = a(op1)$a(op2);
+binop('dollarcntr',op1,op2)$a(op2) = a(op1);
+
+
+ Display binop;
+
+
+
+table binopref(bin,op1,op2)
+
+                        minus-inf       neg-4        zero       pos+2    plus-inf     epsilon     missing   undefined    acron
+
+plus       .minus-inf        -INF        -INF        -INF        -INF                    -INF          NA        UNDF     UNDF
+plus       .neg-4            -INF      -8.000      -4.000      -2.000        +INF      -4.000          NA        UNDF     UNDF
+plus       .zero             -INF      -4.000                   2.000        +INF         EPS          NA        UNDF     UNDF
+plus       .pos+2            -INF      -2.000       2.000       4.000        +INF       2.000          NA        UNDF     UNDF
+plus       .plus-inf                     +INF        +INF        +INF        +INF        +INF          NA        UNDF     UNDF
+plus       .epsilon          -INF      -4.000         EPS       2.000        +INF         EPS          NA        UNDF     UNDF
+plus       .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+plus       .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+plus       .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+minus      .minus-inf                    -INF        -INF        -INF        -INF        -INF          NA        UNDF     UNDF
+minus      .neg-4            +INF                  -4.000      -6.000        -INF      -4.000          NA        UNDF     UNDF
+minus      .zero             +INF       4.000                  -2.000        -INF         EPS          NA        UNDF     UNDF
+minus      .pos+2            +INF       6.000       2.000                    -INF       2.000          NA        UNDF     UNDF
+minus      .plus-inf         +INF        +INF        +INF        +INF                    +INF          NA        UNDF     UNDF
+minus      .epsilon          +INF       4.000         EPS      -2.000        -INF         EPS          NA        UNDF     UNDF
+minus      .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+minus      .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+minus      .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+rpower     .minus-inf        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+rpower     .neg-4            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+rpower     .zero             UNDF        UNDF       1.000                               1.000          NA        UNDF     UNDF
+rpower     .pos+2            UNDF       0.062       1.000       4.000        UNDF       1.000          NA        UNDF     UNDF
+rpower     .plus-inf                                1.000        +INF        +INF       1.000          NA        UNDF     UNDF
+rpower     .epsilon          UNDF        UNDF       1.000         EPS                   1.000          NA        UNDF     UNDF
+rpower     .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+rpower     .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+rpower     .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+mult       .minus-inf        +INF        +INF        UNDF        -INF        -INF        UNDF          NA        UNDF     UNDF
+mult       .neg-4            +INF      16.000                  -8.000        -INF         EPS          NA        UNDF     UNDF
+mult       .zero             UNDF                                            UNDF                      NA        UNDF     UNDF
+mult       .pos+2            -INF      -8.000                   4.000        +INF         EPS          NA        UNDF     UNDF
+mult       .plus-inf         -INF        -INF        UNDF        +INF        +INF        UNDF          NA        UNDF     UNDF
+mult       .epsilon          UNDF         EPS                     EPS        UNDF         EPS          NA        UNDF     UNDF
+mult       .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+mult       .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+mult       .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+div        .minus-inf       1.000        +INF        UNDF        -INF      -1.000        UNDF          NA        UNDF     UNDF
+div        .neg-4                       1.000        UNDF      -2.000                    UNDF          NA        UNDF     UNDF
+div        .zero                                     UNDF                                UNDF          NA        UNDF     UNDF
+div        .pos+2                      -0.500        UNDF       1.000                    UNDF          NA        UNDF     UNDF
+div        .plus-inf       -1.000        -INF        UNDF        +INF       1.000        UNDF          NA        UNDF     UNDF
+div        .epsilon                       EPS        UNDF         EPS                    UNDF          NA        UNDF     UNDF
+div        .missing            NA          NA        UNDF          NA          NA        UNDF          NA        UNDF     UNDF
+div        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+div        .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+*                       minus-inf       neg-4        zero       pos+2    plus-inf     epsilon     missing   undefined    acron
+eq         .minus-inf       1.000
+eq         .neg-4                       1.000
+eq         .zero                                    1.000                               1.000
+eq         .pos+2                                               1.000
+eq         .plus-inf                                                        1.000
+eq         .epsilon                                 1.000                               1.000
+eq         .missing                                                                                 1.000
+eq         .undefined                                                                                           1.000
+eq         .acron                                                                                                        1.000
+le         .minus-inf       1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+le         .neg-4                       1.000       1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+le         .zero                                    1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+le         .pos+2                                               1.000       1.000                      NA        UNDF     UNDF
+le         .plus-inf                                                        1.000                      NA        UNDF     UNDF
+le         .epsilon                                 1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+le         .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+le         .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+le         .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+ge         .minus-inf       1.000                                                                      NA        UNDF     UNDF
+ge         .neg-4           1.000       1.000                                                          NA        UNDF     UNDF
+ge         .zero            1.000       1.000       1.000                               1.000          NA        UNDF     UNDF
+ge         .pos+2           1.000       1.000       1.000       1.000                   1.000          NA        UNDF     UNDF
+ge         .plus-inf        1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+ge         .epsilon         1.000       1.000       1.000                               1.000          NA        UNDF     UNDF
+ge         .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+ge         .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+ge         .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+ne         .minus-inf                   1.000       1.000       1.000       1.000       1.000       1.000       1.000    1.000
+ne         .neg-4           1.000                   1.000       1.000       1.000       1.000       1.000       1.000    1.000
+ne         .zero            1.000       1.000                   1.000       1.000                   1.000       1.000    1.000
+ne         .pos+2           1.000       1.000       1.000                   1.000       1.000       1.000       1.000    1.000
+ne         .plus-inf        1.000       1.000       1.000       1.000                   1.000       1.000       1.000    1.000
+ne         .epsilon         1.000       1.000                   1.000       1.000                   1.000       1.000    1.000
+ne         .missing         1.000       1.000       1.000       1.000       1.000       1.000                   1.000    1.000
+ne         .undefined       1.000       1.000       1.000       1.000       1.000       1.000       1.000                1.000
+ne         .acron           1.000       1.000       1.000       1.000       1.000       1.000       1.000       1.000
+lt         .minus-inf                   1.000       1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+lt         .neg-4                                   1.000       1.000       1.000       1.000          NA        UNDF     UNDF
+lt         .zero                                                1.000       1.000                      NA        UNDF     UNDF
+lt         .pos+2                                                           1.000                      NA        UNDF     UNDF
+lt         .plus-inf                                                                                   NA        UNDF     UNDF
+lt         .epsilon                                             1.000       1.000                      NA        UNDF     UNDF
+lt         .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+lt         .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+lt         .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+gt         .minus-inf                                                                                  NA        UNDF     UNDF
+gt         .neg-4           1.000                                                                      NA        UNDF     UNDF
+gt         .zero            1.000       1.000                                                          NA        UNDF     UNDF
+gt         .pos+2           1.000       1.000       1.000                               1.000          NA        UNDF     UNDF
+gt         .plus-inf        1.000       1.000       1.000       1.000                   1.000          NA        UNDF     UNDF
+gt         .epsilon         1.000       1.000                                                          NA        UNDF     UNDF
+gt         .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+gt         .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+gt         .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+or         .minus-inf       1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+or         .neg-4           1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+or         .zero            1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+or         .pos+2           1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+or         .plus-inf        1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+or         .epsilon         1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+or         .missing            NA          NA          NA          NA          NA          NA          NA        UNDF       NA
+or         .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+or         .acron           1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+and        .minus-inf       1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+and        .neg-4           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+and        .zero                                                                                       NA        UNDF
+and        .pos+2           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+and        .plus-inf        1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+and        .epsilon         1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+and        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF       NA
+and        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+and        .acron           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+xor        .minus-inf                               1.000                                              NA        UNDF
+xor        .neg-4                                   1.000                                              NA        UNDF
+xor        .zero            1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+xor        .pos+2                                   1.000                                              NA        UNDF
+xor        .plus-inf                                1.000                                              NA        UNDF
+xor        .epsilon                                 1.000                                              NA        UNDF
+xor        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF       NA
+xor        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+xor        .acron                                   1.000                                              NA        UNDF
+imp        .minus-inf       1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+imp        .neg-4           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+imp        .zero            1.000       1.000       1.000       1.000       1.000       1.000          NA        UNDF    1.000
+imp        .pos+2           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+imp        .plus-inf        1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+imp        .epsilon         1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+imp        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF       NA
+imp        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+imp        .acron           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+eqv        .minus-inf       1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+eqv        .neg-4           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+eqv        .zero                                    1.000                                              NA        UNDF
+eqv        .pos+2           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+eqv        .plus-inf        1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+eqv        .epsilon         1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+eqv        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF       NA
+eqv        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+eqv        .acron           1.000       1.000                   1.000       1.000       1.000          NA        UNDF    1.000
+ipower     .minus-inf        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+ipower     .neg-4            UNDF       0.004       1.000      16.000        UNDF       1.000          NA        UNDF     UNDF
+ipower     .zero             UNDF        UNDF       1.000                               1.000          NA        UNDF     UNDF
+ipower     .pos+2            UNDF       0.062       1.000       4.000        UNDF       1.000          NA        UNDF     UNDF
+ipower     .plus-inf                                1.000        +INF        +INF       1.000          NA        UNDF     UNDF
+ipower     .epsilon          UNDF        UNDF       1.000         EPS                   1.000          NA        UNDF     UNDF
+ipower     .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+ipower     .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+ipower     .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+max        .minus-inf        -INF      -4.000                   2.000        +INF         EPS          NA        UNDF     UNDF
+max        .neg-4          -4.000      -4.000                   2.000        +INF         EPS          NA        UNDF     UNDF
+max        .zero                                                2.000        +INF         EPS          NA        UNDF     UNDF
+max        .pos+2           2.000       2.000       2.000       2.000        +INF       2.000          NA        UNDF     UNDF
+max        .plus-inf         +INF        +INF        +INF        +INF        +INF        +INF          NA        UNDF     UNDF
+max        .epsilon           EPS         EPS         EPS       2.000        +INF         EPS          NA        UNDF     UNDF
+max        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+max        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+max        .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+min        .minus-inf        -INF        -INF        -INF        -INF        -INF        -INF          NA        UNDF     UNDF
+min        .neg-4            -INF      -4.000      -4.000      -4.000      -4.000      -4.000          NA        UNDF     UNDF
+min        .zero             -INF      -4.000                                                          NA        UNDF     UNDF
+min        .pos+2            -INF      -4.000                   2.000       2.000         EPS          NA        UNDF     UNDF
+min        .plus-inf         -INF      -4.000                   2.000        +INF         EPS          NA        UNDF     UNDF
+min        .epsilon          -INF      -4.000                     EPS         EPS         EPS          NA        UNDF     UNDF
+min        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+min        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+min        .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+normal     .minus-inf        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF          NA        UNDF     UNDF
+normal     .neg-4            UNDF        UNDF      -4.000      -3.345        UNDF      -4.000          NA        UNDF     UNDF
+normal     .zero             UNDF        UNDF                  -3.660        UNDF                      NA        UNDF     UNDF
+normal     .pos+2            UNDF        UNDF       2.000       0.057        UNDF       2.000          NA        UNDF     UNDF
+normal     .plus-inf         UNDF        UNDF        UNDF        UNDF        UNDF        +INF          NA        UNDF     UNDF
+normal     .epsilon          UNDF        UNDF                   0.123        UNDF                      NA        UNDF     UNDF
+normal     .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+normal     .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+normal     .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+mod        .minus-inf        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF          NA        UNDF     UNDF
+mod        .neg-4            UNDF                    UNDF                    UNDF        UNDF          NA        UNDF     UNDF
+mod        .zero             UNDF                    UNDF                    UNDF        UNDF          NA        UNDF     UNDF
+mod        .pos+2            UNDF       2.000        UNDF                    UNDF        UNDF          NA        UNDF     UNDF
+mod        .plus-inf         UNDF        UNDF        UNDF        UNDF        UNDF        UNDF          NA        UNDF     UNDF
+mod        .epsilon          UNDF         EPS        UNDF         EPS        UNDF        UNDF          NA        UNDF     UNDF
+mod        .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+mod        .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+mod        .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+round      .minus-inf                    -INF        -INF        -INF        -INF        -INF          NA        UNDF     UNDF
+round      .neg-4                                  -4.000      -4.000      -4.000      -4.000          NA        UNDF     UNDF
+round      .zero                                                                                       NA        UNDF     UNDF
+round      .pos+2                                   2.000       2.000       2.000       2.000          NA        UNDF     UNDF
+round      .plus-inf                     +INF        +INF        +INF        +INF        +INF          NA        UNDF     UNDF
+round      .epsilon                                                                                    NA        UNDF     UNDF
+round      .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+round      .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+round      .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+uniform    .minus-inf        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF          NA        UNDF     UNDF
+uniform    .neg-4            UNDF      -4.000      -0.575      -3.597        UNDF      -1.000          NA        UNDF     UNDF
+uniform    .zero             UNDF        UNDF                   1.996        UNDF                      NA        UNDF     UNDF
+uniform    .pos+2            UNDF        UNDF        UNDF       2.000        UNDF        UNDF          NA        UNDF     UNDF
+uniform    .plus-inf         UNDF        UNDF        UNDF        UNDF        UNDF        UNDF          NA        UNDF     UNDF
+uniform    .epsilon          UNDF        UNDF                   0.123        UNDF                      NA        UNDF     UNDF
+uniform    .missing            NA          NA          NA          NA          NA          NA          NA        UNDF     UNDF
+uniform    .undefined        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+uniform    .acron            UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+dollarop   .minus-inf        -INF        -INF                    -INF        -INF        -INF        -INF        -INF     -INF
+dollarop   .neg-4          -4.000      -4.000                  -4.000      -4.000      -4.000      -4.000      -4.000   -4.000
+dollarop   .pos+2           2.000       2.000                   2.000       2.000       2.000       2.000       2.000    2.000
+dollarop   .plus-inf         +INF        +INF                    +INF        +INF        +INF        +INF        +INF     +INF
+dollarop   .epsilon           EPS         EPS                     EPS         EPS         EPS         EPS         EPS      EPS
+dollarop   .missing            NA          NA                      NA          NA          NA          NA          NA       NA
+dollarop   .undefined        UNDF        UNDF                    UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+dollarop   .acron             ACR         ACR                     ACR         ACR         ACR         ACR         ACR      ACR
+dollarcntr.minus-inf         -INF        -INF                    -INF        -INF        -INF        -INF        -INF     -INF
+dollarcntr.neg-4           -4.000      -4.000                  -4.000      -4.000      -4.000      -4.000      -4.000   -4.000
+dollarcntr.pos+2            2.000       2.000                   2.000       2.000       2.000       2.000       2.000    2.000
+dollarcntr.plus-inf          +INF        +INF                    +INF        +INF        +INF        +INF        +INF     +INF
+dollarcntr.epsilon            EPS         EPS                     EPS         EPS         EPS         EPS         EPS      EPS
+dollarcntr.missing             NA          NA                      NA          NA          NA          NA          NA       NA
+dollarcntr.undefined         UNDF        UNDF                    UNDF        UNDF        UNDF        UNDF        UNDF     UNDF
+dollarcntr.acron              ACR         ACR                     ACR         ACR         ACR         ACR         ACR      ACR
+
+
+
+set bindiff(bin,op1,op2);
+
+bindiff(bin,op1,op2) = mapval(binop(bin,op1,op2)) <> mapval(binopref(bin,op1,op2));
+bindiff(bin,op1,op2)$( not mapval(binopref(bin,op1,op2))) = abs(binop(bin,op1,op2) - binopref(bin,op1,op2)) > 1e-3;
+
+* push the real random numbers to 0, leave special values alone
+loop(rand,
+   bindiff(rand,op1,op2)$( not mapval(binopref(rand,op1,op2))) = mapval(binop(rand,op1,op2)); );
+
+display bindiff;
+
+parameter binrep(bin,op1,op2,*);
+binrep(bindiff,'ref') =  binopref(bindiff);
+binrep(bindiff,'new') =  binop(bindiff);
+
+option binrep:3:3:1;
+display binrep;
+
+execerror$(card(binrep)=0) = 0;

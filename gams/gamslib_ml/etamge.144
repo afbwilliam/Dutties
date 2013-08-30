@@ -1,0 +1,280 @@
+$title Eta-Macro  Energy Model for the USA - MPSGE Format (ETAMGE,SEQ=144)
+$Ontext
+
+  This is an energy-macro economic interaction model for the united
+  states developed by prof A Manne, Stanford University.
+  (This is a modified version of gams library model ETAMAC.)
+
+
+Manne, A S, ETA-MACRO: A Model of Energy-Economy Interactions.
+In Hitch, C J, Ed, Modeling Energy-Economy Interactions, Resources
+for the Future. ?, Washington, DC, 1977.
+
+$Offtext
+
+*------------------------------------------------------------------------
+* these are notes on changing the time horizon and number of years per period.
+
+* you must first enter the set t which is the time periods that will be
+* used.  the number of years between entries in t must be the value nyper.
+* you must choose the number of years per period, nyper, and this must
+* correspond to the set t. you must change the number of years per period,
+* nyper, in two places. nyper must be greater than or equal to 2.
+*
+* you must also enter the set inityrs which contains the years from the base
+* year to the year before the first year.
+*
+*  units used:
+*
+*  electric energy                10**12 kwh
+*  non-electric energy            10**15 btu
+*  price of electric energy     $/(10**3 kwh)
+*  price of non-electric energy $/(10**6 btu)
+*  gnp                              10**12 $
+*------------------------------------------------------------------------
+
+ scalars  nyper  number of years per period / 5 /;
+
+ sets     inityrs   years before first year / 1985*1989 /
+          bsyr      base year
+          t         actual time periods  / 1990, 1995, 2000, 2005, 2010,
+                                           2015, 2020, 2025, 2030 /
+          tfirst(t) first period
+          tsecond(t) second period
+          tlast(t)  last period
+          nypset    set from 1 to nyper / 1*5 /;
+
+ bsyr(inityrs) = yes$(ord(inityrs) eq 1);
+ tfirst(t) = yes$(ord(t) eq 1);
+ tsecond(t) = yes$(ord(t) eq 2);
+ tlast(t) = yes$(ord(t) eq card(t));
+
+
+*------------------------------------------------------------------------
+ scalars  spda   speed of adjustment              /  0.96 /
+          kpvs   capital share parameter          /  0.28 /
+          elvs   electric share parameter         /  0.35 /
+          esub   elasticity between k-l and e-n   /  0.45 /
+          k0     initial capital                  / 10.90 /
+          e0     initial electric energy          /  2.50 /
+          n0     initial non-electric energy      / 50    /
+          i0     initial investment               /  0.7  /
+          c0     initial consumption              /  3.2  /
+          pe0    initial price of electric energy       / 50   /
+          pn0    initial price of non-electric energy   /  4.5 /
+          pnref  reference price of non-electric energy /  3.0 /
+          y0     initial output
+          htrt0  initial heat rate
+          thsnd  one thousand                         / 1000.0 /
+          rho    esub minus one divided by esub
+          aconst constant for capital-labor index
+          bconst constant for electric-non-electric energy index
+          ninit  number of years before the first year
+          tol    tolerance factor for lower bounds      / 0.3 /;
+*------------------------------------------------------------------------
+
+
+ parameters      dfactcurr(t)    current annual utility discount factor
+                 dfact(t)        utility discount factor
+                 grow(t)         potential annual gnp growth rate
+                 pegrow(t)       current growth of electricity price
+                 pelec(t)        growth of electricity price
+                 pngrow(t)       current growth of non-electricity price
+                 pnelec(t)       growth of non-electricity price
+                 l(t)            current labor force (efficiency units)
+                 ln(t)           new labor force
+                 ipm(t)          investment period multiplier
+                 htrt(t)         heat rate
+                 knew            new capital stock in first period;
+
+
+*------------------------------------------------------------------------
+* the following input factors refer, respectively, to utility discounting
+* (dfactcurr), growth of electric and nonelectric energy costs (pelec and
+* pnelec), and of potential gnp (grow).
+
+ dfactcurr(t)  = 0.96;
+ pegrow(t)     = 0.01;
+ pngrow(t)     = 0.02;
+ grow(t)       = 0.03;
+ htrt0         = 10.809;
+ htrt(t)       = 10.809;
+*------------------------------------------------------------------------
+
+ ninit = card(inityrs);
+ rho   = (esub - 1)/esub;
+ y0    = i0 + c0 + (e0*pe0 + n0*pn0)/thsnd;
+
+ bconst = (pnref/thsnd)*y0**(rho - 1) /
+          ((1 - elvs)*(e0**(rho*elvs))*(n0**(rho*(1 - elvs) - 1)));
+
+ aconst = (y0**rho - bconst*(e0**(rho*elvs))*(n0**(rho*(1 - elvs)))) /
+          (k0**(rho*kpvs));
+
+*the following calculations allow for the growth of investment within each
+*period, and also for its geometric decay.
+
+ knew = sum(tfirst, i0*(sum(inityrs, spda**(ord(inityrs) - 1)*
+                        (1 + grow(tfirst))**(ninit - ord(inityrs)))));
+
+ ipm(t) = sum(nypset, spda**(ord(nypset) - 1)*
+                      (1 + grow(t))**(nyper - ord(nypset)));
+
+
+ dfact(tfirst)  = dfactcurr(tfirst)**ninit;
+ l(tfirst)      = (1 + grow(tfirst))**ninit;
+ ln(tfirst)     = l(tfirst) - (spda**ninit);
+ pelec(tfirst)  = pe0*((1 + pegrow(tfirst))**ninit);
+ pnelec(tfirst) = pn0*((1 + pngrow(tfirst))**ninit);
+
+ loop(t, dfact(t+1)  = dfact(t)*dfactcurr(t+1)**nyper ;
+         l(t+1)      = l(t)*(1 + grow(t+1))**nyper ;
+         ln(t+1)     = l(t+1) - l(t)*(spda**nyper) ;
+         pelec(t+1)  = pelec(t) *(1 + pegrow(t))**nyper ;
+         pnelec(t+1) = pnelec(t)*(1 + pngrow(t))**nyper );
+
+ dfact(tlast)  = dfact(tlast)/(1-dfactcurr(tlast));
+
+ display ipm, kpvs, elvs, l, ln, rho, aconst, bconst, pelec, pnelec, knew;
+
+
+set tn(t,t);
+alias (t,tp);
+tn(t,t+1) = yes;
+
+scalar  peref   reference price of electricity,
+        va0     benchmark value-added,
+        pk0     gross return to capital,
+        l0      benchmark labor earnings;
+
+peref = elvs * pnref * n0 / (e0 * (1-elvs));
+display peref;
+va0 = y0 - (e0*peref + n0*pnref)/thsnd;
+pk0 = kpvs * va0 / k0;
+l0  = (1-kpvs)*va0;
+
+$ontext
+
+$model:etamac
+
+$sectors:
+   yn(t)        !       new vintage production
+   y(t)         !       total output
+   e(t)         !       total electric
+   n(t)         !       total nonelectric
+   i(t)$(not tlast(t))          !       investment
+   k(t)$(not tfirst(t))         !       total capital
+
+$commodities:
+   pc(t)        !       price of current consumption
+   py(t)        !       price total output
+   pln(t)       !       price new vintage labor
+   pkn(t)       !       price new vintage capital
+   pne(t)       !       price new vintage electric
+   pnn(t)       !       price new vintage non-electric
+   pk(t)$(not tfirst(t))        !       price total capital
+
+$consumers:
+   ra           !       representative agent
+
+$report:
+ v:c(t)         d:pc(t)         demand:ra
+ v:en(t)        i:pne(t)        prod:yn(t)
+ v:nn(t)        i:pnn(t)        prod:yn(t)
+
+$prod:yn(t)  s:esub  a:1  b:1
+  o:py(t)       q:1
+  i:pln(t)      q:(l0/y0)                 a:
+  i:pkn(t)      q:(k0/y0)  p:pk0          a:
+  i:pne(t)      q:(e0/y0)  p:(peref/thsnd)  b:
+  i:pnn(t)      q:(n0/y0)  p:(pnref/thsnd)  b:
+
+$prod:y(t)
+  o:pc(t)              q:1
+  o:py(tp)$tn(t,tp)    q:(spda**nyper)
+  i:py(t)              q:1
+
+$prod:k(t)$(not tfirst(t))
+  o:pk(t)               q: 1
+  i:pk(tp)$tn(t,tp)     q:(spda**nyper)
+  i:pc(t)$tlast(t)      q:(grow(t)+ 1-spda)
+
+$prod:e(t)
+  o:pne(t)              q:1
+  i:pc(t)               q:(pelec(t)/thsnd)
+  i:pne(tp)$tn(t,tp)    q:(spda**nyper)
+
+$prod:n(t)
+  o:pnn(t)              q:1
+  i:pc(t)               q:(pnelec(t)/thsnd)
+  i:pnn(tp)$tn(t,tp)    q:(spda**nyper)
+
+$prod:i(t)$(not tlast(t))
+ o:pkn(tp)$tn(t,tp)     q:ipm(t)
+ i:pk(tp)$tn(t,tp)      q:ipm(t)
+ i:pc(t)
+
+$demand:ra  s:1
+ e:pk(tsecond)  q:(-(spda**nyper)*(k0*(spda**ninit)+knew))
+ e:pkn(tfirst)  q:knew
+ e:pne(tfirst)  q:(-e0*(spda**nyper)) ! error - should be ninit.
+ e:pnn(tfirst)  q:(-n0*(spda**nyper)) ! error - should be ninit.
+ e:py(tfirst)   q:( y0*spda**ninit)
+ e:pln(t)       q:(l0*ln(t))
+ d:pc(t)        q:c0    p:dfact(t)
+
+$offtext
+$sysinclude mpsgeset ETAMAC
+
+ra.fx = card(t) * c0;
+
+$include ETAMAC.GEN
+solve etamac using mcp;
+
+*       install omitted activity levels for reporting purposes:
+
+i.l(tlast) = k.l(tlast) * (grow(tlast)+(1-spda));
+k.l(tfirst) =k0*(spda**ninit) + knew;
+
+$stitle report definitions
+ parameter  valuerep    report for c-i-gdp-e-en-tpe
+            growthrep   report of growth rates;
+
+
+ valuerep("con",   bsyr) = c0;
+ valuerep("inv",   bsyr) = i0;
+ valuerep("gdp",   bsyr) = c0 + i0;
+ valuerep("elec",  bsyr) = e0;
+ valuerep("nelec", bsyr) = n0;
+ valuerep("tpe",   bsyr) = htrt0*e0 + n0;
+
+ valuerep("con",   t) = c.l(t);
+ valuerep("inv",   t) = i.l(t);
+ valuerep("gdp",   t) = c.l(t) + i.l(t);
+ valuerep("elec",  t) = e.l(t);
+ valuerep("nelec", t) = n.l(t);
+ valuerep("tpe",   t) = htrt(t)*e.l(t) + n.l(t);
+
+
+ growthrep("con", "'85-00")  = 100*((c.l("2000")/c0)**(1/15) - 1);
+ growthrep("inv", "'85-00")  = 100*((i.l("2000")/i0)**(1/15) - 1);
+ growthrep("gdp", "'85-00")  = 100*(((c.l("2000") + i.l("2000"))/
+                               (c0 + i0))**(1/15) - 1);
+ growthrep("elec", "'85-00") = 100*((e.l("2000")/e0)**(1/15) - 1);
+ growthrep("nelec","'85-00") = 100*((n.l("2000")/n0)**(1/15) - 1);
+ growthrep("tpe",  "'85-00") = 100*(((htrt("2000")*e.l("2000") + n.l("2000"))/
+                                (htrt0*e0 + n0))**(1/15) - 1);
+
+ growthrep("con",  "'00-20") = 100*((c.l("2020")/c.l("2000"))**(1/20) - 1);
+ growthrep("inv",  "'00-20") = 100*((i.l("2020")/i.l("2000"))**(1/20) - 1);
+ growthrep("gdp",  "'00-20") = 100*(((c.l("2020") + i.l("2020"))/
+                               (c.l("2000") + i.l("2000")))**(1/20) - 1);
+ growthrep("elec", "'00-20") = 100*((e.l("2020")/e.l("2000"))**(1/20) - 1);
+ growthrep("nelec","'00-20") = 100*((n.l("2020")/n.l("2000"))**(1/20) - 1);
+ growthrep("tpe",  "'00-20") = 100*(((htrt("2020")*e.l("2020") + n.l("2020"))/
+                               (htrt("2000")*e.l("2000") + n.l("2000")))
+                               **(1/20) - 1);
+
+
+ display valuerep, growthrep;
+

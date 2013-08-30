@@ -1,0 +1,91 @@
+$Title  MPS file for transportation problem (MPSTRANS,SEQ=104)
+$ Eolcom !
+
+$Ontext
+
+   PUT statements are used to generate the linear programming
+   matrix of the problem TRNSPORT (SEQ=1) in standard industry
+   format, the MPS file. The first part of this file is taken from
+   the model TRNSPORT. This is not to suggest writing MPS files with
+   GAMS but a way to demonstrate the use of PUT statements.
+
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions.
+Princeton University Press, Princeton, New Jersey, 1963.
+
+$Offtext
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+   a(i)  capacity of plant i in cases
+     /    seattle     350
+          san-diego   600  /
+
+   b(j)  demand at market j in cases
+     /    new-york    325
+          chicago     300
+          topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+          c(i,j) = f * d(i,j) / 1000 ;
+
+File mps mps input file ;
+
+mps.pc=2;    ! set page control to stream format
+mps.case=1;  ! upper case file
+mps.nd=0;    ! default decimal places are set to zero
+mps.nw=0;    ! default numeric field width is zero - variable length
+
+*  two different ways to form mps names are demonstrated, using
+*  the ordinal index values and a second one, using the label name
+
+*  use ordinal values to form mps names
+
+Put mps 'name' @15 'trnsport'
+      / 'rows'
+      / ' n'   @5  'cost'
+Loop(i, Put / ' l' @5 'sup' ord(i) )
+Loop(j, Put / ' g' @5 'dem' ord(j) )
+Put / 'columns'
+Loop((i,j),
+   Put / @5 'x' ord(i) ord(j) @15 'cost'        @25 c(i,j):12:5
+       / @5 'x' ord(i) ord(j) @15 'sup'  ord(i) @25 1.0   :12:5
+       / @5 'x' ord(i) ord(j) @15 'dem'  ord(j) @25 1.0   :12:5 )
+Put / 'rhs'
+Loop(i, put / @5 'rhs' @15 'sup' ord(i) @25 a(i):12:5 )
+Loop(j, put / @5 'rhs' @15 'dem' ord(j) @25 b(j):12:5 )
+Put / 'endata';
+
+
+*  use first two characters of label to form names
+
+mps.nd=5;    ! default decimals are 5
+mps.nw=12;   ! numeric field width is 12
+mps.lw=2;    ! label field width is 2 - take only firts two characters
+
+Put   / 'name'            @15 'trnsx'
+      / 'rows'
+            / ' n' @5 'c'
+Loop(i, put / ' l' @5 's'   i.tl )
+Loop(j, put / ' g' @5 'd..' j.tl )
+Put / 'columns'
+Loop((i,j),
+   Put / @5 'x' i.tl j.tl @15 'c'        @25 c(i,j)
+       / @5 'x' i.tl j.tl @15 's'   i.tl @25 1.0
+       / @5 'x' i.tl j.tl @15 'd..' j.tl @25 1.0     )
+Put / 'rhs'
+Loop(i, put / @5 'rhs'    @15 's'   i.tl @25 a(i) )
+Loop(j, put / @5 'rhs'    @15 'd..' j.tl @25 b(j) )
+Put / 'endata' ;

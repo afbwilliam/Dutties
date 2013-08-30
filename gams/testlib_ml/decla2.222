@@ -1,0 +1,14 @@
+$title 'Test declaration that crashed on CD21.6'  (DECLA2,SEQ=222)
+
+* tests cmex bug AB00751, P3 exception
+
+set i / i1*i3 /
+    j / j1*j3 /;
+parameter data(i,i,j,j) /
+i1.i1.j1.j2 4
+i1.i2.j1.j2 4
+i1.  .j2.j2 5
+i2.i2.j2.j1 6 /;
+
+$if errorfree $abort There should be a compilation error
+$clearerror

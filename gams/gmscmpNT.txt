@@ -1,0 +1,384 @@
+*********************************
+* GAMS Solver Capabilities File *
+*********************************
+* solverId fileType dictType licCodes defaultOkFlag hiddenFlag linesToFollow modelTypes
+* scriptName
+* [exeName]
+* [libName auditCode solverInterfaceType]
+
+
+ALPHAECP 111 5 EC 1 0 1 MINLP MIQCP
+gmsecpnt.cmd
+gmsecpnx.exe
+
+AMPL 100001 0 0001020304 0 0 1 LP MIP RMIP NLP MCP MPEC RMPEC CNS DNLP RMINLP MINLP
+gmscvant.cmd
+gmscvanx.exe
+
+BARON 1001 5 BA 1 0 1 LP MIP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsba_nt.cmd
+gmsba_nx.exe
+
+BARON2 1001 5 BA 1 1 2 LP MIP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+bardclib64.dll bar 1
+
+BDMLP 1 0 0001020304 1 0 1 LP MIP RMIP
+gmsbd_nt.cmd
+gmsbd_nx.exe
+
+BDMLPD 1 0 0001020304 1 1 2 LP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+bdxcclib64.dll bdx 2
+
+BENCH 101111 5 0001020304 0 0 1 LP MIP RMIP NLP MCP MPEC RMPEC CNS DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsbncnt.cmd
+gmsbncnx.exe
+
+BONMIN 111 0 0001020304 1 0 2 MIP MINLP MIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll bon 1
+
+BONMINH 111 0 IP 1 0 2 MIP MINLP MIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll bon 1
+
+CBC 2111 5 0001020304 1 0 2 LP MIP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll cbc 1
+
+COINBONMIN 111 0 0001020304 1 1 2 MIP MINLP MIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll bon 1
+
+COINCBC 2111 5 0001020304 1 1 2 LP MIP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll cbc 1
+
+COINCOUENNE 111 0 0001020304 1 1 2 NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll cou 1
+
+COINIPOPT 111 0 0001020304 1 1 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll ipo 1
+
+COINOS 111 5 0001020304 0 1 2 LP MIP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll os_ 1
+
+COINSCIP 2111 5 0001020304 1 1 2 MIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll scp 1
+
+CONOPT 1 0 CO 1 0 2 LP RMIP NLP CNS DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+condclib64.dll con 1
+
+CONOPT3 1 0 CO 1 1 2 LP RMIP NLP CNS DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+condclib64.dll con 1
+
+CONOPT4 1 0 CO 1 1 2 LP RMIP NLP CNS DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+co4dclib64.dll co4 1
+
+CONOPTD 1 0 CO 1 1 2 LP RMIP NLP CNS DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+condclib64.dll con 1
+
+CONVERT 101011 5 0001020304 0 0 1 LP MIP RMIP NLP MCP MPEC RMPEC CNS DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmscv_nt.cmd
+gmscv_nx.exe
+
+CONVERTD 101011 5 0001020304 1 1 2 LP MIP RMIP NLP MCP MPEC RMPEC CNS DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+cvddclib64.dll cvd 1
+
+COUENNE 111 0 0001020304 1 0 2 NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll cou 1
+
+CPLEX 1011 5 CPCL 1 0 2 LP MIP RMIP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+cpicclib64.dll cpi 1
+
+CPLEXD 11 5 CPCL 1 1 2 LP MIP RMIP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+cpxcclib64.dll cpx 1
+
+DE 101011 5 0001020304 0 0 2 EMP
+gmsgennt.cmd
+gmsgennx.exe
+sptdclib64.dll spq 1
+
+DECIS 2011 5 DE 0 0 2 EMP
+gmsgennt.cmd
+gmsgennx.exe
+sptdclib64.dll spd 1
+
+DECISC 2011 5 DE 0 0 0 LP
+gmsdecnt.cmd
+
+DECISM 2011 5 DE 0 0 0 LP
+gmsdemnt.cmd
+
+DICOPT 1 5 DI 1 0 1 MINLP MIQCP
+gmsdi_nt.cmd
+gmsdi_nx.exe
+
+DICOPTD 1 5 DI 1 1 2 MINLP MIQCP
+gmsgennt.cmd
+gmsgennx.exe
+diccclib64.dll dic 1
+
+EXAMINER 101111 5 0001020304 0 0 1 LP MIP RMIP NLP MCP MPEC RMPEC DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsex_nt.cmd
+gmsex_nx.exe
+
+GAMSCHK 101111 5 0001020304 0 0 1 LP MIP RMIP NLP MCP DNLP RMINLP MINLP
+gmsck_nt.cmd
+gmsck_nx.exe
+
+GLOMIQO 2111 5 GQ 1 0 2 QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+gqocclib64.dll gqo 1
+
+GUROBI 11 5 GUGL 1 0 2 LP MIP RMIP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+grbcclib64.dll grb 1
+
+IPOPT 111 0 0001020304 1 0 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll ipo 1
+
+IPOPTH 111 0 IP 1 0 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll ipo 1
+
+JAMS 101011 5 0001020304 1 0 1 EMP
+gmsja_nt.cmd
+gmsja_nx.exe
+
+KESTREL 101010 5 0001020304 0 1 1 LP MIP RMIP NLP MCP MPEC RMPEC CNS DNLP RMINLP MINLP QCP MIQCP RMIQCP EMP
+gmske_nt.cmd
+gmske_nx.exe
+
+KNITRO 11 0 KN 1 0 2 LP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+knxcclib64.dll knx 1
+
+LGO 1 5 LG 1 0 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+lgodclib64.dll lgo 1
+
+LGOD 1 5 LG 1 1 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+lgodclib64.dll lgo 1
+
+LINDO 1 5 LD 1 0 2 LP MIP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP EMP
+gmsgennt.cmd
+gmsgennx.exe
+sptdclib64.dll spl 1
+
+LINDOGLOBAL 1 5 LILD 1 0 2 LP MIP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+li_dclib64.dll li_ 1
+
+LINGO 100001 0 0001020304 0 0 1 LP MIP RMIP NLP DNLP RMINLP MINLP
+gmscvlnt.cmd
+gmscvlnx.exe
+
+LOGMIP 101011 5 0001020304 1 0 1 EMP
+gmsja_nt.cmd
+gmsja_nx.exe
+
+LS 101 5 0001020304 0 0 0 LP RMIP
+gmsls_nt.cmd
+
+MILES 100001 5 0001020304 1 0 1 MCP
+gmsmcent.cmd
+gmsmcenx.exe
+
+MILESE 100001 5 0001020304 1 1 1 MCP
+gmsmcent.cmd
+gmsmcenx.exe
+
+MINOS 101 0 M5 1 0 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+milcclib64.dll mil 2
+
+MINOS5 101 0 M5 1 1 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+milcclib64.dll mil 2
+
+MINOS55 101 0 M5 1 1 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+milcclib64.dll mil 2
+
+MOSEK 11 5 MKMBML 1 0 2 LP MIP RMIP NLP DNLP RMINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+mskcclib64.dll msk 2
+
+MPECDUMP 101111 5 0001020304 0 0 1 LP MIP RMIP NLP MCP MPEC RMPEC CNS DNLP RMINLP MINLP
+gmsmd_nt.cmd
+gmsmd_nx.exe
+
+MPSGE 100001 5 GE 1 0 1
+gmsgewnt.cmd
+gmsgewnx.exe
+
+MSNLP 111 0 MNOQ 1 0 1 NLP DNLP RMINLP QCP RMIQCP
+gmsmn_nt.cmd
+gmsmn_nx.exe
+
+NLPEC 100001 0 0001020304 1 0 1 MCP MPEC RMPEC
+gmscvnnt.cmd
+gmscvnnx.exe
+
+OQNLP 111 0 OQ 1 0 1 NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsoq_nt.cmd
+gmsoq_nx.exe
+
+OS 111 5 0001020304 0 0 2 LP MIP RMIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll os_ 1
+
+OSICPLEX 111 0 OCCLCP 1 0 2 LP MIP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll ocp 1
+
+OSIGUROBI 111 0 OG0001020304 1 0 2 LP MIP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll ogu 1
+
+OSIMOSEK 111 0 OM0001020304 1 0 2 LP MIP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll omk 1
+
+OSISOPLEX 111 0 SC 1 1 2 LP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll osp 1
+
+OSIXPRESS 111 0 OX0001020304 1 0 2 LP MIP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll oxp 1
+
+OSL 11 0 OSO2OLSE 1 0 1 LP MIP RMIP
+gmsos3nt.cmd
+gmsos3nx.exe
+
+OSL3 11 0 OSO2OLSE 1 1 1 LP MIP RMIP
+gmsos3nt.cmd
+gmsos3nx.exe
+
+OSLSE 11 0 OSO2OLSE 1 1 1 LP MIP RMIP
+gmsos3nt.cmd
+gmsos3nx.exe
+
+PATH 100001 5 PT 1 0 2 MCP CNS
+gmsgennt.cmd
+gmsgennx.exe
+ptccclib64.dll ptc 2
+
+PATHC 100001 5 PT 1 1 2 MCP CNS
+gmsgennt.cmd
+gmsgennx.exe
+ptccclib64.dll ptc 2
+
+PATHNLP 111 5 PT 1 0 1 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsptnnt.cmd
+gmsptnnx.exe
+
+SBB 111 5 SB 1 0 1 MINLP MIQCP
+gmssb_nt.cmd
+gmssb_nx.exe
+
+SCENSOLVER 1 5 0001020304 0 1 2 LP MIP RMIP NLP MCP CNS DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+scndclib64.dll scn 1
+
+SCIP 2111 5 0001020304 1 0 2 MIP NLP DNLP RMINLP MINLP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll scp 1
+
+SNOPT 101 0 SN 1 0 2 LP RMIP NLP DNLP RMINLP QCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+snlcclib64.dll snl 2
+
+SOPLEX 111 0 SC 1 0 2 LP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+coincclib64.dll osp 1
+
+SULUM 11 5 SU 1 0 2 LP RMIP
+gmsgennt.cmd
+gmsgennx.exe
+slmcclib64.dll slm 1
+
+XA 1 0 XA 1 0 1 LP MIP RMIP
+gmsxa_nt.cmd
+gmsxa_nx.exe
+
+XPRESS 11 5 XPXL 1 0 2 LP MIP RMIP QCP MIQCP RMIQCP
+gmsgennt.cmd
+gmsgennx.exe
+xpxcclib64.dll xpx 1
+
+
+DEFAULTS
+LP CPLEX
+MIP CPLEX
+RMIP CPLEX
+NLP CONOPT
+MCP PATH
+MPEC NLPEC
+RMPEC NLPEC
+CNS CONOPT
+DNLP CONOPT
+RMINLP CONOPT
+MINLP DICOPT
+QCP CONOPT
+MIQCP SBB
+RMIQCP CONOPT
+EMP JAMS

@@ -1,0 +1,14 @@
+"PLANT","MARKET","CASES"
+"Washington","California",100
+"Washington","Montana",125
+"Washington","Utah",0
+"Colorado","California",0
+"Colorado","Montana",75
+"Colorado","Utah",125
+"Washington",-20.0000
+"Colorado",0.0000
+"California",150.0000
+"Montana",140.0000
+"Utah",120.0000
+"cost",53500.00
+"modelstat",1

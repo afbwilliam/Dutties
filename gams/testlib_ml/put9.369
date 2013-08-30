@@ -1,0 +1,15 @@
+$title 'Test empty line at the end of rename'  (PUT9,SEQ=369)
+
+$ontext
+The put_utility line gave an error with 22.6 and previous
+because of the newlines following '.output'
+
+Contributor: Alex Meeraus
+$offtext
+
+set i /file1,file2 /;
+file alx; put alx;
+loop(i,
+    put_utility  'ren' /  i.tl:0 '.output'  / / /;
+    put "output to file " i.tl:0 " with suffix output " /;
+    );

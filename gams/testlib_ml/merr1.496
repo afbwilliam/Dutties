@@ -1,0 +1,132 @@
+$title Matrix Errors (merr1,SEQ=496)
+$Ontext
+
+This model checks if Cmex creates an matrix error as expected. The errors we
+want to get are:
+- fixed variables have to have finite bounds
+- illegal level value
+- lower bound > upper bound
+- bounds on discrete variables have to be integer
+- binary variable need zero lower bound
+- binary variable needs upper bound of one
+- semicont/semiint require lower bound >= 0
+- illegal value (PRIOR)
+
+Contributor: Lutz Westermann
+
+$Offtext
+
+$onecho > err.gms
+Variables x,z;
+x.fx = +inf;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+solve m  min z using lp;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of fixed variables without finite bounds
+
+$onecho > err.gms
+Variables x,z;
+x.l = +inf;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+solve m  min z using lp;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of variable level with special value
+
+$onecho > err.gms
+Variables x,z;
+x.lo = 2;
+x.up = 1;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+solve m  min z using lp;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of lower bound > upper bound
+
+$onecho > err.gms
+Variables x,z;
+integer variable x;
+x.lo = 1.1;
+x.up = 2.2;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+solve m  min z using mip;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of non integer bounds on discrete variables
+
+$onecho > err.gms
+Variables x,z;
+binary variable x;
+x.lo = -1;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+solve m  min z using mip;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of lower bound on binary variable <> 0
+
+$onecho > err.gms
+Variables x,z;
+binary variable x;
+x.up = 2;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+solve m  min z using mip;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of upper bound on binary variable <> 1
+
+$onecho > err.gms
+Variables x,y,z;
+semiint variable x;
+semicont variable y;
+x.lo = -2;
+y.lo = -1;
+Equations obj;
+obj.. z =e= x + y;
+
+model m  /all/;
+solve m  min z using mip;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of negative lower bound on semiint/semicont variable
+
+$onecho > err.gms
+Variables x,z;
+integer variable x;
+x.prior = -inf;
+Equations obj;
+obj.. z =e= x;
+
+model m  /all/;
+m.prioropt = 1;
+solve m  min z using mip;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of special value for priority
+

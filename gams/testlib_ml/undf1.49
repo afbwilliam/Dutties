@@ -1,0 +1,25 @@
+$title $onundf/offundf changes the scanner (UNDF1,SEQ=49)
+
+* first we test the default
+scalar undf now it is a scalar; undf = 10;
+scalar bad  / undf /;
+$if not errorfree $goto skip
+$error UNDF not allowd here
+$exit
+
+$label skip
+$clearerror
+
+* now we make undf a reserved word
+* and test at execution time
+undf =
+$onundf
+undf;
+scalar good / undf /;
+$offundf
+
+scalar code; code = 0/0; execerror=0;
+abort$(code <> undf) 'something wrong here'
+abort$(code <> good)  'something wrong here'
+
+display code,undf,bad,good;

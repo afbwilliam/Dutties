@@ -1,0 +1,45 @@
+Line 1 of text
+Line 2 of text
+
+Line 3 of text
+Line 4 of text
+
+
+*************************
+
+Line 1 of text
+Line 2 of text
+
+Line 3 of text
+Line 4 of text
+
+
+*************************
+
+no substitution
+Line 1 of text %it%
+Line 2 of text %it%
+Line 3 of text %it%
+Line 4 of text %it%
+
+
+*************************
+
+substituion
+Line 1 of text "from $onputv"
+Line 2 of text from $onputv
+Line 3 of text from $onputv
+Line 4 of text from $onputv
+
+
+*************************
+
+verbatum
+Line 1 of text %it%
+Line 2 of text %it%
+Line 3 of text %it%
+Line 4 of text %it%
+
+
+*************************
+

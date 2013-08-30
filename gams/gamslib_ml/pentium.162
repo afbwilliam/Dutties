@@ -1,0 +1,23 @@
+$title Pentium Error Test (PENTIUM,SEQ=162)
+$Ontext
+  Early Pentium chips have an error in the floating point unit
+  which cases incorrect divisions.
+
+
+House, B, Internet Communications.
+
+$Offtext
+
+scalar a / 4195835 /
+       b / 3145727 /
+       p temporary value
+       d this should be zero;
+
+p = a/b; d = p*b-a; display d;
+
+if(d,
+   display '***************************************************'
+           '* Your Pentium chip has THE floating point error. *'
+           '***************************************************'
+else
+   display 'Your Pentium chip is OK.');

@@ -1,0 +1,52 @@
+$Title LogMIP User's Manual Example 1b - Job Scheduling (LOGMIP1B,SEQ=333)
+$ontext
+Three jobs (A,B,C) must be executed sequentially in three steps, but
+not all jobs require all the stages. The objective is to obtain the
+sequence of tasks which minimizes the completion time. Once a job has
+started it cannot be interrupted. The objective is to obtain the
+sequence of task, which minimizes the completion time.
+
+In this model we will use the THEN ELSE construct and use only 3
+binary variables. Note that only the LOGMIP instructions are different.
+
+Ref: Raman & Grossmann, Comp. & Chem. Eng., 18, 7, p.563-578, 1994.
+
+Aldo Vecchietti, LogMIP User's Manual, http://www.logmip.ceride.gov.ar/
+$offtext
+
+SET I /1*3/
+    J /A,B,C/;
+POSITIVE VARIABLES X(J),T;
+VARIABLE Z;
+EQUATIONS equat1, equat2, equat3, equat4, equat5, equat6,
+          equat7, equat8, equat9, OBJECTIVE;
+
+equat1.. T =G= X('A') + 8;
+equat2.. T =G= X('B') + 5;
+equat3.. T =G= X('C') + 6;
+
+equat4.. X('A')-X('C') =L= -5;
+equat5.. X('C')-X('A') =L= -2;
+equat6.. X('B')-X('C') =L= -1;
+equat7.. X('C')-X('B') =L= -6;
+equat8.. X('A')-X('B') =L= -5;
+equat9.. X('B')-X('A') =L=  0;
+
+OBJECTIVE.. Z =E= T;
+
+MODEL PEQUE1 /ALL/;
+
+X.UP(J)=20.;
+
+$ONECHO > "%LM.INFO%"
+* by default the convex hull formulation is used
+disjunction * equat4 else equat5
+disjunction * equat6 else equat7
+disjunction * equat8 else equat9
+
+* optional, if not set LOGMIP will find the modeltype suitable
+modeltype mip
+$OFFECHO
+
+OPTION EMP=LOGMIP;
+SOLVE PEQUE1 USING EMP MINIMIZING Z;

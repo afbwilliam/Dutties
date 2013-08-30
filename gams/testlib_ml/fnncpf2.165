@@ -1,0 +1,62 @@
+$title 'Test correctness of ncpf intrinsic' (FNNCPF2,SEQ=165)
+
+* define some sets, etc.
+$include fnset_xyz.inc
+
+reps = 3e-16;
+relToInput = 0;
+set T / t1 * t2 /;
+parameter data(T,V) /
+t1.x    0
+t1.y    0
+t1.z    0
+t1.f_       0
+* should we insist on the fx_ and fy_ below?
+t1.fx_    1
+t1.fy_    1
+t1.fxx_  0
+t1.fxy_ 0
+t1.fyy_  0
+t1.rc_      2
+t1.ec_      2
+
+* and a good point now, to make sure mathlastrc and mathlastec reset OK
+t2.x    1
+t2.y    1
+t2.z    1
+t2.f_       0
+t2.fx_    -0.5
+t2.fy_    -0.5
+t2.fxx_  0.375
+t2.fxy_ -0.125
+t2.fyy_  0.375
+t2.rc_      0
+t2.ec_      0
+/;
+
+loop {T,
+  data(T,'fyx_') = data(T,'fxy_');
+  data(T,  'f')    = ncpf.value (data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fx')    = ncpf.grad(1:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fy')    = ncpf.grad(2:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fz')    = ncpf.grad(3:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxx')    = ncpf.hess(1:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxy')    = ncpf.hess(1:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxz')    = ncpf.hess(1:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyx')    = ncpf.hess(2:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyy')    = ncpf.hess(2:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyz')    = ncpf.hess(2:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzx')    = ncpf.hess(3:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzy')    = ncpf.hess(3:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzz')    = ncpf.hess(3:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+display data;
+
+abort$(execerror ne 10)
+  'Should get execution errors getting grad/hess of ncpf(0,0,0)';
+execerror = 0;
+
+$include fntest_xyz.inc

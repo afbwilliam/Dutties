@@ -1,0 +1,29 @@
+$title 'Test renaming of GDX files for load/unload operations' (GDX4,SEQ=322)
+
+$ontext
+If we do not have a 'filename' as the first parameter on
+an execute_load/execute_unload we use the name that has been saved by
+the put_utility.
+
+Contributor: Alex Meeraus
+$offtext
+
+
+
+set i / gdx_abc, gdx_cde /;
+parameter x(i) / gdx_abc 1, gdx_cde 2 /;
+file dummy;
+parameter y(i),xy(i);
+
+loop(i,
+   put_utilities dummy 'gdxout' / i.tl;
+   execute_unload x=z;
+);
+
+loop(i,
+   put_utilities dummy 'gdxin' / i.tl;
+   execute_load y=z;
+);
+
+xy(i) = x(i) <> y(i);
+abort$card(xy) 'x <> y',xy;

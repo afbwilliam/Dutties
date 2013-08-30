@@ -1,0 +1,79 @@
+$TITLE 'Test correctness of signpower intrinsic' (FNSPOWN,SEQ=531)
+
+$ontext
+
+Test the signed power function, comparing the true derivatives
+with those computed numerically.  We don't push the range too much
+for this test - we just want to be sure we get all the signs right,
+etc.  The important thing is to test with negative bases x so we know
+our implementation isn't making any gross errors.
+
+Contributor: Steve Dirkse
+$offtext
+
+$include fnset_xy.inc
+
+option seed = 1776;
+
+reps = 5e-5;
+relToInput = 0;
+
+sets
+  ex 'exponents' / e1 * e100 /
+  bs 'bases'     / b1 * b100 /
+  T              / t1 * t10000 /
+*   ex 'exponents' / e1 * e5 /
+*   bs 'bases'     / b1 * b3 /
+*   T              / t1 * t15 /
+  Tex(T,ex)
+  Tbs(T,bs)
+  ;
+scalars
+  n_ex   / [card(ex)] /
+  n_bs   / [card(bs)] /
+  ;
+parameters
+  c(ex)
+  x(bs)
+  ;
+c(ex) = uniform(1e-5, 2.8);
+x(bs) = uniform(-0.5,15);
+x(bs) = 10**x(bs);
+Tex(T,ex) = [ord(ex) = (1 + floor((ord(T)-1)/n_bs))];
+Tbs(T,bs) = [ord(bs) = 1 + (mod(ord(T)-1, n_bs))];
+
+
+data(T,'x') = sum{Tbs(T,bs), x(bs)};
+data(T,'y') = sum{Tex(T,ex), c(ex)};
+
+* first test uses positive x values
+
+data(T, 'f_'  ) = signpower.value(   data(T,'x'),data(T,'y'));
+data(T, 'fx_' ) = signpower.grad(1:  data(T,'x'),data(T,'y'));
+data(T, 'fxx_') = signpower.hess(1:1:data(T,'x'),data(T,'y'));
+loop {T,
+  data(T,  'f')  = signpower.value(    data(T,'x'),data(T,'y'));
+  data(T, 'fx')  = signpower.gradn(1:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')  = signpower.hessn(1:1:data(T,'x'),data(T,'y'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+$include fntest_xy.inc
+
+
+* now repeat the test, but with x negative
+data(T,'x') = -data(T,'x');
+
+data(T, 'f_'  ) = signpower.value(   data(T,'x'),data(T,'y'));
+data(T, 'fx_' ) = signpower.grad(1:  data(T,'x'),data(T,'y'));
+data(T, 'fxx_') = signpower.hess(1:1:data(T,'x'),data(T,'y'));
+loop {T,
+  data(T,  'f')  = signpower.value(    data(T,'x'),data(T,'y'));
+  data(T, 'fx')  = signpower.gradn(1:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')  = signpower.hessn(1:1:data(T,'x'),data(T,'y'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+$include fntest_xy.inc

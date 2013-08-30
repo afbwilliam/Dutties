@@ -1,0 +1,52 @@
+$title Princeton Bilevel Optimization Example 9.1.6 (FLDS916,SEQ=32)
+
+$ontext
+
+  Test problem 9.2.7 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.1.6 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+G. Anandalingam and D. J. White, "A Solution Method for the Linear Static
+Stackelberg Problem Using Penalty Functions", IEEE Transactions on Automatic
+Control, vol. 35, no. 10, pp 1170-1173, 1990.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+$offtext
+
+*Solution of problem 9.1.6 on the web
+scalar  x_l /   16 /
+        y_l /   11 /
+        tol / 1e-6 /;
+
+variables z, z_in; positive variable x, y;
+equations ob, ob_in, c1, c2, c3, c4, c5, c6;
+
+ob..      -   x - 3*y =e= z;
+
+ob_in..         - 3*y =e= z_in;
+c1..      -   x - 2*y =l= -10;
+c2..          x - 2*y =l=   6;
+c3..        2*x -   y =l=  21;
+c4..          x + 2*y =l=  38;
+c5..      -   x + 2*y =l=  18;
+c6..            -   y =l=   0;
+
+
+model bilevel / all /;
+
+$echo bilevel x max z_in * ob_in c1 c2 c3 c4 c5 c6 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l;
+y.l = y_l;
+
+solve bilevel using EMP minimizing z;
+
+abort$(   (abs(x.l - x_l) > tol)
+       or (abs(y.l - y_l) > tol) ) 'Deviated from reported solution';

@@ -1,0 +1,64 @@
+$title Traffic Assignment Model (TRAFFIC,SEQ=3)
+
+$ontext
+
+A simple traffic assignment problem:
+ - Move 5 units of stuff from A to B as quickly as possible, using one or more
+   of the N paths p1..pN between A and B.
+ - The delay d on each path is a function of the volume of traffic on
+   the path:
+      d(p) = a(p) + x(p) + x(p)**1.5
+
+This is a simple example showing how VI can be used to compute
+*effective delay*, i.e. the maximum delay over all paths with nonzero
+flow, or the time it takes for all the stuff to reach the
+destination.  For an example involving a nontrivial network see the
+traffic2 model in this library.
+
+Contributor: Steven Dirkse, January 2009
+
+$offtext
+
+set
+   p 'paths from A to B' / p1 * p4 /;
+scalar
+   b 'volume of stuff to move' / 5 /;
+parameter
+   a(p);
+
+execseed = 1;
+a(p)     = uniform(0,100);
+
+positive variable
+  x(p) 'path flows';
+equation
+  d(p), demand;
+
+d(p)..  a(p) + x(p) + x(p)**1.5 =N= 0;
+demand..   sum{p, x(p)} =G= b;
+
+model vi / d, demand /;
+
+* define the complementary pairs for vi
+file myinfo / '%emp.info%' /;
+putclose myinfo 'vi d x';
+
+solve vi using emp;
+abort$[vi.modelstat <> %MODELSTAT.LOCALLY OPTIMAL%] 'bad modelstat for vi';
+abort$[vi.solvestat <> %SOLVESTAT.NORMAL COMPLETION%] 'bad solvestat for vi';
+
+* for the report labels, ed = effective delay
+parameters
+  report(*)
+  report2(p,*);
+
+report2(p,'flow') = x.l(p);
+report2(p,'delay') = d.l(p);
+
+report('ed_marg') = demand.m;
+report('ed_calc') = smax(p$[x.l(p) > 1e-8], report2(p,'delay'));
+report('ed_diff') = abs(report('ed_calc')-report('ed_marg'));
+
+display report, report2;
+
+abort$[report('ed_diff') > 1e-6] 'bad ed';

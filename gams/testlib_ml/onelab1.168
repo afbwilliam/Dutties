@@ -1,0 +1,20 @@
+$title 'One element dynamic control inside IF' (ONELAB1,SEQ=168)
+
+Sets tmax      / period01 * period02/,
+     t(tmax);
+scalar foo /1/;
+Parameters periodln(tmax) /    period01 11,     period02 20   /,
+           tot1,tot2,tot3;
+
+t('period01')=yes;
+* update set inside if
+
+if(foo,
+  t('period02')=yes;
+  tot1=sum(t(tmax),periodln(tmax));
+  tot2=sum(tmax,   periodln(tmax));
+  tot3=sum(t,      periodln(t)););
+
+abort$(tot1 <> 31) 'tot1 is wrong',tot1,tot2,tot3;
+abort$(tot2 <> 31) 'tot2 is wrong',tot1,tot2,tot3;
+abort$(tot3 <> 31) 'tot3 is wrong',tot1,tot2,tot3;

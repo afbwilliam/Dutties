@@ -1,0 +1,48 @@
+$title Resorting inside a loop with a constant in the search record (LOOP2,SEQ=134)
+
+$ontext
+
+This example caused problems with resorting search records
+
+Contributor: Paul van der Eijk, May-26-2004
+$offtext
+
+set i /i1*i5/
+    j /j1*j5/
+    l /L1*L3/;
+
+parameter ccost(i,j,l);
+
+ccost(i,j,l) = Round(Uniform(1,20));
+ccost('i1', 'j1', 'L2') = 11;
+ccost('i5', 'j1', 'L2') = 13;
+
+set mcc(i,j), mcc1(i,j);
+
+mcc(i,j)$(ccost(i,j,'L2') > 5) = yes;
+
+scalar paul, goon, step, mymin;
+
+paul = 0;
+step = 1;
+
+loop(j$Sum(i$mcc(i,j),1),
+     paul = paul + 1;
+     goon = 1;
+
+     display mcc,ccost;
+     while(goon,
+           goon = 0;
+           mymin = smin(i$mcc(i,j), ccost(i,j,'L2'));
+           display paul,step,mymin;
+           mcc1(i,j) = no;
+           loop(mcc(i,j)$(ccost(mcc,'L2') = mymin),
+                goon = 1;
+                ccost(mcc,'L2') = 0;
+                mcc1(mcc) = yes;
+                display mcc1;
+                step = step + 1;
+               );
+           mcc(mcc1) = no;
+          )
+    );

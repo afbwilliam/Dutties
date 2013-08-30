@@ -1,0 +1,1657 @@
+<html>
+<head>
+<title>COUENNE Options</title>
+</head>
+<body>
+<h2>COUENNE Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/couenne.pdf">COUENNE manual</a>.
+
+<h2>Summary of COUENNE Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Couenne options</h3></th></tr>
+<tr><td><a href="#COUENNE2mir_cuts">
+2mir_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating 2mir_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEaggressive_fbbt">
+aggressive_fbbt</a></td>
+<td>Aggressive feasibility-based bound tightening (to use with NLP points)</td></tr>
+<tr><td><a href="#COUENNEart_cutoff">
+art_cutoff</a></td>
+<td>Artificial cutoff</td></tr>
+<tr><td><a href="#COUENNEart_lower">
+art_lower</a></td>
+<td>Artificial lower bound</td></tr>
+<tr><td><a href="#COUENNEboundtightening_print_level">
+boundtightening_print_level</a></td>
+<td>Output level for bound tightening code in Couenne</td></tr>
+<tr><td><a href="#COUENNEbranching_object">
+branching_object</a></td>
+<td>type of branching object for variable selection</td></tr>
+<tr><td><a href="#COUENNEbranching_print_level">
+branching_print_level</a></td>
+<td>Output level for braching code in Couenne</td></tr>
+<tr><td><a href="#COUENNEbranch_conv_cuts">
+branch_conv_cuts</a></td>
+<td>Apply convexification cuts before branching (for now only within strong branching)</td></tr>
+<tr><td><a href="#COUENNEbranch_fbbt">
+branch_fbbt</a></td>
+<td>Apply bound tightening before branching</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp">
+branch_lp_clamp</a></td>
+<td>Defines safe interval percentage for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_cube">
+branch_lp_clamp_cube</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_div">
+branch_lp_clamp_div</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_exp">
+branch_lp_clamp_exp</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_log">
+branch_lp_clamp_log</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_negpow">
+branch_lp_clamp_negpow</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_pow">
+branch_lp_clamp_pow</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_prod">
+branch_lp_clamp_prod</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_sqr">
+branch_lp_clamp_sqr</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_lp_clamp_trig">
+branch_lp_clamp_trig</a></td>
+<td>Defines safe interval percentage [0,0.5] for using LP point as a branching point.</td></tr>
+<tr><td><a href="#COUENNEbranch_midpoint_alpha">
+branch_midpoint_alpha</a></td>
+<td>Defines convex combination of mid point and current LP point: b = alpha x_lp + (1-alpha) (lb+ub)/2.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select">
+branch_pt_select</a></td>
+<td>Chooses branching point selection strategy</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_cube">
+branch_pt_select_cube</a></td>
+<td>Chooses branching point selection strategy for operator cube.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_div">
+branch_pt_select_div</a></td>
+<td>Chooses branching point selection strategy for operator div.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_exp">
+branch_pt_select_exp</a></td>
+<td>Chooses branching point selection strategy for operator exp.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_log">
+branch_pt_select_log</a></td>
+<td>Chooses branching point selection strategy for operator log.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_negpow">
+branch_pt_select_negpow</a></td>
+<td>Chooses branching point selection strategy for operator negpow.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_pow">
+branch_pt_select_pow</a></td>
+<td>Chooses branching point selection strategy for operator pow.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_prod">
+branch_pt_select_prod</a></td>
+<td>Chooses branching point selection strategy for operator prod.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_sqr">
+branch_pt_select_sqr</a></td>
+<td>Chooses branching point selection strategy for operator sqr.</td></tr>
+<tr><td><a href="#COUENNEbranch_pt_select_trig">
+branch_pt_select_trig</a></td>
+<td>Chooses branching point selection strategy for operator trig.</td></tr>
+<tr><td><a href="#COUENNEcheck_lp">
+check_lp</a></td>
+<td>Check all LPs through an independent call to OsiClpSolverInterface::initialSolve()</td></tr>
+<tr><td><a href="#COUENNEclique_cuts">
+clique_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating clique_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEcont_var_priority">
+cont_var_priority</a></td>
+<td>Priority of continuous variable branching</td></tr>
+<tr><td><a href="#COUENNEconvexification_cuts">
+convexification_cuts</a></td>
+<td>Specify the frequency (in terms of nodes) at which couenne ecp cuts are generated.</td></tr>
+<tr><td><a href="#COUENNEconvexification_points">
+convexification_points</a></td>
+<td>Specify the number of points at which to convexify when convexification type is uniform-grid or around-current-point.</td></tr>
+<tr><td><a href="#COUENNEconvexification_type">
+convexification_type</a></td>
+<td>Determines in which point the linear over/under-estimator are generated</td></tr>
+<tr><td><a href="#COUENNEconvexifying_print_level">
+convexifying_print_level</a></td>
+<td>Output level for convexifying code in Couenne</td></tr>
+<tr><td><a href="#COUENNEcover_cuts">
+cover_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating cover_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEdelete_redundant">
+delete_redundant</a></td>
+<td>Eliminate redundant variables, which appear in the problem as x_k = x_h</td></tr>
+<tr><td><a href="#COUENNEdisjcuts_print_level">
+disjcuts_print_level</a></td>
+<td>Output level for disjunctive cuts in Couenne</td></tr>
+<tr><td><a href="#COUENNEdisj_active_cols">
+disj_active_cols</a></td>
+<td>Only include violated variable bounds in the Cut Generating LP (CGLP).</td></tr>
+<tr><td><a href="#COUENNEdisj_active_rows">
+disj_active_rows</a></td>
+<td>Only include violated linear inequalities in the CGLP.</td></tr>
+<tr><td><a href="#COUENNEdisj_cumulative">
+disj_cumulative</a></td>
+<td>Add previous disjunctive cut to current CGLP.</td></tr>
+<tr><td><a href="#COUENNEdisj_depth_level">
+disj_depth_level</a></td>
+<td>Depth of the B&B tree when to start decreasing the number of objects that generate disjunctions.</td></tr>
+<tr><td><a href="#COUENNEdisj_depth_stop">
+disj_depth_stop</a></td>
+<td>Depth of the B&B tree where separation of disjunctive cuts is stopped.</td></tr>
+<tr><td><a href="#COUENNEdisj_init_number">
+disj_init_number</a></td>
+<td>Maximum number of disjunction to consider at each iteration.</td></tr>
+<tr><td><a href="#COUENNEdisj_init_perc">
+disj_init_perc</a></td>
+<td>The maximum fraction of all disjunctions currently violated by the problem to consider for generating disjunctions.</td></tr>
+<tr><td><a href="#COUENNEdisplay_stats">
+display_stats</a></td>
+<td>display statistics at the end of the run</td></tr>
+<tr><td><a href="#COUENNEenable_lp_implied_bounds">
+enable_lp_implied_bounds</a></td>
+<td>Enable OsiSolverInterface::tightenBounds () -- warning: it has caused some trouble to Couenne</td></tr>
+<tr><td><a href="#COUENNEenable_sos">
+enable_sos</a></td>
+<td>Use Special Ordered Sets (SOS) as indicated in the MINLP model</td></tr>
+<tr><td><a href="#COUENNEestimate_select">
+estimate_select</a></td>
+<td>How the min/max estimates of the subproblems' bounds are used in strong branching</td></tr>
+<tr><td><a href="#COUENNEfeasibility_bt">
+feasibility_bt</a></td>
+<td>Feasibility-based (cheap) bound tightening (FBBT)</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_convcuts">
+feas_pump_convcuts</a></td>
+<td>Separate MILP-feasible, MINLP-infeasible solution during or after MILP solver.</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_heuristic">
+feas_pump_heuristic</a></td>
+<td>Apply the nonconvex Feasibility Pump</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_iter">
+feas_pump_iter</a></td>
+<td>Number of iterations in the main Feasibility Pump loop</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_level">
+feas_pump_level</a></td>
+<td>Specify the logarithm of the number of feasibility pumps to perform on average for each level of given depth of the tree.</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_milpmethod">
+feas_pump_milpmethod</a></td>
+<td>How should the integral solution be constructed?</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_mult_dist_milp">
+feas_pump_mult_dist_milp</a></td>
+<td>Weight of the distance in the distance function of the milp problem</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_mult_dist_nlp">
+feas_pump_mult_dist_nlp</a></td>
+<td>Weight of the distance in the distance function of the nlp problem</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_mult_hess_milp">
+feas_pump_mult_hess_milp</a></td>
+<td>Weight of the Hessian in the distance function of the milp problem</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_mult_hess_nlp">
+feas_pump_mult_hess_nlp</a></td>
+<td>Weight of the Hessian in the distance function of the nlp problem</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_mult_objf_milp">
+feas_pump_mult_objf_milp</a></td>
+<td>Weight of the original objective function in the distance function of the milp problem</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_mult_objf_nlp">
+feas_pump_mult_objf_nlp</a></td>
+<td>Weight of the original objective function in the distance function of the nlp problem</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_nseprounds">
+feas_pump_nseprounds</a></td>
+<td>Number of rounds that separate convexification cuts. Must be at least 1</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_poolcomp">
+feas_pump_poolcomp</a></td>
+<td>Priority field to compare solutions in FP pool</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_tabumgt">
+feas_pump_tabumgt</a></td>
+<td>Retrieval of MILP solutions when the one returned is unsatisfactory</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_usescip">
+feas_pump_usescip</a></td>
+<td>Should SCIP be used to solve the MILPs?</td></tr>
+<tr><td><a href="#COUENNEfeas_pump_vardist">
+feas_pump_vardist</a></td>
+<td>Distance computed on integer-only or on both types of variables, in different flavors.</td></tr>
+<tr><td><a href="#COUENNEfeas_tolerance">
+feas_tolerance</a></td>
+<td>Tolerance for constraints/auxiliary variables</td></tr>
+<tr><td><a href="#COUENNEfixpoint_bt">
+fixpoint_bt</a></td>
+<td>The frequency (in terms of nodes) at which Fix Point Bound Tightening is performed.</td></tr>
+<tr><td><a href="#COUENNEfixpoint_bt_model">
+fixpoint_bt_model</a></td>
+<td>Choose whether to add an extended fixpoint LP model or a more compact one.</td></tr>
+<tr><td><a href="#COUENNEflow_covers_cuts">
+flow_covers_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating flow_covers_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEGomory_cuts">
+Gomory_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating Gomory_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEint_var_priority">
+int_var_priority</a></td>
+<td>Priority of integer variable branching</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_aggressiveness">
+iterative_rounding_aggressiveness</a></td>
+<td>Aggressiveness of the Iterative Rounding heuristic</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_base_lbrhs">
+iterative_rounding_base_lbrhs</a></td>
+<td>Base rhs of the local branching constraint for Iterative Rounding</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_heuristic">
+iterative_rounding_heuristic</a></td>
+<td>Do we use the Iterative Rounding heuristic</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_num_fir_points">
+iterative_rounding_num_fir_points</a></td>
+<td>Max number of points rounded at the beginning of Iterative Rounding</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_omega">
+iterative_rounding_omega</a></td>
+<td>Omega parameter of the Iterative Rounding heuristic</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_time">
+iterative_rounding_time</a></td>
+<td>Specify the maximum time allowed for the Iterative Rounding heuristic</td></tr>
+<tr><td><a href="#COUENNEiterative_rounding_time_firstcall">
+iterative_rounding_time_firstcall</a></td>
+<td>Specify the maximum time allowed for the Iterative Rounding heuristic when no feasible solution is known</td></tr>
+<tr><td><a href="#COUENNElift_and_project_cuts">
+lift_and_project_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating lift_and_project_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNElocal_branching_heuristic">
+local_branching_heuristic</a></td>
+<td>Apply local branching heuristic</td></tr>
+<tr><td><a href="#COUENNElocal_optimization_heuristic">
+local_optimization_heuristic</a></td>
+<td>Search for local solutions of MINLPs</td></tr>
+<tr><td><a href="#COUENNElog_num_abt_per_level">
+log_num_abt_per_level</a></td>
+<td>Specify the frequency (in terms of nodes) for aggressive bound tightening.</td></tr>
+<tr><td><a href="#COUENNElog_num_local_optimization_per_level">
+log_num_local_optimization_per_level</a></td>
+<td>Specify the logarithm of the number of local optimizations to perform on average for each level of given depth of the tree.</td></tr>
+<tr><td><a href="#COUENNElog_num_obbt_per_level">
+log_num_obbt_per_level</a></td>
+<td>Specify the frequency (in terms of nodes) for optimality-based bound tightening.</td></tr>
+<tr><td><a href="#COUENNElp_solver">
+lp_solver</a></td>
+<td>Linear Programming solver for the linearization</td></tr>
+<tr><td><a href="#COUENNEmax_fbbt_iter">
+max_fbbt_iter</a></td>
+<td>Number of FBBT iterations before stopping even with tightened bounds.</td></tr>
+<tr><td><a href="#COUENNEminlp_disj_cuts">
+minlp_disj_cuts</a></td>
+<td>The frequency (in terms of nodes) at which Couenne disjunctive cuts are generated.</td></tr>
+<tr><td><a href="#COUENNEmir_cuts">
+mir_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating mir_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEmultilinear_separation">
+multilinear_separation</a></td>
+<td>Separation for multilinear terms</td></tr>
+<tr><td><a href="#COUENNEnlpheur_print_level">
+nlpheur_print_level</a></td>
+<td>Output level for NLP heuristic in Couenne</td></tr>
+<tr><td><a href="#COUENNEoptimality_bt">
+optimality_bt</a></td>
+<td>Optimality-based (expensive) bound tightening (OBBT)</td></tr>
+<tr><td><a href="#COUENNEorbital_branching">
+orbital_branching</a></td>
+<td>detect symmetries and apply orbital branching</td></tr>
+<tr><td><a href="#COUENNEoutput_level">
+output_level</a></td>
+<td>Output level</td></tr>
+<tr><td><a href="#COUENNEprobing_cuts">
+probing_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating probing_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEproblem_print_level">
+problem_print_level</a></td>
+<td>Output level for problem manipulation code in Couenne</td></tr>
+<tr><td><a href="#COUENNEpseudocost_mult">
+pseudocost_mult</a></td>
+<td>Multipliers of pseudocosts for estimating and update estimation of bound</td></tr>
+<tr><td><a href="#COUENNEpseudocost_mult_lp">
+pseudocost_mult_lp</a></td>
+<td>Use distance between LP points to update multipliers of pseudocosts after simulating branching</td></tr>
+<tr><td><a href="#COUENNEquadrilinear_decomp">
+quadrilinear_decomp</a></td>
+<td>type of decomposition for quadrilinear terms (see work by Cafieri, Lee, Liberti)</td></tr>
+<tr><td><a href="#COUENNEredcost_bt">
+redcost_bt</a></td>
+<td>Reduced cost bound tightening</td></tr>
+<tr><td><a href="#COUENNEreduce_split_cuts">
+reduce_split_cuts</a></td>
+<td>Frequency k (in terms of nodes) for generating reduce_split_cuts cuts in branch-and-cut.</td></tr>
+<tr><td><a href="#COUENNEred_cost_branching">
+red_cost_branching</a></td>
+<td>Apply Reduced Cost Branching (instead of the Violation Transfer) -- MUST have vt_obj enabled</td></tr>
+<tr><td><a href="#COUENNEreformulate_print_level">
+reformulate_print_level</a></td>
+<td>Output level for reformulating problems in Couenne</td></tr>
+<tr><td><a href="#COUENNEsolvetrace">
+solvetrace</a></td>
+<td>Name of file for writing solving progress information.</td></tr>
+<tr><td><a href="#COUENNEsolvetracenodefreq">
+solvetracenodefreq</a></td>
+<td>Frequency in number of nodes for writing solving progress information.</td></tr>
+<tr><td><a href="#COUENNEsolvetracetimefreq">
+solvetracetimefreq</a></td>
+<td>Frequency in seconds for writing solving progress information.</td></tr>
+<tr><td><a href="#COUENNEtrust_strong">
+trust_strong</a></td>
+<td>Fathom strong branching LPs when their bound is above the cutoff</td></tr>
+<tr><td><a href="#COUENNEtwoimpl_depth_level">
+twoimpl_depth_level</a></td>
+<td>Depth of the B&B tree when to start decreasing the chance of running this algorithm.</td></tr>
+<tr><td><a href="#COUENNEtwoimpl_depth_stop">
+twoimpl_depth_stop</a></td>
+<td>Depth of the B&B tree where separation is stopped.</td></tr>
+<tr><td><a href="#COUENNEtwo_implied_bt">
+two_implied_bt</a></td>
+<td>The frequency (in terms of nodes) at which Couenne two-implied bounds are tightened.</td></tr>
+<tr><td><a href="#COUENNEtwo_implied_max_trials">
+two_implied_max_trials</a></td>
+<td>The number of iteration at each call to the cut generator.</td></tr>
+<tr><td><a href="#COUENNEuse_auxcons">
+use_auxcons</a></td>
+<td>Use constraints-defined auxiliaries, i.e. auxiliaries w = f(x) defined by original constraints f(x) - w = 0</td></tr>
+<tr><td><a href="#COUENNEuse_quadratic">
+use_quadratic</a></td>
+<td>Use quadratic expressions and related exprQuad class</td></tr>
+<tr><td><a href="#COUENNEuse_semiaux">
+use_semiaux</a></td>
+<td>Use semiauxiliaries, i.e. auxiliaries defined as w >= f(x) rather than w := f(x))</td></tr>
+<tr><td><a href="#COUENNEviolated_cuts_only">
+violated_cuts_only</a></td>
+<td>Yes if only violated convexification cuts should be added</td></tr></table>
+<h2>Detailed Descriptions of COUENNE Options</h2>
+
+<h4><a name="COUENNE2mir_cuts">
+2mir_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating 2mir_cuts cuts in branch-and-cut.</h4><p>
+
+If k > 0, cuts are generated every k nodes, if -99 < k < 0 cuts are generated
+every -k nodes but Cbc may decide to stop generating cuts, if not enough are
+generated at the root node, if k=-99 generate cuts only at the root node, if
+k=0 or 100 do not generate cuts.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEaggressive_fbbt">
+aggressive_fbbt</a>
+<i> (string)</i> Aggressive feasibility-based bound tightening (to use with NLP points)</h4><p>
+
+Aggressive FBBT is a version of probing that also allows to reduce the solution
+set, although it is not as quick as FBBT. It can be applied up to a certain
+depth of the B&B tree -- see ``log_num_abt_per_level''. In general, this option
+is useful but can be switched off if a problem is too large and seems not to
+benefit from it.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEart_cutoff">
+art_cutoff</a>
+<i> (real)</i> Artificial cutoff</h4><p>
+
+Default value is infinity.
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="COUENNEart_lower">
+art_lower</a>
+<i> (real)</i> Artificial lower bound</h4><p>
+
+Default value is -COIN_DBL_MAX.
+
+<br><i>(default = mindouble)</i>
+
+<h4><a name="COUENNEboundtightening_print_level">
+boundtightening_print_level</a>
+<i> (integer)</i> Output level for bound tightening code in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEbranching_object">
+branching_object</a>
+<i> (string)</i> type of branching object for variable selection</h4><p>
+
+
+<br><i>(default = var_obj)</i>
+<table>
+<tr valign="top"><td width=20 align=right>expr_obj</td><td>use one object for each nonlinear expression</td></tr>
+<tr valign="top"><td width=20 align=right>var_obj</td><td>use one object for each variable</td></tr>
+<tr valign="top"><td width=20 align=right>vt_obj</td><td>use Violation Transfer from Tawarmalani and Sahinidis</td></tr>
+</table>
+
+<h4><a name="COUENNEbranching_print_level">
+branching_print_level</a>
+<i> (integer)</i> Output level for braching code in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEbranch_conv_cuts">
+branch_conv_cuts</a>
+<i> (string)</i> Apply convexification cuts before branching (for now only within strong branching)</h4><p>
+
+After applying a branching rule and before resolving the subproblem, generate a
+round of linearization cuts with the new bounds enforced by the rule.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_fbbt">
+branch_fbbt</a>
+<i> (string)</i> Apply bound tightening before branching</h4><p>
+
+After applying a branching rule and before re-solving the subproblem, apply
+Bound Tightening.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_lp_clamp">
+branch_lp_clamp</a>
+<i> (real)</i> Defines safe interval percentage for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_cube">
+branch_lp_clamp_cube</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_div">
+branch_lp_clamp_div</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_exp">
+branch_lp_clamp_exp</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_log">
+branch_lp_clamp_log</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_negpow">
+branch_lp_clamp_negpow</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_pow">
+branch_lp_clamp_pow</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_prod">
+branch_lp_clamp_prod</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_sqr">
+branch_lp_clamp_sqr</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_lp_clamp_trig">
+branch_lp_clamp_trig</a>
+<i> (real)</i> Defines safe interval percentage [0,0.5] for using LP point as a branching point.</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEbranch_midpoint_alpha">
+branch_midpoint_alpha</a>
+<i> (real)</i> Defines convex combination of mid point and current LP point: b = alpha x_lp + (1-alpha) (lb+ub)/2.</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.25)</i>
+
+<h4><a name="COUENNEbranch_pt_select">
+branch_pt_select</a>
+<i> (string)</i> Chooses branching point selection strategy</h4><p>
+
+
+<br><i>(default = mid-point)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td>minimizes max distance from curve to convexification</td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td>LP point if within [k,1-k] of the bound intervals, middle point otherwise(k defined by branch_lp_clamp)</td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td>LP point clamped in [k,1-k] of the bound intervals (k defined by lp_clamp)</td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td>convex combination of current point and mid point</td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td>minimizes total area of the two convexifications</td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td>do not branch, return null infeasibility; for testing purposes only</td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_cube">
+branch_pt_select_cube</a>
+<i> (string)</i> Chooses branching point selection strategy for operator cube.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_div">
+branch_pt_select_div</a>
+<i> (string)</i> Chooses branching point selection strategy for operator div.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_exp">
+branch_pt_select_exp</a>
+<i> (string)</i> Chooses branching point selection strategy for operator exp.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_log">
+branch_pt_select_log</a>
+<i> (string)</i> Chooses branching point selection strategy for operator log.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_negpow">
+branch_pt_select_negpow</a>
+<i> (string)</i> Chooses branching point selection strategy for operator negpow.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_pow">
+branch_pt_select_pow</a>
+<i> (string)</i> Chooses branching point selection strategy for operator pow.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_prod">
+branch_pt_select_prod</a>
+<i> (string)</i> Chooses branching point selection strategy for operator prod.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_sqr">
+branch_pt_select_sqr</a>
+<i> (string)</i> Chooses branching point selection strategy for operator sqr.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEbranch_pt_select_trig">
+branch_pt_select_trig</a>
+<i> (string)</i> Chooses branching point selection strategy for operator trig.</h4><p>
+
+Default is to use the value of \texttt{branch_pt_select} (value
+\texttt{common}).
+
+<br><i>(default = common)</i>
+<table>
+<tr valign="top"><td width=20 align=right>balanced</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>common</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-central</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>lp-clamped</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>mid-point</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>min-area</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>no-branch</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEcheck_lp">
+check_lp</a>
+<i> (string)</i> Check all LPs through an independent call to OsiClpSolverInterface::initialSolve()</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEclique_cuts">
+clique_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating clique_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEcont_var_priority">
+cont_var_priority</a>
+<i> (integer)</i> Priority of continuous variable branching</h4><p>
+
+When branching, this is compared to the priority of integer variables, whose
+priority is given by int_var_priority, and SOS, whose priority is 10. Higher
+values mean smaller priority.
+
+<br><i>(default = 2000)</i>
+
+<h4><a name="COUENNEconvexification_cuts">
+convexification_cuts</a>
+<i> (integer)</i> Specify the frequency (in terms of nodes) at which couenne ecp cuts are generated.</h4><p>
+
+A frequency of 0 amounts to never solve the NLP relaxation.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="COUENNEconvexification_points">
+convexification_points</a>
+<i> (integer)</i> Specify the number of points at which to convexify when convexification type is uniform-grid or around-current-point.</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="COUENNEconvexification_type">
+convexification_type</a>
+<i> (string)</i> Determines in which point the linear over/under-estimator are generated</h4><p>
+
+For the lower envelopes of convex functions, this is the number of points where
+a supporting hyperplane is generated. This only holds for the initial
+linearization, as all other linearizations only add at most one cut per
+expression.
+
+<br><i>(default = current-point-only)</i>
+<table>
+<tr valign="top"><td width=20 align=right>around-current-point</td><td>At points around current optimum of relaxation</td></tr>
+<tr valign="top"><td width=20 align=right>current-point-only</td><td>Only at current optimum of relaxation</td></tr>
+<tr valign="top"><td width=20 align=right>uniform-grid</td><td>Points chosen in a uniform grid between the bounds of the problem</td></tr>
+</table>
+
+<h4><a name="COUENNEconvexifying_print_level">
+convexifying_print_level</a>
+<i> (integer)</i> Output level for convexifying code in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEcover_cuts">
+cover_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating cover_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEdelete_redundant">
+delete_redundant</a>
+<i> (string)</i> Eliminate redundant variables, which appear in the problem as x_k = x_h</h4><p>
+
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>Keep redundant variables, making the problem a bit larger</td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Eliminate redundant variables (the problem will be equivalent, only smaller)</td></tr>
+</table>
+
+<h4><a name="COUENNEdisjcuts_print_level">
+disjcuts_print_level</a>
+<i> (integer)</i> Output level for disjunctive cuts in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEdisj_active_cols">
+disj_active_cols</a>
+<i> (string)</i> Only include violated variable bounds in the Cut Generating LP (CGLP).</h4><p>
+
+This reduces the size of the CGLP, but may produce less efficient cuts.
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEdisj_active_rows">
+disj_active_rows</a>
+<i> (string)</i> Only include violated linear inequalities in the CGLP.</h4><p>
+
+This reduces the size of the CGLP, but may produce less efficient cuts.
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEdisj_cumulative">
+disj_cumulative</a>
+<i> (string)</i> Add previous disjunctive cut to current CGLP.</h4><p>
+
+When generating disjunctive cuts on a set of disjunctions 1, 2, ..., k,
+introduce the cut relative to the previous disjunction i-1 in the CGLP used for
+disjunction i. Notice that, although this makes the cut generated more
+efficient, it increases the rank of the disjunctive cut generated.
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEdisj_depth_level">
+disj_depth_level</a>
+<i> (integer)</i> Depth of the B&B tree when to start decreasing the number of objects that generate disjunctions.</h4><p>
+
+This has a similar behavior as log_num_obbt_per_level. A value of -1 means that
+generation can be done at all nodes.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="COUENNEdisj_depth_stop">
+disj_depth_stop</a>
+<i> (integer)</i> Depth of the B&B tree where separation of disjunctive cuts is stopped.</h4><p>
+
+A value of -1 means that generation can be done at all nodes
+
+<br><i>(default = 20)</i>
+
+<h4><a name="COUENNEdisj_init_number">
+disj_init_number</a>
+<i> (integer)</i> Maximum number of disjunction to consider at each iteration.</h4><p>
+
+-1 means no limit.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="COUENNEdisj_init_perc">
+disj_init_perc</a>
+<i> (real)</i> The maximum fraction of all disjunctions currently violated by the problem to consider for generating disjunctions.</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="COUENNEdisplay_stats">
+display_stats</a>
+<i> (string)</i> display statistics at the end of the run</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEenable_lp_implied_bounds">
+enable_lp_implied_bounds</a>
+<i> (string)</i> Enable OsiSolverInterface::tightenBounds () -- warning: it has caused some trouble to Couenne</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEenable_sos">
+enable_sos</a>
+<i> (string)</i> Use Special Ordered Sets (SOS) as indicated in the MINLP model</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEestimate_select">
+estimate_select</a>
+<i> (string)</i> How the min/max estimates of the subproblems' bounds are used in strong branching</h4><p>
+
+
+<br><i>(default = normal)</i>
+<table>
+<tr valign="top"><td width=20 align=right>normal</td><td>as usual in literature</td></tr>
+<tr valign="top"><td width=20 align=right>product</td><td>use their product</td></tr>
+</table>
+
+<h4><a name="COUENNEfeasibility_bt">
+feasibility_bt</a>
+<i> (string)</i> Feasibility-based (cheap) bound tightening (FBBT)</h4><p>
+
+A pre-processing technique to reduce the bounding box, before the generation of
+linearization cuts. This is a quick and effective way to reduce the solution
+set, and it is highly recommended to keep it active.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEfeas_pump_convcuts">
+feas_pump_convcuts</a>
+<i> (string)</i> Separate MILP-feasible, MINLP-infeasible solution during or after MILP solver.</h4><p>
+
+
+<br><i>(default = none)</i>
+<table>
+<tr valign="top"><td width=20 align=right>external</td><td>Done after the MILP solver, in a Benders-like fashion</td></tr>
+<tr valign="top"><td width=20 align=right>integrated</td><td>Done within the MILP solver in a branch-and-cut fashion</td></tr>
+<tr valign="top"><td width=20 align=right>none</td><td>Just proceed to the NLP</td></tr>
+<tr valign="top"><td width=20 align=right>postcut</td><td>Do one round of cuts and proceed with NLP</td></tr>
+</table>
+
+<h4><a name="COUENNEfeas_pump_heuristic">
+feas_pump_heuristic</a>
+<i> (string)</i> Apply the nonconvex Feasibility Pump</h4><p>
+
+An implementation of the Feasibility Pump for nonconvex MINLPs
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEfeas_pump_iter">
+feas_pump_iter</a>
+<i> (integer)</i> Number of iterations in the main Feasibility Pump loop</h4><p>
+
+-1 means no limit
+
+<br><i>(default = 10)</i>
+
+<h4><a name="COUENNEfeas_pump_level">
+feas_pump_level</a>
+<i> (integer)</i> Specify the logarithm of the number of feasibility pumps to perform on average for each level of given depth of the tree.</h4><p>
+
+Solve as many nlp's at the nodes for each level of the tree. Nodes are randomly
+selected. If for a given level there are less nodes than this number nlp are
+solved for every nodes. For example if parameter is 8, nlp's are solved for all
+node until level 8, then for half the node at level 9, 1/4 at level 10.... Set
+to -1 to perform at all nodes.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="COUENNEfeas_pump_milpmethod">
+feas_pump_milpmethod</a>
+<i> (integer)</i> How should the integral solution be constructed?</h4><p>
+
+0: automatic, 1: aggressive heuristics, large node limit, 2: default, node
+limit, 3: RENS, 4: Objective Feasibility Pump,  -1: solve MILP completely
+
+<br><i>Range: [-1,4]</i>
+
+<br><i>(default = -1)</i>
+
+<h4><a name="COUENNEfeas_pump_mult_dist_milp">
+feas_pump_mult_dist_milp</a>
+<i> (real)</i> Weight of the distance in the distance function of the milp problem</h4><p>
+
+0: no weight, 1: full weight
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_mult_dist_nlp">
+feas_pump_mult_dist_nlp</a>
+<i> (real)</i> Weight of the distance in the distance function of the nlp problem</h4><p>
+
+0: no weight, 1: full weight
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_mult_hess_milp">
+feas_pump_mult_hess_milp</a>
+<i> (real)</i> Weight of the Hessian in the distance function of the milp problem</h4><p>
+
+0: no weight, 1: full weight
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_mult_hess_nlp">
+feas_pump_mult_hess_nlp</a>
+<i> (real)</i> Weight of the Hessian in the distance function of the nlp problem</h4><p>
+
+0: no weight, 1: full weight
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_mult_objf_milp">
+feas_pump_mult_objf_milp</a>
+<i> (real)</i> Weight of the original objective function in the distance function of the milp problem</h4><p>
+
+0: no weight, 1: full weight
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_mult_objf_nlp">
+feas_pump_mult_objf_nlp</a>
+<i> (real)</i> Weight of the original objective function in the distance function of the nlp problem</h4><p>
+
+0: no weight, 1: full weight
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_nseprounds">
+feas_pump_nseprounds</a>
+<i> (integer)</i> Number of rounds that separate convexification cuts. Must be at least 1</h4><p>
+
+
+<br><i>Range: [1,100000]</i>
+
+<br><i>(default = 4)</i>
+
+<h4><a name="COUENNEfeas_pump_poolcomp">
+feas_pump_poolcomp</a>
+<i> (integer)</i> Priority field to compare solutions in FP pool</h4><p>
+
+0: total number of infeasible objects (integer and nonlinear), 1: maximum
+infeasibility (integer or nonlinear), 2: objective value.
+
+<br><i>Range: [0,2]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfeas_pump_tabumgt">
+feas_pump_tabumgt</a>
+<i> (string)</i> Retrieval of MILP solutions when the one returned is unsatisfactory</h4><p>
+
+
+<br><i>(default = pool)</i>
+<table>
+<tr valign="top"><td width=20 align=right>cut</td><td>Separate convexification cuts</td></tr>
+<tr valign="top"><td width=20 align=right>none</td><td>Bail out of feasibility pump</td></tr>
+<tr valign="top"><td width=20 align=right>perturb</td><td>Randomly perturb unsatisfactory solution</td></tr>
+<tr valign="top"><td width=20 align=right>pool</td><td>Use a solution pool and replace unsatisfactory solution with Euclidean-closest in pool</td></tr>
+</table>
+
+<h4><a name="COUENNEfeas_pump_usescip">
+feas_pump_usescip</a>
+<i> (string)</i> Should SCIP be used to solve the MILPs?</h4><p>
+
+Note, that SCIP is only available for GAMS users with an academic GAMS license.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>Use Cbc's branch-and-cut to solve the MILP</td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Use SCIP's branch-and-cut or heuristics (see feas_pump_milpmethod option) to solve the MILP</td></tr>
+</table>
+
+<h4><a name="COUENNEfeas_pump_vardist">
+feas_pump_vardist</a>
+<i> (string)</i> Distance computed on integer-only or on both types of variables, in different flavors.</h4><p>
+
+
+<br><i>(default = integer)</i>
+<table>
+<tr valign="top"><td width=20 align=right>all</td><td>Compute the distance using continuous and integer variables</td></tr>
+<tr valign="top"><td width=20 align=right>int-postprocess</td><td>Use a post-processing fixed-IP LP to determine a closest-point solution</td></tr>
+<tr valign="top"><td width=20 align=right>integer</td><td>Only compute the distance based on integer coordinates (use post-processing if numerical errors occur)</td></tr>
+</table>
+
+<h4><a name="COUENNEfeas_tolerance">
+feas_tolerance</a>
+<i> (real)</i> Tolerance for constraints/auxiliary variables</h4><p>
+
+Default value is 1e-5.
+
+<br><i>(default = 1e-05)</i>
+
+<h4><a name="COUENNEfixpoint_bt">
+fixpoint_bt</a>
+<i> (integer)</i> The frequency (in terms of nodes) at which Fix Point Bound Tightening is performed.</h4><p>
+
+A frequency of 0 (default) means these cuts are never generated. Any positive
+number n instructs Couenne to generate them at every n nodes of the B&B tree. A
+negative number -n means that generation should be attempted at the root node,
+and if successful it can be repeated at every n nodes, otherwise it is stopped
+altogether.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEfixpoint_bt_model">
+fixpoint_bt_model</a>
+<i> (string)</i> Choose whether to add an extended fixpoint LP model or a more compact one.</h4><p>
+
+
+<br><i>(default = compact)</i>
+<table>
+<tr valign="top"><td width=20 align=right>compact</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>extended</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEflow_covers_cuts">
+flow_covers_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating flow_covers_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEGomory_cuts">
+Gomory_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating Gomory_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEint_var_priority">
+int_var_priority</a>
+<i> (integer)</i> Priority of integer variable branching</h4><p>
+
+When branching, this is compared to the priority of continuous variables, whose
+priority is given by cont_var_priority, and SOS, whose priority is 10. Higher
+values mean smaller priority.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="COUENNEiterative_rounding_aggressiveness">
+iterative_rounding_aggressiveness</a>
+<i> (integer)</i> Aggressiveness of the Iterative Rounding heuristic</h4><p>
+
+Set the aggressiveness of the heuristic; i.e., how many iterations should be
+run, and with which parameters. The maximum time can be overridden by setting
+the _time and _time_firstcall options. 0 = non aggressive, 1 = standard
+(default), 2 = aggressive.
+
+<br><i>Range: [0,2]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="COUENNEiterative_rounding_base_lbrhs">
+iterative_rounding_base_lbrhs</a>
+<i> (integer)</i> Base rhs of the local branching constraint for Iterative Rounding</h4><p>
+
+Base rhs for the local branching constraint that defines a neighbourhood of the
+local incumbent. The base rhs is modified by the algorithm according to
+variable bounds. This corresponds to k' in the paper. Default 15.
+
+<br><i>(default = 15)</i>
+
+<h4><a name="COUENNEiterative_rounding_heuristic">
+iterative_rounding_heuristic</a>
+<i> (string)</i> Do we use the Iterative Rounding heuristic</h4><p>
+
+If enabled, a heuristic based on Iterative Rounding is used to find feasible
+solutions for the problem. The heuristic may take some time, but usually finds
+good solutions. Recommended if you want good upper bounds and have Cplex. Not
+recommended if you do not have Cplex
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEiterative_rounding_num_fir_points">
+iterative_rounding_num_fir_points</a>
+<i> (integer)</i> Max number of points rounded at the beginning of Iterative Rounding</h4><p>
+
+Number of different points (obtained solving a log-barrier problem) that the
+heuristic will try to round at most, during its execution at the root node
+(i.e. the F-IR heuristic). Default 5.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="COUENNEiterative_rounding_omega">
+iterative_rounding_omega</a>
+<i> (real)</i> Omega parameter of the Iterative Rounding heuristic</h4><p>
+
+Set the omega parameter of the heuristic, which represents a multiplicative
+factor for the minimum log-barrier parameter of the NLP which is solved to
+obtain feasible points. This corresponds to $\omega'$ in the paper. Default 0.2.
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="COUENNEiterative_rounding_time">
+iterative_rounding_time</a>
+<i> (real)</i> Specify the maximum time allowed for the Iterative Rounding heuristic</h4><p>
+
+Maximum CPU time employed by the Iterative Rounding heuristic; if no solution
+found in this time, failure is reported. This overrides the CPU time set by
+Aggressiveness if positive.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="COUENNEiterative_rounding_time_firstcall">
+iterative_rounding_time_firstcall</a>
+<i> (real)</i> Specify the maximum time allowed for the Iterative Rounding heuristic when no feasible solution is known</h4><p>
+
+Maximum CPU time employed by the Iterative Rounding heuristic when no solution
+is known; if no solution found in this time, failure is reported.This overrides
+the CPU time set by Aggressiveness if  posive.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="COUENNElift_and_project_cuts">
+lift_and_project_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating lift_and_project_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNElocal_branching_heuristic">
+local_branching_heuristic</a>
+<i> (string)</i> Apply local branching heuristic</h4><p>
+
+A local-branching heuristic based is used to find feasible solutions.
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNElocal_optimization_heuristic">
+local_optimization_heuristic</a>
+<i> (string)</i> Search for local solutions of MINLPs</h4><p>
+
+If enabled, a heuristic based on Ipopt is used to find feasible solutions for
+the problem. It is highly recommended that this option is left enabled, as it
+would be difficult to find feasible solutions otherwise.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNElog_num_abt_per_level">
+log_num_abt_per_level</a>
+<i> (integer)</i> Specify the frequency (in terms of nodes) for aggressive bound tightening.</h4><p>
+
+If -1, apply at every node (expensive!). If 0, apply at root node only. If
+k>=0, apply with probability 2^(k - level), level being the current depth of
+the B&B tree.
+
+<br><i>(default = 2)</i>
+
+<h4><a name="COUENNElog_num_local_optimization_per_level">
+log_num_local_optimization_per_level</a>
+<i> (integer)</i> Specify the logarithm of the number of local optimizations to perform on average for each level of given depth of the tree.</h4><p>
+
+Solve as many nlp's at the nodes for each level of the tree. Nodes are randomly
+selected. If for a given level there are less nodes than this number nlp are
+solved for every nodes. For example if parameter is 8, nlp's are solved for all
+node until level 8, then for half the node at level 9, 1/4 at level 10....
+Value -1 specify to perform at all nodes.
+
+<br><i>(default = 2)</i>
+
+<h4><a name="COUENNElog_num_obbt_per_level">
+log_num_obbt_per_level</a>
+<i> (integer)</i> Specify the frequency (in terms of nodes) for optimality-based bound tightening.</h4><p>
+
+If -1, apply at every node (expensive!). If 0, apply at root node only. If
+k>=0, apply with probability 2^(k - level), level being the current depth of
+the B&B tree.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="COUENNElp_solver">
+lp_solver</a>
+<i> (string)</i> Linear Programming solver for the linearization</h4><p>
+
+
+<br><i>(default = clp)</i>
+<table>
+<tr valign="top"><td width=20 align=right>clp</td><td>Use the COIN-OR Open Source solver CLP</td></tr>
+<tr valign="top"><td width=20 align=right>cplex</td><td>Use the commercial solver Cplex (license is needed)</td></tr>
+<tr valign="top"><td width=20 align=right>gurobi</td><td>Use the commercial solver Gurobi (license is needed)</td></tr>
+<tr valign="top"><td width=20 align=right>soplex</td><td>Use the freely available Soplex</td></tr>
+<tr valign="top"><td width=20 align=right>xpress-mp</td><td>Use the commercial solver Xpress MP (license is needed)</td></tr>
+</table>
+
+<h4><a name="COUENNEmax_fbbt_iter">
+max_fbbt_iter</a>
+<i> (integer)</i> Number of FBBT iterations before stopping even with tightened bounds.</h4><p>
+
+Set to -1 to impose no upper limit
+
+<br><i>(default = 3)</i>
+
+<h4><a name="COUENNEminlp_disj_cuts">
+minlp_disj_cuts</a>
+<i> (integer)</i> The frequency (in terms of nodes) at which Couenne disjunctive cuts are generated.</h4><p>
+
+A frequency of 0 (default) means these cuts are never generated. Any positive
+number n instructs Couenne to generate them at every n nodes of the B&B tree. A
+negative number -n means that generation should be attempted at the root node,
+and if successful it can be repeated at every n nodes, otherwise it is stopped
+altogether.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEmir_cuts">
+mir_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating mir_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEmultilinear_separation">
+multilinear_separation</a>
+<i> (string)</i> Separation for multilinear terms</h4><p>
+
+Type of separation for multilinear terms where the dependent variable is also
+bounded
+
+<br><i>(default = tight)</i>
+<table>
+<tr valign="top"><td width=20 align=right>none</td><td>No separation -- just use the four McCormick inequalities</td></tr>
+<tr valign="top"><td width=20 align=right>simple</td><td>Use one considering lower curve only</td></tr>
+<tr valign="top"><td width=20 align=right>tight</td><td>Use one considering both curves pi(x) = l_{k+1} and pi(x) = u_{k+1}</td></tr>
+</table>
+
+<h4><a name="COUENNEnlpheur_print_level">
+nlpheur_print_level</a>
+<i> (integer)</i> Output level for NLP heuristic in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEoptimality_bt">
+optimality_bt</a>
+<i> (string)</i> Optimality-based (expensive) bound tightening (OBBT)</h4><p>
+
+This is another bound reduction technique aiming at reducing the solution set
+by looking at the initial LP relaxation. This technique is computationally
+expensive, and should be used only when necessary.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEorbital_branching">
+orbital_branching</a>
+<i> (string)</i> detect symmetries and apply orbital branching</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEoutput_level">
+output_level</a>
+<i> (integer)</i> Output level</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEprobing_cuts">
+probing_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating probing_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEproblem_print_level">
+problem_print_level</a>
+<i> (integer)</i> Output level for problem manipulation code in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEpseudocost_mult">
+pseudocost_mult</a>
+<i> (string)</i> Multipliers of pseudocosts for estimating and update estimation of bound</h4><p>
+
+
+<br><i>(default = interval_br_rev)</i>
+<table>
+<tr valign="top"><td width=20 align=right>infeasibility</td><td>infeasibility returned by object</td></tr>
+<tr valign="top"><td width=20 align=right>interval_br</td><td>width of the interval between bound and branching point</td></tr>
+<tr valign="top"><td width=20 align=right>interval_br_rev</td><td>similar to interval_br, reversed</td></tr>
+<tr valign="top"><td width=20 align=right>interval_lp</td><td>width of the interval between bound and current lp point</td></tr>
+<tr valign="top"><td width=20 align=right>interval_lp_rev</td><td>similar to interval_lp, reversed</td></tr>
+<tr valign="top"><td width=20 align=right>projectDist</td><td>distance between current LP point and resulting branches' LP points</td></tr>
+</table>
+
+<h4><a name="COUENNEpseudocost_mult_lp">
+pseudocost_mult_lp</a>
+<i> (string)</i> Use distance between LP points to update multipliers of pseudocosts after simulating branching</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEquadrilinear_decomp">
+quadrilinear_decomp</a>
+<i> (string)</i> type of decomposition for quadrilinear terms (see work by Cafieri, Lee, Liberti)</h4><p>
+
+
+<br><i>(default = rAI)</i>
+<table>
+<tr valign="top"><td width=20 align=right>bi+tri</td><td>Bilinear, THEN trilinear term: x5 = ((x1 x2) x3 x4))</td></tr>
+<tr valign="top"><td width=20 align=right>hier-bi</td><td>Hierarchical decomposition: x5 = ((x1 x2) (x3 x4))</td></tr>
+<tr valign="top"><td width=20 align=right>rAI</td><td>Recursive decomposition in bilinear terms (as in Ryoo and Sahinidis): x5 = ((x1 x2) x3) x4)</td></tr>
+<tr valign="top"><td width=20 align=right>tri+bi</td><td>Trilinear and bilinear term: x5 = (x1 (x2 x3 x4))</td></tr>
+</table>
+
+<h4><a name="COUENNEredcost_bt">
+redcost_bt</a>
+<i> (string)</i> Reduced cost bound tightening</h4><p>
+
+This bound reduction technique uses the reduced costs of the LP in order to
+infer better variable bounds.
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEreduce_split_cuts">
+reduce_split_cuts</a>
+<i> (integer)</i> Frequency k (in terms of nodes) for generating reduce_split_cuts cuts in branch-and-cut.</h4><p>
+
+See option \texttt{2mir_cuts} for the meaning of k.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEred_cost_branching">
+red_cost_branching</a>
+<i> (string)</i> Apply Reduced Cost Branching (instead of the Violation Transfer) -- MUST have vt_obj enabled</h4><p>
+
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>Use Violation Transfer with $\sum |\pi_i a_{ij}|$</td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Use Reduced cost branching with $|\sum \pi_i a_{ij}|$</td></tr>
+</table>
+
+<h4><a name="COUENNEreformulate_print_level">
+reformulate_print_level</a>
+<i> (integer)</i> Output level for reformulating problems in Couenne</h4><p>
+
+
+<br><i>Range: [-2,12]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEsolvetrace">
+solvetrace</a>
+<i> (string)</i> Name of file for writing solving progress information.</h4><p>
+
+
+
+<h4><a name="COUENNEsolvetracenodefreq">
+solvetracenodefreq</a>
+<i> (integer)</i> Frequency in number of nodes for writing solving progress information.</h4><p>
+
+giving 0 disables writing of N-lines to trace file
+
+<br><i>(default = 100)</i>
+
+<h4><a name="COUENNEsolvetracetimefreq">
+solvetracetimefreq</a>
+<i> (real)</i> Frequency in seconds for writing solving progress information.</h4><p>
+
+giving 0.0 disables writing of T-lines to trace file
+
+<br><i>(default = 5)</i>
+
+<h4><a name="COUENNEtrust_strong">
+trust_strong</a>
+<i> (string)</i> Fathom strong branching LPs when their bound is above the cutoff</h4><p>
+
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEtwoimpl_depth_level">
+twoimpl_depth_level</a>
+<i> (integer)</i> Depth of the B&B tree when to start decreasing the chance of running this algorithm.</h4><p>
+
+This has a similar behavior as log_num_obbt_per_level. A value of -1 means that
+generation can be done at all nodes.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="COUENNEtwoimpl_depth_stop">
+twoimpl_depth_stop</a>
+<i> (integer)</i> Depth of the B&B tree where separation is stopped.</h4><p>
+
+A value of -1 means that generation can be done at all nodes
+
+<br><i>(default = 20)</i>
+
+<h4><a name="COUENNEtwo_implied_bt">
+two_implied_bt</a>
+<i> (integer)</i> The frequency (in terms of nodes) at which Couenne two-implied bounds are tightened.</h4><p>
+
+A frequency of 0 (default) means these cuts are never generated. Any positive
+number n instructs Couenne to generate them at every n nodes of the B&B tree. A
+negative number -n means that generation should be attempted at the root node,
+and if successful it can be repeated at every n nodes, otherwise it is stopped
+altogether.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="COUENNEtwo_implied_max_trials">
+two_implied_max_trials</a>
+<i> (integer)</i> The number of iteration at each call to the cut generator.</h4><p>
+
+
+<br><i>(default = 2)</i>
+
+<h4><a name="COUENNEuse_auxcons">
+use_auxcons</a>
+<i> (string)</i> Use constraints-defined auxiliaries, i.e. auxiliaries w = f(x) defined by original constraints f(x) - w = 0</h4><p>
+
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+
+<h4><a name="COUENNEuse_quadratic">
+use_quadratic</a>
+<i> (string)</i> Use quadratic expressions and related exprQuad class</h4><p>
+
+If enabled, then quadratic forms are not reformulated and therefore decomposed
+as a sum of auxiliary variables, each associated with a bilinear term, but
+rather taken as a whole expression. Envelopes for these expressions are
+generated through alpha-convexification.
+
+<br><i>(default = no)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>Use an auxiliary for each bilinear term</td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Create only one auxiliary for a quadratic expression</td></tr>
+</table>
+
+<h4><a name="COUENNEuse_semiaux">
+use_semiaux</a>
+<i> (string)</i> Use semiauxiliaries, i.e. auxiliaries defined as w >= f(x) rather than w := f(x))</h4><p>
+
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td>Only use auxiliaries assigned with '=' </td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td>Use auxiliaries defined by w <= f(x), w >= f(x), and w = f(x)</td></tr>
+</table>
+
+<h4><a name="COUENNEviolated_cuts_only">
+violated_cuts_only</a>
+<i> (string)</i> Yes if only violated convexification cuts should be added</h4><p>
+
+
+<br><i>(default = yes)</i>
+<table>
+<tr valign="top"><td width=20 align=right>no</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>yes</td><td></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,367 @@
+$TITLE  Fuel Economy Standards and New Automobile Sales (CAFEMGE,SEQ=139)
+
+$ONTEXT
+
+This model explores the effects of CAFE standards on the composition of new
+automobile sales, individual manufacturer average fuel efficiency, and combined
+new-fleet average fuel efficiency.  The model is short-run in which constrained
+firms increase their CAFE ratings by altering relative prices only, and in
+which "uncaring" firms simply choose to pay fines.  Steven G. Thorpe, Depart-
+ment of Economics, University of Colorado at Boulder, August 1994.
+
+
+Thorpe, S, The Effects of Fuel Economy Standards on Automobile Sales
+and Average Fuel Efficiency. Tech. rep., Department of Economics,
+University of Colorado, 1994.
+
+$OFFTEXT
+
+*******************************************************************************
+* GAMS declarations and input data ------------------------------------
+
+SETS
+J       automobile firms                /ASIA, EURO, US/
+J1(J)   potentially constrained firms   /ASIA, US/
+J2(J)   uncaring firms                  /EURO/
+I       vehicle classes                 /SUB, COM, MID, LG, SMT, LGT/
+IC(I)   car classes                     /SUB, COM, MID, LG/
+IT(I)   truck classes                   /SMT, LGT/
+NEST(I) nest identifiers    /SUB a, COM a, MID b, LG c, SMT c, LGT c/;
+
+ALIAS   (J,JJ);
+ALIAS   (I,II);
+
+SCALARS
+LSHRX   labor share in auto production          /0.5/
+LSHRY   labor share in non-auto production      /0.3/
+PF0     used to calculate FSHR                  /1.0/
+YTOX    ratio of Y to X expenditures            /8.085/
+ETRN    Elasticity of transformation            /5.0/
+ESUB1   ESUB between automobile groups          /0.5/
+ESUB2   ESUB within automobile groups           /8.0/;
+
+TABLE MPG(I,J)     Sales-weighted MPGs.
+                        ASIA           EURO             US
+         SUB           33.05          28.52          31.64
+         COM           28.75          26.69          29.75
+         MID           25.88          23.14          26.18
+         LG            25.8800        24.30          23.58
+         SMT           23.88          21.10          23.36
+         LGT           24.46          16.00          17.60;
+
+TABLE PX0(I,J)     Sales-weighted average prices (thou).
+                        ASIA           EURO             US
+         SUB          11.122         19.125         10.735
+         COM          14.457         22.197         11.021
+         MID          19.352         35.581         14.841
+         LG                          26.378         20.836
+         SMT          11.585         14.400         11.740
+         LGT          10.032         38.575         13.041;
+
+TABLE X0(I,J)      Unit sales (mil).
+                        ASIA           EURO             US
+         SUB        1.162339       0.115131       0.757758
+         COM        0.968914       0.303296       1.884271
+         MID        0.293727       0.109034       2.108742
+         LG              0.0       0.008351       1.270741
+         SMT        0.424089       0.006251       1.919135
+         LGT        0.320493       0.004614       1.840043;
+
+TABLE LIFE(I,J)    Automobile life in total miles.
+                        ASIA           EURO             US
+         SUB          100000         100000         100000
+         COM          100000         100000         100000
+         MID          100000         100000         100000
+         LG           100000         100000         100000
+         SMT          100000         100000         100000
+         LGT          100000         100000         100000;
+
+PARAMETERS
+
+FSHR(I,J)               Fuel cost as a percent of automobile cost.
+CX0                     BM automobile services consumption ($bil).
+CY0                     BM non-auto consumption ($bil).
+U0                      BM utility.
+CF0                     BM fuel consumption ($bil).
+LY0                     Labor input to non-auto production.
+KY0                     Capital input to non-auto production.
+LX0(J)                  Labor input to automobile production.
+KX0(J)                  Capital input to automobile production.
+EL                      Endowment of labor.
+EKY                     Endowment of non-auto capital.
+EKX(J)                  Endowment of automobile capital.
+
+KCAR(J)                 CAFE standard for passenger cars (mpg).
+KTRK(J)                 CAFE standard for light trucks (mpg).
+EBCAR(J)                CAFE standard for passenger cars (gpm).
+EBTRK(J)                CAFE standard for light trucks (gpm).
+ECAR(I,J)               Passenger car efficiency (gpm).
+ETRK(I,J)               Light truck efficiency (gpm).
+CARFINE(IC,J2)          Fine (tax) for noncompliance.
+TRKFINE(IT,J2)          Fine (tax) for noncompliance.
+BINDCAR(J1)             Equals 1 if CAFE is potentially binding.
+BINDTRK(J1)             Equals 1 if CAFE is potentially binding.
+AFECAR0(J)              BM passenger car AFE.
+AFETRK0(J)              BM light truck AFE.
+AFEALL0                 BM combined fleet AFE.
+MSHR0(I,J)              BM market shares.;
+
+*******************************************************************************
+* GAMS assignments ------------------------------------------------------------
+
+FSHR(I,J)$PX0(I,J)      = (LIFE(I,J)*PF0/MPG(I,J)) / (PX0(I,J)*1000);
+CX0                     = SUM((I,J), (1+FSHR(I,J))*PX0(I,J)*X0(I,J));
+CY0                     = YTOX*CX0;
+U0                      = CY0+CX0;
+CF0                     = SUM((I,J), FSHR(I,J)*PX0(I,J)*X0(I,J));
+LY0                     = LSHRY*(CY0+CF0);
+KY0                     = (1-LSHRY)*(CY0+CF0);
+LX0(J)                  = LSHRX*SUM(I, PX0(I,J)*X0(I,J));
+KX0(J)                  = (1-LSHRX)*SUM(I, PX0(I,J)*X0(I,J));
+EL                      = SUM(J, LX0(J))+LY0;
+EKY                     = KY0;
+EKX(J)                  = KX0(J);
+ECAR(IC,J)              = 1/MPG(IC,J);
+ETRK(IT,J)              = 1/MPG(IT,J);
+AFECAR0(J)              = SUM(IC, X0(IC,J)) / SUM(IC, X0(IC,J)/MPG(IC,J));
+AFETRK0(J)              = SUM(IT, X0(IT,J)) / SUM(IT, X0(IT,J)/MPG(IT,J));
+AFEALL0                 = (SUM((IC,J), X0(IC,J)) + SUM((IT,J), X0(IT,J)))/
+                          (SUM((IC,J), X0(IC,J)/MPG(IC,J)) + SUM((IT,J),
+                          X0(IT,J)/MPG(IT,J)));
+MSHR0(I,J)              = (X0(I,J)/SUM((II,JJ), X0(II,JJ)))*100;
+
+*******************************************************************************
+* Benchmark Replication -------------------------------------------------------
+
+* Set the standards to a non-binding level
+KCAR(J)         = 1;
+KTRK(J)         = 1;
+EBCAR(J)        = 1 / KCAR(J);
+EBTRK(J)        = 1 / KTRK(J);
+
+* Set the taxes and fines to zero
+CARFINE(IC,J2)  = 0;
+TRKFINE(IT,J2)  = 0;
+
+* Limit the occurrence of PT to binding firms
+BINDCAR(J1)     = 0;
+BINDTRK(J1)     = 0;
+BINDCAR(J1)     = 1$(KCAR(J1) GT SMIN(IC, MPG(IC,J1)) AND KCAR(J1) LT
+                  SMAX(IC, MPG(IC,J1)));
+BINDTRK(J1)     = 1$(KTRK(J1) GT SMIN(IT, MPG(IT,J1)) AND KTRK(J1) LT
+                  SMAX(IT, MPG(IT,J1)));
+*******************************************************************************
+* The MPSGE Model -------------------------------------------------------------
+
+$ONTEXT
+$MODEL:CAFE2
+
+$SECTORS:
+U                               ! Welfare.
+Y                               ! Non-automotive production.
+X(J)                            ! Automobile production.
+M                               ! Imports of fuel.
+CAFECAR(IC,J1)$X0(IC,J1)        ! Constraint mechanism.
+CAFETRK(IT,J1)$X0(IT,J1)        ! Constraint mechanism.
+FINECAR(IC,J2)$X0(IC,J2)        ! Penalty mechanism.
+FINETRK(IT,J2)$X0(IT,J2)        ! Penalty mechanism.
+HP(I,J)$X0(I,J)                 ! Automobile consumption.
+CX                              ! Aggregate automobile consumption.
+
+$COMMODITIES:
+PY                              ! Price of good Y.
+W                               ! Wage.
+RY                              ! Rental rate of Y capital.
+PU                              ! Utility price.
+PF                              ! Price of fuel.
+RX(J)                           ! Rental rate of X capital.
+MVX                             ! Marginal value of aggregate auto consumption.
+MCX(I,J)$X0(I,J)                ! Marginal cost of automobiles.
+PX(I,J)$X0(I,J)                 ! Price of automobiles.
+PTCAR(J1)$BINDCAR(J1)           ! Internal transfer price.
+PTTRK(J1)$BINDTRK(J1)           ! Internal transfer price.
+PCX(I,J)$X0(I,J)                ! Price of automobile consumption.
+
+$CONSUMERS:
+RA                              ! Representative agent income.
+
+*--------- Consumers are endowed with labor and capital and demand utility.
+$DEMAND:RA
+D:PU            Q:U0
+E:W             Q:EL
+E:RY            Q:EKY
+E:RX(J)         Q:EKX(J)
+
+*--------- CES/Cobb-Douglas utility function.
+$PROD:U         s:1.0
+O:PU            Q:U0
+I:PY            Q:CY0
+I:MVX           Q:CX0
+
+*--------- CES/Cobb-Douglas production of good Y.
+$PROD:Y         s:1.0
+O:PY            Q:(CY0+CF0)
+I:W             Q:LY0
+I:RY            Q:KY0
+
+*--------- CES/Cobb-Douglas production of automobiles.
+$PROD:X(J)      s:1.0  t:ETRN
+O:MCX(I,J)      Q:X0(I,J)       P:PX0(I,J)
+I:W             Q:LX0(J)
+I:RX(J)         Q:KX0(J)
+
+*--------- Fuel is obtained by trading away some Y.
+$PROD:M
+O:PF            Q:CF0
+I:PY            Q:CF0
+
+*--------- CAFE enters as a tax-subsidy on potentially constrained firms.
+$PROD:CAFECAR(IC,J1)$X0(IC,J1)  s:0  t:0
+O:PX(IC,J1)     Q:X0(IC,J1)     P:PX0(IC,J1)
+I:MCX(IC,J1)    Q:X0(IC,J1)     P:PX0(IC,J1)
+I:PTCAR(J1)$BINDCAR(J1)$(ECAR(IC,J1) GT EBCAR(J1))
++       Q:(1000*X0(IC,J1)*(ECAR(IC,J1)-EBCAR(J1)))
+O:PTCAR(J1)$BINDCAR(J1)$(ECAR(IC,J1) LT EBCAR(J1))
++       Q:(1000*X0(IC,J1)*(EBCAR(J1)-ECAR(IC,J1)))
+
+$PROD:CAFETRK(IT,J1)$X0(IT,J1)  s:0  t:0
+O:PX(IT,J1)     Q:X0(IT,J1)     P:PX0(IT,J1)
+I:MCX(IT,J1)    Q:X0(IT,J1)     P:PX0(IT,J1)
+I:PTTRK(J1)$BINDTRK(J1)$(ETRK(IT,J1) GT EBTRK(J1))
++       Q:(1000*X0(IT,J1)*(ETRK(IT,J1)-EBTRK(J1)))
+O:PTTRK(J1)$BINDTRK(J1)$(ETRK(IT,J1) LT EBTRK(J1))
++       Q:(1000*X0(IT,J1)*(EBTRK(J1)-ETRK(IT,J1)))
+
+*--------- Penalties are incurred by uncaring firms in the form of a tax.
+$PROD:FINECAR(IC,J2)$X0(IC,J2)
+O:PX(IC,J2)     Q:X0(IC,J2)     P:PX0(IC,J2)
+I:MCX(IC,J2)    Q:X0(IC,J2)     P:PX0(IC,J2)    A:RA    T:CARFINE(IC,J2)
+
+$PROD:FINETRK(IT,J2)$X0(IT,J2)
+O:PX(IT,J2)     Q:X0(IT,J2)     P:PX0(IT,J2)
+I:MCX(IT,J2)    Q:X0(IT,J2)     P:PX0(IT,J2)    A:RA    T:TRKFINE(IT,J2)
+
+*--------- Automobiles and fuel are consumed in fixed proportions.
+$PROD:HP(I,J)$X0(I,J)  s:0
+O:PCX(I,J)      Q:((1+FSHR(I,J))*PX0(I,J)*X0(I,J))
+I:PX(I,J)       Q:X0(I,J)       P:PX0(I,J)
+I:PF            Q:(FSHR(I,J)*PX0(I,J)*X0(I,J))
+
+*--------- ESUB1 is the elasticity of substitution BETWEEN vehicle classes.
+$PROD:CX        s:ESUB1  a:ESUB2  b:ESUB2  c:ESUB2
+O:MVX           Q:CX0
+I:PCX(I,J)      Q:((1+FSHR(I,J))*PX0(I,J)*X0(I,J))      NEST.TE(I):
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset CAFE2
+
+
+*       Normalize prices using the non-auto commodity:
+
+PY.FX = 1;
+
+
+$INCLUDE CAFE2.GEN
+SOLVE CAFE2 USING MCP;
+
+*******************************************************************************
+* Generate and report statistics on the calibrated benchmark ------------------
+
+PARAMETERS
+BMAGGR(*,*)             Benchmark aggregate expenditures.
+BMCX(*,*)               Benchmark automobile consumption expenditures (%).
+BMFIRM(*,*)             Benchmark firm market shares based on units (%).;
+
+BMAGGR("CY","LEVEL")    = CY0;
+BMAGGR("CY","PERCENT")  = (CY0/(CY0+CX0))*100;
+BMAGGR("CX","LEVEL")    = CX0;
+BMAGGR("CX","PERCENT")  = (CX0/(CY0+CX0))*100;
+BMAGGR("TOTAL","LEVEL") = CY0+CX0;
+BMAGGR("TOTAL","PERCENT") = 100;
+BMCX(I,J)               = (((1+FSHR(I,J))*PX0(I,J)*X0(I,J))/CX0)*100;
+BMCX("FLEET",J)         = SUM(I, (((1+FSHR(I,J))*PX0(I,J)*X0(I,J))/CX0)*100);
+BMCX(I,"ALL")           = SUM(J, (((1+FSHR(I,J))*PX0(I,J)*X0(I,J))/CX0)*100);
+BMFIRM(I,J)             = (X0(I,J)/SUM((II,JJ), X0(II,JJ)))*100;
+BMFIRM("FLEET",J)       = SUM(I, (X0(I,J)/SUM((II,JJ), X0(II,JJ)))*100);
+BMFIRM(I,"ALL")         = SUM(J, (X0(I,J)/SUM((II,JJ), X0(II,JJ)))*100);
+
+DISPLAY BMAGGR, BMCX, BMFIRM;
+
+*******************************************************************************
+* Introduce binding CAFE standards and impose fines ---------------------------
+
+* Set the CAFE standards
+KCAR(J)         = 29;
+KTRK(J)         = 20;
+EBCAR(J)        = 1/KCAR(J);
+EBTRK(J)        = 1/KTRK(J);
+
+* Set the fines
+CARFINE(IC,J2)  = 0;
+TRKFINE(IT,J2)  = 0;
+
+* Limit the occurrence of PT to binding firms
+BINDCAR(J1)     = 0.25;
+BINDTRK(J1)     = 0.25;
+BINDCAR(J1)     = 1$(KCAR(J1) GT SMIN(IC, MPG(IC,J1)) AND KCAR(J1) LT
+                  SMAX(IC, MPG(IC,J1)));
+BINDTRK(J1)     = 1$(KTRK(J1) GT SMIN(IT, MPG(IT,J1)) AND KTRK(J1) LT
+                  SMAX(IT, MPG(IT,J1)));
+
+$INCLUDE CAFE2.GEN
+SOLVE CAFE2 USING MCP;
+
+*******************************************************************************
+* Generate and report counterfactual results  ---------------------------------
+
+PARAMETERS
+DPX(I,J)                Percentage change in automobile prices.
+DX(I,J)                 Percentage change in automobile output.
+DXALL                   Percentage change in aggregate automobile output.
+MSHR(I,J)
+DMSHR(*,J)              Change in manufacturer market shares.
+AFECAR(J)
+AFETRK(J)
+AFEALL
+AFERPT(*,*)             Average fuel efficiencies.;
+
+DPX(I,J)$PX0(I,J)       = ((PX.L(I,J)-PX0(I,J))/PX0(I,J))*100;
+DX(I,J)$X0(I,J)         = (HP.L(I,J)-1)*100;
+DXALL                   = (SUM((I,J), HP.L(I,J)*X0(I,J))-SUM((I,J), X0(I,J)))
+                          / SUM((I,J), X0(I,J));
+MSHR(I,J)  = (HP.L(I,J)*X0(I,J)/SUM((II,JJ), HP.L(II,JJ)*X0(II,JJ)))*100;
+DMSHR("CARS",J)         = SUM(IC, MSHR(IC,J)-MSHR0(IC,J));
+DMSHR("TRKS",J)         = SUM(IT, MSHR(IT,J)-MSHR0(IT,J));
+
+AFECAR(J)               = SUM(IC, HP.L(IC,J)*X0(IC,J))/
+                          SUM(IC, HP.L(IC,J)*X0(IC,J)/MPG(IC,J));
+AFETRK(J)               = SUM(IT, HP.L(IT,J)*X0(IT,J))/
+                          SUM(IT, HP.L(IT,J)*X0(IT,J)/MPG(IT,J));
+AFEALL                  = (SUM((IC,J), HP.L(IC,J)*X0(IC,J))
+                          +SUM((IT,J), HP.L(IT,J)*X0(IT,J)))/
+                          (SUM((IC,J), HP.L(IC,J)*X0(IC,J)/MPG(IC,J))
+                          +SUM((IT,J), HP.L(IT,J)*X0(IT,J)/MPG(IT,J)));
+
+AFERPT("CAR0",J)        = AFECAR0(J);
+AFERPT("CAR0","ALL")    = SUM((IC,J), X0(IC,J)) /
+                          SUM((IC,J), X0(IC,J)/MPG(IC,J));
+AFERPT("CAR1",J)        = AFECAR(J);
+AFERPT("CAR1","ALL")    = SUM((IC,J), HP.L(IC,J)*X0(IC,J)) /
+                          SUM((IC,J), HP.L(IC,J)*X0(IC,J)/MPG(IC,J));
+AFERPT("CAR%CHG",J)     = ((AFECAR(J)-AFECAR0(J))/AFECAR0(J))*100;
+AFERPT("CAR%CHG","ALL") = ((AFERPT("CAR1","ALL")-AFERPT("CAR0","ALL"))/
+                          AFERPT("CAR0","ALL"))*100;
+AFERPT("TRUCK0",J)      = AFETRK0(J);
+AFERPT("TRUCK0","ALL")  = SUM((IT,J), X0(IT,J)) /
+                          SUM((IT,J), X0(IT,J)/MPG(IT,J));
+AFERPT("TRUCK1",J)      = AFETRK(J);
+AFERPT("TRUCK1","ALL")  = SUM((IT,J), HP.L(IT,J)*X0(IT,J)) /
+                          SUM((IT,J), HP.L(IT,J)*X0(IT,J)/MPG(IT,J));
+AFERPT("TRK%CHG",J)     = ((AFETRK(J)-AFETRK0(J))/AFETRK0(J))*100;
+AFERPT("TRK%CHG","ALL") = ((AFERPT("TRUCK1","ALL")-AFERPT("TRUCK0","ALL"))/
+                          AFERPT("TRUCK0","ALL"))*100;
+AFERPT("FLEET0","ALL")    = AFEALL0;
+AFERPT("FLEET1","ALL")    = AFEALL;
+AFERPT("FLEET%CHG","ALL") = ((AFEALL-AFEALL0)/AFEALL0)*100;
+
+DISPLAY KCAR, KTRK, ESUB1, ESUB2, DPX, DX, AFERPT;

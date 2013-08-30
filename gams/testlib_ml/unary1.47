@@ -1,0 +1,29 @@
+$title tests mapval function (UNARY1,SEQ=47)
+
+* acronyms just return the position in the symbol table
+* the value 93 for acron in parameter ref
+
+acronym acr;
+$onundf
+
+Sets
+  op values to be tested /
+     minus-inf, neg-4, zero, pos+2, plus-inf, epsilon, missing, undefined, acron /;
+
+Parameters
+
+  res(op) result of operations
+  a(op)        actual vales /
+          minus-inf -inf, neg-4 -4    , zero     0, pos+2 2
+          plus-inf  +inf, epsilon  eps, missing na, undefined undf, acron acr /
+  ref(op) reference results /
+          minus-inf    7, neg-4  0    , zero     0, pos+2 0
+          plus-inf     6, epsilon    8, missing  5, undefined    4, acron  93 /
+  err(op) difference from reference;
+
+res(op) = mapval(a(op));
+err(op) = res(op) - ref(op);
+err('acron')$(res('acron') > 8) = 0;
+display res,err;
+
+abort$card(err) ' something really bad has happened';

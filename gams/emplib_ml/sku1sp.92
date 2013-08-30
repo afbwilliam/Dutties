@@ -1,0 +1,106 @@
+$title Multi-product assemble model with discrete and Poisson demand distribution  (SKU1SP,SEQ=92)
+$ontext
+This is a multi-product assembly model, adopted from Section 1.3.1 of the book
+Lectures on Stochastic Programming: Modeling and Theory by Alexander Shapiro,
+Darinka Dentcheva and Andrzej Ruszczynski.
+
+A manufacturer produces n products using m parts which are ordered from the
+suppliers. In the first stage, the manufacturer decides how many units of each
+part to order, and after the (random) demands of the products are observed in
+the second stage, it then decides how many units of each product to make and
+sell. The objective is to maximize the overall profit.
+
+In this model, the random demands are modeled by discrete random variables
+or Poisson distributions.
+
+The model can be solved by solvers such as lindo, de and decis.
+
+Contributor: Yanchao Liu, January 2012.
+$offtext
+
+$ifi not %gams.emp%==lindo $set doDisc 1
+$if not set doDisc $set doDisc 0
+
+$if %doDisc%==1 $set NSCEN 9
+$if not set NSCEN $set NSCEN 100
+
+sets i Product   /i1*i2/
+     j Part      /j1*j5/;
+
+Table Data(*,*)
+          j1      j2      j3      j4      j5   l     q       d
+c         10      30      10      100     50
+v         1       8       2       30      10
+i1        10      5       5       1       1    500   1200    10
+i2        8       5       0       2       1    600   3000    20;
+
+Parameters
+    a(i,j) how many part j needed to make a unit of product i
+    c(j)   cost of procuring a unit of part j
+    v(j)   salvage value of a unit of part j
+    l(i)   manufacturing cost of a unit of product i
+    q(i)   selling price of a unit of product i
+    d(i)   demand of product i;
+
+a(i,j) = Data(i,j);
+c(j)   = Data('c',j);
+v(j)   = Data('v',j);
+l(i)   = Data(i,'l');
+q(i)   = Data(i,'q');
+d(i)   = Data(i,'d');
+
+Positive variables
+     x(j) how many units of part j to order in the first stage
+     z(i) how many units of product i to make and sell in scenario s
+     y(j) how many units of part j to be left over in scenario s
+Variable profit;
+
+Equations
+     obj     defines the profit(negative of the cost)
+     defy(j) defines the part leftover y
+     ubz(i)  product sold cannot exceed the demand;
+
+obj..      profit =e= -sum(j,c(j)*x(j)) - (sum(i,(l(i)-q(i))*z(i)) - sum(j,v(j)*y(j)));
+defy(j)..  y(j) =e= x(j) - sum(i, a(i,j)*z(i));
+ubz(i)..   z(i) =l= d(i);
+
+model sku1 /all/;
+
+*solve sku1 max profit using lp;
+
+file emp / '%emp.info%' /; put emp;
+if (%doDisc%,
+$onput
+randvar d('i1') discrete 0.1  5 0.2 10 0.7 12
+randvar d('i2') discrete 0.1 17 0.2 20 0.7 25
+$offput
+else
+$onput
+randvar d('i1') poisson 10
+randvar d('i2') poisson 20
+$offput
+);
+putclose 'stage 2 z y d defy ubz';
+
+Set  s scenarios / s1*s%NSCEN% /
+Parameter
+     s_d(s,i)    random variable realization
+     s_y(s,j)    level of y by scenario
+     s_z(s,i)    z2 by scenario
+     s_x(s,j)    x by scenario (should be the same for all scenarios)
+     s_profit(s) profit by scenario;
+
+Set  dict / s.     scenario.''
+            d.     randvar. s_d
+            y.     level.   s_y
+            z.     level.   s_z
+            x.     level.   s_x
+            profit.level.   s_profit/;
+
+$ifi not %GAMS.emp%==lindo $goto contsolve
+$echo STOC_NSAMPLE_STAGE=%NSCEN% > lindo.opt
+sku1.optfile = 1;
+
+$label contsolve
+solve sku1 max profit using emp scenario dict;
+display s_d, s_y, s_z, s_x, x.l, s_profit, profit.l;

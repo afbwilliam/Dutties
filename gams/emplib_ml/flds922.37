@@ -1,0 +1,51 @@
+$title Princeton Bilevel Optimization Example 9.2.2 (FLDS922,SEQ=37)
+
+$ontext
+
+  Test problem 9.3.3 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.2.2 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Aiyoshi, E and K. Shimizu (1981). Hierarchical Decentralized systems and its
+new solution by a Barrier Method. IEEE Trans. Systems, Man and Cybernetics,
+SMC-11, 444.
+
+Contributor: Jan-H. Jagla, January 2010
+
+$offtext
+
+*Solution of problem 9.2.2 on the web
+scalar  x_l /   10 /
+        y_l /   10 /
+        tol / 1e-6 /;
+
+variables z, z_in, y; positive variable x;
+equations ob, o1, o2, o3, c0, c1, c2, c3;
+
+ob..  sqr(x) +       sqr(y-10)  =e=    z;
+o1..       x                    =l=   15;
+o2..     - x +               y  =l=    0;
+o3..     - x                    =l=    0;
+
+c0..           2*y*(x + y - 30) =e= z_in;
+c1..       x +               y  =l=   20;
+c2..         -               y  =l=    0;
+c3..                         y  =l=   20;
+
+model bilevel / all /;
+
+$echo bilevel x max z_in * c0 c1 c2 c3 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l;
+y.l = y_l;
+
+solve bilevel using EMP minimizing z;
+
+abort$(   (abs(x.l - x_l) > tol)
+       or (abs(y.l - y_l) > tol) ) 'Deviated from reported solution';

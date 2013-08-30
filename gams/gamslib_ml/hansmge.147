@@ -1,0 +1,172 @@
+$TITLE Hansen's Activity Analysis Example - MPSGE (HANSMGE,SEQ=147)
+$Ontext
+
+Hansen's Activity Analysis Example - MPSGE
+
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.
+Yale University Press, 1973.
+
+$Offtext
+
+SETS    C       COMMODITIES
+
+   /    AGRIC, FOOD, TEXTILES, HSERV, ENTERT, HOUSEOP, CAPEOP, STEEL,
+        COAL, LUMBER, HOUSBOP, CAPBOP, LABOR, EXCHANGE/
+
+        N(C)    NUMERAIRE /LABOR/
+
+        H       CONSUMERS
+  /     AGENT1, AGENT2, AGENT3, AGENT4  /
+
+
+        S       SECTORS
+  /     DOM1, DOM2, DOM3, DOM4, DOM5, DOM6, DOM7,
+        DOM8, DOM9, DOM10, DOM11, DOM12,
+        IMP1, IMP2, IMP3, IMP4, IMP5, IMP6, IMP7,
+        EXP1, EXP2, EXP3, EXP4, EXP5, EXP6, EXP7 /
+
+ALIAS (C,CC);
+
+TABLE E(C,H)  Commodity endowments
+
+           AGENT1    AGENT2  AGENT3    AGENT4
+HOUSBOP         2       0.4               0.8
+CAPBOP          3         2               7.5
+LABOR         0.6       0.8       1       0.6
+
+
+TABLE D(C,H) Reference demands
+
+                    AGENT1     AGENT2     AGENT3     AGENT4
+    AGRIC              0.1        0.2        0.3        0.1
+    FOOD               0.2        0.2        0.2        0.2
+    TEXTILES           0.1        0.1        0.3        0.1
+    HSERV              0.1        0.1        0.1        0.1
+    ENTERT             0.1        0.1        0.1        0.1
+    HOUSEOP            0.3        0.1                   0.1
+    CAPEOP             0.1        0.2                   0.3;
+
+PARAMETER  ESUB(H)  Elasticities in demand
+
+    /   AGENT1          1,        AGENT2          1,
+        AGENT3          1,        AGENT4          1 /;
+
+TABLE DATA(*,C,S)  Activity analysis matrix
+
+                       DOM1        DOM2        DOM3        DOM4        DOM5
+
+OUTPUT.AGRIC           5.00
+OUTPUT.FOOD                        5.00
+OUTPUT.TEXTILES                                2.00
+OUTPUT.HSERV                                               2.00
+OUTPUT.ENTERT                                                          4.00
+OUTPUT.HOUSEOP                                             0.32
+OUTPUT.CAPEOP          0.40        1.30        1.20
+INPUT .AGRIC                       3.50        0.10                    0.70
+INPUT .FOOD            0.90                    0.10                    0.80
+INPUT .TEXTILES        0.20        0.50                    0.10        0.10
+INPUT .HSERV           1.00        2.00        2.00                    2.00
+INPUT .STEEL           0.20        0.40        0.20        0.10
+INPUT .COAL            1.00        0.10        0.10        1.00
+INPUT .LUMBER          0.50        0.40        0.30        0.30
+INPUT .HOUSBOP                                             0.40
+INPUT .CAPBOP          0.50        1.50        1.50        0.10        0.10
+INPUT .LABOR           0.40        0.20        0.20        0.02        0.40
+
+              +        DOM6        DOM7        DOM8        DOM9       DOM10
+
+OUTPUT.HOUSEOP         0.80
+OUTPUT.CAPEOP          1.10        6.00        1.80        1.20        0.40
+OUTPUT.STEEL                                   2.00
+OUTPUT.COAL                                                2.00
+OUTPUT.LUMBER                                                          1.00
+INPUT .TEXTILES        0.80        0.40        0.10        0.10        0.10
+INPUT .HSERV           0.40        1.80        1.60        0.80        0.20
+INPUT .STEEL           1.00        2.00                    0.50        0.20
+INPUT .COAL                        0.20        1.00                    0.20
+INPUT .LUMBER          3.00        0.20        0.20        0.50
+INPUT .CAPBOP          1.50        2.50        2.50        1.50        0.50
+INPUT .LABOR           0.30        0.10        0.10        0.40        0.40
+
+              +       DOM11       DOM12        IMP1        IMP2        IMP3
+
+OUTPUT.AGRIC                                   1.00
+OUTPUT.FOOD                                                1.00
+OUTPUT.TEXTILES                                                        1.00
+OUTPUT.HOUSEOP                     0.36
+OUTPUT.CAPEOP          0.90
+INPUT .HSERV                                   0.40        0.20        0.20
+INPUT .HOUSBOP                     0.40
+INPUT .CAPBOP          1.00                    0.20        0.10        0.10
+INPUT .LABOR                                   0.04        0.02        0.02
+INPUT .EXCHANGE                                0.50        0.40        0.80
+
+              +        IMP4        IMP5        IMP6        IMP7        EXP1
+
+OUTPUT.CAPEOP          1.00
+OUTPUT.STEEL                       1.00
+OUTPUT.COAL                                    1.00
+OUTPUT.LUMBER                                              1.00
+OUTPUT.EXCHANGE                                                        0.50
+INPUT .AGRIC                                                           1.00
+INPUT .HSERV           0.40        0.40        0.40        0.40        0.20
+INPUT .CAPBOP          0.20        0.20        0.20        0.20        0.20
+INPUT .LABOR           0.04        0.04        0.04        0.04        0.04
+INPUT .EXCHANGE        1.20        0.60        0.70        0.40
+
+              +        EXP2        EXP3        EXP4        EXP5        EXP6
+
+OUTPUT.EXCHANGE        0.40        0.80        1.20        0.60        0.70
+INPUT .FOOD            1.00
+INPUT .TEXTILES                    1.00
+INPUT .HSERV           0.20        0.20        0.40        0.40        0.40
+INPUT .CAPEOP                                  1.00
+INPUT .STEEL                                               1.00
+INPUT .COAL                                                            1.00
+INPUT .CAPBOP          0.10        0.10        0.20        0.20        0.20
+INPUT .LABOR           0.02        0.02        0.04        0.04        0.04
+
+              +        EXP7
+
+OUTPUT.EXCHANGE        0.40
+INPUT .HSERV           0.40
+INPUT .LUMBER          1.00
+INPUT .CAPBOP          0.20
+INPUT .LABOR           0.04 ;
+
+$ONTEXT
+
+$MODEL:HANSEN
+
+$SECTORS:
+        Y(S)
+
+$COMMODITIES:
+        P(C)
+
+$CONSUMERS:
+        HH(H)
+
+$PROD:Y(S)
+        O:P(C)          Q:DATA("OUTPUT",C,S)
+        I:P(C)          Q:DATA("INPUT" ,C,S)
+
+$DEMAND:HH(H)  s:ESUB(H)
+        D:P(C)          Q:D(C,H)
+        E:P(C)          Q:E(C,H)
+
+$OFFTEXT
+
+*       READ THE HEADER:
+
+$SYSINCLUDE mpsgeset HANSEN
+
+P.FX(C)$(ORD(C) EQ 1) = 1;
+
+*       GENERATE AND SOLVE THE MODEL:
+
+$INCLUDE HANSEN.GEN
+
+SOLVE HANSEN USING MCP;
+

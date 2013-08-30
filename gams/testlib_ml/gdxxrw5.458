@@ -1,0 +1,65 @@
+$title 'Test for password handling of gdxxrw and $hiddencall' (GDXXRW5,SEQ=458)
+
+$ontext
+This model reads from and writes to password protected xls sheet using the
+password option of GDXXRW. Also it makes sure that $hiddencall is hidden,
+even with $ondollar and dp=2
+
+Contributor: Jan-H. Jagla, September 2009
+$offtext
+
+$if %system.platform% == WIN $goto runme
+$if %system.platform% == WEX $goto runme
+$log GDXXRW test skipped for this platform
+$exit
+
+$label runme
+$call msappavail -Excel
+$if not errorlevel 1 $goto realrunme
+$log no Excel
+$exit
+
+$label realrunme
+
+$onecho > runme.gms
+Sets
+    i   canning plants   / seattle, san-diego /
+    j   markets          / new-york, chicago, topeka / ;
+
+parameter
+    x(i,j);
+
+$ondollar
+$hiddencall gdxxrw gdxxrw5.xls password="this is a test" par=x trace=0
+$if errorlevel 1 $abort 'gdxxrw read call failed'
+$gdxin gdxxrw5
+$load x
+$offdollar
+$offecho
+
+*First test that $hiddencall is hidden
+$call gams runme.gms lo=2 dp=2
+$if errorlevel 1 $abort 'gams runme execution failed'
+$call grep password runme.log  > problem
+$call grep password runme.lst >> problem
+$call test -s problem
+$if errorlevel 1 $goto done
+$abort 'GDX failed but normal completion'
+$label done
+
+
+*Now test reading and writing to password-protected Excel file
+$include runme.gms
+
+Table x2(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          50            300
+      san-diego        275                        275  ;
+
+display x,x2;
+
+abort$sum((i,j),abs(x(i,j)-x2(i,j)) > 0) 'Data differs';
+
+execute_unload 'test2' x2;
+execute 'gdxxrw test2.gdx o=gdxxrw5.xls password="this is a test" index=gdxxrw5 trace=0';
+abort$errorlevel 'gdxxrw write call failed'

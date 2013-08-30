@@ -1,0 +1,206 @@
+$Title Oil Pipeline Design Problem using concurrent MIP solves (CCOIL,SEQ=370)
+$Ontext
+
+  J. Brimberg, P. Hansen, K.-W. Lih, N. Mladenovic, M. Breton 2003.
+  An Oil Pipeline Design Problem. Operations Research, Vol 51, No. 2 228-239
+
+$Offtext
+
+* We don't want to run this with every mip solver in our tests, so only proceed if mip=bdmlp
+$ifi not "x%gams.mip%"=="xbdmlp" $exit
+
+Set n             nodes in the oil pipeline network
+    nw(n)         subset of nodes
+    k             type of oil pipe
+    kk(k)         reduced set of pipe line types
+    regnode(n)    non-port nodes
+    port(n)       port
+    arc(n,n)      arcs in the network
+Parameters
+    cap(k)        capacity of type k oil pipe
+    pipecost(k)   monetary units for type k capacity
+    p(n)          production at each node
+    edgedist(n,n) one way distance
+    dist(n,n)     the distance of the arcs
+Scalar
+    cap1          capacity of type 1 oil pipe
+    pipecost1     monetary units for pipe of type 1
+
+Alias (n,m);
+
+Variables bk(n,n,k)     build variable for type k pipe on the arc
+          b(n,n)        build variable for some pipe on the arc
+          f(n,n)        flow variable on the arc
+          cost          the cost for installing pipes in the network
+
+Binary variables bk,b;
+Positive variables f;
+
+Equations obj           oil pipeline network construction cost
+          oneout(n)     at most one out-flow each node
+          oneoutp(n)    one out-flow for each production node
+          bal(n)        flow conservation constraints
+          bigM(n,n)     the flow capacity constraints
+          defb(n,n)     Additional pipe constraint;
+
+obj..
+     sum(arc(nw,n), dist(arc)*(pipecost1*b(arc) + sum(kk, pipecost(kk)*bk(arc,kk)))) =e= cost;
+
+oneout(m)$(not p(m))..
+     sum((arc(m,n)), b(m,n)) =l= 1;
+
+oneoutp(m)$p(m)..
+     sum((arc(m,n)), b(m,n)) =e= 1;
+
+bal(regnode(nw))..
+     p(nw)  =e= sum(arc(nw,m), f(nw,m)) - sum(arc(m,nw), f(m,nw));
+
+bigM(arc(nw,n))..
+     cap1*b(arc) + sum(kk, cap(kk)*bk(arc,kk)) =g= f(arc);
+
+defb(arc(nw,n))..
+     sum(kk, bk(arc,kk)) =l= b(arc);
+
+Model ccoil /all/;
+
+Set n nodes in the oil pipeline network /
+    1   H87
+    2   ECHIRA
+    3   SIMBA-CONOCO-C
+    4   AGIP-TASSI
+    5   SIMBA-CONOCO-B
+    6   J87
+    7   CONN07
+    8   MBASSI-CONOCO
+    9   WELL09
+    10  NAMBA-TENNECO
+    11  ELF-B
+    12  NDOGO-C-ELF
+    13  PANGA-AGIP
+    14  BIGORNEAU
+    15  CONN15
+    16  AGIP-PANGA-B
+    17  CONN17
+    18  MASSANGA-TENNECO-A
+    19  WELL19
+    20  MASSANGA-TENNECO-B
+    21  TCHIBALA-ELF
+    22  HOURICULA
+    23  LUCINA-SHELL
+    24  CONN24
+    25  CONN25
+    26  TCHIBOBO-TRITON-A
+    27  CONN27
+    28  MWENGUI-ELF
+    29  MBYA-ELF
+    30  CONN30
+    31  TCHIBOBO-TRITON-B
+    32  K8
+    33  GAMBA /
+    k            type of oil pipe / 1*6 /
+
+Parameters
+     cap(k)  capacity of type k oil pipe / 2 5, 3 10, 4 25, 5 50, 6 100 /
+     pipecost(k) monetary units for type k capacity / 2 10, 3 15, 4 25, 5 40, 6 65 /
+     p(n)   production at each node /
+       1   5, 2   7, 3   5, 4   6, 5   5, 6   4, 8   7, 9   3, 10  5,
+       11  4, 12  3, 13  6, 14  9, 16  5, 18  6, 19  5, 20  4, 21  6,
+       22  3, 23  8, 26  5, 28  5, 29 10, 31  6, 32  6 /
+     edgedist(n,n) generalized distance of each edge /
+       1 .2   3.50, 1 .3   1.90, 1 .4   5.40, 2 .3   3.70, 2 .7   1.15,
+       3 .4   4.90, 3 .5   2.50, 3 .7   2.60, 3 .33  4.80, 4 .5   5.30,
+       4 .6   4.00, 5 .6   4.30, 5 .8   2.70, 5 .9   2.10, 5 .33  3.75,
+       6 .8   2.60, 7 .33  1.60, 8 .9   2.20, 8 .10  2.20, 9 .12  2.30,
+       9 .33  1.60, 10.11  2.00, 10.13  2.80, 10.33  5.30, 11.12  1.10,
+       11.13  1.80, 12.13  2.50, 12.14  1.20, 12.33  3.00, 13.14  2.10,
+       13.16  3.20, 14.15  1.20, 14.16  5.30, 15.16  6.30, 15.17  2.10,
+       15.33  1.65, 16.17  4.80, 17.19  7.30, 17.24  2.70, 18.19  1.50,
+       19.20  1.80, 19.21  0.90, 19.23  3.00, 20.21  1.30, 20.26  2.20,
+       20.29  4.80, 21.22  2.50, 21.23  2.80, 21.26  2.90, 22.23  0.80,
+       23.24  2.40, 23.25  3.00, 23.26  5.00, 23.29  3.70, 24.25  0.90,
+       24.29  4.50, 25.29  3.30, 25.30  0.90, 26.27  1.20, 26.28  2.80,
+       26.31  2.50, 27.28  2.10, 27.31  1.50, 28.29  1.30, 28.31  3.00,
+       29.30  2.60, 29.31  4.00, 30.32  0.90 /
+
+Set       regnode(n)   non-port nodes
+          port(n)      port
+          arc(n,n)     arcs in the network
+          kk(k)        reduced set of pipe line types
+
+Parameter dist(n,n)    the distance of the arcs;
+
+dist(m,n) = edgedist(m,n) + edgedist(n,m);
+arc(m,n)$dist(m,n) = yes;
+
+* Last node is the port
+port(n)$(card(n)=ord(n)) = yes;
+regnode(n) = yes; regnode(port) = no;
+arc(port,n) = no;
+
+kk(k) = yes; kk('1') = no; kk('2') = no;
+pipecost1 = pipecost('2');
+cap1 = cap('2');
+* Adjust data for removed pipe line type
+pipecost(kk) = pipecost(kk) - pipecost1;
+cap(kk) = cap(kk) - cap1;
+
+nw(n) = yes;
+
+Set s solvers  / cbc, scip, gurobi, cplex, xpress /
+    mtype model type  / mip /
+    ss(s) solvers available;
+ss(s) = SolverCapabilities(s,'mip');
+Parameter
+    h(s) handle;
+
+ccoil.solvelink = %solvelink.AsyncGrid%;
+ccoil.reslim = 60;
+option limrow=0, limcol=0, solprint=silent, optcr=0, optca=0;
+
+loop(ss, 
+  if (sameas('cbc',    ss), option mip=cbc);
+  if (sameas('cplex',  ss), option mip=cplex);
+  if (sameas('gurobi', ss), option mip=gurobi);
+  if (sameas('scip',   ss), option mip=scip);
+  if (sameas('xpress', ss), option mip=xpress);
+  solve ccoil minimizing cost using mip;
+  h(ss) = ccoil.handle);
+
+Parameter rep, haveSolution /0/;
+
+$eolcom //
+* Now collect
+repeat
+   loop(ss$handlecollect(h(ss)),
+      rep(ss,'solvestat') = ccoil.solvestat;
+      rep(ss,'modelstat') = ccoil.modelstat;
+      rep(ss,'resusd'   ) = ccoil.resusd;
+      rep(ss,'objval')    = ccoil.objval;
+      display$handledelete(h(ss)) 'trouble deleting handles';
+      h(ss) = 0;
+      haveSolution$(ccoil.modelstat = %modelstat.Optimal% or ccoil.modelstat = %modelstat.IntegerSolution%) = 1);
+   if (haveSolution=0, display$sleep(0.25) 'was sleeping for 1/4 second');
+until haveSolution=1 or card(h) = 0 or timeelapsed > 70;
+
+display rep;
+
+* We might have some solver processes still running. If the grid
+* directory is the scratch directory, we better wait for the jobs to
+* terminate otherwise we will have trouble removing the scratch
+* directory which happens automatically when GAMS terminates.
+
+$ifthen "%gams.scrdir%"=="%gams.griddir%"
+repeat
+   loop(ss$handlecollect(h(ss)),
+      rep(ss,'solvestat') = ccoil.solvestat;
+      rep(ss,'modelstat') = ccoil.modelstat;
+      rep(ss,'resusd'   ) = ccoil.resusd;
+      rep(ss,'objval')    = ccoil.objval;
+      display$handledelete(h(ss)) 'trouble deleting handles';
+      h(ss) = 0);
+   display$sleep(card(h)*0.25) 'was sleeping some time';
+until card(h) = 0 or timeelapsed > 70;
+display rep;
+$endif
+
+abort$(haveSolution=0) 'We did not find an integer solution';

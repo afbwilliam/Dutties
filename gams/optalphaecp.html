@@ -1,0 +1,541 @@
+<html>
+<head>
+<title>ALPHAECP Options</title>
+</head>
+<body>
+<h2>ALPHAECP Options</h2>
+
+<h2>Summary of ALPHAECP Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Basic options</h3></th></tr>
+<tr><td><a href="#ALPHAECPCUTnrcuts">
+CUTnrcuts</a></td>
+<td>Cut generation pace</td></tr>
+<tr><td><a href="#ALPHAECPMIPnrsols">
+MIPnrsols</a></td>
+<td>Upper limit of considered MIP solutions per MIP call</td></tr>
+<tr><td><a href="#ALPHAECPMIPsolstrat">
+MIPsolstrat</a></td>
+<td>MIP solution collection strategy</td></tr>
+<tr><td><a href="#ALPHAECPMIPsolver">
+MIPsolver</a></td>
+<td>MIP solver for sub-problems</td></tr>
+<tr><td><a href="#ALPHAECPNLPsolver">
+NLPsolver</a></td>
+<td>NLP solver for sub-problems</td></tr>
+<tr><td><a href="#ALPHAECPreslim">
+reslim</a></td>
+<td>Time limit for AlphaECP (in seconds)</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Algorithmic options for advanced users</h3></th></tr>
+<tr><td><a href="#ALPHAECPCUTdelcrit">
+CUTdelcrit</a></td>
+<td>Cutting plane strategy</td></tr>
+<tr><td><a href="#ALPHAECPECPbeta">
+ECPbeta</a></td>
+<td>Updating multiplier if MIP is infeasible</td></tr>
+<tr><td><a href="#ALPHAECPECPdumpsol">
+ECPdumpsol</a></td>
+<td>Write encountered solutions to gdx files</td></tr>
+<tr><td><a href="#ALPHAECPECPgamma">
+ECPgamma</a></td>
+<td>Updating multiplier when verifying solution</td></tr>
+<tr><td><a href="#ALPHAECPECPiterlim">
+ECPiterlim</a></td>
+<td>Maximum number of AlphaECP iterations</td></tr>
+<tr><td><a href="#ALPHAECPECPloglevel">
+ECPloglevel</a></td>
+<td>Level of AlphaECP output to statusfile</td></tr>
+<tr><td><a href="#ALPHAECPECPpcostrategy">
+ECPpcostrategy</a></td>
+<td>Pseudo-convex objective function strategy</td></tr>
+<tr><td><a href="#ALPHAECPECPretsol">
+ECPretsol</a></td>
+<td>Return solution (1.MIP/2.NLP/3.QUALITY/4.PERFORMANCE)</td></tr>
+<tr><td><a href="#ALPHAECPECPstart">
+ECPstart</a></td>
+<td>User specified start-point</td></tr>
+<tr><td><a href="#ALPHAECPECPstrategy">
+ECPstrategy</a></td>
+<td>AlphaECP strategy</td></tr>
+<tr><td><a href="#ALPHAECPsolvelink">
+solvelink</a></td>
+<td>Solvelink for NLP and MIP sub-solver</td></tr>
+<tr><td><a href="#ALPHAECPTOLepsf">
+TOLepsf</a></td>
+<td>Pseudo-convex objective function termination tolerance</td></tr>
+<tr><td><a href="#ALPHAECPTOLepsg">
+TOLepsg</a></td>
+<td>Constraint tolerance</td></tr>
+<tr><td><a href="#ALPHAECPTOLepsz">
+TOLepsz</a></td>
+<td>Distance tolerance for a new linearization</td></tr>
+<tr><td><a href="#ALPHAECPTOLgrad">
+TOLgrad</a></td>
+<td>Gradient tolerance</td></tr>
+<tr><td><a href="#ALPHAECPTOLinfbnd">
+TOLinfbnd</a></td>
+<td>Infinity bound (MIP variable bound)</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP Solver related options</h3></th></tr>
+<tr><td><a href="#ALPHAECPMIPloglevel">
+MIPloglevel</a></td>
+<td>Level of MIP solver output</td></tr>
+<tr><td><a href="#ALPHAECPMIPoptcr">
+MIPoptcr</a></td>
+<td>Relative MIP gap in intermediate sub-problems</td></tr>
+<tr><td><a href="#ALPHAECPMIPoptcrlim">
+MIPoptcrlim</a></td>
+<td>Initial MIPoptcr interval before MIPoptcr reduction</td></tr>
+<tr><td><a href="#ALPHAECPMIPoptfile">
+MIPoptfile</a></td>
+<td>Option file for MIP sub-solver</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>NLP Solver related options</h3></th></tr>
+<tr><td><a href="#ALPHAECPNLPcall">
+NLPcall</a></td>
+<td>NLP strategy</td></tr>
+<tr><td><a href="#ALPHAECPNLPcalliter">
+NLPcalliter</a></td>
+<td>NLP solver call at next (incremental) iteration</td></tr>
+<tr><td><a href="#ALPHAECPNLPlimsameint">
+NLPlimsameint</a></td>
+<td>NLP call after a number of recurring integer solutions</td></tr>
+<tr><td><a href="#ALPHAECPNLPloglevel">
+NLPloglevel</a></td>
+<td>Level of NLP solver output</td></tr>
+<tr><td><a href="#ALPHAECPNLPreslim">
+NLPreslim</a></td>
+<td>NLP time limit per call</td></tr></table>
+<h2>Detailed Descriptions of ALPHAECP Options</h2>
+
+<h4><a name="ALPHAECPCUTdelcrit">
+CUTdelcrit</a>
+<i> (integer)</i> Cutting plane strategy</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not remove any valid cuts.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>As 0 and allow temporary cuts at semirandom points if normal cuts can not be made.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Allow temporary cuts and cut reselection, and use memory to save points and cuts.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>As 2 and call the reselection heuristic before termination to improve the solution.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPCUTnrcuts">
+CUTnrcuts</a>
+<i> (real)</i> Cut generation pace</h4><p>
+
+The number of linearizations that are generated during an iteration can be
+chosen by AlphaECP, proportional to the number of violating constraints or
+be determined by a fixed amount. Furthermore, the cut reselection <i>CUTdelcrit >=2</i>
+adds cuts to the problem so that the requested cut generation pace is taken in consideration.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Let AlphaECP decide.</td></tr>
+<tr valign="top"><td width=20 align=right>0&lt;n&lt;1</td><td>Number of linearizations = n* the number of linearizations that is possible to generate.</td></tr>
+<tr valign="top"><td width=20 align=right>>1</td><td>Specifies the number of linearizations to generate.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPbeta">
+ECPbeta</a>
+<i> (real)</i> Updating multiplier if MIP is infeasible</h4><p>
+
+In case of an infeasible MIP solution, the invalid cuts are
+updated with the <i>ECPbeta</i> multiplier.
+
+<br><i>(default = 1.3)</i>
+
+<h4><a name="ALPHAECPECPdumpsol">
+ECPdumpsol</a>
+<i> (integer)</i> Write encountered solutions to gdx files</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solutions that the NLP solver found.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Solutions that the NLP or MIP solver found.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPgamma">
+ECPgamma</a>
+<i> (real)</i> Updating multiplier when verifying solution</h4><p>
+
+If a MINLP solution is obtained but some cuts are not valid underestimators,
+then they are updated with the <i>ECPgamma</i> multiplier in
+order to make them into valid underestimators.
+
+<br><i>(default = 2.0)</i>
+
+<h4><a name="ALPHAECPECPiterlim">
+ECPiterlim</a>
+<i> (integer)</i> Maximum number of AlphaECP iterations</h4><p>
+
+This is the maximum number of iterations given to AlphaECP to perform the
+optimization. Value -1 deactivates the AlphaECP iteration limit.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>No limit.</td></tr>
+<tr valign="top"><td width=20 align=right>>=0</td><td>Specifies an iteration limit.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPloglevel">
+ECPloglevel</a>
+<i> (integer)</i> Level of AlphaECP output to statusfile</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No additional output to statusfile.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Report solutions.
+Report all encountered solutions with their corresponding variable
+levels.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Report main actions at iteration level
+(available for minimization problems).</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Report main actions at linearization level
+(available for minimization problems).</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Full reporting.
+Report the main actions taken, the linearizations, function values,
+and solution points for every iteration and line search details
+(available for minimization problems).</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPpcostrategy">
+ECPpcostrategy</a>
+<i> (integer)</i> Pseudo-convex objective function strategy</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Remove support.
+Remove old support planes when a new pseudo-convex problem is formed.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Replace support.
+Replace old support planes with linearizations of the reduction
+constraint when a new pseudo-convex problem is formed.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Remove support and line search.
+Remove old support planes when a new pseudo-convex problem is formed
+and perform a line search when it is possible.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Replace support and line search.
+Replace old support planes with linearizations of the reduction
+constraint when a new pseudo-convex problem is formed and perform a
+line search when it is possible.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPretsol">
+ECPretsol</a>
+<i> (integer)</i> Return solution (1.MIP/2.NLP/3.QUALITY/4.PERFORMANCE)</h4><p>
+
+The reported solution can be extracted from either the MIP or NLP
+solver result. If the MIP solution is returned only the primal values
+are available.
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Choose MIP solution if it is available.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Choose NLP solution if it is available.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Choose the solution with the best tolerance.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Choose the solution with the best objective value.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPstart">
+ECPstart</a>
+<i> (integer)</i> User specified start-point</h4><p>
+
+Define which variable levels are used when the optimization is started.
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use a start-point; start the algorithm by solving the linear part (MIP) of the problem.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use the user specified startpoint, but the variable levels are adjusted with a small value.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use the exact start-point set by the user.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use the exact start-point if linearly feasible; else adjust variable levels with a small value.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPECPstrategy">
+ECPstrategy</a>
+<i> (integer)</i> AlphaECP strategy</h4><p>
+
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Convex strategy.
+Ensures global optimality for problems with convex objective function
+and convex constraints.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Pseudo-convex constraints.
+Ensures global optimality for problems with convex objective function
+and pseudo-convex constraints.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Pseudo-convex objective.
+Ensures global optimality for problems with pseudo-convex objective
+function and pseudo-convex constraints. The reformulation of a
+non-linear objective function into a constraint must be done in a
+specific way. The requirement is that the objective variable must be
+in a linear part of the non-linear function. The reformulation can be
+done, assuming that the minimized or maximized variable is called
+objvar, as follows: (objective function expression) - objvar =E= 0.
+Furthermore, this strategy can effectively use a feasible start-point.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Pseudo-convex objective, but first complete with ECPstrategy 2.
+(Only the necessary linearizations are removed when the <i>ECPstrategy</i> is changed.)</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Pseudo-convex objective, but find the first solution with ECPstrategy 2.
+(Only the necessary linearizations are removed when the <i>ECPstrategy</i> is changed.)</td></tr>
+</table>
+
+<h4><a name="ALPHAECPMIPloglevel">
+MIPloglevel</a>
+<i> (integer)</i> Level of MIP solver output</h4><p>
+
+By default the detailed log of the MIP solver is suppressed in the
+AlphaECP log stream. If this option is turned on and the GAMS
+<tt>LogOption</tt> is set to 1 or 3, the MIP log will be merged into the
+AlphaECP log.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No output.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>MIP solver log goes to GAMS log.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPMIPnrsols">
+MIPnrsols</a>
+<i> (integer)</i> Upper limit of considered MIP solutions per MIP call</h4><p>
+
+When the MIP solver returns several solutions then the most suitable solution is chosen.
+The solutions from the MIP solver are many times similar and a larger number might
+help to find a feasible MINLP solution if the constraints are almost satisfied.
+See <i>MIPsolstrat</i> to change the solution collection strategy.
+
+<br><i>(default = 50)</i>
+
+<h4><a name="ALPHAECPMIPoptcr">
+MIPoptcr</a>
+<i> (real)</i> Relative MIP gap in intermediate sub-problems</h4><p>
+
+The relative stopping tolerance sent to the MIP solver for intermediate MIP problems.
+Note that the <i>MIPoptcr</i> value is decreased
+automatically to zero during the optimization.
+
+<br><i>(default = 1.0)</i>
+
+<h4><a name="ALPHAECPMIPoptcrlim">
+MIPoptcrlim</a>
+<i> (integer)</i> Initial MIPoptcr interval before MIPoptcr reduction</h4><p>
+
+The <i>MIPoptcr</i> parameter is reduced in steps: From 1 to 0.5 to 0.3 to
+0.2 to 0.1 to 0.0.  The first reduction is at iteration
+<i>MIPoptcrlim</i>. <i>MIPoptcrlim</i> defines a step reduction at specific
+iterations (next reduction at iteration = the iteration number for this
+reduction multiplied by two). Note that a step reduction can also be caused by
+other reasons. If <i>MIPoptcrlim</i> is 200 then <i>MIPoptcr</i> is
+reduced at the following iterations: 200, 400, 800, etc.
+
+<br><i>(default = 200)</i>
+
+<h4><a name="ALPHAECPMIPoptfile">
+MIPoptfile</a>
+<i> (integer)</i> Option file for MIP sub-solver</h4><p>
+
+By default the MIP sub-solver is called without an option file. This
+option allows the user to specify an option number and therefore an
+option file to be used for the MIP sub-solver runs.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="ALPHAECPMIPsolstrat">
+MIPsolstrat</a>
+<i> (integer)</i> MIP solution collection strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Instruct MIP solver to return only one solution.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Instruct MIP solver to return any solutions encountered during MIP procedure.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Instruct MIP solver to search for solutions to obtain requested number MIPnrsols solutions.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>As 2, but furthermore require the solutions to fulfill MIPoptcr >=0.2.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Let AlphaECP decide.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPMIPsolver">
+MIPsolver</a>
+<i> (string)</i> MIP solver for sub-problems</h4><p>
+
+This option allows the user to specify a GAMS MIP sub-solver, for example, CPLEX,
+GUROBI, XPRESS, etc. If no option is supplied the current active default
+MIP solver is selected.
+
+<br><i>(default = GAMS MIP solver)</i>
+
+<h4><a name="ALPHAECPNLPcall">
+NLPcall</a>
+<i> (integer)</i> NLP strategy</h4><p>
+
+Determine when the NLP solver is called.
+
+<br><i>(default = 5)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No output.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Call the NLP solver at end of AlphaECP algorithm.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>As 1 and when a better solution is found.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>As 2 and when the same integer solution is encountered NLPlimsameint times.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Let AlphaECP decide.</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Let AlphaECP decide and add noise to the variable levels before call.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPNLPcalliter">
+NLPcalliter</a>
+<i> (integer)</i> NLP solver call at next (incremental) iteration</h4><p>
+
+Specify an iteration interval for the NLP solver calls.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="ALPHAECPNLPlimsameint">
+NLPlimsameint</a>
+<i> (integer)</i> NLP call after a number of recurring integer solutions</h4><p>
+
+If the same integer solution is encountered <i>NLPlimsameint</i> times in a row
+then the NLP solver is called. The counter is reset after the NLP solver is called.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="ALPHAECPNLPloglevel">
+NLPloglevel</a>
+<i> (integer)</i> Level of NLP solver output</h4><p>
+
+By default the detailed log of the NLP solver is suppressed in the
+AlphaECP log stream. If this option is turned on and the GAMS
+<tt>LogOption</tt> is set to 1 or 3, the NLP log will be merged into the
+AlphaECP log.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No output.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>NLP solver log goes to GAMS log.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPNLPreslim">
+NLPreslim</a>
+<i> (real)</i> NLP time limit per call</h4><p>
+
+The time limit (in seconds) given to the chosen NLP solver at each NLP solver call. Setting this
+option to 0 calculates a time limit which is relative to the problem size.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="ALPHAECPNLPsolver">
+NLPsolver</a>
+<i> (string)</i> NLP solver for sub-problems</h4><p>
+
+<tt>solver[.n]</tt> Solver is the name of the GAMS NLP solver that
+should be used in the root node, and <tt>n</tt> is the integer
+corresponding to optfile.  If <tt>.n</tt> is missing, the optfile is
+treated as zero i.e. the NLP solver will not look for an options file.
+This option can be used to overwrite the default that uses the NLP
+solver specified with an <tt>Option NLP = solver;</tt> statement or
+the default GAMS solver for NLP.
+
+<br><i>(default = GAMS NLP solver)</i>
+
+<h4><a name="ALPHAECPreslim">
+reslim</a>
+<i> (real)</i> Time limit for AlphaECP (in seconds)</h4><p>
+
+
+<br><i>(default = GAMS reslim)</i>
+
+<h4><a name="ALPHAECPsolvelink">
+solvelink</a>
+<i> (integer)</i> Solvelink for NLP and MIP sub-solver</h4><p>
+
+
+<br><i>(default = 5)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Call NLP and MIP solver via script.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Call NLP and MIP solver via module.</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Call NLP and MIP solver in memory.</td></tr>
+</table>
+
+<h4><a name="ALPHAECPTOLepsf">
+TOLepsf</a>
+<i> (real)</i> Pseudo-convex objective function termination tolerance</h4><p>
+
+Maximum allowed absolute difference between the nonlinear and the MIP
+objective function value (used only in <i>ECPstrategy 3</i>).
+
+<br><i>(default = 1e-3)</i>
+
+<h4><a name="ALPHAECPTOLepsg">
+TOLepsg</a>
+<i> (real)</i> Constraint tolerance</h4><p>
+
+The nonlinear constraint tolerance defines the maximum value that a
+nonlinear constraint may violate. For example, a constraint required
+to be zero may hold a value +/- <i>TOLepsg</i> at a solution.
+
+<br><i>(default = 1e-3)</i>
+
+<h4><a name="ALPHAECPTOLepsz">
+TOLepsz</a>
+<i> (real)</i> Distance tolerance for a new linearization</h4><p>
+
+The maximum perpendicular distance between a valid cutting plane and its
+generation point (MIP solution).
+
+<br><i>(default = 1e-1)</i>
+
+<h4><a name="ALPHAECPTOLgrad">
+TOLgrad</a>
+<i> (real)</i> Gradient tolerance</h4><p>
+
+The absolute value of a gradient's partial derivative must be above <i>TOLgrad</i>
+value in order for it to be considered nonzero.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="ALPHAECPTOLinfbnd">
+TOLinfbnd</a>
+<i> (real)</i> Infinity bound (MIP variable bound)</h4><p>
+
+All variables must have a positive and a negative finite bound in
+order to ensure a bounded MIP problem. The finite bound value, <i>TOLinfbnd</i>,
+will be applied to single or double unbounded variables.
+
+<br><i>(default = 1e10)</i><h2><a name="dotopt">Dot Options</a></h2>
+
+Dot options allow users to associate values to variables and equations using the
+GAMS name of the variables and equations. The general syntax of a dot option in
+the option file is as follows:
+<pre>
+<i>variable/equation-name.optionname value</i>
+</pre>
+Dot options can be specified for <b>all</b>, a <b>block</b>, a <b>slice</b>, and
+a <b>single</b> variable and equation. The following example makes the use of
+the dot option clear.
+
+<pre>
+Set i /i1*i3/;
+Set j /j2*j4/;
+variable v(i,j), w(i); equation e(i,j);
+</pre>
+
+Consider the following lines in an option file with the imaginary option name <tt>dotopt</tt>:
+<table>
+<tr><td><b>Line in option file</b></td><td><b>Explanation</b></td>
+<tr><td><tt>variables.dotopt 1</tt></td><td>Sets the value of <i>all</i> variables to 1</td>
+<tr><td><tt>equations.dotopt 2</tt></td><td>Sets the value of <i>all</i> equations to 2</td>
+<tr><td><tt>v.dotopt 3</tt></td>        <td>Sets the value of the variables in <i>block</i> <tt>v</tt> to 3</td>
+<tr><td><tt>e.dotopt(*,*) 4</tt></td>   <td>Sets the value of the equations in <i>block</i> <tt>e</tt> to 4</td>
+<tr><td><tt>v.dotopt(*,'j2') 5</tt></td><td>Sets the value of the variables <tt>v</tt> that have j2 in the second index position (<i>slice</i>) to 5</td>
+<tr><td><tt>e.dotopt('i3',*) 6</tt></td><td>Sets the value of the equations <tt>e</tt> that have i3 in the first index position (<i>slice</i>) to 6</td>
+<tr><td><tt>w.dotopt('i2') 7</tt></td>  <td>Sets the value of the <i>single</i> variables <tt>v('i2')</tt> to 7</td>
+<tr><td><tt>e.dotopt('i3','j3') 8</tt>&nbsp;&nbsp;</td><td>Sets the value of the <i>single</i> equations <tt>e('i3','i3')</tt> to 8</td>
+</table>
+
+<p>The values of the dot option are applied in correspondence to the sequence they appear in the option file. In the current example, the values of dotopt for the equation <tt>e</tt> would be as follows:
+
+<table>
+<tr><td><tt>e.dotopt</tt></td><td><tt>i1</tt></td><td><tt>i2</tt></td><td><tt>i3</tt></td>
+<tr><td><tt>j2</tt></td><td>4</td><td>4</td><td>6</td>
+<tr><td><tt>j3</tt></td><td>4</td><td>4</td><td>8</td>
+<tr><td><tt>j4</tt></td><td>4</td><td>4</td><td>6</td>
+</table>
+
+</body></html>

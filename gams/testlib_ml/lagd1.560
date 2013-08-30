@@ -1,0 +1,34 @@
+$Title 'Lag and Lead operations on Dynamic Sets' (LAGD1,SEG=560)
+
+$ontext
+Lag and lead operations require the reference set to  be ordered and
+constant. In some special cases one would want to use those operation on dynamic
+and/or unordered sets. A DCO option on/offOrder has been added to locally relax
+the default requirements. The use of this option comes with a price, the system
+will not be able to diagnose odd and incorrect formulations and data sets.
+
+A small example will be used to illustrate the use of $onOrder and $offOrder. We
+would like to have a circular lead on the content of a slice as shown below.
+$offtext
+
+set a / a1,a2,a3 /, c /c1*c7 /, ac(a,c) / a1.(c2   ,c3   ,c5),    a3.c3 /
+    desiredacc(a,c,c) circular lead     / a1.(c2.c3,c3.c5,c5.c2), a3.c3.c3 /
+    acc(a,c,c), wrongacc(a,c,c);
+
+wrongacc(ac(a,c),c++1) = yes; display wrongacc;
+
+* the above assignment will not work because the lead operator is relative to
+* the set c. we do need to extract the content of the second index position to
+* be used as a reference set and relax the requirement to have a ordered and/or
+* dynamic reference sets.
+
+set temp(c);
+
+$offOrder
+loop(a,
+   temp(c) = ac(a,c);
+   acc(ac(a,temp),temp++1) = yes);
+$onOrder
+
+* arrange the display in list format
+option ac:0:0:1,acc:0:0:1; display ac,acc;

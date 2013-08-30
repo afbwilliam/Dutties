@@ -1,0 +1,105 @@
+$Title Test extrinsic functions in tricclib (TRILIB01,SEQ=521)
+
+$ontext
+This test makes sure that the extrinsic cosine and sine (both using rad and
+grad) implemented in a C library work in the same way as the intrisic versions.
+Additionally the functions are used in a simple model.
+
+Contributor: L. Westermann
+$offtext
+
+$if %system.buildcode% == AIX $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == DIG $funclibin trilib %GAMS.workdir%libtricclib.dylib
+$if %system.buildcode% == DEG $funclibin trilib %GAMS.workdir%libtricclib64.dylib
+$if %system.buildcode% == LNX $funclibin trilib %GAMS.workdir%libtricclib.so
+$if %system.buildcode% == LEG $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == SIG $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == SOL $funclibin trilib %GAMS.workdir%libtricclib.so
+$if %system.buildcode% == SOX $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == VS8 $funclibin trilib %GAMS.workdir%tricclib.dll
+$if %system.buildcode% == WEI
+$if %gams.ide% == 1 $call cp %GAMS.sysdir%testlib_ml\tricclib64.dll %GAMS.workdir%
+$if %system.buildcode% == WEI $funclibin trilib %GAMS.workdir%tricclib64.dll
+
+function myCos        /trilib.Cosine     /
+         mySin        /trilib.Sine       /
+         myPi         /trilib.Pi         /;
+
+set g  / 1*360 /
+    h  / CosInt      Cosine Intrinsic
+         CosExtRad   Cosine Extrinsic (Radian)
+         CosExtDeg   Cosine Extrinsic (Degree)
+         SinInt      Sine Intrinsic
+         SinExtRad   Sine Extrinsic (Radian)
+         SinExtDeg   Sine Extrinsic (Degree)   /
+    hh / F           Function Value
+         G           Gradient Value
+         H           Hessian Value             /;
+
+parameter Deg(g)       Degree Value
+          Rad(g)       Radian Value
+          Test(g,h,hh);
+
+Deg(g) = ord(g);
+Rad(g) = ord(g)*pi/180;
+
+Test(g,'CosInt'   ,'F') = cos  (Rad(g));
+Test(g,'CosExtRad','F') = mycos(Rad(g));
+Test(g,'CosExtDeg','F') = mycos(Deg(g),1);
+Test(g,'SinInt'   ,'F') = sin  (Rad(g));
+Test(g,'SinExtRad','F') = mysin(Rad(g));
+Test(g,'SinExtDeg','F') = mysin(Deg(g),1);
+
+Test(g,'CosInt'   ,'G') = cos.grad  (1: Rad(g));
+Test(g,'CosExtRad','G') = mycos.grad(1: Rad(g));
+Test(g,'CosExtDeg','G') = mycos.grad(1: Deg(g),1)*180/pi;
+Test(g,'SinInt'   ,'G') = sin.grad  (1: Rad(g));
+Test(g,'SinExtRad','G') = mysin.grad(1: Rad(g));
+Test(g,'SinExtDeg','G') = mysin.grad(1: Deg(g),1)*180/pi;
+
+Test(g,'CosInt'   ,'H') = cos.hess  (1:1: Rad(g));
+Test(g,'CosExtRad','H') = mycos.hess(1:1: Rad(g));
+Test(g,'CosExtDeg','H') = mycos.hess(1:1: Deg(g),1)*180/pi*180/pi;
+Test(g,'SinInt'   ,'H') = sin.hess  (1:1: Rad(g));
+Test(g,'SinExtRad','H') = mysin.hess(1:1: Rad(g));
+Test(g,'SinExtDeg','H') = mysin.hess(1:1: Deg(g),1)*180/pi*180/pi;
+
+scalar
+    error01 'mypi <> pi';
+set error02 'cos/sin <> mycos/mysin (rad)'
+    error03 'cos/sin <> mycos/mysin (grad)';
+
+error01 = abs(pi <> mypi) > 1e-12;
+
+error02(g,'cos',hh) = abs(Test(g,'CosInt',hh) - Test(g,'CosExtRad',hh)) > 1e-12;
+error02(g,'sin',hh) = abs(Test(g,'SinInt',hh) - Test(g,'SinExtRad',hh)) > 1e-12;
+error03(g,'cos',hh) = abs(Test(g,'CosInt',hh) - Test(g,'CosExtDeg',hh)) > 1e-12;
+error03(g,'sin',hh) = abs(Test(g,'SinInt',hh) - Test(g,'SinExtDeg',hh)) > 1e-12;
+
+abort$(error01+card(error02)+card(error03))
+       error01, error02, error03;
+
+
+********************************************************************************
+
+
+Scalar trimode /0/;
+
+variable x;
+equation e;
+
+e..   sqr(mysin(x,trimode)) + sqr(mycos(x,trimode)) =e= 1;
+
+model m /e/;
+
+x.lo = 0; x.l=3*pi
+solve m min x using nlp;
+
+abort$(abs(x.l-0)>1e-12) 'x<>0';
+
+* Now do the same using degree instead of radian
+trimode = 1;
+x.lo = 0; x.l=540;
+solve m min x using nlp;
+
+abort$(abs(x.l-0)>1e-12) 'x<>0';

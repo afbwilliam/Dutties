@@ -1,0 +1,32 @@
+$Title Tests UNDF with $load (LOAD5,SEQ=526)
+
+$ontext
+
+The $load should mirror compile time text input with UNDF
+
+Contributor: Alex
+
+$offtext
+
+$onundf
+set i / i1*i30 /; parameter x(i) / i1*i3 10, i7*i30 undf /; scalar s / undf /;
+variable v / l undf /; variable w(i) / i1*i30.up UNDF /;
+$offundf
+
+$gdxout test
+$unload i x s v w
+$gdxout
+
+parameter y(i),z(i),a,b; variable vv,vvv,ww,www
+
+$gdxin test
+$loaddc y=x a=s vv=v ww=w
+$if errorfree $abort undf should have triggered an error
+$clearerror
+
+$onundf
+$load z=x b=s vvv=v www=w
+$gdxin
+$offundf
+
+$if NOT errorfree $abort with $undf we should accept undf

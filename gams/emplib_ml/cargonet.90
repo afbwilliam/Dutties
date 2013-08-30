@@ -1,0 +1,225 @@
+$Title Cargo network scheduling with stochastic transportation demand (CARGONET,SEQ=90)
+
+$ontext
+Mulvey and Ruszczynski provide a two stage network problem for
+scheduling cargo transportation. The flight schedule is completely determined
+in stage one, and the amounts of cargo to be shipped are uncertain.
+The recourse actions are to determine which cargo to place on which flights.
+Transshipment, getting cargo from node m to node n by more than one
+flight on more than one route, is allowed.
+
+In the following example we use a four node network, with node airports
+A, B, C and E. All flights have two legs. That is, including the airport of
+origin, there are three airports in each flight. No direct legs are allowed
+between A and E, but all other possibilities are allowed.
+
+J. M. Mulvey and A. Ruszczynski. A new scenario decomposition
+method for large-scale stochastic optimization. Operations Research,
+43(3),477-490, May-June 1995.
+
+Ariyawansa, K A, and Felt, A J, On a New Collection of Stochastic
+Linear Programming Test Problems, INFORMS Journal on Computing 16(3),
+291-299, 2004.
+$offtext
+
+
+Sets
+   n  nodes      / A, B, C, E /
+   r  routes     / r1*r26 /
+   i  position   / i1*i3 /
+   a  aircrafts  / type0*type1 /;
+
+Alias (n,n0,n1,n2,n3,k), (i,j);
+
+Set DataRoutes(n,n,n) /
+   A.B.A, A.B.E, A.B.C, A.C.A, A.C.E, A.C.B
+   B.A.B, B.A.C, B.C.A, B.C.B, B.C.E, B.E.B, B.E.C
+   C.A.C, C.A.B, C.B.C, C.B.A, C.B.E, C.E.C, C.E.B
+   E.C.E, E.C.B, E.C.A, E.B.E, E.B.C, E.B.A /
+
+Sets
+   route(r,i,n)  yes if node n is on position i on route r
+   vFirst(n,r)   routes with initial node n
+   vLast(n,r)    routes with last node n
+   vLand(n,r)    routes with landing airport n
+   W(n,r)        routes containing node n
+   U(n1,n2,r)    routes containing n1 followed by n2
+   Udom(n1,n2)   yes if n1 is followed by n2 on any arbitrary route
+   OD(n1,n2)     origin-destination pairs of nodes with transportation demand;
+
+scalar nr /1/;
+loop(DataRoutes(n1,n2,n3),
+   loop(r$(ord(r)=nr), route(r,'i1',n1) = yes; route(r,'i2',n2) = yes; route(r,'i3',n3) = yes);
+   nr = nr+1;
+);
+
+vFirst(n,r) = route(r,'i1',n);
+vLast(n,r) = route(r,'i3',n);
+vLand(n,r) = (route(r,'i2',n) or route(r,'i3',n));
+
+option W<route;
+
+loop(r,
+   loop(i,
+      loop(j$(ord(j)>ord(i)), U(n1,n2,r)$(route(r,i,n1) and route(r,j,n2)) = yes)
+   )
+);
+option Udom<U;
+
+OD(n1,n2) = not sameas(n1,n2);
+
+display route, vFirst, vLast, vLand, W, U, Udom, OD;
+
+Parameters
+   b(n1,n2)  demand of shipment between nodes
+   c(a)      cost of a flight hour with type a
+   q         unit cargo cost for loading and unloading an aircraft / 1 /
+   p         unit penalty for undelivered cargo / 1300 /
+   sigma(n)  maximum number of landings allowed in n / #n 25 /
+   d(a)      maximum payload of an aircraft type a
+   hmax(a)   maximum flying hours for type a
+   hmin(a)   minimum flying hours for type a
+   f(n1,n2)  minimum number of direct flights between nodes / #n1.#n2 0 /
+   h(r,a)    flight time on route r with type a;
+
+table b(n1,n2) origin-destination demand
+       A     B     C     E
+   A         5     8     4
+   B   4.5         6.7   4.2
+   C   10.1  8.3         12.2
+   E   3.2   5.3   7.2       ;
+
+Table aData(a,*)
+           payload   cost   maxhours   minhours
+   type0   8         5      480        0
+   type1   6         4      240        0       ;
+
+c(a) = aData(a,'cost');
+d(a) = aData(a,'payload');
+hmax(a) = aData(a,'maxhours');
+hmin(a) = aData(a,'minhours');
+
+Table flightTime(a,n,n)
+           A   B   C   E
+   type0.A     5   7
+   type0.B         4   8
+   type0.C             5
+   type1.A     6   8.4
+   type1.B         4.8 9.6
+   type1.C             6   ;
+
+h(r,a)=sum((route(r,i,n1),n2)$(route(r,i+1,n2)), flightTime(a,n1,n2)+flightTime(a,n2,n1));
+
+display b,c,d,hmax,hmin,h;
+
+Variables
+   X(r,a)           number of aircrafts of type a on route r
+   DIRECT(r,n1,n2)  amount of cargo delivered directly between nodes on route r
+   T(r,n1,k,n2)     amount of cargo moving from n1 to n2 via transshipment node k on route r (n1 and k are part of route r)
+   S(r,k,n2)        amount of transshipment cargo moved from transshipment node k to n2 on route r
+   Y(n1,n2)         undelivered cargo between n1 and n2
+   Z(r,i)           unused capacity on route r on flight from i to i+1
+   OBJ              objective function value;
+
+Positive Variables DIRECT,T,S,Y,Z;
+Integer Variables X;
+
+Equations
+   objFct                    objective function
+   minFlightReq(n1,n2)       minimum flight requirements
+   landLim(n)                maximum landing limits
+   cyclic(a,n)               end round in same state as it started
+   timeLimLow(a)             lower time limit
+   timeLimUp(a)              upper time limit
+   demand(n1,n2)             transportation demand
+   transBal(k,n2)            balance of transshipments wind up at n2 via transshipment node k
+   matBal(n0,r)              material balance at initial node of route r
+   payloadBal(r,i,n1)        payload balance for remaining nodes;
+
+objFct..                     OBJ =e=   sum((r,a), c(a)*h(r,a)*X(r,a))
+                                     + sum((r,U(n1,n2,r)), DIRECT(r,n1,n2) + S(r,n1,n2))*q
+                                     + sum((r,U(n1,k,r),n2)$(not W(n2,r)), T(r,n1,k,n2))*q
+                                     + sum(OD(n1,n2), Y(n1,n2)*p);
+
+minFlightReq(Udom(n1,n2))..  sum((a,U(Udom,r)), X(r,a)) =g= f(Udom);
+
+landLim(n)..                 sum((a,vLand(n,r)), X(r,a)) =l= sigma(n);
+
+cyclic(a,n)..                sum(vFirst(n,r), X(r,a)) =e= sum(vLast(n,r), X(r,a));
+
+timeLimLow(a)..              sum(r, x(r,a)*h(r,a)) =g= hmin(a);
+
+timeLimUp(a)..               sum(r, x(r,a)*h(r,a)) =l= hmax(a);
+
+demand(OD(n1,n2))..          sum(U(n1,n2,r), DIRECT(r,n1,n2))
+                           + sum(U(n1,k,r)$(not W(n2,r)), T(r,n1,k,n2)) + Y(n1,n2) =g= b(n1,n2);
+
+transBal(n1,k)..             sum((r,U(n0,n1,r))$(not W(k,r)), T(r,n0,n1,k)) =e= sum(U(n1,k,r), S(r,n1,k));
+
+matBal(vFirst(n0,r))..       sum(U(n0,n1,r), DIRECT(r,n0,n1) + S(r,n0,n1))
+                           + sum((U(n0,n1,r),k)$(not W(k,r)), T(r,n0,n1,k)) =e= sum(a, d(a)*X(r,a)) - Z(r,'i1');
+
+payloadBal(route(r,i,n1))$(1<ord(i) and ord(i)<card(i))..    
+                             sum(U(n1,n2,r), DIRECT(r,n1,n2) + S(r,n1,n2))
+                           + sum((U(n1,n2,r),k)$(not W(k,r)), T(r,n1,n2,k))
+                           - sum(U(n0,n1,r), DIRECT(r,n0,n1) + S(r,n0,n1))
+                           - sum((U(n0,n1,r),k)$(not W(k,r)), T(r,n0,n1,k)) =e= Z(r,i-1) - Z(r,i);
+
+model cargo /all/;
+
+Solve cargo using mip minimizing OBJ ;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$if not set instance $set instance 16
+$goto i%instance%
+
+$label i16
+$onput
+randvar b('A','B') discrete   0.5   4.5     0.5   5.5
+randvar b('A','C') discrete   0.25  6.8     0.25  7.6     0.25  8.4     0.25  9.2
+randvar b('A','E') discrete   0.5   3.6     0.5   4.4
+$offput
+$goto continue
+
+$label i512
+$onput
+randvar b('A','B') discrete   0.5   4.5     0.5   5.5
+randvar b('A','C') discrete   0.25  6.8     0.25  7.6     0.25  8.4     0.25  9.2
+randvar b('A','E') discrete   0.5   3.6     0.5   4.4
+randvar b('B','A') discrete   0.5   4.05    0.5   4.95
+randvar b('B','C') discrete   0.25  5.695   0.25  6.365   0.25  7.035   0.25  7.705
+randvar b('B','E') discrete   0.5   3.78    0.5   4.62
+randvar b('C','A') discrete   0.5   9.09    0.5  11.11
+$offput
+$goto continue
+
+$label i32768
+$onput
+randvar b('B','A') discrete   0.5   4.05    0.5   4.95
+randvar b('B','C') discrete   0.25  5.695   0.25  6.365   0.25  7.035   0.25  7.705
+randvar b('B','E') discrete   0.5   3.78    0.5   4.62
+randvar b('C','A') discrete   0.5   9.09    0.5  11.11
+randvar b('C','B') discrete   0.5   7.47    0.5   9.13
+randvar b('C','E') discrete   0.5  10.98    0.5  13.42
+randvar b('E','A') discrete   0.5   2.88    0.5   3.52
+randvar b('E','B') discrete   0.5   4.77    0.5   5.83
+randvar b('E','C') discrete   0.25  6.12    0.25  6.84    0.25  7.56    0.25  8.28
+$offput
+
+$label continue
+putclose emp 'stage 2 b Y T S Z DIRECT demand payloadbal matbal transBal';
+
+Set scen Scenarios / sc1*sc%instance% /;
+Parameter
+   sc_b(scen,n1,n2)  demand by scenario
+   sc_OBJ(scen)      number of aircrafts of type a on route r by scenario
+   SC_Y(scen,n1,n2)   undelivered cargo between n1 and n2 by scenario;
+
+Set dict / scen     .scenario. ''
+           b        .randvar . sc_b
+           OBJ      .level   . sc_OBJ
+           Y        .level   . sc_Y   /;
+
+solve cargo min OBJ use emp scenario dict;
+
+display sc_b, sc_OBJ, sc_Y;

@@ -1,0 +1,82 @@
+$title SPE model from Harker - Stackelberg version (HARK-STACK,SEQ=67)
+
+$ontext
+
+A spatial price equilibrium model is used to demonstrate different
+ways of modeling market behavior. In this variant, we look at
+the Stackelberg model that arises when we assume an oligopoly,
+i.e. the production in each region is controlled by a single firm,
+where the regional firms are independent, and one of the firms takes
+the leader position, i.e. is assumed to have knowledge of the other
+firms' decision problems.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations
+Research 34, 3 (1986), 410-425.
+
+Contributor: Steven Dirkse, June 2011
+$offtext
+
+* either include hark-oligop or
+* run with a restart from the hark-oligop save file
+$include hark-oligop.gms
+
+$eolcom //
+
+variable   obj;
+
+equations  objdef;
+  ;
+
+objdef.. obj =E= sum{Q1(Q), z(Q)};
+
+model stack / nash, objdef /;
+
+parameter profit (*,*) 'profit for firm Q under different scenarios';
+profit('nash',Q) = z.l(Q);
+
+loop {Qi,
+  put myinfo '* Stackelberg version of Harker model: leader is firm' Qi.tl;
+  put / 'bilevel';
+  Q1(Q) = sameas(Qi,Q); // leader
+  // first write the leader's vars
+  put /' 'z(Qi)/' ';
+  loop{L,
+    put dl(L,Qi) dlq(L,Qi);
+  };
+  put s(Qi) /' ';
+  loop{arc(i,j),
+    put t(i,j,Qi);
+  };
+  // now write the follower problems
+  loop {Q$[not Q1(Q)],
+    put / 'max' z(Q)/' ';
+    loop{L,
+      put dl(L,Q) dlq(L,Q);
+    };
+    put s(Q) /' ';
+    loop{arc(i,j),
+      put t(i,j,Q);
+    };
+    put /' ' objDefD(Q);
+    loop{NL(n),
+      put flowBal(n,Q);
+    };
+    put /' ';
+    loop{L,
+      put dlBalD(L,Q);
+    };
+    put /' ';
+    loop{L$[not sameas(L,Q)],
+      put in(L,Q);
+    };
+    put / ' ' out(Q) sBal(Q);
+  };
+  put / 'vi';
+  put / '  ttVarDef  ttVar';
+  put / '  cVarDef   cVar';
+  put / '  dlqVarDef dlqVar';
+  putclose;
+  solve stack using emp max obj;
+  profit(Qi,Q) = z.l(Q);
+};
+execute_unload 'oliProfit', profit;

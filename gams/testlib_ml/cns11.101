@@ -1,0 +1,61 @@
+$title CNS model - solvable, nonsingular start point (cns11,SEQ=101)
+
+$ontext
+  The following model has a locally unique solution as shown by
+  the second and third Solve. However, the Jacobian is singular in
+  the initial point for the first solve so some solvers will fail
+  to solve from this start point - they should at least report the
+  infeasibility.
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+
+* there are two solutions: the obvious one (1.5,2.5) and (n1,n2)
+scalars rhs1, rhs2, n1, n2;
+rhs1 = exp(1.5) -    (2.5);
+rhs2 =   -(1.5) + exp(2.5);
+n1 = -10.544654105393;
+n2 = -1.98166273645465;
+
+variable x1, x2;
+equation e1, e2;
+
+e1 .. exp(x1) -     x2  =e= rhs1;
+e2 ..    -x1  + exp(x2) =e= rhs2;
+
+model m / all /;
+
+*  Case 1: A singular starting point. The model may be declared singular.
+x1.l = 0;  x2.l = 0;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%)                             'bad solvestat';
+if   { (m.modelstat = %modelstat.LocallyInfeasible%),
+* locally infeasible, should report a row that way
+  abort$(m.numinfes < 1)                             'wrong .numinfes';
+else
+  abort$(m.modelstat <> %modelstat.Solved%)                          'bad modelstat';
+  abort$(abs(x1.l-1.5) > tol and abs(x1.l-n1) > tol) 'bad x1.l';
+  abort$(abs(x2.l-2.5) > tol and abs(x2.l-n2) > tol) 'bad x2.l';
+  abort$(abs(e1.l-rhs1) > tol)                       'bad e1.l';
+  abort$(abs(e2.l-rhs2) > tol)                       'bad e2.l';
+};
+
+*  Case 2: A nonsingular starting point. The model should solve.
+x1.l = 1; x2.l = 1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Solved%)      'bad return codes';
+abort$(abs(x1.l-1.5) > tol and abs(x1.l-n1) > tol) 'bad x1.l';
+abort$(abs(x2.l-2.5) > tol and abs(x2.l-n2) > tol) 'bad x2.l';
+abort$(abs(e1.l-rhs1) > tol)                       'bad e1.l';
+abort$(abs(e2.l-rhs2) > tol)                       'bad e2.l';
+
+*  Case 3: A nonsingular starting point. The model should solve.
+*          The solution may be different from the one from case 2.
+x1.l = -1; x2.l = -1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Solved%)      'bad return codes';
+abort$(abs(x1.l-1.5) > tol and abs(x1.l-n1) > tol) 'bad x1.l';
+abort$(abs(x2.l-2.5) > tol and abs(x2.l-n2) > tol) 'bad x2.l';
+abort$(abs(e1.l-rhs1) > tol)                       'bad e1.l';
+abort$(abs(e2.l-rhs2) > tol)                       'bad e2.l';

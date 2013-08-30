@@ -1,0 +1,18 @@
+$title Wrong NL code generation for odd case (NLCODE3,SEQ=436)
+
+$ontext
+Contributor: Alex
+$offtext
+
+variables 
+a,z,w1, w2;
+Equations
+e1, e2, obj;
+e1.. w1=e= a*a*(-1)+ a*0 -2;
+e2.. w2=e= (-1)*a*a + a*(0) -2;
+obj.. z=e=1;
+a.fx=1;
+Model Mod / all /;
+option sys3 = 2;
+Solve Mod using nlp minimizing z;
+abort$(w1.l <> w2.l) 'wrong nl code generation';

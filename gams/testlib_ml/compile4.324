@@ -1,0 +1,12 @@
+$title '$goto back fails' (COMPILE4,SEQ=324)
+
+$ontext
+problem introduced with new input file reading alpha 22.4
+
+Contributor: Alex Meeraus
+$offtext
+
+$set x x
+$label one set x %x%x
+$log %x%
+$ifi NOT %x% == xxxx $goto one

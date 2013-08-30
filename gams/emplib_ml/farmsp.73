@@ -1,0 +1,114 @@
+$title The Farmer's Problem - Stochastic (FARMSP,SEQ=73)
+
+$ontext
+
+This model helps a farmer to decide how to allocate
+his or her land. The yields are uncertain.
+
+Birge, R, and Louveaux, F V, Introduction to Stochastic Programming.
+Springer, 1997.
+
+$offtext
+
+Set crop  / wheat, corn, sugarbeets /
+    ch    header for data table /
+           yield  yield in tons per acre
+           cost   plantcost on dollars per acre
+           pprice crop seed purchase price in dollars per ton
+           minreq minimum requirements of crop in ton to feed cattle /
+alias (c,crop);
+
+Table cd(crop,ch) crop data
+           yield   cost  pprice  minreq
+wheat        2.5    150     238     200
+corn         3      230     210     240
+sugarbeets  20      260
+;
+
+Parameter
+   yf     yield factor / 1 /
+   land   available land in acres /500/;
+
+$ontext
+* Not clear what to do, that's why we do EMP!!!
+Stochastic Parameter/Random Variable
+    yf     yield factor / 1 /;
+Set  r     realizations / below, avg, above  /;
+
+Table yfdistrib(r,*)
+        value prob
+below     0.8 [1/4]
+avg       1   [1/2]
+above     1.2 [1/4];
+option yf%yfdistrib;
+yf.stage = 2;
+yf.stage(t) = ord(t)+1;
+$offtext
+
+Set seq price curve segments / s1*s2 /;
+Table pricecurve(crop,seq,*) dollars per ton
+              price     ub
+wheat.s1        170    inf
+corn.s1         150    inf
+sugarbeets.s1    36   6000
+sugarbeets.s2    10    inf
+;
+set pcs(crop,seq) relevant segments; option pcs<pricecurve;
+
+set errorPC(crop) price curve is not concave;
+errorPC(c) = smin(pcs(c,seq), pricecurve(c,seq,'price')-pricecurve(c,seq+1,'price'))<0;
+abort$card(errorPC) errorPC;
+
+Variables
+   x(c)     crop planted in acres of land
+   w(c,seq) crops sold in segment of cost curve in tons
+   y(c)     crops purchased in tons
+   profit   objective variable in dollars;
+Positive variables x,w,y;
+
+Equations
+  profitdef  objective function
+  landuse    capacity
+  bal(c)     crop balance;
+
+profitdef..    profit =e= sum(pcs, w(pcs)*pricecurve(pcs,'price'))
+                        - sum(c, cd(c,'cost')*x(c) + cd(c,'pprice')*y(c));
+
+landuse..      sum(c, x(c)) =l= land;
+
+bal(c)..       yf*cd(c,'yield')*x(c) + y(c) - sum(pcs(c,seq), w(pcs)) =g= cd(c,'minreq');
+
+* No purchase of crops that don't have a purchase price
+y.fx(c)$(cd(c,'pprice')=0) = 0;
+w.up(pcs) = pricecurve(pcs,'ub');
+
+model farm_emp /all/;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$onput
+randvar yf discrete 0.25 0.8
+                    0.50 1.0
+                    0.25 1.2
+
+stage 2 yf y w bal profit
+$offput
+putclose emp;
+
+Set s            scenarios / s1*s3 /;
+Parameter
+    srep(s,*)    scenario attributes / #s.prob 0 /
+    s_yf(s)      yield factor realization by scenario
+    s_profit(s)  profit by scenario
+    s_w(s,c,seq) crops sold in segment of cost curve in tons by scenario
+    s_y(s,c)     crops purchased in tons by scenario;
+
+Set dict / s     .scenario.''
+           ''    .opt.     srep
+           yf    .randvar. s_yf
+           profit.level.   s_profit
+           w     .level.   s_w
+           y     .level.   s_y /;
+
+solve farm_emp using emp maximizing profit scenario dict;
+
+display srep;

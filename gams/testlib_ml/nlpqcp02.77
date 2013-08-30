@@ -1,0 +1,7 @@
+$title Test modsolstat & solution correctness - multiple QCons (NLPQCP02,SEQ=77)
+$ontext
+Run qcp02 as an NLP
+$offtext
+
+$set MTYPE nlp
+$include qcp02.gms

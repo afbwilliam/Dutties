@@ -1,0 +1,55 @@
+$title 'Test correctness of power intrinsic' (FNPOWER,SEQ=158)
+
+* define some sets, etc.
+$include fnset_xy.inc
+
+* do not forget to run with zerores=2e-299 on the command line
+
+$gdxin fnpower
+$load aeps reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,'fyx_') = data(T,'fxy_');
+  data(T,  'f')    = power.value(   data(T,'x'),data(T,'y'));
+  data(T, 'fx')    = power.grad(1:  data(T,'x'),data(T,'y'));
+  data(T, 'fy')    = power.grad(2:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')    = power.hess(1:1:data(T,'x'),data(T,'y'));
+  data(T,'fxy')    = power.hess(1:2:data(T,'x'),data(T,'y'));
+  data(T,'fyx')    = power.hess(2:1:data(T,'x'),data(T,'y'));
+  data(T, 'fyy')   = power.hess(2:2:data(T,'x'),data(T,'y'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+* in case function eval errors occurred
+abort$(execerror lt 1)
+  'Should get execution errors getting grad/hess of pow(x,c), |x| tiny';
+execerror = 0;
+
+display data;
+
+scalar POWER_EPS / 1e-30 /;
+set cheat(T);
+cheat(T) = NO;
+* cheat(T) = (abs(data(T,'f')) ge .999999999e299);
+
+* handle case where |x| < POWER_EPS, c not special
+* cheat(T) = (abs(data(T,'x')) lt POWER_EPS) and (data(T,'y') le -3);
+* display cheat;
+* data(cheat,'f') = sign(data(cheat, '
+
+
+
+* cheat to pass test if overflow occurs.  This can be taken out when CMEX
+* is fixed
+* $ontext
+data(cheat, 'fx') = data(cheat, 'fx_');
+data(cheat, 'fy') = data(cheat, 'fy_');
+data(cheat,'fxx') = data(cheat,'fxx_');
+data(cheat,'fxy') = data(cheat,'fxy_');
+data(cheat,'fyx') = data(cheat,'fyx_');
+data(cheat,'fyy') = data(cheat,'fyy_');
+* $offtext
+
+$include fntest_xy.inc

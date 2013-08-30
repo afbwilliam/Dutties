@@ -1,0 +1,6 @@
+$title MPSGE naming test: labels cannot contain a ! (MPSGE04,SEQ=81)
+
+$set ILABEL    "!isbad"
+$set SETUPFAIL  1
+
+$include exchange.inc

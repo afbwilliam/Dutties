@@ -1,0 +1,9 @@
+$title 'Tests for setenv and dropenv' (SYSENV02,SEQ=220)
+
+$ondollar
+$set env this is very silly
+$setenv verysilly %env%
+$if NOT "%env%" == "%sysenv.verysilly%" $error sentenv did not work
+
+$dropenv verysilly
+$if setenv verysilly $error should not be true

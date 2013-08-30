@@ -1,0 +1,821 @@
+<html>
+<head>
+<title>KNITRO Options</title>
+</head>
+<body>
+<h2>KNITRO Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/knitro.pdf">KNITRO manual</a>.
+
+<h2>Summary of KNITRO Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Barrier options</h3></th></tr>
+<tr><td><a href="#KNITRObar_feasible">
+bar_feasible</a></td>
+<td>specifies whether special emphasis is placed on getting and staying feasible</td></tr>
+<tr><td><a href="#KNITRObar_feasmodetol">
+bar_feasmodetol</a></td>
+<td>tolerance for activation of bar_feasible mode</td></tr>
+<tr><td><a href="#KNITRObar_initmu">
+bar_initmu</a></td>
+<td>initial barrier parameter value</td></tr>
+<tr><td><a href="#KNITRObar_initpt">
+bar_initpt</a></td>
+<td>initial point strategy for barrier algorithms</td></tr>
+<tr><td><a href="#KNITRObar_murule">
+bar_murule</a></td>
+<td>controls the barrier parameter update strategy</td></tr>
+<tr><td><a href="#KNITRObar_switchrule">
+bar_switchrule</a></td>
+<td>controls switch to new feasibility-only phase</td></tr>
+<tr><td><a href="#KNITROmaxcrossit">
+maxcrossit</a></td>
+<td>limit on crossover iterations</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General options</h3></th></tr>
+<tr><td><a href="#KNITROalgorithm">
+algorithm</a></td>
+<td>controls which algorithm to use</td></tr>
+<tr><td><a href="#KNITROdelta">
+delta</a></td>
+<td>initial trust region radius scaling factor</td></tr>
+<tr><td><a href="#KNITROfeastol">
+feastol</a></td>
+<td>relative feasibility error tolerance</td></tr>
+<tr><td><a href="#KNITROfeastolabs">
+feastolabs</a></td>
+<td>absolute feasibility error tolerance</td></tr>
+<tr><td><a href="#KNITROgradopt">
+gradopt</a></td>
+<td>controls gradient computation</td></tr>
+<tr><td><a href="#KNITROhessopt">
+hessopt</a></td>
+<td>controls Hessian computation</td></tr>
+<tr><td><a href="#KNITROhonorbnds">
+honorbnds</a></td>
+<td>maintain feasibility of intermediate iterates w.r.t. variable bounds</td></tr>
+<tr><td><a href="#KNITROlinsolver">
+linsolver</a></td>
+<td>controls which linear system solver to use</td></tr>
+<tr><td><a href="#KNITROmaxcgit">
+maxcgit</a></td>
+<td>limit on inner CG iterations per minor iteration</td></tr>
+<tr><td><a href="#KNITROmaxit">
+maxit</a></td>
+<td>major iteration limit</td></tr>
+<tr><td><a href="#KNITROmaxtime_cpu">
+maxtime_cpu</a></td>
+<td>CPU time limit</td></tr>
+<tr><td><a href="#KNITROmaxtime_real">
+maxtime_real</a></td>
+<td>real or wall-clock time limit</td></tr>
+<tr><td><a href="#KNITROobjrange">
+objrange</a></td>
+<td>parameter used in unboundedness check</td></tr>
+<tr><td><a href="#KNITROoption_file">
+option_file</a></td>
+<td>additional option file name - read only by KNITRO solver lib</td></tr>
+<tr><td><a href="#KNITROopttol">
+opttol</a></td>
+<td>relative optimality error tolerance</td></tr>
+<tr><td><a href="#KNITROopttolabs">
+opttolabs</a></td>
+<td>absolute optimality error tolerance</td></tr>
+<tr><td><a href="#KNITROoutlev">
+outlev</a></td>
+<td>controls the level of output</td></tr>
+<tr><td><a href="#KNITROoutput_time">
+output_time</a></td>
+<td>print output on where time is used</td></tr>
+<tr><td><a href="#KNITROpivot">
+pivot</a></td>
+<td>initial pivot threshold used in the factorization routine</td></tr>
+<tr><td><a href="#KNITROpresolve">
+presolve</a></td>
+<td>control presolve level</td></tr>
+<tr><td><a href="#KNITROreform">
+reform</a></td>
+<td>allow objective reformulation</td></tr>
+<tr><td><a href="#KNITROscale">
+scale</a></td>
+<td>toggles problem scaling</td></tr>
+<tr><td><a href="#KNITROsoc">
+soc</a></td>
+<td>toggles the second order correction option</td></tr>
+<tr><td><a href="#KNITROthreads">
+threads</a></td>
+<td>default thread count</td></tr>
+<tr><td><a href="#KNITROxtol">
+xtol</a></td>
+<td>tolerance for termination on a small stepsize</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Multi-algorithm options</h3></th></tr>
+<tr><td><a href="#KNITROma_maxtime_cpu">
+ma_maxtime_cpu</a></td>
+<td>cumulative CPU time limit for multi-algorithm method</td></tr>
+<tr><td><a href="#KNITROma_maxtime_real">
+ma_maxtime_real</a></td>
+<td>cumulative real or wall-clock time limit for multi-algorithm method</td></tr>
+<tr><td><a href="#KNITROma_terminate">
+ma_terminate</a></td>
+<td>condition for terminating the multi-algorithm method</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP options</h3></th></tr>
+<tr><td><a href="#KNITROmip_branchrule">
+mip_branchrule</a></td>
+<td>branching rule to use for MIP B&B</td></tr>
+<tr><td><a href="#KNITROmip_gub_branch">
+mip_gub_branch</a></td>
+<td>toggles branching on generalized upper bounds</td></tr>
+<tr><td><a href="#KNITROmip_heuristic">
+mip_heuristic</a></td>
+<td>MIP heuristic to use in searching for an initial integer feasible point</td></tr>
+<tr><td><a href="#KNITROmip_heuristic_maxit">
+mip_heuristic_maxit</a></td>
+<td>maximum iterations to allow the MIP heuristic</td></tr>
+<tr><td><a href="#KNITROmip_implications">
+mip_implications</a></td>
+<td>toggles addition of constraints derived from logical implications</td></tr>
+<tr><td><a href="#KNITROmip_integer_tol">
+mip_integer_tol</a></td>
+<td>integrality tolerance</td></tr>
+<tr><td><a href="#KNITROmip_integral_gap_abs">
+mip_integral_gap_abs</a></td>
+<td>absolute stopping tolerance for MIP</td></tr>
+<tr><td><a href="#KNITROmip_integral_gap_rel">
+mip_integral_gap_rel</a></td>
+<td>relative stopping tolerance for MIP</td></tr>
+<tr><td><a href="#KNITROmip_lpalg">
+mip_lpalg</a></td>
+<td>algorithm to use for LP subproblems</td></tr>
+<tr><td><a href="#KNITROmip_maxnodes">
+mip_maxnodes</a></td>
+<td>maximum number of nodes to explore: 0=no limit</td></tr>
+<tr><td><a href="#KNITROmip_maxsolves">
+mip_maxsolves</a></td>
+<td>maximum number of subproblem solves: 0=no limit</td></tr>
+<tr><td><a href="#KNITROmip_maxtime_cpu">
+mip_maxtime_cpu</a></td>
+<td>cumulative CPU time limit for MIP</td></tr>
+<tr><td><a href="#KNITROmip_maxtime_real">
+mip_maxtime_real</a></td>
+<td>cumulative real or wall-clock time limit for MIP</td></tr>
+<tr><td><a href="#KNITROmip_method">
+mip_method</a></td>
+<td>specify MIP method to use</td></tr>
+<tr><td><a href="#KNITROmip_outinterval">
+mip_outinterval</a></td>
+<td>node printing interval for MIP</td></tr>
+<tr><td><a href="#KNITROmip_outlevel">
+mip_outlevel</a></td>
+<td>how much MIP information to print</td></tr>
+<tr><td><a href="#KNITROmip_rootalg">
+mip_rootalg</a></td>
+<td>algorithm to use for the root node solve</td></tr>
+<tr><td><a href="#KNITROmip_rounding">
+mip_rounding</a></td>
+<td>MIP rounding rule to apply</td></tr>
+<tr><td><a href="#KNITROmip_selectrule">
+mip_selectrule</a></td>
+<td>selection rule for the next node in the B&B tree</td></tr>
+<tr><td><a href="#KNITROmip_strong_candlim">
+mip_strong_candlim</a></td>
+<td>max candidates to explore in strong branching</td></tr>
+<tr><td><a href="#KNITROmip_strong_level">
+mip_strong_level</a></td>
+<td>max levels on which to perform strong branching</td></tr>
+<tr><td><a href="#KNITROmip_strong_maxit">
+mip_strong_maxit</a></td>
+<td>max iterations to allow for strong branching</td></tr>
+<tr><td><a href="#KNITROmip_terminate">
+mip_terminate</a></td>
+<td>condition for terminating the MIP algorithm</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Multi-start options</h3></th></tr>
+<tr><td><a href="#KNITROms_enable">
+ms_enable</a></td>
+<td>toggles multi-start method</td></tr>
+<tr><td><a href="#KNITROms_maxbndrange">
+ms_maxbndrange</a></td>
+<td>maximum range to vary unbounded x when generating start points</td></tr>
+<tr><td><a href="#KNITROms_maxsolves">
+ms_maxsolves</a></td>
+<td>maximum number of start points to try during multi-start</td></tr>
+<tr><td><a href="#KNITROms_maxtime_cpu">
+ms_maxtime_cpu</a></td>
+<td>cumulative CPU time limit for multi-start</td></tr>
+<tr><td><a href="#KNITROms_maxtime_real">
+ms_maxtime_real</a></td>
+<td>cumulative real or wall-clock time limit for multi-start</td></tr>
+<tr><td><a href="#KNITROms_startptrange">
+ms_startptrange</a></td>
+<td>maximum range to vary all x when generating start points</td></tr>
+<tr><td><a href="#KNITROms_terminate">
+ms_terminate</a></td>
+<td>termination condition for multi-start</td></tr></table>
+<h2>Detailed Descriptions of KNITRO Options</h2>
+
+<h4><a name="KNITROalgorithm">
+algorithm</a>
+<i> (integer)</i> controls which algorithm to use</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic, based on problem characteristics</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>interior/direct</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>interior/CG</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>active-set method</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>multi-method, perhaps in parallel</td></tr>
+</table>
+
+<h4><a name="KNITRObar_feasible">
+bar_feasible</a>
+<i> (integer)</i> specifies whether special emphasis is placed on getting and staying feasible</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No special emphasis on feasibility</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Iterates must satisfy inequality cons once they become sufficiently feasible</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Special emphasis is placed on getting feasible before trying to optimize</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Implement both options 1 and 2 above</td></tr>
+</table>
+
+<h4><a name="KNITRObar_feasmodetol">
+bar_feasmodetol</a>
+<i> (real)</i> tolerance for activation of bar_feasible mode</h4><p>
+
+
+<br><i>(default = 1e-4)</i>
+
+<h4><a name="KNITRObar_initmu">
+bar_initmu</a>
+<i> (real)</i> initial barrier parameter value</h4><p>
+
+
+<br><i>(default = 1e-1)</i>
+
+<h4><a name="KNITRObar_initpt">
+bar_initpt</a>
+<i> (integer)</i> initial point strategy for barrier algorithms</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>let KNITRO choose the initial point strategy</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>shift the initial point to improve barrier performance</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>do not alter the initial point supplied by the user</td></tr>
+</table>
+
+<h4><a name="KNITRObar_murule">
+bar_murule</a>
+<i> (integer)</i> controls the barrier parameter update strategy</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>monotonic decrease in barrier parameter</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>adaptive rule based on the complementarity gap</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>use a probing (affine-scaling) step</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>use a Mehrotra predictor-corrector type rule, with safeguards on the corrector step</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>use a Mehrotra predictor-corrector type rule, with no safeguards on the corrector step</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>minimize a quality function at each iteration</td></tr>
+</table>
+
+<h4><a name="KNITRObar_switchrule">
+bar_switchrule</a>
+<i> (integer)</i> controls switch to new feasibility-only phase</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>never switch to feasibility phase</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>allow switches to feasibility phase</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>more aggressive switches to feasibility phase</td></tr>
+</table>
+
+<h4><a name="KNITROdelta">
+delta</a>
+<i> (real)</i> initial trust region radius scaling factor</h4><p>
+
+
+<br><i>(default = 1e-0)</i>
+
+<h4><a name="KNITROfeastol">
+feastol</a>
+<i> (real)</i> relative feasibility error tolerance</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="KNITROfeastolabs">
+feastolabs</a>
+<i> (real)</i> absolute feasibility error tolerance</h4><p>
+
+
+<br><i>(default = 0.0)</i>
+
+<h4><a name="KNITROgradopt">
+gradopt</a>
+<i> (integer)</i> controls gradient computation</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>use exact gradients computed by GAMS</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>KNITRO computes gradients by forward finite differences</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>KNITRO computes gradients by central finite differences</td></tr>
+</table>
+
+<h4><a name="KNITROhessopt">
+hessopt</a>
+<i> (integer)</i> controls Hessian computation</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>use exact Hessians computed by GAMS</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>use a dense quasi-Newton BFGS Hessian</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>use a dense quasi-Newton SR1 Hessian</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>compute Hessian-vector products using finite differences</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>use exact Hessian-vector products computed by GAMS</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>use a limited-memory quasi-Newton BFGS Hessian</td></tr>
+</table>
+
+<h4><a name="KNITROhonorbnds">
+honorbnds</a>
+<i> (integer)</i> maintain feasibility of intermediate iterates w.r.t. variable bounds</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>intermediate iterates may be infeasible w.r.t. variable bounds</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>all iterates will be feasible w.r.t. variable bounds</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>the initial iterate will be made feasible w.r.t. variable bounds</td></tr>
+</table>
+
+<h4><a name="KNITROlinsolver">
+linsolver</a>
+<i> (integer)</i> controls which linear system solver to use</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic: based on problem characteristics</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>reserved for internal use, currently automatic</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>hybrid: linear solver used depends on the particular linear system to be solved</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>QR: use dense LAPACK QR routines, only suitable for small problems</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>MA27: use the HSL MA27 sparse symmetric indefinite solver</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>MA57: use the HSL MA57 sparse symmetric indefinite solver</td></tr>
+</table>
+
+<h4><a name="KNITROmaxcgit">
+maxcgit</a>
+<i> (integer)</i> limit on inner CG iterations per minor iteration</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>upper bound determined automatically</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>at most n CG iterations may be performed</td></tr>
+</table>
+
+<h4><a name="KNITROmaxcrossit">
+maxcrossit</a>
+<i> (integer)</i> limit on crossover iterations</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="KNITROmaxit">
+maxit</a>
+<i> (integer)</i> major iteration limit</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>upper bound determined automatically</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>at most n iterations may be performed</td></tr>
+</table>
+
+<h4><a name="KNITROmaxtime_cpu">
+maxtime_cpu</a>
+<i> (real)</i> CPU time limit</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROmaxtime_real">
+maxtime_real</a>
+<i> (real)</i> real or wall-clock time limit</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROma_maxtime_cpu">
+ma_maxtime_cpu</a>
+<i> (real)</i> cumulative CPU time limit for multi-algorithm method</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROma_maxtime_real">
+ma_maxtime_real</a>
+<i> (real)</i> cumulative real or wall-clock time limit for multi-algorithm method</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROma_terminate">
+ma_terminate</a>
+<i> (integer)</i> condition for terminating the multi-algorithm method</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>terminate after all algorithms have completed</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>terminate at first local optimum</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>terminate at first feasible solution</td></tr>
+</table>
+
+<h4><a name="KNITROmip_branchrule">
+mip_branchrule</a>
+<i> (integer)</i> branching rule to use for MIP B&B</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>use most fractional (most infeasible) branching</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>use pseudo-cost branching</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>use strong branching</td></tr>
+</table>
+
+<h4><a name="KNITROmip_gub_branch">
+mip_gub_branch</a>
+<i> (integer)</i> toggles branching on generalized upper bounds</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="KNITROmip_heuristic">
+mip_heuristic</a>
+<i> (integer)</i> MIP heuristic to use in searching for an initial integer feasible point</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>none</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>feasibility pump</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>heuristic based on MPEC formulation</td></tr>
+</table>
+
+<h4><a name="KNITROmip_heuristic_maxit">
+mip_heuristic_maxit</a>
+<i> (integer)</i> maximum iterations to allow the MIP heuristic</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="KNITROmip_implications">
+mip_implications</a>
+<i> (integer)</i> toggles addition of constraints derived from logical implications</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="KNITROmip_integer_tol">
+mip_integer_tol</a>
+<i> (real)</i> integrality tolerance</h4><p>
+
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="KNITROmip_integral_gap_abs">
+mip_integral_gap_abs</a>
+<i> (real)</i> absolute stopping tolerance for MIP</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="KNITROmip_integral_gap_rel">
+mip_integral_gap_rel</a>
+<i> (real)</i> relative stopping tolerance for MIP</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="KNITROmip_lpalg">
+mip_lpalg</a>
+<i> (integer)</i> algorithm to use for LP subproblems</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>interior/direct</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>interior/CG</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>active-set method</td></tr>
+</table>
+
+<h4><a name="KNITROmip_maxnodes">
+mip_maxnodes</a>
+<i> (integer)</i> maximum number of nodes to explore: 0=no limit</h4><p>
+
+
+<br><i>(default = 100000)</i>
+
+<h4><a name="KNITROmip_maxsolves">
+mip_maxsolves</a>
+<i> (integer)</i> maximum number of subproblem solves: 0=no limit</h4><p>
+
+
+<br><i>(default = 200000)</i>
+
+<h4><a name="KNITROmip_maxtime_cpu">
+mip_maxtime_cpu</a>
+<i> (real)</i> cumulative CPU time limit for MIP</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROmip_maxtime_real">
+mip_maxtime_real</a>
+<i> (real)</i> cumulative real or wall-clock time limit for MIP</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROmip_method">
+mip_method</a>
+<i> (integer)</i> specify MIP method to use</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>standard branch and bound</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>hybrid Quesada-Grossman (for convex, nonlinear only)</td></tr>
+</table>
+
+<h4><a name="KNITROmip_outinterval">
+mip_outinterval</a>
+<i> (integer)</i> node printing interval for MIP</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="KNITROmip_outlevel">
+mip_outlevel</a>
+<i> (integer)</i> how much MIP information to print</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>do not print any node information</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>print one line per node</td></tr>
+</table>
+
+<h4><a name="KNITROmip_rootalg">
+mip_rootalg</a>
+<i> (integer)</i> algorithm to use for the root node solve</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic, based on problem characteristics</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>interior/direct</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>interior/CG</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>active-set method</td></tr>
+</table>
+
+<h4><a name="KNITROmip_rounding">
+mip_rounding</a>
+<i> (integer)</i> MIP rounding rule to apply</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>do not round if a node is infeasible</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>round using a fast heuristic only</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>round and solve a subproblem if likely to succeed</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>always round and solve a subproblem</td></tr>
+</table>
+
+<h4><a name="KNITROmip_selectrule">
+mip_selectrule</a>
+<i> (integer)</i> selection rule for the next node in the B&B tree</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>search using a depth first procedure</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>select the node with the best relaxation bound</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>use depth first unless pruned, then best bound</td></tr>
+</table>
+
+<h4><a name="KNITROmip_strong_candlim">
+mip_strong_candlim</a>
+<i> (integer)</i> max candidates to explore in strong branching</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="KNITROmip_strong_level">
+mip_strong_level</a>
+<i> (integer)</i> max levels on which to perform strong branching</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="KNITROmip_strong_maxit">
+mip_strong_maxit</a>
+<i> (integer)</i> max iterations to allow for strong branching</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="KNITROmip_terminate">
+mip_terminate</a>
+<i> (integer)</i> condition for terminating the MIP algorithm</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>terminate at optimum</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>terminate at first integer feasible point</td></tr>
+</table>
+
+<h4><a name="KNITROms_enable">
+ms_enable</a>
+<i> (integer)</i> toggles multi-start method</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="KNITROms_maxbndrange">
+ms_maxbndrange</a>
+<i> (real)</i> maximum range to vary unbounded x when generating start points</h4><p>
+
+
+<br><i>(default = 1e3)</i>
+
+<h4><a name="KNITROms_maxsolves">
+ms_maxsolves</a>
+<i> (integer)</i> maximum number of start points to try during multi-start</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>upper bound determined automatically</td></tr>
+<tr valign="top"><td width=20 align=right>n</td><td>try exactly n start points</td></tr>
+</table>
+
+<h4><a name="KNITROms_maxtime_cpu">
+ms_maxtime_cpu</a>
+<i> (real)</i> cumulative CPU time limit for multi-start</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROms_maxtime_real">
+ms_maxtime_real</a>
+<i> (real)</i> cumulative real or wall-clock time limit for multi-start</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="KNITROms_startptrange">
+ms_startptrange</a>
+<i> (real)</i> maximum range to vary all x when generating start points</h4><p>
+
+
+<br><i>(default = 1e20)</i>
+
+<h4><a name="KNITROms_terminate">
+ms_terminate</a>
+<i> (integer)</i> termination condition for multi-start</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>terminate after ms_maxsolves</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>terminate at first local optimum (if before ms_maxsolves)</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>terminate at first feasible solution (if before ms_maxsolves)</td></tr>
+</table>
+
+<h4><a name="KNITROobjrange">
+objrange</a>
+<i> (real)</i> parameter used in unboundedness check</h4><p>
+
+
+<br><i>(default = 1e20)</i>
+
+<h4><a name="KNITROoption_file">
+option_file</a>
+<i> (string)</i> additional option file name - read only by KNITRO solver lib</h4><p>
+
+
+
+<h4><a name="KNITROopttol">
+opttol</a>
+<i> (real)</i> relative optimality error tolerance</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="KNITROopttolabs">
+opttolabs</a>
+<i> (real)</i> absolute optimality error tolerance</h4><p>
+
+
+<br><i>(default = 0.0)</i>
+
+<h4><a name="KNITROoutlev">
+outlev</a>
+<i> (integer)</i> controls the level of output</h4><p>
+
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>printing of all output is suppressed</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>only summary information is printed</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>print basic information every 10 iterations</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>print basic information at each iteration</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>print basic information and the function count at each iteration</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>in addition to 4, the primal variable values are printed</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>in addition to 5, the dual variable and constraint values are printed</td></tr>
+</table>
+
+<h4><a name="KNITROoutput_time">
+output_time</a>
+<i> (integer)</i> print output on where time is used</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="KNITROpivot">
+pivot</a>
+<i> (real)</i> initial pivot threshold used in the factorization routine</h4><p>
+
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="KNITROpresolve">
+presolve</a>
+<i> (integer)</i> control presolve level</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no presolving</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>basic presolving</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>advanced presolving</td></tr>
+</table>
+
+<h4><a name="KNITROreform">
+reform</a>
+<i> (integer)</i> allow objective reformulation</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="KNITROscale">
+scale</a>
+<i> (integer)</i> toggles problem scaling</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no scaling is performed</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>the problem may be scaled</td></tr>
+</table>
+
+<h4><a name="KNITROsoc">
+soc</a>
+<i> (integer)</i> toggles the second order correction option</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no second-order correction steps are attempted</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>second-order correction steps may be attempted</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>second-order correction steps are always attempted if the original step is rejected and there are nonlinear constraints</td></tr>
+</table>
+
+<h4><a name="KNITROthreads">
+threads</a>
+<i> (integer)</i> default thread count</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="KNITROxtol">
+xtol</a>
+<i> (real)</i> tolerance for termination on a small stepsize</h4><p>
+
+
+<br><i>(default = 1e-15)</i>
+</body></html>

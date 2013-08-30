@@ -1,0 +1,79 @@
+$title Generates some useful files from the Model Library (GAMSUTIL,SEQ=190)
+$Ontext
+Generates some useful files from the Model Library
+
+
+GAMS Development Corporation, Modeling Tool Box.
+
+  The following system configuration/document files are written:
+
+      gamslib.glb  IDE index and documentation
+      modlibfs.txt Makefile input file
+
+  All files $included, read and written have to be in the same
+  directory. This program can be execute from another location
+  by using the GAMS parameter U1, for example:
+
+     >gams gamsutil.190 U1=c:\oldd\alex\gams\gamslib\ver008\test\
+
+$Offtext
+
+$setglobal gamslib '%gams.u1%'
+
+files glb      IDE model library index / '%gamslib%gamslib.glb'   /
+      glist    makefile index file     / '%gamslib%modlibfs.txt' / ;
+
+scalar first;
+
+$offlisting
+$include gamsmod.inc
+$onlisting
+*
+*  IDE modlib file
+*
+put glb
+    'Version = 5'
+ /  'LibraryName = GAMS Model Library %version%'
+ /  'Columns = 6'
+ /  '6 = SeqNr'
+ /  '1 = Name'
+ /  '2 = Application Area'
+ /  '3 = Type'
+ /  '4 = Contributor'
+ /  '5 = Description'
+ /  'InitialSort = 2'
+ /  '*$*$*$';
+
+glb.lcase=1;
+loop((sm(s,m),sath(s,ath)),
+   put / 'Files = ' m.tl:0 '.' s.tl:0; loop(incmap(inc,s), put ',',inc.tl:0);
+   glb.lcase=2;
+   put / '1 = ' m.tl:0;
+   put / '2 = '; first = 1; loop(as(a,s)$first, put  a.te(a);  first=0 );
+   put / '3 = '; loop(tss(t,s), put t.tl );
+   glb.lcase=0; put / '4 = ' ath.tl
+       / '5 = ' m.te(m)
+       / '6 = ' '000000':ceil(log(card(s)+1)/log(10))
+                put @(glb.cc-card(s.tl)) s.tl:0;
+   glb.lcase=1;
+   put_utilities 'glb'/ '%gamslib%' m.tl:0 '.' s.tl:0;
+   put / 'Reference'
+   put$(sum(sr(s,r),1)>1) 's';
+   put ':';
+   loop(sr(s,r), put / r.te(r));
+   put / '*$*$*$' );
+putclose;
+
+*
+*  makefile input
+*
+$stitle list of all files in makefile format
+glist.lcase=1;
+put glist 'MODLIBFILES = \'
+        / 'gamslib.glb \'
+        / 'modlib.log \' ;
+loop(inc,
+   put  / inc.tl:0 ' \' )
+loop(sm(s,m),
+   put  / m.tl:0 '.' s.tl:0 ' \' )
+putclose // glist;

@@ -1,0 +1,168 @@
+$Title External Function - Error Example 3 (ER3,SEQ=572)
+
+$offsymlist offsymxref
+
+$ontext
+  This model is similar to the model in ex3.gms, except that it
+  only includes code for C and Fortran examples.
+  The external functions have implementation errors that have been
+  marked with **ERROR in the source code. Compare these errors with
+  the messages in the GAMS listing file.
+$offtext
+
+Set
+    i   'indices for the 6 points'       /1*6/;
+
+Alias (i,j);
+
+Variables
+    x(i)        'x-coordinates of the points',
+    y(i)        'y-coordinates of the points',
+    area(i)     "area of the i'th triangle ( 0 -> p(i) -> p(i++1) -> 0",
+    totarea     'total area of the hexagon';
+
+Equations
+    areadef(i)          'area definition for triangle i',
+    areadefX(i)         'area definition for triangle i',
+    maxdist(i,j)        'maximal distance between i and j',
+    maxdistX(i,j)       'maximal distance between i and j',
+    obj                 'definition of objective';
+
+$ontext
+  We will implement equation maxdist and areadef using external
+  functions. Here are the original definitions:
+$offtext
+
+maxdist(i,j)$(ord(i) lt ord(j)).. sqr(x(i)-x(j))+sqr(y(i)-y(j)) =l= 1;
+
+areadef(i)..  area(i) =e= 0.5*(x(i)*y(i++1)-y(i)*x(i++1));
+
+$ontext
+  First, notice that external equations must be written as equalities
+  so we must add explicit slacks to the maxdist equations in our
+  GAMS formulation of the external equations.
+$offtext
+
+Positive variable
+     sl(i,j)            'Slack in maxdist equation';
+
+$ontext
+  We plan to use the following numbering scheme for the variables
+  used in the external functions:
+
+  The equations are numbered as follows:
+  maxdist(i,j):  1 to 15 defined using the parameter num defined below
+  areadef(i)  : 16 to 21 = ord(i) + 15 = ord(i) + card(i)*(card(i)-1)/2;
+
+  The variables are numbered as follows:
+  X(i)   :  1 to  6 = ord(i)
+  Y(i)   :  7 to 12 = ord(i) + card(i)
+  area(i): 13 to 18 = ord(i) + 2*card(i)
+  sl(i,j): 19 to 33 = 3*card(i) + 1 to 15, again using num defined below.
+$offtext
+
+parameter num(i,j) Number used for equation maxdist;
+parameter iplus(i) The index for variable x(i++1);
+scalar    count    Counter used to derive num / 0 /;
+loop {(i,j)$(ord(i) lt ord(j)),
+    count    = count + 1;
+    num(i,j) = count;
+};
+iplus(i) = ord(i)+1;
+iplus(i)$(ord(i) eq card(i)) = 1;
+display num, iplus;
+
+$ontext
+  Now follows the definition of the sparsity pattern and the indexing
+  for the external equations.
+
+  Note that ord(i) ne ord(j) in equation maxdistX,
+  so there is no risk of coefficients being added together
+  (as would be the case when x(i) and x(j) are the same varible)
+  In other models can give rise to incorrect indices.
+$offtext
+
+maxdistX(i,j)$(ord(i) lt ord(j)).. ord(i)*x(i) + ord(j)*x(j) +
+               (ord(i)+card(i))*y(i) + (ord(j)+card(j))*y(j) +
+                                (3*card(i)+num(i,j))*sl(i,j)
+                                                =X= num(i,j);
+
+areadefX(i)..              ord(i)*x(i) + iplus(i)*x(i++1) +
+       (card(i)+ord(i))*y(i) + (card(i)+iplus(i))*y(i++1) +
+                               (2*card(i)+ord(i))*area(i) =X=
+                             card(i)*(card(i)-1)/2+ord(i) ;
+
+$ontext
+ The last equation is kept in GAMS format for both models:
+$offtext
+
+ obj..        totarea =e= sum(i,area(i));
+
+Model er3       'GAMS implementation'           / maxdist, obj, areadef / ;
+Model er3f_cb   'External func, F77, callback'  / maxdistX, obj, areadefX / ;
+Model er3c_cb   'External func, C, callback'    / maxdistX, obj, areadefX / ;
+
+parameter report(I,*,*) 'Solution Summary';
+option report:5;
+scalar totdist /0/;
+
+$ontext
+ This model will not use the same iteration path as the model in the
+ library solved with CONOPT because we use explicit slacks.
+ To get the same initial sum of infeasibilities we must initialize
+ the slack variables to make the maxdist equations feasible (if
+ possible).  This is done after the x & y are initialized.
+$offtext
+
+$onechoV > runme.gms
+x.fx("1") = 0;    y.fx("1") = 0;
+x.l ("2") = 0.5;  y.fx("2") = 0;
+x.l ("3") = 0.5;  y.l ("3") = 0.4;
+x.l ("4") = 0.5;  y.l ("4") = 0.8;
+x.l ("5") = 0;    y.l ("5") = 0.8;
+x.l ("6") = 0;    y.l ("6") = 0.4;
+sl.l(i,j)$(ord(i) lt ord(j)) =
+    max(0,1 - (sqr(x.l(i)-x.l(j))+sqr(y.l(i)-y.l(j)) ));
+sl.m(i,j)$(ord(i) lt ord(j)) = 0;
+area.l(i) = 0;
+totarea.l = 0;
+areadefX.m(i) = 0;
+maxdistX.m(i,j) = 0;
+Solve %1 using nlp maximizing totarea;
+$if     %1==er3 abort$(%1.solvestat <> 1) 'problems running model %1';
+$if not %1==er3 abort$(%1.solvestat  = 1) 'problems running model %1';
+execerror = 0;
+report(i,'X','%1') = x.l(i);
+report(i,'Y','%1') = y.l(i);
+totdist = totdist + sum {I, abs(x.l(i) - report(I,'X','er3'))};
+totdist = totdist + sum {I, abs(y.l(i) - report(I,'Y','er3'))};
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=er3c_cb.c                                     --libname=er3c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 er3f_cb.f90"%eq% --libname=er3f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme er3
+$if set runC_cb $batinclude runme er3c_cb
+$if set runF_cb $batinclude runme er3f_cb
+
+display report;
+
+if ((totdist < 1.0E-5),
+  display "@@@@ #Test passed.";
+else
+  display totdist, "@@@@ #Test not passed. Inspect er3.lst for details.";
+);

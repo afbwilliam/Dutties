@@ -1,0 +1,1197 @@
+<html>
+<head>
+<title>MINOS Options</title>
+</head>
+<body>
+<h2>MINOS Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/minos.pdf">MINOS manual</a>.
+
+<h2>Summary of MINOS Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Output related options</h3></th></tr>
+<tr><td><a href="#MINOSdebug_level">
+" "" "" " debug" "level</a></td>
+<td>Controls amount of debug information written</td></tr>
+<tr><td><a href="#MINOSlog_frequency">
+" "" "" " log" "frequency</a></td>
+<td>Number of iterations between each log line (listing file)</td></tr>
+<tr><td><a href="#MINOSprint_level">
+" "" "" " print" "level</a></td>
+<td>Amount of information printed during optimization</td></tr>
+<tr><td><a href="#MINOSscale_print">
+" "" "" " scale" "print</a></td>
+<td>Print scaling factors</td></tr>
+<tr><td><a href="#MINOSsolution">
+" "" "" " solution</a></td>
+<td>Prints MINOS solution</td></tr>
+<tr><td><a href="#MINOSsummary_frequency">
+" "" "" " summary" "frequency</a></td>
+<td>Number of iterations between each log line (log file)</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Tolerances</h3></th></tr>
+<tr><td><a href="#MINOScrash_tolerance">
+" "" "" " crash" "tolerance</a></td>
+<td>Allow crash procedure to ignore small elements in eligible columns</td></tr>
+<tr><td><a href="#MINOSfeasibility_tolerance">
+" "" "" " feasibility" "tolerance</a></td>
+<td>Feasibility tolerance for linear equations</td></tr>
+<tr><td><a href="#MINOSlinesearch_tolerance">
+" "" "" " linesearch" "tolerance</a></td>
+<td>Accuracy required for steplength</td></tr>
+<tr><td><a href="#MINOSLU_density_tolerance">
+" "" "" " LU" "density" "tolerance</a></td>
+<td>When to use dense factorization</td></tr>
+<tr><td><a href="#MINOSLU_factor_tolerance">
+" "" "" " LU" "factor" "tolerance</a></td>
+<td>Trade-off between stability and sparsity in basis factorization</td></tr>
+<tr><td><a href="#MINOSLU_singularity_tolerance">
+" "" "" " LU" "singularity" "tolerance</a></td>
+<td>Protection against ill-conditioned basis matrices</td></tr>
+<tr><td><a href="#MINOSLU_update_tolerance">
+" "" "" " LU" "update" "tolerance</a></td>
+<td>Trade-off between stability and sparsity in basis factorization</td></tr>
+<tr><td><a href="#MINOSoptimality_tolerance">
+" "" "" " optimality" "tolerance</a></td>
+<td>Reduced gradient optimality check</td></tr>
+<tr><td><a href="#MINOSrow_tolerance">
+" "" "" " row" "tolerance</a></td>
+<td>Accuracy requirements for nonlinear rows</td></tr>
+<tr><td><a href="#MINOSscale_print_tolerance">
+" "" "" " scale" "print" "tolerance</a></td>
+<td>Scale print flag and set tolerance</td></tr>
+<tr><td><a href="#MINOSscale_tolerance">
+" "" "" " scale" "tolerance</a></td>
+<td>Scale tolerance</td></tr>
+<tr><td><a href="#MINOSsubspace_tolerance">
+" "" "" " subspace" "tolerance</a></td>
+<td>Determines when nonbasics becomes superbasic</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Limits</h3></th></tr>
+<tr><td><a href="#MINOShessian_dimension">
+" "" "" " hessian" "dimension</a></td>
+<td>Size of Hessian matrix</td></tr>
+<tr><td><a href="#MINOSiterations_limit">
+" "" "" " iterations" "limit</a></td>
+<td>Minor iteration limit</td></tr>
+<tr><td><a href="#MINOSmajor_iterations">
+" "" "" " major" "iterations</a></td>
+<td>Max number of major iterations</td></tr>
+<tr><td><a href="#MINOSminor_iterations">
+" "" "" " minor" "iterations</a></td>
+<td>Max number of minor iterations between linearizations of nonlinear constraints</td></tr>
+<tr><td><a href="#MINOSsuperbasics_limit">
+" "" "" " superbasics" "limit</a></td>
+<td>Maximum number of superbasics</td></tr>
+<tr><td><a href="#MINOSunbounded_objective_value">
+" "" "" " unbounded" "objective" "value</a></td>
+<td>Determines when a problem is called unbounded</td></tr>
+<tr><td><a href="#MINOSunbounded_step_size">
+" "" "" " unbounded" "step" "size</a></td>
+<td>Determines when a problem is called unbounded</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Other algorithmic options</h3></th></tr>
+<tr><td><a href="#MINOScheck_frequency">
+" "" "" " check" "frequency</a></td>
+<td>Number of iterations between numerical accuracy check</td></tr>
+<tr><td><a href="#MINOScompletion">
+" "" "" " completion</a></td>
+<td>Completion of subproblems (full/partial)</td></tr>
+<tr><td><a href="#MINOScrash_option">
+" "" "" " crash" "option</a></td>
+<td>Controls the basis crash algorithm</td></tr>
+<tr><td><a href="#MINOSexpand_frequency">
+" "" "" " expand" "frequency</a></td>
+<td>Setting for anti-cycling mechanism</td></tr>
+<tr><td><a href="#MINOSfactorization_frequency">
+" "" "" " factorization" "frequency</a></td>
+<td>Number of iterations between basis factorizations</td></tr>
+<tr><td><a href="#MINOSlagrangian">
+" "" "" " lagrangian</a></td>
+<td>Determines form of objection function in the linearized subproblems</td></tr>
+<tr><td><a href="#MINOSLU_complete_pivoting">
+" "" "" " LU" "complete" "pivoting</a></td>
+<td>LUSOL pivoting strategy</td></tr>
+<tr><td><a href="#MINOSLU_partial_pivoting">
+" "" "" " LU" "partial" "pivoting</a></td>
+<td>LUSOL pivoting strategy</td></tr>
+<tr><td><a href="#MINOSLU_rook_pivoting">
+" "" "" " LU" "rook" "pivoting</a></td>
+<td>LUSOL pivoting strategy</td></tr>
+<tr><td><a href="#MINOSmajor_damping_parameter">
+" "" "" " major" "damping" "parameter</a></td>
+<td>Prevents large relative changes between subproblem solutions</td></tr>
+<tr><td><a href="#MINOSminor_damping_parameter">
+" "" "" " minor" "damping" "parameter</a></td>
+<td>Limit change in x during linesearch</td></tr>
+<tr><td><a href="#MINOSmultiple_price">
+" "" "" " multiple" "price</a></td>
+<td>Multiple pricing</td></tr>
+<tr><td><a href="#MINOSpartial_price">
+" "" "" " partial" "price</a></td>
+<td>Number of segments in partial pricing strategy</td></tr>
+<tr><td><a href="#MINOSpenalty_parameter">
+" "" "" " penalty" "parameter</a></td>
+<td>Used in modified augmented Lagrangian</td></tr>
+<tr><td><a href="#MINOSradius_of_convergence">
+" "" "" " radius" "of" "convergence</a></td>
+<td>Determines reduction the penalty parameter</td></tr>
+<tr><td><a href="#MINOSscale_all_variables">
+" "" "" " scale" "all" "variables</a></td>
+<td>Synonym to scale option 2</td></tr>
+<tr><td><a href="#MINOSscale_linear_variables">
+" "" "" " scale" "linear" "variables</a></td>
+<td>Synonym to scale option 1</td></tr>
+<tr><td><a href="#MINOSscale_no">
+" "" "" " scale" "no</a></td>
+<td>Synonym to scale option 0</td></tr>
+<tr><td><a href="#MINOSscale_nonlinear_variables">
+" "" "" " scale" "nonlinear" "variables</a></td>
+<td>Synonym to scale option 2</td></tr>
+<tr><td><a href="#MINOSscale_option">
+" "" "" " scale" "option</a></td>
+<td>Scaling</td></tr>
+<tr><td><a href="#MINOSscale_yes">
+" "" "" " scale" "yes</a></td>
+<td>Synonym to scale option 1</td></tr>
+<tr><td><a href="#MINOSstart_assigned_nonlinears">
+" "" "" " start" "assigned" "nonlinears</a></td>
+<td>Starting strategy when there is no basis</td></tr>
+<tr><td><a href="#MINOSverify_constraint_gradients">
+" "" "" " verify" "constraint" "gradients</a></td>
+<td>Synonym to verify level 2</td></tr>
+<tr><td><a href="#MINOSverify_gradients">
+" "" "" " verify" "gradients</a></td>
+<td>Synonym to verify level 3</td></tr>
+<tr><td><a href="#MINOSverify_level">
+" "" "" " verify" "level</a></td>
+<td>Verification of gradients</td></tr>
+<tr><td><a href="#MINOSverify_no">
+" "" "" " verify" "no</a></td>
+<td>Synonym to verify level 0</td></tr>
+<tr><td><a href="#MINOSverify_objective_gradients">
+" "" "" " verify" "objective" "gradients</a></td>
+<td>Synonym to verify level 1</td></tr>
+<tr><td><a href="#MINOSverify_yes">
+" "" "" " verify" "yes</a></td>
+<td>Synonym to verify level 3</td></tr>
+<tr><td><a href="#MINOSweight_on_linear_objective">
+" "" "" " weight" "on" "linear" "objective</a></td>
+<td>Composite objective weight</td></tr></table>
+<h2>Detailed Descriptions of MINOS Options</h2>
+
+<h4><a name="MINOScheck_frequency">
+" "" "" " check" "frequency</a>
+<i> (integer)</i> Number of iterations between numerical accuracy check</h4><p>
+
+Every <i>i</i><sup>th</sup> iteration after the most recent basis factorization, a numerical
+test is made to see if the current solution <i>x</i> satisfies the general linear
+constraints (including linearized nonlinear constraints, if any). The constraints
+are of the form <i>Ax+s = 0</i> where <i>s</i> is the set of slack variables. To
+perform the numerical test, the residual vector <i>r = Ax + s</i> is computed.
+If the largest component of <i>r</i> is judged to be too large, the current basis is
+refactorized and the basic variables are recomputed to satisfy the general
+constraints more accurately.
+
+<br><i>(default = 60)</i>
+
+<h4><a name="MINOScompletion">
+" "" "" " completion</a>
+<i> (string)</i> Completion of subproblems (full/partial)</h4><p>
+
+When there are nonlinear constraints, this determines whether subproblems
+should be solved to moderate accuracy (partial completion), or to
+full accuracy (full completion), GAMS/MINOS implements the option by
+using two sets of convergence tolerances for the subproblems.<br>
+Use of partial completion may reduce the work during early major iterations,
+unless the Minor iterations limit is active. The optimal set of basic
+and superbasic variables will probably be determined for any given subproblem,
+but the reduced gradient may be larger than it would have been
+with full completion.
+An automatic switch to full completion occurs when it appears that the
+sequence of major iterations is converging. The switch is made when the
+nonlinear constraint error is reduced below 100 * (Row tolerance), the relative
+change in <i>Lambda<sub>k</sub></i> is 0.1 or less, and the previous subproblem was solved
+to optimality.
+Full completion tends to give better Langrange-multiplier estimates. It
+may lead to fewer major iterations, but may result in more minor iterations.
+
+<br><i>(default = FULL)</i>
+<table>
+<tr valign="top"><td width=20 align=right>FULL</td><td>Solve subproblems to full accuracy</td></tr>
+<tr valign="top"><td width=20 align=right>PARTIAL</td><td>Solve subproblems to moderate accuracy</td></tr>
+</table>
+
+<h4><a name="MINOScrash_option">
+" "" "" " crash" "option</a>
+<i> (integer)</i> Controls the basis crash algorithm</h4><p>
+
+If a restart is not being performed, an initial basis will be selected from
+certain columns of the constraint matrix <i>(A I)</i>.
+The value of the parameter <i>i</i> determines
+which columns of <i>A</i> are eligible. Columns of <i>I</i> are used to fill gaps
+where necessary.
+If <i>i > 0</i>, three passes are made through the relevant columns of <i>A</i>, searching
+for a basis matrix that is essentially triangular. A column is assigned
+to pivot on a particular row if the column contains a suitably large element
+in a row that has not yet been assigned. (The pivot elements ultimately
+form the diagonals of the triangular basis).
+Pass 1 selects pivots from free columns (corresponding to variables with
+no upper and lower bounds). Pass 2 requires pivots to be in rows associated
+with equality (<tt>=E=</tt>) constraints. Pass 3 allows the pivots to be in
+inequality rows.
+For remaining (unassigned) rows, the associated slack variables are inserted
+to complete the basis.
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Initial basis will be a slack basis</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>All columns are eligible</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Only linear columns are eligible</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Columns appearing nonlinearly in the objective are not eligible</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Columns appearing nonlinearly in the constraints are not eligible</td></tr>
+</table>
+
+<h4><a name="MINOScrash_tolerance">
+" "" "" " crash" "tolerance</a>
+<i> (real)</i> Allow crash procedure to ignore small elements in eligible columns</h4><p>
+
+The <i>Crash tolerance r</i> allows the starting procedure <i>CRASH</i> to ignore
+certain small nonzeros in each column of <i>A</i>. If <i>a<sub>max</sub></i> is the largest element
+in column <i>j</i>, other nonzeros <i>a<sub>i,j</sub></i> in the column are ignored if <i>|a<sub>i,j</sub>| <
+a<sub>max</sub> * r</i>. To be meaningful, the parameter <i>r</i> should be in the range <i>0 <= r < 1</i>).
+When <i>r > 0.0</i> the basis obtained by <i>CRASH</i> may not be strictly triangular,
+but it is likely to be nonsingular and almost triangular. The intention is to
+obtain a starting basis containing more columns of <i>A</i> and fewer (arbitrary)
+slacks. A feasible solution may be reached sooner on some problems.
+For example, suppose the first <i>m</i> columns of <i>A</i> are the matrix shown under
+LU factor tolerance; i.e., a tridiagonal matrix with entries -1, 4, -1. To
+help <i>CRASH</i> choose all <i>m</i> columns for the initial basis, we could specify
+<i>Crash tolerance r</i> for some value of <i>r > 0.25</i>.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="MINOSdebug_level">
+" "" "" " debug" "level</a>
+<i> (integer)</i> Controls amount of debug information written</h4><p>
+
+This causes various amounts of information to be output. Most debug
+levels will not be helpful to GAMS users, but they are listed here for completeness.
+Note that you will need to use the GAMS statement <tt>OPTION
+SYSOUT=on;</tt> to echo the MINOS listing to the GAMS listing file.
+<ul>
+ <li><b>debug level 0</b><br>No debug output.</li>
+ <li><b>debug level 2</b>(or more)<br>Output from <i>M5SETX</i> showing the maximum residual after a row check.</li>
+ <li><b>debug level 40</b><br>Output from <i>LU8RPC</i> (which updates the LU factors of the basis
+     matrix), showing the position of the last nonzero in the transformed incoming column.</li>
+ <li><b>debug level 50</b><br>Output from <i>LU1MAR</i> (which updates the LU factors each refactorization),
+     showing each pivot row and column and the dimensions of the dense matrix involved in the associated elimination.</li>
+ <li><b>debug level 100</b><br>Output from <i>M2BFAC</i> and <i>M5LOG</i> listing the basic and superbasic
+     variables and their values at every iteration.</li>
+</ul>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MINOSexpand_frequency">
+" "" "" " expand" "frequency</a>
+<i> (integer)</i> Setting for anti-cycling mechanism</h4><p>
+
+This option is part of anti-cycling procedure designed to guarantee progress
+even on highly degenerate problems.
+For linear models, the strategy is to force a positive step at every iteration,
+at the expense of violating the bounds on the variables by a small
+amount. Suppose the specified feasibility tolerance is <i>delta</i>. Over a period of
+<i>i</i> iterations, the tolerance actually used by GAMS/MINOS increases from
+<i>0.5*delta</i> to  <i>delta</i> (in steps <i>0.5*delta/i</i>).
+For nonlinear models, the same procedure is used for iterations in which
+there is only one superbasic variable. (Cycling can occur only when the
+current solution is at a vertex of the feasible region.) Thus, zero steps
+are allowed if there is more than one superbasic variable, but otherwise
+positive steps are enforced.
+Increasing <i>i</i> helps reduce the number of slightly infeasible nonbasic basic
+variables (most of which are eliminated during a resetting procedure).
+However, it also diminishes the freedom to choose a large pivot element
+(see Pivot tolerance).
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="MINOSfactorization_frequency">
+" "" "" " factorization" "frequency</a>
+<i> (integer)</i> Number of iterations between basis factorizations</h4><p>
+
+At most <i>i</i> basis changes will occur between factorizations of the basis
+matrix.
+With linear programs, the basis factors are usually updated every iteration.
+The default <i>i</i> is reasonable for typical problems. Higher values up to
+<i>i = 100</i> (say) may be more efficient on problems that are extremely sparse
+and well scaled.
+When the objective function is nonlinear, fewer basis updates will occur as
+an optimum is approached. The number of iterations between basis factorizations
+will therefore increase. During these iterations a test is made
+regularly (according to the Check frequency) to ensure that the general
+constraints are satisfied. If necessary the basis will be re-factorized before
+the limit of <i>i</i> updates is reached.
+When the constraints are nonlinear, the Minor iterations limit will probably
+preempt <i>i</i>.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="MINOSfeasibility_tolerance">
+" "" "" " feasibility" "tolerance</a>
+<i> (real)</i> Feasibility tolerance for linear equations</h4><p>
+
+When the constraints are linear, a feasible solution is one in which all
+variables, including slacks, satisfy their upper and lower bounds to within
+the absolute tolerance <i>r</i>. (Since slacks are included, this means that the
+general linear constraints are also satisfied within <i>r</i>.)
+GAMS/MINOS attempts to find a feasible solution before optimizing the
+objective function. If the sum of infeasibilities cannot be reduced to zero,
+the problem is declared infeasible. Let <i>SINF</i> be the corresponding sum
+of infeasibilities. If <i>SINF</i> is quite small, it may be appropriate to raise
+<i>r</i> by a factor of 10 or 100. Otherwise, some error in the data should be
+suspected.
+If <i>SINF</i> is not small, there may be other points that have a significantly
+smaller sum of infeasibilities. GAMS/MINOS does not attempt to find a
+solution that minimizes the sum.
+If <i>Scale option</i> = 1 or 2, feasibility is defined in terms of the scaled problem
+(since it is then more likely to be meaningful).
+A nonlinear objective function <i>F(x)</i> will be evaluated only at feasible
+points. If there are regions where <i>F(x)</i> is undefined, every attempt should
+be made to eliminate these regions from the problem. For example, for a
+function <i>F(x) = sqrt(x1)+log(x2)</i>, it should be essential to place lower bounds
+on both variables. If <i>Feasibility tolerance = 10<sup>-6</sup></i>, the bounds <i>x<sub>1</sub> > 10<sup>-5</sup></i>
+and <i>x<sub>2</sub> > 10<sup>-4</sup></i> might be appropriate. (The log singularity is more serious;
+in general, keep variables as far away from singularities as possible.)
+If the constraints are nonlinear, the above comments apply to each major
+iteration. A feasible solution satisfies the current linearization of the constraints
+to within the tolerance <i>r</i>. The associated subproblem is said to
+be feasible.
+As for the objective function, bounds should be used to keep <i>x</i> more than
+<i>r</i> away from singularities in the constraint functions <i>f(x)</i>.
+At the start of major iteration <i>k</i>, the constraint functions <i>f(x<sub>k</sub>)</i> are evaluated
+at a certain point <i>x<sub>k</sub></i>. This point always satisfies the relevant bounds
+(<i>l < x<sub>k</sub> < u</i>), but may not satisfy the general linear constraints.
+During the associated minor iterations, <i>F(x)</i> and <i>f(x)</i> will be evaluated
+only at points <i>x</i> that satisfy the bound and the general linear constraints
+(as well as the linearized nonlinear constraints).
+If a subproblem is infeasible, the bounds on the linearized constraints are
+relaxed temporarily, in several stages.
+Feasibility with respect to the nonlinear constraints themselves is measured
+against the Row tolerance (not against <i>r</i>). The relevant test is made
+at the start of a major iteration.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="MINOShessian_dimension">
+" "" "" " hessian" "dimension</a>
+<i> (integer)</i> Size of Hessian matrix</h4><p>
+
+This specifies than an <i>r*r</i> triangular matrix <i>R</i> is to be available for use by
+the quasi-Newton algorithm (to approximate the reduced Hessian matrix
+according to <i>Z<sup>T</sup>HZ approx. R<sup>T</sup>R</i>). Suppose there are <i>s</i> superbasic variables at
+a particular iteration. Whenever possible, <i>r</i> should be greater than <i>s</i>.
+If <i>r > s</i>, the first <i>s</i> columns of <i>R</i> will be used to approximate the reduced
+Hessian in the normal manner. If there are no further changes to the set of
+superbasic variables, the rate of convergence will ultimately be superlinear.
+If <i>r < s</i>, a matrix of the form,
+<blockquote><i>R = diag(R<sub>r</sub>, D)</i></blockquote>
+will be used to approximate the reduced Hessian, where <i>R<sub>r</sub></i> is an <i>r * r</i>
+upper triangular matrix and <i>D</i> is a diagonal matrix of order <i>s - r</i>. The
+rate of convergence will no longer be superlinear (and may be arbitrarily
+slow).
+The storage required if of the order <i>sqr(r)/2</i>, which is substantial if <i>r</i> is as
+large as 200 (say). In general, <i>r</i> should be slight over-estimate of the final
+number of superbasic variables, whenever storage permits. It need not be
+larger than <i>n<sub>1</sub> + 1</i>, where <i>n<sub>1</sub></i> is the number of nonlinear variables. For
+many problems it can be much smaller than <i>n<sub>1</sub></i>.
+If <i>Superbasics limit s</i> is specified, the default value of <i>r</i> is the same number,
+<i>s</i> (and conversely). This is a safeguard to ensure super-linear convergence
+wherever possible. If neither <i>r</i> nor <i>s</i> is specified, GAMS chooses values
+for both, using certain characteristics of the problem.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MINOSiterations_limit">
+" "" "" " iterations" "limit</a>
+<i> (integer)</i> Minor iteration limit</h4><p>
+
+This is maximum number of minor iterations allowed (i.e., iterations of
+the simplex method or the reduced-gradient method). This option, if set,
+overrides the GAMS <i>ITERLIM</i> specification. If <i>i = 0</i>, no minor iterations
+are performed, but the starting point is tested for both feasibility and
+optimality. Iters or Itns are alternative keywords.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="MINOSlagrangian">
+" "" "" " lagrangian</a>
+<i> (string)</i> Determines form of objection function in the linearized subproblems</h4><p>
+
+This determines the form of the objective function used for the linearized
+subproblems. The default value <i>yes</i> is highly recommended. The <i>Penalty
+parameter</i> value is then also relevant. If <i>No</i> is specified, the nonlinear constraint
+functions will be evaluated only twice per major iteration. Hence
+this option may be useful if the nonlinear constraints are very expensive
+to evaluate. However, in general there is a great risk that convergence
+may not occur.
+
+<br><i>(default = YES)</i>
+<table>
+<tr valign="top"><td width=20 align=right>NO</td><td>Nondefault value (not recommended)</td></tr>
+<tr valign="top"><td width=20 align=right>YES</td><td>Default value (recommended)</td></tr>
+</table>
+
+<h4><a name="MINOSlinesearch_tolerance">
+" "" "" " linesearch" "tolerance</a>
+<i> (real)</i> Accuracy required for steplength</h4><p>
+
+For nonlinear problems, this controls the accuracy with which a steplength
+<i>alpha</i> is located in the one-dimensional problem
+<blockquote>
+minimize <i>F(x+alpha*p)</i><br>
+subject to <i>0 < alpha <= beta</i>
+</blockquote>
+A linesearch occurs on most minor iterations for which <i>x</i> is feasible. (If the
+constraints are nonlinear, the function being minimized is the augmented
+Lagrangian.)
+<i>r</i> must be a real value in the range <i>0.0 < r < 1.0</i>.
+The default value <i>r = 0.1</i> requests a moderately accurate search. It should
+be satisfactory in most cases.
+If the nonlinear functions are cheap to evaluate, a more accurate search
+may be appropriate: try <i>r = 0.01</i> or <i>r = 0.001</i>. The number of iterations
+should decrease, and this will reduce total run time if there are many linear
+or nonlinear constraints.
+If the nonlinear function are expensive to evaluate, a less accurate search
+may be appropriate; try <i>r = 0.5</i> or perhaps <i>r = 0.9</i>. (The number of iterations
+will probably increase but the total number of function evaluations
+may decrease enough to compensate.)
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="MINOSlog_frequency">
+" "" "" " log" "frequency</a>
+<i> (integer)</i> Number of iterations between each log line (listing file)</h4><p>
+
+In general, one line of the iteration log is printed every <i>i</i><sup>th</sup> minor iteration.
+A heading labels the printed items, which include the current iteration
+number, the number and sum of feasibilities (if any), the subproblem
+objective value (if feasible), and the number of evaluations of the nonlinear
+functions.
+A value such as <i>i = 10, 100</i> or larger is suggested for those interested only
+in the final solution.
+<i>Log frequency 0</i> may be used as shorthand for <i>Log frequency 99999</i>.
+If <i>Print level > 0</i>, the default value of <i>i</i> is 1. If <i>Print level = 0</i>, the default
+value of <i>i</i> is 100. If <i>Print level = 0</i> and the constraints are nonlinear,
+the minor iteration log is not printed (and the <i>Log frequency</i> is ignored).
+Instead, one line is printed at the beginning of each major iteration.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="MINOSLU_complete_pivoting">
+" "" "" " LU" "complete" "pivoting</a>
+<i> (string)</i> LUSOL pivoting strategy</h4><p>
+
+The LUSOL factorization implements a Markowitz-style search for pivots that locally
+minimize fill-in subject to a threshold pivoting stability criterion. The <i>rook</i> and
+<i>complete pivoting</i> options are more expensive than <i>partial pivoting</i> but are more
+stable and better at revealing rank, as long as the <i>LU factor tolerance</i> is not too
+large (say <i>< 2.0</i>).
+
+
+<h4><a name="MINOSLU_density_tolerance">
+" "" "" " LU" "density" "tolerance</a>
+<i> (real)</i> When to use dense factorization</h4><p>
+
+The density tolerance is used during LUSOL"s basis factorization <i>B=LU</i>.
+Columns of <i>L</i> and rows of <i>U</i> are formed one at the time, and the remaining
+rows and columns of the basis are altered appropriately. At any stage, if the density
+of the remaining matrix exceeds this tolerance, the Markowitz strategy for choosing pivots
+is terminated and the remaining matrix is factored by a dense <i>LU</i> procedure. Raising
+the tolerance towards 1.0 may give slightly sparser factors, with a slight increase in
+factorization time.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="MINOSLU_factor_tolerance">
+" "" "" " LU" "factor" "tolerance</a>
+<i> (real)</i> Trade-off between stability and sparsity in basis factorization</h4><p>
+
+This tolerances affect the stability and sparsity of the basis factorization
+<i>B = LU</i> during factorization. The value <i>r</i> specified must satisfy <i>r >= 1.0</i>.
+<ul>
+<li>The default value <i>r = 100.0</i> usually strikes a good compromise between
+stability and sparsity.</li>
+<li>For large and relatively dense problems, a larger value may give
+a useful improvement in sparsity without impairing stability to a
+serious degree.</li>
+<li>For certain very regular structures (e.g., band matrices) it may be
+necessary to set <i>r</i> to a value smaller than the default
+in order to achieve stability.</li>
+</ul>
+
+<br><i>(default = 100.0)</i>
+
+<h4><a name="MINOSLU_partial_pivoting">
+" "" "" " LU" "partial" "pivoting</a>
+<i> (string)</i> LUSOL pivoting strategy</h4><p>
+
+The LUSOL factorization implements a Markowitz-style search for pivots that locally
+minimize fill-in subject to a threshold pivoting stability criterion. The <i>rook</i> and
+<i>complete pivoting</i> options are more expensive than <i>partial pivoting</i> but are more
+stable and better at revealing rank, as long as the <i>LU factor tolerance</i> is not too
+large (say <i>< 2.0</i>).
+
+
+<h4><a name="MINOSLU_rook_pivoting">
+" "" "" " LU" "rook" "pivoting</a>
+<i> (string)</i> LUSOL pivoting strategy</h4><p>
+
+The LUSOL factorization implements a Markowitz-style search for pivots that locally
+minimize fill-in subject to a threshold pivoting stability criterion. The <i>rook</i> and
+<i>complete pivoting</i> options are more expensive than <i>partial pivoting</i> but are more
+stable and better at revealing rank, as long as the <i>LU factor tolerance</i> is not too
+large (say <i>< 2.0</i>).
+
+
+<h4><a name="MINOSLU_singularity_tolerance">
+" "" "" " LU" "singularity" "tolerance</a>
+<i> (real)</i> Protection against ill-conditioned basis matrices</h4><p>
+
+When the basis is refactorized, the
+diagonal elements of <i>U</i> are tested as follows: if <i>|U<sub>j,j</sub> | <= r</i> or
+<i> |U<sub>j,j</sub>| < r * max<sub>i</sub> |U<sub>j,j</sub>|</i>, the <i>j</i><sup>th</sup> column of the basis is replaced by the corresponding
+slack variable. (This is most likely to occur after a restart,
+or at the start of a major iteration.)
+In some cases, the Jacobian matrix may converge to values that make
+the basis could become very ill-conditioned and the optimization could
+progress very slowly (if at all). Setting <i>r = 1.0<sup>-5</sup></i>, say, may help cause a
+judicious change of basis.
+
+<br><i>(default = 1.0e-11)</i>
+
+<h4><a name="MINOSLU_update_tolerance">
+" "" "" " LU" "update" "tolerance</a>
+<i> (real)</i> Trade-off between stability and sparsity in basis factorization</h4><p>
+
+This tolerances affect the stability and sparsity of the basis factorization
+<i>B = LU</i> during updates. The value <i>r</i> specified must satisfy <i>r >= 1.0</i>.
+<ul>
+<li>The default value <i>r = 10.0</i> usually strikes a good compromise between
+stability and sparsity.</li>
+<li>For large and relatively dense problems, <i>r = 25.0</i> (say) may give
+a useful improvement in sparsity without impairing stability to a
+serious degree.</li>
+<li>For certain very regular structures (e.g., band matrices) it may be
+necessary to set <i>r</i> to a value smaller than the default
+in order to achieve stability.</li>
+</ul>
+
+<br><i>(default = 10.0)</i>
+
+<h4><a name="MINOSmajor_damping_parameter">
+" "" "" " major" "damping" "parameter</a>
+<i> (real)</i> Prevents large relative changes between subproblem solutions</h4><p>
+
+The parameter may assist convergence on problems that have highly nonlinear
+constraints. It is intended to prevent large relative changes between
+subproblem solutions <i>(x<sub>k</sub>, lambda<sub>k</sub>)</i> and <i>(x<sub>k+1</sub>, lambda<sub>k+1</sub>)</i>. For example, the default
+value 2.0 prevents the relative change in either <i>x<sub>k</sub></i> or <i>lambda<sub>k</sub></i> from exceeding
+200 percent. It will not be active on well behaved problems.
+The parameter is used to interpolate between the solutions at the beginning
+and end of each major iteration. Thus <i>x<sub>k+1</sub></i> and <i>lambda<sub>k+1</sub></i> are changed
+to <i>x<sub>k</sub> + sigma*(x<sub>k+1</sub> - x<sub>k</sub>)</i> and <i>lambda<sub>k</sub> + sigma*(lambda<sub>k+1</sub> - lambda<sub>k</sub>)</i> for some step-length <i>sigma < 1</i>.
+In the case of nonlinear equation (where the number of constraints is the
+same as the number of variables) this gives a damped Newton method.
+This is very crude control. If the sequence of major iterations does not
+appear to be converging, one should first re-run the problem with a higher
+Penalty parameter (say 10 or 100 times the default <i>rho</i>). (Skip this re-run
+in the case of nonlinear equations: there are no degrees of freedom and
+the value of <i>rho</i> is irrelevant.)
+If the subproblem solutions continue to change violently, try reducing <i>r</i> to
+0.2 or 0.1 (say).
+For implementation reason, the shortened step to <i>sigma</i> applies to the nonlinear
+variables <i>x</i>, but not to the linear variables <i>y</i> or the slack variables <i>s</i>.
+This may reduce the efficiency of the control.
+
+<br><i>(default = 2.0)</i>
+
+<h4><a name="MINOSmajor_iterations">
+" "" "" " major" "iterations</a>
+<i> (integer)</i> Max number of major iterations</h4><p>
+
+This is maximum number of major iterations allowed. It is intended to
+guard against an excessive number of linearizations of the nonlinear constraints,
+since in some cases the sequence of major iterations my not converge.
+The progress of the major iterations can be best monitored using
+<i>Print level 0</i> (the default).
+
+<br><i>(default = 50)</i>
+
+<h4><a name="MINOSminor_damping_parameter">
+" "" "" " minor" "damping" "parameter</a>
+<i> (real)</i> Limit change in x during linesearch</h4><p>
+
+This parameter limits the change in <i>x</i> during a linesearch. It applies to
+all nonlinear problems, once a feasible solution or feasible subproblem has
+been found.
+A linesearch of the form
+<blockquote><i>
+minimize<sub>alpha</sub> F(x + alpha*p)
+</i></blockquote>
+is performed over the range <i>0 < alpha <= beta</i>, where <i>beta</i> is the step to the nearest
+upper or lower bound on <i>x</i>. Normally, the first step length tried is <i>a<sub>1</sub> =
+min(1, beta)</i>.
+In some cases, such as <i>F(x) = ae<sup>bx</sup></i> or <i>F(x) = ax<sup>b</sup></i>, even a moderate
+change in the components of <i>r</i> can lean to floating-point overflow. The
+parameter <i>r</i> is therefore used to define a limit
+<blockquote><i>
+beta" = r(1 + ||x||)/||p||
+</i></blockquote>
+and the first evaluation of <i>F(x)</i> is at the potentially smaller steplength
+<i>alpha<sub>1</sub> = min(1, beta, beta")</i>.
+Wherever possible, upper and lower bounds on <i>x</i> should be used to prevent
+evaluation of nonlinear functions at meaningless points. The <i>Minor
+damping parameter</i> provides an additional safeguard. The default value
+<i>r = 2.0</i> should not affect progress on well behaved problems, but setting
+<i>r = 0.1</i> or <i>0.01</i> may be helpful when rapidly varying function are present.
+A good starting point may be required. An important application is to
+the class of nonlinear least squares problems.
+In case where several local optima exist, specifying a small value for <i>r</i> may
+help locate an optima near the starting point.
+
+<br><i>(default = 2.0)</i>
+
+<h4><a name="MINOSminor_iterations">
+" "" "" " minor" "iterations</a>
+<i> (integer)</i> Max number of minor iterations between linearizations of nonlinear constraints</h4><p>
+
+This is the maximum number of feasible minor iterations allowed between
+successive linearizations of the nonlinear constraints. A moderate value
+(e.g., <i>20 <= i <= 50</i>) prevents excessive efforts being expended on early major
+iterations, but allows later subproblems to be solved to completion.
+The limit applies to both infeasible and feasible iterations. In some cases,
+a large number of iterations, (say <i>K</i>) might be required to obtain a feasible
+subproblem. If good starting values are supplied for variables appearing
+nonlinearly in the constraints, it may be sensible to specify <i> > K</i>, to allow
+the first major iteration to terminate at a feasible (and perhaps optimal)
+subproblem solution. (If a good initial subproblem is arbitrarily interrupted
+by a small ith subsequent linearization may be less favorable than
+the first.) In general it is unsafe to specify value as small as <i>i = 1</i> or <i>2</i> even
+when an optimal solution has been reached, a few minor iterations may
+be needed for the corresponding subproblem to be recognized as optimal.
+The <i>Iteration limit</i> provides an independent limit on the total minor iterations
+(across all subproblems).
+If the constraints are linear, only the <i>Iteration limit</i> applies: the minor
+iterations value is ignored.
+
+<br><i>(default = 40)</i>
+
+<h4><a name="MINOSmultiple_price">
+" "" "" " multiple" "price</a>
+<i> (integer)</i> Multiple pricing</h4><p>
+
+Pricing refers to a scan of the current non-basic variables to determine
+if any should be changed from their value (by allowing them to become
+superbasic or basic).
+If multiple pricing in effect, the <i>i</i> best non-basic variables are selected for
+admission of appropriate sign If partial pricing is also in effect, the best
+<i>i</i> best variables are selected from the current partition of A and I.
+The default <i>i = 1</i> is best for linear programs, since an optimal solution will
+have zero superbasic variables. Warning : If <i>i > 1</i>, GAMS/MINOS will use
+the reduced-gradient method (rather than the simplex method) even on
+purely linear problems. The subsequent iterations do not correspond to the
+efficient minor iterations carried out be commercial linear programming
+system using multiple pricing. (In the latter systems, the classical simplex
+method is applied to a tableau involving <i>i</i> dense columns of dimension
+<i>m</i>, and <i>i</i> is therefore limited for storage reasons typically to the range
+<i>2 <= i <= 7</i>.)
+GAMS/MINOS varies all superbasic variables simultaneously. For linear
+problems its storage requirements are essentially independent of <i>i</i>. Larger
+values of <i>i</i> are therefore practical, but in general the iterations and time
+required when <i>i > 1</i> are greater than when the simplex method is used
+(<i>i = 1</i>) .
+On large nonlinear problems it may be important to set <i>i > 1</i> if the
+starting point does not contain many superbasic variables. For example,
+if a problem has 3000 variables and 500 of them are nonlinear, the optimal
+solution may well have 200 variables superbasic. If the problem is solved
+in several runs, it may be beneficial to use <i>i = 10</i> (say) for early runs,
+until it seems that the number of superbasics has leveled off.
+If <i>Multiple price i</i> is specified, it is also necessary to specify <i>Superbasic
+limit s</i> for some <i>s > i</i>.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MINOSoptimality_tolerance">
+" "" "" " optimality" "tolerance</a>
+<i> (real)</i> Reduced gradient optimality check</h4><p>
+
+This is used to judge the size of the reduced gradients <i>d<sub>j</sub> = g<sub>j</sub> - pi<sup>T</sup> a<sub>j</sub></i>,
+where <i>g<sub>j</sub></i> is the gradient of the objective function corresponding to the <i>j</i><sup>th</sup>
+variable. <i>a<sub>j</sub></i> is the associated column of the constraint matrix (or Jacobian),
+and <i>pi</i> is the set of dual variables.
+By construction, the reduced gradients for basic variables are always zero.
+Optimality will be declared if the reduced gradients for nonbasic variables
+at their lower or upper bounds satisfy <i>d<sub>j</sub>/||pi|| >= -r</i> or <i>d<sub>j</sub>/||pi|| <= r</i> respectively,
+and if <i>d<sub>j</sub>/||pi|| <= r</i> for superbasic variables.
+In the <i>||pi||</i> is a measure of the size of the dual variables. It is included to
+make the tests independents of a scale factor on the objective function.
+The quantity actually used is defined by
+<blockquote>
+<i>sigma = sum(i, abs(pi(i))), ||pi|| = max{sigma/sqrt(m),1}</i>
+</blockquote>
+so that only large scale factors are allowed for.
+If the objective is scaled down to be small, the optimality test effectively
+reduced to comparing <i>D<sub>j</sub></i> against the tolerance <i>r</i>.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="MINOSpartial_price">
+" "" "" " partial" "price</a>
+<i> (integer)</i> Number of segments in partial pricing strategy</h4><p>
+
+This parameter is recommended for large problems that have significantly
+more variables than constraints. It reduces the work required for each
+pricing operation (when a nonbasic variable is selected to become basic or
+superbasic).
+When <i>i = 1</i>, all columns of the constraints matrix <i>(A I)</i> are searched.
+Otherwise, <i>A<sub>j</sub></i> and <i>I</i> are partitioned to give <i>i</i> roughly equal segments <i>A<sub>j</sub></i>, <i>I<sub>j</sub></i>
+(<i>j = 1</i> to <i>i</i>). If the previous search was successful on <i>A<sub>j-1</sub></i>, <i>I<sub>j-1</sub></i>, the
+next search begins on the segments <i>A<sub>j</sub></i>, <i>I<sub>j</sub></i>. (All subscripts here are modulo
+<i>i</i>.)
+If a reduced gradient is found that is large than some dynamic tolerance,
+the variable with the largest such reduced gradient (of appropriate sign) is
+selected to become superbasic. (Several may be selected if multiple pricing
+has been specified.) If nothing is found, the search continues on the next
+segments <i>A<sub>j+1</sub></i>, <i>I<sub>j+1</sub></i> and so on.
+<i>Partial price t</i> (or <i>t/2</i> or <i>t/3</i>) may be appropriate for time-stage models
+having <i>t</i> time periods
+
+<br><i>(default = 10)</i>
+
+<h4><a name="MINOSpenalty_parameter">
+" "" "" " penalty" "parameter</a>
+<i> (real)</i> Used in modified augmented Lagrangian</h4><p>
+
+This specifies the value of <i>rho</i> in the modified augmented Lagrangian. It is
+used only when <i>Lagrangian = yes</i> (the default setting).
+For early runs on a problem is known to be unknown characteristics, the
+default value should be acceptable. If the problem is problem is known
+to be highly nonlinear, specify a large value, such as 10 times the default.
+In general, a positive value of <i>rho</i> may be necessary of known to ensure
+convergence, even for convex programs.
+On the other hand, if <i>rho</i> is too large, the rate of convergence may be
+unnecessarily slow. If the functions are not highly nonlinear or a good
+starting point is known, it will often be safe to specify penalty parameter
+0.0.
+Initially, use a moderate value for <i>r</i> (such as the default) and a reasonably
+low <i>Iterations</i> and/or <i>major iterations limit</i>. If successive major iterations
+appear to be terminating with radically different solutions, the <i>penalty
+parameter</i> should be increased. (See also the <i>Major damping parameter</i>.)
+If there appears to be little progress between major iteration, it may help
+to reduce the <i>penalty parameter</i>.
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="MINOSprint_level">
+" "" "" " print" "level</a>
+<i> (integer)</i> Amount of information printed during optimization</h4><p>
+
+This varies the amount of information that will be output during optimization.
+<i>Print level 0</i> sets the default Log and summary frequencies to 100. It is
+then easy to monitor the progress of run.
+<i>Print level 1</i> (or more) sets the default Log and summary frequencies to
+1, giving a line of output for every minor iteration. <i>Print level 1</i> also produces
+basis statistics, i.e., information relating to LU factors of the basis
+matrix whenever the basis is re-factorized.
+For problems with nonlinear constraints, certain quantities are printed at
+the start of each major iteration. The value of is best thought of as a
+binary number of the form
+<blockquote>
+  <i>Print level</i> <tt>JFLXB</tt>
+</blockquote>
+where each letter stand for a digit that is either 0 or 1. The quantities
+referred to are:
+<ul>
+<li><b>B</b> Basis statistics, as mentioned above</li>
+<li><b>X</b> <i>x<sub>k</sub></i>, the nonlinear variables involved in the objective function or the
+constraints.</li>
+<li><b>L</b> <i>lambda<sub>k</sub></i>, the Lagrange-multiplier estimates for the nonlinear constraints.
+(Suppressed if <i>Lagrangian=No</i>, since then  <i>lambda<sub>k</sub> = 0</i>.)
+<li><b>F</b> <i>f(x<sub>k</sub>)</i>, the values of the nonlinear constraint functions.
+<li><b>J</b> <i>J(x<sub>k</sub>)</i>, the Jacobian matrix.
+</ul>
+To obtain output of any item, set the corresponding digit to 1, otherwise
+to 0. For example, <i>Print level 10</i> sets <tt>X = 1</tt> and the other digits equal to
+zero; the nonlinear variables will be printed each major iteration.
+If <tt>J = 1</tt>, the Jacobian matrix will be output column-wise at the start
+of each major iteration. Column <i>j</i> will be preceded by the value of the
+corresponding variable <i>x<sub>j</sub></i> and a key to indicate whether the variable is
+basic, superbasic or nonbasic. (Hence if <tt>J = 1</tt>, there is no reason to
+specify <tt>X = 1</tt> unless the objective contains more nonlinear variables than
+the Jacobian.) A typical line of output is
+<blockquote>
+  <tt>3 1.250000D+01 BS 1 1.00000D+00 4 2.00000D+00</tt>
+</blockquote>
+which would mean that <i>x<sub>3</sub></i> is basic at value 12.5, and the third column
+of the Jacobian has elements of 1.0 and 2.0 in rows 1 and 4. (Note:
+the GAMS/MINOS row numbers are usually different from the GAMS row
+numbers; see the Solution option.)
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MINOSradius_of_convergence">
+" "" "" " radius" "of" "convergence</a>
+<i> (real)</i> Determines reduction the penalty parameter</h4><p>
+
+This determines when the penalty parameter <i>rho</i> will be reduced (if initialized
+to a positive value). Both the nonlinear constraint violation (see
+<i>ROWERR</i> below) and the relative change in consecutive Lagrange multiplier
+estimate must be less than <i>r</i> at the start of a major iteration before
+<i>rho</i> is reduced or set to zero.
+A few major iterations later, full completion will be requested if not already
+set, and the remaining sequence of major iterations should converge
+quadratically to an optimum.
+
+<br><i>(default = 0.01)</i>
+
+<h4><a name="MINOSrow_tolerance">
+" "" "" " row" "tolerance</a>
+<i> (real)</i> Accuracy requirements for nonlinear rows</h4><p>
+
+This specifies how accurately the nonlinear constraints should be satisfied
+at a solution. The default value is usually small enough, since model data
+is often specified to about that an accuracy.
+Let <i>ROWERR</i> be the maximum component of the residual vector <i>f(x) +
+A<sub>1</sub>y - b<sub>1</sub></i>, normalized by the size of the solution. Thus
+<blockquote>
+<i>ROWERR = ||f(x) + A<sub>1</sub>y - b<sub>1</sub>||<sub>inf</sub>/(1 + XNORM)</i>
+</blockquote>
+where <i>XNORM</i> is a measure of the size of the current solution <i>(x, y)</i>. The
+solution is regarded acceptably feasible if <i>ROWERR <= r</i>.
+If the problem functions involve data that is known to be of low accuracy,
+a larger <i>Row tolerance</i> may be appropriate.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="MINOSscale_all_variables">
+" "" "" " scale" "all" "variables</a>
+<i> (string)</i> Synonym to scale option 2</h4><p>
+
+
+
+<h4><a name="MINOSscale_linear_variables">
+" "" "" " scale" "linear" "variables</a>
+<i> (string)</i> Synonym to scale option 1</h4><p>
+
+
+
+<h4><a name="MINOSscale_no">
+" "" "" " scale" "no</a>
+<i> (string)</i> Synonym to scale option 0</h4><p>
+
+
+
+<h4><a name="MINOSscale_nonlinear_variables">
+" "" "" " scale" "nonlinear" "variables</a>
+<i> (string)</i> Synonym to scale option 2</h4><p>
+
+
+
+<h4><a name="MINOSscale_option">
+" "" "" " scale" "option</a>
+<i> (integer)</i> Scaling</h4><p>
+
+<i>Scale Yes</i> sets the default. (Caution: If all variables are nonlinear, <i>Scale
+Yes</i> unexpectedly does nothing, because there are no linear variables to
+scale). <i>Scale No</i> suppresses scaling (equivalent to <i>Scale Option 0</i>).
+If nonlinear constraints are present, <i>Scale option 1</i> or <i>0</i> should generally be
+rid at first. <i>Scale option 2</i> gives scales that depend on the initial Jacobian,
+and should therefore be used only if (a) good starting point is provided,
+and (b) the problem is not highly nonlinear.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No scaling.
+If storage is at a premium, this option should be used.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Scale linear variables.
+Linear constraints and variables are scaled by an iterative procedure
+that attempts to make the matrix coefficients as close as possible to
+1.0 (see [5]). This will sometimes improve the performance of the
+solution procedures. <i>Scale linear variables</i> is an equivalent option.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Scale linear + nonlinear variables.
+All constraints and variables are scaled by the iterative procedure.
+Also, a certain additional scaling is performed that may be helpful if
+the right-hand side <i>b</i> or the solution <i>x</i> is large. This takes into account
+columns of <i>(A I)</i> that are fixed or have positive lower bounds
+or negative upper bounds. <i>Scale nonlinear variables</i> or <i>Scale all variables</i>
+are equivalent options.</td></tr>
+</table>
+
+<h4><a name="MINOSscale_print">
+" "" "" " scale" "print</a>
+<i> (string)</i> Print scaling factors</h4><p>
+
+This causes the row-scales <i>r(i)</i> and column-scales <i>c(j)</i> to be printed. The
+scaled matrix coefficients are <i>a"<sub>ij</sub> = a<sub>ij</sub>c(j)/r(i)</i>, and the scaled bounds
+on the variables, and slacks are <i>l"<sub>j</sub> = l<sub>j</sub>/c(j), u"<sub>j</sub> = u<sub>j</sub>/c(j)</i>, where <i>c(j) =
+r(j - n)</i> if <i>j > n</i>.
+If a Scale option has not already been specified, <i>Scale print</i> sets the default
+scaling.
+
+
+<h4><a name="MINOSscale_print_tolerance">
+" "" "" " scale" "print" "tolerance</a>
+<i> (real)</i> Scale print flag and set tolerance</h4><p>
+
+See <i>Scale Tolerance</i>. This option also turns on printing of the scale factors.
+
+<br><i>(default = 0.9)</i>
+
+<h4><a name="MINOSscale_tolerance">
+" "" "" " scale" "tolerance</a>
+<i> (real)</i> Scale tolerance</h4><p>
+
+All forms except <i>Scale option</i> may specify a tolerance <i>r</i> where <i>0 < r < 1</i>
+(for example: <i>Scale Print Tolerance = 0.99</i>). This affects how many
+passes might be needed through the constraint matrix. On each pass, the
+scaling procedure computes the ration of the largest and smallest nonzero
+coefficients in each column:
+<blockquote>
+<i>rho<sub>j</sub> = max<sub>i</sub> |a<sub>ij</sub>|/min<sub>i</sub> |a<sub>ij</sub>| (a<sub>ij</sub> &ne; 0) </i>
+</blockquote>
+If <i>max<sub>j</sub> rho<sub>j</sub></i> is less than <i>r</i> times its previous value, another scaling pass is
+performed to adjust the row and column scales. Raising <i>r</i> from 0.9 to 0.99
+(say) usually increases the number of scaling passes through <i>A</i>. At most
+10 passes are made.
+If a <i>Scale option</i> has not already been specified, <i>Scale tolerance</i> sets the
+default scaling.
+
+<br><i>(default = 0.9)</i>
+
+<h4><a name="MINOSscale_yes">
+" "" "" " scale" "yes</a>
+<i> (string)</i> Synonym to scale option 1</h4><p>
+
+
+
+<h4><a name="MINOSsolution">
+" "" "" " solution</a>
+<i> (string)</i> Prints MINOS solution</h4><p>
+
+This controls whether or not GAMS/MINOS prints the final solution obtained.
+There is one line of output for each constraint and variable. The
+lines are in the same order as in the GAMS solution, but the constraints
+and variables labeled with internal GAMS/MINOS numbers rather than
+GAMS names. (The numbers at the left of each line are GAMS/MINOS
+column numbers, and those at the right of each line in the rows section
+are GAMS/MINOS slacks.)
+The GAMS/MINOS solution may be useful occasionally to interpret certain
+messages that occur during the optimization, and to determine the
+final status of certain variables (basic, superbasic or nonbasic).
+
+<br><i>(default = NO)</i>
+<table>
+<tr valign="top"><td width=20 align=right>NO</td><td>Turn off printing of solution</td></tr>
+<tr valign="top"><td width=20 align=right>YES</td><td>Turn on printing of solution</td></tr>
+</table>
+
+<h4><a name="MINOSstart_assigned_nonlinears">
+" "" "" " start" "assigned" "nonlinears</a>
+<i> (string)</i> Starting strategy when there is no basis</h4><p>
+
+This option affects the starting strategy when there is no basis (i.e., for
+the first solve or when the GAMS statement <i>option bratio = 1</i> is used
+to reject an existing basis.)
+This option applies to all nonlinear variables that have been assigned nondefault
+initial values and are strictly between their bounds. Free variables
+at their default value of zero are excluded. Let <i>K</i> denote the number of
+such assigned nonlinear variables.
+
+<br><i>(default = SUPERBASIC)</i>
+<table>
+<tr valign="top"><td width=20 align=right>SUPERBASIC</td><td>Default.
+Specify <i>superbasic</i> for highly nonlinear models, as long as <i>K</i> is not
+too large (say <i>K < 100</i>) and the initial values are good.</td></tr>
+<tr valign="top"><td width=20 align=right>BASIC</td><td>Good for square systems.
+Specify <i>basic</i> for models that are essentially square (i.e., if there are
+about as many general constraints as variables).</td></tr>
+<tr valign="top"><td width=20 align=right>NONBASIC</td><td>.
+Specify <i>nonbasic</i> if <i>K</i> is large.</td></tr>
+<tr valign="top"><td width=20 align=right>ELIGIBLE FOR CRASH</td><td>.
+Specify <i>Eligible for Crash</i> for linear or nearly linear models. The
+nonlinear variables will be treated in the manner described under
+<i>Crash</i> option.</td></tr>
+</table>
+
+<h4><a name="MINOSsubspace_tolerance">
+" "" "" " subspace" "tolerance</a>
+<i> (real)</i> Determines when nonbasics becomes superbasic</h4><p>
+
+This controls the extent to which optimization is confined to the current
+set of basic and superbasic variables (Phase 4 iterations), before one or
+more nonbasic variables are added to the superbasic set (Phase 3).
+The parameter <i>r</i> must be a real number in the range <i>0 < r <= 1</i>.
+When a nonbasic variables <i>x<sub>j</sub></i> is made superbasic, the resulting norm of
+the reduced-gradient vector (for all superbasics) is recorded. Let this be
+<i>||Z<sup>T</sup> g<sub>0</sub>||</i>. (In fact, the norm will be <i>|d<sub>j</sub>|</i> , the size of the reduced gradient
+for the new superbasic variable <i>x<sub>j</sub></i>.
+Subsequent Phase 4 iterations will continue at least until the norm of the
+reduced-gradient vector satisfies <i>||Z<sup>T</sup> g<sub>0</sub>|| <= r||Z<sup>T</sup> g<sub>0</sub>||</i> is the size of the
+largest reduced-gradient component among the superbasic variables.)
+A smaller value of <i>r</i> is likely to increase the total number of iterations,
+but may reduce the number of basic changes. A larger value such as
+<i>r = 0.9</i> may sometimes lead to improved overall efficiency, if the number
+of superbasic variables has to increase substantially between the starting
+point and an optimal solution.
+Other convergence tests on the change in the function being minimized
+and the change in the variables may prolong Phase 4 iterations. This helps
+to make the overall performance insensitive to larger values of <i>r</i>.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="MINOSsummary_frequency">
+" "" "" " summary" "frequency</a>
+<i> (integer)</i> Number of iterations between each log line (log file)</h4><p>
+
+A brief form of the iteration log is output to the summary file. In general,
+one line is output every ith minor iteration. In an interactive environment,
+the output normally appears at the terminal and allows a run to be monitored.
+If something looks wrong, the run can be manually terminated.
+The Summary frequency controls summary output in the same as the log
+frequency controls output to the print file.
+A value such as <i>Summary Frequency = 10</i> or <i>100</i> is often adequate to determine if the SOLVE
+is making progress. If <i>Print level = 0</i>, the default value of <i>Summary Frequency</i> is 100. If
+<i>Print level > 0</i>, the default value of <i>Summary Frequency</i> is 1. If <i>Print level = 0</i> and the
+constraints are nonlinear, the <i>Summary Frequency</i> is ignored. Instead, one
+line is printed at the beginning of each major iteration.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="MINOSsuperbasics_limit">
+" "" "" " superbasics" "limit</a>
+<i> (integer)</i> Maximum number of superbasics</h4><p>
+
+This places a limit on the storage allocated for superbasic variables. Ideally,
+the parameter <i>i</i> should be set slightly larger than the number of degrees of freedom
+expected at an optimal solution.
+For linear problems, an optimum is normally a basic solution with no degrees
+of freedom. (The number of variables lying strictly between their
+bounds is not more than <i>m</i>, the number of general constraints.) The default
+value of <i>i</i> is therefore 1.
+For nonlinear problems, the number of degrees of freedom is often called
+the number of independent variables.
+Normally, <i>i</i> need not be greater than <i>n<sub>1</sub> + 1</i>, where <i>n<sub>1</sub></i> is the number of
+nonlinear variables.
+For many problems, <i>i</i> may be considerably smaller than <i>n<sub>1</sub></i>. This will save
+storage if <i>n<sub>1</sub></i> is very large.
+This parameter also sets the Hessian dimension, unless the latter is specified
+explicitly (and conversely). If neither parameter is specified, GAMS
+chooses values for both, using certain characteristics of the problem.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MINOSunbounded_objective_value">
+" "" "" " unbounded" "objective" "value</a>
+<i> (real)</i> Determines when a problem is called unbounded</h4><p>
+
+This parameter is intended to detect unboundedness in nonlinear problems.
+During a line search of the form
+<blockquote><i>
+minimize<sub>alpha</sub> F(x + alpha*p)
+</i></blockquote>
+If <i>|F|</i> exceeds the parameter <i>r</i> or if <i>alpha</i> exceeds the <i>unbounded stepsize</i>,
+iterations are terminated with the exit message <tt>PROBLEM IS UNBOUNDED (OR BADLY SCALED)</tt>.
+If singularities are present, unboundedness in <i>F(x)</i> may be manifested by
+a floating-point overflow (during the evaluation of <i>F(x + alpha*p)</i>, before the
+test against <i>r</i> can be made.
+Unboundedness is best avoided by placing finite upper and lower
+bounds on the variables. See also the <i>Minor damping parameter</i>.
+
+<br><i>(default = 1.0e20)</i>
+
+<h4><a name="MINOSunbounded_step_size">
+" "" "" " unbounded" "step" "size</a>
+<i> (real)</i> Determines when a problem is called unbounded</h4><p>
+
+This parameter is intended to detect unboundedness in nonlinear problems.
+During a line search of the form
+<blockquote><i>
+minimize<sub>alpha</sub> F(x + alpha*p)
+</i></blockquote>
+If <i>alpha</i> exceeds the parameter <i>r</i> or if <i>|F|</i> exceeds the <i>unbounded objective value</i>,
+iterations are terminated with the exit message <tt>PROBLEM IS UNBOUNDED (OR BADLY SCALED)</tt>.
+If singularities are present, unboundedness in <i>F(x)</i> may be manifested by
+a floating-point overflow (during the evaluation of <i>F(x + alpha*p)</i>, before the
+test against <i>r</i> can be made.
+Unboundedness is best avoided by placing finite upper and lower
+bounds on the variables. See also the <i>Minor damping parameter</i>.
+
+<br><i>(default = 1.0e10)</i>
+
+<h4><a name="MINOSverify_constraint_gradients">
+" "" "" " verify" "constraint" "gradients</a>
+<i> (string)</i> Synonym to verify level 2</h4><p>
+
+
+
+<h4><a name="MINOSverify_gradients">
+" "" "" " verify" "gradients</a>
+<i> (string)</i> Synonym to verify level 3</h4><p>
+
+
+
+<h4><a name="MINOSverify_level">
+" "" "" " verify" "level</a>
+<i> (integer)</i> Verification of gradients</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Cheap test</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Check objective</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Check Jacobian</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Check objective and Jacobian</td></tr>
+<tr valign="top"><td width=20 align=right>-1</td><td>No check</td></tr>
+</table>
+
+<h4><a name="MINOSverify_no">
+" "" "" " verify" "no</a>
+<i> (string)</i> Synonym to verify level 0</h4><p>
+
+
+
+<h4><a name="MINOSverify_objective_gradients">
+" "" "" " verify" "objective" "gradients</a>
+<i> (string)</i> Synonym to verify level 1</h4><p>
+
+
+
+<h4><a name="MINOSverify_yes">
+" "" "" " verify" "yes</a>
+<i> (string)</i> Synonym to verify level 3</h4><p>
+
+
+
+<h4><a name="MINOSweight_on_linear_objective">
+" "" "" " weight" "on" "linear" "objective</a>
+<i> (real)</i> Composite objective weight</h4><p>
+
+The keywords invokes the so-called composite objective technique, if the
+first solution obtained infeasible, and if the objective function contains
+linear terms.
+While trying to reduce the sum of infeasibilities, the method also attempts
+to optimize the linear objective.
+At each infeasible iteration, the objective function is defined to be
+<blockquote><i>
+minimize<sub>x</sub> sigma*w(c<sup>T</sup>x) + (sum of infeasibilities)
+</i></blockquote>
+where <i>sigma = 1</i> for minimization and <i>sigma = -1</i> for maximization and <i>c</i> is the
+linear objective.
+If an optimal solution is reached while still infeasible, <i>w</i> is reduced by
+a factor of 10. This helps to allow for the possibility that the initial <i>w</i>
+is too large. It also provides dynamic allowance for the fact the sum of
+infeasibilities is tending towards zero.
+The effect of <i>w</i> is disabled after five such reductions, or if a feasible solution
+is obtained.
+This option is intended mainly for linear programs. It is unlikely to be
+helpful if the objective function is nonlinear.
+
+<br><i>(default = 0.0)</i>
+</body></html>

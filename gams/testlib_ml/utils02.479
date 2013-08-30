@@ -1,0 +1,40 @@
+$title test MPS2GMS - it had range problems (UTILS02,SEQ=479)
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$onecho > range.mps
+
+* contributed by Erwin Kalvelagen
+
+* min x1
+* x1=-x2
+* 10 <= x2 <= 12
+
+NAME          Error
+ROWS
+ N  obj
+ G  c1
+ E  c2
+COLUMNS
+    x1        obj                  1
+    x1        c2                   1
+    x2        c1                   1
+    x2        c2                   1
+RHS
+    rhs       c1                  10
+RANGES
+    range     c1                   2
+BOUNDS
+ FR bnd       x1
+ENDATA
+$offecho
+
+$echo garbage > range.inc
+$call mps2gms range.mps range.gdx range.inc > %NUL%
+
+$include range.inc
+
+abort$(m.solvestat<>1 or m.modelstat<>1) 'model failed expected 1 1',m.solvestat,m.modelstat;
+
+abort$(obj.l <> -12) 'wrong solution should be -12',obj.l ;

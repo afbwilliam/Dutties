@@ -1,0 +1,71 @@
+$Title Nonlinear Test Problem - Multiple Solutions (MHW4DXX,SEQ=295)
+
+$Ontext
+
+This popular test problem has several local solutions, local minima
+with obj value of 27.87190522 and 52.90257967, and the global minimum
+with an obj value of 0.02931083.  Additional programming is done to
+test for the correct solution.
+
+We call BARON with the appropriate option to get both solution with one solve.
+
+Wright, M H, Numerical Methods for Nonlinearly Constraint Optimization.
+PhD thesis, Stanford University, 1976.
+
+$Offtext
+
+set i /1*5/
+Variables m, x(i);
+Equations funct, eq1, eq2, eq3;
+
+funct.. m =e= sqr(x('1')-1)          + sqr(x('1')-x('2'))     + power(x('2')-x('3'),3)
+            + power(x('3')-x('4'),4) + power(x('4')-x('5'),4) ;
+
+eq1.. x('1') + sqr(x('2')) + power(x('3'),3) =e= 3*sqrt(2) + 2 ;
+
+eq2.. x('2') - sqr(x('3')) + x('4')           =e= 2*sqrt(2) - 2 ;
+
+eq3.. x('1')*x('5') =e= 2 ;
+
+Model wright / all / ;
+
+x.l('1') = -1; x.l('2') = 2; x.l('3') = 1; x.l('4') = -2; x.l('5') = -2;
+
+$if not solver BARON $exit
+option limcol=0,limrow=0,nlp=baron;
+
+* there are at least three locally optimal solutions
+*  52.90257967
+*  27.87190522
+*   0.02931083 global
+
+$onecho > baron.opt
+numsol 3
+isoltol 1
+gdxout mhw4dxx
+$offecho
+
+wright.optfile=1; wright.optca=100;
+Solve wright using nlp minimizing m;
+
+Set solset /mhw4dxx1, mhw4dxx2, mhw4dxx3/
+    asolset(solset) solution found by solver
+Variables mall(solset), xall(solset,i);
+
+execute 'gdxmerge mhw4dxx*.gdx > "%gams.scrdir%merge.%gams.scrext%"';
+execute_load 'merged.gdx', asolset=merged_set_1, mall=m, xall=x;
+
+option decimals=8; display mall.l, xall.l;
+
+$eolcom //
+scalar tol / 1e-4 /;
+
+* Check feasibility of solutions returned by BARON
+loop(asolset,
+   m.l = mall.l(asolset); x.l(i) = xall.l(asolset,i);
+   abort$(abs(m.l - sqr(x.l('1')-1) - sqr(x.l('1')-x.l('2')) - power(x.l('2')-x.l('3'),3)
+                  - power(x.l('3')-x.l('4'),4) - power(x.l('4')-x.l('5'),4)) > tol) 'funct is bad';
+   abort$(abs(x.l('1') + sqr(x.l('2')) + power(x.l('3'),3) - 3*sqrt(2) - 2) > tol) 'e1 is bad';
+   abort$(abs(x.l('2') - sqr(x.l('3')) + x.l('4') - 2*sqrt(2) + 2) > tol) 'e2 is bad';
+   abort$(abs(x.l('1')*x.l('5') - 2) > tol) 'e3 is bad';
+)

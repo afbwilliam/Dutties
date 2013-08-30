@@ -1,0 +1,63 @@
+$title 'ForceError and ForceErrorCnt Example' (ForceError,SEQ=457)
+$ontext
+
+The ForceError function issues specific errors under certain conditions. This can
+be used to test the error reporting and recovery in different environments. Every
+time ForceError is called, the ForceErrorCnt is incremented (each thread has its
+own count, currently cmex has only one mathnew thread).
+
+   ForceError(<expr>,derivreq,trigger,value,returncode,exceptcode)
+      derivreq  0 func, 1 grad, 2 hess checks if funceval request < derivreq
+      trigger   issues errors every trigger number of calls
+      value     sets func,grad,hess return values
+      returncode 0..4
+      exceptcode 0..3
+
+Every issued error resets the ForceErrorCnt to 0
+
+In cmex we can use ForceErrorCnt to reset the internal ForceErrorCnt
+to any number. Setting it to a large negative number will avoid
+errors during model generation.
+
+Using ForceError(<cons>,....) can be used to test model generation with
+any model type.
+
+$offtext
+
+$eolcom !
+sets rc return code / rcOK, rcFunc, rcGrad, rcHess / ! rcSystem will terminate
+     ec except code / ecOK, ecDomain, ecSingular, ecSigloss /
+     dr derivative request / Func, Grad, Hess /
+
+parameter res(dr,rc,ec) error results during execution;
+
+res(dr,rc,ec) = ForceError(5,         ! expression, g=1 h=0
+                           dr.off,    ! process if >= DerivativeRequest
+                           1,         ! process if >= count
+                           9999,      ! value for f,g,h if we process
+                           rc.off,    ! return code
+                           ec.off);   ! exception code
+display res;
+
+variable x;
+equation eres(dr,rc,ec) error results during model generation;
+eres(dr,rc,ec).. ForceError(x,dr.off,1,9999,rc.off,ec.off) =e= 0;
+model m / all /;
+
+m.limrow=1000; m.limcol=1000; x.fx=0;
+
+ExecError=0;         ! reset to avoid solve abort
+ForceErrorCnt=-1000; ! this will not force any errors during generation
+solve m us nlp min x;
+
+scalar fe current forced error count;
+fe=ForceErrorCnt; display fe;
+
+* ForceErrorCnt and ExecError are not preserved accross workfile
+* could/will depend on solvelink values !!
+
+ForceErrorCnt=0; ExecError=0;
+MaxExecError=1000; ! to avaid a gams exit
+option sys12=1;    ! to allow a solve with (generation/exec) errors
+solve m us nlp min x;
+fe=ForceErrorCnt; display fe;

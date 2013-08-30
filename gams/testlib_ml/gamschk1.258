@@ -1,0 +1,8 @@
+$TITLE 'GAMSCHK test suite - basic option reading test' (GAMSCHK1,SEQ=258)
+
+$call gamslib -q 1
+$echo "abort$(transport.modelstat <> %modelstat.Optimal% or transport.solvestat <> %solvestat.NormalCompletion%) 'problems with gamschk option';" >> trnsport.gms
+$echo "lp bdmlp" > gamschk.opt
+$echo "solve"   >> gamschk.opt
+$call =gams trnsport lp=gamschk lo=0 optfile=1
+$if errorlevel 1 $abort 'problems with gamschk options'

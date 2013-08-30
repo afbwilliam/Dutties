@@ -1,0 +1,40 @@
+$title 'Test correctness of vcpower intrinsic' (FNVCPOW,SEQ=181)
+
+* vcpower(x,c) = x**c, c a constant
+$include fnset_xy.inc
+
+$gdxin fnvcpow
+$load aeps reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,  'f')  = vcpower.value(   data(T,'x'),data(T,'y'));
+  data(T, 'fx')  = vcpower.grad(1:  data(T,'x'),data(T,'y'));
+  data(T, 'fy')  = vcpower.grad(2:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')  = vcpower.hess(1:1:data(T,'x'),data(T,'y'));
+  data(T,'fxy')  = vcpower.hess(1:2:data(T,'x'),data(T,'y'));
+  data(T,'fyx')  = vcpower.hess(2:1:data(T,'x'),data(T,'y'));
+  data(T,'fyy')  = vcpower.hess(2:2:data(T,'x'),data(T,'y'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+abort$(execerror lt 10)
+  'Should get execution errors getting grad/hess of x**c, x < 0)';
+execerror = 0;
+
+$ondollar
+* Some systems flush underflow to zero by default.
+* This makes for less accurate results for some derivs if x < 1, c > 1
+$ifi %system.platform% == LEX $set flushunder
+$ifi %system.platform% == SGI $set flushunder
+$ifi %system.platform% == WEX $set flushunder
+$ifi %system.platform% == DII $set flushunder
+
+$if not set flushunder $goto noflushunder
+* cannot do 1e-285, exponent too small!!
+* $if defined aeps aeps = max(aeps,1e-285);
+$if defined aeps aeps = max(aeps,power(10,-285));
+$label noflushunder
+
+$include fntest_xy.inc

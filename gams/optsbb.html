@@ -1,0 +1,306 @@
+<html>
+<head>
+<title>SBB Options</title>
+</head>
+<body>
+<h2>SBB Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/sbb.pdf">SBB manual</a>.
+
+<h2>Summary of SBB Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#SBBacceptnonopt">
+acceptnonopt</a></td>
+<td>accepts feasible solution from subsolver</td></tr>
+<tr><td><a href="#SBBavgresmult">
+avgresmult</a></td>
+<td>average resource multiplicator</td></tr>
+<tr><td><a href="#SBBdfsstay">
+dfsstay</a></td>
+<td>keeps DFS node selection after solution has been found</td></tr>
+<tr><td><a href="#SBBepint">
+epint</a></td>
+<td>integer feasibility tolerance</td></tr>
+<tr><td><a href="#SBBfailseq">
+failseq</a></td>
+<td>solver sequence for failed nodes</td></tr>
+<tr><td><a href="#SBBinfeasseq">
+infeasseq</a></td>
+<td>solver sequence for infeasible nodes</td></tr>
+<tr><td><a href="#SBBintsollim">
+intsollim</a></td>
+<td>maximum number of integer solutions</td></tr>
+<tr><td><a href="#SBBloginterval">
+loginterval</a></td>
+<td>progress display interval</td></tr>
+<tr><td><a href="#SBBloglevel">
+loglevel</a></td>
+<td>level of solver display</td></tr>
+<tr><td><a href="#SBBmemnodes">
+memnodes</a></td>
+<td>maximum number of nodes in memory</td></tr>
+<tr><td><a href="#SBBnodesel">
+nodesel</a></td>
+<td>node selection strategy</td></tr>
+<tr><td><a href="#SBBprintbbinfo">
+printbbinfo</a></td>
+<td>prints additional node info</td></tr>
+<tr><td><a href="#SBBrootsolver">
+rootsolver</a></td>
+<td>solver for the root node</td></tr>
+<tr><td><a href="#SBBsolvelink">
+solvelink</a></td>
+<td>Solvelink for GAMS NLP solver</td></tr>
+<tr><td><a href="#SBBsubiter">
+subiter</a></td>
+<td>iteration limit for the subsolve</td></tr>
+<tr><td><a href="#SBBsubres">
+subres</a></td>
+<td>resource limit for the subsolve</td></tr>
+<tr><td><a href="#SBBsubsolver">
+subsolver</a></td>
+<td>solver for the subproblems</td></tr>
+<tr><td><a href="#SBBvarsel">
+varsel</a></td>
+<td>variable selection strategy at each node</td></tr></table>
+<h2>Detailed Descriptions of SBB Options</h2>
+
+<h4><a name="SBBacceptnonopt">
+acceptnonopt</a>
+<i> (integer)</i> accepts feasible solution from subsolver</h4><p>
+
+If this option is set to 1 and the subsolver terminates with solver status
+<i>Terminated by Solver</i> and model status <i>Intermediate Nonoptimal</i> SBB
+takes this as a good solution and keeps on going. In default mode such a return
+is treated as a subsolver failure and the <a href="#failseq"><tt>failseq</tt></a>
+is consulted.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="SBBavgresmult">
+avgresmult</a>
+<i> (integer)</i> average resource multiplicator</h4><p>
+
+Similar to <a href="#subres"><tt>subres</tt></a>, this option allows the user to
+control the time limit spend in a node. SBB keeps track of how much time is
+spent in the nodes, and builds an average over time. This average multiplied by
+the factor <tt>avgresmult</tt> is set as a time limit for solving a node in the
+B&amp;B tree. If the NLP solver exceeds this limit it is handled like a failure:
+the node is ignored or the solvers in the <a href="#failseq"><tt>failseq</tt></a>
+are called. The default multiplier <tt>avgresmult</tt> is 5. Setting
+<tt>avgresmult</tt> to 0 will disable the automatic time limit feature. A
+multiplier is not very useful for very small node solution times; therefore,
+independent of each node, SBB grants the solver at least 5 seconds to solve the
+node. The competing option <a href="#subres"><tt>subres</tt></a> overwrites the
+automatically generated resource limit.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="SBBdfsstay">
+dfsstay</a>
+<i> (integer)</i> keeps DFS node selection after solution has been found</h4><p>
+
+If the node selection is a B*/DFS mix, SBB switches frequently to DFS node
+selection mode. It switches back into B* node selection mode, if no subnodes
+were created (new int, pruned, infeasible, fail). It can be advantageous to
+search the neighborhood of the last node also in a DFS manner. Setting
+<tt>dfsstay</tt> to <i>n</i> instructs SBB to stay in DFS mode for another
+<i>n</i> nodes.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="SBBepint">
+epint</a>
+<i> (real)</i> integer feasibility tolerance</h4><p>
+
+The integer infeasibility tolerance.
+
+<br><i>Range: [1e-9,1]</i>
+
+<br><i>(default = 1.0e-5)</i>
+
+<h4><a name="SBBfailseq">
+failseq</a>
+<i> (string)</i> solver sequence for failed nodes</h4><p>
+
+<tt>solver1[.n1] solver2[.n2] ...</tt> where <tt>solver1</tt> is the name of a
+GAMS NLP solver to be used if the default solver fails, i.e., if it was not
+stopped by an iteration, resource, or domain limit and does not return a
+locally optimal or locally infeasible solution. <tt>n1</tt> is the value of
+optfile passed to the alternative NLP solver. If <tt>.n1</tt> is left blank it
+is interpreted as zero. Similarly, <tt>solver2</tt> is the name of a GAMS NLP
+solver that is used if <tt>solver1</tt> fails, and <tt>n2</tt> is the value of
+optfile passed to the second NLP solver. If you have a difficult model where
+solver failures are not unlikely, you may add more <tt>solver.n</tt> pairs.  You
+can use the same solver several times with different options files. <tt>failseq
+conopt conopt.2 conopt.3</tt> means to try CONOPT with no options file. If this
+approach also fails, try CONOPT with options file <tt>conopt.op2</tt>, and if it
+again fails, try CONOPT with options file <tt>conopt.op3</tt>. If all solver and
+options file combinations fail the node will be labeled <i>ignored</i> and the
+node will not be explored further. The default is to try only one solver (the <a
+href="#rootsolver"><tt>rootsolver</tt></a> or <a
+href="#subsolver"><tt>subsolver</tt></a>) and to ignore nodes with a solver
+failure.
+
+
+<h4><a name="SBBinfeasseq">
+infeasseq</a>
+<i> (string)</i> solver sequence for infeasible nodes</h4><p>
+
+<tt>level solver1[.n1] solver2[.n2] ...</tt> The purpose of <tt>infeasseq</tt>
+is to avoid cutting parts of the search tree that appear to be infeasible but
+really are feasible. If the NLP solver labels a node <i>Locally Infeasible</i>
+and the model is not convex a feasible solution may actually exist. If SBB is
+high in the search tree it can be very drastic to prune the node
+immediately. SBB is therefore directed to try the solver/option combinations in
+the list as long as the depth in the search tree is less than the integer value
+<tt>level</tt>. If the list is exhausted without finding a feasible solution,
+the node is assumed to be infeasible. The default is to trust that <i>Locally
+Infeasible</i> nodes are indeed infeasible and to remove them from further
+consideration.
+
+
+<h4><a name="SBBintsollim">
+intsollim</a>
+<i> (integer)</i> maximum number of integer solutions</h4><p>
+
+Maximum number of integer solutions. If this number is exceeded, SBB will
+terminate and return the best solution found so far.
+
+<br><i>(default = 2100000000)</i>
+
+<h4><a name="SBBloginterval">
+loginterval</a>
+<i> (integer)</i> progress display interval</h4><p>
+
+The interval (number of nodes) for which log lines are written.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SBBloglevel">
+loglevel</a>
+<i> (integer)</i> level of solver display</h4><p>
+
+The level of log output.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>only SBB log lines with one line every loginterval nodes</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>NLP solver log for the root node plus SBB loglines as 0</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>NLP solver log for all nodes plus SBB log lines as 0</td></tr>
+</table>
+
+<h4><a name="SBBmemnodes">
+memnodes</a>
+<i> (integer)</i> maximum number of nodes in memory</h4><p>
+
+The maximum number of nodes SBB can have in memory. If this number is
+exceeded, SBB will terminate and return the best solution found so far.
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="SBBnodesel">
+nodesel</a>
+<i> (integer)</i> node selection strategy</h4><p>
+
+Node selection scheme.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Depth First Search (DFS)</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Best Bound (BB)</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Best Estimate (BE)</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>DFS/BB mix</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>DFS/BE mix</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>DFS/BB/BE mix</td></tr>
+</table>
+
+<h4><a name="SBBprintbbinfo">
+printbbinfo</a>
+<i> (integer)</i> prints additional node info</h4><p>
+
+Additional info of log output.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>print no additional info</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>print variable selection letter.
+The node and variable selection for the current node are indicated by a two
+letter code at the end of the log line. The first letter represents the node
+selection: D for DFS, B for Best Bound, and E for Best Estimate. The
+second letter represents the variable selection: X for maximum infeasibility,
+N for minimum infeasibility, and P for pseudo cost.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>print best estimate</td></tr>
+</table>
+
+<h4><a name="SBBrootsolver">
+rootsolver</a>
+<i> (string)</i> solver for the root node</h4><p>
+
+<tt>solver[.n]</tt> Solver is the name of the GAMS NLP solver that should be
+used in the root node, and <tt>n</tt> is the integer corresponding to optfile
+for the root node.  If <tt>.n</tt> is missing, the optfile treated as zero
+i.e. the NLP solver will not look for an options file. This SBB option can be
+used to overwrite the default that uses the NLP solver specified with an
+<tt>Option NLP = solver;</tt> statement or the default GAMS solver for NLP.
+
+<br><i>(default = GAMS NLP solver)</i>
+
+<h4><a name="SBBsolvelink">
+solvelink</a>
+<i> (integer)</i> Solvelink for GAMS NLP solver</h4><p>
+
+
+<br><i>(default = 5)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Call GAMS NLP solver via script</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Call GAMS NLP solver via module</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Call GAMS NLP solver in memory</td></tr>
+</table>
+
+<h4><a name="SBBsubiter">
+subiter</a>
+<i> (integer)</i> iteration limit for the subsolve</h4><p>
+
+The default for <tt>subiter</tt> passed on through <tt>iterlim</tt>. Similar to
+<a href="#subres"><tt>subres</tt></a> but sets the iteration limit for solving a
+node in the B&amp;B tree.
+
+<br><i>(default = GAMS iterlim)</i>
+
+<h4><a name="SBBsubres">
+subres</a>
+<i> (real)</i> resource limit for the subsolve</h4><p>
+
+The default for <tt>subres</tt> passed on through <tt>reslim</tt>. Sets the time
+limit in seconds for solving a node in the B&amp;B tree. If the NLP solver exceeds
+this limit it is handled like a failure and the node is ignored, or the solvers
+in the failseq are called.
+
+<br><i>(default = GAMS reslim)</i>
+
+<h4><a name="SBBsubsolver">
+subsolver</a>
+<i> (string)</i> solver for the subproblems</h4><p>
+
+<tt>solver[.n]</tt> Similar to <a href="#rootsolver"><tt>rootsolver</tt></a> but
+applied to the subnodes.
+
+<br><i>(default = GAMS NLP solver)</i>
+
+<h4><a name="SBBvarsel">
+varsel</a>
+<i> (integer)</i> variable selection strategy at each node</h4><p>
+
+Variable selection scheme.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>maximum integer infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>minimum integer infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>pseudo costs</td></tr>
+</table>
+</body></html>

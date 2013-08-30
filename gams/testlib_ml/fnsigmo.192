@@ -1,0 +1,17 @@
+$title 'Test correctness of sigmoid intrinsic' (FNSIGMO,SEQ=192)
+
+$include fnset_x.inc
+
+$gdxin fnsigmo
+$load aeps0 aeps1 aeps2 reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = sigmoid.value (data(T,'x'));
+  data(T, 'fx')    = sigmoid.grad  (data(T,'x'));
+  data(T,'fxx')    = sigmoid.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

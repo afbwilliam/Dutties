@@ -1,0 +1,91 @@
+$title SPE model from Harker - monopolist and competetive versions (HARK-MONOP,SEQ=64)
+
+$ontext
+
+A spatial price equilibrium model is used to demonstrate different
+ways of modeling market behavior.  In this version, we use EMP
+to model competetive and monopolistic markets.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations
+Research 34, 3 (1986), 410-425.
+
+Harker model from GAMSLIB.
+
+Contributor: Steven Dirkse, June 2011
+$offtext
+
+$eolcom //
+
+$include hark-data.inc
+
+positive variables
+  t(n,n)   transport quantity
+  d(n)     demand quantity
+  s(n)     supply quantity
+  ;
+variables
+  obj      objective value
+  price(n) demand price
+  tc(n,n)  per unit transportation cost
+  ;
+equations  objDef, flowBal(n), priceDef(n), tcDef(n,n);
+
+objDef..  obj =e=  sum{L, price(L) * d(L)}
+                 - sum{L, alpha(L) * s(L) + beta(L)*sqr(s(L))}
+                 - sum{arc(i,j), tc(i,j)*t(i,j)};
+
+flowBal(n)..  s(n)$L(n) + sum{i$arc(i,n), t(i,n)} =g=
+              d(n)$L(n) + sum{j$arc(n,j), t(n,j)};
+
+priceDef(L)..  price(L) =e= rho(L) - eta(L)*d(L);
+
+tcDef(arc(i,j))..  tc(i,j) =e= kappa(i,j) + nu(i,j)*sqr(t(i,j));
+
+model hark  / objDef, flowBal, priceDef, tcDef /;
+
+set dummy 'order reports like the paper' / cspe2, cspeE, monop2, monop1, monop1t /;
+parameters rep1 transport summary
+           rep2 supply demand and price summary
+           tab6 table VI from page 422 Harker paper;
+
+s.l(L) = 25; d.l(L)=25;
+
+solve hark maximizing obj using nlp;
+repMonop(monop1t);
+
+file myinfo / '%emp.info%' /;
+
+// full monopoly power - plain-vanilla NLP so empty info file
+putclose myinfo '* monop1: no dual equations';
+solve hark maximizing obj using emp;
+repMonop(monop1);
+
+
+// monopoly in the demand market but not in transportation, so we use dualEqu
+// to force monopolist to act as a price-taker in the transportation market
+put myinfo '* monop2: act as a price taker by assuming tc is fixed';
+putclose myinfo / 'dualEqu tcDef tc';
+solve hark maximizing obj using emp;
+repMonop(monop2);
+
+// Classic Spatial Price Equilibrium (CSPE) assumes no monopoly power,
+// neither in the demand market nor in transportation, so use dualEqu for both
+put myinfo '* CSPE2';
+put myinfo / 'dualEqu';
+put / '  tcDef tc';
+put / '  priceDef price';
+putclose;
+solve hark maximizing obj using emp;
+repMonop(cspe2);
+
+put myinfo '* CSPE2';
+put myinfo / 'equilibrium';
+put / 'max obj * objDef flowbal';
+put / 'vi';
+put / '  tcDef tc';
+put / '  priceDef price';
+putclose;
+solve hark using emp;
+repMonop(cspeE);
+
+display rep1, rep2, tab6;

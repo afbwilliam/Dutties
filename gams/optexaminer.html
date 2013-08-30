@@ -1,0 +1,410 @@
+<html>
+<head>
+<title>EXAMINER Options</title>
+</head>
+<body>
+<h2>EXAMINER Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/examiner.pdf">EXAMINER manual</a>.
+
+<h2>Summary of EXAMINER Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#EXAMINERabsXScale">
+absXScale</a></td>
+<td>make scale factors dependent on x values</td></tr>
+<tr><td><a href="#EXAMINERcheckDump">
+checkDump</a></td>
+<td>dump file for results of Examiner checks</td></tr>
+<tr><td><a href="#EXAMINERdumpGamsPoint">
+dumpGamsPoint</a></td>
+<td>dump the GamsPoint to a basis file in GAMS source format</td></tr>
+<tr><td><a href="#EXAMINERdumpInitPoint">
+dumpInitPoint</a></td>
+<td>dump the InitPoint to a basis file in GAMS source format</td></tr>
+<tr><td><a href="#EXAMINERdumpSoluPoint">
+dumpSoluPoint</a></td>
+<td>dump the SoluPoint to a basis file in GAMS source format</td></tr>
+<tr><td><a href="#EXAMINERdumpSolvPoint">
+dumpSolvPoint</a></td>
+<td>dump the SolvPoint to a basis file in GAMS source format</td></tr>
+<tr><td><a href="#EXAMINERexamineGamsPoint">
+examineGamsPoint</a></td>
+<td>examine the GamsPoint</td></tr>
+<tr><td><a href="#EXAMINERexamineInitPoint">
+examineInitPoint</a></td>
+<td>examine the InitPoint</td></tr>
+<tr><td><a href="#EXAMINERexamineSoluPoint">
+examineSoluPoint</a></td>
+<td>examine the SoluPoint</td></tr>
+<tr><td><a href="#EXAMINERexamineSolvPoint">
+examineSolvPoint</a></td>
+<td>examine the SolvPoint</td></tr>
+<tr><td><a href="#EXAMINERfCheckAll">
+fCheckAll</a></td>
+<td>forces all the checks on or off</td></tr>
+<tr><td><a href="#EXAMINERfCheckATTR">
+fCheckATTR</a></td>
+<td>forces the model attributes check</td></tr>
+<tr><td><a href="#EXAMINERfCheckDCMP">
+fCheckDCMP</a></td>
+<td>forces the dual complementary slackness check</td></tr>
+<tr><td><a href="#EXAMINERfCheckDCON">
+fCheckDCON</a></td>
+<td>forces the dual contraint feasibility check</td></tr>
+<tr><td><a href="#EXAMINERfCheckDVAR">
+fCheckDVAR</a></td>
+<td>forces the dual variable feasibility check</td></tr>
+<tr><td><a href="#EXAMINERfCheckPCMP">
+fCheckPCMP</a></td>
+<td>forces the primal complementary slackness check</td></tr>
+<tr><td><a href="#EXAMINERfCheckPCON">
+fCheckPCON</a></td>
+<td>forces the primal contraint feasibility check</td></tr>
+<tr><td><a href="#EXAMINERfCheckPVAR">
+fCheckPVAR</a></td>
+<td>forces the primal variable feasibility check</td></tr>
+<tr><td><a href="#EXAMINERGDXDump">
+GDXDump</a></td>
+<td>not yet implemented</td></tr>
+<tr><td><a href="#EXAMINERperpSys">
+perpSys</a></td>
+<td>print FOC for visual inspection</td></tr>
+<tr><td><a href="#EXAMINERreturnGamsPoint">
+returnGamsPoint</a></td>
+<td>return the GamsPoint as a solution to GAMS/Base</td></tr>
+<tr><td><a href="#EXAMINERreturnInitPoint">
+returnInitPoint</a></td>
+<td>return the InitPoint as a solution to GAMS/Base</td></tr>
+<tr><td><a href="#EXAMINERreturnSoluPoint">
+returnSoluPoint</a></td>
+<td>return the SoluPoint as a solution to GAMS/Base</td></tr>
+<tr><td><a href="#EXAMINERreturnSolvPoint">
+returnSolvPoint</a></td>
+<td>return the SolvPoint as a solution to GAMS/Base</td></tr>
+<tr><td><a href="#EXAMINERscaled">
+scaled</a></td>
+<td>apply checks to a scaled version of the model</td></tr>
+<tr><td><a href="#EXAMINERscaleLB">
+scaleLB</a></td>
+<td>lower bound for applied row scales</td></tr>
+<tr><td><a href="#EXAMINERscaleUB">
+scaleUB</a></td>
+<td>upper bound for applied row scales</td></tr>
+<tr><td><a href="#EXAMINERshowIndex">
+showIndex</a></td>
+<td>show row/column indices in addition to their names</td></tr>
+<tr><td><a href="#EXAMINERshowSlacks">
+showSlacks</a></td>
+<td>explicitly show the infeasibilities or slacks for failed checks</td></tr>
+<tr><td><a href="#EXAMINERsolutionFile">
+solutionFile</a></td>
+<td>read solution from pre-existing solution file</td></tr>
+<tr><td><a href="#EXAMINERsubSolver">
+subSolver</a></td>
+<td>subsolver to run</td></tr>
+<tr><td><a href="#EXAMINERsubSolverOpt">
+subSolverOpt</a></td>
+<td>optfile value to pass to the subsolver</td></tr>
+<tr><td><a href="#EXAMINERtrace">
+trace</a></td>
+<td>Examiner trace file</td></tr>
+<tr><td><a href="#EXAMINERunScaled">
+unScaled</a></td>
+<td>apply checks to the original, unscaled version of the model</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Tolerance Options</h3></th></tr>
+<tr><td><a href="#EXAMINERdualCSTol">
+dualCSTol</a></td>
+<td>dual complementary slackness tolerance, i.e. between the dual variables and the primal constraints</td></tr>
+<tr><td><a href="#EXAMINERdualFeasTol">
+dualFeasTol</a></td>
+<td>tolerance used to check feasibility of the dual variables and constraints</td></tr>
+<tr><td><a href="#EXAMINERECTol">
+ECTol</a></td>
+<td>equilibrium condition complementarity tolerance</td></tr>
+<tr><td><a href="#EXAMINERprimalCSTol">
+primalCSTol</a></td>
+<td>primal complementary slackness tolerance, i.e. between the primal variables and the dual constraints</td></tr>
+<tr><td><a href="#EXAMINERprimalFeasTol">
+primalFeasTol</a></td>
+<td>tolerance used to check feasibility of the primal variables and constraints</td></tr>
+<tr><td><a href="#EXAMINERshowTol">
+showTol</a></td>
+<td>relative tolerance for showSlacks - we only want to see explicit slacks that are relatively small</td></tr></table>
+<h2>Detailed Descriptions of EXAMINER Options</h2>
+
+<h4><a name="EXAMINERabsXScale">
+absXScale</a>
+<i> (integer)</i> make scale factors dependent on x values</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="EXAMINERcheckDump">
+checkDump</a>
+<i> (string)</i> dump file for results of Examiner checks</h4><p>
+
+
+
+<h4><a name="EXAMINERdualCSTol">
+dualCSTol</a>
+<i> (real)</i> dual complementary slackness tolerance, i.e. between the dual variables and the primal constraints</h4><p>
+
+
+<br><i>(default = 1e-007)</i>
+
+<h4><a name="EXAMINERdualFeasTol">
+dualFeasTol</a>
+<i> (real)</i> tolerance used to check feasibility of the dual variables and constraints</h4><p>
+
+
+<br><i>(default = 1e-006)</i>
+
+<h4><a name="EXAMINERdumpGamsPoint">
+dumpGamsPoint</a>
+<i> (integer)</i> dump the GamsPoint to a basis file in GAMS source format</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERdumpInitPoint">
+dumpInitPoint</a>
+<i> (integer)</i> dump the InitPoint to a basis file in GAMS source format</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERdumpSoluPoint">
+dumpSoluPoint</a>
+<i> (integer)</i> dump the SoluPoint to a basis file in GAMS source format</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERdumpSolvPoint">
+dumpSolvPoint</a>
+<i> (integer)</i> dump the SolvPoint to a basis file in GAMS source format</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERECTol">
+ECTol</a>
+<i> (real)</i> equilibrium condition complementarity tolerance</h4><p>
+
+
+<br><i>(default = 1e-006)</i>
+
+<h4><a name="EXAMINERexamineGamsPoint">
+examineGamsPoint</a>
+<i> (integer)</i> examine the GamsPoint</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERexamineInitPoint">
+examineInitPoint</a>
+<i> (integer)</i> examine the InitPoint</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERexamineSoluPoint">
+examineSoluPoint</a>
+<i> (integer)</i> examine the SoluPoint</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERexamineSolvPoint">
+examineSolvPoint</a>
+<i> (integer)</i> examine the SolvPoint</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckAll">
+fCheckAll</a>
+<i> (integer)</i> forces all the checks on or off</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckATTR">
+fCheckATTR</a>
+<i> (integer)</i> forces the model attributes check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckDCMP">
+fCheckDCMP</a>
+<i> (integer)</i> forces the dual complementary slackness check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckDCON">
+fCheckDCON</a>
+<i> (integer)</i> forces the dual contraint feasibility check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckDVAR">
+fCheckDVAR</a>
+<i> (integer)</i> forces the dual variable feasibility check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckPCMP">
+fCheckPCMP</a>
+<i> (integer)</i> forces the primal complementary slackness check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckPCON">
+fCheckPCON</a>
+<i> (integer)</i> forces the primal contraint feasibility check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERfCheckPVAR">
+fCheckPVAR</a>
+<i> (integer)</i> forces the primal variable feasibility check</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERGDXDump">
+GDXDump</a>
+<i> (string)</i> not yet implemented</h4><p>
+
+
+
+<h4><a name="EXAMINERperpSys">
+perpSys</a>
+<i> (integer)</i> print FOC for visual inspection</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERprimalCSTol">
+primalCSTol</a>
+<i> (real)</i> primal complementary slackness tolerance, i.e. between the primal variables and the dual constraints</h4><p>
+
+
+<br><i>(default = 1e-007)</i>
+
+<h4><a name="EXAMINERprimalFeasTol">
+primalFeasTol</a>
+<i> (real)</i> tolerance used to check feasibility of the primal variables and constraints</h4><p>
+
+
+<br><i>(default = 1e-006)</i>
+
+<h4><a name="EXAMINERreturnGamsPoint">
+returnGamsPoint</a>
+<i> (integer)</i> return the GamsPoint as a solution to GAMS/Base</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERreturnInitPoint">
+returnInitPoint</a>
+<i> (integer)</i> return the InitPoint as a solution to GAMS/Base</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERreturnSoluPoint">
+returnSoluPoint</a>
+<i> (integer)</i> return the SoluPoint as a solution to GAMS/Base</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERreturnSolvPoint">
+returnSolvPoint</a>
+<i> (integer)</i> return the SolvPoint as a solution to GAMS/Base</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERscaled">
+scaled</a>
+<i> (integer)</i> apply checks to a scaled version of the model</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERscaleLB">
+scaleLB</a>
+<i> (real)</i> lower bound for applied row scales</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="EXAMINERscaleUB">
+scaleUB</a>
+<i> (real)</i> upper bound for applied row scales</h4><p>
+
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="EXAMINERshowIndex">
+showIndex</a>
+<i> (integer)</i> show row/column indices in addition to their names</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERshowSlacks">
+showSlacks</a>
+<i> (integer)</i> explicitly show the infeasibilities or slacks for failed checks</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERshowTol">
+showTol</a>
+<i> (real)</i> relative tolerance for showSlacks - we only want to see explicit slacks that are relatively small</h4><p>
+
+
+<br><i>(default = 1e-004)</i>
+
+<h4><a name="EXAMINERsolutionFile">
+solutionFile</a>
+<i> (string)</i> read solution from pre-existing solution file</h4><p>
+
+
+
+<h4><a name="EXAMINERsubSolver">
+subSolver</a>
+<i> (string)</i> subsolver to run</h4><p>
+
+
+
+<h4><a name="EXAMINERsubSolverOpt">
+subSolverOpt</a>
+<i> (integer)</i> optfile value to pass to the subsolver</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="EXAMINERtrace">
+trace</a>
+<i> (string)</i> Examiner trace file</h4><p>
+
+
+
+<h4><a name="EXAMINERunScaled">
+unScaled</a>
+<i> (integer)</i> apply checks to the original, unscaled version of the model</h4><p>
+
+
+<br><i>(default = 1)</i>
+</body></html>

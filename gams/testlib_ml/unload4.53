@@ -1,0 +1,7 @@
+$title commas are optional (UNLOAD4,SEQ=53)
+variable x; parameter a;
+
+a   = 2;
+x.l = 1;
+
+execute_unload 'gdx1' x , x.l a, x=x ;

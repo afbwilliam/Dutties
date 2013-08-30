@@ -1,0 +1,64 @@
+$title TSP tour plotting with LaTeX xy-pic environment (TSP2LTX,SEQ=324)
+
+$ontext
+
+This model demonstrates how to make quality graphics using LaTeX and
+XY-pic. As an example we will plot the different TSP tours found by
+the model TSP42 from the GAMS Model Library.
+
+The result of a LaTeX run on the file generated can be found at
+
+http://www.gams.com/modlib/adddocs/tsp2ltx.pdf
+
+$offtext
+
+$call gamslib -q tsp42
+$echo file fx /plotcycles.gms/; loop(cycle$results(cycle+1,'obj'), put fx '$batinclude plottour ' cycle.tl /); >> tsp42.gms
+$set mip mip=%gams.mip%
+$if '%mip%' == 'mip=' $set mip
+$call gams tsp42 lo=%gams.lo% %mip% gdx=tsp42
+$if errorlevel 1 $abort 'Could solve run tsp42'
+
+Set i Cities, hdr / relaxed, cycle1*cycle20, optimal /;
+alias (i,j);
+Parameter solutions(hdr,i,j);
+
+$gdxin tsp42
+$load i solutions
+
+table xy(*,i) coordinates
+   c1  c2  c3  c4  c5  c6  c7  c8  c9 c10 c11 c12 c13 c14 c15 c16 c17 c18 c19 c20 c21
+x 170 166 133 140 142 126 125 119 117  99  73  72  37   6   3  21  33   4   3  27  52
+y  85  88  73  70  55  53  60  68  74  83  79  91  94 106  97  82  67  66  42  33  41
+
++ c22 c23 c24 c25 c26 c27 c28 c29 c30 c31 c32 c33 c34 c35 c36 c37 c38 c39 c40 c41 c42
+x  57  58  88  99  95  89  83  85 104 112 112 113 125 135 147 147 154 157 158 172 174
+y  59  66  65  67  55  55  38  25  35  37  24  13  30  32  18  36  45  54  61  82  87;
+;
+
+
+file f /tsp2ltx.tex/; put f;
+
+$onput
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[all]{xy}
+\begin{document}
+$offput
+
+$set plottour
+$onechoV > plottour.gms
+put '\begin{figure}[ht]' / '\[\begin{xy} 0;<0.5mm,0mm>:' /;
+loop(i, put$(ord(i)>1) ','; put '(', xy('x',i), ',' xy('y',i), ')*{\bullet}'/);
+loop((i,j)$(solutions('%1',i,j)>0.5), put$(ord(i)>1) ',';
+   put '(', xy('x',i), ',' xy('y',i), ');(', xy('x',j), ',' xy('y',j), ')**@{-}'/);
+put '\end{xy}\]' / '\caption{%1 solution}' / '\end{figure}' /;
+$offecho
+
+$batinclude plottour Relaxed
+$include plotcycles
+$batinclude plottour Optimal
+
+put '\end{document}'/;
+
+

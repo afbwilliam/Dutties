@@ -1,0 +1,9 @@
+$title 'Test restart from new (Rev 142 & later) workfiles' (REST2,SEQ=217)
+
+scalar checker;
+
+checker = sum {j, 1};
+abort$[checker <> 3] 'bad j set', j, checker;
+
+checker = sum {j$[t(j) eq aaaa], 1};
+abort$[checker <> 2] 'bad t parameter or acronym aaaa', t, checker;

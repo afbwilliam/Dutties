@@ -1,0 +1,37 @@
+$title CNS model with globally unique solution (cns04,SEQ=94)
+
+$ontext
+  The following model has a globally unique solution even though it
+  is nonlinear.
+  Not all solvers will recognize that the solution is globally unique.
+  Equation e1 can be solved uniquely w.r.t. x1.
+  Equation e2 can then be solved uniquely w.r.t. x2 even though it
+    is nonlinear in x1 since x1 has a unique value.
+  Equation e3 and e4 are now linear and they can be solved uniquely
+    given the values of x1 and x;
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+
+variable x1, x2, x3, x4;
+equation e1, e2, e3, e4;
+
+e1 .. x1 =e= 4;
+e2 .. x2 =e= sqr(x1);
+e3 .. x3 + x4 =e= x1;
+e4 .. x3 - x4 =e= x2;
+
+model cns04 / all /;
+option limrow = 0, limcol = 0;
+solve cns04 using cns;
+abort$(cns04.solvestat <> %solvestat.NormalCompletion%
+   or (cns04.modelstat <> %modelstat.SolvedUnique%) and (cns04.modelstat <> %modelstat.Solved%))  'bad return codes';
+abort$(abs(x1.l- 4) > tol)       'bad x1.l';
+abort$(abs(x2.l-16) > tol)       'bad x2.l';
+abort$(abs(x3.l-10) > tol)       'bad x3.l';
+abort$(abs(x4.l+ 6) > tol)       'bad x4.l';
+abort$(abs(e1.l- 4) > tol)       'bad e1.l';
+abort$(abs(e2.l- 0) > tol)       'bad e2.l';
+abort$(abs(e3.l- 0) > tol)       'bad e3.l';
+abort$(abs(e4.l- 0) > tol)       'bad e4.l';

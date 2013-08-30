@@ -1,0 +1,542 @@
+*
+* optlindoglobal.def
+*
+
+DECOMPOSITION_TYPE enumint 27 1 1 1 decomposition to be performed on a linear or mixed integer model
+ 0 1 Solver decides which type of decomposition to use
+ 1 1 Solver does not perform any decompositions and uses the original model
+ 2 1 Attempt total decomposition
+ 3 1 Decomposed model will have dual angular structure
+ 4 1 Decomposed model will have block angular structure
+ 5 1 Decomposed model will have both dual and block angular structure
+SPLEX_SCALE enumint 29 1 1 2 scaling flag
+ 0 1 Scaling is suppressed
+ 1 1 Scaling is performed
+SPLEX_ITRLMT integer 30 -1 -1 maxint 1 2 simplex iteration limit
+SPLEX_PPRICING enumint 31 -1 1 2 pricing option for primal simplex method
+ -1 1 Solver decides the primal pricing method
+ 0 1 Partial pricing
+ 1 1 Devex
+SPLEX_REFACFRQ integer 32 100 0 maxint 1 2 number of simplex iterations between two consecutive basis re-factorizations
+PROB_TO_SOLVE enumint 34 0 1 2 controls whether the explicit primal or dual form of the given LP problem will be solved
+ 0 1 Solver decides
+ 1 1 Explicit primal form
+ 2 1 Explicit dual form
+SPLEX_DPRICING enumint 37 -1 1 2 pricing option for dual simplex method
+ -1 1 Solver decides the dual pricing method
+ 0 1 Partial pricing
+ 1 1 Steepest edge
+SPLEX_DUAL_PHASE enumint 40 0 1 2 controls the dual simplex strategy
+ 0 1 Solver decides
+ 1 1 Single-phase
+ 2 1 Two-phase
+LP_PRELEVEL integer 41 126 0 maxint 1 2 controls the amount and type of LP pre-solving
+ +2 Simple pre-solving
+ +4 Probing
+ +8 Coefficient reduction
+ +16 Elimination
+ +32 Dual reductions
+ +64 Use dual information
+ +512 Maximum pass
+SOLVER_IUSOL enumint 51 0 1 1 flag for computing basic solution for infeasible model
+ 0 1 Return appropriate status if infeasibility is encountered
+ 1 1 Force the solver to compute a basic solution to an infeasible model
+SOLVER_TIMLMT integer 52 -1 -1 maxint 1 1 time limit in seconds for continous solver
+SOLVER_CUTOFFVAL double 53 0 0 maxdouble 1 2 solver will exit if optimal solution is worse than this
+SOLVER_FEASTOL double 54 1e-7 0 maxdouble 1 1 feasibility tolerance
+SOLVER_RESTART enumint 55 0 1 1 starting basis flag
+ 0 1 Perform cold start
+ 1 1 Perform warm start
+SOLVER_IPMSOL enumint 56 0 1 2 basis crossover flag for barrier solver
+ 0 1 Perform crossover to basis solution
+ 1 1 Leave barrier solution intact
+SOLVER_OPTTOL double 57 1e-7 0 maxdouble 1 1 dual feasibility tolerance
+SOLVER_USECUTOFFVAL enumint 58 0 1 2 flag for using cutoff value
+ 0 1 Do not use cutoff value
+ 1 1 Use cutoff value
+SOLVER_PRE_ELIM_FILL integer 59 1000 0 maxint 1 1 fill-in introduced by the eliminations during pre-solve
+SOLVER_CONCURRENT_OPTMODE enumint 61 0 1 2 controls if simplex and interior-point optimizers will run concurrently
+ 0 1 no concurrent runs
+ 1 1 run concurrently if at least 2 threads exist
+ 2 1 run concurrently
+IPM_TOL_INFEAS double 150 1e-8 0 maxdouble 1 3 infeasibility tolerance
+IPM_TOL_PATH double 151 1e-8 0 0.5 1 3 how close to follow the central path
+IPM_TOL_PFEAS double 152 1e-8 0 maxdouble 1 3 primal feasibility tolerance
+IPM_TOL_REL_STEP double 153 0.9999 0 0.999999 1 3 relative step size to the boundary
+IPM_TOL_PSAFE double 154 1 1e-2 maxdouble 1 3 controls the initial primal starting point
+IPM_TOL_DFEAS double 155 1e-8 0 maxdouble 1 3 dual feasibility tolerance
+IPM_TOL_DSAFE double 156 1 1e-4 maxdouble 1 3 controls the initial dual starting point
+IPM_TOL_MU_RED double 157 1e-16 0 maxdouble 1 3 relative complementarity gap tolerance
+IPM_BASIS_REL_TOL_S double 158 1e-12 0 maxdouble 1 3 maximum relative dual bound violation allowed in an optimal basic solution
+IPM_BASIS_TOL_S double 159 1e-7 0 maxdouble 1 3 maximum absolute dual bound violation in an optimal basic solution
+IPM_BASIS_TOL_X double 160 1e-7 0 maxdouble 1 3 maximum absolute primal bound violation allowed in an optimal basic solution
+IPM_BI_LU_TOL_REL_PIV double 161 1e-2 0 0.999999 1 3 relative pivot tolerance used in the LU factorization in the basis identification procedure
+IPM_MAX_ITERATIONS integer 166 1000 0 maxint 1 3 ipm iteration limit
+IPM_OFF_COL_TRH integer 167 40 0 maxint 1 3 extent for detecting the offending columns in the Jacobian of the constraint matrix
+IPM_NUM_THREADS integer 168 1 0 maxint 1 3 number of threads to run the interiorpoint optimizer on
+NLP_SOLVE_AS_LP enumint 200 0 1 5 flag indicating if the nonlinear model will be solved as an LP
+ 0 1 NLP will not be solved as LP
+ 1 1 NLP will be solved as LP
+NLP_SOLVER enumint 201 7 1 5 type of nonlinear solver
+ 4 1 Solver decides
+ 7 1 Uses CONOPTs reduced gradient solver
+ 9 1 Uses CONOPT with multistart feature enabled
+NLP_SUBSOLVER enumint 202 1 1 5 type of nonlinear subsolver
+ 1 1 Primal simplex method
+ 2 1 Dual simplex method
+ 3 1 Barrier solver with or without crossover
+NLP_PSTEP_FINITEDIFF double 204 5e-7 0 maxdouble 1 5 value of the step length in computing the derivatives using finite differences
+NLP_DERIV_DIFFTYPE enumint 205 0 1 5 flag indicating the technique used in computing derivatives with finite differences
+ 0 1 The solver decides
+ 1 1 Use forward differencing method
+ 2 1 Use backward differencing method
+ 3 1 Use center differencing method
+NLP_FEASTOL double 206 1e-6 0 maxdouble 1 5 feasibility tolerance for nonlinear constraints
+NLP_REDGTOL double 207 1e-7 0 maxdouble 1 5 tolerance for the gradients of nonlinear functions
+NLP_USE_CRASH enumint 208 0 1 5 flag for using simple crash routines for initial solution
+ 0 1 Do not use simple crash routines
+ 1 1 Use simple crash routines
+NLP_USE_STEEPEDGE enumint 209 0 1 5 flag for using steepest edge directions for updating solution
+ 0 1 Do not use steepest edge directions
+ 1 1 Use steepest edge directions
+NLP_USE_SLP enumint 210 1 1 5 flag for using sequential linear programming step directions for updating solution
+ 0 1 Do not use sequential linear programming step directions
+ 1 1 Use sequential linear programming step directions
+NLP_USE_SELCONEVAL enumint 211 1 1 5 flag for using selective constraint evaluations for solving NLP
+ 0 1 Do not use selective constraint evaluations
+ 1 1 Use selective constraint evaluations
+NLP_PRELEVEL integer 212 126 0 maxint 1 5 controls the amount and type of NLP pre-solving
+ +2 Simple pre-solving
+ +4 Probing
+ +8 Coefficient reduction
+ +16 Elimination
+ +32 Dual reductions
+ +64 Use dual information
+ +512 Maximum pass
+NLP_ITRLMT integer 213 20000 -1 maxint 1 5 nonlinear iteration limit
+NLP_LINEARZ enumint 214 0 1 5 extent to which the solver will attempt to linearize nonlinear models
+ 0 1 Solver decides
+ 1 1 No linearization occurs
+ 2 1 Linearize ABS MAX and MIN functions
+ 3 1 Same as option 2 plus IF AND OR NOT and all logical operators are linearized
+NLP_STARTPOINT enumint 216 1 1 5 flag for using initial starting solution for NLP
+ 0 1 Do not use initial starting solution for NLP
+ 1 1 Use initial starting solution for NLP
+NLP_QUADCHK enumint 219 0 1 5 flag for checking if NLP is quadratic
+ 0 1 Do not check if NLP is quadratic
+ 1 1 Check if NLP is quadratic
+NLP_AUTODERIV enumint 220 0 1 5 defining type of computing derivatives
+ 0 1 Finite Differences approach will be used
+ 1 1 Forward type of Automatic Differentiation will be used
+ 2 1 Backward type of Automatic Differentiation will be used
+NLP_MAXLOCALSEARCH integer 221 5 0 maxint 1 5 maximum number of local searches
+NLP_USE_LINDO_CRASH enumint 224 1 1 5 flag for using advanced crash routines for initial solution
+ 0 1 Do not use advanced crash routines
+ 1 1 Use advanced crash routines
+NLP_STALL_ITRLMT integer 225 100 0 maxint 1 5 iteration limit before a sequence of non-improving NLP iterations is declared as stalling
+NLP_AUTOHESS enumint 226 0 1 5 flag for using Second Order Automatic Differentiation for solving NLP
+ 0 1 Do not use Second Order Automatic Differentiation
+ 1 1 Use Second Order Automatic Differentiation
+NLP_FEASCHK enumint 227 1 1 5 how to report results when solution satisfies tolerance of scaled but not original model
+ 0 1 Perform no action accept the final solution
+ 1 1 Declare the model status as FEASIBLE if maximum violation in the unscaled model is not higher than 10 times NLP_FEASTOL
+ 2 1 Declare the model status as UNKNOWN if maximum violation in the unscaled model is higher than NLP_FEASTOL
+NLP_MSW_SOLIDX integer 230 0 0 maxint 1 5 index of the multistart solution to be loaded
+NLP_ITERS_PER_LOGLINE integer 231 10 1 maxint 1 5 number of nonlinear iterations to elapse before next progress message
+NLP_MAX_RETRY integer 232 5 -1 maxint 1 5 maximum number refinement retries to purify the final NLP solution
+NLP_MSW_NORM integer 233 2 -1 maxint 1 5 norm to measure the distance between two points in multistart search
+NLP_MSW_MAXREF integer 234 -1 -1 maxint 1 5 maximum number of reference points to generate trial points in multistart search
+NLP_MSW_MAXPOP integer 235 -1 -1 maxint 1 5 maximum number of populations to generate in multistart search
+NLP_MSW_MAXNOIMP integer 236 -1 -1 maxint 1 5 maximum number of consecutive populations to generate without any improvements
+NLP_MSW_FILTMODE integer 237 -1 -1 maxint 1 5 filtering mode to exclude certain domains during sampling in multistart search
+ -1 Solver decides
+ +1 Filter-out the points around known KKT or feasible points previously visited
+ +2 Filter-out the points whose p are in the vicinity of p(x)
+ +4 Filter-out the points in the vicinity of x where x are initial points of all previous local optimizations
+ +8 Filter-out the points whose p(.) values are below a dynamic threshold tolerance
+NLP_MSW_POXDIST_THRES double 238 0.01 0 maxdouble 1 5 penalty function neighborhood threshold in multistart search
+NLP_MSW_EUCDIST_THRES double 239 0.001 0 maxdouble 1 5 euclidean distance threshold in multistart search
+NLP_MSW_XNULRAD_FACTOR double 240 0.5 0 maxdouble 1 5 initial solution neighborhood factor in multistart search
+NLP_MSW_XKKTRAD_FACTOR double 241 0.85 0 maxdouble 1 5 KKT solution neighborhood factor in multistart search
+NLP_MAXLOCALSEARCH_TREE integer 242 1 0 maxint 1 5 maximum number of multistarts
+MIP_TIMLIM integer 300 -1 -1 maxint 1 4 time limit in seconds for integer solver
+MIP_AOPTTIMLIM integer 301 100 0 maxint 1 4 time in seconds beyond which the relative optimality tolerance will be applied
+MIP_LSOLTIMLIM integer 302 -1 -1 maxint 1 4 time limit until finding a new integer solution
+MIP_PRELEVEL integer 303 1022 0 maxint 1 4 controls the amount and type of MIP pre-solving at root node
+ +2 Simple pre-solving
+ +4 Probing
+ +8 Coefficient reduction
+ +16 Elimination
+ +32 Dual reductions
+ +64 Use dual information
+ +128 Binary row presolving
+ +256 Row aggregation
+ +512 Coef Probe Lifting
+ +1024 Maximum pass
+MIP_NODESELRULE enumint 304 0 1 4 specifies the node selection rule
+ 0 1 Solver decides
+ 1 1 Depth first search
+ 2 1 Choose node with worst bound
+ 3 1 Choose node with best bound
+ 4 1 Start with best bound
+ 5 1 Choose the node with the best estimate
+ 6 1 Same as 4 but start with the best estimate
+MIP_INTTOL double 305 1e-6 0 maxdouble 1 4 absolute integer feasibility tolerance
+MIP_RELINTTOL double 306 8e-6 0 maxdouble 1 4 relative integer feasibility tolerance
+MIP_RELOPTTOL double 307 1e-5 0 maxdouble 1 4 MIP relative optimality tolerance
+MIP_PEROPTTOL double 308 1e-5 0 maxdouble 1 4 MIP relative optimality tolerance in effect after MIP_AOPTTIMLIM seconds
+MIP_MAXCUTPASS_TOP integer 309 200 0 maxint 1 4 number passes to generate cuts on the root node
+MIP_MAXCUTPASS_TREE integer 310 2 0 maxint 1 4 number passes to generate cuts on the child nodes
+MIP_ADDCUTPER double 311 0.75 0 maxdouble 1 4 percentage of constraint cuts that can be added
+MIP_ADDCUTPER_TREE double 312 0.5 0 maxdouble 1 4 percentage of constraint cuts that can be added at child nodes
+MIP_MAXNONIMP_CUTPASS integer 313 3 0 maxint 1 4 number of passes allowed in cut-generation that does not improve current relaxation
+MIP_CUTLEVEL_TOP integer 314 22526 0 maxint 1 4 combination of cut types to try at the root node when solving a MIP
+ +2 GUB cover
+ +4 Flow cover
+ +8 Lifting
+ +16 Plant location
+ +32 Disaggregation
+ +64 Knapsack cover
+ +128 Lattice
+ +256 Gomory
+ +512 Coefficient reduction
+ +1024 GCD
+ +2048 Obj integrality
+ +4096 Basis Cuts
+ +8192 Cardinality Cuts
+ +16384 Disjunk Cuts
+MIP_CUTLEVEL_TREE integer 315 4094 0 maxint 1 4 combination of cut types to try at child nodes in the branch and bound tree when solving a MIP
+ +2 GUB cover
+ +4 Flow cover
+ +8 Lifting
+ +16 Plant location
+ +32 Disaggregation
+ +64 Knapsack cover
+ +128 Lattice
+ +256 Gomory
+ +512 Coefficient reduction
+ +1024 GCD
+ +2048 Obj integrality
+ +4096 Basis Cuts
+ +8192 Cardinality Cuts
+ +16384 Disjunk Cuts
+MIP_CUTTIMLIM integer 316 -1 -1 maxint 1 4 time to be spent in cut generation
+MIP_CUTDEPTH integer 317 8 0 maxint 1 4 threshold value for the depth of nodes in the branch and bound tree
+MIP_CUTFREQ integer 318 10 0 maxint 1 4 frequency of invoking cut generation at child nodes
+MIP_HEULEVEL integer 319 3 0 maxint 1 4 specifies heuristic used to find integer solution
+MIP_CUTOFFOBJ double 322 1e30 0 maxdouble 1 4 defines limit for branch and bound
+MIP_USECUTOFFOBJ enumint 323 1 1 4 flag for using branch and bound limit
+ 0 1 Do not use current cutoff value
+ 1 1 Use current cutoff value
+MIP_STRONGBRANCHLEVEL integer 324 10 0 maxint 1 4 depth from the root in which strong branching is used
+MIP_TREEREORDERLEVEL integer 325 10 0 maxint 1 4 tree reordering level
+MIP_BRANCHDIR enumint 326 0 1 4 first branching direction
+ 0 1 Solver decides
+ 1 1 Always branch up first
+ 2 1 Always branch down first
+MIP_TOPOPT enumint 327 0 1 4 optimization method to use when there is no previous basis
+ 0 1 Solver decides
+ 1 1 Use primal method
+ 2 1 Use dual simplex
+ 3 1 Use barrier solver
+MIP_REOPT enumint 328 0 1 4 optimization method to use when doing reoptimization
+ 0 1 Solver decides
+ 1 1 Use primal method
+ 2 1 Use dual simplex
+ 3 1 Use barrier solver
+MIP_SOLVERTYPE enumint 329 0 1 4 optimization method to use when solving mixed-integer models
+ 0 1 Solver decides
+ 1 1 Use Branch and Bound only
+ 2 1 Use Enumeration and Knapsack solver only
+MIP_KEEPINMEM enumint 330 1 1 4 flag for keeping LP bases in memory
+ 0 1 Do not keep LP bases in memory
+ 1 1 Keep LP bases in memory
+MIP_BRANCHRULE enumint 331 0 1 4 rule for choosing the variable to branch
+ 0 1 Solver decides
+ 1 1 Basis rounding with pseudo reduced costs
+ 2 1 Maximum infeasibility
+ 3 1 Pseudo reduced costs only
+MIP_REDCOSTFIX_CUTOFF double 332 0.9 0 maxdouble 1 4 cutoff value as a percentage of the reduced costs
+MIP_ADDCUTOBJTOL double 333 1.5625e-5 0 maxdouble 1 4 required objective improvement to continue generating cuts
+MIP_HEUMINTIMLIM integer 334 0 0 maxint 1 4 minimum time in seconds to be spent in finding heuristic solutions
+MIP_BRANCH_PRIO enumint 335 0 1 4 controls how variable selection priorities are set and used
+ 0 1 If the user has specified priorities then use them Otherwise let LINDO API decide
+ 1 1 If user has specified priorities then use them Overwrite users choices if necessary
+ 2 1 If user has specified priorities then use them Otherwise do not use any priorities
+ 3 1 Let LINDO API set the priorities and ignore any user specified priorities
+ 4 1 Binaries always have higher priority over general integers
+MIP_SCALING_BOUND integer 336 10000 0 maxint 1 4 maximum difference between bounds of an integer variable for enabling scaling
+MIP_PSEUDOCOST_WEIGT double 337 1.5625e-05 0 maxdouble 1 4 weight in pseudocost computations for variable selection
+MIP_LBIGM double 338 10000 0 maxdouble 1 4 Big-M value used in linearizing nonlinear expressions
+MIP_DELTA double 339 1e-6 0 maxdouble 1 4 near-zero value used in linearizing nonlinear expressions
+MIP_DUAL_SOLUTION enumint 340 0 1 4 flag for computing dual solution of LP relaxation
+ 0 1 Do not calculate dual solution for LP relaxation
+ 1 1 Calculate dual solution for LP relaxation
+MIP_BRANCH_LIMIT integer 341 -1 -1 maxint 1 4 limit on the total number of branches to be created during branch and bound
+MIP_ITRLIM double 342 -1 -1 maxdouble 1 4 iteration limit for branch and bound
+MIP_AGGCUTLIM_TOP integer 343 -1 -1 maxint 1 4 max number of constraints involved in derivation of aggregation cut at root node
+MIP_AGGCUTLIM_TREE integer 344 -1 -1 maxint 1 4 max number of constraints involved in derivation of aggregation cut at tree nodes
+MIP_ANODES_SWITCH_DF integer 346 50000 0 maxint 1 4 threshold on active nodes for switching to depth-first search
+MIP_ABSOPTTOL double 347 0 0 maxdouble 1 4 MIP absolute optimality tolerance
+MIP_MINABSOBJSTEP double 348 0 0 maxdouble 1 4 value to update cutoff value each time a mixed integer solution is found
+MIP_PSEUDOCOST_RULE enumint 349 0 1 4 specifies the rule in pseudocost computations for variable selection
+ 0 1 Solver decides
+ 1 1 Only use min pseudo cost
+ 2 1 Only use max pseudo cost
+ 3 1 Use quadratic score function and the pseudo cost weigth
+ 4 1 Same as 3 without quadratic score
+MIP_USE_ENUM_HEU enumint 350 4 1 4 frequency of enumeration heuristic
+ 0 1 Off
+ 1 1 Only at top (root) node without cuts
+ 2 1 Both at top (root) and tree nodes without cuts
+ 3 1 Same as 1 with cuts
+ 4 1 Same as 2 with cuts
+MIP_PRELEVEL_TREE integer 351 1214 0 maxint 1 4 amount and type of MIP pre-solving at tree nodes
+ +2 Simple pre-solving
+ +4 Probing
+ +8 Coefficient reduction
+ +16 Elimination
+ +32 Dual reductions
+ +64 Use dual information
+ +128 Binary row presolving
+ +256 Row aggregation
+ +512 Coef Probe Lifting
+ +1024 Maximum pass
+MIP_REDCOSTFIX_CUTOFF_TREE double 352 0.9 0 maxdouble 1 4 cutoff value as a percentage of the reduced costs at tree nodes
+MIP_USE_INT_ZERO_TOL enumint 353 0 1 4 controls if all MIP calculations would be based on absolute integer feasibility tolarance
+ 0 1 Do not base MIP calculations on MIP_INTTOL
+ 1 1 Base MIP calculations on MIP_INTTOL
+MIP_USE_CUTS_HEU enumint 354 -1 1 4 controls if cut generation is enabled during MIP heuristics
+ -1 1 Solver decides
+ 0 1 Do not use cut heuristic
+ 1 1 Use cut heuristic
+MIP_BIGM_FOR_INTTOL double 355 1e8 0 maxdouble 1 4 threshold for which coefficient of a binary variable would be considered as big-M
+MIP_STRONGBRANCHDONUM integer 366 3 0 maxint 1 4 minimum number of variables to try the strong branching on
+MIP_MAKECUT_INACTIVE_COUNT integer 367 10 0 maxint 1 4 threshold for times a cut could remain active after successive reoptimization
+MIP_PRE_ELIM_FILL integer 368 100 0 maxint 1 4 controls fill-in introduced by eliminations during pre-solve
+MIP_HEU_MODE enumint 369 0 1 4 heuristic used in MIP solver
+ 0 1 Solver decides when to stop the heuristic
+ 1 1 Solver uses a pre-specified time limit to stop the heuristic.
+ 2 1 Solver uses a pre-specified iteration limit to stop the heuristic
+MIP_FP_MODE enumint 375 1 1 4 mode for the feasibility pump heuristic
+ 0 1 Off
+ 1 1 Solver decides
+ 2 1 On until the first solution
+ 3 1 Try to get more than one solution
+MIP_FP_WEIGTH double 376 1 0 1 1 4 weight of the objective function in the feasibility pump
+MIP_FP_OPT_METHOD enumint 377 0 1 4 optimization and reoptimization method for feasibility pump heuristic
+ 0 1 Solver decides
+ 1 1 Primal simplex
+ 2 1 Dual simplex
+ 3 1 Barrier
+MIP_FP_TIMLIM double 378 1800 0 maxdouble 1 4 time limit for feasibility pump heuristic
+MIP_FP_ITRLIM integer 379 500 0 maxint 1 4 iteration limit for feasibility pump heuristic
+MIP_SWITCHFAC_SIM_IPM_TIME double 383 -1 -1 maxdouble 1 4 factor that multiplies the number of constraints to impose a time limit to simplex method and trigger a switch over to the barrier method
+MIP_MAXNUM_MIP_SOL_STORAGE integer 387 1 0 maxint 1 4 maximum number of k-best solutions to store
+MIP_PREHEU_LEVEL enumint 390 0 1 4 heuristic level for the prerelax solver
+ 0 1 Nothing
+ 1 1 One-change
+ 2 1 One-change and two-change
+ 3 1 Depth first enumeration
+MIP_PREHEU_TC_ITERLIM integer 393 30000000 0 maxint 1 4 iteration limit for the two change heuristic
+MIP_PREHEU_DFE_VSTLIM integer 394 200 0 maxint 1 4 limit for the variable visit in depth first enumeration
+ABSOPTTOL double 434 0 0 maxdouble 1 6 absolute optimality tolerance
+RELOPTTOL double 400 1e-6 0 maxdouble 1 6 relative optimality tolerance
+FLTTOL double 401 1e-10 0 maxdouble 1 6 floating-point tolerance
+BOXTOL double 402 1e-6 0 maxdouble 1 6 minimal width of variable intervals
+WIDTOL double 403 1e-4 0 maxdouble 1 6 maximal width of variable intervals
+DELTATOL double 404 1e-7 0 maxdouble 1 6 delta tolerance in GOP convexification
+BNDLIM double 405 1e10 0 maxdouble 1 6 max magnitude of variable bounds used in GOP convexification
+TIMLIM integer 406 -1 -1 maxint 1 6 time limit in seconds for GOP branch-and-bound
+OPTCHKMD integer 407 2 0 maxint 1 6 criterion used to certify the global optimality
+BRANCHMD enumint 408 5 1 6 direction to branch first when branching on a variable
+ 0 1 Absolute width
+ 1 1 Locally relative width
+ 2 1 Globally relative width
+ 3 1 Globally relative distance from the convex minimum to the bounds
+ 4 1 Absolute violation between the function and its convex envelope at the convex minimum
+ 5 1 Relative violation between the function and its convex envelope at the convex minimum
+MAXWIDMD enumint 409 0 1 6 maximum width flag for the global solution
+ 0 1 The maximum width criterion is suppressed
+ 1 1 The maximum width criterion is performed
+PRELEVEL integer 410 30 0 maxint 1 6 amount and type of GOP presolving
+ +2 Initial local optimization
+ +4 Initial linear constraint propagation
+ +8 Recursive linear constraint propagation
+ +16 Recursive nonlinear constraint propagation
+POSTLEVEL integer 411 6 0 maxint 1 6 amount and type of GOP postsolving
+ +2 Apply LSgetBestBound
+ +4 Reoptimize variable bounds
+BBSRCHMD enumint 412 1 1 6 node selection rule in GOP branch-and-bound
+ 0 1 Depth first search
+ 1 1 Choose node with worst bound
+DECOMPPTMD enumint 413 1 1 6 decomposition point selection rule in GOP branch-and-bound
+ 0 1 Mid-point
+ 1 1 Local minimum or convex minimum
+ALGREFORMMD integer 414 18 0 maxint 1 6 algebraic reformulation rule for a GOP
+ +2 Rearrange and collect terms
+ +4 Expand all parentheses
+ +8 Retain nonlinear functions
+ +16 Selectively expand parentheses
+RELBRNDMD integer 415 0 0 maxint 1 6 reliable rounding in the GOP branch-and-bound
+ +2 Use smaller optimality or feasibility tolerances and appropriate presolving options
+ +4 Apply interval arithmetic to reverify the solution feasibility
+USEBNDLIM enumint 417 2 1 6 max magnitude of variable bounds flag for GOP convexification
+ 0 1 Do not use the bound limit on the variables
+ 1 1 Use the bound limit right at the beginning of global optimization
+ 2 1 Use the bound limit after the initial local optimization if selected
+BRANCH_LIMIT integer 418 -1 -1 maxint 1 6 limit on the total number of branches to be created in GOP tree
+CORELEVEL integer 419 14 0 maxint 1 6 strategy of GOP branch-and-bound
+ +2 LP convex relaxation
+ +4 NLP solving
+ +8 Box Branching
+OPT_MODE enumint 420 1 1 6 mode for GOP optimization
+ 0 1 Global search for a feasible solution (thus a feasibility certificate)
+ 1 1 Global search for an optimal solution
+ 2 1 Global search for an unboundedness certificate
+HEU_MODE enumint 421 0 1 6 heuristic used in global solver
+ 0 1 No heuristic is used
+ 1 1 A simple heuristic is used
+SUBOUT_MODE enumint 422 1 1 6 substituting out fixed variables
+ 0 1 Do not substitute out fixed variables
+ 1 1 Substitute out fixed variables
+LSOLBRANLIM integer 424 -1 -1 maxint 1 6 branch limit until finding a new nonlinear solution
+LIM_MODE enumint 429 1 1 6 flag indicating which heuristic limit on sub-solver in GOP is based
+ 0 1 No limit
+ 1 1 Time based limit
+ 2 1 Iteration based limit
+ 3 1 Both time and iteration based limit
+ITRLIM double 430 -1 -1 maxdouble 1 6 GOP iteration limit
+ITRLIM_SIM double 431 -1 -1 maxdouble 1 6 total simplex iteration limit summed over all branches in GOP
+ITRLIM_IPM double 432 -1 -1 maxdouble 1 6 total barrier iteration limit summed over all branches in GOP
+ITRLIM_NLP double 433 -1 -1 maxdouble 1 6 total nonlinear iteration limit summed over all branches in GOP
+REPORTEVSOL boolean.nv 0 0 1 7 solve and report the expected value solution
+STOC_NSAMPLE_PER_STAGE string 0 "" 1 7 list of sample sizes per stage (starting at stage 2)
+STOC_NSAMPLE_SPAR integer 600 -1 -1 maxint 1 7 common sample size per stochastic parameter
+STOC_NSAMPLE_STAGE integer 601 -1 -1 maxint 1 7 common sample size per stage
+STOC_RG_SEED integer 602 1031 0 maxint 1 7 seed to initialize the random number generator
+STOC_METHOD enumint 603 -1 1 7 stochastic optimization method to solve the model
+ -1 1 Solve with the method chosen by the solver
+ 0 1 Solve the deterministic equivalent (DETEQ)
+ 1 1 Solve with the Nested Benders Decomposition (NBD) method
+STOC_REOPT enumint 604 0 1 7 reoptimization method to solve the node-models
+ 0 1 Solver decides
+ 1 1 Use primal method
+ 2 1 Use dual simplex
+ 3 1 Use barrier solver
+ 4 1 Use NLP solver
+STOC_TOPOPT enumint 605 0 1 7 optimization method to solve the root problem
+ 0 1 Solver decides
+ 1 1 Use primal method
+ 2 1 Use dual simplex
+ 3 1 Use barrier solver
+ 4 1 Use NLP solver
+ 6 1 Use multi-start solver
+ 7 1 Use global solver
+STOC_ITER_LIM integer 606 -1 -1 maxint 1 7 iteration limit for stochastic solver
+STOC_DETEQ_TYPE enumint 608 -1 1 7 type of deterministic equivalent
+ -1 1 Solver decides
+ 0 1 Implicit determinisitc equivalent
+ 1 1 Explicit determinisitc equivalent
+STOC_CALC_EVPI enumint 609 1 1 7 flag to enable or disable calculation of EVPI
+ 0 1 disable
+ 1 1 enable
+STOC_SAMP_CONT_ONLY enumint 611 1 1 7 flag to restrict sampling to continuous stochastic parameters only or not
+ 0 1 disable
+ 1 1 enable
+STOC_BUCKET_SIZE integer 612 -1 -1 maxint 1 7 bucket size in Benders decomposition
+STOC_MAX_NUMSCENS integer 613 40000 0 maxint 1 7 maximum number of scenarios before forcing automatic sampling
+STOC_SHARE_BEGSTAGE integer 614 -1 -1 maxint 1 7 stage beyond which node-models are shared
+STOC_NODELP_PRELEVEL integer 615 0 0 maxint 1 7 presolve level solving node-models
+ +2 Simple pre-solving
+ +4 Probing
+ +8 Coefficient reduction
+ +16 Elimination
+ +32 Dual reductions
+ +64 Use dual information
+ +512 Maximum pass
+STOC_TIME_LIM double 616 -1 -1 maxdouble 1 7 time limit for stochastic solver
+STOC_RELOPTTOL double 617 1e-7 0 maxdouble 1 7 relative optimality tolerance (w.r.t lower and upper bounds on the true objective) to stop the solver
+STOC_ABSOPTTOL double 618 1e-7 0 maxdouble 1 7 absolute optimality tolerance (w.r.t lower and upper bounds on the true objective) to stop the solver
+STOC_VARCONTROL_METHOD enumint 620 1 1 7 sampling method for variance reduction
+ 0 1 Montecarlo sampling
+ 1 1 Latinsquare sampling
+ 2 1 Antithetic sampling
+STOC_CORRELATION_TYPE enumint 621 0 1 7 correlation type associated with correlation matrix
+ -1 1 Target correlation
+ 0 1 Pearson correlation
+ 1 1 Kendall correlation
+ 2 1 Spearman correlation
+STOC_WSBAS integer 622 -1 -1 maxint 1 7 warm start basis for wait-see model
+STOC_ALD_OUTER_ITER_LIM integer 623 200 0 maxint 1 7 outer loop iteration limit for ALD
+STOC_ALD_INNER_ITER_LIM integer 624 1000 0 maxint 1 7 inner loop iteration limit for ALD
+STOC_ALD_DUAL_FEASTOL double 625 1e-4 0 maxdouble 1 7 dual feasibility tolerance for ALD
+STOC_ALD_PRIMAL_FEASTOL double 626 1e-4 0 maxdouble 1 7 primal feasibility tolerance for ALD
+STOC_ALD_DUAL_STEPLEN double 627 0.9 0 maxdouble 1 7 dual step length for ALD
+STOC_ALD_PRIMAL_STEPLEN double 628 0.5 0 maxdouble 1 7 primal step length for ALD
+CORE_ORDER_BY_STAGE integer 629 1 0 maxint 1 7 order nontemporal models or not
+STOC_MAP_MPI2LP integer 632 0 0 maxint 1 7 flag to specify whether stochastic parameters in MPI will be mapped as LP matrix elements
+STOC_AUTOAGGR integer 633 1 0 maxint 1 7 flag to enable or disable autoaggregation
+STOC_BENCHMARK_SCEN integer 634 -2 -2 maxint 1 7 benchmark scenario to compare EVPI and EVMU against
+STOC_INFBND double 635 1e9 0 maxdouble 1 7 value to truncate infinite bounds at non-leaf nodes
+STOC_ADD_MPI integer 636 0 0 maxint 1 7 flag to use add-instructions mode when building deteq
+STOC_ELIM_FXVAR integer 637 1 0 maxint 1 7 flag to enable elimination of fixed variables from deteq MPI
+STOC_SBD_OBJCUTVAL double 638 1e-30 0 maxdouble 1 7 RHS value of objective cut in SBD master problem
+STOC_SBD_OBJCUTFLAG integer 639 1 0 maxint 1 7 flag to enable objective cut in SBD master problem
+STOC_SBD_NUMCANDID integer 640 -1 -1 maxint 1 7 maximum number of candidate solutions to generate at SBD root
+STOC_BIGM double 641 1e7 0 maxdouble 1 7 big-M value for linearization and penalty functions
+STOC_NAMEDATA_LEVEL integer 642 1 0 maxint 1 7 name data level
+STOC_SBD_MAXCUTS integer 643 -1 -1 maxint 1 7 max cuts to generate for master problem
+SAMP_NCM_METHOD integer 701 5 0 maxint 1 7 bitmask to enable methods for solving the nearest correlation matrix (NCM) subproblem
+SAMP_NCM_CUTOBJ double 702 1e-30 0 maxdouble 1 7 objective cutoff (target) value to stop the nearest correlation matrix (NCM) subproblem
+SAMP_NCM_DSTORAGE integer 703 -1 -1 maxint 1 7 flag to enable or disable sparse mode in NCM computations
+SAMP_CDSINC double 704 1e-6 0 maxdouble 1 7 correlation matrix diagonal shift increment
+SAMP_SCALE integer 705 0 0 maxint 1 7 flag to enable scaling of raw sample data
+SAMP_NCM_ITERLIM integer 706 100 0 maxint 1 7 iteration limit for NCM method
+SAMP_NCM_OPTTOL double 707 1e-7 0 maxdouble 1 7 optimality tolerance for NCM method
+STOC_DEQOPT enumint 708 0 1 7 method to solve the DETEQ problem
+ 0 1 Solver decides
+ 1 1 Use primal method
+ 2 1 Use dual simplex
+ 3 1 Use barrier solver
+ 4 1 Use NLP solver
+ 6 1 Use multi-start solver
+ 7 1 Use global solver
+SAMPLELIBRARY enumstr 0 "Lindo" 0 7 Sample library
+ "Lindo" 1
+SVR_LS_MONTECARLO strlist 0 1 7 Sample variance reduction map to Lindo Montecarlo algorithm
+SVR_LS_LATINSQUARE strlist 0 1 7 Sample variance reduction map to Lindo Latin Square algorithm
+SVR_LS_ANTITHETIC strlist 0 1 7 Sample variance reduction map to Lindo Antithetic algorithm
+CHECKRANGE string 0 "range.gdx" 1 8 calculate feasible range for variables
+LINDOPATH string 0 "" 0 8 path to LINDO system files
+USEGOP enumint 0 1 1 6 use global optimization
+ 0 1 Do not use global optimization
+ 1 1 Use global optimization
+USEMPI enumint 0 0 0 8 use (and write) MPI file instead of array of instruction codes
+ 0 1 Use array of instruction codes for passing model
+ 1 1 Use MPIfile for passing model
+NOBOUNDS immediate NOBOUNDS 0 8 ignore bounds
+READFILE immediate READFILE 0 8 include option file
+READPARAMS string 0 "" 1 8 read Lindo parameter file
+WRITEDEMPI string 0 "" 1 8 write deterministic equivalent in MPI format
+WRITEDEMPS string 0 "" 1 8 write deterministic equivalent in MPS format
+WRITEMPI string 0 "" 1 8 write (S)MPI file of processed model
+WRITEMPS string 0 "" 1 8 write (S)MPS file of processed model
+SECRET strlist 0 0 8 secret option setting
+*
+* synonym section
+*
+opttol synonym RELOPTTOL
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General Options
+lp group 2 1 LP Options
+ipm group 3 1 IPM Options
+mip group 4 1 MIP Options
+nlp group 5 1 NLP Options
+global group 6 1 Global Options
+sp group 7 1 SP Options
+link group 8 1 Link Options
+*** End of file

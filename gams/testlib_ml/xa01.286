@@ -1,0 +1,83 @@
+$TITLE 'XA test suite - basic option reading test' (XA01,SEQ=286)
+$ONDOLLAR
+
+* start with the transport model, straight from modlib
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+          c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars ;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+Model transport /all/ ;
+
+$onecho > xa.op9
+set iteration 1
+$offecho
+
+$onecho > xa.op8
+* this is a comment
+* options must be spelled out completely, or they are not recognized
+* set iteratio   1
+* the underbar is not part of the option name
+* set_iteration  1
+$offecho
+
+* only the newer links handle junk options correctly (i.e. by ignoring
+* them and continuing) so test for them before testing junk
+$if %system.platform% == AIX $goto OLDXALINK
+$if %system.platform% == AXU $goto OLDXALINK
+$if %system.platform% == SOL $goto OLDXALINK
+$if %system.platform% == SOX $goto OLDXALINK
+$echo junkOption shouldNotCrashXA >> xa.op8
+$label OLDXALINK
+
+option lp=xa;
+
+* this one will fail
+transport.optfile=9;
+solve transport using lp minimizing z ;
+abort$(transport.solvestat <> %solvestat.IterationInterrupt%) 'unexpected XA solvestat';
+abort$(transport.modelstat <> %modelstat.IntermediateInfeasible% and transport.modelstat <> %modelstat.IntermediateNonoptimal%) 'unexpected XA modelstat';
+
+* but this will work
+transport.optfile=8;
+solve transport using lp minimizing z ;
+abort$(transport.solvestat <> %solvestat.NormalCompletion% or transport.modelstat <> %modelstat.Optimal%) 'unexpected XA behavior';

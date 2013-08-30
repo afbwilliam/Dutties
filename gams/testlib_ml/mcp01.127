@@ -1,0 +1,13 @@
+$title Illustrate rules for matching =E= equations in MCP (MCP01,SEQ=127)
+
+$ontext
+
+This model illustrates the matching rules for equation/variable pairs
+in MCP models, for equations of type =E=.
+
+Contributor: Steve Dirkse, May 2004
+$offtext
+
+$set EQTYPE =E=
+
+$include mcp0x.inc

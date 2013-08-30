@@ -1,0 +1,79 @@
+$Title Kissing Number Problem using Variable Neighborhood Search (KNP,SEQ=321)
+
+$ontext
+Determining the maximum number of k-dimensional spheres of radius
+r that can be adjacent to a central sphere of radius r is known
+as the Kissing Number Problem (KNP). The problem has been solved
+for 2 (6), 3 (12) and very recently for 4 (24) dimensions. Here
+is a nonlinear (nonconvex) mathematical programming model known
+as the distance formulation for the solution of the KNP. We solve
+the problem by using the Variable Neighbourhood Search Algorithm.
+
+
+Kucherenko, S, Belotti, P, Liberti, L, and Maculan, N,
+New formulations for the Kissing Number Problem. Tech. rep.,
+LIX Ecole Polytechnique, Palaiseau F-91128, France, 2006.
+$offtext
+
+$eolcom //
+$if not set kmax $set kmax 4
+$if not set smax $set smax 24
+Set    k Dimension /k1*k%kmax%/
+       i Spheres   /s1*s%smax%/; alias (i,j);
+Scalar r radius /1/;
+
+Variable x(i,k) position of the center of the i-th sphere around the central sphere
+         z      feasibility indicator;
+
+Equation eq1(i)    sphere centers have distance 2 from the center sphere
+         eq2(i,j)  minimum pairwise sphere separation distance;
+
+eq1(i).. sum(k, sqr(x(i,k))) =e= 4*sqr(r);
+
+eq2(i,j)$(not sameas(i,j)).. sum(k, sqr(x(i,k)-x(j,k))) =g= 4*sqr(r)*z;
+
+model kissing /all/;
+
+scalar up,lo; lo = -2*r; up = -lo;
+
+x.lo(i,k) = lo; x.up(i,k) = up;
+x.l(i,k) = uniform(lo,up);
+
+parameter p(i,k)  center points of best solution
+          bestobj feasibility indicator of best solution
+          maxnk   major iteration limit (search space)  /20/
+          maxns   minor iteration limit (random starts) /5/
+          nk      major iteration /1/
+          ns      minor iteration
+          goon    termination indicator /1/;
+
+solve kissing max z using nlp;
+* Start VNS only if we have a solution
+if (kissing.modelstat=%modelstat.Optimal% or
+    kissing.modelstat=%modelstat.LocallyOptimal%,
+  bestobj = z.l; p(i,k) = x.l(i,k);
+  option solprint=off, limrow=0, limcol=0;
+  kissing.solvelink=%solvelink.CallScript%;
+* Variable Neighborhood Search Algorithm
+  while(goon and bestobj<1,
+* Sample a new point in the neighborhood of best point
+    ns=1; repeat
+      x.l(i,k) = uniform(p(i,k)-nk*(p(i,k)-lo)/maxnk, p(i,k)+nk*(up-p(i,k))/maxnk);
+      solve kissing max z using nlp;
+* in case we have no solution make sure z.l is small enough to avoid update of bestobj
+      z.l$(kissing.modelstat<>%modelstat.Optimal% and
+           kissing.modelstat<>%modelstat.LocallyOptimal%) = bestobj-1;
+      ns = ns+1;
+    until ns=maxns+1 or z.l>bestobj;
+    if (z.l<=bestobj,
+      nk = nk+1; // enlarge neighborhood
+      goon = nk<=maxnk;
+    else
+      bestobj = z.l; p(i,k) = x.l(i,k);
+      display bestobj;
+      nk=1;
+    );
+  );
+  if (bestobj>=1, display 'KNP(%kmax%) >= %smax%';
+  else display 'Most likely: KNP(%kmax%) < %smax%');
+);

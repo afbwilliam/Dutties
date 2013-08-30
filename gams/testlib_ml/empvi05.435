@@ -1,0 +1,118 @@
+$title Test for EMP's treatment of an odd variable (EMPVI05,SEQ=435)
+$ontext
+
+This model verifies that EMP treats the variable jj correctly. It only occurs
+linearly in the objective of mNLP.
+
+Considering the corresponding MCP: GAMS' mcp check will fail if a variable that
+is mapped to a constraint does not show up in the model. One workaround to keep
+the variable in the model is using eps*jj (see model mMCP).
+
+The MCP can be generated and solved through EMP automatically. EMP will
+preprocess the model and omit jj and dldJJ in generated submodel. Hence, the
+workaround using eps*jj is not reuired but EMP needs to make sure that jj.l/m
+are set to correct values (see model mNLP).
+
+Consider the corresponding VI: Similar to the MCP we need to include jj using
+eps*jj (see model mVI)
+
+Finally we write down a cognate VI (not the same!) which is a simple example of
+a VI that cannot be formulated as an opimization problem.
+
+This model is a variant of the zerofunc model from the GAMS EMP Library.
+
+Contributor: Jan-H. Jagla, March 2009
+
+$offtext
+
+file myinfo / '%emp.info%' /;
+
+**** A simple NLP
+free variables y, z, jj;
+free variable obj;
+equations objDef, gCons;
+
+jj.lo=3;
+
+objDef..  obj =E= power(y,3) / 3 + jj;
+gCons..   y   =G= sqr(z);
+
+model mNLP / objDef, gCons /;
+solve mNLP min obj using nlp;
+abort$[jj.l <> jj.lo] 'mNLP: jj not at lower bound';
+
+**** The corresponding MCP
+positive variable u 'explicit multiplier for MCP';
+equations dLdy, dLdz, dLdjj, dLdu;
+
+u.l = gCons.m;
+
+dLdy..  sqr(y)  - u     =N= 0;
+dLdz..  0       - u*2*z =N= 0;
+dLdjj.. 1 + eps*jj - 0  =N= 0;
+dLdu..  y - sqr(z)      =N= 0;
+
+model mMCP / dLdy.y, dLdz.z, dLdjj.jj, dLdu.u/;
+solve mMCP using mcp;
+abort$[mMCP.modelStat <> %MODELSTAT.OPTIMAL%           ] 'mMCP: Model status not 1';
+abort$[mMCP.solveStat <> %SOLVESTAT.NORMAL COMPLETION% ] 'mMCP: Solver status not 1';
+abort$[mMCP.objval     > 1e-6                          ] 'mMCP: Input for model was not optimal';
+abort$[mMCP.iterusd    > 0                             ] 'mMCP: Iterations used';
+abort$[jj.l           <> jj.lo                         ] 'mMCP: jj not at lower bound';
+
+**** Create and solve the corresponding MCP through EMP
+* tell EMP to solve this as an MCP
+putclose myinfo 'ModelType MCP';
+solve mNLP min obj using emp;
+abort$[mNLP.modelStat <> %MODELSTAT.LOCALLY OPTIMAL%   ] 'mNLP: Model status not 2';
+abort$[mNLP.solveStat <> %SOLVESTAT.NORMAL COMPLETION% ] 'mNLP: Solver status not 1';
+abort$[mNLP.objval    <> obj.l                         ] 'mNLP: ObjVal and obj.l differ';
+abort$[mNLP.iterusd    > 0                             ] 'mNLP: Iterations used';
+abort$[jj.l           <> jj.lo                         ] 'mNLP: jj not at lower bound';
+
+**** Create and solve the corresponding VI through EMP
+equation  F_y, F_jj;
+
+F_y..      sqr(y) =N= 0;
+F_jj.. 1 + eps*jj =N= 0;
+
+* define the complementary pairs for vi
+put myinfo  'vi' /;
+putclose 'F_y y F_jj jj';
+
+model mVI / F_y, F_jj, gCons /;
+solve mVI using emp;
+
+abort$[mVI.modelStat <> %MODELSTAT.LOCALLY OPTIMAL%   ] 'mVI: Model status not 1';
+abort$[mVI.solveStat <> %SOLVESTAT.NORMAL COMPLETION% ] 'mVI: Solver status not 1';
+abort$[mVI.objval     > 1e-6                          ] 'mVI: Input for model was not optimal';
+abort$[mVI.iterusd    > 0                             ] 'mVI: Iterations used';
+abort$[jj.l          <> jj.lo                         ] 'mVI: jj not at lower bound';
+
+********************************************************************************
+
+**** Now use EMP VI with a VI Function that can NOT be derived from an
+**** optimzation problem
+****
+**** Considering F_y only the corresponding NLP objective would look like this:
+**** objDef..  obj =E= power(y,3) / 3 + y*jj;
+**** However, in this case we would also end up with F_jj:
+**** F_jj.. y =N= 0;
+
+equation  mod_F_y;
+
+mod_F_y.. sqr(y) + jj =N= 0;
+
+* define the complementary pairs for vi
+put myinfo  'vi' /;
+putclose 'mod_F_y y';
+
+model mVI_pure / mod_F_y, gCons /;
+jj.up = jj.lo;
+gCons.m = 3;
+solve mVI_pure using emp;
+abort$[mVI_pure.modelStat <> %MODELSTAT.LOCALLY OPTIMAL%   ] 'mVI_pure: Model status not 1';
+abort$[mVI_pure.solveStat <> %SOLVESTAT.NORMAL COMPLETION% ] 'mVI_pure: Solver status not 1';
+abort$[mVI_pure.objval     > 1e-6                          ] 'mVI_pure: Input for model was not optimal';
+abort$[mVI_pure.iterusd    > 0                             ] 'mVI pure: Iterations used';
+abort$[jj.l               <> jj.lo                         ] 'mVI_pure: jj not at lower bound';

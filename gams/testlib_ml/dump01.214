@@ -1,0 +1,25 @@
+$title 'Test loading/dumping of uels from gdx - quoting!' (DUMP01,SEQ=214)
+
+$ontext
+testing for AB00709
+there was a problem with the quoting
+$offtext
+
+$onechoV > temp1.gms
+set i / '_empty_','+empty_','-empty',empty,' leading','**' /; display i;
+$offecho
+
+$onechoV > temp2.gms
+set i
+$gdxin temp1
+$load i
+$gdxin
+display i
+$offecho
+
+$call =gams temp1.gms gdx=temp1 lo=%GAMS.lo%
+$if errorlevel 1 $abort
+$call =gams temp2.gms dumpopt=11 lo=%GAMS.lo%
+$if errorlevel 1 $abort
+$call =gams temp2.dmp lo=%GAMS.lo%
+$if errorlevel 1 $abort

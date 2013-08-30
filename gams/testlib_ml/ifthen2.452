@@ -1,0 +1,73 @@
+$title Test nested $ifthen and $endif  (IFTHEN2,SEQ=452)
+
+$ontext
+Contributor: Alex
+$offtext
+
+$ifthen.C1 1==1 display '$ifthen.C1 1==1';
+$  ifthen.C2 1==1
+   display 'C2true 1';
+$  else.C2
+   abort   'C2false 1';
+$  endif.C2  $remark finished $endif C2 1
+display 'C2 1'
+$Endif.C1    $remark finished $endif C1 1
+display 'C1 1'
+
+$ifthen.C1 1==1  display '$ifthen.C1 1==1';
+$  ifthen.C2 0==1
+   abort   'C2true 2';
+$  else.c2
+   display 'C2false 2';
+$  endif.C2 $remark finished $endif C2 2
+display 'C2 2'
+$endif.C1   $remark finished $endif C1 2
+display 'C1 2'
+
+$ifthen.C1 0==1  abort '$ifthen.C1 0==1';
+$  ifthen.C2 1==1
+   abort 'C2 true 3';
+$  else.c2
+   abort 'C2false 3';
+$  endif.C2  $remark finished $endif C2 3
+abort 'C2 3'
+$endif.C1    $remark finished $endif C1 3
+display 'C1 3'
+
+$ifthen.C1 0==1  abort '$ifthen.C1 0==1';
+$  ifthen.C2 0==1
+   abort 'C2true 4';
+$  else.c2
+   abort 'C2false 4';
+$  endif.C2 $remark finished $endif C2 4
+abort 'C2 4'
+$endif.C1   $remark finished $endif C1 4
+display 'C1 4'
+
+
+scalar count / 0 /;
+$escape =
+$onecho > in.gms
+$  ifthen.C1 %=1==1
+   display 'from inside'; count := count + 1;
+$  endif.C1
+$offecho
+
+$ondollar
+$ifthen.C1 1==1
+$batinclude in 1
+$endif.C1
+
+$ifthen.C1 1==1
+$batinclude in 0
+$endif.C1
+
+$ifthen.C1 0==1
+$batinclude in 1
+$endif.C1
+
+$ifthen.C1 0==1
+$batinclude in  0
+$endif.C1
+
+abort$(count<>1) 'something went wrong',count;

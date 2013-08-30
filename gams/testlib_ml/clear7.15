@@ -1,0 +1,13 @@
+$title $clear cannot clear known predefined symbols (CLEAR7,SEQ=15)
+
+display sameas,diag;
+
+$clear sameas diag
+
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$problem
+$error cannot $clear known predefined symbols
+

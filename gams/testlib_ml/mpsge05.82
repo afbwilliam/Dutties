@@ -1,0 +1,8 @@
+$title MPSGE naming test: labels cannot contain a " (MPSGE05,SEQ=82)
+
+* set up a one-character label: a double quote protected by single quotes
+$set QT        "'"
+$set ILABEL    '"'
+$set SETUPFAIL  1
+
+$include exchange.inc

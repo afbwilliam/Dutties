@@ -1,0 +1,108 @@
+$title Circle Enclosing Points - Stochastic Example (CIRCLESP,SEQ=88)
+$ontext
+
+This is an example from the GAMS/SNOPT manual. Find the smallest circle
+that contains a number of given points.
+
+
+Gill, P E, Murray, W, and Saunders, M A, GAMS/SNOPT: An SQP Algorithm
+for Large-Scale Constrained Optimization, 1988.
+
+$offtext
+* DECIS solves only LP models
+$ifi %gams.emp%==decis $exit
+
+$if not set size $set size 3
+set i points /p1*p%size%/;
+
+parameters
+   x(i)    x coordinates,
+   y(i)    y coordinates;
+
+* fill with random data
+x(i) = uniform(1,10);
+y(i) = uniform(1,10);
+
+variables
+   a       x coordinate of center of circle
+   b       y coordinate of center of circle
+   r       radius;
+
+equations
+   e(i)    points must be inside circle;
+
+
+e(i)..  sqr(x(i)-a) + sqr(y(i)-b) =l= sqr(r);
+
+r.lo = 0;
+
+parameters xmin,ymin,xmax,ymax;
+xmin = smin(i, x(i));
+ymin = smin(i, y(i));
+xmax = smax(i, x(i));
+ymax = smax(i, y(i));
+
+* set starting point
+a.l = (xmin+xmax)/2;
+b.l = (ymin+ymax)/2;
+r.l = sqrt( sqr(a.l-xmin) + sqr(b.l-ymin) );
+
+set s scenario s /s1*s27/
+Parameter
+    s_x(s,i), s_y(s,i);
+
+set dict / s.scenario.''
+           x.randvar.s_x
+           y.randvar.s_y /;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'; emp.pc=0;
+loop(i,
+   put / 'jrandvar x("' i.tl:0 '") y("' i.tl:0 '") '
+           (1/3):6:2 normal(x(i),1):6:2  normal(y(i),1):6:2
+           (1/3):6:2 normal(x(i),1):6:2  normal(y(i),1):6:2
+           (1/3):6:2 normal(x(i),1):6:2  normal(y(i),1):6:2;
+)
+putclose / 'modeltype nlp' / 'stage 2 x y e r'
+
+model m /all/;
+solve m using emp minimizing r scenario dict;
+
+* Expanded DE with implicit NA constraints in GAMS using the scenario from previous solve.
+equation es(s,i), defobj;
+positive variable rs(s);
+variable obj;
+
+es(s,i).. sqr(s_x(s,i)-a) + sqr(s_y(s,i)-b) =l= sqr(rs(s));
+defobj..  obj =e= sum(s, 1/card(s)*rs(s));
+
+model msi /es, defobj/;
+
+xmin = smin((s,i), s_x(s,i));
+ymin = smin((s,i), s_y(S,i));
+xmax = smax((s,i), s_x(s,i));
+ymax = smax((s,i), s_y(S,i));
+
+* set starting point
+a.l = (xmin+xmax)/2;
+b.l = (ymin+ymax)/2;
+rs.l(s) = sqrt( sqr(a.l-xmin) + sqr(b.l-ymin) );
+
+solve msi using nlp minimizing obj;
+abort$(abs(r.l-obj.l)>1e-6) 'EMP and DE (implicit NA) solution differ', r.l, obj.l;
+
+* Expanded DE with explicit NA constraints in GAMS using the scenario from previous solve.
+equation ese(s,i), defnaa(s), defnab(s);
+positive variable as(s), bs(s);
+
+ese(s,i).. sqr(s_x(s,i)-as(s)) + sqr(s_y(s,i)-bs(s)) =l= sqr(rs(s));
+defnaa(s-1).. as('s1') =e= as(s);
+defnab(s-1).. bs('s1') =e= bs(s);
+
+model mse /ese, defnaa, defnab, defobj/;
+
+as.l(s) = (xmin+xmax)/2;
+bs.l(s) = (ymin+ymax)/2;
+rs.l(s) = sqrt( sqr(as.l(s)-xmin) + sqr(bs.l(s)-ymin) );
+
+solve mse using nlp minimizing obj;
+abort$(abs(r.l-obj.l)>1e-6) 'EMP and DE (explicit NA) solution differ', r.l, obj.l;

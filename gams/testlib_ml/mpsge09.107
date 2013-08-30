@@ -1,0 +1,6 @@
+$title MPSGE naming test: labels cannot be empty (MPSGE09,SEQ=107)
+
+$set ILABEL    ""
+$set SETUPFAIL  1
+
+$include exchange.inc

@@ -1,0 +1,94 @@
+$title Compares EMP results for a simple LP with known results (EMP01,SEQ=386)
+
+$ontext
+
+This model compares the results from different EMP runs with the results known.
+The model has a bounded variable only appearing in the objective which is
+reformulated in case EMP writes and MCP model
+
+Contributor: Jan-H. Jagla, April 2007
+
+$offtext
+
+
+variables obj,x,y; equation defobj,e;
+negative variable y;
+
+defobj.. (-2/3)*obj =e= 2*x - y + 3;
+
+e.. y =g= -3;
+
+y.up=-1; x.lo = 1;x.up =5;
+
+model m /all /;
+
+sets enames  / defobj,e /
+     vnames  / obj,x,y  /
+     evnames / set.enames,set.vnames /
+     suf / l,m /;
+
+parameter rep comparison / (defobj.(l  3, m -1.5)
+                            e.     (l -1        )
+                            obj.   (l -9        )
+                            x.     (l  1, m -3  )
+                            y.     (l -1, m  1.5)).known /;
+
+$gdxout "%gams.scrdir%repgdx.%gams.scrext%"
+$unload evnames suf
+$gdxout
+
+$onechoV > "%gams.scrdir%repgms.%gams.scrext%"
+set evnames, suf;
+$gdxin "%oldscrdir%repgdx.%gams.scrext%"
+$load evnames suf
+file fx /'%oldscrdir%rep.%gams.scrext%'/; fx.lw = 0; fx.silent=1; put fx;
+$escape =
+loop((evnames,suf),
+  put "rep('" evnames.tl "','" suf.tl "','%=lp%=') = " evnames.tl "." suf.tl ";" /;
+);
+$offecho
+
+$call gams "%gams.scrdir%repgms.%gams.scrext%" lo=%gams.lo% --oldscrdir="%gams.scrdir%"
+
+* standard LP solve
+solve m us lp max obj;
+$set lp LP
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+option limcol=0,limrow=0;
+
+* EMP - without info file
+solve m us emp max obj;
+$set lp NOemp
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+file fhandle /"%emp.info%"/;
+
+* EMP - use empty info file
+putclose fhandle '*empty emp info file';
+solve m us emp max obj;
+$set lp empLP
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+* EMP - rewrite as MCP
+putclose fhandle 'modeltype mcp';
+solve m us emp max obj;
+$set lp empMCP
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+* EMP - rewrite as MCP and keep original objective
+$echo keepObj > jams.opt
+m.optfile=1;
+solve m us emp max obj;
+$set lp empMCPkeep
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+
+set type / lp, noemp, emplp, empmcp, empmcpkeep /;
+rep('sum','diff',type) = sum((evnames,suf), abs(rep(evnames,suf,type) - rep(evnames,suf,'known')));
+
+display rep;
+
+abort$(sum(type, rep('sum','diff',type)) > 1e-4) 'we did not get the right solution';
+
+$call rm -f repgms.lst

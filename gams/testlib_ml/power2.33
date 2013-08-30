@@ -1,0 +1,15 @@
+$title test integer powers from -298 to +298 (POWER2,SEQ=33)
+scalar i,j,a,d,e,f;
+j := 0;
+for(i = 0 to 298,
+   d = power(10,i);
+   e = power(10,-i);
+   a = log10(d);
+   f = log10(e);
+   display i,d,a,e,f;
+* some machines can only handle 2e-13
+   j$(abs(a-i) > 2e-13) = j + 1;
+   j$(abs(f+i) > 2e-13) = j + 1;
+   );
+
+abort$j 'power is wrong ,many times',j ;

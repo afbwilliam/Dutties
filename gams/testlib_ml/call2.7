@@ -1,0 +1,15 @@
+$title Check return codes for spawns of gams execute (CALL2,SEQ=7)
+
+file gms / temp.gms /; put gms;
+putclose '* ok run'; execute '=gams temp.gms lo=%GAMS.lo%';
+abort$(errorlevel <> 0) 'errorlevel should be 0';
+putclose 'garbage '; execute '=gams temp.gms lo=%GAMS.lo%';
+abort$(errorlevel <> 2) 'errorlevel should be 2';
+putclose 'scalar x; x=1/0;'; execute '=gams temp.gms lo=%GAMS.lo%';
+abort$(errorlevel <> 3) 'errorlevel should be 3';
+putclose '* ok run'; execute '=gams temp.gms garbage=grabage lo=%GAMS.lo%';
+abort$(errorlevel <> 6) 'errorlevel should be 6';
+$exit
+* we removed the UEL limit with 137
+putclose 'set i /1*10000;'; execute '=gams temp.gms license=grabage lo=%GAMS.lo%';
+abort$(errorlevel <> 7) 'errorlevel should be 7';

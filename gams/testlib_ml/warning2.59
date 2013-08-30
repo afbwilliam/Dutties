@@ -1,0 +1,4 @@
+$title compilation warnings are ignored (WARNING2,SEQ=59)
+$echo $warning > temp.gms
+$call =gams temp.gms lo=2
+$if errorlevel 1 $error should NOT have triggered and error

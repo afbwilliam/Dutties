@@ -1,0 +1,18 @@
+$TITLE 'Test correctness of arccos intrinsic' (FNACOS,SEQ=270)
+
+$include fnset_x.inc
+
+$gdxin fnacos
+$load aeps reps0 reps1 reps2 T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = arccos.value (data(T,'x'));
+  data(T, 'fx')    = arccos.grad  (data(T,'x'));
+  data(T,'fxx')    = arccos.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+execerror = 0;
+$include fntest_x.inc

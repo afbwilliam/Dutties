@@ -1,0 +1,8 @@
+$title multiple unloads of the same item are OK (UNLOAD1,SEQ=50)
+variable x; parameter a;
+
+a   = 2;
+x.l = 1;
+
+execute_unload 'gdx1',x,x.l,x.up,x.l = x.garb ,  x.l =y  ,x= x
+                      a,a a=b a=a;

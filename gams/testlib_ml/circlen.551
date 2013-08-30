@@ -1,0 +1,130 @@
+$title Circle Enclosing Points n dimensional (CIRCLEN,SEQ=551)
+$ontext
+
+This is an example from the GAMS/SNOPT manual. Find the smallest
+circle that contains a number of given points. This is extended to an
+n-dimensional ball.
+
+http://en.wikipedia.org/wiki/Smallest_circle_problem
+
+
+Gill, P E, Murray, W, and Saunders, M A, GAMS/SNOPT: An SQP Algorithm
+for Large-Scale Constrained Optimization, 1988.
+
+Extended model from GAMS Model library
+
+Contributor: Michael Bussieck
+
+$offtext
+
+$if not set TESTTOL       $set TESTTOL    1e-6
+
+$if not set DEMOSIZE      $set DEMOSIZE   0
+$if not set GLOBALSIZE    $set GLOBALSIZE 0
+$if not %DEMOSIZE% == 0   $set DEMOSIZE   1
+$if not %GLOBALSIZE% == 0 $set GLOBALSIZE 1
+
+$if %DEMOSIZE%%GLOBALSIZE% == 11 $set dim 9
+
+$if not set size $set size 10
+$if not set dim  $set dim 10
+$ife %dim%>10 $abort GAMS functions can't have more than 10 arguments
+
+set i points /p1*p%size%/
+    d dimension /d1*d%dim%/;
+
+* Build scalar edist argument list based on dim
+$set edistarg x(i,'d1')-a('d1')
+$set cnt 1
+$label addarg
+$if %cnt%==%dim% $goto cont
+$eval cnt %cnt%+1
+$set edistarg %edistarg%,x(i,'d%cnt%')-a('d%cnt%')
+$goto addarg
+$label cont
+
+parameters
+   x(i,d)  coordinates;
+
+* fill with random data
+x(i,d) = uniform(1,10);
+
+variables
+   a(d)    coordinate of center of circle
+   df(i,d) difference x and a
+   r       radius
+   rx(i)   copy of radius for SOCP;
+positive variable rx; r.lo=0;
+
+equations
+   e(i)      points must be inside circle with edist
+   e2(i)     points must be inside circle with sqr and sqrt
+   ddf(i,d)  define difference
+   drx(i)    define copy of r
+   cone(i)   SOCP;
+
+e(i)..      edist(%edistarg%) =l= r;
+e2(i)..     sqrt(sum(d, sqr(x(i,d)-a(d)))) =l= r;
+ddf(i,d)..  df(i,d) =e= a(d) - x(i,d);
+drx(i)..    rx(i) =e= r;
+cone(i)..   sqr(rx(i)) =g= sum(d,sqr(df(i,d)));
+
+parameters xmin(d),xmax(d);
+xmin(d) = smin(i, x(i,d));
+xmax(d) = smax(i, x(i,d));
+
+* set starting point
+a.l(d) = (xmin(d)+xmax(d))/2;
+r.l = sqrt(sum(d,sqr(a.l(d)-xmin(d))));
+
+model m /e/;
+model m2 /e2/;
+model mSOCP /ddf, drx,cone/;
+
+solve m using nlp minimizing r;
+
+if {(m.solvestat = %solvestat.CapabilityProblems%),
+  abort$[m.modelstat <> %modelstat.NoSolutionReturned%] 'Wrong status codes',
+  m.solvestat, m.modelstat;
+  abort.NoError 'Capability problem';
+else
+  if (m.modelstat <> %modelstat.Optimal% and
+      m.modelstat <> %modelstat.LocallyOptimal%, abort 'Wrong status codes');
+}
+
+parameter repm, repm2, repmSOCP;
+
+repm('r') = r.l;
+repm(d)   = a.l(d);
+
+* reset starting point
+a.l(d) = (xmin(d)+xmax(d))/2;
+r.l = sqrt(sum(d,sqr(a.l(d)-xmin(d))));
+
+solve m2 using nlp minimizing r;
+
+if (m2.modelstat <> %modelstat.Optimal% and
+    m2.modelstat <> %modelstat.LocallyOptimal%, abort 'Wrong status codes');
+
+repm2('r') = r.l;
+repm2(d)   = a.l(d);
+
+* Check primal values
+abort$(abs(repm('r')-repm2('r'))>%TESTTOL%) 'r different', repm, repm2;
+abort$(sum(d,abs(repm(d)-repm2(d)))>%TESTTOL%) 'point different', repm, repm2;
+
+* Try solving as SOCP
+* reset starting point
+a.l(d) = (xmin(d)+xmax(d))/2;
+r.l = sqrt(sum(d,sqr(a.l(d)-xmin(d))));
+
+solve mSOCP using qcp minimizing r;
+
+* This should only happen with SOCP solvers (and global solvers)
+if (mSOCP.modelstat = %modelstat.Optimal%,
+  repmSOCP('r') = r.l;
+  repmSOCP(d)   = a.l(d);
+
+  abort$(abs(repm('r')-repmSOCP('r'))>%TESTTOL%) 'r different', repm, repmSOCP;
+  abort$(sum(d,abs(repm(d)-repmSOCP(d)))>%TESTTOL%) 'point different', repm, repmSOCP;
+);

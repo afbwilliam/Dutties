@@ -1,0 +1,167 @@
+$Title Test external equations (TESTEXEQ,SEQ=562)
+
+$ontext
+This test makes sure that the simple examples using external equations work
+with different compilers on different platforms.
+
+Contributor: D. Tischinberg
+$offtext
+
+
+* Dataname same as Modelname and expanded with additional letter from Programming Language
+* 'f' for fortran, 'd' for Delphi
+* For Example Model 'ex1.gms' uses C library 'ex1c.dll' and Fortran library 'ex1f.dll'
+
+Set ex   examples /er1*er3, ex1*ex5, ex1x, ex4x, exmcp1*exmcp5/
+    cb   call back or message vector / '', '_cb' /
+    lang languages / c '.c', fortran90 '.f90', delphi '.dpr', java '.java'/
+    bc   GAMS build codes / vs8, wei, lnx, leg, dig, deg /
+    extequExample(ex,cb,lang) /
+    er1   .'_cb'.C         er1c
+    er1   .'_cb'.Fortran90 er1f
+    er2   .'_cb'.C         er2c
+    er2   .'_cb'.Fortran90 er2f
+    er3   .'_cb'.C         er3c
+    er3   .'_cb'.Fortran90 er3f
+    ex1   .''   .C         ex1c
+    ex1   .''   .Fortran90 ex1f
+    ex1   .''   .Delphi    ex1d
+    ex1   .''   .Java      Ex1j
+    ex1   .'_cb'.C         ex1c
+    ex1   .'_cb'.Fortran90 ex1f
+    ex1   .'_cb'.Delphi    ex1d
+    ex1x  .''.   Fortran90 ex1xf
+    ex1x  .'_cb'.C         ex1xc
+    ex2   .'_cb'.C         ex2c
+    ex2   .'_cb'.Fortran90 ex2f
+    ex2   .'_cb'.Delphi    ex2d
+    ex3   .''   .Delphi    ex3d
+    ex3   .'_cb'.C         ex3c
+    ex3   .'_cb'.Fortran90 ex3f
+* Wheel and sigvm have not enough memory
+$ifi %system.buildcode%==sol $goto skipBig
+$ifi %system.buildcode%==sox $goto skipBig
+$ifi %system.buildcode%==sig $goto skipBig
+    ex4   .''   .Delphi    ex4d
+    ex4   .'_cb'.C         ex4c
+    ex4   .'_cb'.Fortran90 ex4f
+    ex4x  .'_cb'.C         ex4xc
+    ex4x  .'_cb'.Fortran90 ex4xf
+$label skipBig
+    ex5   .''   .C         ex5c
+    ex5   .''   .Fortran90 ex5f
+    exmcp1.''   .C         exmcp1c
+    exmcp1.''   .Fortran90 exmcp1f
+    exmcp2.''   .C         exmcp2c
+    exmcp2.''   .Fortran90 exmcp2f
+    exmcp2.'_cb'.C         exmcp2c
+    exmcp2.'_cb'.Fortran90 exmcp2f
+    exmcp3.'_cb'.C         exmcp3c
+    exmcp3.'_cb'.Fortran90 exmcp3f
+    exmcp4.'_cb'.C         exmcp4c
+    exmcp4.'_cb'.Fortran90 exmcp4f
+    exmcp5.''   .C         exmcp5c
+/;
+
+Set os / Windows '.dll', Unix '.so', Mac '.dylib'/;
+Set ExtraFiles(os,cb,lang) /
+Unix.   '_cb'.Fortran90 gehelper.f90 msg2_f.f90
+Unix.   ''   .Fortran90 gehelper.f90
+Windows.'_cb'.Fortran90 gehelper.f90 msg2_f.f90
+Windows.''   .Fortran90 gehelper.f90
+/;
+ExtraFiles('Mac',cb,lang) = ExtraFiles('Unix',cb,lang);
+
+$set myos Windows
+$ifi %system.filesys%==unix $set myos Unix
+$ifi %system.buildcode%==dig $set myos Mac
+$ifi %system.buildcode%==deg $set myos Mac
+
+* since we need to call compilers, run only on systems that have been setup accordingly
+$ifi %sysenv.HOSTNAME% == hamilton.gams.com $goto continue
+$ifi %sysenv.HOSTNAME% == sigvmec2          $goto continue
+$ifi %sysenv.HOSTNAME% == jan.local         $goto continue
+$ifi %sysenv.HOSTNAME% == wheel             $goto continue
+$ifi %sysenv.HOSTNAME% == n30-csm           $goto continue
+$ifi %sysenv.COMPUTERNAME% == MONTECORE     $goto continue
+$exit
+$label continue
+
+*for Java: before using the DLL make sure jvm.dll is in the PATH (e.g. C:\Program Files\Java\jre6\bin\client)
+$ifi %system.buildcode%==wei $PrefixPath C:\Program Files\Java\jre7\bin\server
+$ifi %system.buildcode%==vs8 $PrefixPath C:\Program Files (x86)\Java\jre7\bin\client
+$ifi %system.buildcode%==lnx $setenv LD_LIBRARY_PATH /opt/jdk_x86/jre/lib/i386/client:%SysEnv.LD_LIBRARY_PATH%
+$ifi %system.buildcode%==leg $setenv LD_LIBRARY_PATH /opt/jdk_x64/jre/lib/amd64/server:%SysEnv.LD_LIBRARY_PATH%
+$ifi %system.buildcode%==aix $setenv LD_LIBRARY_PATH /usr/java6_64/jre/lib/ppc64/j9vm/:%SysEnv.LD_LIBRARY_PATH%
+*$ifi %system.buildcode%==dig $setenv DYLD_LIBRARY_PATH/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries:%SysEnv.LD_LIBRARY_PATH%
+*$ifi %system.buildcode%==deg $setenv DYLD_LIBRARY_PATH/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries:%SysEnv.LD_LIBRARY_PATH%
+$ifi %system.buildcode%==sol $setenv LD_LIBRARY_PATH /s/jdk1.6.0_20/sun4x_58/jre/lib/sparc/client:%SysEnv.LD_LIBRARY_PATH%
+$ifi %system.buildcode%==sox $setenv LD_LIBRARY_PATH /s/jdk1.6.0_20/sun4x_58/jre/lib/sparcv9/server:%SysEnv.LD_LIBRARY_PATH%
+$ifi %system.buildcode%==sig $setenv LD_LIBRARY_PATH /usr/jdk/instances/jdk1.7.0/jre/lib/amd64/server:%SysEnv.LD_LIBRARY_PATH%
+
+*running single example from set
+$if not set TEST $goto alltests
+ set ex2(ex) / %TEST% /;
+$goto singletests
+$label alltests
+ set ex2(ex); ex2(ex) = yes;
+$label singletests
+
+*not running single example from set
+$if not set NOTEST $goto noalltest
+ set exn(ex) /%NOTEST%/;
+ex2(ex) = not exn(ex);
+$label noalltest
+
+*under DIG/DEG no java
+$if not set LAN
+$ifi %system.buildcode%==dig $set LAN "c,fortran90,delphi"
+$ifi %system.buildcode%==deg $set LAN "c,fortran90,delphi"
+
+*under WEI no delphi, # 2237
+$ifi %system.buildcode%==wei $set LAN "c,fortran90,java"
+
+*run examples with defined language
+$if not set LAN $goto alllang
+ set lang2(lang) / %LAN% /;
+$goto singlelang
+$label alllang
+ set lang2(lang); lang2(lang) = yes;
+$label singlelang
+
+scalar fp;
+file fpf / pf.txt /;
+file fx;
+loop(ex2(ex)$sum(extequExample(ex,cb,lang2),1),
+  Put_utility fx 'exec' /'testlib -q ' ex.tl;
+  loop(extequExample(ex,cb,lang2(lang)),
+    put fpf / 'eolonly=1'
+            / '--lang=', lang.tl:0
+            / '--files=';
+    loop(ExtraFiles('%myos%',cb,lang),
+      put ExtraFiles.te('%myos%',cb,lang) ' ');
+    put extequExample.te(extequExample);
+    put cb.tl:0 lang.te(lang);
+    put / '--libname='
+    put extequExample.te(extequExample);
+    loop(os$sameas('%myos%',os), put cb.tl:0 os.te(os));
+    put / '--namestub='
+    put extequExample.te(extequExample);
+    putclose fpf;
+    execute 'gams complink idir=.. lo=%gams.lo% pf=pf.txt'
+    abort$errorlevel 'problems compiling';
+  )
+
+
+  put fpf / 'input=' ex.tl:0 '.gms'
+  loop(extequExample(ex,cb,lang2(lang)),
+    put / '--run';
+    fp = fpf.cc;
+    put lang.tl:0; put @(fp+1) '               ';
+    put @(fp+1) cb.tl:0 '=yes'
+  );
+  putclose fpf;
+  execute 'gams dummy lo=%gams.lo% pf=pf.txt';
+  abort$errorlevel 'problems running example';
+);
+

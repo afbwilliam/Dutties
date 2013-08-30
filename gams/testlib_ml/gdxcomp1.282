@@ -1,0 +1,22 @@
+$TITLE 'Compressed GDX - basic operation' (GDXCOMP1,SEQ=282)
+
+$call gamslib -q 1
+
+$SetEnv GDXCOMPRESS 1
+$call =gams trnsport lp=bdmlp gdx=t1.gdx lo=0
+$if errorlevel 1 $abort 'could not run trsnport'
+$SetEnv GDXCOMPRESS 0
+$call =gams trnsport lp=bdmlp gdx=t0.gdx lo=0
+
+$call wc -c t0.gdx | sed s/t.*// > "%gams.scrdir%t0.%gams.scrext%"
+$call wc -c t1.gdx | sed s/t.*// > "%gams.scrdir%t1.%gams.scrext%"
+
+scalar t0 size of uncompressed GDX file /
+$include "%gams.scrdir%t0.%gams.scrext%"
+/
+
+scalar t1 size of compressed GDX file /
+$include "%gams.scrdir%t1.%gams.scrext%"
+/
+
+abort$(t0<=t1) "wrong file sizes"

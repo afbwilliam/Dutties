@@ -1,0 +1,278 @@
+$Title Compare the actual system with the original solver database (GSOLVER,SEQ=311)
+
+$ontext
+This model compares the solvers and their capabilities on the
+actual system with the original solver capability database.
+It then runs all combinations with solvers known to the global database
+and checks if the return code of a GAMS run is 0.
+
+All exceptions are captured in a compare report. If the report is not empty,
+the model will terminate with an execution error.
+$offtext
+
+Sets ModelTypes    / system.ModelTypes  /
+     SolverNames   / system.SolverNames /
+     Platforms     / system.Platforms   /
+     glbSolverDB(SolverNames,ModelTypes,Platforms) / system.SolverTypePlatformMap /
+     BuildCode   /'%system.buildcode%'/;
+
+Set  s(SolverNames) Solvers available for this platform
+     glbSolverCapabilities(SolverNames,ModelTypes) original solver model type map
+
+Parameter comprep compare report;
+
+s(SolverNames) = sum(glbSolverDB(SolverNames,ModelTypes,'%system.platform%'), yes);
+glbSolverCapabilities(s,ModelTypes) = sum(glbSolverDB(s,ModelTypes,'%system.platform%'), yes);
+
+* Solver/Capability pairs missing in the actual system
+comprep(s,ModelTypes,'missing')    = glbSolverCapabilities(s,ModelTypes) and
+                                     not SolverCapabilities(s,ModelTypes);
+* Additional Solver/Capability pairs in the actual system
+comprep(s,ModelTypes,'additional') = not glbSolverCapabilities(s,ModelTypes) and
+                                     SolverCapabilities(s,ModelTypes);
+
+$onempty
+set skiplist 'list of solvers to skip' /
+  ampl
+  baron2 
+  coinos                'only works with option service and writes to stdout'
+  de
+  decis
+  decisc
+  decism
+  dicoptd
+  kestrel
+  lingo
+  os                    'only works with option service and writes to stdout'
+/;
+
+set skipm 'list of skipped modeltypes' /
+  emp
+/;
+
+set skipsm(*,*) 'list of skipped solver/modeltype combinations' /
+/;
+
+$offempty
+
+* Produce a GAMS program that will execute and configure the test
+* models (shown at the end). For each solver model type combination
+* we will execute a program like:
+*
+* $call =gams <scratch dir>m.%gams.scrext% lo=0 --mtype=rmip --solver=conopt
+* $if errorlevel 1 $abort "Solver conopt expected to solve rmip";
+*
+* and record exceptions in the 'fail' column of the report set tuple comprep.
+
+$set mname '"%gams.scrdir%m.%gams.scrext%"'
+file fx / rungslv.gms /; fx.lcase=1;
+file flog / '' /; flog.ps = 1;
+$set singlerun
+$set lo lo=0
+$if set solver    $set lo lo=3
+$if set solver    $set singlerun and sameas('%solver%',s)
+$if set modeltype $set singlerun %singlerun% and sameas('%modeltype%',Modeltypes)
+
+loop(SolverCapabilities(s,ModelTypes)$([not skipsm(s,ModelTypes)] and [sum{skiplist(s),1}=0] and [sum(skipm(ModelTypes),1)=0] %singlerun%),
+  putclose fx '$call =gams %mname% %lo% --mtype=' ModelTypes.tl:0 ' --solver=' s.tl:0
+            / '$if errorlevel 1 $abort "Solver ' s.tl:0 ' expected to solve ' ModelTypes.tl:0;
+  put flog '--- Running Solver ' s.tl:0 ' on Model Type ' ModelTypes.tl:0 /
+  execute '=gams rungslv.gms %lo%';
+  comprep(s,ModelTypes,'fail')$errorlevel = yes;
+);
+$if set solver $goto modeldump
+
+file ff / gslvfail.gms /;
+loop((s,ModelTypes)$comprep(s,ModelTypes,'fail'),
+  put ff '$call gams gsolver --Solver ' s.tl:0 ' --ModelType ' ModelTypes.tl:0 /;
+);
+
+* Trigger an execution error if the comprep report has entries
+abort$card(comprep) comprep;
+
+$label modeldump
+* Below is the test program to be executed. Note that we
+* copy the model into the scratch directory with the name extension
+* .%gams.scrext%. This file will then be removed automatically when gams
+* terminates.
+
+$onechoV > %mname%
+* A tiny test model for all different model types
+* The $setddlist (Double Dash List) defines all
+* 'legal' --names.
+
+$if NOT set mtype  $error --mtype=xxxx missing
+$if NOT set solver $error --solver=xxxx missing
+$setddlist mtype solver
+
+Variable z;
+Positive Variables w, x, y; x.up = 200;
+Integer Variables xi, yi;
+
+Equation lpe1, nlpe1, dnlpe1, mipe1, minlpe1, lpo, qcpo, nlpo, mipo, miqcpo, minlpo
+         cnse1, cnse2, mcpe1, mpeco, dece1, deco;
+
+* LP QCP NLP MIP MIQCP MINLP
+lpe1..    x + y           =l= 2.2;
+nlpe1..   exp(x+y)        =l= 4.1;
+dnlpe1..  abs(x*y)        =l= 4.1;
+mipe1..   xi + yi         =l= 3.5;
+minlpe1.. exp(xi*yi)      =l= 4.6;
+
+lpo..    z =e= -3*x - 4*y;
+qcpo..   z =e= 2*sqr(x - 3.4) + 3*sqr(y - 2.9);
+nlpo..   z =e= exp(3*x + 2*y);
+mipo..   z =e= -3*xi - 4*yi;
+miqcpo.. z =e= 2*sqr(xi - 3.4) + 3*sqr(yi - 2.9);
+minlpo.. z =e= exp(3*xi + 2*yi);
+
+* CNS
+cnse1..  sqr(x-3) + sqrt(y+4) =e= 3.7;
+cnse2..  x + 3.1*y            =e= 3.5;
+
+* MPEC and MCP
+mcpe1..  0.5*x + 2*y =g= 100;
+mpeco..  z   =e= 0.5*sqr(x) + 0.5*x*y - 95*x;
+
+* DECIS
+dece1..  x =e= y + w;
+deco..   z =e= 24*y -2.49*x - 4*w;
+
+model m_lp     / lpe1, lpo /
+      m_qcp    / lpe1, qcpo /
+      m_nlp    / nlpe1, nlpo /
+      m_dnlp   / dnlpe1, nlpo /
+      m_rmip   / mipe1, mipo /
+      m_mip    / mipe1, mipo /
+      m_rmiqcp / mipe1, miqcpo /
+      m_miqcp  / mipe1, miqcpo /
+      m_rminlp / minlpe1, minlpo /
+      m_minlp  / minlpe1, minlpo /
+      m_cns    / cnse1, cnse2 /
+      m_mpec   / mcpe1.y, mpeco /
+      m_rmpec  / mcpe1.y, mpeco /
+      m_mcp    / mcpe1.y /
+      m_decis  / dece1, deco /;
+
+option %mtype%=%solver%, optcr=0;
+
+* Special handling of solvers with special requirements
+$ifi %solver% == decisc     $goto DECIS
+$ifi %solver% == decism     $goto DECIS
+$ifi %solver% == scensolver $goto SCENSOLVER
+$ifi %solver% == ls         $goto LS
+
+* Special handling for model types that do not have an objective
+$ifi %mtype%  == cns    $goto CNS
+$ifi %mtype%  == mcp    $goto MCP
+
+
+solve m_%mtype% using %mtype% min z;
+abort$(m_%mtype%.solvestat <> %solvestat.NormalCompletion%) 'solver return not normal';
+$exit
+
+$label CNS
+solve m_cns using cns;
+abort$(m_cns.solvestat <> %solvestat.NormalCompletion%) 'solver return not normal';
+$exit
+
+$label MCP
+x.fx=200; solve m_mcp using mcp;
+abort$(m_mcp.solvestat <> %solvestat.NormalCompletion%) 'solver return not normal';
+$exit
+
+$label DECIS
+y.up = 160;
+x.stage=1;
+dece1.stage=2;
+y.stage=2;
+
+file fx / MODEL.STG /
+     fy / MINOS.SPC /;
+putclose fx 'BLOCKS DISCRETE'
+          / 'BL BLOCK1 PERIOD2 0.25'
+          / 'UP BND y  150'
+          / 'BL BLOCK1 PERIOD2 0.75'
+          / 'UP BND y  160';
+putclose fy 'begin'
+          / 'rows 250'
+          / 'columns 250'
+          / 'elements 10000'
+          / 'end';
+
+solve m_decis using %mtype% max z;
+abort$(m_decis.solvestat <> %solvestat.NormalCompletion%) 'solver return not normal';
+$exit
+
+$label SCENSOLVER
+Sets  i / d1*d2 /, j / i1, o1 /, ji(j) / i1 /, jo(j) / o1 /;
+Parameter ds(i,j) / d1.i1 3, d1.o1 5, d2.i1 2.5, d2.o1 4.5 /;
+Parameter d(j);
+
+Variable z;
+Positive variables v(ji), u(jo);
+
+Equations deao, deae1, deae2;
+
+deao..   z =e= sum(jo, u(jo)*d(jo));
+deae1..  sum(ji, v(ji)*d(ji)) =e= 1;
+deae2..  sum(jo, u(jo)*d(jo)) =l= sum(ji, v(ji)*d(ji));
+
+model m_scen /deao, deae1, deae2/;
+
+set dict(*,*,*)   / i.scenario.'' 1
+                    d.param.ds    2  /;
+
+d(j) = ds('d1',j);
+option lp=bdmlpd;
+Solve m_scen using lp minimizing z scenario dict;
+abort$(m_scen.solvestat <> %solvestat.NormalCompletion%) 'solver return not normal';
+$exit
+
+$label LS
+set i 'cases' /i1*i4/;
+set p  'coefficients' / p0, p1 /;
+Scalars d;
+parameters
+  ls_b_(p) / p0 1, p1 1 /
+  ls_y(i), ls_x(i)
+  se_(p)  'Standard errors' /
+   'p0' 0.295803989154981
+   'p1' 0.158113883008419
+  /
+  se(p)  'Standard errors'
+  ;
+ls_x(i) = ord(i)-1;
+ls_y(i) = ls_b_('p0') + ls_x(i) * ls_b_('p1')
+        + 0.25$[sameas(i,'i1') or sameas(i,'i4')]
+        - 0.25$[sameas(i,'i2') or sameas(i,'i3')];
+
+variables
+  ls_b(p)
+  sse 'sum of squared errors'
+  ;
+
+equation
+   fit(i)    'equation to fit'
+   sumsq
+;
+
+sumsq..   sse =n= 0;
+fit(i)..  ls_y(i) =e= ls_b('p0') + ls_x(i) * ls_b('p1');
+
+option lp = ls;
+model leastsq /fit,sumsq/;
+solve leastsq using lp minimizing sse;
+abort$(leastsq.solvestat <> %solvestat.NormalCompletion%) 'solver return not normal';
+
+d = smax{p, abs(ls_b.l(p)-ls_b_(p))};
+abort$[d > 1e-8] 'bad solution ls_b.l', ls_b.l, ls_b_, d;
+
+execute_load 'ls', se;
+abort$[execerror > 0] 'Could not load statistics from GDX';
+
+d = smax{p, abs(se_(p) - se(p))};
+abort$[d > 1e-8] 'bad standard error', se_, se, d;
+$exit
+
+$offecho

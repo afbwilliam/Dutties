@@ -1,0 +1,20 @@
+$title 'Test the double dash option check' (DDLIST1,SEQ=177)
+
+$ontext
+Contributor: Alex
+$offtext
+
+$onecho > temp.gms
+* the --one and --two are already touched
+* --three and --four are added to the ddlist
+display '%two%';
+$if NOT set one $set one default
+$SETDDLIST three four
+$offecho
+
+$call =gams temp.gms --two=twovalue --four=something lo=%GAMS.lo%
+$if errorlevel 1 $abort should have worked
+
+$call gams temp.gms --five="bad double dash" lo=%GAMS.lo% > %system.nullfile%
+$if errorlevel 1 $terminate
+$abort should not have worked

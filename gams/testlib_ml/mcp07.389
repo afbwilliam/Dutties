@@ -1,0 +1,58 @@
+$title 'Example MCP where explicit matching helps the solver' (MCP07,SEQ=389)
+
+$ontext
+
+For MCP models with free variables and equality constraints, the matching
+between these can be seen as somewhat arbitrary or even unnecessary.
+However, the "right" match may arise naturally from the model,
+and the matching used may make a difference to a solver.
+
+This model illustrates a case where the solver prefers one matching
+over another.  It is not a coincidence that the preferred matching is the
+natural one for the KKT conditions.
+
+Contributor: Steve Dirkse, April 2008.  Model obtained from Michael Ferris.
+$offtext
+
+set I / i1 * i2 /;
+set J / j1 * j5 /;
+
+table A(I,J)
+         j1        j2        j3        j4        j5
+i1       0.609209  0.189873  0.921892  0.957156  0.105726
+i2       0.714106  0.551532  0.263135  0.349604  0.407247
+;
+
+positive variables x(J);
+variables u(I);
+variable z;
+
+equations
+  eq1(I) 'equality constraints'
+  cost;
+
+eq1(I)..  sum {J, A(I,J)*x(J)} =E= 1;
+cost..    z =E= sum {J, x(J)};
+
+model mlp / eq1, cost /;
+solve mlp min z using lp;
+
+equation
+  permdLdx(J) 'permute the default matching'
+  dLdx(J)
+  ;
+
+dLdx(J)     .. 1 - sum{I, u(I) * A(I,J)} =N= 0;
+permdLdx(J) .. 1 - sum{I, u(I++1) * A(I,J)} =N= 0;
+
+model lcpGood 'normal matching, identical to default' / dLdx.x, eq1.u /;
+model lcpBad 'permuted matching: still legal and valid' / permdLdx.x, eq1.u /;
+
+* u.l(I) = eq1.m(I);
+x.m(J) = 0;  x.l(J) = 0;  u.m(I) = 0;  u.l(I) = 0;
+dLdx.m(J) = 0;  eq1.m(I) = 0;
+solve lcpGood using mcp;
+
+x.m(J) = 0;  x.l(J) = 0;  u.m(I) = 0;  u.l(I) = 0;
+permdLdx.m(J) = 0;  eq1.m(I) = 0;
+solve lcpBad using mcp;

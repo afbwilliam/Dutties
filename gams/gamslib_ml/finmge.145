@@ -1,0 +1,888 @@
+$TITLE A General Equilibrium Model for Finland  (FINMGE,SEQ=145)
+$ONTEXT
+        GEMFIN VERSION 3.0
+
+        The purpose of this model is to investigate the effects of
+        the so called 'Consistent Tax Reform' for Finland
+        in a simple general equilibrium
+        structure.
+
+
+Torma, H, and Rutherford, T F, A General Equilibrium Assessment of
+Finland's grand Tax Reform. Tech. rep., Department of Economics and
+Management, University of Jyvaskyla, 1992.
+
+        "A General Equilibrium Assessment of Finland's Grand Tax Reform"
+        Working paper 15/1992, Department of Economics and Management,
+        University of Jyvaskyla, Finland  ISBN 951-680-793-3, ISSBN 0357-5675
+        September, 1992
+
+
+        General features of the model:
+
+        5 income classes represented by 5 households
+        8 basic consumption goods
+        1 state government consumption aggregate
+        1 local government consumption aggregate
+        2 investment goods (private and government)
+        19 sectoral commodities
+        2 primary factors (labor and capital)
+
+        The foreign sector is represented through non-competing imports
+        and fixed terms of trade for exports.
+
+        Marginal tax rate schedules are represented by linear
+        approximations to the benchmark rates.  Adjustments which
+        produce benchmark average tax rates are made using utility
+        indices.
+
+        Households differ in terms of both the composition of factor
+        ownership and preferences.
+
+        When marginal tax rates are modified, the level of government
+        expenditure is maintained at benchmark levels through
+        adjustments in consumption sales taxes.  We use multiplicative
+        replacement (benchmark rates are increased proportionally)
+        in this run.
+
+$OFFTEXT
+
+SET     SC    SCENARIOS  /BENCH, GTR-S, GTR-L, CTR-S, CTR-L /,
+        BMK(SC)  /BENCH/,
+        H     HOUSEHOLDS /KVIN1, KVIN2, KVIN3, KVIN4, KVIN5 /,
+
+        ACC   ROW AND COLUMN ENTRIES IN THE SOCIAL ACCOUNTING MATRIX /
+              MAAT, METS, KAIV, ELINT, TVNK, PUUT, PAP, KEM,
+              METV, METUK, MUUTE, SKV, TRAK, MVRAK, KAUP, LIIK,
+              RAKLP, AHV, YHP,
+              EJT, VAJA, ASUM, KTK, TERV, LIIKK, VKK, MTP,
+              LABOR, CAPITAL, EXCHANGE, EXPORTS,
+              L-TAX, K-TAX, DUTY, OTH-TAX,
+              LOCINCTAX, LOCINCSUB, STAINCTAX, STAINCSUB, STATEHELP,
+              PRVINV, GOVINV, LOCCON, STACON, LOCAL, STATE,
+              PRIVATE, ADJUST/,
+
+        C(ACC)  COMMODITIES (SECTORAL + CONSUMPTION + INVESTMENT)
+                /EJT, VAJA, ASUM, KTK, TERV, LIIKK, VKK, MTP,
+                MAAT, METS, KAIV, ELINT, TVNK, PUUT, PAP, KEM,
+                METV, METUK, MUUTE, SKV, TRAK, MVRAK, KAUP, LIIK,
+                RAKLP, AHV, YHP,
+                PRVINV, GOVINV,
+                LOCCON, STACON/,
+
+        G(C)    FINAL CONSUMPTION GOODS /EJT, VAJA, ASUM, KTK,
+                TERV, LIIKK, VKK, MTP/,
+
+        S(C)    PRODUCTION SECTORS /MAAT, METS, KAIV, ELINT, TVNK,
+                PUUT, PAP, KEM, METV, METUK, MUUTE, SKV, TRAK,
+                MVRAK, KAUP, LIIK, RAKLP, AHV, YHP/,
+
+        F(ACC)  PRIMARY FACTORS /LABOR, CAPITAL/,
+
+        T(ACC)  TAXES /L-TAX, K-TAX, DUTY, OTH-TAX,
+                LOCINCTAX, LOCINCSUB, STAINCTAX, STAINCSUB/,
+
+        PT(T) PRODUCTION TAXES /L-TAX, K-TAX, DUTY, OTH-TAX/,
+
+        HT(T) HOUSEHOLD TAXES /STAINCTAX, LOCINCTAX, STAINCSUB, LOCINCSUB/;
+
+ALIAS (ROWS, ACC), (COLS, ACC), (G,GG), (S,SS);
+
+
+*       TIME-FRAME OF THE ANALYSIS SPECIFIED HERE:
+
+PARAMETER  SHORTRUN(SC) /BENCH 0, GTR-S 1, CTR-S 1, GTR-L 0, CTR-L 0/,
+           SHORT   FLAG FOR SHORT-RUN;
+
+TABLE ATR(SC,*,H)  AVERAGE INCOME TAX RATES (%)  BENCHMARK AND COUNTERFACTUAL
+
+                       KVIN1      KVIN2      KVIN3      KVIN4      KVIN5
+BENCH.STA                9.8       10.6       10.3        9.9       11.3
+BENCH.LOC               10.6       11.5       11.1       10.8       12.3
+
+GTR-S.STA                9.8       10.6       10.3        9.9       11.3
+GTR-S.LOC               10.6       11.5       11.1       10.8       12.3
+
+GTR-L.STA                9.8       10.6       10.3        9.9       11.3
+GTR-L.LOC               10.6       11.5       11.1       10.8       12.3
+
+CTR-S.STA                9.8       10.6       10.3        9.9       11.3
+CTR-S.LOC               10.6       11.5       11.1       10.8       12.3
+
+CTR-L.STA                9.8       10.6       10.3        9.9       11.3
+CTR-L.LOC               10.6       11.5       11.1       10.8       12.3
+
+
+TABLE MTR(SC,H)  MARGINAL TAX RATES - BENCHMARK AND COUNTERFACTUAL
+
+                  KVIN1      KVIN2      KVIN3      KVIN4      KVIN5
+BENCH              33.7       44.4       47.9       49.0       56.9
+GTR-S              29.1       40.0       43.0       47.1       51.9
+CTR-S              28.7       39.4       42.9       44.0       51.9
+GTR-L              29.1       40.0       43.0       47.1       51.9
+CTR-L              28.7       39.4       42.9       44.0       51.9
+
+TABLE KTS(SC,C)  CAPITAL TAX SCALING FACTOR (REPRESENTING AVOIR FISCAL)
+
+            MAAT    METS   KAIV   ELINT    TVNK    PUUT     PAP     KEM
+BENCH       1.00    1.00   1.00   1.00     1.00    1.00     1.00    1.00
+GTR-S       1.00    1.00   0.03   0.17     0.00    0.03     0.25    0.21
+CTR-S       1.00    1.00   1.00   1.00     1.00    1.00     1.00    1.00
+GTR-L       1.00    1.00   0.03   0.17     0.00    0.03     0.25    0.21
+CTR-L       1.00    1.00   1.00   1.00     1.00    1.00     1.00    1.00
+
++           METV   METUK   MUUTE  SKV    TRAK   MVRAK    KAUP    LIIK
+BENCH       1.00    1.00   1.00   1.00   1.00   1.00     1.00    1.00
+GTR-S       0.15    0.19   0.00   0.06   0.13   0.20     0.09    0.32
+CTR-S       1.00    1.00   1.00   1.00   1.00   1.00     1.00    1.00
+GTR-L       0.15    0.19   0.00   0.06   0.13   0.20     0.09    0.32
+CTR-L       1.00    1.00   1.00   1.00   1.00   1.00     1.00    1.00
+
+TABLE OTS(SC,C)  OUTPUT TAX SCALING FACTOR (EXEMPTION)
+
+        PRVINV  GOVINV  SKV  TRAK  MVRAK  KAUP  LIIK  RAKLP  AHV  YHP
+CTR-S   -1      -1      0.15 0.15  0.15   0.15  0.15  0.15   0.15 0.15
+CTR-L   -1      -1      0.15 0.15  0.15   0.15  0.15  0.15   0.15 0.15 ;
+
+OTS(SC,C) = OTS(SC,C) + 1;
+
+
+PARAMETER TRANSFER(*,H);
+
+TABLE TRANSF(SC,*,H)  TRANSFERS ASSOCIATED WITH TAX REFORM (STATE)
+
+                  KVIN1      KVIN2      KVIN3      KVIN4      KVIN5
+GTR-S.STA        -0.325     -0.681     -1.063     -1.489     -1.963
+GTR-S.LOC        -0.004     -0.017     -0.072     -0.127     -0.158
+GTR-L.STA        -0.325     -0.681     -1.063     -1.489     -1.963
+GTR-L.LOC        -0.004     -0.017     -0.072     -0.127     -0.158
+CTR-S.STA         0.325       .681      1.063      1.489      1.963
+CTR-S.LOC
+CTR-L.STA         0.250      0.500      0.750      0.750      2.500
+CTR-L.LOC
+
+
+TABLE ESUBP(*,*)  ELASTICITIES OF SUBSTITUTION IN PRODUCTION
+
+                ESUBM     ETRNX     ESUBKL
+MAAT              2.0       2.0       0.581
+METS              2.0       2.0       1.126
+KAIV              2.0       2.0       0.741
+ELINT             2.0       2.0       0.756
+TVNK              2.0       2.0       0.994
+PUUT              2.0       2.0       0.769
+PAP               2.0       2.0       0.769
+KEM               2.0       2.0       1.101
+METV              2.0       2.0       1.115
+METUK             2.0       2.0       1.040
+MUUTE             2.0       2.0       0.916
+SKV               2.0       1.5       0.738
+TRAK              2.0       1.5       0.906
+MVRAK             2.0       1.5       0.611
+KAUP              2.0       1.5       0.757
+LIIK              2.0       1.5       0.905
+RAKLP             2.0       1.5       0.338
+AHV               2.0       1.5       0.971
+YHP               2.0       1.5       0.348
+EJT               2.0                 1.0
+VAJA              2.0                 1.0
+ASUM              2.0                 1.0
+KTK               2.0                 1.0
+TERV              2.0                 1.0
+LIIKK             2.0                 1.0
+VKK               2.0                 1.0
+MTP               2.0                 1.0
+
+*       ESUBM:  Armington elasticity : import-domestic.
+*       ETRNX:  Domestic-export transformation elasticity,
+*       ESUBKL: Primary factor substitution elasticity.
+
+TABLE ESUBC(*,*) ELASTICITIES IN CONSUMPTION
+
+                ESUBS     ESUBL     SIGMA
+KVIN1            1.18         1       0.3
+KVIN2            1.18         1       0.3
+KVIN3            1.18         1       0.3
+KVIN4            1.18         1       0.3
+KVIN5            1.19         1       0.3
+
+*       ESUBS   Total consumption-savings elasticity.
+*       ESUBL   Consumption-leisure elasticity.
+*       SIGMA   Intra-commodity elasticity.
+
+TABLE SAM(ROWS,COLS)  BENCHMARK SECTORAL ACCOUNTS
+
+            MAAT    METS   KAIV   ELINT    TVNK    PUUT     PAP     KEM
+MAAT      -1.305  -0.081        -16.026  -0.030                  -0.004
+METS      -0.153  -0.053         -0.036          -4.561  -4.557  -0.001
+KAIV      -0.116         -0.061  -0.018          -0.001  -0.113  -0.251
+ELINT     -3.289         -0.003 -12.782  -0.159  -0.009  -0.050  -0.147
+TVNK      -0.038         -0.004  -0.023  -2.514  -0.010  -0.057  -0.064
+PUUT                     -0.004  -0.015  -0.005  -1.476  -1.208  -0.050
+PAP       -0.004  -0.006 -0.011  -0.723  -0.094  -0.068 -10.531  -0.507
+KEM       -1.922  -0.212 -0.085  -0.876  -0.281  -0.407  -1.571  -4.079
+METV                     -0.015  -0.073  -0.034  -0.078  -0.105  -0.077
+METUK     -0.451  -0.082 -0.075  -0.345  -0.067  -0.374  -0.995  -0.453
+MUUTE     -0.093  -0.007 -0.038  -0.370  -0.143  -0.189  -0.221  -0.358
+SKV       -0.299  -0.003 -0.140  -0.471  -0.137  -0.437  -4.496  -1.027
+TRAK      -0.260  -0.013 -0.008  -0.062  -0.024  -0.028  -0.083  -0.067
+MVRAK     -0.017  -0.046         -0.007          -0.002  -0.033  -0.014
+KAUP      -1.306  -0.112 -0.055  -0.674  -0.129  -0.106  -0.317  -0.504
+LIIK      -0.228  -0.021 -0.127  -1.205  -0.106  -0.680  -1.380  -0.716
+RAKLP     -0.243  -0.019 -0.207  -1.167  -0.288  -0.343  -0.625  -0.798
+AHV
+YHP       -0.246  -0.101 -0.023  -0.157  -0.043  -0.061  -0.172  -0.129
+LABOR     -1.377  -2.237 -0.557  -4.132  -3.036  -2.317  -4.043  -3.117
+CAPITAL  -13.292  -8.278 -0.512  -3.199  -1.473  -0.532  -4.493  -4.388
+EXCHANGE  -0.838  -0.164 -0.219  -4.044  -2.597  -0.423  -2.472 -17.434
+L-TAX     -0.283  -0.453 -0.128  -0.956  -0.626  -0.514  -0.967  -0.759
+K-TAX                    -0.012  -0.256  -0.083  -0.119  -0.223  -0.141
+DUTY      -0.014  -0.002 -0.006  -0.127  -0.037  -0.002  -0.008  -0.023
+OTH-TAX    0.629  -0.042 -0.037   5.429  -0.019  -0.113  -0.445  -0.404
+
++           METV   METUK   MUUTE     SKV    TRAK   MVRAK    KAUP    LIIK
+MAAT                                                      -0.380  -0.023
+METS      -0.003          -0.024  -0.080  -0.173  -0.022  -0.029  -0.002
+KAIV      -0.762  -0.011  -0.226  -0.518  -0.014  -0.033
+ELINT     -0.005  -0.025  -0.011  -0.027  -0.002          -1.962  -0.099
+TVNK      -0.014  -0.097  -0.151  -0.015  -0.060          -0.028  -0.036
+PUUT      -0.026  -0.238  -0.584  -0.361  -2.903  -0.130          -0.008
+PAP       -0.017  -0.184  -1.819  -0.035  -0.196  -0.015  -0.142  -0.070
+KEM       -0.351  -1.127  -0.703  -1.012  -1.427  -1.175  -0.528  -2.224
+METV      -6.955  -4.440  -0.329  -0.042  -0.408  -0.162          -0.003
+METUK     -0.193  -8.368  -0.754  -0.368  -3.649  -1.172  -0.189  -1.321
+MUUTE     -0.144  -0.507  -3.509  -0.197  -4.210  -0.394  -0.709  -0.383
+SKV       -0.609  -0.664  -0.330 -11.614  -0.121  -0.052  -0.871  -0.309
+TRAK      -0.059  -0.207  -0.077  -0.034  -0.051  -0.074  -0.233  -0.244
+MVRAK     -0.012  -0.039  -0.001  -0.127                  -0.004  -0.986
+KAUP      -0.190  -0.861  -0.291  -0.611  -2.681  -0.428  -1.651  -1.030
+LIIK      -0.381  -0.618  -1.766  -0.619  -1.737  -1.657  -4.920  -1.367
+RAKLP     -0.356  -2.318  -1.312  -0.724  -2.040  -0.562  -7.579  -1.510
+AHV
+YHP       -0.051  -0.293  -0.409  -0.135  -0.109  -0.033  -0.658  -1.189
+LABOR     -1.600 -13.603  -5.987  -2.440 -10.762  -3.338 -21.195 -10.337
+CAPITAL   -0.845  -7.651  -3.857  -5.477  -3.667  -1.557  -6.825 -10.445
+EXCHANGE  -2.878  -9.242  -1.743  -3.266  -2.873  -0.909  -1.734  -4.178
+L-TAX     -0.483  -3.029  -1.270  -0.636  -2.462  -0.787  -4.659  -2.276
+K-TAX     -0.063  -0.417  -0.175  -0.237  -0.128  -0.012  -2.046  -0.072
+DUTY      -0.006  -0.106  -0.020  -0.003  -0.094  -0.022  -0.016  -0.035
+OTH-TAX   -0.149  -0.408   0.174  -1.424  -3.316  -0.731  -2.616  -1.068
+
++           RAKLP      AHV       YHP
+MAAT
+METS                -0.003    -0.004
+KAIV
+ELINT      -0.018             -0.008
+TVNK       -0.006             -0.029
+PUUT       -0.012             -0.027
+PAP        -0.189   -0.015    -0.034
+KEM        -1.410   -0.903    -0.292
+METV                          -0.003
+METUK      -0.195   -0.006    -0.236
+MUUTE      -2.371   -0.018    -0.601
+SKV        -1.324   -2.067    -0.096
+TRAK       -0.358   -2.081    -0.068
+MVRAK
+KAUP       -1.591   -0.524    -0.488
+LIIK       -2.144   -0.168    -0.454
+RAKLP     -12.759   -0.670    -1.786
+AHV
+YHP        -2.138   -0.860    -0.379
+LABOR     -11.768             -5.142
+CAPITAL    -7.430  -19.158    -5.198
+EXCHANGE   -1.494   -0.441    -1.448
+L-TAX      -2.642             -1.059
+DUTY       -0.026             -0.031
+OTH-TAX    -0.620   -0.330    -0.209
+
++            EJT    VAJA    ASUM     KTK    TERV    LIIKK     VKK     MTP
+MAAT      -2.941                                           -0.767  -0.019
+METS      -0.301          -0.590                                   -0.001
+KAIV
+ELINT    -17.880                                           -0.075  -0.370
+TVNK              -2.300          -0.279  -0.001           -0.076  -0.194
+PUUT                              -0.042                           -0.013
+PAP                               -0.110                           -0.288
+KEM               -0.119  -0.600  -0.596  -0.734   -1.799  -0.266  -0.413
+METV
+METUK                             -0.844  -0.103   -1.059  -0.727  -0.083
+MUUTE                             -1.393  -0.003   -0.031  -2.804  -0.385
+SKV                       -3.208                                   -0.118
+TRAK                      -0.002                                   -0.066
+MVRAK                                                              -0.096
+KAUP      -8.183  -3.128  -0.906  -2.837  -1.473   -5.995  -2.586 -12.970
+LIIK                                               -8.603          -1.080
+RAKLP                             -0.523  -0.430   -1.004          -4.005
+AHV                      -27.185                   -0.184
+YHP               -0.079          -0.974  -2.383   -3.188  -4.594  -0.985
+LABOR     -0.994  -0.191  -1.102  -0.258  -0.174   -0.742  -0.403  -0.715
+CAPITAL   -0.097  -0.019  -0.108  -0.025  -0.017   -0.072  -0.039  -0.070
+EXCHANGE  -1.713  -2.570  -0.245  -2.652  -0.542   -3.340  -2.777  -0.873
+L-TAX     -0.221  -0.043  -0.245  -0.058  -0.039   -0.166  -0.090  -0.160
+DUTY      -0.080  -0.120  -0.011  -0.123  -0.025   -0.156  -0.129  -0.041
+OTH-TAX  -14.081  -1.587  -0.123  -1.685  -0.492   -6.164  -2.614  -1.158
+
+       +     EXPORTS      PRVINV      GOVINV
+MAAT          -2.794
+METS          -0.261      -0.001
+KAIV          -0.299
+ELINT         -4.055
+TVNK          -5.170      -0.080      -0.005
+PUUT          -5.756      -0.003      -0.001
+PAP          -23.529
+KEM           -9.227      -0.031      -0.001
+METV          -5.697
+METUK        -24.832      -5.472      -0.266
+MUUTE         -2.693      -0.141      -0.008
+SKV           -0.115
+TRAK          -0.012     -33.166      -5.396
+MVRAK                     -5.904      -3.489
+KAUP          -2.347      -3.310      -0.190
+LIIK          -6.490      -0.637      -0.035
+RAKLP         -2.879      -0.816      -0.044
+YHP           -0.309
+EXCHANGE      93.428     -18.805      -0.917
+DUTY                      -0.216      -0.012
+OTH-TAX        3.037      -4.447      -0.257
+
+       +      LOCCON      STACON      LOCAL      STATE
+
+MAAT          -0.044
+METS          -0.011
+KAIV          -0.000      -0.011
+ELINT         -1.089      -0.174
+TVNK          -0.049      -0.175
+PUUT          -0.114      -0.039
+PAP           -0.238      -0.111
+KEM           -1.774      -0.569
+METV          -0.005      -0.002
+METUK         -0.164      -0.391
+MUUTE         -0.004      -0.638
+SKV           -1.056      -0.356
+TRAK          -0.440      -0.127
+MVRAK         -1.224      -0.951
+KAUP          -1.524      -0.479
+LIIK          -1.304      -0.210
+RAKLP         -0.963      -2.070
+AHV
+YHP                       -0.670
+LABOR        -25.770     -11.161
+CAPITAL       -2.369      -1.177
+EXCHANGE      -1.266      -1.539
+L-TAX         -7.063      -2.539                34.613
+K-TAX                                            3.984
+DUTY          -0.034      -0.015                 1.540
+OTH-TAX       -1.372      -0.394                37.041
+STAINCTAX                                       27.945
+LOCINCTAX                           30.302
+STAINCSUB                                      -40.544
+LOCINCSUB                           -8.477
+STATEHELP                           31.454     -31.454
+LOCCON                             -48.940
+STACON                                         -22.152
+GOVINV                              -4.339      -6.282
+ADJUST                                          -4.691
+
+       +     PRIVATE      ADJUST
+MAAT                      -0.732
+METS                      -1.066
+KAIV                       0.107
+ELINT                     -0.075
+TVNK                      -0.450
+PUUT                       0.165
+PAP                       -0.219
+KEM                        0.647
+METV                       2.276
+METUK                     -1.219
+MUUTE                     -2.649
+SKV                       -0.082
+TRAK                       0.157
+MVRAK                     -0.313
+KAUP                       0.503
+LIIK                      -0.563
+RAKLP                     -0.455
+AHV                        0.125
+YHP                        2.776
+EJT          -46.491
+VAJA         -10.156
+ASUM         -34.330
+KTK          -12.399
+TERV          -6.416
+LIIKK        -32.503
+VKK          -17.947
+MTP          -24.103
+LABOR        150.138      -1.640
+CAPITAL      111.580       0.690
+EXCHANGE                   2.658
+STAINCTAX    -27.945
+LOCINCTAX    -30.302
+STAINCSUB     40.544
+LOCINCSUB      8.477
+PRVINV       -73.029
+ADJUST         4.882      -0.191
+
+
+TABLE DEMAND(*,H)  INCOME AND EXPENDITURE DATA
+
+                KVIN1     KVIN2     KVIN3     KVIN4     KVIN5
+EJT            -4.031    -5.926    -8.463   -10.989   -17.082
+VAJA           -0.880    -1.295    -1.849    -2.401    -3.731
+ASUM           -2.976    -4.376    -6.250    -8.114   -12.614
+KTK            -1.075    -1.580    -2.257    -2.931    -4.556
+TERV           -0.556    -0.818    -1.168    -1.517    -2.357
+LIIKK          -2.818    -4.143    -5.917    -7.683   -11.942
+VKK            -1.556    -2.288    -3.267    -4.242    -6.594
+MTP            -2.090    -3.072    -4.388    -5.697    -8.856
+LABOR           3.878    14.338    25.055    40.818    66.049
+CAPITAL         5.484    11.028    17.485    25.291    52.292
+PRVINV         -6.331    -9.308   -13.294   -17.261   -26.835
+LEISURE        -8.947   -22.711   -37.056   -58.411   -93.261
+STAINCTAX      -0.918    -2.694    -4.369    -6.564   -13.400
+LOCINCTAX      -0.996    -2.921    -4.738    -7.117   -14.530
+STAINCSUB       8.540     8.239     9.067     7.110     7.588
+LOCINCSUB       1.786     1.723     1.896     1.487     1.585
+
+
+*       DETERMINE SECTORAL LEVELS:
+
+PARAMETER  YB(C)  SUPPLY LEVELS;
+
+SAM(ROWS,"ADJUST") = 0;
+SAM("ADJUST",COLS) = 0;
+YB(C) = -SUM(ROWS, SAM(ROWS,C));
+SAM(ROWS,"ADJUST") = - SUM(COLS, SAM(ROWS,COLS));
+SAM(C,"ADJUST") = SAM(C,"ADJUST") - YB(C);
+SAM("ADJUST",COLS) = - SUM(ROWS, SAM(ROWS,COLS));
+SAM("ADJUST",C) = SAM("ADJUST",C) - YB(C);
+DISPLAY SAM;
+
+*. YB(C) = -SUM(COLS, SAM(C,COLS));
+
+*       CHECK CONSISTENCY OF SOCIAL ACCOUNT DATA:
+
+PARAMETER ROWSUM(ROWS)  CHECK SUMS OF ROWS IN SAM,
+          COLSUM(COLS)  CHECK SUMS OF COLUMNS IN SAM;
+
+ROWSUM(ROWS) = SUM(COLS, SAM(ROWS,COLS));
+COLSUM(COLS) = SUM(ROWS, SAM(ROWS,COLS));
+
+ROWSUM(C) = ROWSUM(C) + YB(C);
+COLSUM(C) = COLSUM(C) + YB(C);
+
+ABORT$(SMAX(ROWS, ABS(ROWSUM(ROWS))) GT 1.E-4)
+        " ROWS IN SAM DO NOT BALANCE", ROWSUM, COLSUM;
+
+ABORT$(SMAX(COLS, ABS(COLSUM(COLS))) GT 1.E-4)
+        " COLUMNS IN SAM DO NOT BALANCE", ROWSUM, COLSUM;
+
+*       CHECK JOINT CONSISTENCY OF SAM AND DEMAND DATA:
+
+PARAMETER ENDOWCHK(F)   CONSISTENCY CHECK OF HOUSEHOLD ENDOWMENTS;
+ENDOWCHK(F) = SUM(H, DEMAND(F,H)) - SAM(F,"PRIVATE");
+ABORT$(SMAX(F, ABS(ENDOWCHK(F))) GT 1.E-4)
+        "ENDOWMENTS ARE INCONSISTENT:", ENDOWCHK;
+
+PARAMETER TAXCHK(HT)    CONSISTENCY OF HOUSEHOLD TAXES;
+TAXCHK(HT) = SUM(H, DEMAND(HT,H)) - SAM(HT,"PRIVATE");
+ABORT$(SMAX(HT, ABS(TAXCHK(HT))) GT 1.E-4)
+        "INCOME TAX/SUBSIDY DATA INCONSISTENT WITH SAM:", TAXCHK;
+
+PARAMETER CONCHK(G)     CONSISTENCY CHECK OF HOUSEHOLD DEMAND;
+CONCHK(G) = SUM(H, -DEMAND(G,H)) + SAM(G,"PRIVATE");
+ABORT$(SMAX(G, ABS(CONCHK(G))) GT 1.E-4)
+        "CONSUMPTION DATA INCONSISTENT WITH SAM:", CONCHK;
+
+SCALAR INVCHK   CONSISTENCY CHECK OF HOUSEHOLD INVESTMENT;
+INVCHK = SUM(H, -DEMAND("PRVINV",H)) + SAM("PRVINV","PRIVATE");
+ABORT$(INVCHK GT 1.E-4)
+        "INVESTMENT DATA INCONSISTENT WITH SAM:", INVCHK;
+
+*       CALIBRATE TO SPECIFIED AVERAGE AND MARGINAL TAX RATES:
+
+PARAMETER       TAVE(*,H)       AVERAGE INCOME TAX RATE,
+                TMRG(H)         MARGINAL INCOME TAX RATE,
+                TBMK(H)         BENCHMARK MARGINAL TAX RATE,
+                WALADJ(H)       ADJUSTMENT TO BALANCE INCOME-EXPENDITURE,
+                WB(H)            BENCHMARK WELFARE;
+
+*       PROVIDE A COMPARISON WITH THE BENCHMARK DATA
+
+PARAMETER  INCTAX(*,H)  SOCIAL ACCOUNTING MATRIX VERSUS BENCHMARK (%);
+
+INCTAX("SAM",H)   = -100 * (DEMAND("STAINCTAX",H)+DEMAND("LOCINCTAX",H)) /
+                            SUM(F, DEMAND(F,H));
+
+INCTAX("BENCH",H) = ATR("BENCH","STA",H)+ATR("BENCH","LOC",H);
+
+TAVE("STATE",H) = 0.01 * ATR("BENCH","STA",H);
+TAVE("LOCAL",H) = 0.01 * ATR("BENCH","LOC",H);
+TMRG(H) = 0.01 * MTR("BENCH",H);
+TBMK(H) = TMRG(H);
+
+DEMAND("STAINCTAX",H) = -TAVE("STATE",H) * SUM(F, DEMAND(F,H));
+DEMAND("LOCINCTAX",H) = -TAVE("LOCAL",H) * SUM(F, DEMAND(F,H));
+
+WB(H) =  -( DEMAND("PRVINV",H) + SUM(G, DEMAND(G,H)) +
+           DEMAND("LEISURE",H) * (1 - TBMK(H)) );
+
+WALADJ(H) = DEMAND("PRVINV",H) + SUM(G, DEMAND(G,H)) +
+            SUM(HT, DEMAND(HT,H)) + SUM(F, DEMAND(F,H));
+
+INCTAX("WALADJ%",H) = 100 * WALADJ(H) / SUM(F, DEMAND(F,H));
+
+DISPLAY INCTAX, WALADJ;
+
+
+*       MOVE DATA INTO WORKING PARAMETERS
+
+PARAMETER       IO(S,C)  INTERMEDIATE INPUTS,
+                VE(C)   EXPORTS,
+                TE(C)   EXPORT TAX RATE,
+                VM(C)   IMPORTS,
+                TM(C)   IMPORT TAX RATE,
+                DL(C)   LABOR INPTUS,
+                TL(C)   LABOR TAX RATE,
+                DK(C)   CAPITAL INPUTS,
+                TK(C)   CAPITAL TAX RATE,
+                D(C)    DOMESTIC SUPPLY,
+                E(C)    EXPORTS,
+                M(C)    IMPORTS INCLUDING DUTY,
+                TX(C)   EXCISE TAX,
+                ESUBM(C)        IMPORT AGGREGATION ELASTICITY,
+                ETRNX(C)        EXPORT TRANSFORMATION ELASTICITY,
+                ESUBKL(C)       CAPITAL-LABOR ELASTICTY,
+                ESUBS(H)        CURRENT CONSUMPTION-SAVINGS ELASTICITY,
+                ESUBL(H)        LEISURE-CONSUMPTION ELASTICITY,
+                SIGMA(H)        INTRA-COMMODITY ELASTICTY,
+                DMFBAR(F,C)     BENCHMARK FACTOR DEMAND;
+
+IO(S,C) = -SAM(S,C);
+
+E(S)   = -SAM(S,"EXPORTS");
+TE(S)  = -SAM("OTH-TAX","EXPORTS") / SAM("EXCHANGE","EXPORTS");
+VE(S)  = E(S) / (1-TE(S));
+
+VM(C)   = -SAM("EXCHANGE",C);
+TM(C)$VM(C)   = -SAM("DUTY",C) / VM(C);
+
+DL(C)   = -SAM("LABOR",C);
+TL(C)$DL(C)   = -SAM("L-TAX",C) / DL(C);
+
+DK(C)   = -SAM("CAPITAL",C);
+TK(C)$DK(C)   = -SAM("K-TAX",C) / DK(C);
+
+D(C) = YB(C) + SAM("EXCHANGE",C) + SAM("DUTY",C);
+
+M(C) = SAM("EXCHANGE",C) + SAM("DUTY",C);
+
+TX(C)$YB(C)   = -SAM("OTH-TAX",C) / (D(C) - E(C));
+
+PARAMETER PRDTAX(*,*)   BENCHMARK PRODUCTION TAX RATES (%);
+
+PRDTAX(S,"TE") = 100 * TE(S);
+PRDTAX(S,"TM") = 100 * TM(S);
+PRDTAX(S,"TL") = 100 * TL(S);
+PRDTAX(S,"TK") = 100 * TK(S);
+PRDTAX(S,"TX") = 100 * TX(S);
+
+DISPLAY PRDTAX;
+
+*       ELASTICITIES:
+
+ESUBM(C)  = ESUBP(C,"ESUBM");
+ETRNX(S)  = ESUBP(S,"ETRNX");
+ESUBKL(C) = ESUBP(C,"ESUBKL");
+ESUBS(H)  = ESUBC(H,"ESUBS");
+ESUBL(H)  = ESUBC(H,"ESUBL");
+SIGMA(H)  = ESUBC(H,"SIGMA");
+
+
+$ONTEXT
+
+$MODEL:SUOMI
+
+$SECTORS:
+
+        W(H)    !       WELFARE INDICES
+        Y(C)    !       SECTORAL PRODUCTION:
+        A(C)    !       ARMINGTON AGGREGATION.
+        CC(H)   !       CURRENT CONSUMPTION:
+        K$SHORT !       CAPITAL SUPPLY (SHORT-RUN MODEL)
+
+$COMMODITIES:
+        PFX     !       FOREIGN EXCHANGE
+        PF(F)   !       FACTORS OF PRODUCTION.
+        PS(C)$DK(C)$SHORT       ! SECTOR-SPECIFIC CAPITAL
+        PW(H)   !       WELFARE PRICE INDEX
+        PY(C)   !       SECTORAL GOODS PRICES (DOMESTIC OUTPUT)
+        PA(C)   !       ARMINGTON IMPORT PRICE AGGREGATE
+        PC(H)   !       CURRENT CONSUMPTION
+
+$CONSUMERS:
+        GOVT    !       GOVERNMENT (STATE AND LOCAL)
+        HH(H)   !       HOUSEHOLDS
+
+$AUXILIARY:
+        TAU     !       EQUAL YIELD VARIABLE (MULTIPLIER ON OUTPUT TAXES)
+
+
+*       MARKET LABOR, CAPITAL, FOREIGN EXCHANGE AND GOVERNMENT
+*       CONSUMPTION AGGREGATE:
+
+
+$REPORT:
+        V:DMF(F,C)$DMFBAR(F,C)  I:PF(F)         PROD:Y(C)
+        V:SY(C)$(D(C)-E(C))     O:PY(C)         PROD:Y(C)
+        V:EXP(C)$VE(C)          O:PFX           PROD:Y(C)
+        V:IMP(C)$VM(C)          I:PFX           PROD:A(C)
+        V:CL(H)$(-DEMAND("LEISURE",H))  I:PF("LABOR")   PROD:W(H)
+
+
+$PROD:A(C) s:ESUBM(C)
+        O:PA(C)         Q:(YB(C)-E(C))
+        I:PFX           Q:VM(C)  P:(1+TM(C)) A:GOVT T:TM(C)
+        I:PY(C)         Q:(D(C)-E(C))
+
+*       CURRENT CONSUMPTION:
+
+$PROD:CC(H)  s:SIGMA(H)
+        O:PC(H)         Q:(-SUM(G,DEMAND(G,H)))
+        I:PA(G)         Q:(-DEMAND(G,H))
+
+
+*       PRODUCTION:
+
+$PROD:Y(C)  t:ETRNX(C)  a:ESUBKL(C)
+
+        O:PY(C)         Q:(D(C)-E(C)) P:(1-TX(C))
++       A:GOVT  N:TAU   M:(MAX(OTS(SC,C)*TX(C), 0))
++                       T:(MIN(OTS(SC,C)*TX(C), 0))
+        O:PFX           Q:VE(C)       P:(1-TE(C))  T:TE(C)
+        I:PA(SS)        Q:IO(SS,C)
+        I:PF("LABOR")   Q:DL(C) P:(1+TL(C)) A:GOVT T:TL(C)
+        I:PF("CAPITAL")$(NOT SHORT)
++               Q:DK(C) P:(1+TK(C)) A:GOVT T:(KTS(SC,C)*TK(C))
+        I:PS(C)$SHORT
++               Q:DK(C) P:(1+TK(C)) A:GOVT T:(KTS(SC,C)*TK(C))
+
+$PROD:K$SHORT
+        I:PF("CAPITAL") Q:(SUM(C$DK(C), DK(C)))
+        O:PS(C)         Q:DK(C)
+
+
+$PROD:W(H)  s:ESUBS(H)  a:ESUBL(H)
+        O:PW(H)         Q:WB(H)
+        I:PF("LABOR")   Q:(-DEMAND("LEISURE",H))  P:(1-TBMK(H)) a:
++                       A:GOVT T:(-TMRG(H))
+        I:PC(H)         Q:(-SUM(G,DEMAND(G,H)))  a:
+        I:PA("PRVINV")  Q:(-DEMAND("PRVINV",H))
+
+
+*       FEDERAL GOVERNMENT:
+
+$DEMAND:GOVT
+
+        D:PA("STACON")  Q:(-SAM("STACON","STATE"))
+
+*   GOVERNMENT INVESTMENT (EXOGENOUS):
+
+        E:PA("GOVINV")  Q:SAM("GOVINV","STATE")
+
+* TERMS FROM THE SAM ADJUSTMENT VECTOR:
+
+        E:PA(C)         Q:SAM(C,"ADJUST")
+        E:PF(F)         Q:SAM(F,"ADJUST")
+        E:PFX           Q:SAM("EXCHANGE","ADJUST")
+
+
+*   INCOME SUBSIDY TRANSFER:
+
+        E:PW(H)         Q:(-DEMAND("STAINCSUB",H))
+
+*  OTHER TRANSFERS:
+
+        E:PW(H)         Q:TRANSFER("STA",H)
+
+*     WALRAS ADJUSTMENT:
+
+        E:PW(H)         Q:WALADJ(H)
+
+
+*   LEISURE TAX INTERCEPT:
+
+        E:PF("LABOR")   Q:(SUM(H,-TMRG(H)*DEMAND("LEISURE",H)))
+
+
+*    TAXES AT AVERAGE RATES:
+
+        E:PF(F) Q:(SUM(H, TAVE("STATE",H)*DEMAND(F,H)))
+
+
+*       LOCAL GOVERNMENT DEMAND (FIXED):
+
+        E:PA("LOCCON")  Q:(SAM("LOCCON","LOCAL"))
+
+*       LOCAL GOVERNMENT INVESTMENT (EXOGENOUS):
+
+        E:PA("GOVINV")  Q:SAM("GOVINV","LOCAL")
+
+*       LOCAL INCOME SUBSIDY TRANSFERS:
+
+        E:PW(H)         Q:(-DEMAND("LOCINCSUB",H))
+
+*       OTHER TRANSFERS:
+
+        E:PW(H)         Q:TRANSFER("LOC",H)
+
+*    INCOME TAXES (AVERAGE RATES):
+
+        E:PF(F)         Q:(SUM(H, TAVE("LOCAL",H)*DEMAND(F,H)))
+
+
+*    HOUSEHOLD DEMAND:
+
+$DEMAND:HH(H)
+
+        D:PW(H)         Q:WB(H)
+
+*       FACTOR SUPPLIES (NET AVERAGE TAX PAYMENT):
+
+        E:PF(F)         Q:DEMAND(F,H)
+
+*       INCOME TAXES AT AVERAGE RATES:
+
+        E:PF(F)         Q:(-(TAVE("STATE",H)+TAVE("LOCAL",H))*DEMAND(F,H))
+
+*       LEISURE SUPPLY:
+
+        E:PF("LABOR")   Q:(-(1-TMRG(H))*DEMAND("LEISURE",H))
+
+*       GOVERNMENT TRANSFER:
+
+        E:PW(H)         Q:DEMAND("STAINCSUB",H)
+        E:PW(H)         Q:DEMAND("LOCINCSUB",H)
+
+*       OTHER TRANSFERS:
+
+        E:PW(H)         Q:(-TRANSFER("STA",H))
+        E:PW(H)         Q:(-TRANSFER("LOC",H))
+
+*       WALRAS ADJUSTMENT:
+
+        E:PW(H)         Q:(-WALADJ(H))
+
+*       EQUAL YIELD CONSTRAINTS:
+
+$CONSTRAINT:TAU
+        A("STACON") =G= 1;
+
+*Z:A("STACON")
+*K:-1
+
+
+
+$OFFTEXT
+
+*       READ THE MPS/GE "HEADER" FILE.  THIS IS GENERATED BY
+*       THE PREPROCESSOR, MPSPP:
+
+$SYSINCLUDE mpsgeset SUOMI
+
+TAU.L = 1;
+
+PARAMETER
+
+        SUMMARY(*,SC)   SUMMARY STATISTICS
+        DF(F,C,SC)      FACTOR DEMAND - % CHANGE,
+        DOM(C,SC)       DOMESTIC OUTPUT - % CHANGE,
+        EXPORT(C,SC)    EXPORTS - % CHANGE,
+        IMPORT(C,SC)    IMPORTS - % CHANGE,
+        WELFARE(H,SC)   WELFARE - % CHANGE,
+        LSUPPLY(H,SC)   LABOR SUPPLY - % CHANGE;
+
+*       SET THE ITERATION LIMIT TO 0 FOR THE FIRST SCENARIO
+*       IN ORDER TO CHECK REPLICATION:
+
+        SUOMI.ITERLIM = 0;
+
+*       ESTABLISH A NUMERAIRE PRICE INDEX:
+
+        PFX.FX = 1;
+
+LOOP(SC,
+
+*       SET FLAG FOR SHORT-RUN CAPITAL STOCK:
+
+        SHORT = 1$SHORTRUN(SC);
+
+*       SET BENCHMARK FACTOR DEMANDS:
+
+        DMFBAR("LABOR",C) = DL(C);
+        DMFBAR("CAPITAL",C) = DK(C)$(NOT SHORT);
+
+*       READ IN AVERAGE AND MARGINAL TAX RATES.
+
+        TAVE("STATE",H) = 0.01 * ATR(SC,"STA",H);
+        TAVE("LOCAL",H) = 0.01 * ATR(SC,"LOC",H);
+        TMRG(H) = 0.01 * MTR(SC,H);
+
+        TRANSFER("LOC",H) = TRANSF(SC,"LOC",H);
+        TRANSFER("STA",H) = TRANSF(SC,"STA",H);
+
+*       SOLVE THE SCENARIO:
+
+$INCLUDE SUOMI.GEN
+SOLVE SUOMI USING MCP;
+
+        SUOMI.ITERLIM = 1000;
+
+        SUMMARY("CPU",SC)   = SUOMI.RESUSD;
+        SUMMARY("DEV",SC)   = SUOMI.OBJVAL;
+        SUMMARY("ITERS",SC) = SUOMI.ITERUSD;
+
+DF(F,C,SC) = DMF.L(F,C);
+
+DOM(C,SC) = SY.L(C);
+
+EXPORT(C,SC) = EXP.L(C);
+
+IMPORT(C,SC) = IMP.L(C);
+
+WELFARE(H,SC) = 100 * (W.L(H) - 1);
+
+LSUPPLY(H,SC) = -DEMAND("LEISURE",H) + CL.L(H);
+
+);
+
+*       CONVERT REPORT VARIABLES INTO PERCENTAGE CHANGES:
+
+DF(F,C,SC)$DF(F,C,"BENCH") = 100 * (DF(F,C,SC)-DF(F,C,"BENCH")) /
+                                DF(F,C,"BENCH");
+
+DF("CAPITAL",C,SC)$SHORTRUN(SC) = 0;
+
+DOM(C,SC)$DOM(C,"BENCH") = 100 * (DOM(C,SC)-DOM(C,"BENCH"))/DOM(C,"BENCH");
+
+EXPORT(C,SC)$EXPORT(C,"BENCH") = 100 * (EXPORT(C,SC) - EXPORT(C,"BENCH")) /
+                                EXPORT(C,"BENCH");
+
+IMPORT(C,SC)$IMPORT(C,"BENCH") = 100 * (IMPORT(C,SC) - IMPORT(C,"BENCH")) /
+                                IMPORT(C,"BENCH");
+
+LSUPPLY(H,SC)$LSUPPLY(H,"BENCH") =
+        100 * (LSUPPLY(H,SC) - LSUPPLY(H,"BENCH")) / LSUPPLY(H,"BENCH");
+
+
+*       SIFT OUT THE SMALL NUMBERS:
+
+DF(F,C,SC)$(ABS(DF(F,C,SC)) LT 0.1)       = 0;
+DOM(C,SC)$(ABS(DOM(C,SC)) LT 0.1)         = 0;
+EXPORT(C,SC)$(ABS(EXPORT(C,SC)) LT 0.1)   = 0;
+IMPORT(C,SC)$(ABS(IMPORT(C,SC)) LT 0.1)   = 0;
+LSUPPLY(H,SC)$(ABS(LSUPPLY(H,SC)) LT 0.1) = 0;
+WELFARE(H,SC)$(ABS(WELFARE(H,SC)) LT 0.1) = 0;
+
+OPTION WELFARE:1, DF:1, DOM:1, EXPORT:1, IMPORT:1, LSUPPLY:1;
+
+DISPLAY SUMMARY, WELFARE, DF, DOM, EXPORT, IMPORT, LSUPPLY;
+

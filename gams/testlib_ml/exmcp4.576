@@ -1,0 +1,189 @@
+$Title Hansen/Koopmans: External Function - Example MCP 4 (EXMCP4,SEQ=576)
+
+$ontext
+  ----------------------------------------------------------------------
+  this model is a version of hanskoop.gms from MCPLIB,
+  revised to use external equations as an example and test case
+  If this were a production model, the data defining the equations
+  would be read from a file and not baked into the GAMS model
+  and the external functions
+
+  Reference:
+  Journal of Economic Theory Vol. 5 (1972)  487-523
+
+  An invariant capital stock problem given by Hansen and Koopmans
+
+  The alpha parameter suggested was 0.7, 0.8, and 0.9 in the reference.
+  ----------------------------------------------------------------------
+$offtext
+
+
+sets
+I	'set of capital goods'			/ 1 * 2 /,
+J	'production processes'			/ 1 * 10 /,
+CJ(J)	'processes producing consumption goods' / 1 * 6 /,
+R	'resource types'			/ 1 * 2 /;
+
+scalars
+p / 0.20 /,
+alpha / 0.7 /
+utility ;
+
+option utility:6;
+
+parameters
+A(I,J),
+B(I,J),
+C(R,J),
+w(R) 	/
+1	0.8
+2	0.8
+	 /;
+
+table A(I,J)
+	1   2	3   4	5   6	7   8	9   10
+1	2   2	2   2	2   2	2   2	2   2
+2	3   3	2   2	1   1	1   .5	1   .5	;
+
+table B(I,J)
+	1   2	3   4	5   6	7   8	9   10
+1	1.5 1.5	1.5 1.5	1.5 1.5	4   3	1.5 1.5	
+2	2.7 2.7	1.8 1.8	.9  .9	.9  .4	2   1.5	;
+
+table C(R,J)
+	1   2	3   4	5   6	7   8	9   10
+1	1   1	1   1	1   1	1   1	1   1
+2	.5 1.5	1.5 .5	.5 1.5	1.5 .5	.5 1.5	;
+
+parameters
+xipt(J) /
+1	.301
+2	.302
+3	.303
+4	.304
+5	.305
+6	.306
+7	.307
+8	.308
+9	.309
+10	.310
+/,
+yipt(I) /
+1	.001
+2	.002
+/,
+uipt(R) /
+1	.001
+2	.002
+/;
+
+positive variables
+	x(J)	'activity levels for production processes',
+	y(I)	'dual variables to capital input\output constraints',
+	u(R)	'dual variables to resource constraints' ;
+
+* v(x) = (x1 + 2.5x2)^p * (2.5x3 + x4)^p * (2x5 + 3x6)^p
+equations
+	del(J)		'derivative of Lagrangian',
+	del_ext(J)	'derivative of Lagrangian',
+	capio(I)	'capital input\output constraints',
+	resource_ext(R)	'resource constraints',
+	resource(R)	'resource constraints' ;
+* f(x,u,y) = / -delv(x)	\     / 0   A-alphaB'  C'  \ / x \
+*	     |    0     |  +  | B-A    0       0   |*| y |
+*            \    w     /     \ -C     0       0   / \ u /
+
+del(J) ..	- (p*(x("1") + 2.5*x("2"))**(p-1) *
+		(2.5*x("3") + x("4"))**p *
+		(2*x("5") + 3*x("6"))**p) $(ord(J) eq 1)
+
+		- (p*2.5*(x("1") + 2.5*x("2"))**(p-1) *
+		(2.5*x("3") + x("4"))**p *
+		(2*x("5") + 3*x("6"))**p) $(ord(J) eq 2)
+
+		- ((x("1") + 2.5*x("2"))**p *
+		p*2.5*(2.5*x("3") + x("4"))**(p-1) *
+		(2*x("5") + 3*x("6"))**p) $(ord(J) eq 3)
+
+		- ((x("1") + 2.5*x("2"))**p *
+		p*(2.5*x("3") + x("4"))**(p-1) *
+		(2*x("5") + 3*x("6"))**p) $(ord(J) eq 4)
+
+		- ((x("1") + 2.5*x("2"))**p *
+		(2.5*x("3") + x("4"))**p *
+		p*2*(2*x("5") + 3*x("6"))**(p-1)) $(ord(J) eq 5)
+
+		- ((x("1") + 2.5*x("2"))**p *
+		(2.5*x("3") + x("4"))**p *
+		p*3*(2*x("5") + 3*x("6"))**(p-1)) $(ord(J) eq 6)
+
+		+ sum(I, y(I)*(A(I,J)-alpha*B(I,J)))
+		+ sum(R, u(R)*C(R,J)) 	=g= 0;
+
+del_ext(J)..	sum {CJ, ord(CJ)*x(CJ)}$CJ(J)
+                + sum {I, (card(J)+ord(I)) * y(I)}
+		+ sum {R, (card(J)+card(I)+ord(R)) * u(R)}
+		=x= ord(J);
+
+capio(I) ..	sum(J, (B(I,J)-A(I,J))*x(J)) =g= 0;
+
+resource(R) ..	w(R) - sum(J, C(R,J)*x(J)) =g= 0;
+
+resource_ext(R).. sum {J, ord(J)*x(J)}
+		=x= card(J)+ord(R);
+
+model exmcp4     / del.x, capio.y, resource.u /;
+model exmcp4c_cb / del_ext.x, capio.y, resource_ext.u  /;
+model exmcp4f_cb / del_ext.x, capio.y, resource_ext.u  /;
+
+scalar totdist  / 0 /;
+parameter solution_x(J,*), solution_y(I,*), solution_u(R,*);
+
+$onechoV > runme.gms
+x.l(J) = xipt(J);
+y.l(I) = yipt(I);
+u.l(R) = uipt(R);
+x.lo(CJ) = 2.0e-05;
+solve %1 using mcp;
+x.lo(CJ) = 0;
+solve %1 using mcp;
+solution_x(J,'%1') = x.l(J);
+solution_y(I,'%1') = y.l(I);
+solution_u(R,'%1') = u.l(R);
+totdist = totdist + sum {J, abs(x.l(J)-solution_x(J,'exmcp4'))};
+totdist = totdist + sum {I, abs(y.l(I)-solution_y(I,'exmcp4'))};
+totdist = totdist + sum {R, abs(u.l(R)-solution_u(R,'exmcp4'))};
+utility = (x.l("1") + 2.5*x.l("2"))**p *
+	(2.5*x.l("3") + x.l("4"))**p *
+	(2*x.l("5") + 3*x.l("6"))**p;
+display "utility v(x) = ", utility;
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=exmcp4c_cb.c                                     --libname=exmcp4c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 exmcp4f_cb.f90"%eq% --libname=exmcp4f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme exmcp4
+$if set runC_cb $batinclude runme exmcp4c_cb 
+$if set runF_cb $batinclude runme exmcp4f_cb 
+
+display solution_x, solution_y, solution_u;
+
+if {(totdist < 1.0E-6),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect exmcp4.lst for details.";
+};

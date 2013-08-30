@@ -1,0 +1,96 @@
+$Title Intermixed External Rows: External Function - Example MCP 5 (EXMCP5,SEQ=577)
+
+set i / i1 * i5 /;
+set c / c1 * c3 /;
+alias (i,j), (c,d);
+
+scalar NI, NC;
+NI = card(i);
+NC = card(c);
+
+positive variables
+  u(i)  'external variables 1..NI'
+  v(i)  'external variables NI+1..NI+NI'
+  w(c)
+  x(c)  'external variables 2*NI+1..2*NI+NC'
+  y(i)
+  ;
+equations
+  du(i)
+  dv(i)
+  ev(i)  'external version of dv: 1..NI'
+  dw(c)
+  dx(c)
+  ex(c)  'external version of dx: NI+1..NI+NC'
+  dy(i)
+  ;
+
+du(i) .. sqr(u(i)) =n= ord(i) - 2.5;
+
+dv(i) .. exp(v(i)) =n= u(i);
+ev(i) .. ord(i)*u(i) + (NI+ord(i))*v(i) =x= ord(i);
+
+dw(c) .. w(c)**1.5 =n= 0.1 * sum{j, u(j)};
+
+dx(c) .. x(c)**1.75 =n= 0.2 * sum{i, u(i)};
+ex(c) .. (2*NI + ord(c))*x(c) + sum{i, ord(i)*u(i)} =x= NI + ord(c);
+
+dy(i) .. 5*y(i) =g= u(i) - v(i) + sqrt(.125 * sum{c, x(c)});
+
+model exmcp5                            / du.u, dv.v, dw.w, dx.x, dy.y /;
+model exmcp5c 'External functions in C' / du.u, ev.v, dw.w, ex.x, dy.y /;
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$ifthen not set nocomp
+$  call gams complink lo=%gams.lo% --lang=c --files=exmcp5c.c --libname=exmcp5c%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$endif
+
+w.lo(c) = 1e-4;
+x.lo(c) = 1e-4;
+
+scalar totdist  / 0 /;
+parameter solution_u(i,*), solution_v(i,*), solution_w(c,*), solution_x(c,*), solution_y(i,*);
+
+u.l(i) = 0;
+v.l(i) = 0;
+w.l(c) = 0;
+x.l(c) = 0;
+y.l(j) = 0;
+solve exmcp5 using mcp;
+solution_u(i,'exmcp5') = u.l(i);
+solution_v(i,'exmcp5') = v.l(i);
+solution_w(c,'exmcp5') = w.l(c);
+solution_x(c,'exmcp5') = x.l(c);
+solution_y(i,'exmcp5') = y.l(i);
+
+
+u.l(i) = 0;
+v.l(i) = 0;
+w.l(c) = 0;
+x.l(c) = 0;
+y.l(i) = 0;
+solve exmcp5c using mcp;
+solution_u(i,'exmcp5c') = u.l(i);
+solution_v(i,'exmcp5c') = v.l(i);
+solution_w(c,'exmcp5c') = w.l(c);
+solution_x(c,'exmcp5c') = x.l(c);
+solution_y(i,'exmcp5c') = y.l(i);
+
+totdist = totdist + sum {i, abs(u.l(i)-solution_u(i,'exmcp5'))};
+totdist = totdist + sum {i, abs(v.l(i)-solution_v(i,'exmcp5'))};
+totdist = totdist + sum {c, abs(w.l(c)-solution_w(c,'exmcp5'))};
+totdist = totdist + sum {c, abs(x.l(c)-solution_x(c,'exmcp5'))};
+totdist = totdist + sum {i, abs(y.l(i)-solution_y(i,'exmcp5'))};
+
+display solution_u, solution_v, solution_w, solution_x, solution_y;
+
+if {(totdist < 1.0E-6),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect exmcp5.lst for details.";
+};

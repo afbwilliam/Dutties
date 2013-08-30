@@ -1,0 +1,270 @@
+*
+* optsulum.def
+*
+
+Presolve enumint 1 1 1 4 Controls which type of presolve strategy should be used by the presolve module.
+ 0 1 Do not apply any presolve strategies.
+ 1 1 The optimizer automatically decides if presolve and which type of presolve should be applied.
+ 2 1 Presolve will only use very simple methods to reduce problem size.
+ 3 1 The presolve will only use strategies based on primal information.
+ 4 1 The presolve will only use strategies based on dual information.
+ 5 1 Presolve will reduce problem size using all methods.
+optimizer enumint 0 0 1 5 Controls which optimizer will be used.
+ 0 1 The optimizer decides which optimizer to call based on the model structure.
+ 1 1 The primal simplex optimizer should be applied.
+ 2 1 The dual simplex optimizer should be applied.
+presolvehotstart enumint 2 1 1 4 Controls which type of presolve strategy should be used by the presolve module, when a hotstart is present.
+ 0 1 Do not apply any presolve strategies.
+ 1 1 The optimizer automatically decides if presolve and which type of presolve should be applied.
+ 2 1 Presolve will only use very simple methods to reduce problem size.
+ 3 1 The presolve will only use strategies based on primal information.
+ 4 1 The presolve will only use strategies based on dual information.
+ 5 1 Presolve will reduce problem size using all methods.
+presolvecompress enumint 3 0 1 4 Controls if the problem should be compressed after a call to the presolve module.
+ 0 1 The presolve automatically decides if final problem should be compressed.
+ 1 1 Presolve usewill use compression.
+ 2 1 Do not apply any presolve compression.
+presolvecompresshotstart enumint 4 0 1 4 Controls if the problem should be compressed after a call to the presolve module were a hotstart is present.
+ 0 1 The presolve automatically decides if final problem should be compressed.
+ 1 1 Presolve usewill use compression.
+ 2 1 Do not apply any presolve compression.
+simprimprice enumint 5 0 1 1 Controls which pricing strategy should be used by the primal simplex optimizer.
+ 0 1 The simplex optimizer analyzes the model and decides the best choice in the given situation.
+ 1 1 The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.
+ 2 1 The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.
+ 3 1 The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.
+simdualprice enumint 6 0 1 1 Controls which pricing strategy should be used by the dual simplex optimizer.
+ 0 1 The simplex optimizer analyzes the model and decides the best choice in the given situation.
+ 1 1 The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.
+ 2 1 The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.
+ 3 1 The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.
+simprimpricehotstart enumint 7 0 1 1 Controls which pricing strategy should be used by the primal simplex optimizer, when a hotstart is available.
+ 0 1 The simplex optimizer analyzes the model and decides the best choice in the given situation.
+ 1 1 The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.
+ 2 1 The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.
+ 3 1 The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.
+simdualpricehotstart enumint 8 0 1 1 Controls which pricing strategy should be used by the dual simplex optimizer, when a hotstart is available.
+ 0 1 The simplex optimizer analyzes the model and decides the best choice in the given situation.
+ 1 1 The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.
+ 2 1 The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.
+ 3 1 The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.
+loglevel integer 9 5 0 10 1 3 Controls the amount of output from Sulum in general.
+simloglevel integer 10 5 0 10 1 1 Controls the amounts of output from the simplex optimizer.
+simquadprecision enumint 11 0 1 1 Controls if quad precision is used in the simplex optimizer.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simperturblevel integer 12 50 0 100 1 1 Controls the level of perturbations in the simplex optimizer.
+simshifting enumint 13 1 1 1 Controls the if shifting is used in the simplex optimizer.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simwarmstart enumint 14 1 1 1 If this key is switched off then the optimizer disregard any solution stored in the model.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simprob enumint 15 0 1 1 Some time it might be faster to solve the respective dual formulation instead of the primal.
+ 0 1 The optimizer decides if the primal or dual formulation should be solved.
+ 1 1 The primal formulation should be solved.
+ 2 1 The dual formulation should be solved.
+primcrash enumint 16 1 1 5 Controls if the primal simplex optimizer should crash a advanced start basis.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+dualcrash enumint 17 1 1 5 Controls if the dual simplex optimizer should crash a advanced start basis.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simscale enumint 18 1 1 1 Controls if the simplex optimizer should scale data to be more numerical stable.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simscalehotstart enumint 19 1 1 1 Controls if the simplex optimizer should scale data to be more numerical stable, when a hotstart is present.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+objsense enumint 20 0 0 5 Decide if the model should be maximized or minimized.
+ 0 1 The problem is of type minimization.
+ 1 1 The problem is of type maximization.
+mpswritenames enumint 22 0 1 5 Controls if Sulum MPS writer should replace constraint and variable names with generic ones .
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+debug enumint 23 0 1 5 This option can be switch on in debug mode and development phase to find bugs easier.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+logprefix enumint 27 0 1 3 Skip doing prefix in logging i.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+lognomodulemessage enumint 28 0 1 3 Skip writting stop and start for each optimizer module in logging.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simmaxiter integer 29 maxint 0 maxint 1 1 Maximum iterations allowed in simplex optimizers.
+updatesolquality enumint 30 1 1 5 Decides if the optimizer should update information solution quality items at the end of a call to the optimizer.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simobjcutnosol enumint 31 0 1 1 Controls if a solution is needed when the optimizer stops premature due to objective cut .
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+lpwritenames enumint 32 0 1 5 Controls if Sulum LP writer should replace constraint and variable names with generic ones .
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+lpwritenumonline integer 33 5 1 20 1 5 Controls how many items Sulum LP writer should write on each line.
+lpwriteprecision integer 34 4 2 20 1 5 Controls how many items Sulum LP writer should write on each line.
+lpwritefreecons enumint 35 0 1 5 Controls if Sulum LP writer should write free constraints.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+mpswritefreecons enumint 36 0 1 5 Controls if Sulum MPS writer should write free constraints.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+lpreadfreecons enumint 37 0 1 5 Controls if Sulum LP reader should read free constraints.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+mpsreadfreecons enumint 38 0 1 5 Controls if Sulum MPS reader should read free constraints.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+lpwritevarorder enumint 39 1 1 5 Controls if Sulum LP writer should write variables in same order i.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+numthreads integer 40 1 1 maxint 0 5 Controls the maximum number of threads used by the Sulum optimizer.
+mipmaxnodes integer 41 maxint 0 maxint 0 2 Controls the maximum number of nodes processed bu the Sulum MIP optimizer.
+mipmaxsol integer 42 100 1 maxint 0 2 Controls the maximum number of feasible solutions found and stored in the solution pool by the Sulum MIP optimizer.
+mipcuts enumint 43 4 0 2 Controls the overall level of cut generation used by the Sulum MIP optimizer.
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipmircuts enumint 44 4 0 2 Controls the level of cut generation in MIR cuts used by the Sulum MIP optimizer.
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipgomorycuts enumint 45 4 0 2 Controls the level of cut generation in Gomory cuts used by the Sulum MIP optimizer.
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipflowcovercuts enumint 46 4 0 2 Controls the level of cut generation in flow cover cuts used by the Sulum MIP optimizer (Not implemented yet).
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipcliquecuts enumint 47 4 0 2 Controls the level of cut generation in clique cuts used by the Sulum MIP optimizer.
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipimpliedboundcuts enumint 48 4 0 2 Controls the level of cut generation in implied bound cuts used by the Sulum MIP optimizer.
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipzerohalfcuts enumint 49 4 0 2 Controls the level of cut generation in zero half cuts used by the Sulum MIP optimizer (Not implemented yet).
+ 0 1 The given option is off i.
+ 1 1 Do a minimum of work in cut generation.
+ 2 1 Do a fair amount of work in cut generation.
+ 3 1 Be agressive in cut generation.
+ 4 1 The given option is automatically determined by the optimizer.
+mipnodeselect enumint 50 0 0 2 Controls how nodes are selected in Sulum MIP optimizer.
+ 0 1 The given option is automatically determined by the optimizer.
+ 1 1 Choose best bound first.
+ 2 1 Choose lowest depth first.
+ 3 1 Choose by pseudo costs.
+ 4 1 Choose from a hybrid estimate.
+ 5 1 Choose from a adaptive node search aim to balance the tree exploration.
+mipbranchselect enumint 51 0 0 2 Controls how branching variables are selected in Sulum MIP optimizer.
+ 0 1 The given option is automatically determined by the optimizer.
+ 1 1 Choose based on minimum infeasibility.
+ 2 1 Choose based on maximum infeasibility.
+ 3 1 Choose based on strong branching.
+ 4 1 Choose based on pseudo costs.
+ 5 1 Choose based on a hybrid pseudo price selection scheme.
+mipnodechildselect enumint 52 0 0 2 Controls how node selection on child nodes are selected in Sulum MIP optimizer.
+ 0 1 The given option is automatically determined by the optimizer.
+ 1 1 Choose up branch.
+ 2 1 Choose lo branch.
+ 3 1 Choose bracnh guided by incumbent.
+mipsolveaslp enumint 53 0 0 2 Controls Sulum Optimizer should solve a MIP as LP i.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+miplocalnodepresolve integer 54 10 0 10 0 2 Controls Sulum MIP Optimizer should use node presolve at local nodes i.
+miplocalnodeheuristic integer 55 10 0 10 0 2 Controls Sulum MIP Optimizer should use node heuristics at local nodes i.
+miplocalnodeheuristicpump integer 56 10 0 10 0 2 Controls Sulum MIP Optimizer should use node pumping heuristics at local nodes i.
+miplocalnodecuts integer 57 10 0 10 0 2 Controls Sulum MIP Optimizer should use node cuts at local nodes i.
+mipreducedcoststrengthroot enumint 58 1 0 2 Controls if the Sulum MIP Optimizer should use reduced cost strenghtening at the root node.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+mipreducedcoststrengthnode enumint 59 1 0 2 Controls if the Sulum MIP Optimizer should use reduced cost strenghtening at the each node.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simusequadinf enumint 60 1 1 1 Controls if Sulum Simplex Optimizer should use switch to quad precision, when a problem is determined infeasible.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+miploglevel integer 61 5 0 10 0 2 Controls the amount of output from Sulum integer optimizer in general.
+mipnodeselectloglevel integer 62 0 0 10 0 2 Controls the amount of output from Sulum integer optimizer in the node selection module.
+mipbranchselectloglevel integer 63 0 0 10 0 2 Controls the amount of output from Sulum integer optimizer in the branch selection module.
+mipintsolloglevel integer 64 0 0 10 0 2 Controls the amount of output from Sulum integer optimizer about finding integer feasible solutions.
+simsolveunscaled enumint 65 1 1 1 Controls if the simplex optimizer should reoptimize on a unscaled problem if tolerances are not met.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+mipfeasfocus enumint 66 0 0 2 Controls if the mixed integer optimizer should focus more on obtaining a feasible solution.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+mipsubmippinglevel integer 67 1 0 10 0 2 Controls how deep the mixed integer optimizer can go on solve sub mips.
+mipsolstopnum integer 68 maxint 1 maxint 0 2 Controls if the mixed integer optimizer should stop after a certain number of integer solutions is found.
+mipdotiming enumint 69 0 0 2 Controls if the mixed integer optimizer should do extra timing which can be fetched from varies information items.
+ 0 1 The given option is off.
+ 1 1 The given option is on.
+simtolprim double 0 1.0e-6 1.0e-10 1.0e-4 1 1 Absolut tolerance used by the simplex optimizer to determine if a solution is primal feasible or not.
+simtoldual double 1 1.0e-6 1.0e-10 1.0e-4 1 1 Absolut tolerance used by the simplex optimizer to determine if a solution is dual feasible or not.
+simtolpivot double 2 1.0e-9 1.0e-12 1.0e-5 1 1 Absolut tolerance used by the simplex optimizer to control the minimum size of a pivot element.
+simtolmarko double 3 8.0e-3 1.0e-4 9.0e-1 1 1 Absolut tolerance used by the simplex optimizer to control the stability of pivot size in LU factorization module.
+simtimelimit double 4 maxdouble 0 maxdouble 1 1 Maximum time allowed in the simplex optimizer.
+simobjupcut double 5 maxdouble mindouble maxdouble 1 1 If the optimal objective value can be proved to be larger than this value, then the optimizer terminates.
+simobjlocut double 6 mindouble mindouble maxdouble 1 1 If the optimal objective value can be proved to be less than this value, then the optimizer terminates.
+wrnlargea double 7 1.0e+8 0.0 maxdouble 1 5 If a absolute value in the constraint matrix is larger than this value a warning will be displayed, but only if debug is on.
+wrnsmalla double 8 1.0e+8 0.0 maxdouble 1 5 If a absolute value in the constraint matrix is smaller than this value a warning will be displayed, but only if debug is on.
+wrnlargec double 9 1.0e+8 0.0 maxdouble 1 5 If a absolute value in the objective is larger than this value a warning will be displayed, but only if debug is on.
+wrnlargelo double 10 1.0e+8 0.0 maxdouble 1 5 If the absolute value of a lower bound is larger than this value a warning will be displayed, but only if debug is on.
+wrnlargeup double 11 1.0e+8 0.0 maxdouble 1 5 If the absolute value of a upper bound is larger than this value a warning will be displayed, but only if debug is on.
+opttimelimit double 13 maxdouble 0 maxdouble 1 5 Maximum time allowed in the optimizer.
+optsolvezero double 14 1.0e-12 0 1.0e-8 1 5 Tolerance on what is considered zero in solves with basis call by the user.
+miptolrelgap double 15 1.0e-4 1.0e-16 maxdouble 0 2 Relative stopping tolerance used by the MIP optimizer.
+miptolabsgap double 16 1.0e-10 0.0 maxdouble 0 2 Absolute stopping tolerance used by the MIP optimizer.
+miptolint double 17 1.0e-6 1.0e-9 1.0e-2 0 2 Integer variable tolerance used by the MIP optimizer.
+miptimelimit double 18 maxdouble 0 maxdouble 0 2 Maximum time allowed in the mixed integer optimizer.
+mipobjupcut double 19 maxdouble mindouble maxdouble 0 2 If the optimal objective value can be proved to be larger than this value and a feasible solution exists,, then the optimizer terminates.
+mipobjlocut double 20 mindouble mindouble maxdouble 0 2 If the optimal objective value can be proved to be less than this value and a feasible solution exists, then the optimizer terminates.
+mipcutoff double 21 maxdouble mindouble maxdouble 0 2 Cuttoff value to be used to prune nodes in the mixed integer optimizer.
+dumpsolution string 0 "" 1 5 Controls export of alternate MIP solutions
+fixoptfile string 0 "" 0 2 Option file for fixed problem optimization
+mipstart boolean 0 0 0 2 Use mip starting values
+solvetrace string 0 "" 0 2 Filename of solving trace file
+solvetracenode integer 0 100 0 maxint 0 2 Node interval when a trace record is written
+solvetracetime double 0 1 0 maxdouble 0 2 Time interval when a trace record is written
+names boolean 0 1 1 5 Indicator for loading names
+nobounds immediate nobounds 0 5 Ignores bounds on options
+printoptions boolean 0 0 1 5 List values of all options to GAMS listing file
+probread string 0 "" 0 5 Supply a problem via a Gurobi input file
+readfile immediate readfile 0 5 Read secondary option file
+rerun integer 0 0 -1 1 1 5 Resolve without presolve in case of unbounded or infeasible
+solvefixed boolean 0 1 0 2 Indicator for solving the fixed problem for a MIP to get a dual solution
+usebasis integer 0 0 0 1 1 1 Use basis from GAMS
+writeprob string 0 "" 1 5 Save the problem instance
+*
+* synonym section
+*
+threads synonym numthreads
+*
+* deprecated section
+*
+synon deprecated
+ threads
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+Simplex group 1 1 Options related to the simplex optimizer
+MIP group 2 0 Options related to the mixed integer optimizer
+Logging group 3 1 Options related to logging in Sulum
+Presolve group 4 1 Options related to the presolve module
+Other group 5 1 Other options
+*** End of file

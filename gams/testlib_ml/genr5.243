@@ -1,0 +1,7 @@
+$TITLE 'Generate test data for read5 test of gdxMrw' (GENR5,SEQ=243)
+
+scalar valeps, valinf, valpi;
+valeps = eps;
+valinf = inf;
+valpi  = pi;
+execute_unload 'exr5.gdx', valeps, valinf, valpi;

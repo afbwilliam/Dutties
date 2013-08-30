@@ -1,0 +1,34 @@
+$TITLE 'Test centropy intrinsic on nice inputs' (FNCENTR5,SEQ=361)
+
+$ontext
+Test the function values and derivatives of
+   centropy(x,y,delta) = x * log((x+delta)/(y+delta))
+on nice inputs:
+  x,y in [1e-6,1e6]
+  d   in [0,1e-8]
+
+Author: Steve Dirkse
+$offtext
+
+$include fnset_xy.inc
+
+$gdxin fncentr5
+$load aeps reps T data
+$gdxin
+relToInput = 0;
+reps = 4e-13;
+
+loop {T,
+  data(T,  'f')  = centropy.value(   data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T, 'fx')  = centropy.grad(1:  data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T, 'fy')  = centropy.grad(2:  data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fxx')  = centropy.hess(1:1:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fxy')  = centropy.hess(1:2:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fyx')  = centropy.hess(2:1:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T,'fyy')  = centropy.hess(2:2:data(T,'x'),data(T,'y'),data(T,'d'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display relToInput;
+$include fntest_xy.inc

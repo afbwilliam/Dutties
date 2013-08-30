@@ -1,0 +1,29 @@
+$title piped sort (PIPE4,SEQ=114)
+
+$ontext
+
+Contributor: Alex Meeraus
+$offtext
+
+$version 137 goto OK
+$clearerror
+$stop
+$label OK
+
+set i / 1*5 /; alias(i,i1,i2,i3,i4);
+
+parameter a4(i1,i2,i3,i4);
+
+a4(i1,i2,i3,i4)$(uniform(0,1) > .9) = uniform(1,2);
+
+parameters p1234(i1,i2,i3,i4)
+           p4321(i4,i3,i2,i1)
+           p4123(i4,i1,i2,i3)
+           p3421(i3,i4,i2,i1);
+
+option p1234 < a4, p4321 < a4, p4123 < a4, p3421 < a4;
+
+abort$sum((i1,i2,i3,i4), p1234(i1,i2,i3,i4) <> a4(i1,i2,i3,i4)) 'bad sort';
+abort$sum((i1,i2,i3,i4), p4321(i4,i3,i2,i1) <> a4(i1,i2,i3,i4)) 'bad sort';
+abort$sum((i1,i2,i3,i4), p4123(i4,i1,i2,i3) <> a4(i1,i2,i3,i4)) 'bad sort';
+abort$sum((i1,i2,i3,i4), p3421(i3,i4,i2,i1) <> a4(i1,i2,i3,i4)) 'bad sort';

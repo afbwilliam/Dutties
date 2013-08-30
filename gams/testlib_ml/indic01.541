@@ -1,0 +1,92 @@
+$title Test of =g= indicator constraints (INDIC01,SEQ=xxx)
+
+$ontext
+Test =g= indicator constraints.  This model is based on DICE from the
+GAMS model library.
+
+Contributed by Steve Dirkse, November 2011
+$offtext
+
+sets    f    faces on a dice  / face1*face6 /
+        dice number of dice   / dice1*dice3 / ;
+
+scalars flo  lowest face value  / 1 /
+        fup  highest face value
+        wn   wins needed - possible bound ;
+
+fup = card(dice) * card(f);
+
+wn = floor(0.5 * sqr(card(f))) + 1;
+
+alias(f,fp);
+alias(dice,dicep);
+
+variables  wnx               number of wins
+           fval(dice,f)      value of dice - will be integer
+           comp(dice,f,fp)   one if f beats fp ;
+binary variable comp;
+
+fval.lo(dice,f) = flo;
+fval.up(dice,f) = fup;
+
+fval.fx("dice1","face1") = flo;
+* can cheat a little and fix values to speed things up
+fval.fx("dice1","face2") = 10;
+
+equation eq1(dice)       count the wins
+         eq3(dice,f,fp)  definition of non-transitive relation
+         eq4(dice,f)     different face values for a single dice;
+
+eq1(dice).. sum((f,fp), comp(dice,f,fp)) =e= wnx;
+
+eq3(dice,f,fp) .. fval(dice,f) =g= fval(dice++1,fp) + 1;
+
+eq4(dice,f-1) .. fval(dice,f-1) + 1 =l= fval(dice,f);
+
+
+model xdice /all /;
+
+$onecho > cplex.o99
+indic eq3(dice,f,fp)$comp(dice,f,fp) 1
+$offecho
+$onecho > xpress.o99
+indic eq3(dice,f,fp)$comp(dice,f,fp) 1
+$offecho
+$echo gams/indicatorfile = "cplex.o99" > scip.o99
+xdice.optfile = 99;
+* all obj values are integer, so any fairly small optcr should work
+xdice.optcr = 1e-3;
+
+solve xdice using mip max wnx;
+abort$[xdice.solvestat <> %solvestat.NormalCompletion%] "wrong solver status";
+abort$[(xdice.modelstat <> %modelstat.Optimal%) and (xdice.modelstat <> %modelstat.IntegerSolution%)] "wrong model status";
+
+* clean and check
+parameters
+  chk1(dice)
+  nWins(dice)    'win count, dice over dice++1'
+  chk2(dice,f)
+  v(dice,f)      'face value of dice - will be integer'
+  chk3(dice,f,fp)
+  dom(dice,f,fp) 'one if (dice,f) dominates (dice++1,fp)'
+  ;
+
+v(dice,f) = round(fval.l(dice,f));
+dom(dice,f,fp) = round(comp.l(dice,f,fp));
+nWins(dice) = sum{(f,fp), dom(dice,f,fp)};
+
+execute_unload 'indic01_sol', v, dom, nWins;
+
+abort$[abs(wnx.l - round(wnx.l)) > 1e-6] 'objective not integer', wnx.l;
+
+chk1(dice) = nWins(dice) - round(wnx.l);
+abort$card(chk1) 'bogus objective', nWins, wnx.l, dom;
+
+chk2(dice,f) = abs(v(dice,f) - fval.l(dice,f));
+abort$[smax{(dice,f), chk2(dice,f)} > 1e-6] 'non-integer fval returned', chk2, fval.l;
+
+chk3(dice,f,fp) = abs(dom(dice,f,fp) - comp.l(dice,f,fp));
+abort$[smax{(dice,f,fp), chk3(dice,f,fp)} > 1e-6] 'non-integer comp returned', chk3, comp.l;
+
+chk3(dice,f,fp)$dom(dice,f,fp) = [v(dice,f) <= v(dice++1,fp)];
+abort$card(chk3) 'bogus comp variable', comp.l, dom, chk3;

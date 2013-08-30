@@ -1,0 +1,19 @@
+*
+* optls.def (manual)
+*
+
+gdx_file_name string 0 "ls.gdx" 0 1 Name for output GDX file
+add_constant_term enumint 0 2 0 1 log output level
+ 0 1 No
+ 1 1 Yes
+ 2 1 Automatic
+debug_level integer 0 0 0 maxint 1 1 Debug level
+maxn integer 0 1000 0 maxint 0 1 maxn
+maxp integer 0 25 0 maxint 0 1 maxp
+
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General options
+*** End of file

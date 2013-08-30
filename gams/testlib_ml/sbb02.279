@@ -1,0 +1,10 @@
+$TITLE 'SBB test suite - SOS2 test' (SBB02,SEQ=279)
+
+$call gamslib -q bidsos
+
+$call sed s/mip/minlp/ bidsos.gms > bidsosX.gms
+$echo "abort$(bideval.solvestat <> %solvestat.NormalCompletion% or bideval.modelstat <> %modelstat.Optimal%) 'problems with SBB SOS handling'" >> bidsosX.gms
+
+$echo "strict 1" > sbb.op2
+$call =gams bidsosX lo=2 optfile=2 minlp=sbb nlp=pathnlp
+$if errorlevel 1 $abort 'problems with SBB SOS handling'

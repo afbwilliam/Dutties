@@ -1,0 +1,34 @@
+$Title  A Deployment Test Model (DPLYTEST,SEQ=316)
+$Ontext
+
+This small model demonstrates the use of the deploy model. If anything
+goes wrong, a compilation error is issued.
+
+$Offtext
+
+* Retrieve model lp01 and deploy from the GAMS Model Library
+$call testlib -q lp01
+$call gamslib -q deploy
+
+* Execute the deploy model and build a GAMS/CONOPT deployment system
+$call =gams deploy lo=2
+$if errorlevel 1 $abort Error running model deploy
+$if not exist gmsdeply.zip $abort Error finding deploy zip file gmsdeply.zip
+
+* Unzip the GAMS/CONOPT deployment system in the scratch directory
+$call =gmsunzip -oqq -d"%gams.scrdir%gmssys" gmsdeply.zip
+$if errorlevel 1 $abort Error unzipping gmsdeply.zip i into '%gams.scrdir%gmssys'
+
+$set bs \
+$if %system.filesys% == UNIX $set bs /
+
+$set QUOTE '"'
+$if %system.filesys% == UNIX $set QUOTE ''
+
+* Run model lp01 with the newly installed GAMS system
+$call =%QUOTE%%gams.scrdir%gmssys%bs%gams%QUOTE% lp01 lp=conopt lo=2
+$if errorlevel 1 $abort Error running lp01 with new GAMS system
+
+* Remove newly created GAMS system directory
+$call =rm -rf "%gams.scrdir%gmssys"
+$if errorlevel 1 $abort Error removing newly created GAMS system directory

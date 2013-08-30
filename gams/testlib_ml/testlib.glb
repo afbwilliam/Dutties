@@ -1,0 +1,6766 @@
+Version = 5
+LibraryName = GAMS Test Library
+Columns = 4
+4 = SeqNr
+1 = Name
+2 = Type
+3 = Description
+InitialSort = 2
+*$*$*$
+Files = testutil.1,testmod.inc
+1 = TESTUTIL
+2 = GAMS
+3 = Generates some useful files from the Test Model Library
+4 = 001
+Generates some useful files from the Test Model Library (TESTUTIL,SEQ=1)
+
+Generates some useful files from the Test Model Library
+
+*$*$*$
+Files = quality.2,testmod.inc
+1 = QUALITY
+2 = GAMS
+3 = Driver for quality tests of all sorts
+4 = 002
+'Driver for quality tests of all sorts' (QUALITY,SEQ=2)
+
+
+*$*$*$
+Files = assign1.3
+1 = ASSIGN1
+2 = GAMS
+3 = Lagged replacements could go wrong
+4 = 003
+lagged replacements could go wrong (ASSIGN1,SEQ=3)
+
+Early cmex implementations used knock out list which was implemented incorrcetly GT00512
+
+Once a default value is stored at an index position, a second assignment to the same index position (using a lag operator) will not store the non-default value.
+
+*$*$*$
+Files = binary1.4
+1 = BINARY1
+2 = GAMS
+3 = Simple tests for binary boolean operations
+4 = 004
+simple tests for binary boolean operations (BINARY1,SEQ=4)
+
+
+*$*$*$
+Files = binary2.5
+1 = BINARY2
+2 = GAMS
+3 = Tests selected binary operations and functions
+4 = 005
+'test selected binary operations and functions' (BINARY2,SEQ=5)
+
+
+*$*$*$
+Files = call1.6
+1 = CALL1
+2 = GAMS
+3 = CALL1
+4 = 006
+Check return codes for spawns of gams $call =string (CALL1,SEQ=6)
+
+remember  $if errorlevel N     true if errolevel >= n
+
+we removed the limit on UELs with 137
+
+*$*$*$
+Files = call2.7
+1 = CALL2
+2 = GAMS
+3 = Check return codes for spawns of gams execute
+4 = 007
+Check return codes for spawns of gams execute (CALL2,SEQ=7)
+
+
+*$*$*$
+Files = call3.8
+1 = CALL3
+2 = GAMS
+3 = Check for standard output conflicts
+4 = 008
+Check for standard output conflicts (CALL3,SEQ=8)
+
+
+*$*$*$
+Files = clear1.9
+1 = CLEAR1
+2 = GAMS
+3 = Test that option clear works like an assign
+4 = 009
+Test that option clear works like an assign (CLEAR1,SEQ=9)
+
+
+*$*$*$
+Files = clear2.10
+1 = CLEAR2
+2 = GAMS
+3 = Test that we cannot option clear a domain
+4 = 010
+Test that we cannot option clear a domain (CLEAR2,SEQ=10)
+
+
+*$*$*$
+Files = clear3.11
+1 = CLEAR3
+2 = GAMS
+3 = $clear acts like a data statement and knows about alias
+4 = 011
+$clear acts like a data statement and knows about alias (CLEAR3,SEQ=11)
+
+
+*$*$*$
+Files = clear4.12
+1 = CLEAR4
+2 = GAMS
+3 = $clear cannot clear predefined symbols
+4 = 012
+$clear cannot clear predefined symbols (CLEAR4,SEQ=12)
+
+
+*$*$*$
+Files = clear5.13
+1 = CLEAR5
+2 = GAMS
+3 = option clear cannot clear predefined symbols
+4 = 013
+option clear cannot clear predefined symbols (CLEAR5,SEQ=13)
+
+
+*$*$*$
+Files = clear6.14
+1 = CLEAR6
+2 = GAMS
+3 = option clear cannot clear known predefined symbols
+4 = 014
+option clear cannot clear known predefined symbols (CLEAR6,SEQ=14)
+
+
+*$*$*$
+Files = clear7.15
+1 = CLEAR7
+2 = GAMS
+3 = $clear cannot clear known predefined symbols
+4 = 015
+$clear cannot clear known predefined symbols (CLEAR7,SEQ=15)
+
+
+*$*$*$
+Files = dattim1.16
+1 = DATTIM1
+2 = GAMS
+3 = basic day/time test for Thursday Jul 4, 2002
+4 = 016
+basic day/time test for Thursday Jul 4, 2002 (DATTIM1,SEQ=16)
+
+
+*$*$*$
+Files = dattim2.17
+1 = DATTIM2
+2 = GAMS
+3 = day of week test starting Monday Jan 7, 2002
+4 = 017
+day of week test starting Monday Jan 7, 2002 (DATTIM2,SEQ=17)
+
+
+*$*$*$
+Files = funcs1.18
+1 = FUNCS1
+2 = GAMS
+3 = Test functions in NLP and DNLP
+4 = 018
+Test functions in NLP and DNLP (FUNCS1,SEQ=18)
+
+
+*$*$*$
+Files = gdx1.19
+1 = GDX1
+2 = GAMS
+3 = Checks opening of gdx files for read and write
+4 = 019
+Checks opening of gdx files for read and write (GDX1,SEQ=19)
+
+
+*$*$*$
+Files = ifnot1.20
+1 = IFNOT1
+2 = GAMS
+3 = Better recognition of $if NOT ==
+4 = 020
+Better recognition of $if NOT == (IFNOT1,SEQ=20)
+
+GT00459 from A drud
+
+$if [NOT] s1 == s2 ...... $if NOT == should be an error $if %string% == somthing   is a problem of %string% is NOT
+
+new rules:
+
+1.  to regonize a NOT we need a space following NOT 2.  NOT == is an error
+
+*$*$*$
+Files = load1.21
+1 = LOAD1
+2 = GAMS
+3 = $load under $onmulti works like data statements
+4 = 021
+$load under $onmulti works like data statements (LOAD1,SEQ=21)
+
+
+*$*$*$
+Files = loop1.22
+1 = LOOP1
+2 = GAMS
+3 = Empty loops with and without control  GT00532
+4 = 022
+Empty loops with and without control  GT00532 (LOOP1,SEQ=22)
+
+
+*$*$*$
+Files = onmulti1.23
+1 = ONMULTI1
+2 = GAMS
+3 = With onmulti we can expand the domain
+4 = 023
+With onmulti we can expand the domain (ONMULTI1,SEQ=23)
+
+
+*$*$*$
+Files = onmulti2.24
+1 = ONMULTI2
+2 = GAMS
+3 = Onmulti operates like a replace
+4 = 024
+Onmulti operates like a replace (ONMULTI2,SEQ=24)
+
+
+*$*$*$
+Files = onmulti3.25
+1 = ONMULTI3
+2 = GAMS
+3 = Onmulti may violate the ordered property
+4 = 025
+Onmulti may violate the ordered property (ONMULTI3,SEQ=25)
+
+
+*$*$*$
+Files = onmulti4.26
+1 = ONMULTI4
+2 = GAMS
+3 = The onmulti merge may destroy the ordered property
+4 = 026
+The onmulti merge may destroy the ordered property (ONMULTI4,SEQ=26)
+
+
+*$*$*$
+Files = onmulti5.27
+1 = ONMULTI5
+2 = GAMS
+3 = Test set table and onmulti with deletes
+4 = 027
+Test set table and onmulti with deletes (ONMULTI5,SEQ=27)
+
+
+*$*$*$
+Files = phantom1.28
+1 = PHANTOM1
+2 = GAMS
+3 = Phantoms can only have default values
+4 = 028
+Phantoms can only have default values (PHANTOM1,SEQ=28)
+
+
+*$*$*$
+Files = phantom2.29
+1 = PHANTOM2
+2 = GAMS
+3 = Phantoms can only have default values - ondelim
+4 = 029
+Phantoms can only have default values - ondelim (PHANTOM2,SEQ=29)
+
+
+*$*$*$
+Files = point1.30
+1 = POINT1
+2 = GAMS
+3 = execute_loadpoint is a merge operation
+4 = 030
+execute_loadpoint is a merge operation (POINT1,SEQ=30)
+
+execute_loadpoint is a merge, although not tested here
+
+*$*$*$
+Files = point2.31
+1 = POINT2
+2 = GAMS
+3 = execute_load is a replacement operation
+4 = 031
+execute_load is a replacement operation (POINT2,SEQ=31)
+
+load is a replace, although not tested here
+
+*$*$*$
+Files = power1.32
+1 = POWER1
+2 = GAMS
+3 = compare real and integer power for normal values
+4 = 032
+compare real and integer power for normal values (POWER1,SEQ=32)
+
+
+*$*$*$
+Files = power2.33
+1 = POWER2
+2 = GAMS
+3 = test integer powers from -299 to +299
+4 = 033
+test integer powers from -298 to +298 (POWER2,SEQ=33)
+
+
+*$*$*$
+Files = put1.34
+1 = PUT1
+2 = GAMS
+3 = aliased set and .te
+4 = 034
+aliased set and .te (PUT1,SEQ=34)
+
+
+*$*$*$
+Files = put2.35
+1 = PUT2
+2 = GAMS
+3 = .nr=2 writes scientific notation
+4 = 035
+.nr=2 writes scientific notation (PUT2,SEQ=35)
+
+
+*$*$*$
+Files = put3.36
+1 = PUT3
+2 = GAMS
+3 = .nr=2 writes scientific - test for errors
+4 = 036
+.nr=2 writes scientific - test for errors (PUT3,SEQ=36)
+
+
+*$*$*$
+Files = put4.37
+1 = PUT4
+2 = GAMS
+3 = uses system.f? and compares with full file name
+4 = 037
+uses system.f? and compares with full file name (PUT4,SEQ=37)
+
+
+*$*$*$
+Files = set1.38
+1 = SET1
+2 = GAMS
+3 = test basic $set scopting
+4 = 038
+test basic $set scopting (SET1,SEQ=38)
+
+
+*$*$*$
+Files = set2.39
+1 = SET2
+2 = GAMS
+3 = more on $set scoping
+4 = 039
+more on $set scoping (SET2,SEQ=39)
+
+
+*$*$*$
+Files = set3.40
+1 = SET3
+2 = GAMS
+3 = $set and $drop scoping
+4 = 040
+$set and $drop scoping (SET3,SEQ=40)
+
+
+*$*$*$
+Files = set4.41
+1 = SET4
+2 = GAMS
+3 = set $set with includes
+4 = 041
+set $set with includes (SET4,SEQ=41)
+
+
+*$*$*$
+Files = set5.42
+1 = SET5
+2 = GAMS
+3 = split file name
+4 = 042
+split file name (SET5,SEQ=42)
+
+
+*$*$*$
+Files = set6.43
+1 = SET6
+2 = GAMS
+3 = split a gams name into components
+4 = 043
+split a gams name into components (SET6,SEQ=43)
+
+
+*$*$*$
+Files = set7.44
+1 = SET7
+2 = GAMS
+3 = split the file name and recombine
+4 = 044
+split the file name and recombine (SET7,SEQ=44)
+
+
+*$*$*$
+Files = tester.45
+1 = TESTER
+2 = GAMS
+3 = handy way to test at compile time
+4 = 045
+handy way to test at compile time (TESTER,SEQ=45)
+
+
+*$*$*$
+Files = title1.46
+1 = TITLE1
+2 = GAMS
+3 = My Title
+4 = 046
+My Title (TITLE1,SEQ=46)
+
+
+*$*$*$
+Files = unary1.47
+1 = UNARY1
+2 = GAMS
+3 = tests mapval function
+4 = 047
+tests mapval function (UNARY1,SEQ=47)
+
+acronyms just return the position in the symbol table the value 93 for acron in parameter ref
+
+*$*$*$
+Files = unary2.48
+1 = UNARY2
+2 = GAMS
+3 = simple test on unary operations with "crazy" values
+4 = 048
+simple test on unary operations with 'crazy' values (UNARY2,SEQ=48)
+
+on/off undf makes UNDF a reserved word
+
+*$*$*$
+Files = undf1.49
+1 = UNDF1
+2 = GAMS
+3 = $onundf/offundf changes the scanner
+4 = 049
+$onundf/offundf changes the scanner (UNDF1,SEQ=49)
+
+first we test the default
+
+*$*$*$
+Files = unload1.50
+1 = UNLOAD1
+2 = GAMS
+3 = multiple unloads of the same item are OK
+4 = 050
+multiple unloads of the same item are OK (UNLOAD1,SEQ=50)
+
+
+*$*$*$
+Files = unload2.51
+1 = UNLOAD2
+2 = GAMS
+3 = cannot unload different items to same gdx name
+4 = 051
+cannot unload different items to same gdx name (UNLOAD2,SEQ=51)
+
+
+*$*$*$
+Files = unload3.52
+1 = UNLOAD3
+2 = GAMS
+3 = ignore gdx suffix
+4 = 052
+ignore gdx suffix (UNLOAD3,SEQ=52)
+
+
+*$*$*$
+Files = unload4.53
+1 = UNLOAD4
+2 = GAMS
+3 = commas are optional
+4 = 053
+commas are optional (UNLOAD4,SEQ=53)
+
+
+*$*$*$
+Files = unload5.54
+1 = UNLOAD5
+2 = GAMS
+3 = multiple $unloads of the same item are OK
+4 = 054
+multiple $unloads of the same item are OK (UNLOAD5,SEQ=54)
+
+
+*$*$*$
+Files = unload6.55
+1 = UNLOAD6
+2 = GAMS
+3 = cannot $unload different items to same gdx name
+4 = 055
+cannot $unload different items to same gdx name (UNLOAD6,SEQ=55)
+
+
+*$*$*$
+Files = unload7.56
+1 = UNLOAD7
+2 = GAMS
+3 = ignore gdx suffix
+4 = 056
+ignore gdx suffix (UNLOAD7,SEQ=56)
+
+
+*$*$*$
+Files = unload8.57
+1 = UNLOAD8
+2 = GAMS
+3 = $unload lines are treated as one for errors
+4 = 057
+$unload lines are treated as one for errors (UNLOAD8,SEQ=57)
+
+
+*$*$*$
+Files = warning1.58
+1 = WARNING1
+2 = GAMS
+3 = set limit on compilation warnings with WARNING=n
+4 = 058
+set limit on compilation warnings with WARNING=n (WARNING1,SEQ=58)
+
+
+*$*$*$
+Files = warning2.59
+1 = WARNING2
+2 = GAMS
+3 = compilation warnings are ignored
+4 = 059
+compilation warnings are ignored (WARNING2,SEQ=59)
+
+
+*$*$*$
+Files = empty1.60
+1 = EMPTY1
+2 = GAMS
+3 = checks if empty equation are feasible
+4 = 060
+checks if empty equation are feasible (EMPTY1,SEQ=60)
+
+this was reported by Gary Goldstein, GT00487
+
+*$*$*$
+Files = gbin1.61
+1 = GBIN1
+2 = GAMS
+3 = Checks to see if we have unix utilities in the path
+4 = 061
+'Checks to see if we have unix utilities in the path' (GBIN1,SEQ=61)
+
+This test is a bit convoluted for MS DOS/Windows: We first need to reset the path to the gams system dircetory and only then we test that gams will set the path to gbin correctly by executing a simple grep job.
+
+*$*$*$
+Files = nest1.62
+1 = NEST1
+2 = GAMS
+3 = nested If - loop - solve test with alias
+4 = 062
+nested If - loop - solve test with alias (NEST1,SEQ=62)
+
+This test is for a problem we encountered with 21.0. if(...,
+  loop(...,
+  solve ..
+x(...  );
+
+on the second round we got the wrong data because the driving loop index got messed up.
+
+*$*$*$
+Files = nest2.63
+1 = NEST2
+2 = GAMS
+3 = nested if loop solve test with map
+4 = 063
+nested if loop solve test with map (NEST2,SEQ=63)
+
+This test for a problem we encountered with 21.0. if(...,
+  loop(...,
+  solve ..
+x(...  );
+
+on the second round we got the wrong data because the driving loop index got messed up.
+
+*$*$*$
+Files = nlcode1.64
+1 = NLCODE1
+2 = GAMS
+3 = test for NL code generation error GT00470
+4 = 064
+test for NL code generation error GT00470 (NLCODE1,SEQ=64)
+
+
+*$*$*$
+Files = savep1.65
+1 = SAVEP1
+2 = GAMS
+3 = execute_loadpoint: save point - clear - loadpoint - reoptimize
+4 = 065
+execute_loadpoint: save point - clear - loadpoint - reoptimize (SAVEP1,SEQ=65)
+
+
+*$*$*$
+Files = lp01.66
+1 = LP01
+2 = LP
+3 = Simple test on one equation
+4 = 066
+Simple test on one equation (LP01,SEQ=66)
+
+In this test we check how a solver behaves when there is only one objective variable in one equation. Different tests are performed applying different directions of optimization as well as different types of signs of the constraints.
+
+Jun 2006: break out the test on an =n= equation into a separate test (lp11) so that for some solvers we can skip just =n= but still test the other equation types.
+
+*$*$*$
+Files = lp02.67
+1 = LP02
+2 = LP
+3 = Simple level and sign test
+4 = 067
+Simple level and sign test (LP02,SEQ=67)
+
+In this test series we status if a solver gets the levels and marginals right.
+
+*$*$*$
+Files = lp03.68
+1 = LP03
+2 = LP
+3 = Many free variables and restart
+4 = 068
+Many free variables and restart (LP03,SEQ=68)
+
+In this test we check how a solver behaves when there are many free variables and if it restarts from this optimal basis.
+
+*$*$*$
+Files = lp04.69
+1 = LP04
+2 = LP
+3 = Tests basic modelstat codes
+4 = 069
+Tests basic modelstat codes (LP04,SEQ=69)
+
+In this test we check infeasible and unbounded conditions
+
+*$*$*$
+Files = lp05.70
+1 = LP05
+2 = LP
+3 = Test iteration interrupt for optimal and infeasible models
+4 = 070
+Test iteration interrupt for optimal and infeasible models (LP05,SEQ=70)
+
+More elaborate checks on iteration interrupt for optimal and infeasible models
+
+*$*$*$
+Files = lp06.71
+1 = LP06
+2 = LP
+3 = Test iteration interrupts and optimal restarts
+4 = 071
+Test iteration interrupts and optimal restarts (LP06,SEQ=71)
+
+
+*$*$*$
+Files = lp07.72
+1 = LP07
+2 = LP
+3 = Test restarts with reslim
+4 = 072
+Test restarts with reslim (LP07,SEQ=72)
+
+More elaborate checks on iteration interrupt for optimal and infesible models
+
+*$*$*$
+Files = lp08.73
+1 = LP08
+2 = LP
+3 = Test the proper return of free equations
+4 = 073
+Test the proper return of free equations (LP08,SEQ=73)
+
+
+*$*$*$
+Files = qcp01.74
+1 = QCP01
+2 = QCP
+3 = Test of correctness for levels & marginals of QCP
+4 = 074
+Test of correctness for levels & marginals of QCP (QCP01,SEQ=74)
+
+Test of correctness of the levels and marginals returned. We have QP terms in the objective only - all QCP solvers accept this. All cases are considered, e.g.
+  1) =L=, =G=, =E= constraints (should we add =N=?)
+  2) variables at lower and upper bound, and not at bound
+  3) min [convex obj] or max [concave obj]
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = xQx + cx + b where cz and b take different values
+
+*$*$*$
+Files = qcp02.75
+1 = QCP02
+2 = QCP
+3 = Test modsolstat & solution correctness - multiple QCons
+4 = 075
+Test modsolstat & solution correctness - multiple QCons (QCP02,SEQ=75)
+
+set default M and N based on license and type of solver
+
+*$*$*$
+Files = nlpqcp01.76,[qcp01]
+1 = NLPQCP01
+2 = NLP
+3 = Test of correctness for levels & marginals of NLP
+4 = 076
+Test of correctness for levels & marginals of NLP (NLPQCP01,SEQ=76)
+
+Run qcp01 as an NLP
+
+*$*$*$
+Files = nlpqcp02.77,[qcp02]
+1 = NLPQCP02
+2 = NLP
+3 = Test modsolstat & solution correctness - multiple QCons
+4 = 077
+Test modsolstat & solution correctness - multiple QCons (NLPQCP02,SEQ=77)
+
+Run qcp02 as an NLP
+
+*$*$*$
+Files = mpsge01.78
+1 = MPSGE01
+2 = MPSGE
+3 = Illustrate correct naming in MPSGE - new rules
+4 = 078
+Illustrate correct naming in MPSGE - new rules (MPSGE01,SEQ=78)
+
+This model illustrates the NEW naming rules for labels and identifiers in MPSGE.  The new rules are those imposed by the MPSGE engine that uses the external equation interface to communicate with the MCP solver - this was introduced in GAMS Distribution 20.1 on 31 October, 2001.  To use these new rules, you must be running from GAMS Distribution 21.3 (due early January 2004) or newer - this was when the "oldnames" check made by GAMS/Base was taken out and the checks were moved to the MPSGE engines.
+
+Of course, just because something is allowed doesn't make it a good idea - this is not an illustration of good style.
+
+New rules for names in MPSGE models -----------------------------------
+
+  Labels must:
+    not contain the following characters:  set i / ' !.:"', "'" /
+      or in English space, bang, dot, colon, double-quote, single-quote
+    not be empty: set i / '' /;
+    N.B. There is no MPSGE-specific limit on the label length.
+
+  Other identifiers (e.g. parameters, model name, variables):
+    no MPSGE-specific limits
+
+*$*$*$
+Files = mpsge02.79
+1 = MPSGE02
+2 = MPSGE
+3 = Illustrate correct naming in MPSGE - old rules
+4 = 079
+Illustrate correct naming in MPSGE - old rules (MPSGE02,SEQ=79)
+
+This model illustrates the OLD naming rules for labels and identifiers in MPSGE.  See the model mpsge01 for the new rules and more explanation.
+
+Since the old rules are not overly restrictive, you might consider following these rules to be sure your models run with both the new-style and old-style MPSGE engines.
+
+Old rules for names in MPSGE models -----------------------------------
+
+  Labels must:
+    be at most 10 characters long,
+    not contain the following characters:  set i / ' !.:"', "'" /
+      or in English space, bang, dot, colon, double-quote, single-quote
+    not be empty: set i / '' /;
+
+  Other identifiers (e.g. parameters, model name, variables) must:
+    be at most 10 characters long
+
+*$*$*$
+Files = mpsge03.80,exchange.inc
+1 = MPSGE03
+2 = MPSGE
+3 = MPSGE naming test: labels cannot contain a space
+4 = 080
+MPSGE naming test: labels cannot contain a space (MPSGE03,SEQ=80)
+
+
+*$*$*$
+Files = mpsge04.81,exchange.inc
+1 = MPSGE04
+2 = MPSGE
+3 = MPSGE naming test: labels cannot contain a !
+4 = 081
+MPSGE naming test: labels cannot contain a ! (MPSGE04,SEQ=81)
+
+
+*$*$*$
+Files = mpsge05.82,exchange.inc
+1 = MPSGE05
+2 = MPSGE
+3 = MPSGE naming test: labels cannot contain a "
+4 = 082
+MPSGE naming test: labels cannot contain a " (MPSGE05,SEQ=82)
+
+set up a one-character label: a double quote protected by single quotes
+
+*$*$*$
+Files = mpsge06.83,exchange.inc
+1 = MPSGE06
+2 = MPSGE
+3 = MPSGE naming test: labels cannot contain a '
+4 = 083
+MPSGE naming test: labels cannot contain a ' (MPSGE06,SEQ=83)
+
+set up a one-character label: a single quote protected by double quotes
+
+*$*$*$
+Files = mpsge07.84,exchange.inc
+1 = MPSGE07
+2 = MPSGE
+3 = MPSGE naming test: labels cannot contain a .
+4 = 084
+MPSGE naming test: labels cannot contain a . (MPSGE07,SEQ=84)
+
+
+*$*$*$
+Files = mpsge08.85,exchange.inc
+1 = MPSGE08
+2 = MPSGE
+3 = MPSGE naming test: labels cannot contain a :
+4 = 085
+MPSGE naming test: labels cannot contain a : (MPSGE08,SEQ=85)
+
+
+*$*$*$
+Files = qcp03.86
+1 = QCP03
+2 = QCP
+3 = Test case for cancellation in quadratic terms
+4 = 086
+Test case for cancellation in quadratic terms (QCP03,SEQ=86)
+
+
+*$*$*$
+Files = qcp04.87
+1 = QCP04
+2 = QCP
+3 = Test modsolstat & solution correctness - multiple QCons
+4 = 087
+Test modsolstat & solution correctness - multiple QCons (QCP04,SEQ=87)
+
+$if set DEMOSIZE    $set N 149 $if set GLOBALSIZE  $set N 6
+
+set default N based on license and type of solver
+
+*$*$*$
+Files = lp09.88
+1 = LP09
+2 = LP
+3 = Many free variables and restart
+4 = 088
+Many free variables and restart (LP09,SEQ=88)
+
+In this test we check how a solver behaves when there are many free variables and if it restarts from this optimal basis.
+
+*$*$*$
+Files = gdx2.89,gdxtest.zip.ignore
+1 = GDX2
+2 = GAMS
+3 = Test loading of old GDX files from other platforms
+4 = 089
+Test loading of old GDX files from other platforms (gdx2,SEQ=89)
+
+
+*$*$*$
+Files = restart1.90,restest.zip.ignore
+1 = RESTART1
+2 = GAMS
+3 = Test restart from old workfiles
+4 = 090
+Test restart from old workfiles (restart1,SEQ=90)
+
+With GAMS 23.4 we switched from 32bit to 64bit on AIX, old workfiles cannot be used anymore $ifi %system.platform% == AIX $goto haveWorkfiles
+
+ no old workfiles exist for this platform
+
+*$*$*$
+Files = cns01.91
+1 = CNS01
+2 = CNS
+3 = Test how bounds change the 1-variable CNS model sqr(x)=4
+4 = 091
+Test how bounds change the 1-variable CNS model sqr(x)=4 (cns01,SEQ=91)
+
+Single equation square nonlinear system with bounds varying from free over exactly at the solution to a fixed variable.
+
+The model without bounds has two solutions, x = 2 and x = -2, and the one that is returned may depend on the initial value. Bounds may of course exclude one of the solutions.
+
+*$*$*$
+Files = cns02.92
+1 = CNS02
+2 = CNS
+3 = Test how bounds change a 2-variable CNS model
+4 = 092
+Test how bounds change a 2-variable CNS model (cns02,SEQ=92)
+
+This is a simple two by two CNS model solved with varying bounds.
+
+*$*$*$
+Files = cns03.93
+1 = CNS03
+2 = CNS
+3 = CNS test - holdfixed and singular models
+4 = 093
+CNS test - holdfixed and singular models (cns03,SEQ=93)
+
+This model is singular if it is square. The way it is reported depends on whether holdfixed is turned on or off.
+
+*$*$*$
+Files = cns04.94
+1 = CNS04
+2 = CNS
+3 = CNS model with globally unique solution
+4 = 094
+CNS model with globally unique solution (cns04,SEQ=94)
+
+The following model has a globally unique solution even though it is nonlinear. Not all solvers will recognize that the solution is globally unique. Equation e1 can be solved uniquely w.r.t. x1. Equation e2 can then be solved uniquely w.r.t. x2 even though it
+  is nonlinear in x1 since x1 has a unique value.
+Equation e3 and e4 are now linear and they can be solved uniquely
+  given the values of x1 and x;
+
+*$*$*$
+Files = cns05.95
+1 = CNS05
+2 = CNS
+3 = CNS model with globally unique solution
+4 = 095
+CNS model with globally unique solution (cns05,SEQ=95)
+
+The following model has a globally unique solution even though it is nonlinear. Not all solvers will recognize that the solution is globally unique. Equation e1 can be solved uniquely w.r.t. x1. Equation e2 can then be solved uniquely w.r.t. x2 even though it
+  is nonlinear in x1 since x1 has a unique value.
+Equation e3 and e4 are now linear, given the values of x1 and x2,
+  and they can be solved uniquely.
+
+*$*$*$
+Files = cns06.96
+1 = CNS06
+2 = CNS
+3 = CNS model with globally unique solution
+4 = 096
+CNS model with globally unique solution (cns06,SEQ=96)
+
+The following model has a globally unique solution even though it is nonlinear. Not all solvers will recognize that the solution is globally unique. Equation e1 can be solved uniquely w.r.t. x1 because the function exp is monotone. Equation e2 can then be solved uniquely w.r.t. x2 even though it
+  is nonlinear in x1 since x1 has a unique nonzero value.
+
+*$*$*$
+Files = cns07.97
+1 = CNS07
+2 = CNS
+3 = CNS model with globally unique solution
+4 = 097
+CNS model with globally unique solution (cns07,SEQ=97)
+
+The following model has a globally unique solution even though it is nonlinear and simultaneous. Not all solvers will recognize that the solution is globally unique (hardly any will).
+
+The Jacobian of the model
+
+exp(x1)   +1
+ -1     exp(x2)
+
+has the determinant exp(x1)*exp(x2)+1 and is therefore always strictly positive (bounded away from zero) and if a solution exist it is therefore unique.
+
+*$*$*$
+Files = cns08.98
+1 = CNS08
+2 = CNS
+3 = CNS model - singular, nonsquare
+4 = 098
+CNS model - singular, nonsquare (cns08,SEQ=98)
+
+This CNS model is singular and it should be caught by GAMS since it is not square.
+
+*$*$*$
+Files = cns09.99
+1 = CNS09
+2 = CNS
+3 = CNS model - solvable, singular
+4 = 099
+CNS model - solvable, singular (cns09,SEQ=99)
+
+Solvable, singular model with infeasible starting point Apart from the start point, identical to cns10
+
+*$*$*$
+Files = cns10.100
+1 = CNS10
+2 = CNS
+3 = CNS model - solvable, singular
+4 = 100
+CNS model - solvable, singular (cns10,SEQ=100)
+
+Solvable, singular model with feasible starting point Apart from the start point, identical to cns09
+
+*$*$*$
+Files = cns11.101
+1 = CNS11
+2 = CNS
+3 = CNS model - solvable, nonsingular start point
+4 = 101
+CNS model - solvable, nonsingular start point (cns11,SEQ=101)
+
+The following model has a locally unique solution as shown by the second and third Solve. However, the Jacobian is singular in the initial point for the first solve so some solvers will fail to solve from this start point - they should at least report the infeasibility.
+
+*$*$*$
+Files = cns12.102
+1 = CNS12
+2 = CNS
+3 = CNS model - unsolvable model, scaling issues
+4 = 102
+CNS model - unsolvable model, scaling issues (cns12,SEQ=102)
+
+The following model and its scaled variant are both infeasible. E2 and e3 uniquely determines x2 = x3 = 0, and e1 is then impossible to satisfy. The scaling in the second model may force a solver based on monotonicity of the infeasibilities to adjust x1 gradually as x2 and x3 are moved towards zero, and the solution process may end with a very large x1 value and therefore also a very large derivative.
+
+*$*$*$
+Files = cns13.103
+1 = CNS13
+2 = CNS
+3 = CNS model - solvable, globally unique
+4 = 103
+CNS model - solvable, globally unique (cns13,SEQ=103)
+
+The following model has a globally unique solution even though it is nonlinear. Not all solvers will recognize that the solution is globally unique. Equation e3 and e4 can be solved uniquely w.r.t. x3 and x4. Equation e1 and e2 can then be solved uniquely w.r.t. x1 and x2
+  even though it is nonlinear in x3 and x4 since x3 and x4 have
+  unique values.
+
+*$*$*$
+Files = mpec01.104
+1 = MPEC01
+2 = MPEC
+3 = MPEC model to test all types of matches, using =N=
+4 = 104
+MPEC model to test all types of matches, using =N= (MPEC01,SEQ=104)
+
+This is a fairly simple MPEC model with some useful features:
+ a) it has a unique solution
+ b) it contains all types of matches
+ c) it can be run as an MCP as well as an MPEC
+
+Contributor: Steve Dirkse, Jan 2004
+
+*$*$*$
+Files = mpec02.105,[mpec01]
+1 = MPEC02
+2 = MPEC
+3 = Run through equreform options for NLPEC solver
+4 = 105
+Run through equreform options for NLPEC solver (MPEC02,SEQ=105)
+
+This model is a driver that runs the NLPEC solver with a number of different equreform options and using a number of different DNLP solvers.  You can set the DNLP solver list using
+  --DNLP '"MINOS,CONOPT"'
+and the equreform list using
+  --ER '"1,10,16*18"'
+To turn off the skip list and really run all the tests, set the --NOSKIP parameter to anything:
+  --NOSKIP=1
+
+*$*$*$
+Files = sos1a.106
+1 = SOS1A
+2 = MIP
+3 = Test of SOS1 variables with active upper bounds
+4 = 106
+Test of SOS1 variables with active upper bounds (SOS1A,SEQ=106)
+
+simple capacitated transportation model
+   source_j   -->    dest_j
+           0<=x_j<=xmax
+
+upper bounds put a squeeze on x_j when x(J) is SOS1, the MIP and RMIP solutions should be very different.
+
+N.B. We only test cases where the lower bounds on SOS1 vars are 0. There is no consensus definition when lower bounds are nonzero.
+
+*$*$*$
+Files = mpsge09.107,exchange.inc
+1 = MPSGE09
+2 = MPSGE
+3 = MPSGE naming test: labels cannot be empty
+4 = 107
+MPSGE naming test: labels cannot be empty (MPSGE09,SEQ=107)
+
+
+*$*$*$
+Files = mpsge10.108
+1 = MPSGE10
+2 = MPSGE
+3 = MPSGE scaleopt test - m.scaleopt must be 0
+4 = 108
+MPSGE scaleopt test - m.scaleopt must be 0 (MPSGE10,SEQ=108)
+
+scaleopt must set to 0.  You cannot use the GAMS scaling in an MPSGE model.
+
+*$*$*$
+Files = semicon1.109
+1 = SEMICON1
+2 = MIP
+3 = Simple test of SEMICONT variables
+4 = 109
+Simple test of SEMICONT variables (SEMICON1,SEQ=109)
+
+Simple test of semicont variables We want to minimize the distance between x and xbar, subject to x + s = 10, s semicontinuous. Depending on how the bounds on s are set, the minimum distance is acheived when s = 0 or s is in its nonzero range.
+
+*$*$*$
+Files = nlcode2.110
+1 = NLCODE2
+2 = GAMS
+3 = Test limits on nonlinear code length per block
+4 = 110
+Test limits on nonlinear code length per block (NLCODE2,SEQ=110)
+
+Test that we can have equation blocks with close to the maximum number of NL instructions per block, and that we can do this for two blocks at once. This puts the total count over the per-block limit, which should not cause any problems. If the limits in GAMS/Base are changed, change maxInsPerBlock below. Could we get maxInsPerBlock from GAMS/Base?
+
+Limit for non-linear instruction code is now 2147483k. It is the same for the block. We can not test it on all out machines because of memory limitations. this check requires a license
+
+*$*$*$
+Files = pipe1.111
+1 = PIPE1
+2 = GAMS
+3 = piped assignment - permutation for two dimensions
+4 = 111
+piped assignment - permutation for two dimensions (PIPE1,SEQ=111)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = pipe2.112
+1 = PIPE2
+2 = GAMS
+3 = piped assignment - permutation for two dimensions
+4 = 112
+piped assignment - permutation for two dimensions (PIPE2,SEQ=112)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = pipe3.113
+1 = PIPE3
+2 = GAMS
+3 = piped projections
+4 = 113
+piped projections (PIPE3,SEQ=113)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = pipe4.114
+1 = PIPE4
+2 = GAMS
+3 = piped sort
+4 = 114
+piped sort (PIPE4,SEQ=114)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = pipe5.115
+1 = PIPE5
+2 = GAMS
+3 = piped projection and counts to 1,2,3 dimensions
+4 = 115
+piped projection and counts to 1,2,3 dimensions (PIPE5,SEQ=115)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = pipe6.116
+1 = PIPE6
+2 = GAMS
+3 = piped projection and counts to 1,2,3 dimensions and sorts
+4 = 116
+piped projection and counts to 1,2,3 dimensions and sorts (PIPE6,SEQ=116)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = gdx3.117
+1 = GDX3
+2 = GAMS
+3 = gdx test sorting with new elements
+4 = 117
+gdx test sorting with new elements (GDX3,SEQ=117)
+
+Contributor: Paul van der Eijk
+
+ delete old data file
+ generate program to generate the data file
+
+*$*$*$
+Files = lp10.118
+1 = LP10
+2 = LP
+3 = Poorly-scaled model - small matrix entry implies large x
+4 = 118
+Poorly-scaled model - small matrix entry implies large x (LP10,SEQ=118)
+
+In this model we drive the scalar c down towards zero, making for a poorly scaled model.  For nice c vals, the model is unbounded.  As c decreases, x2 increases in proportion. Eventually, either GAMS or the solver will squeeze the constant c out of the matrix and the model becomes solvable.
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = dattim3.119
+1 = DATTIM3
+2 = GAMS
+3 = Julian time test
+4 = 119
+Julian time test (DATTIM3,SEQ=119)
+
+
+*$*$*$
+Files = dattim4.120
+1 = DATTIM4
+2 = GAMS
+3 = Julian date test
+4 = 120
+Julian date test (DATTIM4,SEQ=120)
+
+The gams function JDate(year,month,day) accepts arguments similar to to date functions in other languages. The earliest date is Jan 1, 1, and the latest date is Dec 31, 9999. Gams picked Jan 1, 1900 as day 1, as done by Excel. Unfortunately, Excel treats the year 1900 incorrectly as a leap year and the serial days starting with March 1, 1900 will be off by one day.
+
+The arguments are can be positive or negative and do not have to form a proper date. The arguments with fractional values are first converted to a signed integer by using the floor() function.
+
+Note about Excle: The Excel DATE(yesr,month,day) function has the following data ranges note that excel incorrectly treats the year 1900 as a leap year.
+ DATE(1900, 1, 1) =        1  incorrect should be  2
+ DATE(1900, 2,28) =       59  incorrect should be 60
+ DATE(1900, 3, 1) =       61
+ DATE(9999,12,31) =  2958465
+for years having a value of less than 1900, 1900 + year is assumed
+
+The following table shows different ways of entering dates:
+
+*$*$*$
+Files = dattim5.121
+1 = DATTIM5
+2 = GAMS
+3 = test Gxxx functions
+4 = 121
+test Gxxx functions (DATTIM5,SEQ=121)
+
+
+*$*$*$
+Files = dattim6.122
+1 = DATTIM6
+2 = GAMS
+3 = time decoding test
+4 = 122
+time decoding test (DATTIM6,SEQ=122)
+
+
+*$*$*$
+Files = eps1.123
+1 = EPS1
+2 = GAMS
+3 = EPS in multiplications and divisions
+4 = 123
+EPS in multiplications and divisions (EPS1,SEQ=123)
+
+version 21.0 - 21.3 has a problem with EPS values in equations those EPS can come from levels or data
+
+*$*$*$
+Files = funcs2.124
+1 = FUNCS2
+2 = GAMS
+3 = Test functions in linear models
+4 = 124
+Test functions in linear models (FUNCS2,SEQ=124)
+
+
+*$*$*$
+Files = delim1.125
+1 = DELIM1
+2 = GAMS
+3 = check element text
+4 = 125
+check element text (DELIM1,SEQ=125)
+
+This came originally from M Bussieck's Hill model, 12 Apr 2004
+
+*$*$*$
+Files = decla1.126
+1 = DECLA1
+2 = GAMS
+3 = Incorrect asterisk list generation
+4 = 126
+Incorrect asterisk list generation (DECLA1,SEQ=126)
+
+
+*$*$*$
+Files = mcp01.127,mcp0x.inc
+1 = MCP01
+2 = MCP
+3 = Illustrate rules for matching =E= equations in MCP
+4 = 127
+Illustrate rules for matching =E= equations in MCP (MCP01,SEQ=127)
+
+This model illustrates the matching rules for equation/variable pairs in MCP models, for equations of type =E=.
+
+Contributor: Steve Dirkse, May 2004
+
+*$*$*$
+Files = mcp02.128,mcp0x.inc
+1 = MCP02
+2 = MCP
+3 = Illustrate rules for matching =G= equations in MCP
+4 = 128
+Illustrate rules for matching =G= equations in MCP (MCP02,SEQ=128)
+
+This model illustrates the matching rules for equation/variable pairs in MCP models, for equations of type =G=.
+
+Contributor: Steve Dirkse, May 2004
+
+*$*$*$
+Files = mcp03.129,mcp0x.inc
+1 = MCP03
+2 = MCP
+3 = Illustrate rules for matching =L= equations in MCP
+4 = 129
+Illustrate rules for matching =L= equations in MCP (MCP03,SEQ=129)
+
+This model illustrates the matching rules for equation/variable pairs in MCP models, for equations of type =L=.
+
+Contributor: Steve Dirkse, May 2004
+
+*$*$*$
+Files = mcp04.130,mcp0x.inc
+1 = MCP04
+2 = MCP
+3 = Illustrate rules for matching =N= equations in MCP
+4 = 130
+Illustrate rules for matching =N= equations in MCP (MCP04,SEQ=130)
+
+This model illustrates the matching rules for equation/variable pairs in MCP models, for equations of type =N=.
+
+Contributor: Steve Dirkse, May 2004
+
+*$*$*$
+Files = nlplp02.131,[lp02]
+1 = NLPLP02
+2 = NLP
+3 = Simple level and sign test
+4 = 131
+Simple level and sign test (NLPLP02,SEQ=131)
+
+Run lp02 as an NLP
+
+  set MSMAX to 2 to allow NLP solver to return modelstat = %modelstat.LocallyOptimal% LOCALLY OPTIMAL
+
+*$*$*$
+Files = oqnlp01.132,[nlplp02]
+1 = OQNLP01
+2 = NLP
+3 = OQNLP/MSNLP test suite
+4 = 132
+OQNLP/MSNLP test suite (OQNLP01,SEQ=132)
+
+
+*$*$*$
+Files = sameas1.133
+1 = SAMEAS1
+2 = GAMS
+3 = tests different sameas uses
+4 = 133
+tests different sameas uses (SAMEAS1,SEQ=133)
+
+
+*$*$*$
+Files = loop2.134
+1 = LOOP2
+2 = GAMS
+3 = Resorting inside a loop with a constant in the search record
+4 = 134
+Resorting inside a loop with a constant in the search record (LOOP2,SEQ=134)
+
+This example caused problems with resorting search records
+
+Contributor: Paul van der Eijk, May-26-2004
+
+*$*$*$
+Files = loop3.135,[loop2]
+1 = LOOP3
+2 = GAMS
+3 = Check GDX output of loop2 (resorting search records in a loop)
+4 = 135
+Check GDX output of loop2 (resorting search records in a loop) (LOOP3,SEQ=135)
+
+Check that the loop2 model gives the same results with different option settings.
+
+Contributor: Paul van der Eijk, May-26-2004
+
+*$*$*$
+Files = mpec03.136
+1 = MPEC03
+2 = MPEC
+3 = MPEC model to test all types of matches, using =ELG=
+4 = 136
+MPEC model to test all types of matches, using =ELG= (MPEC03,SEQ=136)
+
+This is a fairly simple MPEC model with some useful features:
+ a) it has a unique solution
+ b) it contains all types of matches
+ c) it can be run as an MCP as well as an MPEC
+
+This model is based on mpec01, but here we use =E=, =L=, and =G=, but not =N=.
+
+Contributor: Steve Dirkse, May 2004
+
+*$*$*$
+Files = loop4.137
+1 = LOOP4
+2 = GAMS
+3 = complex search structures- tremove2 problem
+4 = 137
+complex search structures- tremove2 problem (LOOP4,SEQ=137)
+
+
+*$*$*$
+Files = funcs3.138
+1 = FUNCS3
+2 = GAMS
+3 = declaration via a table using function names
+4 = 138
+declaration via a table using function names (FUNCS3,SEQ=138)
+
+
+*$*$*$
+Files = loop5.139
+1 = LOOP5
+2 = GAMS
+3 = complex search structures- tremove2 problem
+4 = 139
+complex search structures- tremove2 problem (LOOP5,SEQ=139)
+
+
+*$*$*$
+Files = ifstat1.140
+1 = IFSTAT1
+2 = GAMS
+3 = tests of $if statement
+4 = 140
+'Tests of $IF statement' (IFSTAT1,SEQ=140)
+
+this tests a number of $IF options
+
+*$*$*$
+Files = gdxrank1.141
+1 = GDXRANK1
+2 = GAMS
+3 = Tests some GDXRANK stuff
+4 = 141
+'Tests some GDXRANK stuff' (GDXRANK1,SEQ=141)
+
+pvde
+
+*$*$*$
+Files = bench01.142
+1 = BENCH01
+2 = GAMS
+3 = BENCH test suite - CALL
+4 = 142
+BENCH test suite - CALL (BENCH01,SEQ=142)
+
+Checks status codes, levels and marginals with single solver specified for modeltypes
+
+   - LP  (lp02)
+   - QCP (qcp01)
+   - NLP (nlplp02)
+
+Contributor: Armin Pruessner, July 2004
+
+*$*$*$
+Files = bench02.143
+1 = BENCH02
+2 = GAMS
+3 = BENCH test suite - LOG
+4 = 143
+BENCH test suite - LOG (BENCH02,SEQ=143)
+
+Checks bench log output using:
+
+  - regular LP call
+  - LP call with Examiner
+  - LP call with Examiner fail (too tight tol)
+  - NLP call with Examiner fail (too tight tol)
+
+Contributor: Armin Pruessner, July 2004
+
+*$*$*$
+Files = bench03.144
+1 = BENCH03
+2 = GAMS
+3 = BENCH test suite - LST
+4 = 144
+BENCH test suite - LST (BENCH03,SEQ=144)
+
+Checks bench listing output using:
+
+  - regular LP call
+  - LP call with Examiner
+  - LP call with Examiner fail (too tight tol)
+
+Contributor: Armin Pruessner, July 2004
+
+*$*$*$
+Files = nlpec01.145,[mpec01],validnlpecopts.gdx
+1 = NLPEC01
+2 = MPEC
+3 = NLPEC test suite - options test
+4 = 145
+NLPEC test suite - options test (NLPEC01,SEQ=145)
+
+This model takes a set of NLPEC option combinations and runs the NLPEC solver on the mpec01 model from testlib for each combination.  Any errors (e.g. internal to NLPEC, in the syntax or semantics of the reforumulated NLP model, etc.) should get flagged because mpec01 includes internal tests that a correct solution has been obtained and will abort otherwise.
+
+The NLPEC option combinations to test are read by default from a GDX file.  This GDX file is created by running NLPEC in a special mode. In this mode all possible output combinations from NLPEC's checkOptions routine (i.e. after invalid combos are patched up to be valid) are written to a GDX file.  In the current implementation (Aug 2004), the set of over 1,115,136 possible combinations is reduced to 2838 valid ones, a reduction of 99.75%
+
+To regenerate the GDX file you can solve an MPEC model using NLPEC and an option file with the line
+
+   DumpValid
+
+This will terminate without solving after the GDX data file is generated.
+
+Contributor: Steven Dirkse
+
+*$*$*$
+Files = embed1.146
+1 = EMBED1
+2 = GAMS
+3 = Test syntax: bad number field in embedded parameter
+4 = 146
+'Test syntax: bad number field in embedded parameter' (EMBED1,SEQ=146)
+
+
+*$*$*$
+Files = embed2.147
+1 = EMBED2
+2 = GAMS
+3 = Compare equivalent data statements
+4 = 147
+'Compare equivalent data statements'  (EMBED2,SEQ=147)
+
+
+*$*$*$
+Files = funcs4.148
+1 = FUNCS4
+2 = GAMS
+3 = Rules for getting derivs/intervals of intrinsics
+4 = 148
+rules for getting derivs/intervals of intrinsics (FUNCS4,SEQ=148)
+
+In this model we test the syntax and symantics for getting the derivatives and intervals for the GAMS intrinsic functions
+
+For a given function func, GAMS has always allowed its use as:
+
+f = func(x)
+
+We can now test the derivatives and intervals that are defined along with function func using GAMS syntax (new with Rev 139):
+
+ df = func.grad(x)   - gradient of func
+ df = func.gradn(x)  - gradient of func, computed numerically
+d2f = func.hess(x)   - Hessian of func d2f = func.hessn(x)      - Hessian of func, computed numerically
+  L = func.low(xlo:xup)  - lower bound for func(x) on [xlo,xup]
+  H = func.high(xlo:xup)  - upper bound for func(x) on [xlo,xup]
+ gL = func.gradl(xlo:xup)  - lower bound for gradient on [xlo,xup]
+ gH = func.gradh(xlo:xup)  - upper bound for gradient on [xlo,xup]
+
+An extended syntax from that above allows for multivariate functions and is illustrated below.
+
+Contributor: Steven Dirkse, July 2004
+
+  the following requires at least version 139
+
+*$*$*$
+Files = funcs5.149
+1 = FUNCS5
+2 = GAMS
+3 = Test correctness of intrinsic functions
+4 = 149
+test correctness of intrinsic functions (FUNCS5,SEQ=149)
+
+
+*$*$*$
+Files = fnsqr.150,fnset_x.inc,fntest_x.inc,fnsqr.gdx
+1 = FNSQR
+2 = GAMS
+3 = Test correctness of sqr intrinsic
+4 = 150
+test correctness of sqr intrinsic (FNSQR,SEQ=150)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnexp.151,fnset_x.inc,fntest_x.inc,fnexp.gdx
+1 = FNEXP
+2 = GAMS
+3 = Test correctness of exp intrinsic
+4 = 151
+Test correctness of exp intrinsic (FNEXP,SEQ=151)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnlog.152,fnset_x.inc,fntest_x.inc,fnlog.gdx
+1 = FNLOG
+2 = GAMS
+3 = Test correctness of log intrinsic
+4 = 152
+Test correctness of log intrinsic (FNLOG,SEQ=152)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnlog2.153,fnset_x.inc,fntest_x.inc,fnlog2.gdx
+1 = FNLOG2
+2 = GAMS
+3 = Test correctness of log2 intrinsic
+4 = 153
+Test correctness of log2 intrinsic (FNLOG2,SEQ=153)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnlog10.154,fnset_x.inc,fntest_x.inc,fnlog10.gdx
+1 = FNLOG10
+2 = GAMS
+3 = Test correctness of log10 intrinsic
+4 = 154
+Test correctness of log10 intrinsic (FNLOG10,SEQ=154)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnsqrt.155,fnset_x.inc,fntest_x.inc,fnsqrt.gdx
+1 = FNSQRT
+2 = GAMS
+3 = Test correctness of sqrt intrinsic
+4 = 155
+'Test correctness of sqrt intrinsic' (FNSQRT,SEQ=155)
+
+define some sets, etc.
+
+*$*$*$
+Files = fncos.156,fnset_x.inc,fntest_x.inc,fncos.gdx
+1 = FNCOS
+2 = GAMS
+3 = Test correctness of cos intrinsic
+4 = 156
+'Test correctness of cos intrinsic' (FNCOS,SEQ=156)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnsin.157,fnset_x.inc,fntest_x.inc,fnsin.gdx
+1 = FNSIN
+2 = GAMS
+3 = Test correctness of sin intrinsic
+4 = 157
+'Test correctness of sin intrinsic' (FNSIN,SEQ=157)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnpower.158,fnset_xy.inc,fntest_xy.inc,fnpower.gdx
+1 = FNPOWER
+2 = GAMS
+3 = Test correctness of power intrinsic
+4 = 158
+'Test correctness of power intrinsic' (FNPOWER,SEQ=158)
+
+define some sets, etc.
+
+do not forget to run with zerores=2e-299 on the command line
+
+*$*$*$
+Files = fnpi.159,fnpi.gdx
+1 = FNPI
+2 = GAMS
+3 = Test correctness of pi intrinsic
+4 = 159
+'Test correctness of pi intrinsic' (FNPI,SEQ=159)
+
+
+*$*$*$
+Files = fnncpf.160,fnset_xyz.inc,fntest_xyz.inc,fnncpf.gdx
+1 = FNNCPF
+2 = GAMS
+3 = Test correctness of ncpf intrinsic
+4 = 160
+'Test correctness of ncpf intrinsic' (FNNCPF,SEQ=160)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnsinh.161,fnset_x.inc,fntest_x.inc,fnsinh.gdx
+1 = FNSINH
+2 = GAMS
+3 = Test correctness of sinh intrinsic
+4 = 161
+'Test correctness of sinh intrinsic' (FNSINH,SEQ=161)
+
+define some sets, etc.
+
+*$*$*$
+Files = fncosh.162,fnset_x.inc,fntest_x.inc,fncosh.gdx
+1 = FNCOSH
+2 = GAMS
+3 = Test correctness of cosh intrinsic
+4 = 162
+'Test correctness of cosh intrinsic' (FNCOSH,SEQ=162)
+
+define some sets, etc.
+
+*$*$*$
+Files = fntanh.163,fnset_x.inc,fntest_x.inc,fntanh.gdx
+1 = FNTANH
+2 = GAMS
+3 = Test correctness of tanh intrinsic
+4 = 163
+'Test correctness of tanh intrinsic' (FNTANH,SEQ=163)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnfact.164,fnset_x.inc,fntest_x.inc
+1 = FNFACT
+2 = GAMS
+3 = Test correctness of fact intrinsic
+4 = 164
+'Test correctness of fact intrinsic' (FNFACT,SEQ=164)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnncpf2.165,fnset_xyz.inc,fntest_xyz.inc
+1 = FNNCPF2
+2 = GAMS
+3 = Test correctness of ncpf intrinsic
+4 = 165
+'Test correctness of ncpf intrinsic' (FNNCPF2,SEQ=165)
+
+define some sets, etc.
+
+*$*$*$
+Files = lags1.166
+1 = LAGS1
+2 = GAMS
+3 = Tests simple lag and lead operations
+4 = 166
+'Tests simple lag and lead operations' (LAGS1,SEQ=166)
+
+
+*$*$*$
+Files = sort1.167
+1 = SORT1
+2 = GAMS
+3 = Test optimization with lags
+4 = 167
+'Test optimization with lags' (SORT1,SEQ=167)
+
+when using the sorting option sys11 we drop a number of records
+
+*$*$*$
+Files = onelab1.168
+1 = ONELAB1
+2 = GAMS
+3 = One element dynamic control inside IF
+4 = 168
+'One element dynamic control inside IF' (ONELAB1,SEQ=168)
+
+
+*$*$*$
+Files = loop6.169
+1 = LOOP6
+2 = GAMS
+3 = sys11 testcase
+4 = 169
+'sys11 testcase' (LOOP6,SEQ=169)
+
+
+*$*$*$
+Files = map1.170
+1 = MAP1
+2 = GAMS
+3 = simple mapped assignment
+4 = 170
+'simple mapped assignment' (MAP1,SEQ=170)
+
+
+*$*$*$
+Files = onelab2.171
+1 = ONELAB2
+2 = GAMS
+3 = One element dynamic extracted from TSP
+4 = 171
+'One element dynamic extracted from TSP' (ONELAB2,SEQ=171)
+
+
+*$*$*$
+Files = gdxxrw1.172
+1 = GDXXRW1
+2 = GAMS
+3 = Testing the clear option with larger data
+4 = 172
+'Testing the clear option with larger data' (GDXXRW1,SEQ=172)
+
+
+*$*$*$
+Files = gdxxrw2.173
+1 = GDXXRW2
+2 = GAMS
+3 = Testing the clear option with fitting data
+4 = 173
+'Testing the clear option with fitting data' (GDXXRW2,SEQ=173)
+
+
+*$*$*$
+Files = gdxxrw3.174
+1 = GDXXRW3
+2 = GAMS
+3 = Testing gdxxrw with xls or gdx file
+4 = 174
+'Testing gdxxrw with xls or gdx file' (GDXXRW3,SEQ=174)
+
+
+*$*$*$
+Files = gdxxrw4.175
+1 = GDXXRW4
+2 = GAMS
+3 = Test for some scalar read problems
+4 = 175
+'Test for some scalar read problems' (GDXXRW4,SEQ=175)
+
+this problem resulted from trying to read a scalar value from xls
+
+1. create the sheet
+
+*$*$*$
+Files = univ1.176
+1 = UNIV1
+2 = GAMS
+3 = No assignment to universe
+4 = 176
+'No assignment to universe' (UNIV1,SEQ=176)
+
+
+*$*$*$
+Files = ddlist1.177
+1 = DDLIST1
+2 = GAMS
+3 = Test the double dash option check
+4 = 177
+'Test the double dash option check' (DDLIST1,SEQ=177)
+
+Contributor: Alex
+
+  the --one and --two are already touched
+  --three and --four are added to the ddlist
+
+*$*$*$
+Files = badpt1.178,badpt.inc
+1 = BADPT1
+2 = GAMS
+3 = Test rejection of models with generation errors
+4 = 178
+'Test rejection of models with generation errors' (BADPT1,SEQ=178)
+
+In this model we attempt to solve a number of models that have generation errors of various types.  By default, CMEX should reject these models - i.e. the solver is not called.
+
+Contributor: Steve Dirkse, Nov 2004
+
+  get the model definitions
+
+*$*$*$
+Files = badpt2.179,badpt.inc
+1 = BADPT2
+2 = GAMS
+3 = Test acceptance of models with generation errors
+4 = 179
+'Test acceptance of models with generation errors' (BADPT2,SEQ=179)
+
+In this model we attempt to solve a number of models that have generation errors of various types.  We set the error limit and the sys12 switch to allow this non-default behavior.
+
+Contributor: Steve Dirkse, Nov 2004
+
+*$*$*$
+Files = badpt3.180
+1 = BADPT3
+2 = GAMS
+3 = Test rejection of models with generation errors
+4 = 180
+'Test rejection of models with generation errors' (BADPT3,SEQ=180)
+
+In this model we check how GAMS/Base treats models with gradient eval errors at the initial point.  It should pass them on to the solver without any special prompting.
+
+Contributor: Steve Dirkse, Nov 2004
+
+*$*$*$
+Files = fnvcpow.181,fnset_xy.inc,fntest_xy.inc,fnvcpow.gdx
+1 = FNVCPOW
+2 = GAMS
+3 = Test correctness of vcpower intrinsic
+4 = 181
+'Test correctness of vcpower intrinsic' (FNVCPOW,SEQ=181)
+
+vcpower(x,c) = x**c, c a constant
+
+*$*$*$
+Files = fnvcpow2.182,fnset_xy.inc,fntest_xy.inc
+1 = FNVCPOW2
+2 = GAMS
+3 = Test correctness of vcpower intrinsic
+4 = 182
+'Test correctness of vcpower intrinsic' (FNVCPOW2,SEQ=182)
+
+vcpower(x,c) = x**c, c a constant
+
+*$*$*$
+Files = fngamma.183,fnset_x.inc,fntest_x.inc,fngamma.gdx
+1 = FNGAMMA
+2 = GAMS
+3 = Test correctness of gamma intrinsic
+4 = 183
+'Test correctness of gamma intrinsic' (FNGAMMA,SEQ=183)
+
+define some sets, etc.
+
+*$*$*$
+Files = fngamma2.184,fnset_x.inc,fntest_x.inc
+1 = FNGAMMA2
+2 = GAMS
+3 = Test correctness of gamma intrinsic
+4 = 184
+'Test correctness of gamma intrinsic' (FNGAMMA2,SEQ=184)
+
+
+*$*$*$
+Files = fnatan.185,fnset_x.inc,fntest_x.inc,fnatan.gdx
+1 = FNATAN
+2 = GAMS
+3 = Test correctness of arctan intrinsic
+4 = 185
+'Test correctness of arctan intrinsic' (FNATAN,SEQ=185)
+
+
+*$*$*$
+Files = fnerrf.186,fnset_x.inc,fntest_x.inc,fnerrf.gdx
+1 = FNERRF
+2 = GAMS
+3 = Test correctness of errorf intrinsic
+4 = 186
+'Test correctness of errorf intrinsic' (FNERRF,SEQ=186)
+
+this data set is not so very precise, but it is computed using the same form to avoid any gross errors - it should be correct using a largish tolerance computed using errorf(x) = 0.5 * (1+erf(x/sqrt(2)));
+
+*$*$*$
+Files = fnerrf2.187,fnset_x.inc,fntest_x.inc,fnerrf2.gdx
+1 = FNERRF2
+2 = GAMS
+3 = Test correctness of errorf intrinsic
+4 = 187
+'Test correctness of errorf intrinsic' (FNERRF2,SEQ=187)
+
+this data set should be more precise, as precise as you can be with Matlab. we use two identities to compute errorf: erf(-z) = -erf(z) computed using errorf(x) = 0.5 * (1+erf(x/sqrt(2)));
+
+*$*$*$
+Files = fnncpcm.188,fnset_xyz.inc,fntest_xyz.inc,fnncpcm.gdx
+1 = FNNCPCM
+2 = GAMS
+3 = Test correctness of ncpcm intrinsic
+4 = 188
+'Test correctness of ncpcm intrinsic' (FNNCPCM,SEQ=188)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnncpcm2.189,fnset_xyz.inc,fntest_xyz.inc,fnncpcm2.gdx
+1 = FNNCPCM2
+2 = GAMS
+3 = Test correctness of ncpcm intrinsic
+4 = 189
+'Test correctness of ncpcm intrinsic' (FNNCPCM2,SEQ=189)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnentro.190,fnset_x.inc,fntest_x.inc,fnentro.gdx
+1 = FNENTRO
+2 = GAMS
+3 = Test correctness of entropy intrinsic
+4 = 190
+'Test correctness of entropy intrinsic' (FNENTRO,SEQ=190)
+
+
+*$*$*$
+Files = fnentro2.191,fnset_x.inc,fntest_x.inc
+1 = FNENTRO2
+2 = GAMS
+3 = Test correctness of entropy intrinsic
+4 = 191
+'Test correctness of entropy intrinsic' (FNENTRO2,SEQ=191)
+
+
+*$*$*$
+Files = fnsigmo.192,fnset_x.inc,fntest_x.inc,fnsigmo.gdx
+1 = FNSIGMO
+2 = GAMS
+3 = Test correctness of sigmoid intrinsic
+4 = 192
+'Test correctness of sigmoid intrinsic' (FNSIGMO,SEQ=192)
+
+
+*$*$*$
+Files = fnsigmo2.193,fnset_x.inc,fntest_x.inc
+1 = FNSIGMO2
+2 = GAMS
+3 = Test correctness of sigmoid intrinsic
+4 = 193
+'Test correctness of sigmoid intrinsic' (FNSIGMO2,SEQ=193)
+
+
+*$*$*$
+Files = fnrpow.194,fnset_xy.inc,fntest_xy.inc,fnrpow.gdx
+1 = FNRPOW
+2 = GAMS
+3 = Test correctness of rpower intrinsic
+4 = 194
+'Test correctness of rpower intrinsic' (FNRPOW,SEQ=194)
+
+rpower(x,y) = x**y these points are the "easy" ones, i.e. there should not be any exceptions as all the inputs are of reasonable size.
+
+*$*$*$
+Files = fnrpow2.195,fnset_xy.inc,fntest_xy.inc,fnrpow2.gdx
+1 = FNRPOW2
+2 = GAMS
+3 = Test correctness of rpower intrinsic
+4 = 195
+'Test correctness of rpower intrinsic' (FNRPOW2,SEQ=195)
+
+rpower(x,y) = x**y these points include more difficult ones, i.e. there are cases where we get exceptions.
+
+*$*$*$
+Files = fnrpow3.196,fnset_xy.inc,fntest_xy.inc
+1 = FNRPOW3
+2 = GAMS
+3 = Test correctness of rpower intrinsic
+4 = 196
+'Test correctness of rpower intrinsic' (FNRPOW3,SEQ=196)
+
+test x**y Test the exception cases - we assume other tests have been made for the usual case of nice input and no exceptions
+
+*$*$*$
+Files = fnedist.197
+1 = FNEDIST
+2 = GAMS
+3 = Test correctness of edist intrinsic
+4 = 197
+'Test correctness of edist intrinsic' (FNEDIST,SEQ=197)
+
+Norm 2 function
+
+f := sqrt(sqr(x1)+sqr(x2)+...)
+
+g1.. = x1/f  x2/f  ...
+
+hij = -xi*xj/f^3     for i<>j
+      (f^2-xi^2)/f^3 for i=j
+
+*$*$*$
+Files = fnedist2.198
+1 = FNEDIST2
+2 = GAMS
+3 = Test correctness of edist intrinsic
+4 = 198
+'Test correctness of edist intrinsic' (FNEDIST2,SEQ=198)
+
+test not yet implemented
+
+*$*$*$
+Files = fnedist3.199
+1 = FNEDIST3
+2 = GAMS
+3 = Test correctness of edist intrinsic
+4 = 199
+'Test correctness of edist intrinsic' (FNEDIST3,SEQ=199)
+
+test not yet implemented
+
+*$*$*$
+Files = fncvpow.200
+1 = FNCVPOW
+2 = GAMS
+3 = Test correctness of cvpow intrinsic
+4 = 200
+'Test correctness of cvpow intrinsic' (FNCVPOW,SEQ=200)
+
+test not yet implemented
+
+*$*$*$
+Files = fncvpow2.201
+1 = FNCVPOW2
+2 = GAMS
+3 = Test correctness of cvpow intrinsic
+4 = 201
+'Test correctness of cvpow intrinsic' (FNCVPOW2,SEQ=201)
+
+test not yet implemented
+
+*$*$*$
+Files = fncvpow3.202
+1 = FNCVPOW3
+2 = GAMS
+3 = Test correctness of cvpow intrinsic
+4 = 202
+'Test correctness of cvpow intrinsic' (FNCVPOW3,SEQ=202)
+
+test not yet implemented
+
+*$*$*$
+Files = badpt4.203,badpt.inc
+1 = BADPT4
+2 = GAMS
+3 = Test acceptance of models with generation errors
+4 = 203
+'Test acceptance of models with generation errors' (BADPT4,SEQ=203)
+
+In this model we attempt to solve a number of models that have generation errors of various types.  We set the error limit and the sys12 switch to allow this non-default behavior. The results are analyzed and any unacceptable results cause an error.
+
+Contributor: Steve Dirkse, Nov 2004
+
+*$*$*$
+Files = badpt5.204
+1 = BADPT5
+2 = GAMS
+3 = Test acceptance of models with generation errors
+4 = 204
+'Test acceptance of models with generation errors' (BADPT5,SEQ=204)
+
+
+*$*$*$
+Files = symxref1.205
+1 = SYMXREF1
+2 = GAMS
+3 = Test cross-reference generation problem
+4 = 205
+'Test cross-reference generation problem' (SYMXREF1,SEQ=205)
+
+gamma and ycal happen to hash to the same slot causing a problem with an incorrect cross-reference
+
+*$*$*$
+Files = echo1.206
+1 = ECHO1
+2 = GAMS
+3 = Test that $echon does not write a new line
+4 = 206
+'Test that $echon does not write a new line'  (ECHO1,SEQ=206)
+
+
+*$*$*$
+Files = syschk1.207
+1 = SYSCHK1
+2 = GAMS
+3 = Test impact of sys11 setting
+4 = 207
+'Test impact of sys11 setting' (SYSCHK1,SEQ=207)
+
+Check impact of sys11 settings where we know that sorting improves performance
+
+Paul van der Eijk
+
+  decrease N if test machine has little memory - keep test in physical RAM!!
+
+*$*$*$
+Files = unload9.208
+1 = UNLOAD9
+2 = GAMS
+3 = Test export of defaults for uninitialized scalars
+4 = 208
+'Test export of defaults for uninitialized scalars' (UNLOAD9,SEQ=208)
+
+we have to trick gams a bit with the variables to make them scalars
+
+*$*$*$
+Files = loop7.209
+1 = LOOP7
+2 = GAMS
+3 = Test assignment using a map
+4 = 209
+'Test assignment using a map' (LOOP7,SEQ=209)
+
+
+*$*$*$
+Files = ifstat2.210
+1 = IFSTAT2
+2 = GAMS
+3 = $IF should allow keywords for SET and ENV
+4 = 210
+'$IF should allow keywords for SET and ENV' (IFSTAT2,SEQ=210)
+
+
+*$*$*$
+Files = convert1.211
+1 = CONVERT1
+2 = LP
+3 = Test the coinfml option of convert
+4 = 211
+'Test the coinfml option of convert' (CONVERT1,SEQ=211)
+
+we have to make more than one round trip because fml2gms which really is mps2gms, changes the order of rows. Would be nice to have a scalar model option in addition to the indexed .gms model, which changes the order of rows (and variables).
+
+coinfml only fully operational on Windows
+
+*$*$*$
+Files = convert2.212
+1 = CONVERT2
+2 = LP
+3 = Basic test of convert output
+4 = 212
+'Basic test of convert output' (CONVERT2,SEQ=212)
+
+This tests the basic convert file formats using the good old trnsport model and the 'all' (most) files option.
+
+*$*$*$
+Files = loop8.213
+1 = LOOP8
+2 = GAMS
+3 = Test optimization of a control set with a single element
+4 = 213
+'Test optimization of a control set with a single element' (LOOP8,SEQ=213)
+
+test
+
+Paul van der Eijk
+
+*$*$*$
+Files = dump01.214
+1 = DUMP01
+2 = GAMS
+3 = Test loading/dumping of uels from gdx - quoting!
+4 = 214
+'Test loading/dumping of uels from gdx - quoting!' (DUMP01,SEQ=214)
+
+testing for AB00709 there was a problem with the quoting
+
+*$*$*$
+Files = mip01.215
+1 = MIP01
+2 = MIP
+3 = Test for known XPRESS bug
+4 = 215
+'Test for known XPRESS bug' (MIP01,SEQ=215)
+
+In this test we run a smallish MIP.  XPRESS used to return a bogus nonbasic status for some of the continous free vars, resulting in a bad value for variable x43 in the model below
+
+Contributed by Steve Dirkse, February 2005
+
+   MIP written by GAMS Convert at 12/23/04 10:31:59
+
+   Equation counts
+       Total        E        G        L        N        X        C
+         151       63       45       42        0        0        0
+
+   Variable counts
+                    x        b        i      s1s      s2s       sc       si
+       Total     cont   binary  integer     sos1     sos2    scont     sint
+         153      132       21        0        0        0        0        0
+   FX      5        5        0        0        0        0        0        0
+
+   Nonzero counts
+       Total    const       NL      DLL
+         490      490        0        0
+
+   Solve m using MIP minimizing x108;
+
+*$*$*$
+Files = save2.216
+1 = SAVE2
+2 = GAMS
+3 = Test restart from new (Rev 142 & later) workfiles
+4 = 216
+'Test restart from new (Rev 142 & later) workfiles' (SAVE2,SEQ=216)
+
+Start with the trnsport model, but add stuff as needed.
+  - use an acronym
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = rest2.217
+1 = REST2
+2 = GAMS
+3 = Test restart from new (Rev 142 & later) workfiles
+4 = 217
+'Test restart from new (Rev 142 & later) workfiles' (REST2,SEQ=217)
+
+
+*$*$*$
+Files = restart2.218,[rest2],res2test.zip.ignore
+1 = RESTART2
+2 = GAMS
+3 = Test restart from new (Rev 142 & later) workfiles
+4 = 218
+'Test restart from new (Rev 142 & later) workfiles' (RESTART2,SEQ=218)
+
+Tests ability to do cross-platform reads of the workfiles from Rev 142 and following.  The save data is generated from model save2.216.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = sysenv01.219
+1 = SYSENV01
+2 = GAMS
+3 = Tests for path and system environment strings
+4 = 219
+'Tests for path and system environment strings' (SYSENV01,SEQ=219)
+
+$prefixpath c:\some\path\somewhere is just a shortcut for
+  $setenv PATH c:\some\path\somewhere;%sysenv.PATH%
+that prevents the overflow of short strings N.B. the environment variable name used in %sysenv.name% is case-sensitive
+
+uses $prefixpath
+     %sysenv.name%
+%sysenv.xx% will just truncate to 255
+
+this may overflow and give an error
+
+*$*$*$
+Files = sysenv02.220
+1 = SYSENV02
+2 = GAMS
+3 = Tests for setenv and dropenv
+4 = 220
+'Tests for setenv and dropenv' (SYSENV02,SEQ=220)
+
+
+*$*$*$
+Files = load2.221
+1 = LOAD2
+2 = GAMS
+3 = test filtered $load
+4 = 221
+'Test filtered $load' (LOAD2,SEQ=221)
+
+AB00747, the gdx filter could overflow AND may have been wrong when using $onmulti in declarations or $load sequences.
+
+*$*$*$
+Files = decla2.222
+1 = DECLA2
+2 = GAMS
+3 = Test declaration that crashed on CD21.6
+4 = 222
+'Test declaration that crashed on CD21.6'  (DECLA2,SEQ=222)
+
+tests cmex bug AB00751, P3 exception
+
+*$*$*$
+Files = pipe7.223
+1 = PIPE7
+2 = GAMS
+3 = Test the elemcount on two dim sets
+4 = 223
+'Test the elemcount on two dim sets' (PIPE7,SEQ=223)
+
+AB00753:cmex::after remap using option card is wrong
+
+*$*$*$
+Files = msnlp01.224
+1 = MSNLP01
+2 = NLP
+3 = Test for MSNLP and external NLP codes
+4 = 224
+'Test for MSNLP/OQNLP and external NLP codes' (MSNLP01,SEQ=224)
+
+
+*$*$*$
+Files = loop9.225
+1 = LOOP9
+2 = GAMS
+3 = Test use of set with a single element in a loop
+4 = 225
+'Test use of set with a single element in a loop' (LOOP9,SEQ=225)
+
+This model demonstrates a problem we have in gams21.5 thru 21.7 (updating of a one-dimensional set used in optimization)
+
+*$*$*$
+Files = pipe8.226
+1 = PIPE8
+2 = GAMS
+3 = Test that projecting to self works OK
+4 = 226
+'Test that projecting to self works OK' (PIPE8,SEQ=226)
+
+AB00772
+
+*$*$*$
+Files = pipe9.227
+1 = PIPE9
+2 = GAMS
+3 = Test for projecting
+4 = 227
+'Test for projecting' (PIPE9,SEQ=227)
+
+AB00772
+
+*$*$*$
+Files = math1.228,math1min.gdx,math1max.gdx
+1 = MATH1
+2 = GAMS
+3 = Demonstrate an inaccurate calculation
+4 = 228
+'Demonstrate an inaccurate calculation' (MATH1,SEQ=228)
+
+While investigating an issue with the markov model from GAMS' modlib, I discovered the model generated differently on different machines. The cause of this was traced back to an "inaccurate" parameter calculation (more precisely, a calculation that gives significantly different results on different machines).
+
+In this model I exaggerate the difference in the results by changing pn only slightly.  The large relative error or difference arises in the usual way - by subtracting two quantities of nearly equal value.
+
+Contributor: Steve Dirkse, June 2005
+
+*$*$*$
+Files = put5.229
+1 = PUT5
+2 = GAMS
+3 = Test put fallback when writing directory
+4 = 229
+'Test put fallback when writing directory' (PUT5,SEQ=229)
+
+test for AB0831
+
+*$*$*$
+Files = delim2.230
+1 = DELIM2
+2 = GAMS
+3 = Test domain checking on columns under $ondelim
+4 = 230
+'Test domain checking on columns under $ondelim' (DELIM2,SEQ=230)
+
+AB00834:cmex::ondelim problem The following program does not compile with 22.0alpha16Jun, but does with 21.7
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = ifstat3.231
+1 = IFSTAT3
+2 = GAMS
+3 = Tests $if exist and $if dexist
+4 = 231
+'Tests $if exist and $if dexist' (IFSTAT3,SEQ=231)
+
+The "$if exist foo" test in GAMS checks for files only - it should return false for a directory named foo. A new test "$if dexist foo" has been added to check for a directory named foo
+
+*$*$*$
+Files = pipe10.232
+1 = PIPE10
+2 = GAMS
+3 = Test for projecting scalars
+4 = 232
+'Test for projecting scalars' (PIPE10,SEQ=232)
+
+AB00770
+
+scalar case is correct
+
+*$*$*$
+Files = fnncpvus.233,fnset_xyz.inc,fntest_xyz.inc,fnncpvusin.gdx
+1 = FNNCPVUS
+2 = GAMS
+3 = Test correctness of NCPVUsin intrinsic
+4 = 233
+'Test correctness of NCPVUsin intrinsic' (FNNCPVUS,SEQ=233)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnncpvup.234,fnset_xyz.inc,fntest_xyz.inc,fnncpvupow.gdx
+1 = FNNCPVUP
+2 = GAMS
+3 = Test correctness of NCPVUpow intrinsic
+4 = 234
+'Test correctness of NCPVUpow intrinsic' (FNNCPVUP,SEQ=234)
+
+define some sets, etc.
+
+*$*$*$
+Files = fnncpvux.235,fnset_xyz.inc,fntest_xyz.inc
+1 = FNNCPVUX
+2 = GAMS
+3 = Test correctness of NCPVUxxx intrinsics
+4 = 235
+'Test correctness of NCPVUxxx intrinsics' (FNNCPVUx,SEQ=235)
+
+ncpvusin(r,s,mu) = ncpvupow(r,s,mu) = min(r,s) if |r-s|>=mu the smoothed case is tested elsewhere, here we just look at the case where the smoothing isn't used
+
+*$*$*$
+Files = gdxdiff1.236
+1 = GDXDIFF1
+2 = GAMS
+3 = Test GDXDIFF handling of zeros when eps>0
+4 = 236
+'Test GDXDIFF handling of zeros when eps>0' (GDXDIFF1,SEQ=236)
+
+Gdxdiff should ignore small differences when a key appears in one symbol but not in the other symbol, and a nonzero error tolerance is in effect. Tests fix for issue AB00856
+
+Contributor: Paul van der Eijk
+
+*$*$*$
+Files = embed3.237
+1 = EMBED3
+2 = GAMS
+3 = Test embedded parameter values: multiplication
+4 = 237
+'Test embedded parameter values: multiplication' (EMBED3,SEQ=237)
+
+Contributor: Alex
+
+*$*$*$
+Files = handle01.238
+1 = HANDLE01
+2 = LP
+3 = Test the m.handle functionality: submit, wait, resubmit
+4 = 238
+'Test the m.handle functionality: submit, wait, resubmit' (HANDLE01,SEQ=238)
+
+In this model we test the model.handle mechanisms by running the same model several times.  In particular, the resubmission via m.handlesubmit is tested
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = ifstat4.239
+1 = IFSTAT4
+2 = LP
+3 = Tests $if gamslevel and related items
+4 = 239
+'Tests $if gamslevel and related items' (IFSTAT4,SEQ=239)
+
+Tests different ways to detect or compute the GAMS Revision number, aka the version number.
+
+  Rich Roberts from SRS
+
+*$*$*$
+Files = genr2.240
+1 = GENR2
+2 = GAMS
+3 = Generate test data for read2 test of gdxMrw
+4 = 240
+'Generate test data for read2 test of gdxMrw' (GENR2,SEQ=240)
+
+we do not use set j - J is an internal Matlab function?
+
+*$*$*$
+Files = genr3.241
+1 = GENR3
+2 = GAMS
+3 = Generate test data for read3 test of gdxMrw
+4 = 241
+'Generate test data for read3 test of gdxMrw' (GENR3,SEQ=241)
+
+
+*$*$*$
+Files = genr4.242
+1 = GENR4
+2 = GAMS
+3 = Generate test data for read4 test of gdxMrw
+4 = 242
+'Generate test data for read4 test of gdxMrw' (GENR4,SEQ=242)
+
+we do not use set j - J is an internal Matlab function?
+
+*$*$*$
+Files = genr5.243
+1 = GENR5
+2 = GAMS
+3 = Generate test data for read5 test of gdxMrw
+4 = 243
+'Generate test data for read5 test of gdxMrw' (GENR5,SEQ=243)
+
+
+*$*$*$
+Files = genw2.244
+1 = GENW2
+2 = GAMS
+3 = Generate test data for write2 test of gdxMrw
+4 = 244
+'Generate test data for write2 test of gdxMrw' (GENW2,SEQ=244)
+
+
+*$*$*$
+Files = genw3.245
+1 = GENW3
+2 = GAMS
+3 = Generate test data for write3 test of gdxMrw
+4 = 245
+'Generate test data for write3 test of gdxMrw' (GENW3,SEQ=245)
+
+
+*$*$*$
+Files = genw4.246
+1 = GENW4
+2 = GAMS
+3 = Generate test data for write4 test of gdxMrw
+4 = 246
+'Generate test data for write4 test of gdxMrw' (GENW4,SEQ=246)
+
+
+*$*$*$
+Files = gdxmrw01.247,[genw2],[genw3],[genw4],ex1_.gdx,ex1_lab_.gdx,exw3_.gdx,exw3_lab_.gdx,wbatch.m,write1.m,write2.m,write2a_.gdx,write2b_.gdx,write3.m,write4.m,write4a_.gdx,write4b_.gdx
+1 = GDXMRW01
+2 = GAMS
+3 = test the Matlab utility writegdx
+4 = 247
+'test the Matlab utility writegdx' (GDXMRW01,SEQ=247)
+
+This file contains code to call writegdx and check that the files written are correct.
+
+It's likely that these tests will also serve as the sole (or an auxiliary) form of documentation for writegdx.
+
+*$*$*$
+Files = gdxmrw02.248,[genr2],[genr3],[genr4],[genr5],ex2.gdx,exr3.gdx,exr4.gdx,exr5.gdx,rbatch.m,read1.m,read2.m,read3.m,read4.m,read5.m,rtrns.m,trnsport.gdx
+1 = GDXMRW02
+2 = GAMS
+3 = test the Matlab utility readgdx
+4 = 248
+'test the Matlab utility readgdx' (GDXMRW02,SEQ=248)
+
+This file contains code to test the GAMS/Matlab utility readgdx
+
+It is likely that these tests will also serve as the sole (or an auxiliary) form of documentation for readgdx.
+
+*$*$*$
+Files = load3.249
+1 = LOAD3
+2 = GAMS
+3 = Test exec time loading with missing filter
+4 = 249
+'Test exec time loading with missing filter' (LOAD3,SEQ=249)
+
+AB01028: We should get a compilation error since the domain d is empty System 22.2 gave a runtime error.
+
+*$*$*$
+Files = compile1.250
+1 = COMPILE1
+2 = GAMS
+3 = AB01031: a solve stmt messed up the symbol table
+4 = 250
+'AB01031: a solve stmt messed up the symbol table' (COMPILE1,SEQ=250)
+
+The original (AB01031) was a lengthy program from MB with a wrong data statement
+
+*$*$*$
+Files = lp11.251
+1 = LP11
+2 = LP
+3 = Simple test on one =n= equation
+4 = 251
+'Simple test on one =n= equation' (LP11,SEQ=251)
+
+In this test we check how a solver behaves when there is only one objective variable in one free equation.  Different tests are performed applying different directions of optimization.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = lp12.252
+1 = LP12
+2 = LP
+3 = Test solution quality with solvelink=3
+4 = 252
+'Test solution quality with solvelink=%SOLVELINK.AsyncGrid%' (LP12,SEQ=252)
+
+This test is a modified version of lp01.  In this model, we use m.solvelink = %SOLVELINK.AsyncGrid% so we can test the solution returned in this case.
+
+N.B.: An alternate way to test this is to use m.solvelink = %SOLVELINK.AsyncSimulate% which uses handles and their associated calls (e.g. handlestatus, execute_loadhandle) internally without requiring any changes to the model.  There should be at least one explicit test of m.solvelink = %SOLVELINK.AsyncGrid% though.
+
+Tests include:
+  a) correct model attributes
+  b) correct levels and marginals on rows and cols
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = sl4lp01.253,[lp01]
+1 = SL4LP01
+2 = LP
+3 = Simple test on one equation, with solvelink=4
+4 = 253
+'Simple test on one equation, with solvelink=1,2,4,5' (SL4LP01,SEQ=253)
+
+Run lp01 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4lp02.254,[lp02]
+1 = SL4LP02
+2 = LP
+3 = Simple level and sign test, with solvelink=4
+4 = 254
+'Simple level and sign test, with solvelink=1,2,4,5' (SL4LP02,SEQ=254)
+
+Run lp02 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = mcp05.255
+1 = MCP05
+2 = MCP
+3 = Test simple 2x2 MCP model where preprocessing solves it
+4 = 255
+'Test simple 2x2 MCP model where preprocessing solves it' (MCP05,SEQ=255)
+
+This model turfed up a bug in the PATH preprocessor.  The bug is known to exist in the 4.6.05 and 4.6.06 libraries, and is fixed in 4.6.07 (Jun 2006).
+
+Contributor: Steve Dirkse, June 2006
+
+*$*$*$
+Files = utils01.256
+1 = UTILS01
+2 = GAMS
+3 = test mps2gms - run it and solve the resulting model
+4 = 256
+'test mps2gms - run it and solve the resulting model' (UTILS01,SEQ=256)
+
+In this model we:
+   1. create an MPS file with $onecho
+   2. run mps2gms on the MPS file, checking the return code
+   3. run gams on the output of mps2gms, checking the return code
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = gamsbas1.257
+1 = GAMSBAS1
+2 = GAMS
+3 = GAMSBAS test suite - basic option reading test
+4 = 257
+'GAMSBAS test suite - basic option reading test' (GAMSBAS1,SEQ=257)
+
+We do not ship GAMSBAS anymore. Please check the McCarl guide for alternatives
+
+*$*$*$
+Files = gamschk1.258
+1 = GAMSCHK1
+2 = GAMS
+3 = GAMSCHK test suite - basic option reading test
+4 = 258
+'GAMSCHK test suite - basic option reading test' (GAMSCHK1,SEQ=258)
+
+
+*$*$*$
+Files = mpswrit1.259
+1 = MPSWRIT1
+2 = GAMS
+3 = MPSWRITE test suite - basic option reading test
+4 = 259
+'MPSWRITE test suite - basic option reading test' (MPSWRIT1,SEQ=259)
+
+
+*$*$*$
+Files = path01.260
+1 = PATH01
+2 = GAMS
+3 = PATH test suite - basic option reading test
+4 = 260
+'PATH test suite - basic option reading test' (PATH01,SEQ=260)
+
+
+*$*$*$
+Files = pathnlp1.261
+1 = PATHNLP1
+2 = GAMS
+3 = PATHNLP test suite - basic option reading test
+4 = 261
+'PATHNLP test suite - basic option reading test' (PATHNLP1,SEQ=261)
+
+Why doesn't this next line reset the optfile???? $echo "transport.optfile = 0;" >> trnsport.gms
+
+test the path option reading mode: first 3 chars are significant
+
+*$*$*$
+Files = pathnlp2.262
+1 = PATHNLP2
+2 = GAMS
+3 = PATHNLP test suite - basic option reading test
+4 = 262
+'PATHNLP test suite - basic option reading test' (PATHNLP2,SEQ=262)
+
+test the path option reading mode:
+ this should not reset the major_iteration_limit
+
+*$*$*$
+Files = cplex01.263
+1 = CPLEX01
+2 = GAMS
+3 = CPLEX test suite - basic option reading test
+4 = 263
+'CPLEX test suite - basic option reading test' (CPLEX01,SEQ=263)
+
+
+*$*$*$
+Files = mosek01.264
+1 = MOSEK01
+2 = GAMS
+3 = MOSEK test suite - basic option reading test
+4 = 264
+'MOSEK test suite - basic option reading test' (MOSEK01,SEQ=264)
+
+
+*$*$*$
+Files = baron01.265
+1 = BARON01
+2 = GAMS
+3 = BARON test suite - basic option reading test
+4 = 265
+'BARON test suite - basic option reading test' (BARON01,SEQ=265)
+
+
+*$*$*$
+Files = convert3.266
+1 = CONVERT3
+2 = GAMS
+3 = CONVERT test suite - basic option reading test
+4 = 266
+'CONVERT test suite - basic option reading test' (CONVERT3,SEQ=266)
+
+
+*$*$*$
+Files = sbb01.267
+1 = SBB01
+2 = GAMS
+3 = SBB test suite - basic option reading test
+4 = 267
+'SBB test suite - basic option reading test' (SBB01,SEQ=267)
+
+
+*$*$*$
+Files = lgo01.268
+1 = LGO01
+2 = GAMS
+3 = LGO test suite - basic option reading test
+4 = 268
+'LGO test suite - basic option reading test' (LGO01,SEQ=268)
+
+
+*$*$*$
+Files = fntan.269,fnset_x.inc,fntest_x.inc,fntan.gdx
+1 = FNTAN
+2 = GAMS
+3 = Test correctness of tan intrinsic
+4 = 269
+'Test correctness of tan intrinsic' (FNTAN,SEQ=269)
+
+make the tolerances a bit wider - required for the old linux build also the Windows system needs a wider tolerance
+
+*$*$*$
+Files = fnacos.270,fnset_x.inc,fntest_x.inc,fnacos.gdx
+1 = FNACOS
+2 = GAMS
+3 = Test correctness of arccos intrinsic
+4 = 270
+'Test correctness of arccos intrinsic' (FNACOS,SEQ=270)
+
+
+*$*$*$
+Files = fnacosx.271,fnset_x.inc,fntest_x.inc
+1 = FNACOSX
+2 = GAMS
+3 = Test correctness of arccos intrinsic eXceptions
+4 = 271
+'Test correctness of arccos intrinsic eXceptions' (FNACOSX,SEQ=271)
+
+Test some exceptional cases here
+
+We use the principal branch of arccos, corresponding to
+  arccos(-1) = PI
+  arccos( 0) = PI/2
+  arccos( 1) = 0
+
+*$*$*$
+Files = fnasin.272,fnset_x.inc,fntest_x.inc,fnasin.gdx
+1 = FNASIN
+2 = GAMS
+3 = Test correctness of arcsin intrinsic
+4 = 272
+'Test correctness of arcsin intrinsic' (FNASIN,SEQ=272)
+
+
+*$*$*$
+Files = fnasinx.273,fnset_x.inc,fntest_x.inc
+1 = FNASINX
+2 = GAMS
+3 = Test correctness of arcsin intrinsic eXceptions
+4 = 273
+'Test correctness of arcsin intrinsic eXceptions' (FNASINX,SEQ=273)
+
+Test some exceptional cases here
+
+We use the principal branch of arcsin, corresponding to
+  arcsin(-1) = -PI/2
+  arcsin( 0) = 0
+  arcsin( 1) = PI/2
+
+ENUM            VAL ----            --- rcOK            0 rcFUNC          1 rcGRAD          2 rcHESS          3 rcSYSTEM        4
+
+ecOK            0 ecDOMAIN        1 ecSINGULAR      2 ecOVERFLOW      3 ecSIGLOSS       4
+
+*$*$*$
+Files = fnatan2.274,fnset_xy.inc,fntest_xy.inc,fnatan2.gdx
+1 = FNATAN2
+2 = GAMS
+3 = Test correctness of arctan2 intrinsic
+4 = 274
+'Test correctness of arctan2 intrinsic' (FNATAN2,SEQ=274)
+
+
+*$*$*$
+Files = fnatan2n.275,fnset_xy.inc,fntest_xy.inc
+1 = FNATAN2N
+2 = GAMS
+3 = Test correctness of arctan2 intrinsic
+4 = 275
+'Test correctness of arctan2 intrinsic' (FNATAN2N,SEQ=275)
+
+Test the arctan2 function, comparing the true derivatives with those computed numerically.  This test is just for rough correctness (to be sure we haven't gotten any signs wrong, etc.) so keep the inputs in the easy range [1,5].
+
+*$*$*$
+Files = fnatan2x.276,fnset_xy.inc,fntest_xy.inc
+1 = FNATAN2X
+2 = GAMS
+3 = Test correctness of arctan2 intrinsic eXceptions
+4 = 276
+'Test correctness of arctan2 intrinsic eXceptions' (FNATAN2X,SEQ=276)
+
+arctan2(y,x) = arctan(y/x), but adjusted for the correct quadrant so we return the angle the vector (x,y) makes with (1,0).
+
+ENUM            VAL ----            --- rcOK            0 rcFUNC          1 rcGRAD          2 rcHESS          3 rcSYSTEM        4
+
+ecOK            0 ecDOMAIN        1 ecSINGULAR      2 ecOVERFLOW      3
+
+*$*$*$
+Files = bench04.277
+1 = BENCH04
+2 = GAMS
+3 = BENCH test suite - basic option reading test
+4 = 277
+'BENCH test suite - basic option reading test' (BENCH04,SEQ=277)
+
+The first solve should return modelstat 14 (no sol returned) The bench option 'returnlastsol on' should give us a solution.
+
+*$*$*$
+Files = miles01.278
+1 = MILES01
+2 = GAMS
+3 = MILES test suite - basic option reading test
+4 = 278
+'MILES test suite - basic option reading test' (MILES01,SEQ=278)
+
+
+*$*$*$
+Files = sbb02.279
+1 = SBB02
+2 = GAMS
+3 = SBB test suite - SOS2 test
+4 = 279
+'SBB test suite - SOS2 test' (SBB02,SEQ=279)
+
+
+*$*$*$
+Files = conopt01.280
+1 = CONOPT01
+2 = GAMS
+3 = CONOPT test suite - basic option reading test
+4 = 280
+'CONOPT test suite - basic option reading test' (CONOPT01,SEQ=280)
+
+
+*$*$*$
+Files = tramp01.281
+1 = TRAMP01
+2 = GAMS
+3 = TRAMP test suite - basic option reading test
+4 = 281
+'TRAMP test suite - basic option reading test' (TRAMP01,SEQ=281)
+
+
+*$*$*$
+Files = gdxcomp1.282
+1 = GDXCOMP1
+2 = GAMS
+3 = Compressed GDX - basic operation
+4 = 282
+'Compressed GDX - basic operation' (GDXCOMP1,SEQ=282)
+
+
+*$*$*$
+Files = knitro01.283
+1 = KNITRO01
+2 = GAMS
+3 = KNITRO test suite - basic option reading test
+4 = 283
+'KNITRO test suite - basic option reading test' (KNITRO01,SEQ=283)
+
+
+*$*$*$
+Files = examin01.284
+1 = EXAMIN01
+2 = GAMS
+3 = EXAMINER test suite - basic option reading test
+4 = 284
+'EXAMINER test suite - basic option reading test' (EXAMIN01,SEQ=284)
+
+
+*$*$*$
+Files = mpecdu01.285
+1 = MPECDU01
+2 = GAMS
+3 = MPECDUMP test suite - basic option reading test
+4 = 285
+'MPECDUMP test suite - basic option reading test' (MPECDU01,SEQ=285)
+
+
+*$*$*$
+Files = xa01.286
+1 = XA01
+2 = GAMS
+3 = XA test suite - basic option reading test
+4 = 286
+'XA test suite - basic option reading test' (XA01,SEQ=286)
+
+start with the transport model, straight from modlib
+
+*$*$*$
+Files = xpress01.287
+1 = XPRESS01
+2 = GAMS
+3 = XPRESS test suite - basic option reading test
+4 = 287
+'XPRESS test suite - basic option reading test' (XPRESS01,SEQ=287)
+
+start with the transport model, straight from modlib
+
+*$*$*$
+Files = xpress02.288
+1 = XPRESS02
+2 = GAMS
+3 = XPRESS test suite - check levels and marginals
+4 = 288
+'XPRESS test suite - check levels and marginals' (XPRESS02,SEQ=288)
+
+We need to make sure we get correct marginal signs with XPRESS in all cases (e.g. when we use the barrier code with and without crossover).  The conventions used have changed with different XPRESS releases so we need a thorough check.
+
+   - LP  (lp02)
+   - QCP (qcp01)
+
+Contributor: Steve Dirkse, Nov 2004
+
+*$*$*$
+Files = compile2.289
+1 = COMPILE2
+2 = GAMS
+3 = test for data errors caused by C compiler bug
+4 = 289
+'test for data errors caused by C compiler bug' (COMPILE2,SEQ=289)
+
+There is a bug in the Intel 9.1.XXX compilers (e.g. 9.1.043) that causes some floating point computations to be incorrect - not by a little, but just plain wrong.  This causes problems with many models. This example is taken from a model sent by Michael Ferris that was our first reported instance of this problem.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = gdxcopy1.290
+1 = GDXCOPY1
+2 = GAMS
+3 = Test GDXCOPY utility with /V5 option
+4 = 290
+'Test GDXCOPY utility with -V5 option' (GDXCOPY1,SEQ=290)
+
+Gdxcopy should write a version 5 GDX file (i.e. one compatible with Distribution 22.2) if the -v5 flag is used.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = sl4lp03.291,[lp03]
+1 = SL4LP03
+2 = LP
+3 = Many free variables and restart, with solvelink=4
+4 = 291
+'Many free variables and restart, with solvelink=1,2,4,5' (SL4LP03,SEQ=291)
+
+Run lp03 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4lp10.292,[lp10]
+1 = SL4LP10
+2 = LP
+3 = Poorly-scaled model, with solvelink=4
+4 = 292
+'Poorly-scaled model, with solvelink=1,2,4,5' (SL4LP10,SEQ=292)
+
+Run lp10 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4lp11.293,[lp11]
+1 = SL4LP11
+2 = LP
+3 = Simple test on one =n= equation, with solvelink=4
+4 = 293
+'Simple test on one =n= equation, with solvelink=1,2,4,5' (SL4LP11,SEQ=293)
+
+Run lp11 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4sos1a.294,[sos1a]
+1 = SL4SOS1A
+2 = MIP
+3 = Test of SOS1 variables with active upper bounds, with solvelink=4
+4 = 294
+'Test of SOS1 variables with active upper bounds, with solvelink=1,2,4,5' (SL4SOS1A,SEQ=294)
+
+Run sos1a with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4scon1.295,[semicon1]
+1 = SL4SCON1
+2 = MIP
+3 = Simple test of SEMICONT variables, with solvelink=4
+4 = 295
+'Simple test of SEMICONT variables, with solvelink=1,2,4,5' (SL4SCON1,SEQ=295)
+
+Run semicon1 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4mcp01.296,[mcp01]
+1 = SL4MCP01
+2 = MCP
+3 = Test matching =E= equations in MCP, with solvelink=4
+4 = 296
+'Test matching =E= equations in MCP, with solvelink=%SOLVELINK.AsyncSimulate%' (SL4MCP01,SEQ=296)
+
+Run mcp01 with solvelink=%SOLVELINK.AsyncSimulate%
+
+*$*$*$
+Files = sl4mcp02.297,[mcp02]
+1 = SL4MCP02
+2 = MCP
+3 = Test matching =G= equations in MCP, with solvelink=4
+4 = 297
+'Test matching =G= equations in MCP, with solvelink=%SOLVELINK.AsyncSimulate%' (SL4MCP02,SEQ=297)
+
+Run mcp02 with solvelink=%SOLVELINK.AsyncSimulate%
+
+*$*$*$
+Files = sl4mcp03.298,[mcp03]
+1 = SL4MCP03
+2 = MCP
+3 = Test matching =L= equations in MCP, with solvelink=4
+4 = 298
+'Test matching =L= equations in MCP, with solvelink=%SOLVELINK.AsyncSimulate%' (SL4MCP03,SEQ=298)
+
+Run mcp03 with solvelink=%SOLVELINK.AsyncSimulate%
+
+*$*$*$
+Files = sl4mcp04.299,[mcp04]
+1 = SL4MCP04
+2 = MCP
+3 = Test matching =N= equations in MCP, with solvelink=4
+4 = 299
+'Test matching =N= equations in MCP, with solvelink=%SOLVELINK.AsyncSimulate%' (SL4MCP04,SEQ=299)
+
+Run mcp04 with solvelink=%SOLVELINK.AsyncSimulate%
+
+*$*$*$
+Files = sl4cns01.300,[cns01]
+1 = SL4CNS01
+2 = CNS
+3 = Test 1-variable CNS model, with solvelink=4
+4 = 300
+'Test 1-variable CNS model, with solvelink=4' (SL4CNS01,SEQ=300)
+
+Run cns01 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns02.301,[cns02]
+1 = SL4CNS02
+2 = CNS
+3 = Test 2-variable CNS model, with solvelink=4
+4 = 301
+'Test 2-variable CNS model, with solvelink=4' (SL4CNS02,SEQ=301)
+
+Run cns02 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns03.302,[cns03]
+1 = SL4CNS03
+2 = CNS
+3 = Test holdfixed and singular models, with solvelink=4
+4 = 302
+'Test holdfixed and singular models, with solvelink=4' (SL4CNS03,SEQ=302)
+
+Run cns03 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns04.303,[cns04]
+1 = SL4CNS04
+2 = CNS
+3 = Test globally unique CNS model, with solvelink=4
+4 = 303
+'Test globally unique CNS model, with solvelink=4' (SL4CNS04,SEQ=303)
+
+Run cns04 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns05.304,[cns05]
+1 = SL4CNS05
+2 = CNS
+3 = Test globally unique CNS model, with solvelink=4
+4 = 304
+'Test globally unique CNS model, with solvelink=4' (SL4CNS05,SEQ=304)
+
+Run cns05 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns06.305,[cns06]
+1 = SL4CNS06
+2 = CNS
+3 = Test globally unique CNS model, with solvelink=4
+4 = 305
+'Test globally unique CNS model, with solvelink=4' (SL4CNS06,SEQ=305)
+
+Run cns06 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns07.306,[cns07]
+1 = SL4CNS07
+2 = CNS
+3 = Test globally unique CNS model, with solvelink=4
+4 = 306
+'Test globally unique CNS model, with solvelink=4' (SL4CNS07,SEQ=306)
+
+Run cns07 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns08.307,[cns08]
+1 = SL4CNS08
+2 = CNS
+3 = Test singular nonsquare CNS model, with solvelink=4
+4 = 307
+'Test singular nonsquare CNS model, with solvelink=4' (SL4CNS08,SEQ=307)
+
+Run cns08 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns09.308,[cns09]
+1 = SL4CNS09
+2 = CNS
+3 = Test solvable singular CNS model, with solvelink=4
+4 = 308
+'Test solvable singular CNS model, with solvelink=4' (SL4CNS09,SEQ=308)
+
+Run cns09 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns10.309,[cns10]
+1 = SL4CNS10
+2 = CNS
+3 = Test solvable singular CNS model, with solvelink=4
+4 = 309
+'Test solvable singular CNS model, with solvelink=4' (SL4CNS10,SEQ=309)
+
+Run cns10 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns11.310,[cns11]
+1 = SL4CNS11
+2 = CNS
+3 = Test solvable CNS model, with solvelink=4
+4 = 310
+'Test solvable CNS model, with solvelink=4' (SL4CNS11,SEQ=310)
+
+Run cns11 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns12.311,[cns12]
+1 = SL4CNS12
+2 = CNS
+3 = Test unsolvable CNS model, with solvelink=4
+4 = 311
+'Test unsolvable CNS model, with solvelink=4' (SL4CNS12,SEQ=311)
+
+Run cns12 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = sl4cns13.312,[cns13]
+1 = SL4CNS13
+2 = CNS
+3 = Test solvable CNS model, with solvelink=4
+4 = 312
+'Test solvable CNS model, with solvelink=4' (SL4CNS13,SEQ=312)
+
+Run cns13 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = put6.313
+1 = PUT6
+2 = GAMS
+3 = Test put utility rename feature
+4 = 313
+'Test put utility rename feature'  (PUT6,SEQ=313)
+
+It should not matter if we have the file open or closed when using rename, title, exec ... we only need to open if we have inc gdl or htm
+
+Contributor: Alex
+
+*$*$*$
+Files = put7.314
+1 = PUT7
+2 = GAMS
+3 = Test bad $on/offput in if statement
+4 = 314
+'Test bad $on/offput in if statement'  (PUT7,SEQ=314)
+
+Contributor: Alex
+
+*$*$*$
+Files = baron02.315
+1 = BARON02
+2 = GAMS
+3 = BARON test suite - bar_space_length is case sensitive
+4 = 315
+'BARON test suite - bar_space_length is case sensitive' (BARON02,SEQ=315)
+
+
+*$*$*$
+Files = testhtm.316,testmod.inc
+1 = TESTHTM
+2 = GAMS
+3 = Generates HTM testlib library files
+4 = 316
+'Generates HTM testlib library files' (TESTHTM,SEQ=316);
+
+Generates HTM testlib library files
+
+GAMS Development Coorporation, Testlib Tool Box.
+
+  Generates all .htm related files for the set of models
+  found in testmod.inc. Uses unpublished and
+  unsupported PUT_Utilities features.
+
+  The file testmod.inc is the master file for all other
+  derived files.
+
+  Files generated:
+
+     seqindx.htm
+     alfindx.htm
+     *.htm  for all model and include files
+
+  All files $included, read and written have to be in the same
+  directory.  This program can be executed from another location
+  by using the GAMS parameter U1, for example:
+
+     >gams testhtm.316 U1=c:\oldd\alex\gams\gamslib\ver008\testlib\
+
+*$*$*$
+Files = fncentr.317,fnset_x.inc,fntest_x.inc,fncentr.gdx
+1 = FNCENTR
+2 = GAMS
+3 = Test correctness of centropy intrinsic
+4 = 317
+'Test correctness of centropy intrinsic' (FNCENTR,SEQ=317)
+
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+
+*$*$*$
+Files = fncentr2.318,fnset_x.inc,fntest_x.inc,fncentr2.gdx
+1 = FNCENTR2
+2 = GAMS
+3 = Test correctness of centropy intrinsic
+4 = 318
+'Test correctness of centropy intrinsic' (FNCENTR2,SEQ=318)
+
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+
+*$*$*$
+Files = fncentr3.319,fnset_x.inc,fntest_x.inc,fncentr3.gdx
+1 = FNCENTR3
+2 = GAMS
+3 = Test correctness of centropy intrinsic
+4 = 319
+'Test correctness of centropy intrinsic' (FNCENTR3,SEQ=319)
+
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+
+*$*$*$
+Files = fncentrx.320
+1 = FNCENTRX
+2 = GAMS
+3 = Test correctness of centropy intrinsic eXceptions
+4 = 320
+'Test correctness of centropy intrinsic eXceptions' (FNCENTRX,SEQ=320)
+
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+
+ENUM            VAL ----            --- rcOK            0 rcFUNC          1 rcGRAD          2 rcHESS          3 rcSYSTEM        4
+
+ecOK            0 ecDOMAIN        1 ecSINGULAR      2 ecOVERFLOW      3
+
+*$*$*$
+Files = compile3.321
+1 = COMPILE3
+2 = GAMS
+3 = No mixed mode is allowed in equations
+4 = 321
+'No mixed mode is allowed in equations' (COMPILE3,SEQ=321)
+
+
+*$*$*$
+Files = gdx4.322
+1 = GDX4
+2 = GAMS
+3 = Test renaming of GDX files for load/unload operations
+4 = 322
+'Test renaming of GDX files for load/unload operations' (GDX4,SEQ=322)
+
+If we do not have a 'filename' as the first parameter on an execute_load/execute_unload we use the name that has been saved by the put_utility.
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = put8.323
+1 = PUT8
+2 = GAMS
+3 = Test put utility exec feature
+4 = 323
+'Test put utility exec feature'  (PUT8,SEQ=323)
+
+We should get an execerror if we exec a file that does not exist
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = compile4.324
+1 = COMPILE4
+2 = GAMS
+3 = $goto back fails
+4 = 324
+'$goto back fails' (COMPILE4,SEQ=324)
+
+problem introduced with new input file reading alpha 22.4
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = ifstat5.325
+1 = IFSTAT5
+2 = GAMS
+3 = Tests $if/$ifi/$ife statements
+4 = 325
+'Tests $if/$ifi/$ife statements' (IFSTAT5,SEQ=325)
+
+Tests compile-time if tests, especially the new $ife test
+
+For ife  expr1 == expr2   true if (expr1-expr2)/(1+abs(expr2)) < 1e-12 For ife  expr1            true if expr1 <> 0
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = ifstat6.326
+1 = IFSTAT6
+2 = GAMS
+3 = quick syntax test for all $if/$ifi/$ife statements
+4 = 326
+'quick syntax test for all $if/$ifi/$ife statements' (IFSTAT6,SEQ=326)
+
+Tests compile-time if tests
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = compile5.327
+1 = COMPILE5
+2 = GAMS
+3 = tests $goto, $ife, and $eval
+4 = 327
+'tests $goto, $ife, and $eval' (COMPILE5,SEQ=327)
+
+
+*$*$*$
+Files = dict1.328
+1 = DICT1
+2 = GAMS
+3 = test new dictionary (starting with cmex 147)
+4 = 328
+'test new dictionary (starting with cmex 147)' (DICT1,SEQ=328)
+
+Starting with CMEX 147 the dictionary contains only those labels that are referenced by the model rim.  We test this by adding set elements to sets that are not used.  We use convert to create two dictionary files and compare to be equal.
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = lp13.329
+1 = LP13
+2 = LP
+3 = checks +/- INF on =L=, =G=, and =N= equations
+4 = 329
+'checks +/- INF on =L=, =G=, and =N= equations' (LP13,SEQ=329)
+
+
+*$*$*$
+Files = veda1.330
+1 = VEDA1
+2 = GAMS
+3 = tests that we can execute gdx2veda
+4 = 330
+'tests that we can execute gdx2veda' (VEDA1,SEQ=330)
+
+Transport model
+
+*$*$*$
+Files = ifstat7.331
+1 = IFSTAT7
+2 = GAMS
+3 = tests for $IF declared and defined
+4 = 331
+'tests for $IF declared and defined' (IFSTAT7,SEQ=331)
+
+This test for a stupid mistake by AM to require the symbol to exist before we test for defined
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = convert4.332
+1 = CONVERT4
+2 = GAMS
+3 = CONVERT test suite - proper placing of parenthesis
+4 = 332
+'CONVERT test suite - proper placing of parenthesis' (CONVERT4,SEQ=332)
+
+Tests the fix for AB01194:
+  e.. x1/(x1/x2) =e= 0;
+produced the convert output
+  e.. x1/x1/x2 =e= 0;
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = convert5.333
+1 = CONVERT5
+2 = GAMS
+3 = CONVERT test suite - min(max(x1,x2),x3)
+4 = 333
+'CONVERT test suite - min(max(x1,x2),x3)' (CONVERT5,SEQ=333)
+
+AB01198:convert::derivatives  (Distribution 22.2-22.4) Input of
+  min(max(x1,x2),x3)
+produced bad output in gams.gms:
+   min(x1,x2,x3)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = edcrypt1.334
+1 = EDCRYPT1
+2 = GAMS
+3 = tests for endecrypt with and without password
+4 = 334
+'Tests for endecrypt with and without password' (EDCRYPT1,SEQ=334)
+
+password file should be gone
+
+*$*$*$
+Files = handle02.335
+1 = HANDLE02
+2 = GAMS
+3 = Test handlecollect with save & restart
+4 = 335
+'Test handlecollect with save & restart' (HANDLE02,SEQ=335)
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = compile6.336,macsource.zip.ignore
+1 = COMPILE6
+2 = GAMS
+3 = Test that we can read a Mac-formatted file
+4 = 336
+'Test that we can read a Mac-formatted file' (COMPILE6,SEQ=336)
+
+
+*$*$*$
+Files = binary3.337
+1 = BINARY3
+2 = GAMS
+3 = test binary operation: imp
+4 = 337
+'test binary operation: imp' (BINARY3,SEQ=337)
+
+In this test we check that the imp function works as expected when the arguments are taken from parameters.  CMEX tries to take advantage of sparsity in the inputs when computing outputs, (e.g. with the or operator) but that's not possible with imp: 0 imp 0 = 1.
+
+ABMaster issue AB01260: known to fail with 22.4, fixed for 22.5.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = onmulti6.338
+1 = ONMULTI6
+2 = GAMS
+3 = Test merge with $onmulti and $gdxin
+4 = 338
+'Test merge with $onmulti and $gdxin' (ONMULTI6,SEQ=338)
+
+This tests AB01267: celmerge was called incorrectly
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = lindgl01.339
+1 = LINDGL01
+2 = GAMS
+3 = LINDOGLOBAL test suite - lingoglobal as subsolver
+4 = 339
+'LINDOGLOBAL test suite - lindoglobal as subsolver' (LINDGL01,SEQ=339)
+
+
+*$*$*$
+Files = mcp06.340
+1 = MCP06
+2 = MCP
+3 = Test level/marginal correctness and conventions for MCP
+4 = 340
+'Test level/marginal correctness and conventions for MCP'  (MCP06,SEQ=340)
+
+This model illustrates and tests the convention for returning equation/variable levels/marginals for an MCP.
+
+Assume we have a complementarity problem defined by model m /f.x/.  The values to expect in GAMS are:
+  x.l: solution computed by the solver
+  f.l: computed as for all GAMS models (plug and chug)
+  x.m: f.l - f.up/f.lo (whichever is not infinity)
+       what if both are infinity??
+  f.m: x.l
+
+AFAIK, what is illustrated here has been the accepted behavior, consistently implemented, for quite some time.
+
+Contributor: Steve Dirkse, June 2006
+
+*$*$*$
+Files = sl4mcp06.341,[mcp06]
+1 = SL4MCP06
+2 = MCP
+3 = Test correctness/conventions for MCP, with solvelink=4
+4 = 341
+'Test correctness/conventions for MCP, with solvelink=%SOLVELINK.AsyncSimulate%' (SL4MCP06,SEQ=341)
+
+Run mcp06 with solvelink=%SOLVELINK.AsyncSimulate%
+
+*$*$*$
+Files = mdb2gms1.342,querytest.mdb,querytest.gdx
+1 = MDB2GMS1
+2 = GAMS
+3 = Test database access with MDB2GMS
+4 = 342
+'Test database access with MDB2GMS' (MDB2GMS1,SEQ=342)
+
+Test database access with MDB2GMS Make multiple queries in one call, store in GDX file
+
+*$*$*$
+Files = sql2gms1.343,querytest.mdb,querytest.gdx
+1 = SQL2GMS1
+2 = GAMS
+3 = Test database access with SQL2GMS
+4 = 343
+'Test database access with SQL2GMS' (SQL2GMS1,SEQ=343)
+
+Test database access with SQL2GMS (OLEDB) Make multiple queries in one call, store in GDX file
+
+*$*$*$
+Files = nlpec02.344,[mpec01]
+1 = NLPEC02
+2 = MPEC
+3 = NLPEC test suite - loop over DNLP solvers
+4 = 344
+'NLPEC test suite - loop over DNLP solvers' (NLPEC02,SEQ=344)
+
+This model runs the NLPEC solver on the mpec01 model from testlib for each DNLP solver.  This tests that our solvers can run correctly as subsolvers of NLPEC - sometimes things happen to break this!
+
+Contributor: Steven Dirkse
+
+  requires CMEX Rev 141 - system.solverNames
+
+*$*$*$
+Files = sos2a.345
+1 = SOS2A
+2 = MIP
+3 = Test of SOS2 variables
+4 = 345
+'Test of SOS2 variables'  (SOS2A,SEQ=345)
+
+Do linear interpolation of the points
+   ord(I), f(I)
+(using SOS2 vars w(I)) to define a function f(x). By bounding w(I) below we can take out a little interval from the domain of f.  We minimize the distance between f(x) and Fbar, with full domain and with the restriction.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = semiint1.346
+1 = SEMIINT1
+2 = MIP
+3 = Simple test of SEMIINT variables
+4 = 346
+'Simple test of SEMIINT variables' (SEMIINT1,SEQ=346)
+
+Simple test of semiint variables We want to minimize the distance between x and xbar, subject to x + s = 10, s semi-integer. Depending on how the bounds on s are set, the minimum distance is acheived when s = 0 or s is in its nonzero range.
+
+*$*$*$
+Files = delim3.347
+1 = DELIM3
+2 = GAMS
+3 = Bug test: missing elements not reported
+4 = 347
+'Bug test: missing elements not reported' (DELIM3,SEQ=347)
+
+AB01354:cmex:problem with $ondelim
+
+Contributor: Alex
+
+  without ondelim we get 161 error, which is OK
+
+*$*$*$
+Files = data1.348
+1 = DATA1
+2 = GAMS
+3 = Bug test: bad message on max dimensions
+4 = 348
+'Bug test: bad message on max dimensions' (DATA1,SEQ=348)
+
+
+*$*$*$
+Files = gdx5.349
+1 = GDX5
+2 = GAMS
+3 = Checks for unreported GDX error
+4 = 349
+'Checks for unreported GDX error' (GDX5,SEQ=349)
+
+In some cases we could have an error writing a GDX file from GAMS but the error would not be caught and reported.
+
+Contributor: Jan-Henrik Jagla
+
+*$*$*$
+Files = gdxcopy2.350
+1 = GDXCOPY2
+2 = GAMS
+3 = Test GDXCOPY utility with -V6C and V6U options
+4 = 350
+'Test GDXCOPY utility with -V6C and V6u options' (GDXCOPY2,SEQ=350)
+
+Gdxcopy should write a version 6 GDX file (i.e. one compatible with Distribution 22.5) if the -v6c or -v6u flags are used.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = baron03.351
+1 = BARON03
+2 = GAMS
+3 = BARON test suite - test all combinations of LP/NLP solvers
+4 = 351
+'BARON test suite - test all combinations of LP/NLP solvers' (BARON03,SEQ=351)
+
+Test of BARON. This test uses the model MHW4D from gamslib, taken from: Wright, M H, Numerical Methods for Nonlinearly Constrained Optimization. PhD thesis, Stanford University, 1976. We run the model with all combinations of LP and NLP solvers available in BARON.
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = call4.352
+1 = CALL4
+2 = GAMS
+3 = Check call with long command line
+4 = 352
+'Check call with long command line' (CALL4,SEQ=352)
+
+Check that the $call handles input longer than 255 chars
+
+Contributor: Steve
+
+*$*$*$
+Files = pfmaptst.353,allpfmap.gdx
+1 = PFMAPTST
+2 = GAMS
+3 = Checks files in distribution
+4 = 353
+'Checks files in distribution' (GMSPFMAPTEST,SEQ=352)
+
+Compares the list of existing files with the list of expected files.
+
+Contributor: Lutz
+
+ For changes on all platforms
+
+*$*$*$
+Files = gdxcopy3.354
+1 = GDXCOPY3
+2 = GAMS
+3 = Test GDXCOPY utility with -V7C and V7U options
+4 = 354
+'Test GDXCOPY utility with -V7C and V7U options' (GDXCOPY3,SEQ=354)
+
+Gdxcopy should write a version 7 GDX file (i.e. one compatible with Distribution 22.6) if the -v7c or -v7u flags are used.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = har1.355
+1 = HAR1
+2 = GAMS
+3 = gdx2har and har2gdx test from Example 1
+4 = 355
+'gdx2har and har2gdx test from Example 1' (HAR1,SEQ=355)
+
+This example shows how a GDX file can be written by a GAMS program and the results then transferred into a HAR file. In the small GAMS example two sets and three parameters are defined. The program output is then written to the GDX file. Set and parameter names are shorter than 12 characters and conform to GEMPACK syntax rules, so the translator retains all same names in the HAR file. In this case, set and parameter names have fewer than 4 characters, so the HEADER identifiers in the HAR file are identical to the GAMS names.  GDX2HAR infers domains of the parameters from the array elements, which are all non-zero in this case.
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = cplex02.356
+1 = CPLEX02
+2 = GAMS
+3 = CPLEX test suite - tuning test
+4 = 356
+'CPLEX test suite - tuning test' (CPLEX02,SEQ=356)
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = nonneg.357
+1 = NONNEG
+2 = GAMS
+3 = Check that NonNegative do same as Positive Variables
+4 = 357
+Check that NonNegative do same as Positive Variables (NONNEG,SEQ=357)
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = cplex03.358
+1 = CPLEX03
+2 = GAMS
+3 = Test the GAMS/CPLEX link for propper handling of long UEL names and domains larger than 10
+4 = 358
+Test the GAMS/CPLEX link for propper handling of long UEL names and domains larger than 10 (cplex03,SEQ=358)
+
+This problem finds a least cost shipping schedule that meets requirements at markets and supplies at factories where demand exceeds supply using the Cplex feature FeasOpt.
+
+*$*$*$
+Files = fncentry.359,fnset_xy.inc,fntest_xy.inc
+1 = FNCENTRY
+2 = GAMS
+3 = Test correctness of centropy(x,y,d) intrinsic exceptions
+4 = 359
+'Test correctness of centropy(x,y,d) intrinsic exceptions' (FNCENTRY,SEQ=359)
+
+centropy(x,y,delta) = x * log((x+delta)/(y+delta))
+
+ENUM            VAL ----            --- rcOK            0 rcFUNC          1 rcGRAD          2 rcHESS          3 rcSYSTEM        4
+
+ecOK            0 ecDOMAIN        1 ecSINGULAR      2 ecOVERFLOW      3
+
+Author: Steve
+
+*$*$*$
+Files = fncentr4.360,fnset_xy.inc,fntest_xy.inc
+1 = FNCENTR4
+2 = GAMS
+3 = Test correctness of centropy intrinsic
+4 = 360
+'Test correctness of centropy intrinsic' (FNCENTR4,SEQ=360)
+
+Test the centropy function, comparing the true derivatives with those computed numerically.  This test is just for rough correctness (to be sure we haven't gotten any signs wrong, etc.) so keep the inputs in an easy range where no overflow is possible:
+  x,y in [1e0,1e100]
+  d   in [0,1e-8]
+
+*$*$*$
+Files = fncentr5.361,fnset_xy.inc,fntest_xy.inc,fncentr5.gdx
+1 = FNCENTR5
+2 = GAMS
+3 = Test centropy intrinsic on nice inputs
+4 = 361
+'Test centropy intrinsic on nice inputs' (FNCENTR5,SEQ=361)
+
+Test the function values and derivatives of
+   centropy(x,y,delta) = x * log((x+delta)/(y+delta))
+on nice inputs:
+  x,y in [1e-6,1e6]
+  d   in [0,1e-8]
+
+Author: Steve Dirkse
+
+*$*$*$
+Files = fncentr6.362,fnset_xy.inc,fntest_xy.inc,fncentr6.gdx
+1 = FNCENTR6
+2 = GAMS
+3 = Test centropy intrinsic on small inputs
+4 = 362
+'Test centropy intrinsic on small inputs' (FNCENTR6,SEQ=362)
+
+Test the function values and derivatives of
+   centropy(x,y,delta) = x * log((x+delta)/(y+delta))
+on very small inputs :
+  x in [0,1e2]
+  y in [1e-298,1e2]
+  d in [0,1e2]
+
+Author: Steve Dirkse
+
+*$*$*$
+Files = gdxmerg1.363
+1 = GDXMERG1
+2 = GAMS
+3 = test gdxmerge - verify that an aliased set can be merged
+4 = 363
+'test gdxmerge - verify that an aliased set can be merged' (GDXMERG1,SEQ=363)
+
+In this model we:
+   1.  Write a small helper gams file
+   2.  Execute this file a few times to generate different gdx files
+   3.  call on gdxmerge to merge the gdx files
+   4.  read some data back to verify the contents
+
+Contributor: Paul van der Eijk
+
+*$*$*$
+Files = ifthen1.364
+1 = IFTHEN1
+2 = GAMS
+3 = Test $ifthen and $endif
+4 = 364
+'Test $ifthen and $endif' (IFTHEN1,SEQ=364)
+
+Contributor: Alex
+
+*$*$*$
+Files = decis01.365
+1 = DECIS01
+2 = GAMS
+3 = Test small DECIS Models with DECISC and DECISM
+4 = 365
+Test of small DECIS Models with DECISC and DECISM (decis01,SEQ=365)
+
+This models tests the GAMS modlib models 197.APL1P 198.APL1PCA 199.FARM
+
+with both DECISC and DECISM
+
+Contributor: Jan-H. Jagla
+
+*$*$*$
+Files = condtwin.366
+1 = CONDTWIN
+2 = GAMS
+3 = CONOPTD with two solves in a row
+4 = 366
+CONOPTD with two solves in a row (CONDTWIN,SEQ=366)
+
+This model checks if it is possible to run conopt with solvelink 5 two times in a row, then with cplexd, at the end two times with conopt again.
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = examin02.367
+1 = EXAMIN02
+2 = GAMS
+3 = EXAMINER test suite - runs examiner with selected subsolver
+4 = 367
+'EXAMINER test suite - runs examiner with selected subsolver' (EXAMIN02,SEQ=367)
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = blank.368
+1 = BLANK
+2 = GAMS
+3 = Runs GAMS with a parameter containing blanks
+4 = 368
+'Runs GAMS with a parameter containing blanks' (BLANK,SEQ=368)
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = put9.369
+1 = PUT9
+2 = GAMS
+3 = Test empty line at the end of rename
+4 = 369
+'Test empty line at the end of rename'  (PUT9,SEQ=369)
+
+The put_utility line gave an error with 22.6 and previous because of the newlines following '.output'
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = delim4.370
+1 = DELIM4
+2 = GAMS
+3 = Drop dummy in column definition under $ondelim
+4 = 370
+Drop dummy in column definition under $ondelim (DELIM4,SEQ=370)
+
+AB01429 submitted by Franz
+
+*$*$*$
+Files = match01.371
+1 = MATCH01
+2 = GAMS
+3 = Test matching operator: compile and execution time
+4 = 371
+'Test matching operator: compile and execution time' (MATCH01,SEQ=371)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = vardat01.372
+1 = VARDAT01
+2 = GAMS
+3 = test scalar var/equ data statements
+4 = 372
+'test scalar var/equ data statements' (VARDAT01,SEQ=372)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = vardat02.373
+1 = VARDAT02
+2 = GAMS
+3 = test indexed var/equ data statements
+4 = 373
+'test indexed var/equ data statements' (VARDAT02,SEQ=373)
+
+Contributor: Alex Meeraus
+
+  note that the var/equ statement does not create 'l' .. as UELs
+
+*$*$*$
+Files = decis02.374
+1 = DECIS02
+2 = LP
+3 = Test of correctness for levels & marginals of LP
+4 = 374
+Test of correctness for levels & marginals of LP (DECIS02,SEQ=374)
+
+Test of correctness of the levels and marginals returned. All cases are considered, e.g.
+  1) =L=, =G=, =E= constraints (should we add =N=?)
+  2) variables at lower and upper bound, and not at bound
+  3) min or max
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = cx + b where cz and b take different values
+
+The unique wrinkle with this model is that it's set up to be a trivial 2-stage model: s2 is the only 2nd-stage var, s2con the only 2nd-stage constraint.  Any LP solver can solve the core model given here, and we formulate the deterministic version so that each scenario is identical and we can test results from stochastic solvers since we know the expected result.
+
+Author: Steven Dirkse, February 2006
+
+*$*$*$
+Files = decis03.375
+1 = DECIS03
+2 = LP
+3 = Test of correctness for levels & marginals of LP
+4 = 375
+'Test of correctness for levels & marginals of LP' (DECIS03,SEQ=375)
+
+This model is an extension of DECIS02 to allow duplicate blocks. Test of correctness of the levels and marginals returned. All cases are considered, e.g.
+  1) =L=, =G=, =E= constraints (should we add =N=?)
+  2) variables at lower and upper bound, and not at bound
+  3) min or max
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = cx + b where cz and b take different values
+
+The unique wrinkles with this model are: 1. It is set up to be a trivial 2-stage model: s2 is the only 2nd-stage var, s2con the only 2nd-stage constraint.  Any LP solver can solve the core model given here, and we formulate the deterministic version so that each scenario is identical and we can test results from stochastic solvers since we know the expected result. 2. The model is made up of duplicate blocks so the size can be adjusted easily.  The set I controls the duplicate blocks.
+
+Author: Steven Dirkse, March 2007
+
+*$*$*$
+Files = vardat03.376
+1 = VARDAT03
+2 = GAMS
+3 = test var/equ data statements with $onempty
+4 = 376
+'test var/equ data statements with $onempty' (VARDAT03,SEQ=376)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = vardat04.377
+1 = VARDAT04
+2 = GAMS
+3 = test indexed var/equ data statements with $onmulti
+4 = 377
+'test indexed var/equ data statements with $onmulti' (VARDAT04,SEQ=377)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = vardat05.378
+1 = VARDAT05
+2 = GAMS
+3 = test table var/equ data statements with $onmulti
+4 = 378
+'test table var/equ data statements with $onmulti' (VARDAT05,SEQ=378)
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = emplp01.379,[lp01]
+1 = EMPLP01
+2 = GAMS
+3 = Simple test on one equation with EMP
+4 = 379
+Simple test on one equation with EMP (EMPLP01,SEQ=379)
+
+This model tests lp01 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. For the second test EMP rewrites the model as MCP and solves it with the default MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emplp02.380,[lp02]
+1 = EMPLP02
+2 = GAMS
+3 = Simple level and sign test with EMP
+4 = 380
+Simple level and sign test with EMP (EMPLP02,SEQ=380)
+
+This model tests lp02 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. For the second test EMP rewrites the model as MCP and solves it with the default MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emplp03.381,[lp03]
+1 = EMPLP03
+2 = GAMS
+3 = Many free variables and restart with EMP
+4 = 381
+Many free variables and restart with EMP (EMPLP03,SEQ=381)
+
+This model tests lp03 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. A second test with EMP rewriting the model as MCP is not done since lp03 is a simplex-only test.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emplp10.382,[lp10]
+1 = EMPLP10
+2 = GAMS
+3 = Poorly-scaled model - small matrix entry implies large x using EMP
+4 = 382
+'Poorly-scaled model - small matrix entry implies large x using EMP' (EMPLP10,SEQ=382)
+
+This model tests lp10 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. For the second test EMP rewrites the model as MCP and solves it with the default MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emplp11.383,[lp11]
+1 = EMPLP11
+2 = GAMS
+3 = Simple test on one =n= equation using EMP
+4 = 383
+'Simple test on one =n= equation using EMP' (EMPLP11,SEQ=383)
+
+This model tests lp11 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. For the second test EMP rewrites the model as MCP and solves it with the default MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emplp12.384,[lp12]
+1 = EMPLP12
+2 = GAMS
+3 = Test solution quality with solvelink=3 using EMP
+4 = 384
+'Test solution quality with solvelink=3 using EMP' (EMPLP12,SEQ=384)
+
+This model tests lp12 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. For the second test EMP rewrites the model as MCP and solves it with the default MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emplp13.385,[lp13]
+1 = EMPLP13
+2 = GAMS
+3 = checks +/- INF on =L=, =G=, and =N= equations using EMP
+4 = 385
+'checks +/- INF on =L=, =G=, and =N= equations using EMP' (EMPLP13,SEQ=385)
+
+This model tests lp12 from the Test Library with solver EMP. In the first test EMP generates a standard scalar model which is solved by the default lp solver. For the second test EMP rewrites the model as MCP and solves it with the default MCP solver.
+
+Contributor: Jan-H. Jagla, March 2007
+
+*$*$*$
+Files = emp01.386
+1 = EMP01
+2 = GAMS
+3 = Compares EMP results for a simple LP with known results
+4 = 386
+Compares EMP results for a simple LP with known results (EMP01,SEQ=386)
+
+This model compares the results from different EMP runs with the results known. The model has a bounded variable only appearing in the objective which is reformulated in case EMP writes and MCP model
+
+Contributor: Jan-H. Jagla, April 2007
+
+*$*$*$
+Files = emp02.387
+1 = EMP02
+2 = GAMS
+3 = Compares EMP results for a simple NLP with known results
+4 = 387
+Compares EMP results for a simple NLP with known results (EMP02,SEQ=387)
+
+This model compares the results from different EMP runs with the results known. The NLP model is taken from the GAMS Model Library
+
+Wright, M H, Numerical Methods for Nonlinearly Constraint Optimization. PhD thesis, Stanford University, 1976.
+
+Contributor: Jan-H. Jagla, April 2007
+
+*$*$*$
+Files = emp03.388
+1 = EMP03
+2 = GAMS
+3 = Check correctness of NLP->MCP reform in EMP
+4 = 388
+'Check correctness of NLP->MCP reform in EMP' (EMP03,SEQ=388)
+
+Test conventions for EMP rewriting as an MCP (aka NLPD). model 1 is a max model, model 2 a min.  They are identical except for 1 is max z=f(x), the other is min z=-f(x) and of course the equation duals have opposite sign
+
+Key observation: the NLPD option
+  dualVar x f
+essentially equates f.m with variable x, so we don't compute derivatives wrt. x as we would if x were a primal variable.  Since this is so, we assume x has the same sign as f.m would in the NLP model, and we need to do a reformulation that preserves the sign of f.m=x.
+
+The model shows how we can reformulate a max model and its equivalent min so that we preserve the sign of the equation duals in the MCP version.
+
+Contributor: Steve Dirkse, April 2008
+
+*$*$*$
+Files = mcp07.389
+1 = MCP07
+2 = MCP
+3 = Test level/marginal correctness and conventions for MCP
+4 = 389
+'Example MCP where explicit matching helps the solver' (MCP07,SEQ=389)
+
+For MCP models with free variables and equality constraints, the matching between these can be seen as somewhat arbitrary or even unnecessary. However, the "right" match may arise naturally from the model, and the matching used may make a difference to a solver.
+
+This model illustrates a case where the solver prefers one matching over another.  It is not a coincidence that the preferred matching is the natural one for the KKT conditions.
+
+Contributor: Steve Dirkse, April 2008.  Model obtained from Michael Ferris.
+
+*$*$*$
+Files = qcp05.390
+1 = QCP05
+2 = QCP
+3 = Test case for poly function
+4 = 390
+'Test case for poly function'  (QCP05,SEQ=390)
+
+Compare modlib's qdemo7 with a version making use of the poly function
+
+Contributor: Jan-Hendrik Jagla, June 2008
+
+*$*$*$
+Files = invert01.391
+1 = INVERT01
+2 = GAMS
+3 = Test invert utility
+4 = 391
+'Test invert utility' (INVERT01,SEQ=391)
+
+Test the invert utility:
+  1. write a square matrix to a GDX file
+  2. call 'invert' (an external program) to do the inversion
+  3. read in the invert from a second GDX file
+  4. test that A * A-inv = I
+
+Contributor: Erwin Kalvelagen and Steve Dirkse, July 2008.
+
+*$*$*$
+Files = invert02.392
+1 = INVERT02
+2 = GAMS
+3 = Test invert utility on rank-deficient inputs
+4 = 392
+'Test invert utility on rank-deficient inputs' (INVERT02,SEQ=392)
+
+Test the invert utility on rank-deficient inputs. Given an n-dimensional matrix n of rank r, invert should return n-r. Note that DGESV is checking for an exact zero so it will over-estimate the rank in general.  We use the identity matrix in this test so we should get the correct rank from invert.
+
+Contributor: Erwin Kalvelagen and Steve Dirkse, July 2008.
+
+*$*$*$
+Files = gdxconv1.393
+1 = GDXCONV1
+2 = GAMS
+3 = Compare all combinations of GDXCOMPRESS and GDXCONVERT
+4 = 393
+'Compare all combinations of GDXCOMPRESS and GDXCONVERT' (GDXCONV1,SEQ=393)
+
+Diffs gdx files produced with all combinations of GDXCOMPRESS and GDXCONVERT and checks whether compressed files are smaller than non-compressed
+
+Contributor: Jan-Hendrik Jagla, June 2008
+
+*$*$*$
+Files = ls01.394
+1 = LS01
+2 = GAMS
+3 = Test LS (Least Squares) utility - lower difficulty
+4 = 394
+Test LS (Least Squares) utility - lower difficulty (LS01,SEQ=394)
+
+Run the LS solver on the Norris test problem (Level of Difficulty: Lower) from NIST and verify that the results are those certified to be correct.  The problem and results were both taken from the NIST Web site:
+
+  http://www.itl.nist.gov/div898/strd/lls/data/Norris.shtml
+
+Contributor: Erwin Kalvelagen and Steve Dirkse, July 2008.
+
+*$*$*$
+Files = ls02.395
+1 = LS02
+2 = GAMS
+3 = Test LS (Least Squares) utility - higher difficulty
+4 = 395
+Test LS (Least Squares) utility - higher difficulty (LS02,SEQ=395)
+
+Run the LS solver on the Filip test problem (Level of Difficulty: Higher) from NIST and verify that the results are those certified to be correct.  The problem and results were both taken from the NIST Web site:
+
+  http://www.itl.nist.gov/div898/strd/lls/data/Filip.shtml
+
+Contributor: Erwin Kalvelagen and Steve Dirkse, July 2008.
+
+*$*$*$
+Files = gdx6.396,gdx6.gdx
+1 = GDX6
+2 = GAMS
+3 = GDX Test - Unsorted full domains
+4 = 396
+'GDX Test - Unsorted full domains' (GDX6,SEQ=396)
+
+Test GDX Bug AB01548. Loading data sorted did not set the first dimension that changed correctly. This in turn caused GAMS to write the data to the gdx unsorted.
+
+Contributor: Jan-Henrik Jagla, July 2008
+
+*$*$*$
+Files = ls03.397
+1 = LS03
+2 = GAMS
+3 = Test LS (Least Squares) utility - higher dimensions for GDX
+4 = 397
+Test LS (Least Squares) utility - higher dimensions for GDX (LS03,SEQ=397)
+
+Run the LS solver on made-up data to see that it works when the GDX output file contains params with many dimensions.
+
+Contributor: Steve Dirkse, July 2008.
+
+*$*$*$
+Files = ls04.398
+1 = LS04
+2 = GAMS
+3 = Test LS (Least Squares) utility - higher dimensions for GDX
+4 = 398
+Test LS (Least Squares) utility - higher dimensions for GDX (LS04,SEQ=398)
+
+Run the LS solver on made-up data to see that it works when the GDX output file contains params with many dimensions.
+
+Contributor: Steve Dirkse, July 2008.
+
+*$*$*$
+Files = gdxcopy4.399
+1 = GDXCOPY4
+2 = GAMS
+3 = Test internal gdxcopy call and its controls
+4 = 399
+Test internal gdxcopy call and its controls (GDXCOPY4,SEQ=399)
+
+The environment variables GDXCOMPRESS and GDXCONVERT can be set to control the GDX files produced - here these settings are tested.  The gdxdump output contains information about both the data and the internal version & file format information of the GDX files produced.  The dump output should be the same no matter what solvelink setting is used.  Note that the environment vars must be upper case to work on non-Windows systems.
+
+Contributor: Wolfgang Britz
+
+*$*$*$
+Files = convert6.400
+1 = CONVERT6
+2 = GAMS
+3 = CONVERT test suite - hessian.gdx
+4 = 400
+CONVERT test suite - hessian.gdx (CONVERT6,SEQ=400)
+
+Test to see if we wrote the hessian.gdx file. AB01571
+
+Contributor: Alex Meeraus, Steve Dirkse
+
+*$*$*$
+Files = mcp08.401
+1 = MCP08
+2 = MCP
+3 = Test MCP that turfs up PATH proprocessing error
+4 = 401
+Test MCP that turfs up PATH proprocessing error (MCP08,SEQ=401)
+
+This model turfed up a bug in the PATH preprocessor.  The bug is known to exist in the 4.7.00 libraries - tested with GAMS Distrib 22.8.1 (Aug 2008).
+
+Contributor: Steve Dirkse, Aug 2008. Original problem report and model sent by: Stefan Boeters CPB Netherlands Bureau for Economic Policy Analysis Sector International Economics
+
+*$*$*$
+Files = assign2.402
+1 = ASSIGN2
+2 = GAMS
+3 = test for bad assignment with .fx
+4 = 402
+test for bad assignment with .fx (ASSIGN2,SEQ=402)
+
+Contributor: Alex
+
+*$*$*$
+Files = macro01.403
+1 = MACRO01
+2 = GAMS
+3 = several macro tests
+4 = 403
+several macro tests (MACRO01,SEQ=403)
+
+Contributor: Alex
+
+  1 %xx% are replaced before we recognize a comment or $control
+
+*$*$*$
+Files = gdx7.404
+1 = GDX7
+2 = GAMS
+3 = Bad acronym loading
+4 = 404
+Bad acronym loading (GDX7,SEQ=404)
+
+Dear gams team,
+
+I realized that a $load of a parameter with $GDXIN in which acronyms are used will fail when the acronym is defined after a definition of a set. As a workaround I defined all acronyms at the top of each program, but this is rather upsetting. The small example below demonstrates the strange behavior. Maybe I missed something in the documentation? Hope to hear from you soon.
+
+Alexander Gocht
+
+<alexander.gocht@ilr.uni-bonn.de> Bonn University (CPARI Team) Institute for Food and Resource Economics
+
+*$*$*$
+Files = gdx8.405
+1 = GDX8
+2 = GAMS
+3 = Bad acronym mapping
+4 = 405
+Bad acronym mapping (GDX8,SEQ=405)
+
+This started to work with 22.6 and acronym info in gdx. The acronym index values have to be remapped.
+
+Contributor: Alex
+
+*$*$*$
+Files = gdxmerg2.406
+1 = GDXMERG2
+2 = GAMS
+3 = Bad acronym merge in gdxmerge
+4 = 406
+Bad acronym merge in gdxmerge (GDXMERG2,SEQ=406)
+
+This started to work with 22.6 and acronym info in gdx. The acronym index values have to be remapped.
+
+Contributor: Alex
+
+*$*$*$
+Files = scensol1.407
+1 = SCENSOL1
+2 = GAMS
+3 = Basic Scenario Solver Test
+4 = 407
+Basic GUSS Test (SCENSOL1,SEQ=407)
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = scnred01.408
+1 = SCNRED01
+2 = GAMS
+3 = Basic Scenred2 test - tree construction
+4 = 408
+Basic Scenred2 test - tree construction (SCNRED01,SEQ=408)
+
+Simple check of tree construction in SCENRED-2
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = eigval01.409
+1 = EIGVAL01
+2 = GAMS
+3 = Test eigenvalue utility
+4 = 409
+Test eigenvalue utility (EIGVAL01,SEQ=409)
+
+Eigenvalue example.
+
+Contributor: Erwin Kalvelagen, October 2008.
+
+*$*$*$
+Files = eigvec01.410
+1 = EIGVEC01
+2 = GAMS
+3 = Test eigenvector utility
+4 = 410
+Test eigenvector utility (EIGVEC01,SEQ=410)
+
+Eigenvector example.
+
+Contributor: Erwin Kalvelagen, October 2008.
+
+*$*$*$
+Files = choles01.411
+1 = CHOLES01
+2 = GAMS
+3 = Test cholesky utility
+4 = 411
+Test cholesky utility (CHOLES01,SEQ=411)
+
+Finds the cholesky decomposition A=LL' of a positive definite symmetric matrix A through an external program
+
+Contributor: Erwin Kalvelagen, Amsterdam Optimization
+
+*$*$*$
+Files = choles02.412
+1 = CHOLES02
+2 = GAMS
+3 = Test cholesky utility
+4 = 412
+Test cholesky utility (CHOLES02,SEQ=412)
+
+Test factor returned by the cholesky utility
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = eigvec02.413
+1 = EIGVEC02
+2 = GAMS
+3 = Test eigenvector/eigenvalue utilities
+4 = 413
+Test eigenvector/eigenvalue utilities (EIGVEC02,SEQ=413)
+
+Eigenvalue/vector test. Construct A to have known eigenvalues/vectors: A X = X lam
+
+A = 2 1   X = 1  1   lam =  1
+    1 2      -1  1            3
+
+Contributor: Steve Dirkse, October 2008
+
+*$*$*$
+Files = load4.414
+1 = LOAD4
+2 = GAMS
+3 = Tests various file opening options for GDX files
+4 = 414
+Tests various file opening options for GDX files
+
+This was triggered by resetting the gdx file name during execution and using an execute_loadpoint, which got the wrong file name Fixed with #7403
+
+Contributor: Alex, Steve
+
+*$*$*$
+Files = nlp01.415
+1 = NLP01
+2 = NLP
+3 = Test of correctness for levels & marginals of NLP
+4 = 415
+Test of correctness for levels & marginals of NLP (NLP01,SEQ=415)
+
+Test of correctness of the levels and marginals returned. Although this test should work for all NLP solvers, it is designed specifically to test a MINOS-style link. It includes most/all of the different sorts of variables and constraints one finds in such links.
+
+Contributor: Steve
+
+*$*$*$
+Files = suffix01.416
+1 = SUFFIX01
+2 = GAMS
+3 = Test suffix options on controlling sets
+4 = 416
+Test suffix options on controlling sets (SUFFIX01,SEQ=416)
+
+Contributor: Alex
+
+*$*$*$
+Files = card01.417
+1 = CARD01
+2 = GAMS
+3 = Test extended card and ord functions
+4 = 417
+Test extended card and ord functions (CARD01,SEQ=417)
+
+Contributor: Alex
+
+*$*$*$
+Files = lp14.418
+1 = LP14
+2 = LP
+3 = Simple test on one equation AFTER reformulation
+4 = 418
+Simple test on one equation AFTER reformulation (LP14,SEQ=418)
+
+This test mimics LP01, but the post-reformulation model should have only one equation.  Useful for testing solvers that use the objective function reformulation.
+
+Contributor: Steve
+
+*$*$*$
+Files = convert7.419
+1 = CONVERT7
+2 = GAMS
+3 = CONVERT test suite - test hessian info correctness
+4 = 419
+CONVERT test suite - test hessian info correctness (CONVERT7,SEQ=419)
+
+Do some consistency checks on the full Hessian and the Hessian-vector products dumped out by CONVERT.
+
+Currently, there are flags to do this for NLP models in gamslib. Run it like this: gams convert7.gms
+    --gmsName=chenery
+    --modelName=chenrad
+    --modelType=NLP
+    --objName=td
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = empbp01.420
+1 = EMPBP01
+2 = GAMS
+3 = Simple bilevel model, inner problem consists of objective only
+4 = 420
+Simple bilevel model, inner problem consists of objective only (EMPBP01,SEQ=420)
+
+This model compares the results obtained by EMP with the ones obtained using the corresponding hand-crafted model. The bilevel model is composed of an outer minimization problem plus a inner minimization problem consisting of an objective function only.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = empbp02.421
+1 = EMPBP02
+2 = GAMS
+3 = Simple bilevel model, outer problem consists of objective only
+4 = 421
+Simple bilevel model, outer problem consists of objective only (EMPBP02,SEQ=421)
+
+This model compares the results obtained by EMP with the ones obtained using the corresponding hand-crafted model. The bilevel model is composed of an outer minimization problem consisting of an objective function only plus a inner minimization problem
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = empbp03.422
+1 = EMPBP03
+2 = GAMS
+3 = Simple bilevel model, both inner and outer problems have constraints
+4 = 422
+Simple bilevel model, both inner and outer problems have constraints (EMPBP03,SEQ=422)
+
+This model compares the results obtained by EMP with the ones obtained using the corresponding hand-crafted model. Both, the outer minimization problem and the inner minimization problem contains constraints
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = empvi01.423
+1 = EMPVI01
+2 = GAMS
+3 = Simple test for variational inequalities through EMP
+4 = 423
+Simple test for variational inequalities through EMP (EMPVI01,SEQ=423)
+
+This model checks the correctness of the models generated by EMP for two simple variational inequalities models.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = empvi02.424
+1 = EMPVI02
+2 = GAMS
+3 = Compares manual and EMP-VI models
+4 = 424
+Compares manual and EMP-VI models (EMPVI02,SEQ=424)
+
+This model compares models generated by EMP with the corresponding manually build models
+
+Contributor: Steven Dirkse and Jan-H. Jagla , January 2009
+
+*$*$*$
+Files = empvi03.425
+1 = EMPVI03
+2 = GAMS
+3 = Compares alternative EMP-VI models
+4 = 425
+Compares alternative EMP-VI models (EMPVI03,SEQ=425)
+
+This model compares three alternative EMP variational inequality formulations with the corresponding complementarity problems
+
+Contributor: Steven Dirkse and Jan-H. Jagla , January 2009
+
+*$*$*$
+Files = empvi04.426
+1 = EMPVI04
+2 = GAMS
+3 = Test for EMP Variational Inequalities
+4 = 426
+Test for EMP Variational Inequalities (EMPVI04,SEQ=426)
+
+VI is to find x in X:
+
+F(x) (y - x) >= 0, for all y in X
+
+X is a closed convex set, e.g. X = { x >= 0 | g(x) >= 0 }
+
+This can be reformulated as an MCP:
+
+0 <= F(x) - \grad g(x) u  \perp x >= 0 0 <= g(x)                                  \perp u >= 0
+
+In what follows, the model reform is the MCP that EMP should
+
+Contributor: Steven Dirkse and Jan-H. Jagla , January 2009
+
+*$*$*$
+Files = empecs01.427
+1 = EMPECS01
+2 = GAMS
+3 = Test for EMP-Embedded Complementarity System
+4 = 427
+Test for EMP-Embedded Complementarity System (EMPECS01,SEQ=427)
+
+Embedded Complementarity System -------------------------------
+
+The problem to solve is:
+  min_x  f(x,y)  st  g(x,y) \leq 0
+plus the constraint that
+  H(x,y,\lambda) = 0
+where \lambda is the multiplier on the g(x,y) \leq 0 constraint.
+
+EMP enables to write this problem simply by specifying the nlp and the side constraint H. Using the mappings
+
+dualequ H y dualvar lambda g
+
+EMP considers the side constraint H defining the dual of y and the side variable lambda defining the dual of g.
+
+References: Ferris et al, An extended mathematical programming framework, Computers and Chemical Engineering 33, p.1973-1982, 2009
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = empecs02.428
+1 = EMPECS02
+2 = GAMS
+3 = Test for EMP-Embedded Complementarity System
+4 = 428
+Test for EMP-Embedded Complementarity System (EMPECS02,SEQ=428)
+
+This model is a variant of T. Rutherford's model 'State Variable Targetting in an NLP Framework'.
+
+http://www.mpsge.org/nlptarget/
+
+         This program illustrates how to use recursive NLP methods
+         for solving an infinite-horizon optimization model with minimal
+         terminal effects.
+
+         Thomas F. Rutherford
+         December 1, 2005
+
+It makes use of EMP's embedded complemenatrity system framework.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = empdisj1.429
+1 = EMPDISJ1
+2 = GAMS
+3 = Test EMP Disjunction - Minimize the makespan
+4 = 429
+Test EMP Disjunction - Minimize the makespan (EMPDISJ1,SEQ=429)
+
+This model is a variant of Raman & Grossmann, Computers and Chemical Engineering 18, 7, p.563-578, 1994.
+
+Contributor: Jan-H. Jagla and Alex Meeraus, January 2009
+
+*$*$*$
+Files = local01.430
+1 = LOCAL01
+2 = GAMS
+3 = Test .local in different context $on/offlocal
+4 = 430
+Test .local in different context $on/offlocal (LOCAL01,SEQ=430)
+
+$onlocal allows unlimited nextion  (default) $offlocal limits .local on the same symbol to one in control stack
+
+Contributor: Alex
+
+*$*$*$
+Files = emp04.431
+1 = EMP04
+2 = GAMS
+3 = Compare results of EMP runs using different options for nlp problem
+4 = 431
+Compare results of EMP runs using different options for nlp problem (EMP04,SEQ=431)
+
+This test compares the results EMP delivers after being started with different options.
+
+This test makes use of the model mhw4d from the GAMS model library which is borrowed from:
+
+Wright, M H, Numerical Methods for Nonlinearly Constraint Optimization. PhD thesis, Stanford University, 1976.
+
+Contributor: Jan-H. Jagla, February 2009
+
+*$*$*$
+Files = privat01.432
+1 = PRIVAT01
+2 = GAMS
+3 = Test private workfile behavior
+4 = 432
+Test private workfile behavior (PRIVAT01,SEQ=432)
+
+Test that the private workfiles work as expected.  To do this, we create a normal save file, restart from that and save a private save file.  We then try lots of different things starting from the private save file to verify expected operation, using separate models to isolate the tests.
+
+We use the demo license as the local/active license file, and point to this local/active license file as the target license as well.
+
+Contributor: Steve
+
+*$*$*$
+Files = minos01.433
+1 = MINOS01
+2 = GAMS
+3 = MINOS test suite - anti-cycling via expand frequency
+4 = 433
+'MINOS test suite - anti-cycling via expand frequency' (MINOS01,SEQ=433)
+
+In this test we run MINOS on an example that is known to cycle with the default expand frequency.  It should not cycle if we set the expand frequency to a lower value.
+
+Note that the case is difficult to reproduce: it's the 4th run in a DICOPT model that requires OSL3 be the MIP solver.  If you have a better example let me know.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = scnred02.434
+1 = SCNRED02
+2 = GAMS
+3 = Scenred2 test - tree reduction and zero values
+4 = 434
+Scenred2 test - tree reduction and zero values (SCNRED02,SEQ=434)
+
+Simple check of tree reduction in SCENRED-2
+
+We first check that the obvious reduction is taken, first when the node to be removed has nonzero random values and then all the cases where one of the values is zero.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = empvi05.435
+1 = EMPVI05
+2 = GAMS
+3 = Test for EMP's treatment of a odd variables
+4 = 435
+Test for EMP's treatment of an odd variable (EMPVI05,SEQ=435)
+
+This model verifies that EMP treats the variable jj correctly. It only occurs linearly in the objective of mNLP.
+
+Considering the corresponding MCP: GAMS' mcp check will fail if a variable that is mapped to a constraint does not show up in the model. One workaround to keep the variable in the model is using eps*jj (see model mMCP).
+
+The MCP can be generated and solved through EMP automatically. EMP will preprocess the model and omit jj and dldJJ in generated submodel. Hence, the workaround using eps*jj is not reuired but EMP needs to make sure that jj.l/m are set to correct values (see model mNLP).
+
+Consider the corresponding VI: Similar to the MCP we need to include jj using eps*jj (see model mVI)
+
+Finally we write down a cognate VI (not the same!) which is a simple example of a VI that cannot be formulated as an opimization problem.
+
+This model is a variant of the zerofunc model from the GAMS EMP Library.
+
+Contributor: Jan-H. Jagla, March 2009
+
+*$*$*$
+Files = nlcode3.436
+1 = NLCODE3
+2 = GAMS
+3 = Wrong NL code generation for odd case
+4 = 436
+Wrong NL code generation for odd case (NLCODE3,SEQ=436)
+
+Contributor: Alex
+
+*$*$*$
+Files = set8.437
+1 = SET8
+2 = GAMS
+3 = Test the set.id set#id #id data macros
+4 = 437
+Test the set.id set#id #id data macros (SET8,SEQ=437)
+
+In 23.0 and older, we got bad data structures when using these 'macros' in table statements.  This resulted in not being able to write gdx files and bad workfiles that could not be read.  Another problem was that these 'macros' could not be in the first row or first column.
+
+Contributor: Alex
+
+*$*$*$
+Files = nlcode4.438
+1 = NLCODE4
+2 = GAMS
+3 = more NL testing when code is deleted
+4 = 438
+more NL testing when code is deleted (NLCODE4,SEQ=438)
+
+Contributor: Alex
+
+*$*$*$
+Files = compile7.439
+1 = COMPILE7
+2 = GAMS
+3 = Test and document some system.XXX macros
+4 = 439
+'Test and document some system.XXX macros' (COMPILE7,SEQ=439)
+
+There are several macros we use frequently in the test library. Here is an example to show how they work.
+
+Contributor: Steve
+
+*$*$*$
+Files = mcp09.440
+1 = MCP09
+2 = MCP
+3 = Test inequalities with infinite bounds
+4 = 440
+Test inequalities with infinite bounds (MCP09,SEQ=440)
+
+This started as an example to show equivalent complementarity models, one using positive vars and the other using "mixed bounds", i.e arbitrary lower and upper bounds.  Put another way, this compares/contrasts NCP and MCP.  There should be nothing lost in the MCP formulation, with a gain in clarity/maintainability.
+
+This example turned up an issue when we use infinite bounds on inequalities for complementarity problems.
+
+For this example, think of the KKT system for the optimization problem
+  min    sqr(x-c)
+  s.t.   L <= x <= U
+
+Contributor: Steve Dirkse, March 2009
+
+*$*$*$
+Files = empadj01.441
+1 = EMPADJ01
+2 = GAMS
+3 = Test for EMPs AdjustEqu/NYslp option
+4 = 441
+"Test for EMPs AdjustEqu/NYslp option" (EMPADJ01,SEQ=441)
+
+Test EMP's option AdjustEqu NYslp which adds a slack variable to every nonlinear equation. Each slacks is multiplied with a penalty variable and added to the added to / subtracted from the objective.
+
+Contributor: Jan-H. Jagla, April 2009
+
+*$*$*$
+Files = emp05.442
+1 = EMP05
+2 = GAMS
+3 = Test handling of constant equations
+4 = 442
+"Test for handling of constant equations" (EMP05,SEQ=442)
+
+Test for EMP's handling of constants
+
+Contributor: Jan-H. Jagla, April 2009
+
+*$*$*$
+Files = examin03.443
+1 = EXAMIN03
+2 = GAMS
+3 = EXAMINER test suite - test returnInitPoint option
+4 = 443
+EXAMINER test suite - test returnInitPoint option (EXAMIN03,SEQ=443)
+
+Normally, EXAMINER just examines and reports on solutions without reporting any solutions back to GAMS.  This behavior can be changed with the returnXxxxPoint options.  The model verifies that the returnInitPoint option returns the correct values.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = compile8.444
+1 = COMPILE8
+2 = GAMS
+3 = Test for a mapping error
+4 = 444
+Test for a mapping error (COMPILE8,SEQ=444)
+
+contributed by Foy Teuton Lockheed Martin Aeronautics Co. Marietta, GA  30063
+
+the gams compiler accepts j(a(j)) but the code generator raises an assert
+
+*$*$*$
+Files = sl4mip01.445,[mip01]
+1 = SL4MIP01
+2 = MIP
+3 = Test for known XPRESS bug, with solvelink=4
+4 = 445
+'Test for known XPRESS bug, with solvelink=1,2,4,5' (SL4MIP01,SEQ=445)
+
+Run mip01 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+*$*$*$
+Files = macro02.446
+1 = MACRO02
+2 = GAMS
+3 = multi-line macro test
+4 = 446
+multi-line macro test (MACRO02,SEQ=446)
+
+Contributor: Paul
+
+*$*$*$
+Files = put10.447
+1 = PUT10
+2 = GAMS
+3 = $on/offput inserted outside the loop
+4 = 447
+$on/offput inserted outside the loop (PUT10,SEQ=447)
+
+Trac #1750
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = set9.448
+1 = SET9
+2 = GAMS
+3 = fast shifting of set elements
+4 = 448
+fast shifting of set elements (SET9,SEQ=448)
+
+The execution time depends on the size of the reference set i and the position of the dynamic set elements in the reference set. The old implementation has an execution time that is proportional to the size of the reference set. The new coding depends on the position of the element in the reference set. At the expense of memory, we could make the time proportional to the number of elements in the dynamic set only.
+   k(i) = k(i-1)        candidate for fast execution but only inside a loop
+   k(i) = k(i-1) + no   the +no makes it slow
+
+Contributor: Alex
+
+*$*$*$
+Files = set10.449
+1 = SET10
+2 = GAMS
+3 = first entry in set/param data has wrong dimension
+4 = 449
+first entry in set/param data has wrong dimension (SET10,SEQ=449)
+
+23.1 and 23.2 have an access violation and crash, 23.3 is fixed
+
+Contributor: Alex
+
+*$*$*$
+Files = set11.450
+1 = SET11
+2 = GAMS
+3 = test for order when using set.id or set#id or #id
+4 = 450
+test for order when using set.id or set#id or #id (SET11,SEQ=450)
+
+Contributor: Alex
+
+*$*$*$
+Files = gdxcopy5.451
+1 = GDXCOPY5
+2 = GAMS
+3 = Test GDX environment variables with trailing blanks
+4 = 451
+Test GDX environment variables with trailing blanks (GDXCOPY5,SEQ=451)
+
+Trailing or leading blanks in the GDX environment variables caused the automatically translation via gdxcopy to fail. There was no indication why the gdxcopy failed, other than a usage screen.
+
+In GAMS we have to work hard to get a trailing blank, in shell script this error is easily made.
+
+*$*$*$
+Files = ifthen2.452
+1 = IFTHEN2
+2 = GAMS
+3 = Test nested $ifthen and $endif
+4 = 452
+Test nested $ifthen and $endif  (IFTHEN2,SEQ=452)
+
+Contributor: Alex
+
+*$*$*$
+Files = ifthen3.453
+1 = IFTHEN3
+2 = GAMS
+3 = Test $ifthen $elseif/else $endif
+4 = 453
+Test $ifthen $elseif/else $endif  (IFTHEN3,SEQ=453)
+
+Contributor: Alex
+
+*$*$*$
+Files = ifthen4.454
+1 = IFTHEN4
+2 = GAMS
+3 = Tests $ifthen from old release notes
+4 = 454
+Tests $ifthen from old release notes  (IFTHEN4,SEQ=454)
+
+A new variant on the $if statement has been introduced. It follows the usual structures and allows appropriate nesting. The syntax for the condition are the same as for the $if statement. The $ifthen and case insensitive compare and E for constant expression evaluation. In the example below we will execute all blocks of such a statement.
+
+Contributor: Alex
+
+*$*$*$
+Files = eval01.455
+1 = EVAL01
+2 = GAMS
+3 = constant evaluation with non-stop arithmetic
+4 = 455
+constant evaluation with non-stop arithmetic (EVAL01,SEQ=455)
+
+Contributor: Alex
+
+*$*$*$
+Files = eval02.456
+1 = EVAL02
+2 = GAMS
+3 = $eval/ife/...  sameas function
+4 = 456
+$eval/ife/...  sameas function (EVAL02,SEQ=456)
+
+strings are unquoted (uel syntax), single or double quoted reserved words can be unquoted strings
+
+Contributor: Alex
+
+*$*$*$
+Files = forceerr.457
+1 = FORCEERR
+2 = GAMS
+3 = ForceError and ForceErrorCnt Example
+4 = 457
+'ForceError and ForceErrorCnt Example' (ForceError,SEQ=457)
+
+The ForceError function issues specific errors under certain conditions. This can be used to test the error reporting and recovery in different environments. Every time ForceError is called, the ForceErrorCnt is incremented (each thread has its own count, currently cmex has only one mathnew thread).
+
+   ForceError(<expr>,derivreq,trigger,value,returncode,exceptcode)
+      derivreq  0 func, 1 grad, 2 hess checks if funceval request < derivreq
+      trigger   issues errors every trigger number of calls
+      value     sets func,grad,hess return values
+      returncode 0..4
+      exceptcode 0..3
+
+Every issued error resets the ForceErrorCnt to 0
+
+In cmex we can use ForceErrorCnt to reset the internal ForceErrorCnt to any number. Setting it to a large negative number will avoid errors during model generation.
+
+Using ForceError(<cons>,....) can be used to test model generation with any model type.
+
+*$*$*$
+Files = gdxxrw5.458,gdxxrw5.xls
+1 = GDXXRW5
+2 = GAMS
+3 = Test for password handling of gdxxrw
+4 = 458
+'Test for password handling of gdxxrw and $hiddencall' (GDXXRW5,SEQ=458)
+
+This model reads from and writes to password protected xls sheet using the password option of GDXXRW. Also it makes sure that $hiddencall is hidden, even with $ondollar and dp=2
+
+Contributor: Jan-H. Jagla, September 2009
+
+*$*$*$
+Files = lolp.459
+1 = LOLP
+2 = LP
+3 = LP Test for logoption
+4 = 459
+LP Test for logoption (LOLP,SEQ=459)
+
+Make sure lo=0 is quiet and lo=2 and lo=3 run without a problem
+
+Contributor: Jan-H. Jagla, September 2009
+
+*$*$*$
+Files = lonlp.460
+1 = LONLP
+2 = NLP
+3 = NLP Test for logoption
+4 = 460
+NLP Test for logoption (LONLP,SEQ=460)
+
+Make sure lo=0 is quiet and lo=2 and lo=3 run without a problem
+
+Contributor: Jan-H. Jagla, September 2009
+
+*$*$*$
+Files = lomcp.461
+1 = LOMCP
+2 = MCP
+3 = MCP Test for logoption
+4 = 461
+MCP Test for logoption (LOMCP,SEQ=461)
+
+Make sure lo=0 is quiet and lo=2 and lo=3 run without a problem
+
+Contributor: Jan-H. Jagla, September 2009
+
+*$*$*$
+Files = eval03.462
+1 = EVAL03
+2 = GAMS
+3 = test constant compile time evaluation functions
+4 = 462
+test constant compile time evaluation functions (EVAL03,SEQ=462)
+
+Functions:
+
+abs   ceil  cos  exp  fact floor  frac   IfThen log   log2 log10 max   mod  mod  PI   power  round  sign   sin   sleep sqr   sqrt  tan  trunc
+
+ * ** ** Additional tests are welcome ** ** **
+
+Contributor: Alex
+
+*$*$*$
+Files = eval04.463
+1 = EVAL04
+2 = GAMS
+3 = test constant compile time evaluation operators
+4 = 463
+test constant compile time evaluation operators (EVAL04,SEQ=463)
+
+Operators
+
+OR XOR EQV IMP AND NOT < <= = <> >= > LE LE EQ NE GE GT + - unary -
+  /
+
+ * ** ** Additional tests are welcome ** ** **
+
+Contributor: Alex
+
+*$*$*$
+Files = examin04.464
+1 = EXAMIN04
+2 = GAMS
+3 = EXAMINER test suite - test returnGamsPoint option and QCP
+4 = 464
+EXAMINER test suite - test returnGamsPoint option and QCP(EXAMIN04,SEQ=464)
+
+Normally, EXAMINER just examines and reports on solutions without reporting any solutions back to GAMS.  This behavior can be changed with the returnXxxxPoint options.  The model verifies that the returnGamsPoint option returns the correct values.
+
+A wrinkle added here is that we test while solving as a QCP. The test EXAMIN03 does a similar test, but for LP.
+
+Contributors: Tom Rutherford & Steve Dirkse
+
+*$*$*$
+Files = empbp04.465
+1 = EMPBP04
+2 = GAMS
+3 = Bilevel model with and without well-defined inner objective equation
+4 = 465
+Bilevel model with and without explicitly defined objective equation (EMPBP04,SEQ=465)
+
+The KKT conditions generated for a inner problem with a well-defined objective equation (defobj) need to be the same as if the objective is not defined explicitly.
+
+Contributor: Jan-H. Jagla, November 2009
+
+*$*$*$
+Files = empbp05.466
+1 = EMPBP05
+2 = GAMS
+3 = Bilevel model with MIN follower vs. VI follower
+4 = 466
+Bilevel model with MIN follower vs. VI follower (EMPBP05,SEQ=466)
+
+This is a version of the model bard871 from the GAMS EMP Library
+
+   Example from Chapter 8, example 8.7.1, page 358
+
+   John F. Bard, Practical Bilevel Optimization: Algorithms and Applications,
+   Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = eval05.467
+1 = EVAL05
+2 = GAMS
+3 = constant expression test for ceil,floor,trunc,frac
+4 = 467
+constant expression test for ceil,floor,trunc,frac (EVAL05,SEQ=467)
+
+Contributor: Alex
+
+*$*$*$
+Files = eval06.468
+1 = EVAL06
+2 = GAMS
+3 = matching operators in a column spec
+4 = 468
+matching operators in a column spec (EVAL06,SEQ=468)
+
+This crashed before - just testing that it does not crash it only crashes when having an error before
+
+Contributor: Alex
+
+*$*$*$
+Files = emp06.469
+1 = EMP06
+2 = GAMS
+3 = Test of EMP based on trnsport model
+4 = 469
+Test of EMP based on trnsport model (EMP06,SEQ=469)
+
+Reformulate a modified version of trnsport using EMP, and check for correct solutions.  Modifications to the original model:
+  1. Adjust the data to make some supply constraints slack and remove
+  degeneracy.
+  2. Adjust equations to make LP duals (i.e. the prices) positive -
+  re-orientation is left for another discussion and another test
+
+Contributor: Steven Dirkse, January 2010
+
+*$*$*$
+Files = emp07.470
+1 = EMP07
+2 = GAMS
+3 = Test of EMP based on trnsport model
+4 = 470
+Test of EMP based on trnsport model (EMP07,SEQ=470)
+
+Reformulate a modified version of trnsport using EMP, and check for correct solutions.  Modifications to the original model:
+  1. Adjust the data to make some supply constraints slack and remove
+  degeneracy.
+  2. Adjust equations to make NLP duals (i.e. the prices) positive -
+  re-orientation is left for another discussion and another test (emp08)
+  3. Adjust it to be an NLP
+
+Contributor: Steven Dirkse, January 2010
+
+*$*$*$
+Files = emp08.471
+1 = EMP08
+2 = GAMS
+3 = Test of EMP based on trnsport model
+4 = 471
+Test of EMP based on trnsport model (EMP08,SEQ=471)
+
+Reformulate a modified version of trnsport using EMP, and check for correct solutions.  Modifications to the original model:
+  1. Adjust the data to make some supply constraints slack and remove
+  degeneracy.
+  2. Do not adjust equation orientation (compare with emp07)
+  3. Adjust it to be an NLP
+
+Contributor: Steven Dirkse, January 2010
+
+*$*$*$
+Files = pgams01.472
+1 = PGAMS01
+2 = GAMS
+3 = Test procdir deletion in pgams
+4 = 472
+Test procdir deletion in pgams (PGAMS01,SEQ=472)
+
+Create a subdirectory in the process directory to see if gams.exe (aka pgams) will delete it.  Model pgams02 does the actual running of this file and the testing afterwards.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = pgams02.473,[pgams01]
+1 = PGAMS02
+2 = GAMS
+3 = Test procdir deletion in pgams
+4 = 473
+Test procdir deletion in pgams (PGAMS02,SEQ=473)
+
+Test if gams.exe (aka pgams) deletes the process directory when running pgams01.
+
+Contributor: Steve Dirkse
+
+  we create a fresh dir to be sure we know what process dir is used
+
+*$*$*$
+Files = tabsubst.474
+1 = TABSUBST
+2 = GAMS
+3 = tab and string subsitution for long line
+4 = 474
+tab and string substitution for long line (TABSUBST,SEQ=474)
+
+Early cmex implementations expanded tabs with looking at the total length of the line. We also make sure long line due to string subsitutions get rejected.
+                                1         2         3         4         5         0
+                       123456789012345678901234567890123456789012345678901234567890
+  assume we have enough space with 80000 line length
+  now we go beyond the max length and should get ane error
+
+*$*$*$
+Files = eval07.475,x5555.gdx
+1 = EVAL07
+2 = GAMS
+3 = test evaluation of real constants - string2Double conversion
+4 = 475
+test evaluation of real constants - string2Double conversion (EVAL07,SEQ=475)
+
+There were issues with CMEX converting strings to double on reading the input.  This tests that in a minimal way.
+
+Contributor: Steve
+
+*$*$*$
+Files = dumpsol.476
+1 = DUMPSOL
+2 = GAMS
+3 = Gurobi Alternate Solutions for a Simple Facility Location Problem
+4 = 476
+Alternate Solutions for a Simple Facility Location Problem (DUMPSOL,SEQ=476)
+
+A simple version of a facility location problem is used to show how the solution pool and the tools associated with it work. This example is taken from the Cplex 11 User's Manual (ILOG, Cplex 11 User's Manual, 2007)
+
+A company is considering opening as many as four warehouses in order to serve nine different regions. The goal is to minimize the sum of fixed costs associated with opening warehouses as well as the various transportation costs incurred to ship goods from the warehouses to the regions.
+
+Whether or not to open a warehouse is represented by binary variable ow. Whether or not to ship goods from warehouse i to region j is represented by binary variable oa.
+
+Each region needs a specified amount of goods, and each warehouse can store only a limited quantity of goods. In addition, each region must be served by exactly one warehouse.
+
+*$*$*$
+Files = ifthen5.477
+1 = IFTHEN5
+2 = GAMS
+3 = $ifthen false without sameline
+4 = 477
+$ifthen false without sameline (IFTHEN5,SEQ=477)
+
+The $if statement syntax allows for a missing command
+
+$if condition  true_line
+
+or $if condition true_line
+
+This is not allowed with $ifthen or $elseif. We cannot skip the next line if we have no true_line and condition=FALSE.
+
+Contributor: Alex
+
+*$*$*$
+Files = ifthen6.478
+1 = IFTHEN6
+2 = GAMS
+3 = $ifthen/elseif false without sameline
+4 = 478
+$ifthen/elseif false without sameline (IFTHEN6,SEQ=478)
+
+The $if statement syntax allows for a missing command
+
+$if condition  true_line
+
+or $if condition true_line
+
+This is not allowed with $ifthen or $elseif. We cannot skip the next line if we have no true_line and condition=FALSE.
+
+Contributor: Alex
+
+*$*$*$
+Files = utils02.479
+1 = UTILS02
+2 = GAMS
+3 = test MPS2GMS - it had range problems
+4 = 479
+test MPS2GMS - it had range problems (UTILS02,SEQ=479)
+
+contributed by Erwin Kalvelagen
+
+min x1 x1=-x2 10 <= x2 <= 12
+
+*$*$*$
+Files = utils03.480
+1 = UTILS03
+2 = GAMS
+3 = test MPS2GMS for reading the second range entry on a line
+4 = 480
+test MPS2GMS for reading the second range entry on a line (UTILS03,SEQ=480)
+
+In this model we:
+   1. create an MPS file with $onecho
+   2. run mps2gms on the MPS file, checking the return code
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = mpsge11.481
+1 = MPSGE11
+2 = MPSGE
+3 = MPSGE test -  multiple fixed income levels
+4 = 481
+MPSGE test -  multiple fixed income levels (MPSGE11,SEQ=481)
+
+Usually only one numeraire is fixed in an MPSGE model: either a price or income level chosen by the user or an income level chosen by MPSGE.  But in some cases the user fixes multiple income levels.  The MPSGE function evaluator must check for this and use the fixed income levels instead of the usual computed ones.
+
+To test this we adapt the scarfmge model from gamslib.
+
+Contributor: Tom Rutherford, Steve Dirkse
+
+*$*$*$
+Files = trylin01.482
+1 = TRYLIN01
+2 = GAMS
+3 = Test model attribute TryLinear
+4 = 482
+Test model attribute TryLinear (TRYLIN01,SEQ=482)
+
+Run trnsport with transport.trylinear = 1 using different combinations of model types, solvers, and solvelink choices and make sure the final model type and solver used is correct
+
+Contributor: Jan-H. Jagla, April 2010
+
+*$*$*$
+Files = gen_r1.483
+1 = GEN_R1
+2 = GAMS
+3 = Generate GDX file for test of GDXMRW
+4 = 483
+Generate GDX file for test of GDXMRW (GEN_R1,SEQ=483)
+
+Generate data for testing the GDXMRW function rgdx
+
+*$*$*$
+Files = gen_r2.484
+1 = GEN_R2
+2 = GAMS
+3 = Generate GDX file for test of GDXMRW
+4 = 484
+Generate GDX file for test of GDXMRW (GEN_R2,SEQ=484)
+
+Generate data for testing the GDXMRW function rgdx
+
+*$*$*$
+Files = gen_rbig.485
+1 = GEN_RBIG
+2 = GAMS
+3 = Generate GDX file for test of GDXMRW
+4 = 485
+Generate GDX file for test of GDXMRW (GEN_RBIG,SEQ=485)
+
+Generate data for testing the GDXMRW function rgdx
+
+Contributor: Steve
+
+*$*$*$
+Files = gdxmrw03.486,[gen_r1],[gen_r2],read1.gdx,read2.gdx,readbig.gdx,r_batch.m,r1.m,r2.m,rsparse.m,rfull.m
+1 = GDXMRW03
+2 = GAMS
+3 = test the Matlab utility rgdx
+4 = 486
+test the Matlab utility rgdx (GDXMRW03,SEQ=486)
+
+This file contains code to test the GAMS/Matlab utility rgdx
+
+Contributor: Steve
+
+  $call =gams gen_r1.gms
+  $call =gams gen_r2.gms
+  $call =gams gen_rbig.gms
+  the GDX files to read should not need to be (re)generated,
+  but you may find it useful to look at the generating source
+
+*$*$*$
+Files = gdxmrw04.487,writeset_.gdx,writepar_.gdx,w_batch.m,writeset.m,writepar.m
+1 = GDXMRW04
+2 = GAMS
+3 = test the Matlab utility wgdx
+4 = 487
+test the Matlab utility wgdx' (GDXMRW04,SEQ=487)
+
+Call wgdx and check that the files written are correct.
+
+Contributor: Steve
+
+*$*$*$
+Files = testinst.488
+1 = TESTINST
+2 = GAMS
+3 = test the Matlab mex-file gams
+4 = 488
+test the Matlab mex-file gams (TESTINST,SEQ=488)
+
+Dump some data to test the gams() mex-file.
+
+Contributor: Steve
+
+*$*$*$
+Files = gversion.489
+1 = GVERSION
+2 = GAMS
+3 = test the Matlab mex-file gams
+4 = 489
+test the Matlab mex-file gams (GVERSION,SEQ=489)
+
+Write the GAMS version to GDX to test the gams() mex-file.
+
+Contributor: Steve
+
+*$*$*$
+Files = gdxmrw05.490,[gversion],[testinst],testinst.m
+1 = GDXMRW05
+2 = GAMS
+3 = test the Matlab mex-file gams
+4 = 490
+test the Matlab mex-file gams (GDXMRW05,SEQ=490)
+
+Start Matlab in batch mode to run testinst.m.  You can also run 'testlib gdxmrw05' to extract the required files in the current dir, start Matlab, and run testinst.m interactively.  In either case, the log file 'testinstlog.txt' produced shows that the GAMS mex-interface is working or helps to identify what the problems are.
+
+Contributor: Steve
+
+*$*$*$
+Files = onmulti7.491
+1 = ONMULTI7
+2 = GAMS
+3 = Test merge with $onmulti and empty data statement
+4 = 491
+'Test merge with $onmulti and empty data statement' (ONMULTI7,SEQ=491)
+
+Trac #1914: An empty data statement under $onmulti removes previous data Found with one of Goldsteins models
+
+Contributor: Alex Meeraus
+
+*$*$*$
+Files = emp09.492
+1 = EMP09
+2 = GAMS
+3 = Test initial levels for equilibrium EMP models
+4 = 492
+Test initial levels for equilibrium EMP models (EMP09,SEQ=492)
+
+Test to verify that the initial values get set as expected.  We expect that the MCP generated by JAMS will have all initial values set properly, i.e. at the optimal values since we start at a solution.
+
+Contributor: Steven Dirkse, June 2010
+
+*$*$*$
+Files = xerr1.493,xerr.zip.ignore
+1 = XERR1
+2 = GAMS
+3 = External Function Errors: RHS wrong
+4 = 493
+External Function Errors: RHS wrong (xerr1,SEQ=493)
+
+This model checks if Cmex creates an error as expected when dealing with external equations. The errors we want to get are: - RHS value not integer in =X= equation - RHS value out of range in =X= equation - RHS value not unique in =X= equation
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = xerr2.494,xerr.zip.ignore
+1 = XERR2
+2 = GAMS
+3 = External Function Errors: Aij wrong
+4 = 494
+External Function Errors: Aij wrong (xerr1,SEQ=494)
+
+This model checks if Cmex creates an error as expected when dealing with external equations. The errors we want to get are: - Aij in variable has non integer value in =X= equation - Aij out of range in variable in =X= equation - Aij not unique in variable in =X= equation - Aij not the same in variable in =X= equation
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = cerr1.495
+1 = CERR1
+2 = GAMS
+3 = Cone Equation Errors
+4 = 495
+Cone Equation Errors (cerr1,SEQ=495)
+
+This model checks if Cmex creates an error as expected when dealing with cone equations. The errors we want to get are: - RHS for =C= has to be 0.0 - =C= equations cannot be scaled - Variables with =C= entries have to be continous - Variable enters more than one =C= equation
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = merr1.496
+1 = MERR1
+2 = GAMS
+3 = Matrix Errors
+4 = 496
+Matrix Errors (merr1,SEQ=496)
+
+This model checks if Cmex creates an matrix error as expected. The errors we want to get are: - fixed variables have to have finite bounds - illegal level value - lower bound > upper bound - bounds on discrete variables have to be integer - binary variable need zero lower bound - binary variable needs upper bound of one - semicont/semiint require lower bound >= 0 - illegal value (PRIOR)
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = mip02.497,mip02_solu.gdx
+1 = MIP02
+2 = MIP
+3 = Check on MIP solution value
+4 = 497
+Check on MIP solution value (MIP02,SEQ=497)
+
+In this model, we test that the solution returned by the MIP solver is the one expected.  The test includes a check on the marginal values returned.  The model used is the one from magic in the GAMS model library, adjusted to remove degeneracy.
+
+Contributor: Steve Dirkse, July 2010
+
+*$*$*$
+Files = mip03.498
+1 = MIP03
+2 = MIP
+3 = Test for zero gap when optcr and optca set to zero
+4 = 498
+Test for zero gap when optcr and optca set to zero (MIP03,SEQ=498)
+
+In this TSP-like MIP, we test that setting optcr=0 and optca=0 actually leads to a gap smaller than a tolerance (default 1e-8).
+
+Contributor: Jan-Hendrik Jagla, September 2007
+
+*$*$*$
+Files = emp10.499
+1 = EMP10
+2 = GAMS
+3 = Test of EMP equilibrium models and flip operator
+4 = 499
+Test of EMP equilibrium models and flip operator (EMP10,SEQ=499)
+
+Reformulate a simple LP using EMP and the "equilibrium" keyword/strategy, and check that the solution is unchanged if we:
+  a) flip equations manually (i.e. f(x) =L= b becomes -f(x) =G= -b
+  b) flip equations using the -equName syntax in the info file
+  c) both a and b
+
+In addition, the resulting MCPs generated have the following property: flipping manually gives the same MCP as flipping with the flip operator, and flipping twice (both manually and with the flip operator) gives the same MCP as flipping not at all.  How to check for this though?
+
+Contributor: Steven Dirkse, September 2010
+
+*$*$*$
+Files = emp11.500
+1 = EMP11
+2 = GAMS
+3 = Test EMP formulations of scarfmcp
+4 = 500
+Test EMP formulations of scarfmcp (EMP11,SEQ=500)
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria. Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp), we instead
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    A'p <= 0, p >= 0
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_c  p'*c   s.t.  u_h(c) >= 1
+
+This is detailed in Rutherford's 1992 paper entitled "Sequential Joint Maximization"
+
+*$*$*$
+Files = empdisj2.501
+1 = EMPDISJ2
+2 = GAMS
+3 = Test Disjunctions involving the objective
+4 = 501
+Test disjunctions involving the objective (EMPDISJ2,SEQ=501)
+
+The following checks have to be performed:
+
+1. If the objective equation is unambiguous it cannot be involved in a disjunction. 2. If there are multiple the reader has to make sure each term of the relevant disjunction has to have a (potential) objective
+
+Contributor: Jan-H. Jagla, November 2010
+
+*$*$*$
+Files = gdxxrw6.502
+1 = GDXXRW6
+2 = GAMS
+3 = Test for dset reading problem
+4 = 502
+Test for dset reading problem (GDXXRW5,SEQ=502)
+
+Contributor: Jan-H. Jagla, November 2010
+
+*$*$*$
+Files = qcp06.503
+1 = QCP06
+2 = QCP
+3 = Nonlinear model cannot be solved as QCP
+4 = 503
+Nonlinear model cannot be solved as QCP (QCP06,SEQ=503)
+
+Contributor: Jan-H. Jagla, November 2010
+
+*$*$*$
+Files = gdxdump1.504
+1 = GDXDUMP1
+2 = GAMS
+3 = Use GdxDump NoData on Transportation Problem
+4 = 504
+Use GdxDump NoData on Transportation Problem (GDXDUMP1,SEQ=504)
+
+Use GdxDump NoData option to create declarations for sets and parameters
+
+Contributor: M. Bussieck
+
+*$*$*$
+Files = lindorng.505
+1 = LINDORNG
+2 = GAMS
+3 = Test for LindoGlobals CheckRange Option
+4 = 505
+Test for LindoGlobal's CheckRange Option  (LINDORNG,SEQ=505)
+
+This test model is based on the chance model from GAMSLIB.
+
+Contributer: Michael Bussieck Date:        11/19/2010
+
+*$*$*$
+Files = interval.506
+1 = INTERVAL
+2 = GAMS
+3 = Test for interval evaluation
+4 = 506
+Test for interval evaluation (INTERVAL,SEQ=506)
+
+Contributer: Arne Drud, December 2010
+
+*$*$*$
+Files = empdisj3.507
+1 = EMPDISJ3
+2 = GAMS
+3 = Test Disjunctions using not (equivalence)
+4 = 507
+Test disjunctions using not (equivalence) (EMPDISJ3,SEQ=507)
+
+Contributor: Jan-H. Jagla, January 2011
+
+*$*$*$
+Files = emplog1.508
+1 = EMPLOG1
+2 = GAMS
+3 = Test disjunctions and logical conditions
+4 = 508
+Test disjunctions and logical conditions  (EMPLOG1,SEQ=508)
+
+This model compares the results of the two variants of the food model, with and without EMP.
+
+Contributor: Jan-H. Jagla, January 2011
+
+*$*$*$
+Files = maxima.509
+1 = MAXIMA
+2 = GAMS
+3 = Test several maxima of Cmex
+4 = 509
+Test several maxima of Cmex  (MAXIMA,SEQ=509)
+
+Check if maximum... - identifier length - explanatory text length - number of indices - input line length - loop depths - nested include file depths is as expected.
+
+Contributor: M. Bussieck
+
+*$*$*$
+Files = emplog2.510
+1 = EMPLOG2
+2 = GAMS
+3 = Test simple logical conditions
+4 = 510
+Test simple logical conditions  (EMPLOG2,SEQ=510)
+
+Verify that 'b2 =e= 1' is accepted as logical condition. There is no need to do it this way, but this corresponds to 'not b1 =e 1' which is/was allowed. Use both ways of defining a logic equation, via the keyword logic and the sign =B=.
+
+Contributor: Jan-H. Jagla, February 2011
+
+*$*$*$
+Files = qcp07.511
+1 = QCP07
+2 = QCP
+3 = Test correctness for QCP with poly function
+4 = 511
+Test correctness for QCP with poly function (QCP07,SEQ=511)
+
+Test that we handle QCP models with the poly function. This is really a formulation test, not a solver test.
+
+Contributor: Steven Dirkse, February 2011
+
+*$*$*$
+Files = qcp08.512
+1 = QCP08
+2 = QCP
+3 = Test correctness for QCP with power(*,2) function
+4 = 512
+Test correctness for QCP with power(*,2) function (QCP08,SEQ=512)
+
+Test that we handle QCP models with the power(*,2) function. This is really a formulation test, not a solver test.
+
+Contributor: Steven Dirkse, February 2011
+
+*$*$*$
+Files = empdisj4.513
+1 = EMPDISJ4
+2 = GAMS
+3 = Test disjunctions with negative bounds on variables
+4 = 513
+Test disjunctions with negative bounds on variables (EMPDISJ4,SEQ=507)
+
+Contributor: Jan-H. Jagla, February 2011
+
+*$*$*$
+Files = funcback.514
+1 = FUNCBACK
+2 = GAMS
+3 = Test function backward compatibility
+4 = 514
+Test function backward compatibility  (FUNCBACK,SEQ=514)
+
+GAMS Release 23.7 introduced the keyword FUNCTION(S) This mode ensures that older models/restart files which contain function(s) as an identifier still work.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = asynexec.515
+1 = ASYNEXEC
+2 = GAMS
+3 = Test asynchronous execution at compile and execution time
+4 = 515
+Test asynchronous execution at compile and execution time (ASYNEXEC,SEQ=515)
+
+In this test GAMS jobs are started asynchronous. Afterwards it is demonstrated how to either wait for completion or send a kill signal to those jobs. There are three ways to start a job asynchronously:
+
+ > $Call.ASync ...
+ > Execute.ASync '...';
+ > put_utility fx 'Exec.ASync' / '...'; / put_utility fx 'Shell.ASync' / '...';
+
+After each of those the function JobHandle could be used to get the Process ID of the last job executed. With JobStatus(pid) one could check for the status of a job. Possible return values are:
+
+ 0: error (input is not a valid PID or access is denied)
+ 1: process is still running
+ 2: process is finished with return code which could be accessed by errorlevel
+ 3: process not running anymore or was never running, no return code available
+
+With JobTerminate(pid) a interrupt signal can be send to a running job. If this was successful the return value is one, otherwise it is zero. With JobKill(pid) a kill signal can be send to a running job. If this was successful the return value is one, otherwise it is zero.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = scen01.516
+1 = SCEN01
+2 = GAMS
+3 = Compile time test for the scenario facility
+4 = 516
+Compile time test for Gather-Update-Solve-Scatter (GUSS) (SCEN01, SEQ=516)
+
+The early implementation of GUSS had subtle side effects. Therefore, the GAMS compiler enforces strict rules for the use of GUSS. This test collects a number of these tests.
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = empdisj5.517
+1 = EMPDISJ5
+2 = GAMS
+3 = Test disjunctions using not on binary variable and constraint
+4 = 517
+Test disjunctions using not on binary variable and constraint (EMPDISJ5,SEQ=517)
+
+Contributor: Jan-H. Jagla, March 2011
+
+*$*$*$
+Files = scen02.518
+1 = SCEN02
+2 = GAMS
+3 = Execution time test for the scenario facility
+4 = 518
+Execution time test for Gather-Update-Solve-Scatter (GUSS) (SCEN02, SEQ=518)
+
+The early implementation of GUSS had subtle side effects. Therefore, the GAMS compiler and runtime enforces strict rules for the use of GUSS. This test collects a number of these runtime tests.
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = scen03.519
+1 = SCEN03
+2 = GAMS
+3 = Multi-dimensional scenario solver test
+4 = 519
+Multi-dimensional scenario solver test (SCEN03, SEQ=519)
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = stolib01.520
+1 = STOLIB01
+2 = GAMS
+3 = Test extrinsic functions in stodclib
+4 = 520
+Test extrinsic functions in stodclib (STOLIB01,SEQ=520)
+
+This test makes sure that the random number generators, the probability density functions, the cumulative distribution functions and the inverse cumulative distribution functions from stodclib work as expected.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = trilib01.521,tricclib.LIBSTEM,trisource.zip.ignore
+1 = TRILIB01
+2 = GAMS
+3 = Test extrinsic functions in tricclib
+4 = 521
+Test extrinsic functions in tricclib (TRILIB01,SEQ=521)
+
+This test makes sure that the extrinsic cosine and sine (both using rad and grad) implemented in a C library work in the same way as the intrisic versions. Additionally the functions are used in a simple model.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = trilib02.522,tridclib.LIBSTEM,trisource.zip.ignore
+1 = TRILIB02
+2 = GAMS
+3 = Test extrinsic functions in tridclib
+4 = 522
+Test extrinsic functions in tridclib (TRILIB02,SEQ=522)
+
+This test makes sure that the extrinsic cosine and sine (both using rad and grad) implemented in a Delphi library work in the same way as the intrisic versions. Additionally the functions are used in a simple model.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = trilib03.523,trifclib.LIBSTEM,trisource.zip.ignore
+1 = TRILIB03
+2 = GAMS
+3 = Test extrinsic functions in trifclib
+4 = 523
+Test extrinsic functions in trifclib (TRILIB03,SEQ=523)
+
+This test makes sure that the extrinsic cosine and sine (both using rad and grad) implemented in a Fortran library work in the same way as the intrisic versions. Additionally the functions are used in a simple model.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = lindorg2.524
+1 = LINDORG2
+2 = GAMS
+3 = Test for LindoGlobals CheckRange Option
+4 = 524
+Test for LindoGlobal's CheckRange Option  (LINDORG2,SEQ=524)
+
+This model tests the logic for NA cases for linear terms.
+
+Contributer: Lutz Westermann
+
+*$*$*$
+Files = mip04.525
+1 = MIP04
+2 = MIP
+3 = Exercise new XPRESS return code for unbounded MIP
+4 = 525
+Exercise new XPRESS return code for unbounded MIP (MIP04,SEQ=525)
+
+In the model we make sure the XPRESS link is properly handling the XPRS_MIP_UNBOUNDED code - new in XPVERSION 22.
+
+Contributor: Steve Dirkse, May 2011
+
+*$*$*$
+Files = load5.526
+1 = LOAD5
+2 = GAMS
+3 = Tests UNDF with $load
+4 = 526
+Tests UNDF with $load (LOAD5,SEQ=526)
+
+The $load should mirror compile time text input with UNDF
+
+Contributor: Alex
+
+*$*$*$
+Files = pwplib01.527
+1 = PWPLIB01
+2 = GAMS
+3 = Test piecewise polynomials in pwpcclib
+4 = 527
+Test piecewise polynomials in pwpcclib (PWPLIB01,SEQ=527)
+
+This test makes sure that the extrinsic piecewise polynomials implemented in a C library work in the same way as modeling it "by hand".
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = fitlib01.528
+1 = FITLIB01
+2 = GAMS
+3 = Test the use of FITPACK inside GAMS
+4 = 528
+Test the use of FITPACK inside GAMS (FITLIB01,SEQ=528)
+
+This test uses the library fitfclib. This library packs FITPACK, written by Prof. P. Dierckx, in a way that it can be used inside GAMS with the function library facility. We test that splines of a certain degree (in this case 3 and 4) can interpolate polynomial functions of the same degree exactly. This is done for a curve as well as for a surface.
+
+Contributor: L. Westermann
+
+*$*$*$
+Files = load6.529
+1 = LOAD6
+2 = GAMS
+3 = Tests dynamic error messages during $loaddc
+4 = 529
+Tests dynamic error messages during $loaddc (LOAD6,SEQ=529)
+
+The error makes nice gams names but the UELs may not have been been loaded and the error message needs to load the strings.
+
+Contributor: Alex
+
+*$*$*$
+Files = fnspowx.530,fnset_xy.inc,fntest_xy.inc
+1 = FNSPOWX
+2 = GAMS
+3 = Test correctness of signpower intrinsic
+4 = 530
+'Test correctness of signpower intrinsic' (FNSPOWX,SEQ=530)
+
+Test the signed power function on a selected set of inputs. The actual implementation of the signpower function sits on top of the x**c function, so we just need to get the signs right - the rest of the tests are done for vcpower.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = fnspown.531,fnset_xy.inc,fntest_xy.inc
+1 = FNSPOWN
+2 = GAMS
+3 = Test correctness of signpower intrinsic
+4 = 531
+'Test correctness of signpower intrinsic' (FNSPOWN,SEQ=531)
+
+Test the signed power function, comparing the true derivatives with those computed numerically.  We don't push the range too much for this test - we just want to be sure we get all the signs right, etc.  The important thing is to test with negative bases x so we know our implementation isn't making any gross errors.
+
+Contributor: Steve Dirkse
+
+*$*$*$
+Files = nlcode5.532,nlcode5.gdx
+1 = NLCODE5
+2 = GAMS
+3 = Test for NL code bug from Dist 23.6
+4 = 532
+Test for NL code bug from Dist 23.6 (NLCODE5,SEQ=532)
+
+This example turfs up a bug in the NL code generation. The 23.5.2 system (last in the 23.5 series) was OK. The problem exists in 23.6.0 alpha, in 23.6.5, and probably all of 23.6
+
+Contributor: Kent Zhao, June 2011
+
+*$*$*$
+Files = scensol2.533
+1 = SCENSOL2
+2 = GAMS
+3 = Test handling of unsorted scenario UELs in GUSS
+4 = 533
+Test handling of unsorted scenario UELs in GUSS (SCENSOL2,SEQ=533)
+
+This test makes sure that we do not get a 'Data not sorted' error when the scenario set contains a 'not sorted' uel.
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = nlcode6.534
+1 = NLCODE6
+2 = GAMS
+3 = Test for NL code bug from Dist 23.6
+4 = 534
+Test for NL code bug from Dist 23.6 (NLCODE6,SEQ=534)
+
+This example turfs up a bug in the NL code generation: trac #2092. The 23.5.2 system (last in the 23.5 series) was OK. The problem exists in all of 23.6, 23.7.1, and 23.7.2, but is fixed in maintenance release 23.7.3
+
+Contributor: Alex Meeraus, Aug 2011
+
+*$*$*$
+Files = scensol3.535
+1 = SCENSOL3
+2 = GAMS
+3 = NoMatchLimit GUSS Test
+4 = 535
+NoMatchLimit GUSS Test (SCENSOL3,SEQ=535)
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = gzip01.536
+1 = GZIP01
+2 = GAMS
+3 = Test gzipped input files
+4 = 536
+Test gzipped input files (GZIP01,SEQ=536)
+
+Contributor: Paul van der Eijk
+
+*$*$*$
+Files = sl4qcp01.537,[qcp01]
+1 = SL4QCP01
+2 = QCP
+3 = Test of correctness for levels & marginals of QCP, with solvelink=1,2,4,5
+4 = 537
+'Test of correctness for levels & marginals of QCP, with solvelink=1,2,4,5' (SL4QCP01,SEQ=537)
+
+Run qcp01 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = sl4qcp02.538,[qcp02]
+1 = SL4QCP02
+2 = QCP
+3 = Test modsolstat & solution correctness - multiple QCons, with solvelink=1,2,4,5
+4 = 538
+'Test modsolstat & solution correctness - multiple QCons, with solvelink=1,2,4,5' (SL4QCP02,SEQ=538)
+
+Run qcp02 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = sl4qcp03.539,[qcp03]
+1 = SL4QCP03
+2 = QCP
+3 = Test case for cancellation in quadratic terms, with solvelink=1,2,4,5
+4 = 539
+'Test case for cancellation in quadratic terms, with solvelink=1,2,4,5' (SL4QCP03,SEQ=539)
+
+Run qcp03 with solvelink=%SOLVELINK.CallScript%,%SOLVELINK.CallModule%,%SOLVELINK.AsyncSimulate%,%SOLVELINK.LoadLibrary%
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = miqcp01.540
+1 = MIQCP01
+2 = MIQCP
+3 = Test of correctness for levels & marginals of MIQCP
+4 = 540
+Test of correctness for levels & marginals of MIQCP (MIQCP01,SEQ=540)
+
+Test of correctness of the levels and marginals returned. We have QP terms in the objective only - all MIQCP solvers accept this. Cases considered:
+  1) =L=, =G=, =E= constraints
+To add later:
+  2) min [convex obj] or max [concave obj]
+  4) special attention paid to the form of the obj. constraint, i.e.
+     cz * z = xQx + cx + b where cz and b take different values
+
+*$*$*$
+Files = indic01.541
+1 = INDIC01
+2 = MIP
+3 = Test of =g= indicator constraints
+4 = 541
+Test of =g= indicator constraints (INDIC01,SEQ=xxx)
+
+Test =g= indicator constraints.  This model is based on DICE from the GAMS model library.
+
+Contributed by Steve Dirkse, November 2011
+
+*$*$*$
+Files = indic02.542
+1 = INDIC02
+2 = MIP
+3 = Test of =e= indicator constraints
+4 = 542
+Test of =e= indicator constraints (INDIC02,SEQ=542)
+
+Test =e= indicator constraints.
+
+Contributed by Steve Dirkse, November 2011
+
+*$*$*$
+Files = kestrel1.543
+1 = KESTREL1
+2 = GAMS
+3 = Kestrel test for lp solvers
+4 = 543
+Kestrel test for lp solvers (KESTREL1,SEQ=543)
+
+Simple trnsport test for lp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+
+*$*$*$
+Files = kestrel2.544
+1 = KESTREL2
+2 = GAMS
+3 = Kestrel test for mcp solvers
+4 = 544
+Kestrel test for mcp solvers (KESTREL2,SEQ=544)
+
+Simple scarfmcp test for mcp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+
+*$*$*$
+Files = kestrel3.545
+1 = KESTREL3
+2 = GAMS
+3 = Kestrel test for nlp solvers
+4 = 545
+Kestrel test for nlp solvers (KESTREL3,SEQ=545)
+
+Simple mhw4d test for nlp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+
+*$*$*$
+Files = kestrel4.546
+1 = KESTREL4
+2 = GAMS
+3 = Kestrel test for minlp solvers
+4 = 546
+Kestrel test for minlp solvers (KESTREL1,SEQ=543)
+
+Simple trnsport test for minlp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+
+*$*$*$
+Files = indic03.547
+1 = INDIC03
+2 = MIP
+3 = Test of =e= indicator constraints
+4 = 547
+Test of =e= indicator constraints (INDIC03,SEQ=547)
+
+Test =e= indicator constraints.
+
+Contributed by Steve Dirkse, November 2011
+
+*$*$*$
+Files = xpress03.548
+1 = XPRESS03
+2 = MIP
+3 = XPRESS test suite - solution pool example
+4 = 548
+XPRESS test suite - solution pool example (XPRESS03,SEQ=548)
+
+A simple version of a facility location problem is used to show how the solution pool and the tools associated with it work. This example is taken from the Cplex 11 User's Manual (ILOG, Cplex 11 User's Manual, 2007)
+
+A company is considering opening as many as four warehouses in order to serve nine different regions. The goal is to minimize the sum of fixed costs associated with opening warehouses as well as the various transportation costs incurred to ship goods from the warehouses to the regions.
+
+Whether or not to open a warehouse is represented by binary variable ow. Whether or not to ship goods from warehouse i to region j is represented by binary variable oa.
+
+Each region needs a specified amount of goods, and each warehouse can store only a limited quantity of goods. In addition, each region must be served by exactly one warehouse.
+
+*$*$*$
+Files = mip05.549
+1 = MIP05
+2 = MIP
+3 = Maximum queens chess problem
+4 = 549
+Maximum queens chess problem  (MIP05,SEQ=549)
+
+This model finds all possible ways to arrange eight queens on a chess board in such a way that no two queens check each other. Using solves within a loop, successive solutions are cut off until the model becomes infeasible.  At this point, all the solutions have been enumerated.  This problem has a long history. In 1850 it was investigated by C.F. Gauss, but he was unable to solve it completely. There are 92 possible solutions on a standard 8x8 chessboard. Alternate NxN chessboards can easily be used, see numSols below.
+
+Dudeney, H E, Amusements in Mathematics. Dover, New York, 1970.
+
+Beauvais, J, Solving the Maximum Queens Chess Problem with OSL. IBM Kingston, EKKNEWS 2 (1991).
+
+GAMS Model Library, queens.103
+
+Contributor: Steve Dirkse, Jan 2012
+
+*$*$*$
+Files = xpress04.550
+1 = XPRESS04
+2 = MIP
+3 = XPRESS test suite - solution enumerator example
+4 = 550
+XPRESS test suite - solution enumerator example (XPRESS04,SEQ=550)
+
+Test the XPRESS solution enumerator - in this case, it should return the set of all MIP solutions, exactly as computed by cutting and repeated solves.
+
+Contributor: Steve Dirkse, Jan 2012
+
+*$*$*$
+Files = circlen.551
+1 = CIRCLEN
+2 = NLP
+3 = Circle Enclosing Points n dimensional
+4 = 551
+Circle Enclosing Points n dimensional (CIRCLEN,SEQ=551)
+
+This is an example from the GAMS/SNOPT manual. Find the smallest circle that contains a number of given points. This is extended to an n-dimensional ball.
+
+http://en.wikipedia.org/wiki/Smallest_circle_problem
+
+*$*$*$
+Files = trilib04.552,tricclib.LIBSTEM,trisource.zip.ignore
+1 = TRILIB04
+2 = GAMS
+3 = Demonstrates problems with a stateful function library
+4 = 552
+Demonstrates problems with a stateful function library (TRILIB04,SEQ=552)
+
+This demonstrates the problems with a stateful function library in the context of GAMS and solver processes.
+
+The trilib default mode for computations is in radians (mode=0). The function SetTriMode can be used to interpret the arguments of subsequent function calls to Cosine and Sine as degrees (mode=1) instead of radians (mode=0). The SetTriMod function returns the previous mode value.
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = mip06.553
+1 = MIP06
+2 = MIP
+3 = Cuts and solution enumeration
+4 = 553
+Cuts and solution enumeration (MIP06,SEQ=553)
+
+This model is based on the dice.176 model from model library.  To make it work better as an example for MIP solution enumeration it was cleaned up and constraints were added to make solutions and solution representatives unique.  Then cuts were added.  By default, it stops cutting/enumerating when all optimal solutions have been found.
+
+Contributor: Steve Dirkse, Jan 2012
+
+*$*$*$
+Files = xpress05.554
+1 = XPRESS05
+2 = MIP
+3 = XPRESS test suite - solution enumerator example
+4 = 554
+XPRESS test suite - solution enumerator example (XPRESS05,SEQ=554)
+
+Test the XPRESS solution enumerator.  To test we use a variant of the dice model (adjusted to avoid multiple representations of the same solution).  The test model is a maximization having 2 solutions with obj=21, 98 solutions with obj=20, and plenty of solutions with obj=19. We test a number of things:
+  1. Return all optimal solutions (i.e. obj = 21)
+  2. Return all solutions with obj = 20 or 21
+  3. Return the 2 best solutions
+  4. Return the 3 best solutions
+  5. Return the 100 best solutions
+  6. Return the 200 best solutions
+  7. Return first 10 solutions with obj 20 or 21
+  8. Return first 200 solutions with obj >= 18
+
+Contributor: Steve Dirkse, Jan 2012
+
+*$*$*$
+Files = qcp09.555
+1 = QCP09
+2 = QCP
+3 = Simplest test for QCP correctness
+4 = 555
+Simplest test for QCP correctness (QCP09,SEQ=555)
+
+Very simple QCP: quadratic obj and 1 quadratic constraint. It should be impossible to have the wrong conventions for passing Q matrices (e.g. symmetry treatment, "implied 1/2", signs) and get this one correct.
+
+Contributor: Steven Dirkse, January 2012
+
+*$*$*$
+Files = perm1.556
+1 = PERM1
+2 = GAMS
+3 = Test for various permutations
+4 = 556
+Test for various permutations (PERM1,SEQ=556)
+
+Contributor: Michael Bussieck
+
+  part 1
+
+*$*$*$
+Files = ctrlcmip.557
+1 = CTRLCMIP
+2 = GAMS
+3 = Test interrupt handling
+4 = 557
+Test interrupt handling (CTRLCMIP,SEQ=557)
+
+
+*$*$*$
+Files = mpsge12.558
+1 = MPSGE12
+2 = MPSGE
+3 = MPSGE test - inter-mixed MPSGE and MCP rows in model
+4 = 558
+MPSGE test - inter-mixed MPSGE and MCP rows in model (MPSGE12,SEQ=558)
+
+A bug was introduced in GAMS Distribution 23.8.1 that affected MCP models with external equations.  The problem only arises when nonlinear equations come before some or all of the external equations in the model.  MPSGE models are especially vulnerable, since the MPSGE logic is implemented via external equations, while $constraint rows are implemented via typical GAMS algebra.
+
+The issue is fixed with GAMS 23.8.2.
+
+Contributor: Steve Dirkse, April 2012
+
+*$*$*$
+Files = gdxcomp2.559
+1 = GDXCOMP2
+2 = GAMS
+3 = GDX - compressed and MT operation
+4 = 559
+'GDX - compressed and MT operation' (GDXCOMP2,SEQ=559)
+
+This model checks that the GDX file produced by GAMSCMEX with "gdx=<filename>" is what we expect for different settings of the environment variables GDXCOMPRESS and GDXTHREADS.
+
+Contributor: Steve Dirkse, May 2012
+
+*$*$*$
+Files = lagd1.560
+1 = LAGD1
+2 = GAMS
+3 = Lag and Lead operations on Dynamic Sets
+4 = 560
+'Lag and Lead operations on Dynamic Sets' (LAGD1,SEG=560)
+
+Lag and lead operations require the reference set to  be ordered and constant. In some special cases one would want to use those operation on dynamic and/or unordered sets. A DCO option on/offOrder has been added to locally relax the default requirements. The use of this option comes with a price, the system will not be able to diagnose odd and incorrect formulations and data sets.
+
+A small example will be used to illustrate the use of $onOrder and $offOrder. We would like to have a circular lead on the content of a slice as shown below.
+
+*$*$*$
+Files = miqcp02.561
+1 = MIQCP02
+2 = MIQCP
+3 = Test of correctness of solvestat
+4 = 561
+Test of correctness of solvestat (MIQCP02,SEQ=561)
+
+This test os based on the GAMS Model Library qmeanvar. It caused Xpress to crash on Windows for some time.
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = testexeq.562,[complink]
+1 = TESTEXEQ
+2 = GAMS
+3 = Test external equations
+4 = 562
+Test external equations (TESTEXEQ,SEQ=562)
+
+This test makes sure that the simple examples using external equations work with different compilers on different platforms.
+
+Contributor: D. Tischinberg
+
+*$*$*$
+Files = ex1.563,[complink],Ex1j.h,Ex1j.java,Ex1jwrap.c,geheader.h,ex1c.c,ex1c_cb.c,ex1d.dpr,ex1d_cb.dpr,geheader_d.pas,geheader2_d.pas,ex1f.f90,ex1f_cb.f90,gehelper.f90,msg2_f.f90,ex1c.LIBSTEM,ex1c_cb.LIBSTEM,ex1d.LIBSTEM,ex1d_cb.LIBSTEM,ex1f.LIBSTEM,ex1f_cb.LIBSTEM
+1 = EX1
+2 = GAMS
+3 = External Function - Example 1
+4 = 563
+External Function - Example 1 (EX1,SEQ=563)
+
+This is the first in a sequence of examples that show how to use the external function (=X=) facility with GAMS. The first model is a simple unconstrained quadratic model and the quadratic function is defined in an external function.
+
+*$*$*$
+Files = ex1x.564,[complink],geheader.h,gehelper.f90,ex1xc_cb.c,ex1xf.f90,ex1xc_cb.LIBSTEM,ex1xf.LIBSTEM
+1 = EX1X
+2 = GAMS
+3 = External Function - Example 1x
+4 = 564
+External Function - Example 1x (EX1X,SEQ=564)
+
+This is a revised version ot example 1 in which the Fortran routine shows how to use the advanced features of defining constant derivatives and Hessian time Vector values.
+
+*$*$*$
+Files = ex2.565,[complink],geheader.h,geheader_d.pas,gehelper.f90,msg2_f.f90,ex2c_cb.c,ex2d_cb.dpr,ex2f_cb.f90,ex2c_cb.LIBSTEM,ex2d_cb.LIBSTEM,ex2f_cb.LIBSTEM
+1 = EX2
+2 = GAMS
+3 = External Function - Example 2
+4 = 565
+External Function - Example 2 (EX2,SEQ=565)
+
+This is the second in a sequence of examples that show how to use the external equations (=X=) facility with GAMS/CONOPT. The second model is also simple unconstrained quadratic model and the quadratic function is defined in an external function.
+
+But this time we communicate the data from GAMS via a put file including information on the size of the model. We can now change the data in GAMS without reprogramming the Fortran or C routine.
+
+The model is slightly convoluted. We want to be able to solve it for different subsets I of the Domain D.
+
+*$*$*$
+Files = ex3.566,[complink],geheader.h,geheader_d.pas,gehelper.f90,msg2_f.f90,ex3c_cb.c,ex3d.dpr,ex3f_cb.f90,ex3c_cb.LIBSTEM,ex3d.LIBSTEM,ex3f_cb.LIBSTEM
+1 = EX3
+2 = GAMS
+3 = External Function - Example 3
+4 = 566
+External Function - Example 3 (EX3,SEQ=566)
+
+This is the third in a sequence of examples that show how to use the external function (=X=) facility with GAMS/CONOPT. The third model is a copy of the Hexagon Test problems, Himmel16 or SEQ=36 in the GAMS model library. The purpose is to show how complicated the indexing can be, both in the GAMS model and in the Fortran or C routines.
+
+For comments on the model itself, see Himmel16 in the model library.
+
+*$*$*$
+Files = ex4.567,[complink],geheader.h,geheader_d.pas,gehelper.f90,msg2_f.f90,ex4c_cb.c,ex4d.dpr,ex4f_cb.f90,deasolu.gdx,ex4c_cb.LIBSTEM,ex4d.LIBSTEM,ex4f_cb.LIBSTEM
+1 = EX4
+2 = GAMS
+3 = External Function - Example 4
+4 = 567
+External Function - Example 4 (EX4,SEQ=567)
+
+Example contributed by Meta Voelker and Michael Ferris, UW-Madison
+
+Model for finding the smoothing parameter (window width) used to estimate the density function for a set of DEA efficiency scores. The density estimate uses a reflected kernel function. The smoothing parameter is found by maximizing the log likelihood cross-validation function on the efficiency scores.
+
+Reference: B.W. Sliverman, Density Estimation for Statistics and Data Analysis, Chapman and Hall, 1986.
+
+*$*$*$
+Files = ex4x.568,[complink],geheader.h,gehelper.f90,msg2_f.f90,deasolu.gdx,ex4xc_cb.c,ex4xf_cb.f90,ex4xc_cb.LIBSTEM,ex4xf_cb.LIBSTEM
+1 = EX4X
+2 = GAMS
+3 = External Function - Example 4x
+4 = 568
+External Function - Example 4x (EX4X,SEQ=568)
+
+Example contributed by Meta Voelker and Michael Ferris, UW-Madison
+
+Model for finding the smoothing parameter (window width) used to estimate the density function for a set of DEA efficiency scores. The density estimate uses a reflected kernel function. The smoothing parameter is found by maximizing the log likelihood cross-validation function on the efficiency scores.
+
+Reference: B.W. Sliverman, Density Estimation for Statistics and Data Analysis, Chapman and Hall, 1986.
+
+The example is similar to ex4 but there are two extra DLLs that show the use of constant derivatives in Fortran (ex4xf_cb.for) and C (ex4xc_cb.c). The execution time should be reduced if CONOPT3 is used as the NLP solver.
+
+*$*$*$
+Files = ex5.569,[complink],geheader.h,gehelper.f90,ex5c.c,ex5f.f90,ex5c.LIBSTEM,ex5f.LIBSTEM
+1 = EX5
+2 = GAMS
+3 = External Function - Example 5
+4 = 569
+External Function - Example 5 (EX5,SEQ=569)
+
+The example is functionally identical to Example 1. The new aspect is, that the size of the set I is written to a file in the GAMS Scratch directory. The external function requests the name of the GAMS Scratch directory during initialization and reads the size and compares it with the expected size.
+
+*$*$*$
+Files = er1.570,[complink],geheader.h,gehelper.f90,msg2_f.f90,er1c_cb.c,er1f_cb.f90,er1c_cb.LIBSTEM,er1f_cb.LIBSTEM
+1 = ER1
+2 = GAMS
+3 = External Function - Error Example 1
+4 = 570
+External Function - Error Example 1 (ER1,SEQ=570)
+
+This model is similar to the model in ex1.gms, except that it only includes code for C and Fortran examples. The external functions have implementation errors that have been marked with **ERROR in the source code. Compare these errors with the messages in the GAMS listing file.
+
+*$*$*$
+Files = er2.571,[complink],geheader.h,gehelper.f90,msg2_f.f90,er2c_cb.c,er2f_cb.f90,er2c_cb.LIBSTEM,er2f_cb.LIBSTEM
+1 = ER2
+2 = GAMS
+3 = External Function - Error Example 2
+4 = 571
+External Function - Error Example 2 (ER2,SEQ=571)
+
+This model is similar to the model in ex1.gms, except that it only includes code for C and Fortran examples. The external functions have implementation errors that have been marked with **ERROR in the source code. Compare these errors with the messages in the GAMS listing file.
+
+*$*$*$
+Files = er3.572,[complink],geheader.h,gehelper.f90,msg2_f.f90,er3c_cb.c,er3f_cb.f90,er3c_cb.LIBSTEM,er3f_cb.LIBSTEM
+1 = ER3
+2 = GAMS
+3 = External Function - Error Example 3
+4 = 572
+External Function - Error Example 3 (ER3,SEQ=572)
+
+This model is similar to the model in ex3.gms, except that it only includes code for C and Fortran examples. The external functions have implementation errors that have been marked with **ERROR in the source code. Compare these errors with the messages in the GAMS listing file.
+
+*$*$*$
+Files = exmcp1.573,[complink],geheader.h,gehelper.f90,exmcp1c.c,exmcp1f.f90,exmcp1c.LIBSTEM,exmcp1f.LIBSTEM
+1 = EXMCP1
+2 = GAMS
+3 = External Function - Example MCP 1
+4 = 573
+This example is based on ex2.gms, an NLP example of an unconstrained QP. Here, we start with the same model, write down its KKT conditions, and then implement these KKT conditions using an external equation
+
+*$*$*$
+Files = exmcp2.574,[complink],geheader.h,gehelper.f90,msg2_f.f90,exmcp2c.c,exmcp2c_cb.c,exmcp2f.f90,exmcp2f_cb.f90,exmcp2c.LIBSTEM,exmcp2c_cb.LIBSTEM,exmcp2f.LIBSTEM,exmcp2f_cb.LIBSTEM
+1 = EXMCP2
+2 = GAMS
+3 = External Function - Example MCP 2
+4 = 574
+External Function - Example MCP 2 (EXMCP2,SEQ=574)
+
+DLL Test Problem Number MCP2 -- dense nonlinear system
+
+*$*$*$
+Files = exmcp3.575,[complink],geheader.h,gehelper.f90,msg2_f.f90,exmcp3c_cb.c,exmcp3f_cb.f90,exmcp3c_cb.LIBSTEM,exmcp3f_cb.LIBSTEM
+1 = EXMCP3
+2 = GAMS
+3 = External Function - Example MCP 3
+4 = 575
+External Function - Example MCP 3 (EXMCP3,SEQ=575)
+
+DLL Test Problem Number MCP3 -- dense nonlinear system
+
+*$*$*$
+Files = exmcp4.576,[complink],geheader.h,gehelper.f90,msg2_f.f90,exmcp4c_cb.c,exmcp4f_cb.f90,exmcp4c_cb.LIBSTEM,exmcp4f_cb.LIBSTEM
+1 = EXMCP4
+2 = GAMS
+3 = Hansen/Koopmans: External Function - Example MCP 4 (EXMCP4,SEQ=576)
+4 = 576
+Hansen/Koopmans: External Function - Example MCP 4 (EXMCP4,SEQ=576)
+
+---------------------------------------------------------------------- this model is a version of hanskoop.gms from MCPLIB, revised to use external equations as an example and test case If this were a production model, the data defining the equations would be read from a file and not baked into the GAMS model and the external functions
+
+Reference: Journal of Economic Theory Vol. 5 (1972)  487-523
+
+An invariant capital stock problem given by Hansen and Koopmans
+
+The alpha parameter suggested was 0.7, 0.8, and 0.9 in the reference. ----------------------------------------------------------------------
+
+*$*$*$
+Files = exmcp5.577,[complink],geheader.h,exmcp5c.c,exmcp5c.LIBSTEM
+1 = EXMCP5
+2 = GAMS
+3 = Intermixed External Rows: External Function - Example MCP 5 (EXMCP5,SEQ=577)
+4 = 577
+Intermixed External Rows: External Function - Example MCP 5 (EXMCP5,SEQ=577)
+
+
+*$*$*$
+Files = complink.578
+1 = COMPLINK
+2 = GAMS
+3 = Compile and link external equation libraries
+4 = 578
+Compile and link external equation libraries (COMPLINK,SEQ=578)
+
+This model is used for compiling and linking of external equation libraries.
+
+*$*$*$
+Files = lindgl02.579
+1 = LINDGL02
+2 = GAMS
+3 = Check that Lindo(Global) works with SOS variables
+4 = 579
+'Check that Lindo(Global) works with SOS variables' (LINDGL02,SEQ=579)
+
+We test that Lindo does not ignore SOS conditions. At some stage those were ignored with MINLP models. This test is based on the model waters from MINLPLib. That model has a know optimum of ~900. Without the SOS condition a objective of ~200 can be achieved. A strict time limit is set since we do not want to find the optimum but only a feasible solution > 900.
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = qcp10.580
+1 = QCP10
+2 = QCP
+3 = Test for QCP correctness
+4 = 580
+Test for QCP correctness (QCP10,SEQ=580)
+
+There was a bug in the QP code which should be fixed with GAMS 23.9.4. This was used to reproduce the problem.
+
+Contributor: Michael Bussieck
+
+*$*$*$
+Files = empdisj6.581
+1 = EMPDISJ6
+2 = GAMS
+3 = Test disjunctions using negated equality equations
+4 = 581
+Test disjunctions using negated equality equations (EMPDISJ6, SEQ=581)
+
+This test is based on bug report send by Silvia Tomasi.
+
+The disjunctive program to solve is minimize x such that (A1 or (x=0)) and
+          (not A2 or not (x <= 3)) and
+          (not A1 or A2)
+
+An optimal solution is x = 0: A1 = false, A2 = false, (x=0) = true, (x<=3) = true.
+
+Contributor: Stefan Vigerske, November 2012
+
+*$*$*$
+Files = gdx9.582
+1 = GDX9
+2 = GAMS
+3 = Checks unloading and loading a GDX file with variable attributes
+4 = 582
+'Checks unloading and loading a GDX file with variable attributes' (gdx9, SEQ=582)
+
+execute_unload's variables with randomly choosen attributes into GDX file, resets attributes in GAMS, execute_load's GDX file, and checks that the original attribute values have been restored.
+
+*$*$*$
+Files = empdisj7.583
+1 = EMPDISJ7
+2 = GAMS
+3 = Test disjunctions using negated variables in disjunctive terms
+4 = 583
+Test EMP Disjunction - Negated variables in disjunctive terms (EMPDISJ7,SEQ=583)
+
+This test is based on bug found in EMP from GAMS 23.9.5.
+
+The disjunctive program to solve is minimize 10*y1 + 10*y2 + y3 such that y1 or y2 or not y3
+
+An optimal solution is clearly y3 = 0. However, due to a bug, a 'not y3' in a disjunctive term was not handled correctly.
+
+Contributor: Stefan Vigerske, November 2012
+
+*$*$*$
+Files = traceuc.584
+1 = TRACEUC
+2 = GAMS
+3 = Test if we can get the user and computer name in a trace file
+4 = 584
+Test if we can get the user and computer name in a trace file (TRACEUC,SEQ=584)
+
+Contributer: Michael Bussieck
+
+*$*$*$
+Files = asynntrp.585
+1 = ASYNNTRP
+2 = GAMS
+3 = Start GAMS job asynchronously and send interrupt signal to it
+4 = 585
+Start GAMS job asynchronously and send interrupt signal to it (ASYNNTRP,SEQ=585)
+
+'$Call.ASyncNC' starts a job in a new, minimized console. With 'JobHandle' one gets the process ID of that job and the put_utility 'WinMsg' sends an interrupt signal to that PID.
+
+Contributor: Lutz Westermann
+
+*$*$*$

@@ -1,0 +1,86 @@
+$title Stochastic Programming Example (PRODSP3,SEQ=81)
+
+$ontext
+
+The problem consists of determining the product mix for a furniture shop with two
+workstations: carpentry and finishing. The availability of labor in man-hours at
+the two stations is limited. There are four product classes, each consuming a
+certain number of man-hours at the two stations. Each product earns a certain
+profit and the shop has the option to purchase labor from outside. The objective
+is to maximize the profit.
+
+The problem is solved for 300 scenarios.
+
+See also 'PRODSP' and 'PRODSP2' in the GAMS Model Library.
+
+King, A J, Stochastic Programming Problems: Examples from the
+Literature. In Ermoliev, Y, and Wets, R J, Eds, Numerical
+Techniques for Stochastic Optimization Problems. Springer Verlag,
+1988, pp. 543-567.
+
+$offtext
+
+Sets i product class / class-1*class-4 /
+     j workstation   / work-1 *work-2  /
+
+Parameters c(i) profit / class-1 12,class-2 20, class-3 18, class-4 40 /
+           q(j) cost   / work-1 5, work-2 10 /;
+
+Parameters h(j)   random available labor
+           t(j,i) random labor required
+
+table trand(j,*,i) min and max values for uniform distribution
+            class-1 class-2 class-3 class-4
+work-1.min    3.5    8         6      9
+work-1.max    4.5   10         8     11
+work-2.min     .8     .8       2.5   36
+work-2.max    1.2    1.2       3.5   44 ;
+
+parameter hrand(j,*) / work-1.(mean 6000, variance 100)
+                       work-2.(mean 4000, variance  50) /;
+
+t(j,i) = uniform(trand(j,'min',i),trand(j,'max',i));
+
+h('work-1') = normal(6000,100);
+h('work-2') = normal(4000, 50);
+
+Variables EProfit  expected profit
+          x(i)     products sold
+          v(j)     labor purchased
+positive variable x,v
+
+Equations obj     expected cost definition
+          lbal(j) labor balance;
+
+obj.. EProfit =e=  sum(i, c(i)*x(i)) - sum(j, q(j)*v(j));
+
+lbal(j).. sum(i, t(j,i)*x(i)) =l= h(j) + v(j);
+
+model mix / obj, lbal /;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%';
+loop(j,
+   put / 'randvar ' h.tn(j) ' normal ' hrand(j,'mean'):6:0 hrand(j,'variance'):4:0);
+loop((j,i),
+   put / 'randvar ' t.tn(j,i) ' uniform ' trand(j,'min',i):6:2 trand(j,'max',i):6:2);
+
+alias(j,jp);
+loop((jp,j,i),
+   put / 'correlation ' h.tn(jp) ' ' t.tn(j,i) uniform(-1,1):6:2);
+putclose / 'stage 2 v lbal h t';
+
+Set scen        scenarios / s1*s300 /;
+Parameter
+    s_h(scen,j)
+    s_t(scen,j,i);
+
+Set dict / scen .scenario.''
+           h    .randvar .s_h
+           t    .randvar .s_t /;
+
+$ifi not %gams.emp%==lindo $goto spcont2
+$echo STOC_NSAMPLE_STAGE 300 > lindo.opt
+mix.optfile=1;
+
+$label spcont2
+solve mix using emp maximizing eprofit scenario dict;

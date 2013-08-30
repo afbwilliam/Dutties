@@ -1,0 +1,74 @@
+$TITLE 'Test correctness of centropy intrinsic eXceptions' (FNCENTRX,SEQ=320)
+
+$ontext
+
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+
+ENUM            VAL
+----            ---
+rcOK            0
+rcFUNC          1
+rcGRAD          2
+rcHESS          3
+rcSYSTEM        4
+
+ecOK            0
+ecDOMAIN        1
+ecSINGULAR      2
+ecOVERFLOW      3
+
+$offtext
+
+$include fnset_x.inc
+
+reps = 2e-13;
+relToInput = 0;
+set
+   T      / t1 * t5, t102*t105 /,
+   T1(T)  / t1 * t5            /,
+   T2(T)  /          t102*t105 /;
+
+$set OFLO  1.e299
+scalar d / 1e-20 /;
+
+table data(T,V)
+        x       c       d       f_              fx_     fxx_    rc_     ec_
+t1      1       1      -1                                        1       1
+t2      1       0       1                                        1       1
+t3     -1       1       1                                        1       1
+t4      0       1       0       0             -%OFLO%  %OFLO%    2       2
+t5    1e298     1       0     %OFLO%           123456  1e-198    1       3
+
+t102    1       0                                                1       1
+t103   -1       1                                                1       1
+t104    0       1                              123456  123456
+t105  1e298     1             %OFLO%           123456  1e-198    1       3
+;
+
+data(T,'fx_' )$[sameas('t5',T) or sameas('t105',T)] = log(1e298) + 1;
+data(T,'fxx_')$[sameas('t5',T) or sameas('t105',T)] = data(T,'fxx_') * 1e-100;
+data('t104','fx_' ) = log(d);
+data('t104','fxx_') = 2 / d;
+
+loop {T1,
+  data(T1,  'f') = centropy.value (data(T1,'x'), data(T1,'c'), data(T1,'d'));
+  data(T1, 'fx') = centropy.grad  (data(T1,'x'), data(T1,'c'), data(T1,'d'));
+  data(T1,'fxx') = centropy.hess  (data(T1,'x'), data(T1,'c'), data(T1,'d'));
+  data(T1, 'rc') = mathlastrc;
+  data(T1, 'ec') = mathlastec;
+};
+
+* if the third arg is not passed, it defaults to 1e-20
+loop {T2,
+  data(T2,  'f') = centropy.value (data(T2,'x'), data(T2,'c'));
+  data(T2, 'fx') = centropy.grad  (data(T2,'x'), data(T2,'c'));
+  data(T2,'fxx') = centropy.hess  (data(T2,'x'), data(T2,'c'));
+  data(T2, 'rc') = mathlastrc;
+  data(T2, 'ec') = mathlastec;
+};
+
+abort$(execerror lt 10)
+ 'Should get execution errors getting func/grad/hess of centropy(x,c,d)';
+execerror = 0;
+
+$include fntest_x.inc

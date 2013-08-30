@@ -1,0 +1,72 @@
+$Title Newsboy problem, discrete and joint distribution (NBDISCJOINT,SEQ=79)
+
+$ontext
+
+Newsboy problem from Lindo manual
+Random paramters D and R are discrete and jointly distributed
+
+Reference: LINDO API 7.0 User Manual
+
+$offtext
+
+Scalar  c       Purchase costs per unit                                 / 30 /
+        p       Penalty shortage cost per unit unsatisfied demand       /  5 /
+        h       Holding cost per unit leftover                          / 10 /
+        v       Revenue per unit sold                                   / 60 /
+*       Random parameters
+        d       Demand                                                  / 63 /
+        r       Refund per unit                                         /  9 /;
+
+Variable Z Profit;
+Positive Variables
+         X Units bought
+         I Inventory
+         L Lost sales
+         S Units sold
+         Y Units returned
+         E Units kept;
+
+Equations Row1, Row2, Row3, Row4, Profit;
+
+* Units bought, X, Buy at least 1 (serves as a dummy constraint for stage 1);
+Row1.. X =g= 1;
+
+* Inventory (I) and Lost Sales (L);
+Row2.. I =e= X + L - d;
+
+* Units sold S, and inventory left over, I;
+Row3.. S =e= X - I;
+
+* Y units returned to vendor for a possible refund, and E kept;
+Row4.. Y + E =e= I;
+
+* Profit, to be maximized;
+Profit..  Z =e= v*S - c*X - h*I - p*L + r*Y - h*E;
+
+Model nb / all /;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$onput
+jrandvar d r 0.12 90 9 0.28 90 -15 0.15 60 9 0.15 60 -15 0.27 30 9 0.03 30 -15
+stage 2 d r
+stage 2 I L S Y E Z
+stage 2 Row2 Row3 Row4 Profit
+$offput
+putclose emp;
+
+Set scen        scenarios / s1*s36 /;
+Parameter
+    s_d(scen)   demand realization by scenario
+    s_r(scen)   refund realization by scenario
+    s_x(scen)
+    s_s(scen) ;
+
+Set dict / scen .scenario.''
+           d    .randvar .s_d
+           r    .randvar .s_r
+           s    .level   .s_s
+           x    .level   .s_x /;
+
+solve nb max z use emp scenario dict;
+
+display s_d, s_r, s_s, s_x;

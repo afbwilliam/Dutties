@@ -1,0 +1,78 @@
+$TITLE MPSGE test - inter-mixed MPSGE and MCP rows in model (MPSGE12,SEQ=558)
+
+$ontext
+A bug was introduced in GAMS Distribution 23.8.1 that affected MCP
+models with external equations.  The problem only arises when
+nonlinear equations come before some or all of the external equations
+in the model.  MPSGE models are especially vulnerable, since the MPSGE
+logic is implemented via external equations, while $constraint rows
+are implemented via typical GAMS algebra.
+
+The issue is fixed with GAMS 23.8.2.
+
+Contributor: Steve Dirkse, April 2012
+$offtext
+
+$eolcom //
+
+SETS
+i       / 'i1' /,
+j       / j1 * j2 /,
+h       / h1 * h2 /;
+
+display i;
+
+parameter       d0(i,h)         Reference demands,
+                e0(i,h)         Reference endowments;
+
+d0(i,h) = uniform(0,1);
+e0(i,h) = uniform(0,1);
+
+$ontext
+
+$model:exchange
+
+* include some dummy variables
+$auxiliary:
+        dum1
+        dum2
+
+$commodities:
+        price(i,j)
+
+$consumers:
+        ra(h)
+
+
+$constraint:dum1
+        dum1**1.1 =N= 2**1.1;
+
+$demand:ra(h)
+        d:price(i,j)       q:d0(i,h)
+        e:price(i,j)       q:e0(i,h)
+
+$constraint:dum2
+        dum2**0.9 =N= 3**0.9;
+
+$offtext
+
+$sysinclude mpsgeset exchange
+
+dum1.lo = 1e-4;
+dum2.lo = 1e-4;
+price.l(i,j) = 1;
+ra.l(h) = 1;
+
+$include EXCHANGE.GEN
+solve exchange using mcp;
+
+abort$[exchange.solvestat <> 1] 'wrong solvestat';
+abort$[exchange.modelstat <> 1] 'wrong modelstat';
+
+parameter priceSum;
+
+priceSum = sum{(i,j), price.l(i,j)};
+abort$[abs(2-priceSum) > 1e-5] 'solution bogus', price.l, priceSum;
+
+abort$[abs(dum1.l - 2) > 1e-5] 'solution dum1', dum1.l;
+abort$[abs(dum2.l - 3) > 1e-5] 'solution dum2', dum2.l;

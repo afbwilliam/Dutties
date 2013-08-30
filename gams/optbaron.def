@@ -1,0 +1,225 @@
+*
+* optbaron.def
+*
+
+AutoBounds integer 0 0 0 maxint 0 7 Option to automatically generate bounds when bounds are missing
+BasFra double 0 0.7 0 maxdouble 1 7 Similarity measure between bases for basis update not to occur
+BasKp boolean 0 1 1 7 Indicates whether basis information is to be save
+ 0 no basis information is saved
+ 1 LP solver working basis will not be modified if at least basfra *n of its basic variables are also basic in the saved basis for the node that is about to be solved
+BilRel integer 0 4 0 maxint 1 7 Controls rounds of bilinear relaxations
+BoxTol double 0 1e-5 0 maxdouble 1 1 Box elimination tolerance.
+BrPtStra enumint 0 0 1 4 Branching point selection strategy
+ 0 1 BARONs dynamic strategy
+ 1 1 w-branching
+ 2 1 bisection-branching
+ 3 1 convex combination of 1 and 2 as dictated by convexratio
+BrVarStra enumint 0 0 1 4 Branching variable selection strategy
+ 0 1 BARONs dynamic strategy
+ 1 1 largest violation
+ 2 1 longest edge
+CallConopt integer 0 0 0 maxint 0 9 call CONOPT to get duals for final point
+ConTol double 0 1e-5 0 maxdouble 1 1 Constraint satisfaction tolerance.
+ConvexRatio double 0 0.7 0 maxdouble 1 4 The branching point ratio
+CutOff double 0 0 0 maxdouble 1 7 Eliminate solutions that are no better than this value
+CvxRel integer 0 1 0 maxint 1 7 Do cvxrel rounds of convexification cuts at every node
+CvxBt boolean 0 1 1 7 Controls cvx-based tightening
+CvxInitOA boolean 0 1 1 7 Controls cvx-based initial outer approximation
+DoLocal boolean 0 1 1 5 Local search option for upper bounding
+ 0 no local search is done during upper bounding
+ 1 BARON's dynamic local search decision rule
+EpsA double 0 1e-6 0 maxdouble 1 1 Absolute termination tolerance.
+EpsR double 0 0 0 maxdouble 1 1 Relative termination tolerance.
+FirstFeas integer 0 0 0 maxint 1 1 Changes the search for first numsol solutions
+ 0 search for the best numsol solutions
+ 1 find numsol solutions irrespective of solution quality
+GdxOut string 0 "" 0 9 Write gdx files for each point
+hAbsTol double 0 0.1 0 maxdouble 1 5 Absolute improvement in the objective to repeat heuristic
+Hessian integer 0 0 0 maxint 0 9 Generate hessian information
+hRelTol double 0 0.1 0 maxdouble 1 5 Relative improvement in the objective to repeat heuristic
+InfBnd double 0 0 0 maxdouble 1 9 infinity value to be used on bounds
+IntOpt1 integer 0 0 0 maxint 0 7 Integer option 1
+IntOpt2 integer 0 0 0 maxint 0 7 Integer option 2
+IntOpt3 integer 0 0 0 maxint 0 7 Integer option 3
+IntOpt4 integer 0 0 0 maxint 0 7 Integer option 4
+IntOpt5 integer 0 0 0 maxint 0 7 Integer option 5
+IntTol double 0 1e-6 0 maxdouble 1 1 Integrality satisfaction tolerance.
+ISolTol double 0 1e-5 0 maxdouble 1 1 Solution Distance
+lbttdo boolean 0 1 1 3 Linear-feasibility-based range reduction option (poor man's LPs)
+ 0 no range reduction based on feasibility.
+ 1 range reduction done based on feasibility.
+linearidentify boolean 0 1 1 7 identification of common linear subexpressions in nonlinear functions
+LocRes boolean 0 0 1 5 Option to control output from local search
+ 0 no local search output
+ 1 detailed results from local search will be printed to res.dat file
+lpalg enumint 0 0 1 7 Specifies the LP algorithm to be used (available only with CPLEX as the LP solver)
+ 0 1 automatic selection of LP algorithm
+ 1 1 primal simplex
+ 2 1 dual simplex
+ 3 1 barrier
+lpsol enumint 0 3 1 7 Specifies the LP Solver to be used
+ 3 1 CPLEX
+ 7 1 XPRESS
+ 8 1 CLP
+MaxHeur integer 0 5 0 maxint 1 5 Maximum number of passes allowed for heuristic
+MaxIter integer 0 -1 -1 maxint 1 1 Maximum number of BB iterations allowed
+maxnodepass integer 0 5 0 maxint 1 3 Maximum number of passes allowed through a node
+MaxPreTime double 0 -1 -1 maxdouble 1 1 Maximum CPU time allowed in presolve
+maxredpass integer 0 10 0 maxint 1 3 Maximum number of times range reduction is performed at a node before a new relaxation is constructed
+MaxTime double 0 1200 0 maxdouble 1 1 Maximum CPU time allowed
+mdo boolean 0 1 1 3 Marginals-based reduction option
+ 0 no range reduction based on marginals.
+ 1 range reduction done based on marginals.
+MIPCuts integer 0 1 0 maxint 1 7 Do MIPCuts rounds of MIP cuts at every node
+mipgap double 0 0.05 -1 maxdouble 1 2 Relative optimality tolerance for MIP relaxations
+mipnodes integer 0 1000 -1 maxint 1 2 Number of nodes allowed in the MIP relaxation solution
+miprel boolean 0 1 1 2 Switch to use MIP relaxations
+mipsolopt boolean 0 0 1 9 Read MIP solvers options
+ModBrPt boolean 0 1 1 4 Branch point modification option
+ 0 brstra-dictated branching point is used without any modifications
+ 1 allows BARON to occasionally modify the brstra-dictated branching point, if deemed necessary
+multmsize integer 0 2 2 20 1 2 Maximum allowable size of multilinear
+multrel integer 0 4 0 maxint 1 2 Rounds of cuts of multilinears
+nlpdolin boolean 0 1 1 2 Linearization option for relaxation
+ 0 use nonlinear relaxation whenever possible
+ 1 use linear programming relaxation
+nlpsol enumint 0 -1 1 7 Specifies the NLP solver to be used
+ -1 1 Automatic NLP solver selection and switching strategy
+ 2 1 MINOS
+ 4 1 SNOPT
+ 6 1 GAMS NLP solver (see ExtNLPsolver)
+ 9 1 IPOPT
+NodeSel enumint 0 0 1 7 Node selection scheme
+ 0 1 BARONs mixed selection scheme
+ 1 1 best bound
+ 2 1 last in first out [LIFO]
+ 3 1 minimum infeasibility
+NoStarting boolean 0 0 0 9 Discard starting point
+Nouter1 integer 0 4 0 maxint 1 2 Number of outer approximators of convex univariant functions.
+NoutIter integer 0 4 0 maxint 1 2 Number of rounds of cutting plane generation at LP relaxation.
+noutitermip integer 0 4 -1 100 1 2 Number of outer approximation rounds with MIP relaxation.
+NoutPerVar integer 0 4 0 maxint 1 2 Number of outer approximations per variable
+NumBranch integer 0 -1 -1 maxint 1 4 Number of Variables to be branched on
+ -1 consider the model variables as well as variables introduced by BARON's lower bounding procedure
+ 0 consider only the original model variables for branching
+ n consider only the first n variables for branching
+NumLoc integer 0 10 -1 maxint 1 5 Number of local searches done in NLP preprocessing
+NumSol integer 0 1 -1 maxint 1 1 Number of solutions to be reported
+NumStore integer 0 0 -1 maxint 1 4 Number of variables whose bounds are to be stored at every node of the tree
+ -1 store all variables
+ 0 store numbranch variables
+ n store n variables
+obttdo boolean 0 1 1 3 Optimality based tightening option
+ 0 no range reduction based on optimality.
+ 1 range reduction done based on optimality.
+oldpow boolean 0 0 0 7 Old polyhedral convexification routines for powers
+oldmono boolean 0 0 0 7 Old polyhedral convexification routines for powers
+oldlog boolean 0 0 0 7 Old polyhedral convexification routines for logarithms
+OutGrid integer 0 20 0 maxint 1 2 per variable number of grid points
+PBin boolean 0 1 1 3 Probing on binary variables option
+ 0 no probing on binary variables.
+ 1 probing on binary variables.
+pdo integer 0 3 -1 maxint 1 3 Number of probing problems allowed
+ -1 probing on all numbranch variables.
+ 0 no range reduction by probing.
+ n probing on n variables.
+pEnd integer 0 -1 -1 maxint 1 3 Level of branch-and-reduce tree where probing ends
+ 0 probing never ends
+ n probing ends at level n
+pFreq integer 0 3 0 maxint 1 3 Level-frequency of probing applications
+ 1 probing is done at every level of the search tree.
+ n probing is done every n levels, beginning at level pstart and ending at level pend.
+PhaseOne integer 0 0 0 maxint 0 9 Create Phase One feasibility problem
+postabstol double 0 1e30 0 maxdouble 1 7 Absolute tolerance for postponing a node
+postreltol double 0 1e30 0 maxdouble 1 7 Realtive tolerance for postponing a node
+prelpdo integer 0 1 minint maxint 1 7 Solve preprocessing LPs at root
+ -n preprocess the first n problem variables
+ 0 no preprocessing LPs should be solved
+ 1 preprocess all problem variables including those introduced by BARON's reformulator
+ 2 preprocess the first numstore problem variables
+ 3 preprocess all original problem variables
+prfreq integer 0 100 0 maxint 1 6 Log output frequency in number of nodes
+prlevel integer 0 1 0 maxint 1 6 Level of results printed. A larger value produces more output
+ <=0 all log output is suppressed
+ >0 print log output
+profra double 0 0.67 0 1 1 3 Fraction of probe to bound distance from relaxed solution when forced probing is done
+prtimefreq double 0 30 0 maxdouble 1 6 Log output frequency in number of seconds
+pStart integer 0 0 0 maxint 1 3 Level of branch-and-reduce tree where probing begins
+ 0 probing begins at root node.
+ n probing begins at level n.
+pxdo integer 0 0 0 maxint 1 3 Number of probing variables fully optimized (not fixed at bound)
+RealOpt1 double 0 0 0 maxdouble 0 7 Real option 1
+RealOpt2 double 0 0 0 maxdouble 0 7 Real option 2
+RealOpt3 double 0 0 0 maxdouble 0 7 Real option 3
+RealOpt4 double 0 0 0 maxdouble 0 7 Real option 4
+RealOpt5 double 0 0 0 maxdouble 0 7 Real option 5
+RealPower integer 0 0 0 maxint 0 9 Use original real power
+redabstol double 0 0.1 0 maxdouble 1 3 Absolute improvement in the objective to reconstruct the relaxation of the current node
+redreltol double 0 0.1 0 maxdouble 1 3 Relative improvement in the objective to reconstruct the relaxation of the current node
+Reform integer 0 100 0 maxint 1 9 Reformulation level
+RLTRel integer 0 1 0 maxint 1 7 Do RLTRel rounds of RLT cuts at every node
+tdo boolean 0 1 1 3 Bounds tightening option
+ 0 no bounds tightening is performed.
+ 1 bounds tightening is performed.
+twoways boolean 0 1 1 3 Determines whether probing on both bounds is done or not
+ 0 probing to be done by farthest bound
+ 1 probing to be done at both bounds
+WorkFactor double 0 1 0 maxdouble 1 9 Memory allocation multiplier in Mb - overrides automatic default
+WorkSpace integer 0 0 0 maxint 1 9 Memory allocation in Mb - overrides automatic default
+Bar_Space_Length integer 0 0 0 maxint 0 9 BARON work space global variable in Mb
+.Lo double 0 0 mindouble maxdouble 1 9 Variable Lower Bound
+.Up double 0 0 0 maxdouble 1 9 Variable Upper Bound
+.Prior double 0 0 0 maxdouble 1 9 Variable Branching Priority
+.EquClass enumint 0 0 1 9 Equation Classification
+ 0 1 general
+ 1 1 relax
+ 2 1 convex
+ 3 1 relax+convex
+GamsCntr string 0 "" 0 8 GAMS control file name
+HessCntr string 0 "" 0 8 Hessian mini control file
+HessInst string 0 "" 0 8 Hessian instruction file
+TimName string 0 "" 0 8 tim file name
+ResName string 0 "" 0 8 res file name
+SumName string 0 "" 0 8 sum file name
+OptName string 0 "" 1 8 temp option file name
+ProName string 0 "" 0 8 problem name
+DotBar string 0 "gams.bar" 1 9 Name of BARON problem file to be written
+Include immediate ReadFile 0 9 Start reading from a new file
+ObjName string 0 "" 1 9 Obj variable name
+ExtNLPsolver string 0 "conopt" 1 9 External GAMS NLP solver and option file (e.g. conopt.1)
+ExtMINLPsolver string 0 "sbb" 1 9 External GAMS MINLP solver and option file (e.g. sbb.1)
+Secret strlist 0 1 9 Pass secret option to BARON
+optca synonym EpsA
+optcr synonym EpsR
+integer1 synonym IntOpt1
+integer2 synonym IntOpt2
+integer3 synonym IntOpt3
+integer4 synonym IntOpt4
+integer5 synonym IntOpt5
+nodlim synonym MaxIter
+reslim synonym MaxTime
+real1 synonym RealOpt1
+real2 synonym RealOpt2
+real3 synonym RealOpt3
+real4 synonym RealOpt4
+real5 synonym RealOpt5
+myeolchar EOLCOMM #
+*
+* deprecated section
+*
+baron11 deprecated
+ linearidentify New parser in BARON 11.3 makes option superfluous
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+Termination group 1 1 Termination options
+Relaxation group 2 1 Relaxation options
+Range group 3 1 Range Reduction Options - 6.4
+Branching group 4 1 Branching Options  - 6.2
+Heuristic group 5 1 Heuristic Local Search Options - 6.3
+Output group 6 1 Output Options - 6.6
+Other group 7 1 Other Options - 6.7
+GamsOnly group 8 1 Gams system interface only
+NonBaron group 9 1 None Baron options - interface and convert only
+*** End of file

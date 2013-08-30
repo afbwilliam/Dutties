@@ -1,0 +1,97 @@
+$TITLE EXAMINER test suite - test returnInitPoint option (EXAMIN03,SEQ=443)
+
+$ontext
+Normally, EXAMINER just examines and reports on solutions without
+reporting any solutions back to GAMS.  This behavior can be changed
+with the returnXxxxPoint options.  The model verifies that the
+returnInitPoint option returns the correct values.
+
+Contributor: Steve Dirkse
+$offtext
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+          c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars ;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+Model transport /all/ ;
+
+
+* first set variable levels & equation marginals
+x.l('san-diego','new-york') = 325;
+x.l('san-diego','chicago')  = 275;
+x.l('seattle'  ,'topeka')   = 275;
+x.l('seattle'  ,'chicago')  = 50;
+z.l = sum{(i,j), c(i,j)*x.l(i,j)};
+cost.m = 1;
+supply.m(i) = 0;
+demand.m(j) = 0;
+
+* now set quantities that Examiner will recompute when asked:
+*  variable marginals (i.e. reduced costs)
+*  equation levels are not set, GAMS computes these when generating
+*  the model
+* we can set x.m to look optimal but if they are not consistent with
+* x.l they are bogus anyway.
+x.m(i,j) = 0;
+z.m = 0;
+
+* we can easily compute the *REAL* x.m and z.m in this case
+scalar zm, zmdiff;
+parameter xm(i,j), xmdiff(i,j);
+zm = 0;
+xm(i,j) = c(i,j) - supply.m(i) - demand.m(j);
+
+$onecho > examiner.opt
+examineGamsPoint yes
+examineInitPoint yes
+returnInitPoint  yes
+$offecho
+
+option lp=examiner;
+transport.optfile=1;
+Solve transport using lp minimizing z ;
+
+zmdiff = zm - z.m;
+xmdiff(i,j) = xm(i,j) - x.m(i,j);
+display zm, zmdiff, xm, xmdiff;
+abort$[abs(zmdiff) > 1e-6] 'bad z.m';
+abort$[smax{(i,j), abs(xmdiff(i,j))} > 1e-6] 'bad x.m';

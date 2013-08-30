@@ -1,0 +1,1620 @@
+Version = 5
+LibraryName = GAMS EMP Library
+Columns = 4
+4 = SeqNr
+1 = Name
+2 = Type
+3 = Description
+InitialSort = 2
+*$*$*$
+Files = emputil.1,empmod.inc
+1 = EMPUTIL
+2 = GAMS
+3 = Generates the EMP Model Library files
+4 = 01
+Generates the EMP Model Library files (EMPUTIL,SEQ=1)
+
+The following system configuration/document files are written:
+
+    emplib.glb   IDE index and documentaion
+    emplibfs.txt Makefile input file
+
+All files $included, read and written have to be in the same directory.
+
+*$*$*$
+Files = transvi.2
+1 = TRANSVI
+2 = VI
+3 = VI version of the transport model
+4 = 02
+VI version of the transport model (TRANSVI,SEQ=2)
+
+Example showing how to write a VI as an MCP
+
+We want to write the VI using EMP to avoid manual translation to MCP. We use the definitions of VI and MCP from
+
+Steven P. Dirkse,  Ph.D. Dissertation
+    Robust Solution of Mixed Complementarity Problems.
+    Mathematical Programming Technical Report 94-12, August 1994.
+    ftp://ftp.cs.wisc.edu/math-prog/tech-reports/94-12.ps
+    Pages 4-6
+
+In this case, the VI to start with is what we get by letting F(x) = df/dx, where f is the objective in the transport model.
+
+We adjusted the data to get nonzero supply marginals.
+
+Contributor: Steven Dirkse and Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = traffic.3
+1 = TRAFFIC
+2 = VI
+3 = Traffic Assignment Model
+4 = 03
+Traffic Assignment Model (TRAFFIC,SEQ=3)
+
+A simple traffic assignment problem:
+ - Move 5 units of stuff from A to B as quickly as possible, using one or more
+   of the N paths p1..pN between A and B.
+ - The delay d on each path is a function of the volume of traffic on
+   the path:
+      d(p) = a(p) + x(p) + x(p)**1.5
+
+This is a simple example showing how VI can be used to compute
+ effective delay*, i.e. the maximum delay over all paths with nonzero
+flow, or the time it takes for all the stuff to reach the destination.  For an example involving a nontrivial network see the traffic2 model in this library.
+
+Contributor: Steven Dirkse, January 2009
+
+*$*$*$
+Files = bard511.4
+1 = BARD511
+2 = BP
+3 = Practical Bilevel Optimization Example 5.1.1
+4 = 04
+Practical Bilevel Optimization Example 5.1.1 (BARD511,SEQ=4)
+
+Example from Chapter 5, example 5.1.1, page 197
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications, Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = bard721.5
+1 = BARD721
+2 = BP
+3 = Practical Bilevel Optimization Example 7.2.1
+4 = 05
+Practical Bilevel Optimization Example 7.2.1 (BARD721,SEQ=5)
+
+Example from Chapter 7, example 7.2.1, page 275
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications, Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = bard722.6
+1 = BARD722
+2 = BP
+3 = Practical Bilevel Optimization Example 7.2.2
+4 = 06
+Practical Bilevel Optimization Example 7.2.2 (BARD722,SEQ=6)
+
+Example from Chapter 7, example 7.2.2, page 281
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications, Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = bard851.7
+1 = BARD851
+2 = BP
+3 = Practical Bilevel Optimization Example 8.5.1
+4 = 07
+Practical Bilevel Optimization Example 8.5.1 (BARD851,SEQ=7)
+
+Example from Chapter 8, example 8.5.1, page 336
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications, Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = bard871.8
+1 = BARD871
+2 = BP
+3 = Practical Bilevel Optimization Example 8.7.1
+4 = 08
+Practical Bilevel Optimization Example 8.7.1 (BARD871,SEQ=8)
+
+Example from Chapter 8, example 8.7.1, page 358
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications, Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = ccmg153.9
+1 = CCMG153
+2 = BP
+3 = Bilevel Programs in Engineering Example 1.5.3
+4 = 09
+Bilevel Programs in Engineering Example 1.5.3 (CCMG153,9)
+
+Example from Chapter 1.5.3 page 45-48 and 276-277 (The Wall Design)
+
+Conejo A J, Castillo E, Minguez R, and Garcia-Bertrand R, Decomopsition Techniques in Mathematical Programming, Springer, Berlin, 2006.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = ccmg71.10
+1 = CCMG71
+2 = BP
+3 = Bilevel Programs in Engineering Example 7.1
+4 = 10
+Bilevel Programs in Engineering Example 7.1 (CCMG71,10)
+
+Example from Chapter 7, example 7.1, page 274
+
+Conejo A J, Castillo E, Minguez R, and Garcia-Bertrand R, Decomopsition Techniques in Mathematical Programming, Springer, Berlin, 2006.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = ccmg74.11
+1 = CCMG74
+2 = BP
+3 = Bilevel Programs in Engineering Example 7.4
+4 = 11
+Bilevel Programs in Engineering Example 7.4 (CCMG74,11)
+
+Example from Chapter 7, example 7.4, page 281
+
+Conejo A J, Castillo E, Minguez R, and Garcia-Bertrand R, Decomopsition Techniques in Mathematical Programming, Springer, Berlin, 2006.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = mirrlees.12
+1 = MIRRLEES
+2 = BP
+3 = Simple Nonconvex Bilevel Programming Example
+4 = 12
+Simple Nonconvex Bilevel Programming Example (MIRRLEES,12)
+
+This simple nonconvex example is borrowed from
+
+J. A. Mirrlees. The theory of moral hazard and unobservable bevaviour: part I. Review of Economic Studies, 66: 3-21, 1999.
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = target.13
+1 = TARGET
+2 = ECS
+3 = State Variable Targetting in EMPs ECS Framework
+4 = 13
+State Variable Targetting in EMPs ECS Framework (TARGET,SEQ=13)
+
+This model is a variant of T. Rutherford's model 'State Variable Targetting in an NLP Framework'.
+
+http://www.mpsge.org/nlptarget/
+
+         This program illustrates how to use recursive NLP methods
+         for solving an infinite-horizon optimization model with minimal
+         terminal effects.
+
+         Thomas F. Rutherford
+         December 1, 2005
+
+It makes use of EMP's embedded complementarity system framework.
+
+Contributors: Jan-H. Jagla, January 2009
+              Michael Ferris, April 2010
+
+*$*$*$
+Files = transecs.14
+1 = TRANSECS
+2 = ECS
+3 = Transportation model as equilibrium problem using embedded complementarity
+4 = 14
+Transportation model as equilibrium problem using embedded complementarity (TRANSECS,SEQ=14)
+
+Dantzig's original transportation model TRNSPORT (in GAMS Model Library) is reformulated using EMP's embedded complementarity system. It reproduces the results of TRANSMCP (in GAMS Model Library) which uses a linear complementarity approach.
+
+As in TRANSMCP, we solve four models:
+   1. original fixed-demand LP to get calibration data
+   2. reproduce fixed-demand results with flexible-demand model
+   3. counter-factual with fixed-demand model
+   4. counter-factual with flexible-demand model
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions. Princeton University Press, Princeton, New Jersey, 1963.
+
+Contributor: Steven Dirkse, January 2009
+
+*$*$*$
+Files = makespan.15
+1 = MAKESPAN
+2 = LOGICAL
+3 = Job scheduling with three datasets - Minimize the makespan
+4 = 15
+Job scheduling with three datasets - Minimize the makespan (MAKESPAN,SEQ=15)
+
+This model solves a job shop scheduling problem using EMP's disjunction reformulation. The problem which has a set of jobs (j) which must be processed in a sequence of stages (s). Yet, not all jobs require all stages. A zero wait transfer policy is assumed between the stages (once a job has started it cannot be interrupted). To obtain a feasible solution it is necessary to eliminate all clashes between jobs. It requires that no two jobs are performed at any stage at any time. The objective is to minimize the makespan, the time to complete all jobs.
+
+This model includes data sets 1, 6 and 9 which can be reset. E.g. gams makespan --example=6
+
+References: Raman & Grossmann, Computers and Chemical Engineering 18, 7, p.563-578, 1994. Aldo Vecchietti, LogMIP User's Manual, http://www.logmip.ceride.gov.ar/, 2007
+
+Contributor: Alex Meeraus, January 2009
+
+*$*$*$
+Files = goempgo.16,empmod.inc
+1 = GOEMPGO
+2 = GAMS
+3 = EMP Quality Assurance Test
+4 = 16
+'EMP Quality Assurance Test' (GOEMPGO,SEQ=16)
+
+This model runs all models included in the EMP Library and their success
+
+Contributor: Jan-H. Jagla, January 2009
+
+*$*$*$
+Files = emphtm.17,empmod.inc
+1 = EMPHTM
+2 = GAMS
+3 = Generates HTM emplib library files
+4 = 17
+'Generates HTM emplib library files' (EMPHTM,SEQ=17);
+
+Generates HTM emplib library files
+
+GAMS Development Coorporation, emplib Tool Box.
+
+  Generates all .htm related files for the set of models
+  found in empmod.inc. Uses unpublished and
+  unsupported PUT_Utilities features.
+
+  The file empmod.inc is the master file for all other
+  derived files.
+
+  Files generated:
+
+     seqindx.htm
+     alfindx.htm
+     *.htm  for all model and include files
+
+*$*$*$
+Files = zerofunc.18
+1 = ZEROFUNC
+2 = VI
+3 = Match unmatched vars with zero functions in VI
+4 = 18
+Match unmatched vars with zero functions in VI (ZEROFUNC,SEQ=18)
+
+If the feasible set is defined in terms of variables that don't appear in the VI function F, we should not need to mention these variables explicitly in a match.  Any unmatched variable will be treated as matched to the zero function.  The optimization analogy is variables that appear in the constraints but not in the objective.  We test/define the proper behavior in this model.
+
+Contributor: Steven Dirkse, February 2009
+
+*$*$*$
+Files = traffic2.19
+1 = TRAFFIC2
+2 = VI
+3 = Traffic Assignment Model
+4 = 19
+Traffic Assignment Model (TRAFFIC,SEQ=19)
+
+In this traffic assignment problem, we have a number of users/cities, connected by a shared network of roads.   Each user n needs to move a fixed quantity from her city n to city n++3 over the shared network.  Each user can routes flow among multiple paths between her source and distination nodes.  The delay on each path is the sum of the delay along each arc in the path, while the *effective delay* for each user is the maximum delay over the her paths with nonzero flow.  Each user routes her flow so as to minimize her effective delay, assuming the flow chosen by the other users is constant.
+
+We give two formulations of the model: the first is as a VI via EMP, the second as a standard MCP.  The MCP formulation has the advantage of yielding a small model (one variable per city) but the function used to define the MCP is less readable and maintainable than the functions used to define the VI. It would be easier to modify the VI formulation to add some additional links or to bound some of the link flows, while the MCP formulation depends on the particular form of the network.
+
+The MCP formulation is taken from
+
+Steven P. Dirkse,  Ph.D. Dissertation
+         Robust Solution of Mixed Complementarity Problems.
+         Mathematical Programming Technical Report 94-12, August 1994.
+         ftp://ftp.cs.wisc.edu/math-prog/tech-reports/94-12.ps
+         Chapter 3.2.4, Pages 63-65
+
+while the model originates from
+
+Bertsekas, D. P. & Gafni E. M. (1982) 'Projection methods for variational
+         inequalities with application to the traffic assignment problem',
+         Mathematical Programming Study 17, 139-159
+
+Contributor: Steven Dirkse, February 2009
+
+*$*$*$
+Files = sequence.20
+1 = SEQUENCE
+2 = LOGICAL
+3 = Sequencing on a single machine
+4 = 20
+Sequencing on a single machine (SEQUENCE, SEQ=20)
+
+A set of tasks is to be processed on a single machine. The execution of the tasks is non-preemptive (ie cannot be interrupted). For every task i its release date, duration and due date are given.
+
+What is the sequence that minimizes the maximum tardiness?
+
+Reference: Applications of optimization with Xpress-MP (Last update 10 September, 2007) 7.4 Sequencing jobs on a bottleneck machine, pp 94-97
+
+This model shows how to use different reformulations (BigM, Convex Hull and Indicators) through EMP without any change to the model itself.
+
+Contributor: Michael Ferris and Jan-H. Jagla, April 2009
+
+*$*$*$
+Files = negishi.21
+1 = NEGISHI
+2 = ECS
+3 = Pure exchange model solved with EMP, SJM, and CGE
+4 = 21
+Pure exchange model solved with EMP, SJM, and CGE (NEGISHI, SEQ=21)
+
+We consider a pure exchange model in which a set of agents (i.e. consumers) are each endowed with a fixed quantity of goods. The agents can trade to maximize their utility.  The solution consists of a consumption vector for each agent and a set of prices for each good such that:
+   each agent maximizes her utility at this consumption level
+   s.t. the budget constraint imposed by her endowment and the prices
+
+Utility is given by a Cobb-Douglas function of the form
+
+      U(agent) = prod(good, C(good,agent)**alpha(good,agent))
+
+This utility function implies that the income level is the Negishi weight.
+
+This cannot be solved as a single NLP model (see reference below) but there are a number of ways to solve this model:
+  1. Via EMP and a complementarity model, finding the weights directly
+  2. Via the SJM approach of Rutherford
+  3. Via a CGE approach (using the implicit demand functions)
+
+Negishi, T, Welfare Economics and the Existence of an Equilibrium for a Competitive Economy.  Metroeconomics, Vol 12 (1960), 92-97.
+
+Editor: Steve Dirkse, August 2009
+        With contributions from Sherman Robinson and Michael Ferris
+
+*$*$*$
+Files = jointc1.22
+1 = JOINTC1
+2 = BP
+3 = Educational bilevel model
+4 = 22
+Educational bilevel model (JOINTC1, SEQ=22)
+
+This is an example that shows that upper level joint constraints cannot simply be put into lower level model
+
+First model ----------- The lower level problem essentially requires y = -x which implies -x >= x for the upper level problem. Since has a lower bound 1 this model is infeasible.
+
+Second model ------------ The lower level problem essentially requires y = |x|. Since x and y are minimized and x has a lower bound of 1 the solution is x = 1 = y.
+
+Contributor: Michael Ferris, November 2009
+
+*$*$*$
+Files = jointc2.23
+1 = JOINTC2
+2 = BP
+3 = Educational bilevel model
+4 = 23
+Educational bilevel model (JOINTC2, SEQ=23)
+
+This is an example that shows that upper level joint constraints cannot simply be put into lower level model
+
+First model ----------- The lower level problem essentially requires y = -x which implies x <= 1 for the upper level problem. Since x has a lower bound of 1 the solution is x = 1, y = -1.
+
+Second model ------------ The upper level problem maximizes x s.t. no constraint, hence, x will be at its upper bound, x = 2. That implies y >= 0 for the lower level problem which minimzes y, hence y = 0.
+
+Contributor: Michael Ferris, November 2009
+
+*$*$*$
+Files = ferris43.24
+1 = FERRIS43
+2 = ECS
+3 = Educational embedded complemenarity system model
+4 = 24
+Educational embedded complementarity system model (FERRIS43,SEQ=24)
+
+Embedded Complementarity System -------------------------------
+
+The problem to solve is:
+  min_x  f(x,y)  st  g(x,y) \leq 0
+plus the constraint that
+  H(x,y,\lambda) = 0
+where \lambda is the multiplier on the g(x,y) \leq 0 constraint.
+
+EMP enables to write this problem simply by specifying the nlp and the side constraint H. Using the mappings
+
+dualequ H y dualvar lambda g
+
+EMP considers the side constraint H defining the dual of y and the side variable lambda defining the dual of g.
+
+References: Ferris et al, An extended mathematical programming framework, Computers and Chemical Engineering 33, p.1973-1982, 2009
+
+Contributor: Jan-H. Jagla, November 2009
+
+*$*$*$
+Files = multmpec.25
+1 = MULTMPEC
+2 = BP
+3 = Educational bilevel model with VI followers
+4 = 25
+Educational bilevel model with VI followers (MULTMPEC,SEQ=25)
+
+This model demonstrate how to use EMP for a bilevel model with multiple inner variational inequality followers.
+
+The actual model to solve is:
+
+min_{u,x,y,z}   z
+  s.t.   exp(z) + y = 2, z >= 1
+
+         (u,x) solves VI( [x+y+z-1; u-log(x)], {(u,x) | u >= 0, x >= 0 } )
+
+            y  solves VI(               y+z+3, {   y  |         y free } )
+
+Note that the two VI's (due to the definitional sets) correspond respectively to a complementarity problem:
+
+       0 <= u  \perp  x + y + z - 1 >= 0
+       0 <= x  \perp  u - log(x) >= 0
+
+and a linear equation:
+
+      y + z + 3 = 0
+
+The starting value for x is needed to protect the evaluation of log(x).
+
+Contributor: Michel Ferris and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = transbp.26
+1 = TRANSBP
+2 = BP
+3 = Transportation model with variable demand function using bilevel programming
+4 = 26
+Transportation model with variable demand function using bilevel programming (TRANSBP,SEQ=26)
+
+Dantzig's original transportation model TRNSPORT (in GAMS Model Library) is reformulated using EMP's bilevel programming.
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions. Princeton University Press, Princeton, New Jersey, 1963.
+
+Additional features:
+  The fixed demand b(j) is replaced by a function:
+    g(j) = max(b(j),y(j))
+  with an outer objective function that tries to force y to be close to a
+  target value (400). The max function is modeled using Variational Inequalties.
+
+  The original trnsport model is the lower level problem.
+
+Contributor: Michael Ferris, December 2009
+
+*$*$*$
+Files = flds911.27
+1 = FLDS911
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.1
+4 = 27
+Princeton Bilevel Optimization Example 9.1.1 (FLDS911,SEQ=27)
+
+Test problem 9.2.2 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.1 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Clark, P A, and Westerberg, A W, Bilevel Programming for Steady-State Chemical Process Design-i. Fundamentals and Algorithms. Comput. Chem. Eng. 14 (1990), 87-97.
+
+NOTE:
+
+The problem 9.1.1 on the web gives the solution y1=4, y2=2, and x=5. However, the KKT condition
+  kt2..   4*lb('2') - 2*lb('2') - 3*lb('3')  =e= 0;
+seems to be incorrect. It does not match equation c1-c3. It but should be
+  kt2..   4*lb('1') - 2*lb('2') - 3*lb('3')  =e= 0;
+Then, the model gives the solution y1=4, y2=6, and x=6 which is verified the EMP model below.
+
+We did NOT verify this by checking the original reference!
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds912.28
+1 = FLDS912
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.2
+4 = 28
+Princeton Bilevel Optimization Example 9.1.2 (FLDS912,SEQ=28)
+
+Test problem 9.2.3 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.2 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Liu, Y H, and Hart, S M, Characterizing an Optimal Solution to the Linear Bilevel Programming Problem. European Journal of Operational Research 79 (1994), 164-166.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds913.29
+1 = FLDS913
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.3
+4 = 29
+Princeton Bilevel Optimization Example 9.1.3 (FLDS913,SEQ=29)
+
+Test problem 9.2.4 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.3 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Candler, W, and Townsley, R, A Linear Two-Level Programming Problem. Comp. Op. Res.9 (1982), 59-76.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds914.30
+1 = FLDS914
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.4
+4 = 30
+Princeton Bilevel Optimization Example 9.1.4 (FLDS914,SEQ=30)
+
+Test problem 9.2.5 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.4 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds915.31
+1 = FLDS915
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.5
+4 = 31
+Princeton Bilevel Optimization Example 9.1.5 (FLDS915,SEQ=31)
+
+Test problem 9.2.6 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.5 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Bard J F, Some properties of the bilevel programming problem, Journal of Optimization Theory and Applications, v.68 n.2, p.371-378, Feb. 1991
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds916.32
+1 = FLDS916
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.6
+4 = 32
+Princeton Bilevel Optimization Example 9.1.6 (FLDS916,SEQ=32)
+
+Test problem 9.2.7 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.6 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+G. Anandalingam and D. J. White, "A Solution Method for the Linear Static Stackelberg Problem Using Penalty Functions", IEEE Transactions on Automatic Control, vol. 35, no. 10, pp 1170-1173, 1990.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds917.33
+1 = FLDS917
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.7
+4 = 33
+Princeton Bilevel Optimization Example 9.1.7 (FLDS917,SEQ=33)
+
+Test problem 9.2.8 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.7 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Jonathan F. Bard, James E. Falk: An explicit solution to the multi-level programming problem. Computers & OR 9(1): 77-100 (1982)
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds918.34
+1 = FLDS918
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.8
+4 = 34
+Princeton Bilevel Optimization Example 9.1.8 (FLDS918,SEQ=34)
+
+Test problem 9.2.9 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.8 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Jonathan F. Bard, James E. Falk: An explicit solution to the multi-level programming problem. Computers & OR 9(1): 77-100 (1982)
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds919.35
+1 = FLDS919
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.1.9
+4 = 35
+Princeton Bilevel Optimization Example 9.1.9 (FLDS919,SEQ=35)
+
+Test problem 9.2.10 in Handbook of Test Problems in Local and Global Optimization Test problem 9.1.9 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Visweswaran, V., C. Floudas, M. Ierapetritou, and E. Pistikopoulos, A Decomposition Based Global Optimization Approach for Solving Bilevel Linear and Nonlinear Quadratic Programs. In Floudas and Pardalos (eds.), State of the Art in Global Optimization: Computational Methods and Applications. Kluwer Academic Publishers, 1996.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+*$*$*$
+Files = flds921.36
+1 = FLDS921
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.1
+4 = 36
+Princeton Bilevel Optimization Example 9.2.1 (FLDS921,SEQ=36)
+
+Test problem 9.3.2 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.1 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Shimizu, K, Ishizuka, Y, and Bard, J F, Nondifferentiable and Two-Level Mathematical Programming. Kluwer Academic Publishers, 1997
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds922.37
+1 = FLDS922
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.2
+4 = 37
+Princeton Bilevel Optimization Example 9.2.2 (FLDS922,SEQ=37)
+
+Test problem 9.3.3 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.2 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Aiyoshi, E and K. Shimizu (1981). Hierarchical Decentralized systems and its new solution by a Barrier Method. IEEE Trans. Systems, Man and Cybernetics, SMC-11, 444.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds923.38
+1 = FLDS923
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.3
+4 = 38
+Princeton Bilevel Optimization Example 9.2.3 (FLDS923,SEQ=38)
+
+Test problem 9.3.4 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.3 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Visweswaran, V., C. Floudas, M. Ierapetritou, and E. Pistikopoulos, A Decomposition Based Global Optimization Approach for Solving Bilevel Linear and Nonlinear Quadratic Programs. In Floudas and Pardalos (eds.), State of the Art in Global Optimization: Computational Methods and Applications. Kluwer Academic Publishers, 1996.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds924.39
+1 = FLDS924
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.4
+4 = 39
+Princeton Bilevel Optimization Example 9.2.4 (FLDS924,SEQ=39)
+
+Test problem 9.3.5 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.4 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Yezza, A. (1996). First-order necessary optimality conditions for general bilevel programming problems. Journal of Optimization Theory and Applications, 89:189– 219.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds925.40
+1 = FLDS925
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.5
+4 = 40
+Princeton Bilevel Optimization Example 9.2.5 (FLDS925,SEQ=40)
+
+Test problem 9.3.6 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.5 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Clark, P A, and Westerberg, A W, Bilevel Programming for Steady-State Chemical Process Design-i. Fundamentals and Algorithms. Comput. Chem. Eng. 14 (1990), 87-97.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds926.41
+1 = FLDS926
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.6
+4 = 41
+Princeton Bilevel Optimization Example 9.2.6 (FLDS926,SEQ=41)
+
+Test problem 9.3.7 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.6 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Falk, J. E. and Liu, J. (1995). On bilevel programming, Part I: General nonlinear cases. Mathematical Programming, 70:47–72.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds927.42
+1 = FLDS927
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.7
+4 = 42
+Princeton Bilevel Optimization Example 9.2.7 (FLDS927,SEQ=42)
+
+Test problem 9.3.8 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.7 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Visweswaran, V., C. Floudas, M. Ierapetritou, and E. Pistikopoulos, A Decomposition Based Global Optimization Approach for Solving Bilevel Linear and Nonlinear Quadratic Programs. In Floudas and Pardalos (eds.), State of the Art in Global Optimization: Computational Methods and Applications. Kluwer Academic Publishers, 1996.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds928.43
+1 = FLDS928
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.8
+4 = 43
+Princeton Bilevel Optimization Example 9.2.8 (FLDS928,SEQ=43)
+
+Test problem 9.3.9 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.8 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Yezza, A. (1996). First-order necessary optimality conditions for general bilevel programming problems. Journal of Optimization Theory and Applications, 89:189– 219.
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = flds929.44
+1 = FLDS929
+2 = BP
+3 = Princeton Bilevel Optimization Example 9.2.9
+4 = 44
+Princeton Bilevel Optimization Example 9.2.9 (FLDS929,SEQ=44)
+
+Test problem 9.3.10 in Handbook of Test Problems in Local and Global Optimization Test problem 9.2.9 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding, S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Bard J F, Some properties of the bilevel programming problem, Journal of Optimization Theory and Applications, v.68 n.2, p.371-378, Feb. 1991
+
+Contributor: Jan-H. Jagla, January 2010
+
+*$*$*$
+Files = transeql.45
+1 = TRANSEQL
+2 = ECS
+3 = Transportation model as equilibrium problem
+4 = 45
+Transportation model as equilibrium problem (TRANSEQL,SEQ=45)
+
+Dantzig's original transportation model TRNSPORT (in GAMS Model Library) is reformulated using EMP's equilibrium system with multiple agents. It reproduces the results of TRANSMCP (in GAMS Model Library) which uses a linear complementarity approach.
+
+As in TRANSMCP, we solve four models:
+   1. original fixed-demand LP to get calibration data
+   2. reproduce fixed-demand results with flexible-demand model
+   3. counter-factual with fixed-demand model
+   4. counter-factual with flexible-demand model
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions. Princeton University Press, Princeton, New Jersey, 1963.
+
+Contributor: Michael Ferris & Steven Dirkse, January 2010
+
+*$*$*$
+Files = simplevi.46
+1 = SIMPLEVI
+2 = VI
+3 = Simple Variational Inequality
+4 = 46
+Simple Variational Inequality (SIMPLEVI,SEQ=46)
+
+This model shows how to solve a simple VI using EMP
+
+VI is to find x in X: F(x) (y - x) >= 0, for all y in X X is a closed convex set, e.g. X = { x >= 0 | g(x) >= 0 }
+
+Subsequently, the model 'reform' illustrates the MCP that EMP solves internally.
+
+Contributor: Michael Ferris, February 2010
+
+*$*$*$
+Files = simplevi2.47
+1 = SIMPLEVI2
+2 = VI
+3 = Simple Nonlinear Variational Inequality
+4 = 47
+Simple Nonlinear Variational Inequality (SIMPLEVI2,SEQ=47)
+
+This model shows how to solve a simple nonlinear VI using EMP
+
+VI is to find x in X: F(x) (y - x) >= 0, for all y in X X is a closed convex set, e.g. X = { x >= 0 | g(x) >= 0 }
+
+Since the variational inequality is integrable w.r.t y this model can also be expressed as NLP as done in the model 'nlpmod'.
+
+Contributor: Michael Ferris, February 2010
+
+*$*$*$
+Files = affinevi.48
+1 = AFFINEVI
+2 = VI
+3 = Affine Variational Inequality
+4 = 48
+Affine Variational Inequality (AFFINEVI,SEQ=48)
+
+An affine VI is to find x in X:
+
+F(x) (y - x) >= 0, for all y in X
+
+Here F is an affine (linear) function and X is polyhedral: e.g. X = { x >= 0 | Ax >= b }
+
+This can be reformulated as an MCP:
+
+0 <= F(x) - A'u           \perp x >= 0 0 <= Ax - b               \perp u >= 0
+
+Contributor: Michael Ferris, February 2010
+
+*$*$*$
+Files = simpequil.49
+1 = SIMPEQUIL
+2 = EQUIL
+3 = Simple Equilibrium
+4 = 49
+Simple Equilibrium (SIMPEQUIL,SEQ=49)
+
+This is a simple equilibrium problem that shows that the existence of solutions to the individual optimization problems does not guarantee the existence of an equilibrium solution.
+
+Individual agents problems are solvable LP's. Overall problem does not have a solution.
+
+Forcing the variable x2 to be strictly positive enables an equilibrium solution.
+
+Contributor: Michael Ferris, March 2010
+
+*$*$*$
+Files = flipper.50
+1 = FLIPPER
+2 = EQUIL
+3 = Test of flipping equations
+4 = 50
+Test of flipping equations (FLIPPER, SEQ=50)
+
+Test to verify that the flip operator is working as expected.  We expect that the MCP generated by JAMS with the flip in the info file will be identical to the unflipped version.  To test this we check that the expected solution is accepted as such with an iterlim of 0.
+
+Authors: Steve and Michael, June 2010
+
+*$*$*$
+Files = scarfemp-dem.51
+1 = SCARFEMP-DEM
+2 = EQUIL
+3 = Scarf's Activity Analysis Example
+4 = 51
+Scarf's Activity Analysis Example (SCARFEMP-DEM,SEQ=51)
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria. Yale University Press, 1973.
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = scarfemp-altdem.52
+1 = SCARFEMP-ALTDEM
+2 = EQUIL
+3 = Scarf's Activity Analysis Example - non-closed form demand function
+4 = 52
+Scarf's Activity Analysis Example - non-closed form demand function (SCARFEMP-ALTDEM,SEQ=52)
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.  Yale University Press, 1973.
+
+Rather than write the demand function explicitly (as in the GAMSLIB model scarfmcp), we instead
+
+max_x(c,h)  u_h(x)
+   s.t    p'*x <= i_h, x >= 0
+
+In this model we generate a new utility function
+   u_h(x) = sum_c gamma(c,h) * x(c,h)**beta(c,h)
+
+for which there is no closed form solution for the demand function (but which is chosen to have the same soln as the scarf model)
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = scarfemp-primal.53
+1 = SCARFEMP-PRIMAL
+2 = EQUIL
+3 = Scarf's Activity Analysis Example
+4 = 53
+Scarf's Activity Analysis Example (SCARFEMP-PRIMAL,SEQ=53)
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria. Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp), we instead use the KKT of the dual form optimization problem:
+   max_{x,y}  sum (h, i(h) * log(u_h(x)))
+   s.t    Ay  + sum_h endow(h) >= sum_h x(c,h), x,y >= 0
+
+coupled with the income complementarity relationship.
+
+This is detailed in Rutherford's 1992 paper entitled "Sequential Joint Maximization"
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = scarfemp-dual.54
+1 = SCARFEMP-DUAL
+2 = EQUIL
+3 = Scarf's Activity Analysis Example
+4 = 54
+Scarf's Activity Analysis Example (SCARFEMP-DUAL,SEQ=54)
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria. Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp), we instead use the KKT of the dual form optimization problem:
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    A'p <= 0, p >= 0
+
+coupled with the income complementarity relationship.
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_c  p'*c   s.t.  u_h(c) >= 1
+
+This is detailed in Rutherford's 1992 paper entitled "Sequential Joint Maximization"
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = scarfexpend.55
+1 = SCARFEXPEND
+2 = EQUIL
+3 = Scarf's Activity Analysis Example
+4 = 55
+Scarf's Activity Analysis Example (SCARFEXPEND,SEQ=55)
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria. Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp), we instead
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    A'p <= 0, p >= 0
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_x  p'*x   s.t.  u_h(x) >= 1, x >= 0
+(or equivalently:
+   expend_h(p)  = min_x  p'*x   s.t.  log(u_h(x)) >= 0, x >=0
+)
+
+The EMPLIB model uses a closed form of the expenditure function.  In this model we use the definition of the expenditure model in terms of the utility function to generate the MCP model using an NLP with KKT conditions in it.
+
+ie replace the expenditure function by its KKT conditions (utillev, dedp) in the defn of the max_p problem above.
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = pies.56
+1 = PIES
+2 = EQUIL
+3 = PIES Energy Equilibrium
+4 = 56
+PIES Energy Equilibrium (PIES,SEQ=56)
+
+A linear program with a variable rhs in the constraint system is expressed as a complementarity problem.
+
+LP:     min     <c,x>
+                Ax = q(p),
+        s.t.    Bx = b,
+                x >= 0
+
+where the prices p are the duals to the first constraint.
+
+MCP:           A'p + B'v + c >= 0, x >= 0, comp.
+        -Ax + q(p)           =  0, p free, comp.
+        -Bx              + b =  0, v free, comp.
+
+Of course, the variables x and v are going to be split up further in the GAMS model.
+
+References: William W. Hogan, Energy Policy Models for Project Independence, Computers \& Operations Research (2), 1975.
+
+N. Josephy, A Newton Method for the PIES energy model, Tech Report, Mathematics Research Center, UW-Madison, 1979.
+
+S.P. Dirkse and M.C. Ferris, "MCPLIB: A Collection of Nonlinear Mixed Complementarity Problems", Optimization Methods in Software 5 (1995), 319-345.
+
+Contributor: Michael Ferris & Steven Dirkse, October 2010
+
+*$*$*$
+Files = exc2x2emp.57
+1 = EXC2X2EMP
+2 = EQUIL
+3 = pure exchange model (ie no production)
+4 = 57
+pure exchange model (ie no production) (EXC2X2EMP,SEQ=57)
+
+Model from Ermoliev et al, On Convergence of SJM In this version, replace utility maximization with demand functions This is similar to scarfemp-dual.gms except there is no production
+
+Rather than form the MCP explicitly, we instead use the KKT of the dual form optimization problem:
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    sum(., p(.)) = 1, p >= 0
+
+coupled with the income complementarity relationship.
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_c  p'*c   s.t.  u_h(c) >= 1
+
+In this model, player 1 has u_1(x1) x1('2') while player 2 has u_2(x2) = sqrt(x2('1')*x2('2'))
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = exc2x2emp-dem.58
+1 = EXC2X2EMP-DEM
+2 = EQUIL
+3 = pure exchange model (ie no production)
+4 = 58
+pure exchange model (ie no production) (EXC2X2EMP-DEM,SEQ=58)
+
+Model from Ermoliev et al, On Convergence of SJM Model uses explicit demand functions Computational issues with x2('2') = 0 at solution
+
+gams exc2x2 --sol=mcp1
+   This sets up the standard Arrow Debreu model and solves using MCP
+
+gams exc2x2 --sol=mcp2
+   This sets up the Ermoliev aggregate embedded model, solved using MCP
+
+gams exc2x2 --sol=neg
+   This does Negishi iterations on the Ermoliev embedded model - ie
+   sequence of NLP's trying to get to fixed point on "budget"
+   constraint.
+
+Contributor: Michael Ferris, October 2010
+
+*$*$*$
+Files = foodemp.59
+1 = FOODEMP
+2 = LOGICAL
+3 = Food Manufacturing Problem - Blending of oils
+4 = 59
+Food Manufacturing Problem - Blending of oils  (FOODEMP,SEQ=59)
+
+The problem is to plan the blending of five kinds of oil, organized in two categories (two kinds of vegetable oils and three kinds of non vegetable oils) into batches of blended products over six months.
+
+Some of the oil is already available in storage. There is an initial stock of oil of 500 tons of each raw type when planning begins. An equal stock should exist in storage at the end of the plan. Up to 1000 tons of each type of raw oil can be stored each month for later use. The price for storage of raw oils is 5 monetary units per ton. Refined oil cannot be stored. The blended product cannot be stored either.
+
+The rest of the oil (that is, any not available in storage) must be bought in quantities to meet the blending requirements. The price of each kind of oil varies over the six-month period.
+
+The two categories of oil cannot be refined on the same production line. There is a limit on how much oil of each category (vegetable or non vegetable) can be refined in a given month:
+ - Not more than 200 tons of vegetable oil can be refined per month.
+ - Not more than 250 tons of non vegetable oil can be refined per month.
+
+There are constraints on the blending of oils:
+ - The product cannot blend more than three oils.
+ - When a given type of oil is blended into the product, at least 20 tons of
+   that type must be used.
+ - If either vegetable oil 1 (v1) or vegetable oil 2 (v2) is blended in the
+   product, then non vegetable oil 3 (o3) must also be blended in that product.
+
+The final product (refined and blended) sells for a known price: 150 monetary units per ton.
+
+The aim of the six-month plan is to minimize production and storage costs while maximizing profit.
+
+*$*$*$
+Files = simpenlp.60
+1 = SIMPENLP
+2 = ENLP
+3 = Simple example of ENLP
+4 = 60
+Simple example of ENLP  (SIMPENLP,SEQ=60)
+
+This model shows how to solve a simple ENLP using EMP
+
+Contributor: Michael C. Ferris, February 2011
+
+*$*$*$
+Files = nlp2mcp.61
+1 = NLP2MCP
+2 = GAMS
+3 = nlp2mcp: Form the KKT conditions of an NLP as an MCP
+4 = 61
+nlp2mcp: Form the KKT conditions of an NLP as an MCP  (NLP2MCP,SEQ=61)
+
+This model shows how to solve an NLP as an MCP using EMP. EMP essentially reformulates te NLP using Karush–Kuhn–Tucker (KKT) conditions.
+
+Contributor: Michael C. Ferris, February 2011
+
+*$*$*$
+Files = simplevi3.62
+1 = SIMPLEVI3
+2 = VI
+3 = Another simple VI example
+4 = 62
+Another simple VI example (SIMPLEVI3,SEQ=62)
+
+This model shows that a VI with no constraint set is equivalent to an MCP (models viMCP and mcp1) and shows that by introducing multipliers on the VI constraints (g) in the model vi, we can formulate an equivalent MCP (mcp2)
+
+Note the two forms of the syntax for the empinfo file.  In the first case we use the full form, whereas in the second case we use the "vectorized" form.
+
+Contributor: Michael C. Ferris, February 2011
+
+*$*$*$
+Files = simpequil2.63
+1 = SIMPEQUIL2
+2 = EQUIL
+3 = Simple Equilibrium with external constraint
+4 = 63
+Simple Equilibrium with external constraint (SIMPEQUIL2,SEQ=63)
+
+Example of max_x x st x+y <= 1, x >=0 with external constraint
+           -3x + y = 0.5 (\perp y free)
+
+This is modeled as an equlibrium problem with two agents, one an optimizer, the other solving a VI.
+
+Contributor: Michael Ferris, February 2011
+
+*$*$*$
+Files = hark-monop.64,hark-data.inc
+1 = HARK-MONOP
+2 = EQUIL
+3 = SPE model from Harker - monopolist and competetive versions
+4 = 64
+SPE model from Harker - monopolist and competetive versions (HARK-MONOP,SEQ=64)
+
+A spatial price equilibrium model is used to demonstrate different ways of modeling market behavior.  In this version, we use EMP to model competetive and monopolistic markets.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations Research 34, 3 (1986), 410-425.
+
+Harker model from GAMSLIB.
+
+Contributor: Steven Dirkse, June 2011
+
+*$*$*$
+Files = hark-oligop.65,hark-data.inc
+1 = HARK-OLIGOP
+2 = EQUIL
+3 = SPE model from Harker - oligopoly version
+4 = 65
+SPE model from Harker - oligopoly version (HARK-OLIGOP,SEQ=65)
+
+A spatial price equilibrium model is used to demonstrate different ways of modeling market behavior. In this variant, we look at the Cournot-Nash model that arises when we assume an oligopoly, i.e. the production in each region is controlled by a single firm, where the regional firms are independent.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations Research 34, 3 (1986), 410-425.
+
+Contributor: Steven Dirkse, June 2011
+
+*$*$*$
+Files = hark-oligop-ind.66,[hark-oligop]
+1 = HARK-OLIGOP-IND
+2 = EQUIL
+3 = SPE model from Harker - oligopoly version
+4 = 66
+SPE model from Harker - oligopoly version (HARK-OLIGOP-IND,SEQ=66)
+
+A spatial price equilibrium model is used to demonstrate different ways of modeling market behavior. In this variant, we look at the Cournot-Nash model that arises when we assume an oligopoly, i.e. the production in each region is controlled by a single firm, where the regional firms are independent.  This model starts from the Cournot-Nash solution and verifies that this is a solution to each of the agent optimization problems considered in turn.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations Research 34, 3 (1986), 410-425.
+
+Contributor: Steven Dirkse, June 2011
+
+  either include hark-oligop or
+  run with a restart from the hark-oligop save file
+
+*$*$*$
+Files = hark-stack.67,[hark-oligop]
+1 = HARK-STACK
+2 = BP
+3 = SPE model from Harker - Stackelberg version
+4 = 67
+SPE model from Harker - Stackelberg version (HARK-STACK,SEQ=67)
+
+A spatial price equilibrium model is used to demonstrate different ways of modeling market behavior. In this variant, we look at the Stackelberg model that arises when we assume an oligopoly, i.e. the production in each region is controlled by a single firm, where the regional firms are independent, and one of the firms takes the leader position, i.e. is assumed to have knowledge of the other firms' decision problems.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations Research 34, 3 (1986), 410-425.
+
+Contributor: Steven Dirkse, June 2011
+
+  either include hark-oligop or
+  run with a restart from the hark-oligop save file
+
+*$*$*$
+Files = two3emp.68
+1 = TWO3EMP
+2 = EQUIL
+3 = EMP Formulation of Simple 2 x 2 x 2 General Equilibrium Model
+4 = 68
+EMP Formulation of Simple 2 x 2 x 2 General Equilibrium Model (TWO3EMP,SEQ=68)
+
+This is the TWO3MCP model formulated using GAMS/EMP.
+
+Reference:  Shoven and Whalley: "Applied G.E. Models"
+            Journal of Economic Literature, XXII (1984)
+
+*$*$*$
+Files = airsp3.69
+1 = AIRSP3
+2 = SP
+3 = Aircraft allocation - stochastic optimization
+4 = 69
+Aircraft allocation - stochastic optimization (AIRSP3,SEQ=69)
+
+The objective of this model is to allocate aircrafts to routes to maximize the expected profit when traffic demand is uncertain. Several problems are solved with standard LP solvers and DECIS:
+
+Also see models AIRCRAFT, AIRSP and AIRSP2.
+
+*$*$*$
+Files = apl1psp.70
+1 = APL1PSP
+2 = SP
+3 = Stochastic Electric Power Expansion Planning Problem
+4 = 70
+Stochastic Electric Power Expansion Planning Problem (APL1PSP,SEQ=70)
+
+Stochastic Electric Power Expansion Planning Problem. This is a two-stage stochastic linear program. Facing uncertain demand, decisions about generation capacity need to be made.
+
+This model is also used as an example in the GAMS/DECIS user's guide.
+
+Infanger, G, Planning Under Uncertainty - Solving Large-Scale Stochastic Linear Programs, 1988.
+
+*$*$*$
+Files = apl1pcasp.71
+1 = APL1PCASP
+2 = SP
+3 = Stochastic Electric Power Expansion Planning Problem
+4 = 71
+Stochastic Electric Power Expansion Planning Problem (APL1PCASP,SEQ=71)
+
+Stochastic Electric Power Expansion Planning Problem. This is a two-stage stochastic linear program. Facing uncertain demand, decisions about generation capacity need to be made.
+
+This model is also used as an example in the GAMS/DECIS user's guide.
+
+*$*$*$
+Files = clearlaksp.72
+1 = CLEARLAKSP
+2 = SP
+3 = Scenario Reduction: ClearLake exercise
+4 = 72
+Scenario Reduction: ClearLake exercise (CLEARLAKSP,SEQ=72)
+
+Exercise, p. 44:
+
+The Clear Lake Dam controls the water level in Clear Lake, a well-known resort in Dreamland.  The Dam Commission is trying to decide how much water to release in each of the next four months. The Lake is currently 150 mm below flood stage.  The dam is capable of lowering the water level 200 mm each month, but additional precipitation and evaporation affect the dam.  The weather near Clear Lake is highly variable.  The Dam Commission has divided the months into two two-month blocks of similar weather.  The months within each block have the same probabilities for weather, which are assumed independent of one another.  In each month of the first block, they assign a probability of 1/2 to having a natural 100-mm increase in water levels and probabilities of 1/4 to having a 50-mm decrease or a 250-mm increase in water levels.  All these figures correspond to natural changes in water level without dam releases.  In each month of the second block, they assign a probability of 1/2 to having a natural 150-mm increase in water levels and probabilities of 1/4 to having a 50-mm increase or a 350-mm increase in water levels.  If a flood occurs, then damage is assessed at $10,000 per mm above flood level.  A water level too low leads to costly importation of water. These costs are $5000 per mm less than 250 mm below flood stage.  The commission first considers an overall goal of minimizing expected costs.  This model only considers this first objective.
+
+*$*$*$
+Files = farmsp.73
+1 = FARMSP
+2 = SP
+3 = The Farmer's Problem - Stochastic
+4 = 73
+The Farmer's Problem - Stochastic (FARMSP,SEQ=73)
+
+This model helps a farmer to decide how to allocate his or her land. The yields are uncertain.
+
+Birge, R, and Louveaux, F V, Introduction to Stochastic Programming. Springer, 1997.
+
+*$*$*$
+Files = kilosafarm.74
+1 = KILOSAFARM
+2 = SP
+3 = Kilosa farm problem
+4 = 74
+Kilosa farm problem (KILOSAFARM,SEQ=74)
+
+Kilosa farm problem using chance constraints from Lindo manual
+
+Reference: LINDO API 7.0 User Manual
+
+*$*$*$
+Files = landssp.75
+1 = LANDSSP
+2 = SP
+3 = Optimal Investment
+4 = 75
+Optimal Investment (LANDSSP,SEQ=75)
+
+The following two-stage problem consists of determining the optimal capacity investment in various types of power plants so as to meet next period demands for electricity. Four power plants are considered and they can operate in three different modes. The next period demand for each of the three modes are to be met. There is a budget constraint and also a constraint on the minimum total capacity.
+
+*$*$*$
+Files = nbcontindep.76
+1 = NBCONTINDEP
+2 = SP
+3 = Newsboy problem, continuous and independent distribution
+4 = 76
+Newsboy problem, continuous and independent distribution (NBCONTINDEP,SEQ=76)
+
+Newsboy problem from Lindo manual Random parameters D and R are continuous and independently distributed
+
+Reference: LINDO API 7.0 User Manual
+
+*$*$*$
+Files = nbcontjoint.77
+1 = NBCONTJOINT
+2 = SP
+3 = Newsboy problem, continuous and joint distribution
+4 = 77
+Newsboy problem, continuous and joint distribution (NBCONTJOINT,SEQ=77)
+
+Newsboy problem from Lindo manual Random paramters D and R are continuous distributed with a certain correlation
+
+Reference: LINDO API 7.0 User Manual
+
+*$*$*$
+Files = nbdiscindep.78
+1 = NBDISCINDEP
+2 = SP
+3 = Newsboy problem, discrete and independent distribution
+4 = 78
+Newsboy problem, discrete and independent distribution (NBDISCINDEP,SEQ=78)
+
+Newsboy problem from Lindo manual Random parameters D and R are discrete and independently distributed
+
+Reference: LINDO API 7.0 User Manual
+
+*$*$*$
+Files = nbdiscjoint.79
+1 = NBDISCJOINT
+2 = SP
+3 = Newsboy problem, discrete and joint distribution
+4 = 79
+Newsboy problem, discrete and joint distribution (NBDISCJOINT,SEQ=79)
+
+Newsboy problem from Lindo manual Random paramters D and R are discrete and jointly distributed
+
+Reference: LINDO API 7.0 User Manual
+
+*$*$*$
+Files = portfolio.80
+1 = PORTFOLIO
+2 = SP
+3 = Stochastic portfolio model
+4 = 80
+Stochastic portfolio model (PORTFOLIO,SEQ=80)
+
+This is a GAMS version of a LINGO model
+
+Conditional Value at Risk model(PORTCVAR) We specify a probability, theta, e.g., 0.1, and then we want the model to choose a) a target return, and b) a portfolio composition, so as to
+ Max theta*target - (expected shortfall below target).
+It is easy to see that if all scenarios are equally likely, then it is worthwhile increasing the target as long as less than theta of the scenarios fall short of the target. So at an optimum, the probability of missing the target is about theta.;
+
+Key words: Conditional Value at Risk, CVAR, Value at Risk,
+           Downside risk, Scenario method, Portfolio;
+
+*$*$*$
+Files = prodsp3.81
+1 = PRODSP3
+2 = SP
+3 = Stochastic Programming Example
+4 = 81
+Stochastic Programming Example (PRODSP3,SEQ=81)
+
+The problem consists of determining the product mix for a furniture shop with two workstations: carpentry and finishing. The availability of labor in man-hours at the two stations is limited. There are four product classes, each consuming a certain number of man-hours at the two stations. Each product earns a certain profit and the shop has the option to purchase labor from outside. The objective is to maximize the profit.
+
+The problem is solved for 300 scenarios.
+
+See also 'PRODSP' and 'PRODSP2' in the GAMS Model Library.
+
+King, A J, Stochastic Programming Problems: Examples from the Literature. In Ermoliev, Y, and Wets, R J, Eds, Numerical Techniques for Stochastic Optimization Problems. Springer Verlag, 1988, pp. 543-567.
+
+*$*$*$
+Files = simplechance.82
+1 = SIMPLECHANCE
+2 = SP
+3 = Simple chance constraint model
+4 = 82
+Simple chance constraint model (SIMPLECHANCE,SEQ=82)
+
+Simple chance constraint model from Lindo manual
+
+Reference: LINDO API 7.0 User Manual
+
+*$*$*$
+Files = sp3x2.83
+1 = SP3X2
+2 = SP
+3 = Simple stochatic model
+4 = 83
+Simple stochastic model (SP3X2,SEQ=83)
+
+
+*$*$*$
+Files = tr20.84,tr20_scen.gdx
+1 = TR20
+2 = SP
+3 = Extended transport model with stochastic demand and costs
+4 = 84
+Extended transport model with stochastic demand and costs (tr20,SEQ=84)
+
+
+*$*$*$
+Files = nbsimple.85
+1 = NBSIMPLE
+2 = SP
+3 = Simple newsboy problem, discrete
+4 = 85
+Simple newsboy problem, discrete (NBSIMPLE,SEQ=85)
+
+Simple newsboy problem Random paramters D is discrete
+
+*$*$*$
+Files = airlift.86
+1 = AIRLIFT
+2 = SP
+3 = Airlift operations schedule
+4 = 86
+Airlift operations schedule (AIRLIFT,SEQ=86)
+
+In scheduling monthly airlift operations, demands for specific routes can be predicted. Actual requirements will be known in the future, and they may not agree with predicted requirements. Recourse actions are then required to meet the actual requirements. The actual requirements are expressed in tons, or any other appropriate measure, and they can be represented by a random variable. Aircraft of several different types are available for service.  Each of these types of aircraft has its own restriction on number of flight hours available during the month.
+
+The recourse actions available include allowing available flight time to go unused, switching aircraft from one route to another, and buying commercial flights. Each of these has its associated cost, depending on the type(s) of aircraft involved.
+
+*$*$*$
+Files = stocfor3.87
+1 = STOCFOR3
+2 = SP
+3 = Long Range Forest Planning
+4 = 87
+Long Range Forest Planning (STOCFOR3,SEQ=87)
+
+The job of a long range forest planner is to decide what parts of the forest will be harvested when. Important criteria for such a decision are the age of the trees, and the likelihood that trees left standing will be destroyed by fire.
+
+Gassmann creates a set of K age classifications of equal length (e.g. 20 years), and places each portion of the forest into one of the classes, according to the age of the trees within. He also divides the future planning horizon into T rounds, each with a time length equal to that of each age classification. That is, in one time round, any trees that are not destroyed or harvested will move to the next age class.
+
+*$*$*$
+Files = circlesp.88
+1 = CIRCLESP
+2 = SP
+3 = Circle Enclosing Points - Stochastic Example
+4 = 88
+Circle Enclosing Points - Stochastic Example (CIRCLESP,SEQ=88)
+
+This is an example from the GAMS/SNOPT manual. Find the smallest circle that contains a number of given points.
+
+*$*$*$
+Files = batchsp.89
+1 = BATCHSP
+2 = SP
+3 = Design of batch chemical plants with stcohastic demand and price
+4 = 89
+Design of batch chemical plants with stochastic demand and price (BATCHSP,SEQ=89)
+
+Subrahmanyam, Pekny, and Reklaitis describe the design of a batch type chemical plant to produce products for which we do not know the future demand.
+
+We present here only half of the problem. We must decide how many plants to build, of what type, when to build them, and how to operate them.
+
+*$*$*$
+Files = cargonet.90
+1 = CARGONET
+2 = SP
+3 = Cargo network scheduling with stochastic transportation demand
+4 = 90
+Cargo network scheduling with stochastic transportation demand (CARGONET,SEQ=90)
+
+Mulvey and Ruszczynski provide a two stage network problem for scheduling cargo transportation. The flight schedule is completely determined in stage one, and the amounts of cargo to be shipped are uncertain. The recourse actions are to determine which cargo to place on which flights. Transshipment, getting cargo from node m to node n by more than one flight on more than one route, is allowed.
+
+In the following example we use a four node network, with node airports A, B, C and E. All flights have two legs. That is, including the airport of origin, there are three airports in each flight. No direct legs are allowed between A and E, but all other possibilities are allowed.
+
+J. M. Mulvey and A. Ruszczynski. A new scenario decomposition method for large-scale stochastic optimization. Operations Research, 43(3),477-490, May-June 1995.
+
+Ariyawansa, K A, and Felt, A J, On a New Collection of Stochastic Linear Programming Test Problems, INFORMS Journal on Computing 16(3), 291-299, 2004.
+
+*$*$*$
+Files = gen2s.91
+1 = GEN2S
+2 = SP
+3 = Two stage stochastic program in the generic form
+4 = 91
+Two stage stochastic program in the generic form (GEN2S,SEQ=91)
+
+Solves a two-stage stochastic linear program of the form: min c'x + E[Q(x,s)] s.t. Ax = b, x >= 0, where Q(x,s) = min q(s)'y(s) s.t. Wy(s) >= h(s) - T(s)x, y >= 0;
+
+Data is from Dr. Janos Mayer from Univ of Zurich, documented in the paper: A simulation-based approach to two-stage stochastic programming with recourse by Alexander Sharpiro and Tito Homem-de-Mello, 1998.
+
+In the given data, h is a normal vector with mean h_avg and standard devication h_stddev.
+
+The model is solved by the LINDO solver. The command-line parameter NSCEN is used to set the number of samples to be generated by the solver.
+
+Contributor: Yanchao Liu, January 2012.
+
+  Can only be solved with Lindo
+
+*$*$*$
+Files = sku1sp.92
+1 = SKU1SP
+2 = SP
+3 = Multi-product assemble model with discrete and Poisson demand distribution
+4 = 92
+Multi-product assemble model with discrete and Poisson demand distribution  (SKU1SP,SEQ=92)
+
+This is a multi-product assembly model, adopted from Section 1.3.1 of the book Lectures on Stochastic Programming: Modeling and Theory by Alexander Shapiro, Darinka Dentcheva and Andrzej Ruszczynski.
+
+A manufacturer produces n products using m parts which are ordered from the suppliers. In the first stage, the manufacturer decides how many units of each part to order, and after the (random) demands of the products are observed in the second stage, it then decides how many units of each product to make and sell. The objective is to maximize the overall profit.
+
+In this model, the random demands are modeled by discrete random variables or Poisson distributions.
+
+The model can be solved by solvers such as lindo, de and decis.
+
+Contributor: Yanchao Liu, January 2012.
+
+*$*$*$
+Files = simplevi4.93
+1 = SIMPLEVI4
+2 = VI
+3 = A simple example for 2 VIs
+4 = 93
+Another simple VI example (SIMPLEVI4,SEQ=62)
+
+This model shows how to model an equilbrium consisting of two VIs one of which has a non-trivial constraint set.
+
+Contributor: Michael C. Ferris, September 2012
+
+*$*$*$
+Files = transsp.94
+1 = TRANSSP
+2 = SP
+3 = A Stochastic Transportation Problem
+4 = 94
+A Stochastic Transportation Problem (TRANSSP,SEQ=94)
+
+This model is a stochastic extension of the TRNSPORT model from the GAMS model library. Here the demand at each market is uncertain. This is modeled with a random variable df (demand factor) which gets multiplied with the demand. It has a discrete distribution. A recourse variable u (unsatisfied demand) was added.
+
+Contributor: Lutz Westermann
+
+*$*$*$
+Files = oa.95
+1 = OA
+2 = GAMS
+3 = Outer Approximation with GAMS
+4 = 95
+Outer Approximation for Convex Minimization Problem with Binary Variables (OA,SEQ=95)
+
+This model demonstrates how to implement a generic simple outer approximation algorithm for convex mixed-binary non-linear programs.
+
+This model uses two represenations of the model instance: the index model instance (with original names) and a vector/scalar model instance. The latter allows to deal with the Jacobian and similar objects in a generic n by m matrix fashion.
+
+The modifications (OA cuts, solution elemination cuts, fixing of variables, etc) for the subproblems are done by GAMS source rewriting in the scalar model instance space.
+
+The only custom part that needs to be done by the user is to identify the non-linear constraints and the binary variables in the original indexed model.
+
+Contributor: Michael Bussieck, November 2012
+
+  START Problem specific part
+
+*$*$*$

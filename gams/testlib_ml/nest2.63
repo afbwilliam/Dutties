@@ -1,0 +1,79 @@
+$Title nested if loop solve test with map (NEST2,SEQ=63)
+$Ontext
+This test for a problem we encountered with 21.0.
+if(...,
+  loop(...,
+  solve ..
+x(...  );
+
+on the second round we got the wrong data because the
+driving loop index got messed up.
+
+$offtext
+
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka / ;
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        2.5           1.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j ;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model transport /all/ ;
+
+option limcol=0,limrow=0,solprint=off;
+
+parameter dd;
+
+scalar mode / 1/, cnt / 0 /;
+
+set k(i,j), kval(i,j) ; k(i,j) = yes;
+
+
+if(mode=1,
+   loop(k ,
+   kval(k) = yes;
+   display kval;
+   Solve transport using lp maximizing z ;
+   cnt := cnt + 1;
+   c(i,j) = c(i,j)*1.1; );
+   dd(i) = 10 );
+
+set diff; diff(k) = yes - kval(k);
+
+abort$((cnt <> card(k)) or card(diff)) 'the loop did not run correctly',kval,diff;

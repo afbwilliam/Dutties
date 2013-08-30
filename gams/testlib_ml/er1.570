@@ -1,0 +1,100 @@
+$Title  External Function - Error Example 1 (ER1,SEQ=570)
+
+$ontext
+  This model is similar to the model in ex1.gms, except that it
+  only includes code for C and Fortran examples.
+  The external functions have implementation errors that have been
+  marked with **ERROR in the source code. Compare these errors with
+  the messages in the GAMS listing file.
+$offtext
+
+set i / i1*i4 /
+alias (i,j);
+
+parameter Q(i,j) Covariance Matrix
+          X0(i)  Targets;
+Q(i,j) = power(0.5, abs(ord(i)-ord(j)) );
+X0(i)  = ord(i);
+display Q, X0;
+
+variables x(i), z;
+equations zdef, zdefX;
+
+* The desired equation, implemented in GAMS, is
+
+  zdef .. sum( (i,j), (x(i)-x0(i)) * Q(i,j) * (x(j)-x0(j) ) ) =e= z;
+
+* It is implemented as an external equation as:
+
+  zdefX .. sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 1;
+
+$ontext
+  The coefficients in the equation show that the X-variables are
+  numbered from 1 to card(i) and Z has number card(i)+1 in the
+  External Function code.
+  There is only one external equation and it has number 1, the value
+  of the right hand side.
+  Note that all variables in the equations must be assigned a variable
+  number and that they all must appear in the external function. You
+  cannot as yet tell the solver that some of the terms are linear
+  -- all terms are nonlinear from the solver's point of view.
+$offtext
+
+model er1      'GAMS implementation'                        / zdef /;
+model er1c_cb  'External functions in C, with callbacks'    / zdefX /;
+model er1f_cb  'External functions in F77, with callbacks'  / zdefX /;
+
+option limcol = 0, iterlim=1000;
+
+*  Check the solution against the targets:
+
+parameter report(*,*,*) Solution Summary;
+scalar totdist /0/;
+
+$onechoV > runme.gms
+z.l = 0;
+z.m = 0;
+x.l(i) = 0;
+x.m(i) = 0;
+zdefX.l = 0;
+zdefX.m = 0;
+solve %1 using nlp minimizing z;
+$if     %1==er1 abort$(%1.solvestat <> 1) 'problems running model %1';
+$if not %1==er1 abort$(%1.solvestat  = 1) 'problems running model %1';
+execerror = 0;
+report('Solve ','Stat',  '%1') = %1.solvestat;
+report('Model ','Stat',  '%1') = %1.modelstat;
+report(i,'Target',  '%1') = x0(i);
+report(i,'Value',   '%1') = x.l(i);
+report(i,'Distance','%1') = abs(x.l(i) - x0(i));
+totdist = totdist + sum(i,abs(x.l(i) - x0(i)));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=er1c_cb.c                                     --libname=er1c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 er1f_cb.f90"%eq% --libname=er1f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme er1
+$if set runC_cb $batinclude runme er1c_cb
+$if set runF_cb $batinclude runme er1f_cb
+
+display report;
+
+if ((totdist < 1.0E-5),
+  display "@@@@ #Test passed.";
+else
+  display totdist, "@@@@ #Test not passed. Inspect er1.lst for details.";
+);

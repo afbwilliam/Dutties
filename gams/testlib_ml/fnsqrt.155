@@ -1,0 +1,24 @@
+$title 'Test correctness of sqrt intrinsic' (FNSQRT,SEQ=155)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+$gdxin fnsqrt
+$load aeps reps relToInput T data
+$gdxin
+
+reps = 5e-16;
+
+loop {T,
+  data(T,  'f')    = sqrt.value (data(T,'x'));
+  data(T, 'fx')    = sqrt.grad  (data(T,'x'));
+  data(T,'fxx')    = sqrt.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+abort$(execerror lt 2)
+  'Should get execution errors evaluating grad/hess of sqrt(x), x tiny';
+execerror = 0;
+
+$include fntest_x.inc

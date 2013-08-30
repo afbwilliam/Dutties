@@ -1,0 +1,33 @@
+$title 'Test $ifthen and $endif' (IFTHEN1,SEQ=364)
+
+$ontext
+Contributor: Alex
+$offtext
+
+scalar count / 0 /;
+$ondollar
+$ifthene 0
+$abort need to crash
+$else
+display 'good ifthen 1'; count = count+1;
+$endif
+
+$ifthene 1
+display 'good ifthen 2'; count = count+10;
+$log ok here
+$else
+$abort really bad
+$endif
+
+$ifthene 0
+$abort should be skipped
+$endif  $log first $endif
+
+scalar qnumber / 3 /
+$ifthene.bad qnumber=0 abort "skip same line";
+abort "second skip";
+abort 'should be skipped';
+$endif.bad log garbage
+display 'more';count = count+100;
+
+abort$(count<>111) 'something went wrong count should be 111',count;

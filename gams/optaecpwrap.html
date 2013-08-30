@@ -1,0 +1,355 @@
+<html>
+<head>
+<title>AECPWRAP Options</title>
+</head>
+<body>
+<h2>AECPWRAP Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/aecpwrap.pdf">AECPWRAP manual</a>.
+
+<h2>Summary of AECPWRAP Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#AECPWRAPAlphaStr">
+AlphaStr</a></td>
+<td>Alpha_Strategy</td></tr>
+<tr><td><a href="#AECPWRAPBeta">
+Beta</a></td>
+<td>Beta</td></tr>
+<tr><td><a href="#AECPWRAPCallConopt">
+CallConopt</a></td>
+<td>Call conopt to get duals</td></tr>
+<tr><td><a href="#AECPWRAPDefaultSettings">
+DefaultSettings</a></td>
+<td>1=Convex, 2=Pseudo-convex constraints, 3=Pseudo-convex</td></tr>
+<tr><td><a href="#AECPWRAPEcpIterLim">
+EcpIterLim</a></td>
+<td>ECP_Iteration_Limit</td></tr>
+<tr><td><a href="#AECPWRAPEcpLinStr">
+EcpLinStr</a></td>
+<td>ECP_Linearization_Strategy</td></tr>
+<tr><td><a href="#AECPWRAPEcpStartStr">
+EcpStartStr</a></td>
+<td>ECP_Starting_Strategy</td></tr>
+<tr><td><a href="#AECPWRAPEcpStr">
+EcpStr</a></td>
+<td>Change only strategy 1,2 or 3</td></tr>
+<tr><td><a href="#AECPWRAPEcpTermCrit">
+EcpTermCrit</a></td>
+<td>ECPTermination_Criterion</td></tr>
+<tr><td><a href="#AECPWRAPEpsilonF">
+EpsilonF</a></td>
+<td>Epsilon_f</td></tr>
+<tr><td><a href="#AECPWRAPEpsilonG">
+EpsilonG</a></td>
+<td>Epsilon_g</td></tr>
+<tr><td><a href="#AECPWRAPEpsilonHStr">
+EpsilonHStr</a></td>
+<td>Epsilon_h_Strategy</td></tr>
+<tr><td><a href="#AECPWRAPEpsilonZ">
+EpsilonZ</a></td>
+<td>Epsilon_z</td></tr>
+<tr><td><a href="#AECPWRAPGamma">
+Gamma</a></td>
+<td>Gamma</td></tr>
+<tr><td><a href="#AECPWRAPInfBnd">
+InfBnd</a></td>
+<td>Infinity value to be used on bounds</td></tr>
+<tr><td><a href="#AECPWRAPMaxCpuTime">
+MaxCpuTime</a></td>
+<td>Maximum CPU-time</td></tr>
+<tr><td><a href="#AECPWRAPModAlphaFiles">
+ModAlphaFiles</a></td>
+<td>Allow_Modified_Alpha_Files</td></tr>
+<tr><td><a href="#AECPWRAPPcoStr">
+PcoStr</a></td>
+<td>PCO_Strategy</td></tr>
+<tr><td><a href="#AECPWRAPResMemSize">
+ResMemSize</a></td>
+<td>Reserved_Memory_Size</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>CPLEX Options</h3></th></tr>
+<tr><td><a href="#AECPWRAPC_BranchDirect">
+C_BranchDirect</a></td>
+<td>Branching_direction</td></tr>
+<tr><td><a href="#AECPWRAPC_MaxCpuTime">
+C_MaxCpuTime</a></td>
+<td>Tree_memory_limit</td></tr>
+<tr><td><a href="#AECPWRAPC_MipStrBackT">
+C_MipStrBackT</a></td>
+<td>MIP_strategy_backtrack</td></tr>
+<tr><td><a href="#AECPWRAPC_MipTolIntegral">
+C_MipTolIntegral</a></td>
+<td>MIP_tolerance_integrality</td></tr>
+<tr><td><a href="#AECPWRAPC_NodeSelectStr">
+C_NodeSelectStr</a></td>
+<td>Node_selection_strategy</td></tr>
+<tr><td><a href="#AECPWRAPC_Presolve">
+C_Presolve</a></td>
+<td>Preprocessing_presolve</td></tr>
+<tr><td><a href="#AECPWRAPC_RelMipGapTol">
+C_RelMipGapTol</a></td>
+<td>Relative_MIPgap_tolerance</td></tr>
+<tr><td><a href="#AECPWRAPC_SubLpAlg">
+C_SubLpAlg</a></td>
+<td>Subproblem_LP_algorithm</td></tr>
+<tr><td><a href="#AECPWRAPC_VarSelectStr">
+C_VarSelectStr</a></td>
+<td>Variable_selection_strategy</td></tr>
+<tr><td><a href="#AECPWRAPEcpC_MipSolLim1">
+EcpC_MipSolLim1</a></td>
+<td>MIP_solutions_limit_(initial)</td></tr></table>
+<h2>Detailed Descriptions of AECPWRAP Options</h2>
+
+<h4><a name="AECPWRAPAlphaStr">
+AlphaStr</a>
+<i> (integer)</i> Alpha_Strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No alpha updating used on the cutting planes</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Alpha updating (should be used if termination criterion>1)</td></tr>
+</table>
+
+<h4><a name="AECPWRAPBeta">
+Beta</a>
+<i> (real)</i> Beta</h4><p>
+
+
+<br><i>(default = 1.30)</i>
+
+<h4><a name="AECPWRAPCallConopt">
+CallConopt</a>
+<i> (integer)</i> Call conopt to get duals</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Conopt is not called</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Automatically call Conopt to obtain dual values for the solution point returned</td></tr>
+</table>
+
+<h4><a name="AECPWRAPC_BranchDirect">
+C_BranchDirect</a>
+<i> (integer)</i> Branching_direction</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="AECPWRAPC_MaxCpuTime">
+C_MaxCpuTime</a>
+<i> (integer)</i> Tree_memory_limit</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="AECPWRAPC_MipStrBackT">
+C_MipStrBackT</a>
+<i> (real)</i> MIP_strategy_backtrack</h4><p>
+
+
+<br><i>(default = 0.9999)</i>
+
+<h4><a name="AECPWRAPC_MipTolIntegral">
+C_MipTolIntegral</a>
+<i> (real)</i> MIP_tolerance_integrality</h4><p>
+
+
+<br><i>(default = 1E-5)</i>
+
+<h4><a name="AECPWRAPC_NodeSelectStr">
+C_NodeSelectStr</a>
+<i> (integer)</i> Node_selection_strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="AECPWRAPC_Presolve">
+C_Presolve</a>
+<i> (integer)</i> Preprocessing_presolve</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="AECPWRAPC_RelMipGapTol">
+C_RelMipGapTol</a>
+<i> (real)</i> Relative_MIPgap_tolerance</h4><p>
+
+
+<br><i>(default = 0.0001)</i>
+
+<h4><a name="AECPWRAPC_SubLpAlg">
+C_SubLpAlg</a>
+<i> (integer)</i> Subproblem_LP_algorithm</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="AECPWRAPC_VarSelectStr">
+C_VarSelectStr</a>
+<i> (integer)</i> Variable_selection_strategy</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="AECPWRAPDefaultSettings">
+DefaultSettings</a>
+<i> (integer)</i> 1=Convex, 2=Pseudo-convex constraints, 3=Pseudo-convex</h4><p>
+
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>EcpStr=1, EcpLinStr=4, EcpTermCrit=1,EcpC_MipSolLim1=1</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>EcpStr=1, EcpLinStr=1, EcpTermCrit=1,EcpC_MipSolLim1=1</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>EcpStr=2, EcpLinStr=1, EcpTermCrit=3,EcpC_MipSolLim1=1</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>EcpStr=3, EcpLinStr=1, EcpTermCrit=4,EcpC_MipSolLim1=1</td></tr>
+</table>
+
+<h4><a name="AECPWRAPEcpC_MipSolLim1">
+EcpC_MipSolLim1</a>
+<i> (integer)</i> MIP_solutions_limit_(initial)</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="AECPWRAPEcpIterLim">
+EcpIterLim</a>
+<i> (integer)</i> ECP_Iteration_Limit</h4><p>
+
+
+<br><i>(default = GAMS IterLim)</i>
+
+<h4><a name="AECPWRAPEcpLinStr">
+EcpLinStr</a>
+<i> (integer)</i> ECP_Linearization_Strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Add cutting planes only for max g_i >= epsilon_g</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Add cutting planes for 25% of max g_i >= epsilon_g</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Add cutting planes for 50% of max g_i >= epsilon_g</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Add cutting planes for 75% of max g_i >= epsilon_g</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Add cutting planes for all g_i >= epsilon_g</td></tr>
+</table>
+
+<h4><a name="AECPWRAPEcpStartStr">
+EcpStartStr</a>
+<i> (integer)</i> ECP_Starting_Strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>First ECP Iteration solved as a MIP problem</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>First ECP Iteration solved as a Relaxed MIP problem</td></tr>
+</table>
+
+<h4><a name="AECPWRAPEcpStr">
+EcpStr</a>
+<i> (integer)</i> Change only strategy 1,2 or 3</h4><p>
+
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>No Alpha updating on cutting planes</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Alpha updating on cutting planes</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Strategy 2 + objective function reduction constraint</td></tr>
+</table>
+
+<h4><a name="AECPWRAPEcpTermCrit">
+EcpTermCrit</a>
+<i> (integer)</i> ECPTermination_Criterion</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Max g_i <= epsilon_g</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Criterion 1 + Special criterion for Quasi-Convex NLP</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Criterion 1 + Alpha >= g_k / epsilon_h</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Criterion 3 + abs(f(z)-mu) <= epsilon_f</td></tr>
+</table>
+
+<h4><a name="AECPWRAPEpsilonF">
+EpsilonF</a>
+<i> (real)</i> Epsilon_f</h4><p>
+
+
+<br><i>(default = 0.001)</i>
+
+<h4><a name="AECPWRAPEpsilonG">
+EpsilonG</a>
+<i> (real)</i> Epsilon_g</h4><p>
+
+
+<br><i>(default = 0.001)</i>
+
+<h4><a name="AECPWRAPEpsilonHStr">
+EpsilonHStr</a>
+<i> (integer)</i> Epsilon_h_Strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Epsilon_h = Epsilon_z</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Epsilon_h = Epsilon_z * Norm of gradient at k</td></tr>
+</table>
+
+<h4><a name="AECPWRAPEpsilonZ">
+EpsilonZ</a>
+<i> (real)</i> Epsilon_z</h4><p>
+
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="AECPWRAPGamma">
+Gamma</a>
+<i> (real)</i> Gamma</h4><p>
+
+
+<br><i>(default = 2)</i>
+
+<h4><a name="AECPWRAPInfBnd">
+InfBnd</a>
+<i> (real)</i> Infinity value to be used on bounds</h4><p>
+
+
+<br><i>(default = 1E10)</i>
+
+<h4><a name="AECPWRAPMaxCpuTime">
+MaxCpuTime</a>
+<i> (real)</i> Maximum CPU-time</h4><p>
+
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="AECPWRAPModAlphaFiles">
+ModAlphaFiles</a>
+<i> (integer)</i> Allow_Modified_Alpha_Files</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Problem in *.ecp file generates alpha2.for, alpha3.for automatically</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>As 0, but STOP before compiling Alpha-files (implicit MINLP models)</td></tr>
+</table>
+
+<h4><a name="AECPWRAPPcoStr">
+PcoStr</a>
+<i> (integer)</i> PCO_Strategy</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Remove old objective function cuts when obj.fun. is improved</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Replace old objective function cuts when obj.fun. is improved</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Remove old objective function cuts when obj.fun. is improved + line search to the best level curve</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Replace old objective function cuts when obj.fun. is improved + line search to the best level curve</td></tr>
+</table>
+
+<h4><a name="AECPWRAPResMemSize">
+ResMemSize</a>
+<i> (integer)</i> Reserved_Memory_Size</h4><p>
+
+
+<br><i>(default = 5000000)</i>
+</body></html>

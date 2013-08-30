@@ -1,0 +1,64 @@
+$title Test for EMP Variational Inequalities (EMPVI04,SEQ=426)
+
+$ontext
+VI is to find x in X:
+
+F(x) (y - x) >= 0, for all y in X
+
+X is a closed convex set, e.g. X = { x >= 0 | g(x) >= 0 }
+
+This can be reformulated as an MCP:
+
+0 <= F(x) - \grad g(x) u  \perp x >= 0
+0 <= g(x)                                  \perp u >= 0
+
+In what follows, the model reform is the MCP that EMP should
+
+Contributor: Steven Dirkse and Jan-H. Jagla , January 2009
+
+$offtext
+
+sets
+ I  / i1, i2 /
+ J  / j1 * j3 /
+ ;
+
+table A(I,J)
+       j1        j2     j3
+i1      1         1
+i2                1      1 ;
+
+parameter b(I) /
+i1   6
+i2   9
+/;
+
+positive variables
+ x(J)  'primal vars, perp to f(J)'
+ u(I)  'auxiliary vars, perp to g(I)'
+ ;
+
+equations
+ F(J)
+ F_aux(J)
+ g(I)
+ ;
+
+F(J)..      2 * x(J)                        =N= 0 ;
+F_aux(J)..  2 * x(J) + sum{I, -A(I,J)*u(I)} =N= 0 ;
+g(I)..      sum {j, A(I,J)*x(J)} =g= b(I) ;
+
+* VI re-formulated as MCP
+model reform / F_aux.x, g.u/;
+solve reform using mcp;
+
+model niceVI / F, g/;
+file fx / "%emp.info%" /;
+putclose fx 'vi F x';
+
+niceVI.iterlim = 0;
+solve niceVI using emp;
+abort$[niceVI.objval > 1e-6] 'Input for model vi should be optimal, was not';
+
+
+

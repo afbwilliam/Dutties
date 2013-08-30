@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>DECIS Options</title>
+</head>
+<body>
+<h2>DECIS Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/decis.pdf">DECIS manual</a>.
+
+<h2>Summary of DECIS Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#DECISEVSubSolver">
+EVSubSolver</a></td>
+<td>Subsolver to run on expected value problem</td></tr>
+<tr><td><a href="#DECISEVSubSolverOpt">
+EVSubSolverOpt</a></td>
+<td>Optfile value to pass to the subsolver for expected value problem</td></tr>
+<tr><td><a href="#DECISFileName">
+FileName</a></td>
+<td>Filename of generated scalar GAMS model</td></tr>
+<tr><td><a href="#DECISScenarioLog">
+ScenarioLog</a></td>
+<td>Select log option for scenario solves</td></tr>
+<tr><td><a href="#DECISSolveEVProb">
+SolveEVProb</a></td>
+<td>Solve and report the expected value solution</td></tr>
+<tr><td><a href="#DECISSolveScenarios">
+SolveScenarios</a></td>
+<td>Maximum number of scenarios solved</td></tr>
+<tr><td><a href="#DECISSubSolvePar">
+SubSolvePar</a></td>
+<td>User defined GAMS parameters for subsolve</td></tr>
+<tr><td><a href="#DECISSubSolver">
+SubSolver</a></td>
+<td>Subsolver to run</td></tr>
+<tr><td><a href="#DECISTerminate">
+Terminate</a></td>
+<td>Generate the GAMS source code of the reformulated Model</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>DECIS Solver Options</h3></th></tr>
+<tr><td><a href="#DECISIBug">
+IBug</a></td>
+<td>Debug output</td></tr>
+<tr><td><a href="#DECISIReg">
+IReg</a></td>
+<td>Indicator for regularized decomposition - MINOS only</td></tr>
+<tr><td><a href="#DECISIScratch">
+IScratch</a></td>
+<td>Internal unit number for output and debug</td></tr>
+<tr><td><a href="#DECISIStrat">
+IStrat</a></td>
+<td>Solution strategy</td></tr>
+<tr><td><a href="#DECISIWrite">
+IWrite</a></td>
+<td>Subproblem output</td></tr>
+<tr><td><a href="#DECISNSamples">
+NSamples</a></td>
+<td>Sample size used for the estimation</td></tr>
+<tr><td><a href="#DECISNZRows">
+NZRows</a></td>
+<td>Number of rows reserved for cuts in the master problem</td></tr>
+<tr><td><a href="#DECISRho">
+Rho</a></td>
+<td>rho parameter of regularization term in the objective function</td></tr>
+<tr><td><a href="#DECISTolBen">
+TolBen</a></td>
+<td>Tolerance for stopping the decomposition algorithm</td></tr>
+<tr><td><a href="#DECISTolW">
+TolW</a></td>
+<td>tolerance when writing debug solution output</td></tr></table>
+<h2>Detailed Descriptions of DECIS Options</h2>
+
+<h4><a name="DECISEVSubSolver">
+EVSubSolver</a>
+<i> (string)</i> Subsolver to run on expected value problem</h4><p>
+
+
+
+<h4><a name="DECISEVSubSolverOpt">
+EVSubSolverOpt</a>
+<i> (integer)</i> Optfile value to pass to the subsolver for expected value problem</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="DECISFileName">
+FileName</a>
+<i> (string)</i> Filename of generated scalar GAMS model</h4><p>
+
+
+<br><i>(default = decis.gms)</i>
+
+<h4><a name="DECISIBug">
+IBug</a>
+<i> (integer)</i> Debug output</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>DECIS does not write any debug output</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solution of the master problem on each iteration</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>1 plus scenario index and the optimal objective value for each subproblem solved</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>2 plus information regarding importance sampling</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>3 plus optimal dual variables of the cuts</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>4 plus coeffcients and the right-hand side of the cuts</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>5 plus dump of the master problem and the subproblem in MPS format</td></tr>
+</table>
+
+<h4><a name="DECISIReg">
+IReg</a>
+<i> (integer)</i> Indicator for regularized decomposition - MINOS only</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="DECISIScratch">
+IScratch</a>
+<i> (integer)</i> Internal unit number for output and debug</h4><p>
+
+
+<br><i>(default = 17)</i>
+
+<h4><a name="DECISIStrat">
+IStrat</a>
+<i> (integer)</i> Solution strategy</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Solves the expected value problem</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Solves the stochastic problem using Monte Carlo importance sampling</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Refers to istrat = 1 plus istrat = 2</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Solves the stochastic universe problem</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Refers to istrat = 1 plus istrat = 4</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>Solves the stochastic problem using crude Monte Carlo sampling</td></tr>
+<tr valign="top"><td width=20 align=right>7</td><td>Refers to istrat = 1 plus istrat = 6</td></tr>
+<tr valign="top"><td width=20 align=right>8</td><td>Solves the stochastic problem using Monte Carlo pre-sampling</td></tr>
+<tr valign="top"><td width=20 align=right>9</td><td>Refers to istrat = 1 plus istrat = 8</td></tr>
+<tr valign="top"><td width=20 align=right>10</td><td>Solves the stochastic problem using control variates</td></tr>
+<tr valign="top"><td width=20 align=right>11</td><td>Refers to istrat = 1 plus istrat = 10</td></tr>
+</table>
+
+<h4><a name="DECISIWrite">
+IWrite</a>
+<i> (integer)</i> Subproblem output</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="DECISNSamples">
+NSamples</a>
+<i> (integer)</i> Sample size used for the estimation</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="DECISNZRows">
+NZRows</a>
+<i> (integer)</i> Number of rows reserved for cuts in the master problem</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="DECISRho">
+Rho</a>
+<i> (real)</i> rho parameter of regularization term in the objective function</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="DECISScenarioLog">
+ScenarioLog</a>
+<i> (integer)</i> Select log option for scenario solves</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Quiet</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Summary</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Full log</td></tr>
+</table>
+
+<h4><a name="DECISSolveEVProb">
+SolveEVProb</a>
+<i> (integer)</i> Solve and report the expected value solution</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="DECISSolveScenarios">
+SolveScenarios</a>
+<i> (integer)</i> Maximum number of scenarios solved</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="DECISSubSolvePar">
+SubSolvePar</a>
+<i> (string)</i> User defined GAMS parameters for subsolve</h4><p>
+
+
+
+<h4><a name="DECISSubSolver">
+SubSolver</a>
+<i> (string)</i> Subsolver to run</h4><p>
+
+
+<br><i>(default = decisc)</i>
+<table>
+<tr valign="top"><td width=20 align=right>decisc</td><td>Decis using Cplex</td></tr>
+<tr valign="top"><td width=20 align=right>decism</td><td>Decis using Minos</td></tr>
+</table>
+
+<h4><a name="DECISTerminate">
+Terminate</a>
+<i> (integer)</i> Generate the GAMS source code of the reformulated Model</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="DECISTolBen">
+TolBen</a>
+<i> (real)</i> Tolerance for stopping the decomposition algorithm</h4><p>
+
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="DECISTolW">
+TolW</a>
+<i> (real)</i> tolerance when writing debug solution output</h4><p>
+
+
+<br><i>(default = 1e-9)</i>
+</body></html>

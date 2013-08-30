@@ -1,0 +1,244 @@
+$title Global optimization of semi-infinite programs via restriction of the right-hand side (SIPRES,SEQ=372)
+
+$ontext
+This model provides an algorithm for the global solution of a
+semi-infinite program (SIP) without convexity assumptions.
+It terminates finitely with a guaranteed feasible point, and a
+certificate of eps^f-optimality. The only assumptions are continuity
+of the functions and existence of an eps^f-optimal SIP-Slater point.
+The lower and upper bounds are obtained by the solution of two nonconvex
+nonlinear programs (NLP) each, thus shifting the nonconvexity to the
+global NLP solver.
+
+This example provides a solution to the SIP
+
+min{(x_1,x_2) in [-1000,1000]^2} 1/3*sqr(x_1) + sqr(x_2) + 1/2*x_1;
+s.t.
+ sqr(1-sqr(x_1)*sqr(y)) - x_1*sqr(y)-sqr(x_2) + x_2 <= 0 for all y in [0,1]
+
+Model has been contributed by Alexander Mitsos, June 2009
+Please use the citation below in derived work.
+
+
+Mitsos, A, Global Optimization of Semi-Infinite Programs via
+Restriction of the Right Hand Side. Optimization 60, 7 (2010).
+http://dx.doi.org/10.1080/02331934.2010.527970
+$offtext
+
+* Test  only with deterministic global codes
+$ifi %gams.nlp%==baron       $goto cont
+$ifi %gams.nlp%==couenne     $goto cont
+$ifi %gams.nlp%==lindoglobal $goto cont
+$log %gams.nlp% does not provide deterministic global optimization
+$exit
+$label cont
+
+$onempty
+Parameters
+    myoptR     relative termination criteria for SIP /1e-3/
+    myoptA     absolute termination criteria for SIP /1e-3/
+    epsilon    initial value for epsilon /1/
+    epsfactor  division factor of epsilon /2/;
+
+Set disc /1*30/
+    dlbd(disc) discretization of lower-bounding / /
+    dubd(disc) discretization of upper-bounding / /;
+* dimensionality >= expected number of iterations
+Scalar maxiter; maxiter = card(disc);
+
+Set xset, yset;
+
+Parameters
+    ylbd(yset,disc) lower bound discretization
+    yubd(yset,disc) upper bound discretizationl
+
+Variable
+    x(xset)        variable for upper bounding and lower bounding problem
+    y(yset)        variables for lower-level
+    obj            upper-level objective function
+    vio            constraint violation for lower-level program
+
+model lowmod, ubdmod, lbdmod;
+
+* Problem spefic definitions
+Equation
+    eqobj          upper-level objective function
+    eqconlow       SIP constraint
+    eqconlbd(disc) discretized constraints for lower bounding problem
+    eqconubd(disc) discretized constraints for upper bounding problem
+
+Set xset /1*2/
+    yset /1*1/;
+
+$macro resetBoundsOnX x.lo(xset) = -1000; x.up(xset) = 1000
+resetBoundsOnX;
+y.lo(yset)=0;     y.up(yset)=1;
+
+eqobj..          obj =e= 1/3*sqr[x('1')] + sqr[x('2')] + 1/2*x('1');
+
+$macro eqcon(y)  sqr{1-sqr[x('1')]*sqr[y]} - x('1')*sqr[y] - sqr[x('2')] + x('2')
+
+eqconlow..       eqcon(y('1')) =e= vio;
+
+eqconlbd(dlbd).. eqcon(ylbd('1',dlbd)) =l= 0;
+
+eqconubd(dubd).. eqcon(yubd('1',dubd)) =l= -epsilon;
+
+* the three subproblems
+model lowmod /eqconlow/
+      ubdmod /eqobj, eqconubd/
+      lbdmod /eqobj, eqconlbd/;
+
+*end of problem specific declarations
+
+file output where results go / 'ex2res.txt' /;  put output;
+
+lowmod.holdfixed = 1;
+Option solprint=off, limrow=0, limcol=0, nlp=baron, optca=1e-6, optcr=1e-4;
+
+Scalars LBD     lower bound / -1e10 /
+        UBD     upper bound / +1e10 /
+        UBD_LBD absolute gap
+        iter    iteration counter    /  0 /
+        done    trigger to exit loop / -1 /
+        cpulbd /0/, cpulbdlow /0/, cpuubd /0/, cpuubdlow /0/, cputot;
+Parameter xstar(xset) solution;
+
+* dummy initialization just in case
+ylbd(yset,dlbd)=6e66;
+yubd(yset,dubd)=6e66;
+
+$eolcom //
+$macro putsol(v) loop(v&set, put ' ' v.l(v&set):20:15)
+$macro putstat(m) put 'm solvestat=' m.solvestat ' modelstat=' m.modelstat
+
+loop(disc$(done<0),
+  iter=iter+1;
+  if (iter > maxiter,
+    put 'was not expecting iter=' iter /;
+    abort 'too many iterations';
+  );
+  put '####' / 'running at iter=' iter:5:0 ' LBD=' LBD:20:15 ' UBD=' UBD:20:15 /;
+  solve lbdmod minimizing obj using nlp;  // lower bounding problem
+  cpulbd = cpulbd+lbdmod.resusd;
+  putstat(lbdmod);
+
+  if (lbdmod.solvestat <> %solvestat.normalCompletion% or
+      (lbdmod.modelstat <> %modelstat.optimal% and
+       lbdmod.modelstat <> %modelstat.locallyOptimal%),
+    put ' unexpected failed lbdmod' /;
+    if (LBD < lbdmod.objest,
+      LBD = lbdmod.objest)
+  else
+    LBD = lbdmod.objest);
+  put ' lbd obj=' obj.l:20:15 ' best possible=' lbdmod.objest:20:15,' x='; putsol(x);
+  put /;
+
+* lower-level problem for fixed parameters (assuming all good so far)
+  x.fx(xset) = x.l(xset);
+  solve lowmod maximizing vio using nlp;
+  resetBoundsOnX;
+  cpulbdlow = cpulbdlow + lowmod.resusd;
+  putstat(lowmod);
+
+  if (lowmod.solvestat = %solvestat.normalCompletion% and
+      (lowmod.modelstat = %modelstat.optimal% or
+       lowmod.modelstat = %modelstat.locallyOptimal%),
+    put ' normal vio=' vio.l:20:15 '  best possible=' lowmod.objest:20:15 ' y='; putsol(y);
+    put /;
+    if ( lowmod.objest <= 0,
+      put 'lower bounding problem found feasible point but will not use' /;
+    else
+      dlbd(disc)=yes;
+      ylbd(yset,disc) = y.l(yset));
+  );
+
+* upper bounding problem
+  solve ubdmod minimizing obj using NLP;
+  cpuubd = cpuubd + ubdmod.resusd;
+  putstat(ubdmod);
+  if (ubdmod.solvestat <> %solvestat.normalCompletion%,
+    put ' abnormal' /;
+    abort 'failed ubdmod';
+  elseif (ubdmod.modelstat=%modelstat.infeasible% or
+          ubdmod.modelstat=%modelstat.infeasibleNoSolution%),
+    put ' infeasible epsilon=' epsilon:20:15 /;
+    epsilon = epsilon/epsfactor;
+  elseif (ubdmod.modelstat <> %modelstat.optimal% and
+          ubdmod.modelstat <> %modelstat.locallyOptimal%),
+    put ' unexpected' /;
+    abort "unexpected ubdmod.modelstat";
+  else
+    put ' optimal candidate obj=' obj.l:20:15 ' best possible=' ubdmod.objest:20:15 ' x='; putsol(x);
+    put ' epsilon=' epsilon:20:15 /;
+* lower level problem for fixed parameters
+    x.fx(xset) = x.l(xset);
+    solve lowmod maximizing vio using NLP;
+    resetBoundsOnX;
+
+    cpuubdlow = cpuubdlow + lowmod.resusd;
+    putstat(lowmod);
+
+    if (lowmod.solvestat <> %solvestat.normalCompletion% or
+        (lowmod.modelstat<> %modelstat.optimal% and
+         lowmod.modelstat<> %modelstat.locallyOptimal%),
+      put ' unexpected' /;
+      abort 'failed lowmod';
+    else
+      put ' normal vio=' vio.l:20:15 ' best possible=' lowmod.objest:20:15 ' y='; putsol(y);
+      put /;
+      if (lowmod.objest <=0,
+        epsilon = epsilon/epsfactor;
+        if (obj.l < UBD,
+          UBD = obj.l;
+          xstar(xset) = x.l(xset));
+      else
+* add point to discretization
+        dubd(disc)=yes;
+        yubd(yset,disc) = y.l(yset));
+    );
+  );
+  UBD_LBD = UBD - LBD;
+
+* check that lower bound is below upper bound (otherwise sth is wrong)
+  if (UBD_LBD < 0,
+    put 'UBD=' UBD:20:15 ' should be larger than LBD=' LBD:20:15 /;
+    abort 'unexpected UBD < LBD');
+
+* check if termination has occured
+  if (UBD_LBD < myoptA or LBD > UBD - myoptR*abs(UBD),
+    put 'converged with UBD=' UBD:10:7 ' LBD=' LBD:10:7 ' difference=' UBD_LBD:10:7 ' xstar=';
+    loop(xset, put ' ' xstar(xset):20:15);
+    put /;
+    done=1);
+);
+
+* printout discretization for upper and lower bounding problem
+put / '##' / 'discretization for lbd' /;
+loop(disc,
+  put dlbd(disc);
+  if(dlbd(disc),
+    loop(yset,
+      put ' ' ylbd(yset,disc):20:15))
+  put /;
+);
+put / '##' / 'discretization for ubd' /;
+loop(disc,
+  put dubd(disc);
+  if(dubd(disc),
+    loop(yset,
+      put ' ' yubd(yset,disc):20:15))
+  put /;
+);
+
+* printout CPU time and solution
+cputot = cpulbd + cpulbdlow + cpuubd + cpuubdlow;
+put / '##' / 'Solution'
+    / cputot:10:2
+    / cpulbd:10:2
+    / cpulbdlow:10:2
+    / cpuubd:10:2
+    / cpuubdlow:10:2
+    / LBD:10:5
+    / UBD:10:5 /;
+loop(xset, put xstar(xset):20:15 /);

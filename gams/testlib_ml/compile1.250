@@ -1,0 +1,13 @@
+$title 'AB01031: a solve stmt messed up the symbol table' (COMPILE1,SEQ=250)
+
+$ontext
+
+The original (AB01031) was a lengthy program from MB with a wrong
+data statement
+
+$offtext
+
+set the;
+solve the ;
+abc = the;
+$clearerror

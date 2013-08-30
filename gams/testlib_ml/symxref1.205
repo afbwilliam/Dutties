@@ -1,0 +1,12 @@
+$title 'Test cross-reference generation problem' (SYMXREF1,SEQ=205)
+
+$ontext
+gamma and ycal happen to hash to the same slot causing
+a problem with an incorrect cross-reference
+$offtext
+
+$onsymxref
+scalar x;
+scalar gamma;
+scalar ycal;
+ycal = system.gamma(2);

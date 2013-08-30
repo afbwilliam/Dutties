@@ -1,0 +1,95 @@
+$title Test suffix options on controlling sets (SUFFIX01,SEQ=416)
+
+$ontext
+Contributor: Alex
+$offtext
+
+set i / 1 1.1
+        2 2.2
+        3 inf
+        4
+        5 garbage
+        a this is a /;
+
+* one dimensional test
+parameter rep1(*,i) summary of one dimensional stuff;
+
+rep1('i.ord',i)       = i.ord;
+rep1('i.pos',i)       = i.pos;
+rep1('i.off',i)       = i.off;
+rep1('i.uel',i)       = i.uel;
+rep1('i.len',i)       = i.len;
+rep1('i.val',i)       = i.val;
+rep1('i.xls',i)       = i.xls;
+rep1('i.tlen',i)      = i.tlen;
+rep1('i.tval',i)      = i.tval;
+rep1('card(i.tl)',i)  = card(i.tl);
+rep1('card(i.te)',i)  = card(i.te);
+rep1('ord(i.tl)',i)   = ord(i.tl);
+rep1('ord(i.tl,2)',i) = ord(i.tl,2);
+rep1('ord(i.te)',i)   = ord(i.te);
+rep1('ord(i.te,2)',i) = ord(i.te,2);
+
+execerror = 0;
+
+table rep1res(*,i) results for rep1
+$onundf
+                   1       2       3       4       5       a
+
+'i.ord'            1       2       3       4       5       6
+'i.pos'            1       2       3       4       5       6
+'i.off'                    1       2       3       4       5
+'i.uel'            1       2       3       4       5       6
+'i.len'            1       1       1       1       1       1
+'i.val'            1       2       3       4       5    UNDF
+'i.xls'         UNDF    UNDF    UNDF    UNDF    UNDF       1
+'i.tlen'           3       3       3       0       7       9
+'i.tval'           1.1     2.2  +INF       0    UNDF    UNDF
+'card(i.tl)'       1       1       1       1       1       1
+'card(i.te)'       3       3       3       0       7       9
+'ord(i.tl)'       49      50      51      52      53      97
+'ord(i.tl,2)'      0       0       0       0       0       0
+'ord(i.te)'       49      50     105       0     103     116
+'ord(i.te,2)'     46      46     110       0      97     104
+
+
+alias(*,c)
+set err1; err1(c,i) = rep1(c,i) <> rep1res(c,i);
+abort$card(err1) 'result are wrong',rep1res,rep1,err1;
+
+set j       / a*e /,
+    ij(i,j) / 1.a   1.1
+              1.b
+              2.e   2.26
+              3.c*d 3.33
+              4.b   garbage /;
+
+* two dimensional test
+parameter rep2;
+
+rep2('ij.tlen'     ,ij) = ij.tlen;
+rep2('ij.tval'     ,ij) = ij.tval;
+rep2('card(ij.te)' ,ij) = card(ij.te);
+rep2('ord(ij.te)'  ,ij) = ord(ij.te);
+rep2('ord(ij.te,2)',ij) = ord(ij.te,2);
+rep2('ord(ij.te,3)',ij) = ord(ij.te,3);
+
+table rep2res(*,i,j)  results for rep2
+                  1.a  1.B   2.E    3.C   3.D   4.B
+
+'ij.tlen'           3    0     4      4     4     7
+'ij.tval'         1.1    0  2.26   3.33  3.33  UNDF
+'card(ij.te)'       3    0     4      4     4     7
+'ord(ij.te)'       49    0    50     51    51   103
+'ord(ij.te,2)'     46    0    46     46    46    97
+'ord(ij.te,3)'     49    0    50     51    51   114
+
+
+set err2; err2(c,ij) = rep2(c,ij) <> rep2res(c,ij);
+
+execerror=0;
+
+* display c;
+
+option rep2:2:1:2,rep2res:0:1:2,err2:0:1:2;
+abort$card(err2) 'result are wrong',rep2res,rep2,err2;

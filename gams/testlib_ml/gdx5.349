@@ -1,0 +1,34 @@
+$title 'Checks for unreported GDX error' (GDX5,SEQ=349)
+
+$ontext
+In some cases we could have an error writing a GDX file from GAMS
+but the error would not be caught and reported.
+
+Contributor: Jan-Henrik Jagla
+$offtext
+
+$call gamslib -q trnsport
+
+*check writing of aliases and sets with domain alias into gdx file
+$onecho > trnspor2.gms
+$include trnsport
+alias (*,tmp);
+set test(tmp);
+test(tmp) = yes;
+$offecho
+
+*write log, stdout, stderr into same file
+$call gams trnspor2.gms gdx=test lo=3 1>testlog 2>&1
+
+*More messages signalizing problems could be added
+$call grep "*** Problem writing sysmbol" testlog  > problem
+$call grep "*** GDX File failed" testlog         >> problem
+$call grep "*** Illegal identifier" testlog      >> problem
+
+$call grep "*** Status: Normal completion" testlog > ok
+
+$call test -s problem && test -s ok
+$if errorlevel 1 $goto done
+$abort 'GDX failed but normal completion'
+$label done
+

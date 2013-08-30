@@ -1,0 +1,90 @@
+$TITLE 'Test correctness of signpower intrinsic' (FNSPOWX,SEQ=530)
+
+$ontext
+
+Test the signed power function on a selected set of inputs.
+The actual implementation of the signpower function
+sits on top of the x**c function, so we just need to get the signs
+right - the rest of the tests are done for vcpower.
+
+Contributor: Steve Dirkse
+$offtext
+
+$include fnset_xy.inc
+
+reps = 2e-13;
+relToInput = 0;
+set T / t1 * t11, t20*t25, t30*t35 /;
+set TA(T) / t1*t11 /;
+set TB(T) / t20*t25 /;
+set TC(T) / t30*t35 /;
+
+$ontext
+FYI:
+  rcOK       0
+  rcFUNC     1
+  rcGRAD     2
+  rcHESS     3
+  rcSYSTEM   4
+
+  ecOK       0
+  ecDOMAIN   1
+  ecSINGULAR 2
+  ecOVERFLOW 3
+  ecSIGLOSS  4
+$offtext
+
+table data(T,V)
+        x       y       f_              fx_     fxx_    rc_     ec_
+t1      0       0       1
+t2      0       0.5                    1e10   -1e299     2       2
+t3      0       1                        1               3       2
+t4      0       1.5                            1e299     3       2
+t5      0       2                                 2
+t6      0       2.5
+t7      0      -0.5                                      1       1
+t8      0      -1                                        1       1
+t9      0      -1.5                                      1       1
+t10     0      -2                                        1       1
+t11     0      -2.5                                      1       1
+
+t20     0.5     0
+t21     0.5     0.5
+t22     0.5     1
+t23     0.5     1.5
+t24     0.5     2
+t25     0.5     2.5
+
+t30    -0.5     0
+t31    -0.5     0.5
+t32    -0.5     1
+t33    -0.5     1.5
+t34    -0.5     2
+t35    -0.5     2.5
+;
+
+data(TB(T), 'f_'  ) = vcpower.value(   data(T,'x'),data(T,'y'));
+data(TB(T), 'fx_' ) = vcpower.grad(1:  data(T,'x'),data(T,'y'));
+data(TB(T), 'fxx_') = vcpower.hess(1:1:data(T,'x'),data(T,'y'));
+
+data(TC(T), 'f_'  ) = -vcpower.value(   -data(T,'x'),data(T,'y'));
+data(TC(T), 'fx_' ) =  vcpower.grad(1:  -data(T,'x'),data(T,'y'));
+data(TC(T), 'fxx_') = -vcpower.hess(1:1:-data(T,'x'),data(T,'y'));
+
+loop {T,
+  data(T,  'f')  = signpower.value(   data(T,'x'),data(T,'y'));
+  data(T, 'fx')  = signpower.grad(1:  data(T,'x'),data(T,'y'));
+  data(T, 'fy')  = signpower.grad(2:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')  = signpower.hess(1:1:data(T,'x'),data(T,'y'));
+  data(T,'fxy')  = signpower.hess(1:2:data(T,'x'),data(T,'y'));
+  data(T,'fyx')  = signpower.hess(2:1:data(T,'x'),data(T,'y'));
+  data(T,'fyy')  = signpower.hess(2:2:data(T,'x'),data(T,'y'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+abort$(execerror lt 10)
+ 'Should get execution errors getting func/grad/hess of signpower(x,y)';
+execerror = 0;
+
+$include fntest_xy.inc

@@ -1,0 +1,20 @@
+$title Test procdir deletion in pgams (PGAMS02,SEQ=473)
+
+$ontext
+Test if gams.exe (aka pgams) deletes the process directory when
+running pgams01.
+
+Contributor: Steve Dirkse
+$offtext
+
+* we create a fresh dir to be sure we know what process dir is used
+$set dirsep \
+$if %system.filesys% == UNIX $set dirsep /
+$set subdir pgamstest
+$set procdir %subdir%%dirsep%225a
+
+$call rm -rf %subdir%
+$call mkdir %subdir%
+$if NOT dexist %subdir% $abort directory %subdir% does not exist
+$call cd %subdir% && gams pgams01 idir=.. lo=%gams.lo%
+$if dexist %procdir% $abort directory %procdir% should not not exist

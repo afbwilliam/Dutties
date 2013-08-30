@@ -1,0 +1,316 @@
+$title XPRESS test suite - solution enumerator example (XPRESS05,SEQ=554)
+
+$ontext
+Test the XPRESS solution enumerator.  To test we use a variant of the
+dice model (adjusted to avoid multiple representations of the same
+solution).  The test model is a maximization having 2 solutions with
+obj=21, 98 solutions with obj=20, and plenty of solutions with obj=19.
+We test a number of things: 
+  1. Return all optimal solutions (i.e. obj = 21)
+  2. Return all solutions with obj = 20 or 21
+  3. Return the 2 best solutions
+  4. Return the 3 best solutions
+  5. Return the 100 best solutions
+  6. Return the 200 best solutions
+  7. Return first 10 solutions with obj 20 or 21
+  8. Return first 200 solutions with obj >= 18
+
+Contributor: Steve Dirkse, Jan 2012
+$offtext
+
+$ifthen %DEMOSIZE% == 1
+$ log This test is too big to run in demo mode: exiting
+$ abort.noerror
+$endif
+
+$if not exist mip06.gms $call testlib -q mip06
+$onecho > poolObj.gms
+* read in solutions and compute their objectives
+
+set
+  pool        'solutions generated'
+  p2(pool)
+  d  'number of dice'
+  f  'die faces'
+  v 'face values'
+  map(d,f,v)        'maps dice faces to values'
+  win(d,f,f)        'true if faceVal(d,f) beats faceVal(d++,fp)'
+  ;
+alias(f,fp),(d,dp);
+parameter
+  obj(pool)
+  faceVal(d,f)      'value on die face - will be integer'
+  vals(v)           'possible face values'
+  chk(v)
+  ;
+scalar ok / 0 /;
+binary variables
+  mapv(d,f,v)       'maps dice faces to values'
+  ;
+$gdxin diceDef
+$load f d v vals
+$gdxin
+$gdxin %INFILE%
+$load pool=index
+$gdxin
+
+execute_unload '%OUTFILE%', ok;
+ok = 525;
+
+file fpool;
+loop{pool,
+  p2(pool) = no;  p2(pool) = yes;
+  put_utility fpool 'gdxin' / pool.te(pool);
+  execute_loadpoint mapv=map;
+  map(d,f,v) = round(mapv.l(d,f,v));
+  display map;
+  chk(v) = 1 - sum{map(d,f,v), 1};
+  abort$card(chk) 'bad map', chk, map;
+  faceVal(d,f) = sum{map(d,f,v), vals(v)};
+  win(d,f,fp) = [faceVal(d,f) > faceVal(d++1,fp) + 0.5];
+  obj(pool) = smin{d, sum{win(d,f,fp), 1}};
+};
+execute_unload '%OUTFILE%', ok, pool, obj;
+$offecho
+
+
+sets
+  pool 'possible solutions' / file1*file999 /
+  p(pool)
+  ;
+parameter
+  obj(pool)
+  chk(pool)
+  ;
+scalar cnt;
+
+* -------------------------------------------------------------------------
+
+*  1. Return all optimal solutions (i.e. obj = 21)
+$onecho > xpress.101
+solnpool           diceSols101.gdx
+solnpoolPrefix     test101
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+mipabscutoff       20.5
+* by default, the pool has a very large capacity
+$offecho
+$call gams mip06.gms mip=xpress optfile=101 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 101 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols101 --outfile=diceObjs101 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs101', p=pool, obj;
+abort$[card(p) <> 2] 'test 101: should have 2 solutions of 21', p, obj;
+chk(p) = obj(p) - 21;
+abort$[card(chk)] 'test 101: should have 2 solutions of 21', chk, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  2. Return all solutions with obj = 20 or 21
+$onecho > xpress.102
+solnpool           diceSols102.gdx
+solnpoolPrefix     test102
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+mipabscutoff       19.5
+* by default, the pool has a very large capacity
+$offecho
+$call gams mip06.gms mip=xpress optfile=102 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 102 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols102 --outfile=diceObjs102 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 100 sols: 2 with obj=21, 98 with obj=20
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs102', p=pool, obj;
+abort$[card(p) <> 100] 'test 102: should have 100 solutions', p, obj;
+cnt = sum{p$[obj(p) = 21], 1};
+abort$[cnt <> 2] 'test 102: should have 2 solutions of 21', cnt, p, obj;
+cnt = sum{p$[obj(p) = 20], 1};
+abort$[cnt <> 98] 'test 102: should have 98 solutions of 20', cnt, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  3. Return the 2 best solutions
+$onecho > xpress.103
+* return the 2 best solutions
+* this is the default behavior if you have a fixed capacity
+solnpoolCapacity   2
+solnpool           diceSols103.gdx
+solnpoolPrefix     test103
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+$offecho
+$call gams mip06.gms mip=xpress optfile=103 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 103 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols103 --outfile=diceObjs103 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 2 sols with obj=21
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs103', p=pool, obj;
+abort$[card(p) <> 2] 'test 103: should have 2 solutions of 21', p, obj;
+cnt = sum{p$[obj(p) = 21], 1};
+abort$[cnt <> 2] 'test 103: should have 2 solutions of 21', cnt, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  4. Return the 3 best solutions
+$onecho > xpress.104
+* return the 3 best solutions
+* this is the default behavior if you have a fixed capacity
+solnpoolCapacity   3
+solnpool           diceSols104.gdx
+solnpoolPrefix     test104
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+$offecho
+$call gams mip06.gms mip=xpress optfile=104 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 104 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols104 --outfile=diceObjs104 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 2 sols with obj=21, 1 with obj=20
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs104', p=pool, obj;
+abort$[card(p) <> 3] 'test 104: should have 3 solutions', p, obj;
+cnt = sum{p$[obj(p) = 21], 1};
+abort$[cnt <> 2] 'test 104: should have 2 solutions of 21', cnt, p, obj;
+cnt = sum{p$[obj(p) = 20], 1};
+abort$[cnt <> 1] 'test 104: should have 1 solution of 20', cnt, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  5. Return the 100 best solutions
+$onecho > xpress.105
+* return the 100 best solutions
+* this is the default behavior if you have a fixed capacity
+solnpoolCapacity   100
+solnpool           diceSols105.gdx
+solnpoolPrefix     test105
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+$offecho
+$call gams mip06.gms mip=xpress optfile=105 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 105 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols105 --outfile=diceObjs105 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 2 sols with obj=21, 98 with obj=20
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs105', p=pool, obj;
+abort$[card(p) <> 100] 'test 105: should have 100 solutions', p, obj;
+cnt = sum{p$[obj(p) = 21], 1};
+abort$[cnt <> 2] 'test 105: should have 2 solutions of 21', cnt, p, obj;
+cnt = sum{p$[obj(p) = 20], 1};
+abort$[cnt <> 98] 'test 105: should have 98 solutions of 20', cnt, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  6. Return the 200 best solutions
+$onecho > xpress.106
+* return the 200 best solutions
+* this is the default behavior if you have a fixed capacity
+solnpoolCapacity   200
+solnpool           diceSols106.gdx
+solnpoolPrefix     test106
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+$offecho
+$call gams mip06.gms mip=xpress optfile=106 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 106 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols106 --outfile=diceObjs106 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 2 sols with obj=21, 98 with obj=20, and 100 with obj=19
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs106', p=pool, obj;
+abort$[card(p) <> 200] 'test 106: should have 200 solutions', p, obj;
+cnt = sum{p$[obj(p) = 21], 1};
+abort$[cnt <> 2] 'test 106: should have 2 solutions of 21', cnt, p, obj;
+cnt = sum{p$[obj(p) = 20], 1};
+abort$[cnt <> 98] 'test 106: should have 98 solutions of 20', cnt, p, obj;
+cnt = sum{p$[obj(p) = 19], 1};
+abort$[cnt <> 100] 'test 106: should have 100 solutions of 19', cnt, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  7. Return first 10 solutions with obj 20 or 21
+$onecho > xpress.107
+* return the first 10 solutions with obj >= 20
+* setting cullRounds = 0 stops enumeration as soon as the pool is full
+mipabscutoff       19.5
+solnpoolCapacity   10
+solnPoolCullRounds 0
+solnpool           diceSols107.gdx
+solnpoolPrefix     test107
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+$offecho
+$call gams mip06.gms mip=xpress optfile=107 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 107 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols107 --outfile=diceObjs107 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 10 sols with obj >= 20
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs107', p=pool, obj;
+abort$[card(p) <> 10] 'test 107: should have 10 solutions', p, obj;
+chk(p) = [obj(p) < 20];
+abort$[card(chk)] 'test 107: should have 10 solutions with obj >= 20', chk, p, obj;
+
+* -------------------------------------------------------------------------
+
+*  8. Return first 200 solutions with obj >= 18
+$onecho > xpress.108
+* return the first 200 solutions with obj >= 18
+* setting cullRounds = 0 stops enumeration as soon as the pool is full
+mipabscutoff       17.5
+solnpoolCapacity   200
+solnPoolCullRounds 0
+solnpool           diceSols108.gdx
+solnpoolPrefix     test108
+solnpoolDupPolicy  0
+solnpoolPop        2
+solnpoolVerbosity  2
+$offecho
+$call gams mip06.gms mip=xpress optfile=108 --SKIPCUTS=1 lo=%GAMS.lo%
+$if errorlevel 1 $abort Generating solutions for run 108 with XPRESS enumerator failed
+
+$call gams poolObj.gms --infile=diceSols108 --outfile=diceObjs108 lo=%GAMS.lo%
+$if errorlevel 1 $abort Computing/checking objectives failed
+
+* expect 200 sols with obj >= 18
+p(pool) = no;  obj(pool) = 0;  chk(pool) = 0;
+execute_load 'diceObjs108', p=pool, obj;
+abort$[card(p) <> 200] 'test 108: should have 200 solutions', p, obj;
+chk(p) = [obj(p) < 18];
+abort$[card(chk)] 'test 108: should have 200 solutions with obj >= 18', chk, p, obj;
+
+* -------------------------------------------------------------------------
+
+
+* for debugging you can skip the cleanup, o/w this test leaves a mess
+* $goto alldone
+
+execute 'rm -f  xpress.10?';
+execute 'rm -f  test10?_dice_p*.gdx';
+execute 'rm -f  diceDef.gdx diceSols10?.gdx diceObjs10?.gdx';
+
+$label alldone

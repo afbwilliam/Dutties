@@ -1,0 +1,227 @@
+$title State Variable Targetting in EMPs ECS Framework (TARGET,SEQ=13)
+
+$ontext
+
+This model is a variant of T. Rutherford's model 'State Variable Targetting in
+an NLP Framework'.
+
+http://www.mpsge.org/nlptarget/
+
+*        This program illustrates how to use recursive NLP methods
+*        for solving an infinite-horizon optimization model with minimal
+*        terminal effects.
+
+*        Thomas F. Rutherford
+*        December 1, 2005
+
+It makes use of EMP's embedded complementarity system framework.
+
+Contributors: Jan-H. Jagla, January 2009
+              Michael Ferris, April 2010
+$offtext
+
+$if not set horizon $set horizon 2020
+
+set     t                Time periods /2005*%horizon%/,
+        tlast(t)         Last time period /%horizon%/
+        tfirst(t)        First time period /2005/;
+
+parameter
+        kvs              Capital value share /0.3/
+        delta            Capital depreciation rate /0.07/
+        r                Baseline interest rate / 0.05/
+        g                Growth rate /0.02/,
+        phi              Production scale faster
+        L(t)             Labor supply
+        kinit            Initial capital stock
+        kterm            Terminal capital stock
+        dfactor          Discount factor;
+
+L(t) = power(1+g, ord(t)-1);
+kinit = 0.5 * kvs / (r + delta);
+dfactor(t) = power(1/(1+r), ord(t)-1);
+phi = 1 / kinit**kvs;
+
+VARIABLES
+        C(t)            Consumption trillion US dollars,
+        K(t)            Capital stock trillion US dollars,
+        I(t)            Investment trillion US dollars,
+        Y(t)            Output net abatement and damage costs,
+        UTILITY         Maximand;
+
+POSITIVE VARIABLES Y, C, K, I;
+
+EQUATIONS
+        UTIL            Objective function
+        CC(t)           Consumption
+        YY(t)           Output
+        KK(t)           Capital balance
+        TERMCAP         Terminal capital stock constraint with terminal capital stock parameter;
+
+UTIL..              UTILITY =E= SUM(t, 10 * dfactor(t) * L(t) * LOG(C(t)/L(t)));
+CC(t)..                C(t) =E= Y(t) - I(t);
+YY(t)..                Y(t) =E= phi * L(t)**(1-kvs) * K(t)**kvs;
+KK(t)..                K(t) =L= (1-delta)**10 * K(t-1) + 10 * I(t-1) + kinit$tfirst(t);
+TERMCAP..             kterm =E= sum(tlast, (1-delta)**10 * K(tlast) + 10 * I(tlast));
+
+model ramsey NLP Model using parameter kterm /all/;
+
+C.L(t) = 1;        C.LO(t) = 0.01;
+K.L(t) = 1;        K.LO(t) = 0.01;
+I.L(t) = 1;
+Y.L(t) = 1;
+
+*Run iterative loop of ramsey NLP model
+set iter /iter1*iter20/;
+
+kterm = kinit * power(1+g,card(t));
+
+parameter        invest(t,iter)  Investment in successive iterations
+                 kt(iter)        Terminal capital stock in successive iterations;
+
+option solprint=off, limrow=0, limcol=0;
+loop(iter,
+        kt(iter) = kterm;
+        solve ramsey maximizing UTILITY using NLP;
+        invest(t,iter) = I.L(t);
+
+        kterm = sum(tlast(t), K.L(tlast) * Y.L(t)/Y.L(t-1));
+);
+option solprint=on;
+
+Parameter rep(*,*);
+rep('NLP','KTERM') = kterm;
+rep('NLP','iter')  = na;
+
+*-------------------------------------------------------------------------------
+*Now we write this as an MCP
+Variables
+         KTERMV          Terminal capital stock,
+         uCC(t)          Shadow value of market supply,
+         uKK(t)          Shadow value of capital,
+         uYY(t)          Shadow value of output,
+         uTERMCAPV       ;
+
+Negative Variables
+         uKK(t)          Shadow value of capital;
+
+Equations
+         dLdC(t)         First-order-conditions from the NLP for variable C
+         dLdK(t)         First-order-conditions from the NLP for variable K
+         dLdI(t)         First-order-conditions from the NLP for variable I
+         dLdY(t)         First-order-conditions from the NLP for variable Y
+         TERMCAPV        Terminal capital stock constraint with terminal capital stock variable
+         SSTERM          First-order-condition for terminal capital stock variable;
+
+
+* Dual constraints (first-order-conditions from the NLP):
+dLdC(t)..  - 10 * dfactor(t) * L(t) / C(t)
+           - uCC(t) =N= 0;
+dLdK(t)..  [phi * L(t)**(1-kvs) * kvs * K(t)**(kvs-1)] * uYY(t)
+           - uKK(t)
+           + [(1-delta)**10]* uKK(t+1)
+           + ([(1-delta)**10] * uTERMCAPV)$tlast(t) =N= 0;
+dLdI(t)..  - uCC(t)
+           + 10 * uKK(t+1)
+           + 10 * uTERMCAPV$tlast(t) =N= 0;
+dLdY(t)..  + uCC(t)
+           - uYY(t) =N= 0;
+
+*Substitute TERMCAP of NLP by TERMCAPV (using variable KTERMV instead of parameter kterm)
+TERMCAPV..  KTERMV =E= sum(tlast, (1-delta)**10 * K(tlast) + 10 * I(tlast));
+
+*First-order-condition for terminal capital stock variable
+SSTERM.. sum(tlast(t),I(t)/I(t-1) - Y(t)/Y(t-1)) =E= 0;
+
+*Use duals of primal variables
+uKK.L(t)    = KK.m(t);
+uYY.L(t)    = - YY.m(t);
+uCC.L(t)    = - CC.m(t);
+uTERMCAPV.l = - TERMCAP.m;
+
+model ramseymcp / CC.uCC, YY.uYY, KK.uKK, TERMCAPV.uTERMCAPV, dLdY.Y, dLdC.C, dLdI.I, dLdK.K, SSTERM.KTERMV /;
+
+*-------------------------------------------------------------------------------
+*Solve the MCP and use NLP solution as starting point
+solve ramseymcp using mcp;
+rep('MCP','KTERM') = KTERMV.l;
+rep('MCP','iter')  = ramseymcp.iterusd;
+
+*One may be able to decrease tolerance if running more iteration for the nlp
+scalar tol /1e-3/;
+
+*Compare terminal capital stock of iterative NLP Framework with the obtained
+*solving the hand-written MCP
+abort$(abs(kterm-KTERMV.l)>tol) 'MCP and iterative NLP solution differ';
+
+*Solve the MCP again but now start from the same starting point as the
+*NLP iterative process
+C.L(t)      = 1;
+K.L(t)      = 1;
+I.L(t)      = 1;
+Y.L(t)      = 1;
+KK.m(t)     = 0;
+YY.m(t)     = 0;
+CC.m(t)     = 0;
+TERMCAPV.m  = 0;
+solve ramseymcp using mcp;
+rep('MCP_2','KTERM') = KTERMV.l;
+rep('MCP_2','iter')  = ramseymcp.iterusd;
+
+abort$(abs(kterm-KTERMV.l)>tol) '(Start Over) MCP and iterative NLP solution differ';
+
+*Now we use EMP's Embedded Complementarity System (ECS)
+model ramseyemp /UTIL,CC,YY,KK,TERMCAPV,SSTERM/;
+
+$onecho > "%emp.info%"
+dualequ SSTERM KTERMV
+$offecho
+
+solve ramseyemp maximizing UTILITY using emp;
+rep('ECS','KTERM') = KTERMV.l;
+rep('ECS','iter')  = ramseyemp.iterusd;
+abort$(abs(kterm-KTERMV.l)>1e-3) 'ECS and iterative NLP solution not the same';
+
+*Solve the EMP ECS model again but now start from the same starting point
+*as the NLP iterative process
+C.L(t)      = 1;
+K.L(t)      = 1;
+I.L(t)      = 1;
+Y.L(t)      = 1;
+KK.m(t)     = 0;
+YY.m(t)     = 0;
+CC.m(t)     = 0;
+TERMCAPV.m  = 0;
+solve ramseyemp maximizing UTILITY using emp;
+rep('ECS_2','KTERM') = KTERMV.l;
+rep('ECS_2','iter')  = ramseyemp.iterusd;
+abort$(abs(kterm-KTERMV.l)>1e-3) '(Start over) ECS and iterative NLP solution not the same';
+
+*Now we use an EMP Equilibrium
+
+file e / '%emp.info%' /;
+put e    'equilibrium' /;
+put      'max utility C K I Y util termcapv CC KK YY' /;
+putclose 'vi SSTERM KTERMV' /;
+
+solve ramseyemp using emp;
+rep('Equil','KTERM') = KTERMV.l;
+rep('Equil','iter')  = ramseyemp.iterusd;
+abort$(abs(kterm-KTERMV.l)>1e-3) 'Equlibrium and iterative NLP solution not the same';
+
+*Solve the EMP Equlibrium model again but now start from the same starting
+*point as the NLP iterative process
+C.L(t)      = 1;
+K.L(t)      = 1;
+I.L(t)      = 1;
+Y.L(t)      = 1;
+KK.m(t)     = 0;
+YY.m(t)     = 0;
+CC.m(t)     = 0;
+TERMCAPV.m  = 0;
+solve ramseyemp using emp;
+rep('Equil_2','KTERM') = KTERMV.l;
+rep('Equil_2','iter')  = ramseyemp.iterusd;
+abort$(abs(kterm-KTERMV.l)>1e-3) '(Start over) Equlibrium and iterative NLP solution not the same';
+
+display rep;

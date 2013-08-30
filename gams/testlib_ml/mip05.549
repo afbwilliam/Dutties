@@ -1,0 +1,115 @@
+$Title Maximum queens chess problem  (MIP05,SEQ=549)
+$Eolcom !
+
+$ontext
+
+   This model finds all possible ways to arrange eight queens on a chess
+   board in such a way that no two queens check each other.
+   Using solves within a loop, successive solutions are cut off until
+   the model becomes infeasible.  At this point, all the solutions
+   have been enumerated.  This problem has a long history. In 1850
+   it was investigated by C.F. Gauss, but he was unable to solve it
+   completely. There are 92 possible solutions on a standard 8x8 chessboard.
+   Alternate NxN chessboards can easily be used, see numSols below.
+
+Dudeney, H E, Amusements in Mathematics. Dover, New York, 1970.
+
+Beauvais, J, Solving the Maximum Queens Chess Problem with OSL. IBM
+Kingston, EKKNEWS 2 (1991).
+
+GAMS Model Library, queens.103
+
+Contributor: Steve Dirkse, Jan 2012
+
+$offtext
+
+* to run without cut generation use --SKIPCUTS=1 on the command line
+* this will just solve the problem without cuts and by default will
+* only return one solution
+$if not set SKIPCUTS $set SKIPCUTS 0
+
+$ifthen %DEMOSIZE% == 1
+  set  i   'size of chess board'     / 1*6 /;
+$else
+  set  i   'size of chess board'     / 1*8 /;
+$endif
+$eval NS 2 * card(i) - 3
+sets
+  s      'diagonal offsets'        / 1*%NS% /   ! 2i-3 diagonals
+  nn     'max number of solutions' / s1*s1000 /
+  n(nn)  'solutions found'
+  dim    'known dimensions'        / d1 * d10 /
+  ;
+alias (i,j);
+
+parameters
+  sh(s)  'shift values for diagonals'
+  rev(i) 'reverse order'
+  sols(nn,i,j) 'previously found solutions for cut generation'
+  numSols(dim) /
+    d4     2
+    d5    10
+    d6     4
+    d7    40
+    d8    92
+    d9   352
+    d10  724
+  /
+  ;
+scalars
+  nI    'size of chessboard'
+  nSols 'number of solutions found'
+  ;
+sh(s)  = ord(s) - card(i) + 1 ;
+rev(i) = card(i) + 1 - 2*ord(i);
+Display sh, rev;
+
+binary variable x(i,j)  'square is occupied by a queen'
+       variable tot     'count of squares occupied by queens'
+
+equations
+  a(i)  'no two queens may be in the same rank'
+  b(j)  'no two queens may be in the same file'
+  c(s)  'no two queens may be in the same diagonal (forward)'
+  d(s)  'no two queens may be in the same diagonal (backward)'
+  obj   'objective definition'
+  cut(nn)  'known solutions to be eliminated'
+  ;
+
+a(i).. sum(j, x(i,j)) =e= 1;
+
+b(j).. sum(i, x(i,j)) =e= 1;
+
+c(s).. sum(i, x(i,i+sh(s))) =l= 1;
+
+d(s).. sum(i, x(i,i+(rev(i)+sh(s)))) =l= 1;
+
+cut(n).. sum{(i,j), sols(n,i,j)*x(i,j)} =l= card(i)-1;
+
+obj..  tot =e= sum{(i,j), x(i,j)};
+
+
+Model queens 'model with cuts' / all /;
+
+n(nn) = no;     ! clear set of cuts
+sols(nn,i,j) = 0;
+option optcr=0;
+solve queens maximizing tot using mip;
+
+$if %SKIPCUTS% == 1 $exit
+
+option limrow=0, limcol=0, solprint=off;
+option solveLink = %SOLVELINK.loadLibrary%;
+loop{nn$(queens.solvestat=%solvestat.NormalCompletion% and
+         queens.modelstat=%modelstat.Optimal%),
+
+   n(nn) = yes;   ! add element to set
+   sols(nn,i,j) = round(x.l(i,j));
+   Solve queens maximizing tot using mip;
+};
+abort$[card(n) eq card(nn)] 'set nn too small';
+nI = card(i);
+nSols = card(n);
+display nI, nSols;
+abort$[nSols <> sum{dim$(ord(dim) eq nI), numSols(dim)}] 'bad nSols', nSols, numSols, nI;
+execute_unload 'queensSolsCuts', n, I, sols;

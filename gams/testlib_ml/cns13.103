@@ -1,0 +1,44 @@
+$title CNS model - solvable, globally unique (cns13,SEQ=103)
+
+$ontext
+  The following model has a globally unique solution even though it
+  is nonlinear.
+  Not all solvers will recognize that the solution is globally unique.
+  Equation e3 and e4 can be solved uniquely w.r.t. x3 and x4.
+  Equation e1 and e2 can then be solved uniquely w.r.t. x1 and x2
+    even though it is nonlinear in x3 and x4 since x3 and x4 have
+    unique values.
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+scalars rhs1, rhs2, rhs3, rhs4;
+rhs1 = 1 + 2 + sqr(3)       ;
+rhs2 = 1 - 2 +        sqr(4);
+rhs3 =             3    + 4 ;
+rhs4 =             3    - 4 ;
+
+variable x1, x2, x3, x4;
+equation e1, e2, e3, e4;
+
+e1 .. x1 + x2 + sqr(x3)         =e= rhs1;
+e2 .. x1 - x2 +         sqr(x4) =e= rhs2;
+e3 ..               x3    + x4  =e= rhs3;
+e4 ..               x3    - x4  =e= rhs4;
+
+model m / all /;
+
+solve m using cns;
+* we will NOT check for only 15 at this time although this is an easy model
+abort$(m.solvestat <> %solvestat.NormalCompletion% or
+      (m.modelstat = %modelstat.SolvedUnique% eqv m.modelstat = %modelstat.Solved%))  'bad return codes';
+abort$(abs(x1.l-1) > tol)                       'bad x1.l';
+abort$(abs(x2.l-2) > tol)                       'bad x2.l';
+abort$(abs(x3.l-3) > tol)                       'bad x3.l';
+abort$(abs(x4.l-4) > tol)                       'bad x4.l';
+abort$(abs(e1.l-rhs1) > tol)                    'bad e1.l';
+abort$(abs(e2.l-rhs2) > tol)                    'bad e2.l';
+abort$(abs(e3.l-rhs3) > tol)                    'bad e3.l';
+abort$(abs(e4.l-rhs4) > tol)                    'bad e4.l';
+abort$(m.numinfes <> 0)                         'wrong .numinfes';
+abort$(m.numdepnd <> 0)                         'wrong .numdepnd';

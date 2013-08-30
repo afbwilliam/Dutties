@@ -1,0 +1,102 @@
+$Title	External Function - Example MCP 1 (EXMCP1,SEQ=573)
+
+$ontext
+  This example is based on ex2.gms, an NLP example of
+  an unconstrained QP.
+  Here, we start with the same model, write down its KKT conditions,
+  and then implement these KKT conditions using an external equation
+
+$offtext
+
+
+set	I	/i1*i14/;
+alias (I,J);
+
+scalar compz;
+parameter Q(I,I) 'Covariance Matrix',
+          X0(I)  'Targets';
+Q(I,J) = power(0.5, abs(ord(I)-ord(J)) );
+X0(I)  = ord(I) / card(I);
+display Q, X0;
+
+variables
+	x(I), z;
+equations
+	zdef		'objective function, in GAMS',
+	dzdx(I)		'del z wrt x(I)',
+	dzdxX(I)	'del z wrt x(I), eXternal version';
+
+zdef..  sum {(I,J),
+             (x(I)-x0(I)) * Q(I,J) * (x(J)-x0(J)) }
+        =e= z;
+
+dzdx(I)..	2 * sum {J, Q(I,J) * (x(J) - x0(J)) } =e= 0;
+
+dzdxX(I)..	sum {J, ord(J) * x(J) } =x= ord(I);
+
+model exnlp1  /zdef/;
+model exmcp1  /dzdx/;
+model exmcp1c /dzdxX/;
+model exmcp1f /dzdxX/;
+
+file f / 'exmcp1.put' /; f.nw = 0; f.nd = 13;
+
+f.nr = 0; put f card(i):0:0 /; f.nr = 2;
+
+loop {i,
+   put x0(i) /;
+   loop {j,
+      put q(i,j) /;
+   };
+};
+putclose f;
+
+parameter report(*, *, *) 'Solution Summary';
+scalar totdist /0/;
+
+$onechoV > runme.gms
+x.l(j) = 0;
+x.m(j) = 0;
+$if     %2==nlp solve %1  using nlp min z;
+$if not %2==nlp solve %1  using mcp; z.l = sum {(I,J), (x.l(I)-x0(I)) * Q(I,J) * (x.l(J)-x0(J))};
+report('Solve ','Stat',  '%1') = %1.solvestat;
+report('Model ','Stat',  '%1') = %1.modelstat;
+report('OBJ',   'Z',     '%1') = z.l;
+report(i,'Target',  '%1') = x0(i);
+report(i,'Value',   '%1') = x.l(i);
+report(i,'Distance','%1') = abs(x.l(i) - x0(i));
+totdist = totdist + sum(i,abs(x.l(i) - x0(i)));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC '1' set runF '1'
+
+$ifthen not set nocomp
+$  ifi set runC    $call gams complink lo=%gams.lo% --lang=c         --files=exmcp1c.c                                     --libname=exmcp1c%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF    $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 exmcp1f.f90"%eq% --libname=exmcp1f%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$             batinclude runme exnlp1  nlp
+$             batinclude runme exmcp1  mcp
+$if set runC $batinclude runme exmcp1c mcp
+$if set runF $batinclude runme exmcp1f mcp
+
+display report;
+
+* this totdist tolerance is pretty wide;
+* we don't get a solution to full precision with the NLP solver.
+* Compare the precision of the NLP to the MCP technique!
+if ((totdist < 1.0E-4),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect exmcp1.lst for details.";
+);

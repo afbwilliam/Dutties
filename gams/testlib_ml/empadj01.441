@@ -1,0 +1,140 @@
+$title "Test for EMPs AdjustEqu/NYslp option" (EMPADJ01,SEQ=441)
+
+$ontext
+
+Test EMP's option AdjustEqu NYslp which adds a slack variable to every
+nonlinear equation. Each slacks is multiplied with a penalty variable and added
+to the added to / subtracted from the objective.
+
+Contributor: Jan-H. Jagla, April 2009
+
+$offtext
+
+variable x1,x2,y;
+equation objequ, e1, e2;
+
+objequ.. y =e= 2*x1 + x2;
+e1.. x1*x1 + x2*x2 =l= 25;
+e2.. x1*x1 - x2*x2 =l= 7;
+
+model m /all/;
+
+$echo Adjustequ NYslp > "%emp.info%"
+
+$onecho > jams.opt
+FileName slpexample.gms
+*SubSolver nyslp
+SubSolver conopt
+Dict slpdict.txt
+$offecho
+
+m.optfile=1;
+solve m max y using emp;
+
+execute 'sed "2d" slpexample.gms > slpexample_mod.gms';
+execute 'diff -bw slpexample_mod.gms slp_ref.gms'
+abort$errorlevel 'slpexample_mod.gms and slp_ref.gms differ';
+
+execute 'sed "1d" slpdict.txt > slpdict_mod.txt';
+execute 'diff -bw slpdict_mod.txt slpdict_ref.txt'
+abort$errorlevel 'slpdict_mod.txt and slpdict_ref.txt differ';
+
+$onecho > slp_ref.gms
+***********************************************
+* for more information use JAMS option "Dict"
+***********************************************
+
+Variables  x1,x2,objvar,w2,w3,p2,p3,w4;
+
+Positive Variables  w2,w3;
+
+Equations  e1,e2,e3,e4;
+
+
+e1..  - 2*x1 - x2 + objvar =E= 0 - w4;
+
+e2.. x1*x1 + x2*x2 =L= 25 + w2;
+
+e3.. x1*x1 - x2*x2 =L= 7 + w3;
+
+* e4 defines penalty aggregation variable w4
+e4.. w4 =E= + p2*w2 + p3*w3;
+
+* set non default bounds
+
+p2.fx = 0.0;
+p3.fx = 0.0;
+
+* set non default levels
+
+
+* set non default marginals
+
+
+Model m / all /;
+
+m.limrow=0; m.limcol=0;
+
+* Index of first slack variable
+m.integer1   = 4;
+* Index of first penalty variable
+m.integer2   = 6;
+* Index of penalty aggregation variable
+m.integer3   = 8;
+
+Solve m using DNLP maximizing objvar;
+$offecho
+
+$onecho > slpdict_ref.txt
+
+********************************************************************************
+ Contents
+ 1 Content of EMP Information File
+ 2 Processed EMP Information
+ 3 Dictionary
+  3.1 Constraints
+  3.2 Variables
+********************************************************************************
+
+
+ 1 Content of EMP Information File
+ ---------------------------------
+
+     1: Adjustequ NYslp
+
+
+ 2 Processed EMP Information
+ ---------------------------
+
+   Number of adjusted constraints specified = 2
+   Equ       Type   Weight   Parameters ...
+    e2      NYslp       p2
+    e3      NYslp       p3
+
+   Thetafunction Counts
+     2 NYslp
+
+
+ 3 Dictionary
+ ------------
+  3.1 Constraints
+  ---------------
+
+                  e1  objequ
+                  e2  e1
+                  e3  e2
+                  e4  {new: defines penalty aggregation variable w4}
+
+
+  3.2 Variables
+ --------------
+
+                  x1  x1
+                  x2  x2
+              objvar  y
+                  w2  {new: slack variable of equation e2}
+                  w3  {new: slack variable of equation e3}
+                  p2  {new: penalty variable for equation e2}
+                  p3  {new: penalty variable for equation e3}
+                  w4  {new: penalty aggregation variable}
+$offecho

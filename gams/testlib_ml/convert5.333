@@ -1,0 +1,34 @@
+$title 'CONVERT test suite - min(max(x1,x2),x3)' (CONVERT5,SEQ=333)
+
+$ontext
+AB01198:convert::derivatives  (Distribution 22.2-22.4)
+Input of
+  min(max(x1,x2),x3)
+produced bad output in gams.gms:
+   min(x1,x2,x3)
+
+Contributor: Alex Meeraus
+$offtext
+
+
+Variables x1,x2,x3,objvar;
+Equations  e1;
+
+e1..  min(max(2*x1,3*x2),4*x3) =e= objvar;
+
+Model m / all /;
+
+x1.fx=0;x2.fx=2;x3.fx=2;objvar.fx=6;
+
+Solve m us dnlp max objvar;
+
+option dnlp=convert;
+solve m us dnlp max objvar;
+
+$onecho > t1.gms
+$include gams.gms
+abort$(m.modelstat <> %modelstat.Optimal%) 'should be optimal'
+$offecho
+
+execute 'gams t1 lo=%gams.lo% dnlp=conopt';
+abort$errorlevel 'did not work';

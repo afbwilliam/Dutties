@@ -1,0 +1,6 @@
+$title $clear acts like a data statement and knows about alias (CLEAR3,SEQ=11)
+set i / a,b,c /; alias(i,j);
+$clear j
+abort$card(i) 'set should be empty', i;
+abort$card(j) 'set should be empty', j;
+

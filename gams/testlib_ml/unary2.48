@@ -1,0 +1,77 @@
+$title simple test on unary operations with 'crazy' values (UNARY2,SEQ=48)
+
+* on/off undf makes UNDF a reserved word
+
+$onundf
+
+acronym acr
+
+Sets op values to be tested /
+        minus-inf, neg-4, zero, pos+2, plus-inf, epsilon, missing, undefined, acron /
+     un unary functions and operations to be tested /
+        abs,arctan,ceil,cos,floor,errorf,exp,log,log10,not,sin,
+        sign,sqrt,sqr,trunc,umin /
+
+Parameters unres(un,op) result of operations
+           unref(un,op) reference results
+           unerr(un,op,*) error report
+           a(op)        actual vales /
+           minus-inf -inf, neg-4 -4    , zero     0, pos+2 2
+           plus-inf  +inf, epsilon  eps, missing na, undefined undf, acron acr /;
+
+
+unres("abs"   ,op) = abs   (a(op));
+unres("arctan",op) = arctan(a(op));
+unres("ceil"  ,op) = ceil  (a(op));
+unres("cos"   ,op) = cos   (a(op));
+unres("errorf",op) = errorf(a(op));
+unres("exp"   ,op) = exp   (a(op));
+unres("floor" ,op) = floor (a(op));
+unres("log"   ,op) = log   (a(op));
+unres("log10" ,op) = log10 (a(op));
+unres("not"   ,op) = not    a(op) ;
+unres("sign"  ,op) = sign  (a(op));
+unres("sin",   op) = sin   (a(op));
+unres("sqr"   ,op) = sqr   (a(op));
+unres("sqrt"  ,op) = sqrt  (a(op));
+unres("trunc" ,op) = trunc (a(op));
+unres("umin"  ,op) = -      a(op) ;
+
+
+table unref(un,op)
+
+         minus-inf       neg-4        zero       pos+2    plus-inf     epsilon     missing   undefined   acron
+
+abs           +INF       4.000                   2.000        +INF         EPS          NA        UNDF    UNDF
+arctan      -1.571      -1.326                   1.107       1.571         EPS          NA        UNDF    UNDF
+ceil          -INF      -4.000                   2.000        +INF         EPS          NA        UNDF    UNDF
+cos           UNDF      -0.654       1.000      -0.416        UNDF       1.000          NA        UNDF    UNDF
+errorf             3.178861E-5       0.500       0.977       1.000       0.500          NA        UNDF    UNDF
+exp                      0.018       1.000       7.389        +INF       1.000          NA        UNDF    UNDF
+floor         -INF      -4.000                   2.000        +INF                      NA        UNDF    UNDF
+log           UNDF        UNDF        UNDF       0.693        +INF        UNDF          NA        UNDF    UNDF
+log10         UNDF        UNDF        UNDF       0.301        +INF        UNDF          NA        UNDF    UNDF
+not                                  1.000                                              NA        UNDF
+sign        -1.000      -1.000                   1.000       1.000         EPS          NA        UNDF    UNDF
+sin           UNDF       0.757                   0.909        UNDF         EPS          NA        UNDF    UNDF
+sqr           +INF      16.000                   4.000        +INF         EPS          NA        UNDF    UNDF
+sqrt          UNDF        UNDF                   1.414        +INF         EPS          NA        UNDF    UNDF
+trunc         -INF      -4.000                   2.000        +INF                      NA        UNDF    UNDF
+umin          +INF       4.000                  -2.000        -INF         EPS          NA        UNDF    UNDF
+
+set undiff(un,op);
+
+* we have to use mapval to make sure the tests are not messed up
+* don't worry, there is a separate mapval test for cmex
+
+undiff(un,op)  = mapval(unres(un,op)) <> mapval(unref(un,op));
+undiff(un,op)$(not mapval(unref(un,op))) = abs(unres(un,op) - unref(un,op)) > 1e-3;
+
+unerr(undiff,'ref') =  unref(undiff);
+unerr(undiff,'new') =  unres(undiff);
+
+display unerr;
+
+execerror=0;
+
+abort$card(undiff) 'something wrong with unarries';

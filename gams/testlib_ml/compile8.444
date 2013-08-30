@@ -1,0 +1,32 @@
+$title Test for a mapping error (COMPILE8,SEQ=444)
+
+$ontext
+contributed by
+Foy Teuton
+Lockheed Martin Aeronautics Co.
+Marietta, GA  30063
+
+the gams compiler accepts j(a(j)) but the code generator raises an assert
+$offtext
+
+set i / 1*5 /, p / a,b,c /; alias(i,j,k);
+
+parameter limit_cap(i,j,p);
+parameters range / 5 /, npiece_cap / 3 /;
+set a(j) / 2*4 /, b(i) / 2*5 /;;
+
+loop(i ,
+*  following raises an assertion
+   loop(j(a(j)),
+*  following was intended
+*   loop(j$(a(j)),
+*  following without $
+*   loop(a(j),
+      if(not sameas(j,i),
+        loop(p,
+           limit_cap(i,j,p) = (ord(p)*(range/(npiece_cap-1)))**2 ))));
+
+display limit_cap;
+
+$if errorfree $abort should have an error
+$clearerrors

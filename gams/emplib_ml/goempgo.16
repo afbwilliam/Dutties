@@ -1,0 +1,207 @@
+$TITLE 'EMP Quality Assurance Test' (GOEMPGO,SEQ=16)
+
+$ontext
+
+This model runs all models included in the EMP Library and their success
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+
+$eolcom //
+
+$set SLASH     \
+$if %system.filesys% == UNIX $set SLASH /
+
+$if not set PREFIX $set PREFIX %system.platform%
+
+$set GAMSLO %gams.lo%
+$if %gams.ide% == 1 $set GAMSLO 2
+
+$set FLAGS lo=%GAMSLO% etlim=1800 %gams.user1%
+
+$set ALL   all_emp.gms
+$set FAIL  failures_emp.gms
+$set RMDIR rmdir.gms
+$if not set TRACE    $set TRACE    emplib.trc  // gtrace file trace=%TRACE%
+$if not set TRACEREP $set TRACEREP emplib.rep  // Gtrace report file
+$set TL       6
+
+scalar licensed /0/;
+$if '%LICENSE%' == 'yes' licensed = 1;
+
+$include empmod.inc
+
+
+$if not set TEST $goto alltests
+set m2(m) / %TEST% /;
+$goto singletests
+$label alltests
+set m2(m); m2(m) = yes;
+$label singletests
+
+set solvers        master set of solvers  / system.solverNames /
+    solverPlatformMap(solvers,*)          / system.SolverPlatformMap /
+    mt            modelTypes              / system.modeltypes /
+    avail(solvers) EMP Solvers available for this platform';
+
+$ifthen set solver
+set singleS(solvers) / %solver% /;
+loop(singleS,
+  abort$(not solvers(singleS)) 'Solver not valid';
+  abort$(not sum(solverPlatformMap(singleS,'%system.platform%'),1)) 'Solver not available on this platform';
+  abort$(not SolverCapabilities(singleS,'EMP')) 'Solver cannot solve EMP models';
+  avail(singleS) = yes;
+);
+$else
+avail(solvers)
+ = solvers(solvers)
+   and sum(solverPlatformMap(solvers,'%system.platform%'),1)
+   and SolverCapabilities(solvers,'EMP');
+$endif
+
+$onempty
+set
+   skipM(m) skip model /
+      emphtm        'utility to create EMP library web page but not a test'
+      emputil       'utility to create EMP library file but not a test'
+      goempgo       'the test itself'
+   /
+   skipMstdo(m) skip model stdout check /
+   /
+   skipMstde(m) skip model stderr check /
+   /
+   skipMtrace(m) skip model trace check /
+   /
+   skipS(solvers) skip solver /
+      KESTREL
+   /
+   skipSstdo(solvers) skip solver stdout check /
+      DECIS
+   /
+   skipSstde(solvers) skip solver stderr check /
+   /
+   skipSM(solvers,m) skip model-solver-combination /
+      DECIS.nbdiscjoint 'DecisC/M fail on model generated, see #2127'
+      LINDO.circlesp    'LINDOs local solve is not as precise as expected by the test'
+$if %system.buildcode% == DEG       LINDO.simplechance 'non-deterministic error on DEG'
+   /
+   skipSMtrace(solvers,m) skip model-solver-combination trace check /
+      DE.tr20           'DE reports 9,14 on first and third solve'
+      LINDO.tr20        'LINDO reports 9,14 on first and third solve'
+   /;
+$offempty
+
+* Skip nonSP models with DE, DECIS and LINDO
+skipSM('DE'    ,m) $= not sum(sm(s,m),ts('SP',s));
+skipSM('DECIS' ,m) $= not sum(sm(s,m),ts('SP',s));
+skipSM('LINDO' ,m) $= not sum(sm(s,m),ts('SP',s));
+* Skip SP models with JAMS
+skipSM('JAMS'  ,m) $= sum(sm(s,m),ts('SP',s));
+* Only do logic models with LOGMIP
+skipSM('LOGMIP',m) $= not sum(sm(s,m),ts('LOGICAL',s));
+
+scalar
+  rc     / 0 /,
+  tot    / 0 /,
+  err    / 0 /,
+  stderr / 0 /,
+  stdout / 0 /;
+
+file fone  / 'onetest.gms' /
+     fstd  / 'stdtest.gms' /
+     fall  / '%ALL%'       /
+     ffail / '%FAIL%'      /
+     frm   / '%RMDIR%'     /
+     fx;
+
+$if %ALL%  == all_emp.gms      putclose fall  '* These are the tests we ran' /;
+$if %FAIL% == failures_emp.gms putclose ffail '* These are the tests that failed' / '*Total tests: 0  Failed tests: 0';
+                               putclose frm   '* Delete directories of successfull tests' /;
+fone.lcase  = 1;
+fstd.lcase  = 1;
+fall.lcase  = 1;
+ffail.lcase = 1;
+frm.lcase   = 1;
+fx.lcase    = 1;
+fall.ap     = 1;
+ffail.ap    = 1;
+frm.ap      = 1;
+
+$set DIRNAME "'%PREFIX%_emp_' m.tl:0 '_' t.tl:0 '_' solvers.tl:0"
+loop((sm(s,m2(m)),ts(t,s))$(not skipM(m) and (not big(s) or licensed)),
+  loop(avail(solvers)$(not skipS(solvers) and not skipSM(solvers,m)),
+    tot = tot + 1;
+
+    //Create empty dir and onetest
+    put_utility fx 'shell' / 'rm -rf ' %DIRNAME% ' && mkdir ' %DIRNAME%;
+    put fone
+       '$call emplib -q ' m.tl:0
+     / '$if errorlevel 1 $abort'
+     / '$echo JobStart ' m.tl:0 ' >> %TRACE%'
+     / '$call gams ' m.tl:0 ' jt=' m.tl:0 ' emp=' solvers.tl:0 ' trace=%TRACE% %FLAGS%'
+     / '$if errorlevel 1 $set err 1'
+    put$(not skipMtrace(m) and not skipSMtrace(solvers,m))
+     / '$call gams %TRACE% a=gt ps=0 pw=255 tl=0 lo=2';
+    putclose
+     / '$if errorlevel 1 $set err 1'
+     / '$if set err scalar err /%err%/'
+     / '$call cat %TRACE% >> ..%SLASH%%TRACE%'
+     / "$if %err% == 1 $abort 'Problem'";
+
+    // move and run onetest
+    put_utility fx 'shell' / 'mv -f onetest.gms ' %DIRNAME% ' && cd ' %DIRNAME% ' && gams onetest lo=%GAMSLO% --err=0 gdx=..%SLASH%err >stdout.txt 2>stderr.txt';
+    rc=1;
+    execute_load 'err' rc=err;
+
+    //Create stdout and stderr test
+    putclose fstd
+       '$call test -s stdout.txt'
+     / '$if errorlevel 1 $set stdout 0'
+     / '$call test -s stderr.txt'
+     / '$if errorlevel 1 $set stderr 0'
+     / 'scalar stdout /%stdout%/'
+     / '       stderr /%stderr%/;';
+
+    //Run stdout/err test
+    put_utility fx 'shell' / 'mv -f stdtest.gms ' %DIRNAME% ' && cd ' %DIRNAME% ' && gams stdtest.gms lo=%GAMSLO% --stderr=1 --stdout=1 gdx=..%SLASH%std';
+    stdout=1; stderr=1;
+    execute_load 'std' stderr,stdout;
+
+    //Create file containing all tests
+    put fall '$call gams goempgo %FLAGS% --prefix=%PREFIX% --test=' m.tl:0 ' --solver=' solvers.tl:0 ;
+    if (licensed,                    put ' --LICENSE=yes');
+    if (rc,                          put ' --ftrace=1'   );
+    if (stdout and not skipMstdo(m)
+        and not skipSstdo(solvers),  put ' --fstdout=1'  );
+    if (stderr and not skipMstde(m)
+        and not skipSstde(solvers),  put ' --fstderr=1'  );
+    putclose ' --dir='%DIRNAME% /;
+
+    if (rc or (stdout and not skipMstdo(m) and not skipSstdo(solvers))
+           or (stderr and not skipMstde(m) and not skipSstde(solvers)),
+      err = err + 1;
+      execute 'tail -n1 %ALL% >> %FAIL%';
+    else
+      putclose frm '$call rm -rf ' %DIRNAME%;
+    );
+  );
+);
+
+execute 'gams %TRACE% a=gt ps=0 pw=255 o=%TRACEREP% tl=%TL% lo=0';
+execute 'gams %RMDIR% lo=0';
+
+putclose ffail '*Total tests: ', tot:0:0, '  Failed tests: ', err:0:0;
+
+execute 'rm -f rmdir.* err.gdx std.gdx';
+
+if ((err > 0),
+  put_utility 'log' / err:0:0, ' out of ' ,tot:0:0, ' tests failed.';
+  put_utility 'log' / 'Check %FAIL%';
+  abort 'Some test failed.';
+else
+  put_utility 'log' / 'Congratulations!  All ', tot:0:0, ' tests passed.'/;
+);
+
+put_utility 'log' / 'See the file %ALL% to reproduce all the runs'/;

@@ -1,0 +1,69 @@
+$TITLE 'Test correctness of arctan2 intrinsic' (FNATAN2N,SEQ=275)
+
+$ontext
+
+Test the arctan2 function, comparing the true derivatives
+with those computed numerically.  This test is just for rough
+correctness (to be sure we haven't gotten any signs wrong, etc.) so
+keep the inputs in the easy range [1,5].
+
+$offtext
+
+$include fnset_xy.inc
+
+set T / 1 * 4000 /;
+set TT(T) / 1 * 1000 /;
+scalar n;
+n = card(tt);
+abort$(n*4 <> card(t)) 'mismatch in T & P';
+
+parameter pdata(T,V);
+option seed = 1001;
+pdata(TT,'x') = uniform(1,5);
+pdata(TT,'y') = uniform(1,5);
+data(T      , V)  =  pdata(T, V);
+data(T+n    ,'x') =  pdata(T,'x');
+data(T+n    ,'y') = -pdata(T,'y');
+data(T+(2*n),'x') = -pdata(T,'x');
+data(T+(2*n),'y') =  pdata(T,'y');
+data(T+(3*n), V)  = -pdata(T, V);
+
+* display data;
+
+aeps = 1e-7;
+reps = 1e-6;
+relToInput = 0;
+
+* compute the derivative values using finite differences
+* FYI: CMEX uses centered differences for gradn and hessn where possible:
+* grad(x) = (f(x+h) - f(x-h)) / 2h
+* hess(x) = grad(x+h) - grad(x-h) / 2h
+* setting real1 decreases h from the default of 1e-3
+option real1 = 5e-5;
+
+loop {T,
+  data(T,  'f_')  = arctan2.value(    data(T,'y'),data(T,'x'));
+  data(T, 'fy_')  = arctan2.gradn(1:  data(T,'y'),data(T,'x'));
+  data(T, 'fx_')  = arctan2.gradn(2:  data(T,'y'),data(T,'x'));
+  data(T,'fyy_')  = arctan2.hessn(1:1:data(T,'y'),data(T,'x'));
+  data(T,'fyx_')  = arctan2.hessn(1:2:data(T,'y'),data(T,'x'));
+  data(T,'fxy_')  = arctan2.hessn(2:1:data(T,'y'),data(T,'x'));
+  data(T,'fxx_')  = arctan2.hessn(2:2:data(T,'y'),data(T,'x'));
+  data(T, 'rc')   = 0;
+  data(T, 'ec')   = 0;
+};
+
+loop {T,
+  data(T,  'f')  = arctan2.value(   data(T,'y'),data(T,'x'));
+  data(T, 'fy')  = arctan2.grad(1:  data(T,'y'),data(T,'x'));
+  data(T, 'fx')  = arctan2.grad(2:  data(T,'y'),data(T,'x'));
+  data(T,'fyy')  = arctan2.hess(1:1:data(T,'y'),data(T,'x'));
+  data(T,'fyx')  = arctan2.hess(1:2:data(T,'y'),data(T,'x'));
+  data(T,'fxy')  = arctan2.hess(2:1:data(T,'y'),data(T,'x'));
+  data(T,'fxx')  = arctan2.hess(2:2:data(T,'y'),data(T,'x'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display relToInput;
+$include fntest_xy.inc

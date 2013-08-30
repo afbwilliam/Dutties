@@ -1,0 +1,156 @@
+$title Simple test on one equation (LP01,SEQ=66)
+
+$ontext
+
+In this test we check how a solver behaves when there is only
+one objective variable in one equation. Different tests
+are performed applying different directions of optimization
+as well as different types of signs of the constraints.
+
+Jun 2006: break out the test on an =n= equation into a separate test
+(lp11) so that for some solvers we can skip just =n= but still test
+the other equation types.
+
+$offtext
+
+$if not set MTYPE       $set MTYPE lp
+$if not set solvedasmcp $set solvedasmcp 0
+$if not set SKIPUNBND $set SKIPUNBND 0
+scalar skipUnBnd / %SKIPUNBND% /;
+
+variable obj;
+
+equations defobje
+          defobjl
+          defobjg;
+
+model lp01e /defobje/
+      lp01l /defobjl/
+      lp01g /defobjg/;
+
+defobje.. obj =e= 1;
+defobjl.. obj =l= 1;
+defobjg.. obj =g= 1;
+
+
+option limcol=0,limrow=0,bratio=1;
+
+scalar tol / 1e-6 /;
+
+solve lp01e max obj us %MTYPE%;
+  abort$(lp01e.solvestat <> %solvestat.NormalCompletion% or lp01e.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01e.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01e.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01e.objval - 1) > tol) 'bad m.objval';
+  abort$(abs(defobje.l - 1) > tol)    'bad equation level';
+  abort$(abs(defobje.m - 1) > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)     > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)     > tol)    'bad variable marginal';
+
+solve lp01l max obj us %MTYPE%;
+  abort$(lp01l.solvestat <> %solvestat.NormalCompletion% or lp01l.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01l.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01l.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01l.objval - 1) > tol) 'bad m.objval';
+  abort$(abs(defobjl.l - 1) > tol)    'bad equation level';
+  abort$(abs(defobjl.m - 1) > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)     > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)     > tol)    'bad variable marginal';
+
+if {not skipUnBnd,
+  solve lp01g max obj us %MTYPE%;
+    abort$(lp01g.solvestat <> %solvestat.NormalCompletion%
+           or ( (lp01g.modelstat <> %modelstat.Unbounded%) and (lp01g.modelstat <> %modelstat.Unbounded-NoSolution%)
+                and ((lp01g.modelstat <> %modelstat.Infeasible%) or (%solvedasmcp% = 0)))) 'wrong status codes';
+};
+
+solve lp01e min obj us %MTYPE%;
+  abort$(lp01e.solvestat <> %solvestat.NormalCompletion% or lp01e.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01e.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01e.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01e.objval - 1) > tol) 'bad m.objval';
+  abort$(abs(defobje.l - 1) > tol)    'bad equation level';
+  abort$(abs(defobje.m - 1) > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)     > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)     > tol)    'bad variable marginal';
+
+if {not skipUnBnd,
+  solve lp01l min obj us %MTYPE%;
+    abort$(lp01l.solvestat <> %solvestat.NormalCompletion%
+           or ( (lp01l.modelstat <> %modelstat.Unbounded%) and (lp01l.modelstat <> %modelstat.Unbounded-NoSolution%)
+                and ((lp01l.modelstat <> %modelstat.Infeasible%) or (%solvedasmcp% = 0)))) 'wrong status codes';
+};
+
+solve lp01g min obj us %MTYPE%;
+  abort$(lp01g.solvestat <> %solvestat.NormalCompletion% or lp01g.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01g.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01g.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01g.objval - 1) > tol) 'bad m.objval';
+  abort$(abs(defobjg.l - 1) > tol)    'bad equation level';
+  abort$(abs(defobjg.m - 1) > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)     > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)     > tol)    'bad variable marginal';
+
+
+obj.lo = -1000; obj.up = 1000;
+
+
+solve lp01e max obj us %MTYPE%;
+  abort$(lp01e.solvestat <> %solvestat.NormalCompletion% or lp01e.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01e.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01e.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01e.objval - 1) > tol) 'bad m.objval';
+  abort$(abs(defobje.l - 1)    > tol)    'bad equation level';
+  abort$(abs(defobje.m - 1)    > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)        > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)        > tol)    'bad variable marginal';
+
+solve lp01l max obj us %MTYPE%;
+  abort$(lp01l.solvestat <> %solvestat.NormalCompletion% or lp01l.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01l.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01l.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01l.objval - 1) > tol)    'bad m.objval';
+  abort$(abs(defobjl.l - 1)    > tol)    'bad equation level';
+  abort$(abs(defobjl.m - 1)    > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)        > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)        > tol)    'bad variable marginal';
+
+solve lp01g max obj us %MTYPE%;
+  abort$(lp01g.solvestat <> %solvestat.NormalCompletion% or lp01g.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01g.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01g.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01g.objval - 1000) > tol) 'bad m.objval';
+  abort$(abs(defobjg.l - 1000) > tol)    'bad equation level';
+  abort$(abs(defobjg.m - 0)    > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1000)     > tol)    'bad variable level';
+  abort$(abs(obj.m - 1)        > tol)    'bad variable marginal';
+
+solve lp01e min obj us %MTYPE%;
+  abort$(lp01e.solvestat <> %solvestat.NormalCompletion% or lp01e.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01e.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01e.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01e.objval - 1) > tol)    'bad m.objval';
+  abort$(abs(defobje.l - 1)    > tol)    'bad equation level';
+  abort$(abs(defobje.m - 1)    > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)        > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)        > tol)    'bad variable marginal';
+
+solve lp01l min obj us %MTYPE%;
+  abort$(lp01l.solvestat <> %solvestat.NormalCompletion% or lp01l.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01l.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01l.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01l.objval + 1000) > tol) 'bad m.objval';
+  abort$(abs(defobjl.l + 1000) > tol)    'bad equation level';
+  abort$(abs(defobjl.m - 0)    > tol)    'bad equation marginal';
+  abort$(abs(obj.l + 1000)     > tol)    'bad variable level';
+  abort$(abs(obj.m - 1)        > tol)    'bad variable marginal';
+
+solve lp01g min obj us %MTYPE%;
+  abort$(lp01g.solvestat <> %solvestat.NormalCompletion% or lp01g.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(lp01g.numnopt  <> 0) '    NONOPT flags set';
+  abort$(lp01g.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(lp01g.objval - 1) > tol)    'bad m.objval';
+  abort$(abs(defobjg.l - 1)    > tol)    'bad equation level';
+  abort$(abs(defobjg.m - 1)    > tol)    'bad equation marginal';
+  abort$(abs(obj.l - 1)        > tol)    'bad variable level';
+  abort$(abs(obj.m - 0)        > tol)    'bad variable marginal';

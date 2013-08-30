@@ -1,0 +1,57 @@
+$TITLE 'KNITRO test suite - basic option reading test' (KNITRO01,SEQ=283)
+
+$log GDXXRW test skipped for this platform
+$exit
+
+variable x, y, z;
+equation f, g, h;
+
+scalar a, xbar, ybar, zbar;
+
+f..     exp(x) =E=  a;
+g..     cos(y) =E= sqrt(x) - 2;
+h..     log(z) =E= y;
+
+x.lo = 1e-6;
+x.up = 20;
+y.lo = 0;
+y.up = pi/2;
+z.lo = 1e-6;
+
+model m / f, g, h /;
+* this is not a tough model but it will take a few iterations
+* to get a solution
+
+a = 1000;
+xbar = log(a);
+* older CMEX versions lack arccos
+* ybar = arccos(sqrt(xbar)-2);
+ybar = arctan(sqrt(1-sqr(sqrt(xbar)-2))/(sqrt(xbar)-2));
+zbar = exp(ybar);
+
+display a, xbar, ybar, zbar;
+
+$onecho > knitro.525
+maxit   2
+$offecho
+
+$onecho > knitro.322
+* crank down to get a precise solution
+feastol   1e-8
+opttol    1e-8
+$offecho
+
+option nlp = knitro;
+
+* this one will fail
+m.optfile = 525;
+solve m using nlp min x;
+abort$(m.solvestat <> %solvestat.TerminatedBySolver% or m.modelstat <> %modelstat.IntermediateInfeasible%) 'unexpected KNITRO behavior';
+
+
+m.optfile = 322;
+solve m using nlp min x;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.LocallyOptimal%) 'unexpected KNITRO behavior';
+abort$(abs(xbar-x.l) > 1e-7) 'bad x.l at solution';
+abort$(abs(ybar-y.l) > 1e-7) 'bad y.l at solution';
+abort$(abs(zbar-z.l) > 1e-7) 'bad z.l at solution';

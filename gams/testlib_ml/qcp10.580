@@ -1,0 +1,20 @@
+$title Test for QCP correctness (QCP10,SEQ=580)
+
+$ontext
+There was a bug in the QP code which should be fixed with GAMS 23.9.4. This
+was used to reproduce the problem.
+
+Contributor: Michael Bussieck
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+
+variables z,x,y;
+positive variables x,y;
+equation e1,e2;
+e1.. z =g= x*x+y;
+e2.. x+y =g= 1;
+model m /all/;
+
+solve m minimizing z using qcp;
+abort$(abs(z.l-0.75)>%TESTTOL%) 'Wrong solution';

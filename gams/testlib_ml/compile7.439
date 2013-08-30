@@ -1,0 +1,40 @@
+$title 'Test and document some system.XXX macros' (COMPILE7,SEQ=439)
+
+$ontext
+There are several macros we use frequently in the test library.
+Here is an example to show how they work.
+
+Contributor: Steve
+$offtext
+
+$log
+$log system.date = %system.date%
+$log
+$log system.errorlevel = %system.errorlevel%
+$log
+$log The filesys is UNIX or ???? these days
+$log system.filesys = %system.filesys%
+$log
+$log fp / fn / fe tell us what GAMS file is being compiled
+$log system.fp = %system.fp%
+$log system.fn = %system.fn%
+$log system.fe = %system.fe%
+$log
+$log Memory gives the Mb (1,000,000 bytes) of allocated heap
+$log Before we fully allocate a 1000x1000 matrix
+$log system.memory = %system.memory%
+set i / 1*1000/, j/1*1000/;
+parameter A(I,J) / (#i).(#j) 1 /;
+$log and after
+$log system.memory = %system.memory%
+$log
+$log These are useful for seeing what we are running, and where
+$log system.buildcode = %system.buildcode%
+$log system.hostplatform = %system.hostplatform%
+$log system.platform = %system.platform%
+$log
+$log There are several ways to get version info
+$log system.gamsversion = %system.gamsversion%
+$log       system.verid = %system.verid%
+$log     system.version = %system.version%
+$log

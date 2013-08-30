@@ -1,0 +1,72 @@
+*
+* optgev.def
+*
+
+AlgFileType integer 0 1 0 maxint 1 1 File type of scratch files
+GamsVersion integer 0 999 0 maxint 1 1 GAMS CMEX Version
+LogOption enumint 0 1 1 1 Log option
+ 0 1 no log output
+ 1 1 log output to screen (console)
+ 2 1 log output to logfile
+ 3 1 log output to standard output
+Reform integer 0 100 0 maxint 1 1 Reform option
+IDEFlag enumint 0 0 1 1 IDE Flag
+ 0 1 unknown environment
+ 1 1 runs under GAMS IDE
+DomLim integer 0 0 0 maxint 1 1 Domain violation limit solver default
+IterLim integer 0 2000000000 0 maxint 1 1 Iteration limit solver default
+NodeLim integer 0 0 0 maxint 1 1 Node limit solver default
+SysOut integer 0 0 0 1 1 1 Solver Status file reporting option
+Integer1 integer 0 0 minint maxint 1 1
+Integer2 integer 0 0 minint maxint 1 1
+Integer3 integer 0 0 minint maxint 1 1
+Integer4 integer 0 0 minint maxint 1 1
+Integer5 integer 0 0 minint maxint 1 1
+GenSolver boolean 0 0 1 1 Indicator for generic solver executable
+CurSolver integer 0 0 0 maxint 1 1 Solver id of the last gevcallsolver
+PageWidth integer 0 123 0 maxint 1 1 Output file page width
+PageSize integer 0 78 0 maxint 1 1 Output file page size
+Keep integer 0 0 0 1 1 1 Keep scratch directory
+ThreadsRaw integer 0 1 minint maxint 1 1
+OptCR double 0 0.1 0 maxdouble 1 1 optRelative Optimality criterion solver default
+OptCA double 0 0 0 maxdouble 1 1 optAbsolute Optimality criterion solver default
+ResLim double 0 1000 0 maxdouble 1 1 Resource (CPU) solver default limit
+WorkSpace double 0 0 0 maxdouble 1 1 Work space for some solvers
+WorkFactor double 0 1 0 maxdouble 1 1 Work space multiplier for some solvers
+CutOff double 0 0 mindouble maxdouble 1 1 CutOff solver default
+UseCutOff boolean 0 0 1 1 UseCutOff solver default
+Cheat double 0 0 mindouble maxdouble 1 1 optCheat solver default
+UseCheat boolean 0 0 1 1 UseCheat solver default
+TryInt double 0 0 0 maxdouble 1 1 TryInt solver default
+Real1 double 0 0 mindouble maxdouble 1 1
+Real2 double 0 0 mindouble maxdouble 1 1
+Real3 double 0 0 mindouble maxdouble 1 1
+Real4 double 0 0 mindouble maxdouble 1 1
+Real5 double 0 0 mindouble maxdouble 1 1
+HeapLimit double 0 1e20 0 maxdouble 1 1 Maximum Heap size allowed
+NameCtrFile string 0 "" 1 1 Control file name
+NameLogFile string 0 "" 1 1 Log file name
+NameStaFile string 0 "" 1 1 Status file name
+NameScrDir string 0 "" 1 1 Scratch directory
+NameGamsDate string 0 "" 1 1 GAMS Date
+NameGamsTime string 0 "" 1 1 GAMS Time
+NameSysDir string 0 "" 1 1 System directory
+NameWrkDir string 0 "" 1 1 Working directory
+NameCurDir string 0 "" 1 1 Current directory
+License1 string 0 "" 1 1 License line 1
+License2 string 0 "" 1 1 License line 2
+License3 string 0 "" 1 1 License line 3
+License4 string 0 "" 1 1 License line 4
+License5 string 0 "" 1 1 License line 5
+NameMatrix string 0 "" 1 1 Matrix file name
+NameInstr string 0 "" 1 1 Intruction file name
+NameParams string 0 "" 1 1 Parameter file name
+NameScrExt string 0 "dat" 1 1 Scratch extension
+NameScenFile string 0 "" 1 1 Scenario file name
+NameExtFFile string 0 "" 1 1 External Function file name
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General options
+*** End of file

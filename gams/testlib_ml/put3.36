@@ -1,0 +1,17 @@
+$title .nr=2 writes scientific - test for errors (PUT3,SEQ=36)
+
+file temp; temp.nr=2;
+
+putclose temp   "* from put3.gms"
+
+/"$ondollar"
+/"$ifi NOT        '*****' == '" 1.234e10: 5:3 "' $error should be        '*****'"
+/"$ifi NOT       ' 1e+10' == '" 1.234e10: 6:3 "' $error should be       ' 1e+10'"
+/"$ifi NOT      ' 1.e+10' == '" 1.234e10: 7:3 "' $error should be      ' 1.e+10'"
+/"$ifi NOT     ' 1.2e+10' == '" 1.234e10: 8:3 "' $error should be     ' 1.2e+10'"
+/"$ifi NOT    ' 1.23e+10' == '" 1.234e10: 9:3 "' $error should be    ' 1.23e+10'"
+/"$ifi NOT   ' 1.234e+10' == '" 1.234e10:10:3 "' $error should be   ' 1.234e+10'"
+/"$ifi NOT  '  1.234e+10' == '" 1.234e10:11:3 "' $error should be  '  1.234e+10'"
+/"$ifi NOT '   1.234e+10' == '" 1.234e10:12:3 "' $error should be '   1.234e+10'"
+
+execute "=gams temp.put lo=%GAMS.lo%"; execerror $= errorlevel;

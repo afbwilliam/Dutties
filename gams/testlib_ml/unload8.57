@@ -1,0 +1,12 @@
+$title $unload lines are treated as one for errors (UNLOAD8,SEQ=57)
+parameter a,b;
+a = 1;
+b = 2;
+
+$gdxout gdx1
+$unload a a=a
+$unload a a=a
+
+$gdxout gdx1
+$unload b b=a
+$unload b b=a

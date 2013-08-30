@@ -1,0 +1,30 @@
+$title 'Test the coinfml option of convert' (CONVERT1,SEQ=211)
+
+* we have to make more than one round trip because fml2gms
+* which really is mps2gms, changes the order of rows. Would
+* be nice to have a scalar model option in addition to the
+* indexed .gms model, which changes the order of rows (and
+* variables).
+
+* coinfml only fully operational on Windows
+$if NOT %system.platform% == WIN  $exit
+
+$set ide ide=%gams.ide% lo=%gams.lo%
+
+$call gamslib -q trnsport
+$echo coinfml > convert.opt
+$echo garbage one > coinfml.xml
+$echo garbage two > coinfml.tmp
+
+* gams -> xml -> gams (new row order) -> xml -> gams -> xml
+
+$call gams trnsport.gms  optfile=1 lp=convert %ide%
+$call fml2gms coinfml.xml gms=fml2gms.gms > NUL
+$call gams fml2gms.gms optfile=1 rmip=convert %ide%
+$call fml2gms coinfml.xml gms=fml2gms.gms > NUL
+$echo coinfml coinfml.tmp > convert.opt
+$call gams fml2gms.gms optfile=1 rmip=convert %ide%
+
+$call =diff coinfml.xml coinfml.tmp
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%

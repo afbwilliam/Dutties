@@ -1,0 +1,137 @@
+$Title  An Infeasible Transportation Problem analyzed with option FeasOpt (FEASOPT1,SEQ=314)
+$Ontext
+
+This problem finds a least cost shipping schedule that meets
+requirements at markets and supplies at factories where demand
+exceeds supply using the feature FeasOpt implemented by Cplex 
+and Gurobi.
+
+
+Dantzig, G B, Chapter 3.3. In Linear Programming and Extensions.
+Princeton University Press, Princeton, New Jersey, 1963.
+
+$Offtext
+$ifi %system.lp% == cplex  $goto cont
+$ifi %system.lp% == gurobi $goto cont
+$exit
+$label cont
+
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka / ;
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        2.5           1.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j ;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model transport /all/ ; option limrow=0, limcol=0;
+
+* Increase demand by 20%
+  b(j) = 1.2*b(j);
+
+  Solve transport using lp minimizing z ;
+
+  display 'The first phase of the Simplex algorithm distributed the infeasibilities as follows',
+          x.infeas, supply.infeas, demand.infeas;
+
+$ifi %system.lp% == cplex  file fslv Solver Option file / cplex.opt /; transport.optfile=1;
+$ifi %system.lp% == gurobi file fslv Solver Option file / gurobi.opt /; transport.optfile=1;
+
+* Lets try to move the infeasibilities on the demand side
+  putclose fslv / 'feasopt 1' / 'equation.feaspref 0' / 'demand.feaspref 1';
+
+  Solve transport using lp minimizing z ;
+
+  display 'All infeasibilities should be in the demand equations', x.infeas, supply.infeas, demand.infeas;
+  abort$(sum((i,j), x.infeas(i,j)) + sum(i,supply.infeas(i))) x.infeas, supply.infeas, demand.infeas;
+  abort$(sum(j,demand.infeas(j))<1e-5) x.infeas, supply.infeas, demand.infeas;
+
+* Lets try to distribute the infeasibilities on the demand side by
+* using the sum of squares for the relaxation measurement
+  putclose fslv / 'feasopt 1' / 'feasoptmode 4' / 'equation.feaspref 0' / 'demand.feaspref 1';
+
+  Solve transport using lp minimizing z ;
+  display 'All infeasibilities should be in the demand equations and nicely distributed',
+          x.infeas, supply.infeas, demand.infeas;
+  abort$(sum((i,j), x.infeas(i,j)) + sum(i,supply.infeas(i))) x.infeas, supply.infeas, demand.infeas;
+  abort$(sum(j,demand.infeas(j))<1e-5) x.infeas, supply.infeas, demand.infeas;
+
+* Lets try to distribute the infeasibilities on the demand and supply
+* side by using the sum of squares for the relaxation measurement
+  putclose fslv / 'feasopt 1' / 'feasoptmode 4';
+
+  Solve transport using lp minimizing z ;
+  display 'All infeasibilities should be in the demand and supply equations and nicely distributed',
+          x.infeas, supply.infeas, demand.infeas;
+  abort$(sum((i,j), x.infeas(i,j))) x.infeas, supply.infeas, demand.infeas;
+  abort$(sum(i,supply.infeas(i))+sum(j,demand.infeas(j))<1e-5) x.infeas, supply.infeas, demand.infeas;
+
+* Lets try to distribute the infeasibilities on the demand and supply
+* side by using the sum of squares for the relaxation measurement and
+* lets also optimize the transport shipment with respect to the
+* original objective function
+  putclose fslv / 'feasopt 1' / 'feasoptmode 3';
+
+  Solve transport using lp minimizing z ;
+  display 'All infeasibilities should be in the demand equations and nicely distributed with an "optimal" x',
+          x.infeas, supply.infeas, demand.infeas, x.l;
+  abort$(sum((i,j), x.infeas(i,j))) x.infeas, supply.infeas, demand.infeas;
+  abort$(sum(i,supply.infeas(i))+sum(j,demand.infeas(j))<1e-5) x.infeas, supply.infeas, demand.infeas;
+
+* Lets adjust supply and demands based on the relaxation found
+  a(i) = a(i) + supply.infeas(i);
+  b(j) = b(j) - demand.infeas(j);
+
+* Now we should have a feasible model. The primals from our previous
+* solve should be the optimal one, so lets save them to compare them
+* with the outcome with the next solve;
+  Parameter xbest(i,j); xbest(i,j) = x.l(i,j);
+
+* Lets try to tell the solver to do a warm start
+* from just the primals using primal Simplex
+$ifi %system.lp% == cplex  putclose fslv / 'advind 2' / 'lpmethod 1';
+$ifi %system.lp% == gurobi putclose fslv / 'usebasis 1' / 'method 0';
+
+  Solve transport using lp minimizing z ;
+
+* We better have an optimum solution and the same primals as in the
+* previous run. This is a little dangerous since the problem is
+* degenerated.
+  abort$(transport.modelstat<>%modelstat.Optimal% or
+         sum((i,j), xbest(i,j) - x.l(i,j))>1e-6) x.l, xbest;
+

@@ -1,0 +1,141 @@
+$TITLE 'Simple test of SEMIINT variables' (SEMIINT1,SEQ=346)
+
+$ontext
+  Simple test of semiint variables
+  We want to minimize the distance between x and xbar,
+  subject to x + s = 10, s semi-integer.
+  Depending on how the bounds on s are set, the minimum distance
+  is acheived when s = 0 or s is in its nonzero range.
+$offtext
+
+$eolcom //
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not %MIPMCHECKS% == 0 mchecks = 1;
+
+scalar failed / 0 /;
+$escape =
+$echo if{%=1, display '%=1 failed', '%=2'; failed=1}; > gtest.gms
+$escape %
+
+scalar
+    tol       / %TESTTOL% /,
+    xbar      / 7.9 /;
+
+variable z;
+
+semiint variable s;
+
+positive variables
+  pup           'penalty on x > center',
+  plo           'penalty on x < center'
+  x;
+
+equations
+  cost,
+  bigx          'prevents big x',
+  smallx        'prevents small x'
+  f;
+
+
+cost..  z =e= pup + plo;
+bigx..  x - pup =l= xbar;
+smallx..plo + x =g= xbar;
+f..     x + s =e= 10;
+
+model m / cost, bigx, smallx, f /;
+m.optcr = 1e-5;
+m.optca = 0;
+s.up = 10;
+
+set sloVals 'lower bounds on s' /
+'slo=0',
+'slo=1'
+'slo=2'
+'slo=3'
+'slo=4'
+'slo=5'
+/;
+
+parameter slo(sloVals) /
+'slo=0'         0
+'slo=1'         1
+'slo=2'         2
+'slo=3'         3
+'slo=4'         4
+'slo=5'         5
+/;
+
+table levl(sloVals,*)
+                s       z       pup     plo     x       cost    f
+'slo=0'         2       .1      .1      0       8       0       10
+'slo=1'         2       .1      .1      0       8       0       10
+'slo=2'         2       .1      .1      0       8       0       10
+'slo=3'         3       .9       0      0.9     7       0       10
+'slo=4'         4       1.9      0      1.9     6       0       10
+'slo=5'         0       2.1     2.1     0      10       0       10 ;
+
+table marg(sloVals,*)
+                s       z       pup     plo     x       cost    f
+'slo=0'        -1       0       0       1       0       1       1
+'slo=1'        -1       0       0       1       0       1       1
+'slo=2'        -1       0       0       1       0       1       1
+'slo=3'         1       0       1       1       0       1      -1
+'slo=4'         1       0       1       1       0       1      -1
+'slo=5'        -1       0       0       1       0       1       1 ;
+
+parameter
+  sl(sloVals), zl(sloVals), pupl(sloVals), plol(sloVals), xl(sloVals),
+  costl(sloVals), fl(sloVals),
+  sm(sloVals), zm(sloVals), pupm(sloVals), plom(sloVals), xm(sloVals),
+  costm(sloVals), fm(sloVals);
+
+sl   (sloVals) = levl(sloVals,'s');
+zl   (sloVals) = levl(sloVals,'z');
+pupl (sloVals) = levl(sloVals,'pup');
+plol (sloVals) = levl(sloVals,'plo');
+xl   (sloVals) = levl(sloVals,'x');
+costl(sloVals) = levl(sloVals,'cost');
+fl   (sloVals) = levl(sloVals,'f');
+
+sm   (sloVals) = marg(sloVals,'s');
+zm   (sloVals) = marg(sloVals,'z');
+pupm (sloVals) = marg(sloVals,'pup');
+plom (sloVals) = marg(sloVals,'plo');
+xm   (sloVals) = marg(sloVals,'x');
+costm(sloVals) = marg(sloVals,'cost');
+fm   (sloVals) = marg(sloVals,'f');
+
+loop {sloVals$[ord(sloVals) > 0],
+  s.lo = slo(sloVals);
+  solve m using MIP minimizing z;
+  if {(m.solvestat = %solvestat.CapabilityProblems%),
+    abort$(m.modelstat <> %modelstat.NoSolutionReturned%)             'bad modelstat';
+    // skip checks if the solver is not SEMIINT-capable
+  else
+$   batinclude gtest "(m.solvestat <> %solvestat.NormalCompletion% or (m.modelstat <> %modelstat.Optimal% and m.modelstat <> %modelstat.IntegerSolution%) )" "wrong status codes"
+$   batinclude gtest "(abs(m.objval-z.l) > tol)" "z.l <> m.objval";
+
+$   batinclude gtest "(abs(   s.l-   sl(sloVals)) > tol)" "   s.l <> sl";
+$   batinclude gtest "(abs(   z.l-   zl(sloVals)) > tol)" "   z.l <> zl";
+$   batinclude gtest "(abs( pup.l- pupl(sloVals)) > tol)" " pup.l <> pupl";
+$   batinclude gtest "(abs( plo.l- plol(sloVals)) > tol)" " plo.l <> plol";
+$   batinclude gtest "(abs(   x.l-   xl(sloVals)) > tol)" "   x.l <> xl";
+$   batinclude gtest "(abs(cost.l-costl(sloVals)) > tol)" "cost.l <> costl";
+$   batinclude gtest "(abs(   f.l-   fl(sloVals)) > tol)" "   f.l <> fl";
+
+  if {mchecks,
+$     batinclude gtest "(abs(   s.m-    sm(sloVals)) > tol)" "   s.m <> sm";
+$     batinclude gtest "(abs(   z.m-    zm(sloVals)) > tol)" "   z.m <> zm";
+$     batinclude gtest "(abs(   x.m-    xm(sloVals)) > tol)" "   x.m <> xm";
+$     batinclude gtest "(abs(cost.m- costm(sloVals)) > tol)" "cost.m <> costm";
+$     batinclude gtest "(abs(   f.m-    fm(sloVals)) > tol)" "   f.m <> fm";
+  };
+* $   batinclude gtest "(abs( pup.m-bigx.m  -pupm(sloVals)) > tol)" "pup.m-bigx.m <> pupm";
+* $   batinclude gtest "(abs( plo.m+smallx.m-plom(sloVals)) > tol)" "plo.m+smallx.m <> plom";
+
+$if set doscalar
+  if (failed, option mip=convert; solve m using mip min z;);
+  abort$failed 'test failed', s.lo;
+  };
+};

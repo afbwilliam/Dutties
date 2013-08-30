@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>JAMS Options</title>
+</head>
+<body>
+<h2>JAMS Options</h2>
+All options available through GAMS/JAMS are described in this document.
+<p>For more information about this solver please inspect the
+complete <a href="docs/solvers/jams.pdf">JAMS manual</a>.
+
+<h2>Summary of JAMS Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Reformulation Options</h3></th></tr>
+<tr><td><a href="#JAMSKeepObj">
+KeepObj</a></td>
+<td>Keep original objective function and variables in generates MCP model</td></tr>
+<tr><td><a href="#JAMSMargTol">
+MargTol</a></td>
+<td>Only report marginals with an absolute value above the tolerance</td></tr>
+<tr><td><a href="#JAMSObjVarName">
+ObjVarName</a></td>
+<td>Name of objective variable</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#JAMSDict">
+Dict</a></td>
+<td>Creates dictionary file</td></tr>
+<tr><td><a href="#JAMSDisjBinRelax">
+DisjBinRelax</a></td>
+<td>Relax requirement that disjunction variables are binary</td></tr>
+<tr><td><a href="#JAMSEMPInfoFile">
+EMPInfoFile</a></td>
+<td>Path and name of file containing additional EMP information</td></tr>
+<tr><td><a href="#JAMSFileName">
+FileName</a></td>
+<td>Filename of generated scalar GAMS model</td></tr>
+<tr><td><a href="#JAMSSubSolvePar">
+SubSolvePar</a></td>
+<td>User defined GAMS parameters for subsolve</td></tr>
+<tr><td><a href="#JAMSSubSolver">
+SubSolver</a></td>
+<td>Subsolver to run</td></tr>
+<tr><td><a href="#JAMSSubSolverOpt">
+SubSolverOpt</a></td>
+<td>Optfile value to pass to the subsolver</td></tr>
+<tr><td><a href="#JAMSTerminate">
+Terminate</a></td>
+<td>Generate the GAMS source code of the reformulated Model</td></tr></table>
+<h2>Detailed Descriptions of JAMS Options</h2>
+
+<h4><a name="JAMSDict">
+Dict</a>
+<i> (string)</i> Creates dictionary file</h4><p>
+
+Generate a dictionary file that maps original variable and equation names to the
+ones of the scalar JAMS model.
+
+<br><i>(default = dict.txt)</i>
+
+<h4><a name="JAMSDisjBinRelax">
+DisjBinRelax</a>
+<i> (integer)</i> Relax requirement that disjunction variables are binary</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="JAMSEMPInfoFile">
+EMPInfoFile</a>
+<i> (string)</i> Path and name of file containing additional EMP information</h4><p>
+
+Path and name of file containing additional EMP information as disjunctions,
+perpendiculars, bilevel characterization etc. By default, the file is expected
+to exist in the GAMS scratch directory of the current run (gams.scrdir). If
+this option is used, EMP searches for the file based on the provided relative or
+absolute path. In case of a given relative path, it is assumed to be relative to
+the working directory.
+
+
+<h4><a name="JAMSFileName">
+FileName</a>
+<i> (string)</i> Filename of generated scalar GAMS model</h4><p>
+
+The generated reformulated model will be written into a file with this name
+
+<br><i>(default = emp.gms)</i>
+
+<h4><a name="JAMSKeepObj">
+KeepObj</a>
+<i> (integer)</i> Keep original objective function and variables in generates MCP model</h4><p>
+
+This option is only valid for reformulations into complementarity systems. If
+KeepObj is set the generated MCP program will incorporate the original objective
+function and the Karush-Kuhn-Tucker condition of the original objective variable.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="JAMSMargTol">
+MargTol</a>
+<i> (real)</i> Only report marginals with an absolute value above the tolerance</h4><p>
+
+The user can define a tolerance below which the marginal values will not be
+reported.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="JAMSObjVarName">
+ObjVarName</a>
+<i> (string)</i> Name of objective variable</h4><p>
+
+Name of objective variable in generated model
+
+<br><i>(default = objvar)</i>
+
+<h4><a name="JAMSSubSolvePar">
+SubSolvePar</a>
+<i> (string)</i> User defined GAMS parameters for subsolve</h4><p>
+
+The user can define GAMS parameters for the subsolve.
+
+
+<h4><a name="JAMSSubSolver">
+SubSolver</a>
+<i> (string)</i> Subsolver to run</h4><p>
+
+Subsolver used to solve the reformulated model. The subsolver chosen has to be
+suitable for the <a href="#RefType">reformulation type</a> chosen. The user can
+also provide a solver related option file, see <a href="#SubSolverOpt">SubSolverOpt</a>.
+
+
+<h4><a name="JAMSSubSolverOpt">
+SubSolverOpt</a>
+<i> (integer)</i> Optfile value to pass to the subsolver</h4><p>
+
+Number of option file for subsolver.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="JAMSTerminate">
+Terminate</a>
+<i> (integer)</i> Generate the GAMS source code of the reformulated Model</h4><p>
+
+Generate the GAMS source code of the reformulated Model in a file with name
+<a href="#FileName">FileName</a> and terminate without solving the model.
+
+<br><i>(default = 0)</i>
+</body></html>

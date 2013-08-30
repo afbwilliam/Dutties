@@ -1,0 +1,31 @@
+*
+* optjams.def
+*
+
+ObjVarName string 0 "objvar" 1 1 Name of objective variable
+KeepObj boolean.nv 0 0 1 1 Keep original objective function and variables in generates MCP model
+MargTol double 0 1e-6 0 maxdouble 1 1 Only report marginals with an absolute value above the tolerance
+EMPInfoFile string 0 "" 1 2 Path and name of file containing additional EMP information
+FileName string 0 "emp.gms" 1 2 Filename of generated scalar GAMS model
+ReadFile immediate ReadFile 0 2 Read secondary option file
+SubSolver string 0 "" 1 2 Subsolver to run
+SubSolverOpt integer 0 1 1 999 1 2 Optfile value to pass to the subsolver
+SubSolvePar string 0 "" 1 2 User defined GAMS parameters for subsolve
+Terminate boolean.nv 0 0 1 2 Generate the GAMS source code of the reformulated Model
+Debug enumint 0 0 0 2 Creates additional debug output
+ 0 1 no debug information
+ 1 1 Level 1 debug information
+ 2 1 Level 1 and 2 debug information
+Dict string.opt 0 "dict.txt" 1 2 Creates dictionary file
+DisjBinRelax boolean.nv 0 0 1 2 Relax requirement that disjunction variables are binary
+*
+* indicator section
+*
+myeolchar EOLCOMM #
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+Reform group 1 1 Reformulation Options
+General group 2 1 General Options
+*** End of file

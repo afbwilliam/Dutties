@@ -1,0 +1,94 @@
+$title "Test for handling of constant equations" (EMP05,SEQ=442)
+
+$ontext
+
+Test for EMP's handling of constants
+
+Contributor: Jan-H. Jagla, April 2009
+
+$offtext
+
+Equation defobj,e1,e2,e3,e4,e5;
+Variable z;
+defobj.. z =e= 3;
+e1.. 1 =l= 5;
+e2.. 1 =n= 5;
+e3.. 1 =e= 1;
+e4.. 1 =g= -5;
+e5.. 1 =n= -5;
+Model constants /all/;
+
+$echo FileName test1.gms > jams.opt
+constants.optfile=1;
+
+Solve constants using emp minimizing z ;
+abort$execerror 'Solve ok using emp should not have given exec errors';
+display constants.numvar, constants.numequ;
+abort$(constants.numvar <> 1 or constants.numequ <> 6) 'Model ok should have one variable and six equations';
+execute 'sed "2d" test1.gms > test1_mod.gms';
+execute 'diff -bw test1_mod.gms test_ref.gms'
+abort$errorlevel 'test1_mod.gms and test_ref.gms differ';
+
+Equation e6;
+e6.. 1 =e= 2;
+Model infeas_equE /constants, e6/;
+
+Solve infeas_equE using emp minimizing z ;
+abort$execerror 'Solve ok using emp should not have given exec errors';
+abort$(infeas_equE.solvestat <> 1 or infeas_equE.modelstat <> 4) 'Model infeas_equE should terminate with (1,4)';
+display infeas_equE.numvar, infeas_equE.numequ;
+abort$(infeas_equE.numvar <> 1 or infeas_equE.numequ <> 7) 'Model infeas_equE should have one variable and seven equations';
+execute 'grep "*** JAMS Equation 7 infeasible due to rhs value" "%gams.scrdir%gamsstat.%gams.scrext%" > test.txt'
+abort$errorlevel 'EMP did not declare e6 infeasible';
+
+Equation e7;
+e7.. 1 =l= -1;
+Model infeas_equL /constants, e7/;
+
+Solve infeas_equL using emp minimizing z ;
+abort$execerror 'Solve ok using emp should not have given exec errors';
+abort$(infeas_equL.solvestat <> 1 or infeas_equL.modelstat <> 4) 'Model infeas_equL should terminate with (1,4)';
+display infeas_equL.numvar, infeas_equL.numequ;
+abort$(infeas_equL.numvar <> 1 or infeas_equL.numequ <> 7) 'Model infeas_equL should have one variable and seven equations';
+execute 'grep "*** JAMS Equation 7 infeasible due to rhs value" "%gams.scrdir%gamsstat.%gams.scrext%" > test.txt'
+abort$errorlevel 'EMP did not declare e7 infeasible';
+
+Equation e8;
+e8.. 1 =g= 2;
+Model infeas_equG /constants, e8/;
+
+Solve infeas_equG using emp minimizing z ;
+abort$execerror 'Solve ok using emp should not have given exec errors';
+abort$(infeas_equG.solvestat <> 1 or infeas_equG.modelstat <> 4) 'Model infeas_equG should terminate with (1,4)';
+display infeas_equG.numvar, infeas_equG.numequ;
+abort$(infeas_equG.numvar <> 1 or infeas_equG.numequ <> 7) 'Model infeas_equG should have one variable and seven equations';
+execute 'grep "*** JAMS Equation 7 infeasible due to rhs value" "%gams.scrdir%gamsstat.%gams.scrext%" > test.txt'
+abort$errorlevel 'EMP did not declare e8 infeasible';
+
+$onecho > test_ref.gms
+***********************************************
+* for more information use JAMS option "Dict"
+***********************************************
+
+Variables  objvar;
+
+Equations  e1;
+
+
+e1..    objvar =E= 3;
+
+* set non default bounds
+
+
+* set non default levels
+
+
+* set non default marginals
+
+
+Model m / all /;
+
+m.limrow=0; m.limcol=0;
+
+Solve m using LP minimizing objvar;
+$offecho

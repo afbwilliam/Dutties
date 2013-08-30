@@ -1,0 +1,29 @@
+$title simple tests for binary boolean operations (BINARY1,SEQ=4)
+set op / and, or, xor, imp, eqv /;
+set i / 0,1 / ; alias(i,j); parameter arg(i) / 0 0, 1 1 /;
+
+
+table good(i,j,op) correct results
+
+            and          or         xor         imp         eqv
+
+0.0                                           1.000       1.000
+0.1                   1.000       1.000       1.000
+1.0                   1.000       1.000
+1.1       1.000       1.000                   1.000       1.000
+
+parameter res(i,j,op) computed
+          err(i,j,op) wrong results;
+
+
+res(i,j,'and') = arg(i) and arg(j);
+res(i,j,'or')  = arg(i) or  arg(j);
+res(i,j,'xor') = arg(i) xor arg(j);
+res(i,j,'imp') = arg(i) imp arg(j);
+res(i,j,'eqv') = arg(i) eqv arg(j);
+
+err(i,j,op) = good(i,j,op) - res(i,j,op);
+display res,err;
+
+abort$card(err) 'wrong boolean operations';
+

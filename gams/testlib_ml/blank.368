@@ -1,0 +1,11 @@
+$TITLE 'Runs GAMS with a parameter containing blanks' (BLANK,SEQ=368)
+
+$Ontext
+Contributor: Lutz Westermann
+$Offtext
+
+$call gamslib -q trnsport
+
+$if not %system.filesys% == UNIX $call gams trnsport --xxx="yyy zzz" lo=%gams.lo%
+$if     %system.filesys% == UNIX $call gams trnsport '--xxx="yyy zzz"' lo=%gams.lo%
+$if errorlevel 1 $abort problems running GAMS using a parameter containing blanks

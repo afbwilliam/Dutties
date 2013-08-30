@@ -1,0 +1,17 @@
+$title 'Test for projecting' (PIPE9,SEQ=227)
+
+* AB00772
+
+set i(i) /i1*i5/;
+parameter x(i) / i1*i3 10 /;
+display i; alias(i,j);
+option i<x;
+$if errorfree $goto problem
+$clearerror
+option j<x;
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error should not allow to change a domain

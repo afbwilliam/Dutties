@@ -1,0 +1,47 @@
+$title 'Test impact of sys11 setting' (SYSCHK1,SEQ=207)
+
+$ontext
+Check impact of sys11 settings where we know that
+sorting improves performance
+
+Paul van der Eijk
+$offtext
+
+$set N 200
+* decrease N if test machine has little memory - keep test in physical RAM!!
+$if %system.platform% == AXU $set N 120
+$if %system.platform% == AIX $set N 120
+$if %system.platform% == LNX $set N 160
+
+set i /i1*i%N%/
+    j /j1*j%N%/
+    k /k1*k5/
+    m /m1*m5/;
+
+parameter A(i,j,k,m),BX(m,j),B0(m,j), B1(m,j), B2(m,j);
+parameter T0, T(*) 'sys11 timings' /x=0, 0=0, 1=0, 2=0/;
+
+A(i,j,k,m)$(uniform(0,1) < 0.5) = uniform(0,1);
+
+T0 = TimeExec;
+
+BX(m,j) = Sum((k,i), A(i,j,k,m));
+T('X')=TimeExec - T0; T0 = TimeExec;
+
+option sys11=0;
+B0(m,j) = Sum((k,i), A(i,j,k,m));
+T('0')=TimeExec - T0; T0 = TimeExec;
+
+option sys11=1;
+B1(m,j) = Sum((k,i), A(i,j,k,m));
+T('1')=TimeExec - T0; T0 = TimeExec;
+
+option sys11=2;
+B2(m,j) = Sum((k,i), A(i,j,k,m));
+T('2')=TimeExec - T0; T0 = TimeExec;
+
+Display T;
+
+Abort$(Abs(T('X') - T('0')) / T('0') > 0.6) 'Sys11 default is not zero';
+Abort$(T('1') < 2.0 * T('0'))               'sys11=0 should be the faster than sys11=1';
+Abort$(T('1') < 2.0 * T('2'))               'sys11=2 should be the faster than sys11=1';

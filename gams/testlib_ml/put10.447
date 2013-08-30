@@ -1,0 +1,52 @@
+$title $on/offput inserted outside the loop (PUT10,SEQ=447)
+
+$ontext
+Trac #1750
+
+Contributor: Alex Meeraus
+$offtext
+
+set i master set of sites / i1 Seattle
+                            i2 Portland
+                            i3  /;
+
+execute 'rm -f temp1.put temp2.put'
+
+$ontext
+ This will write a file containing
+
+ Seattle
+ Portland
+ i3
+ test
+$offtext
+file temp1; put temp1;
+loop(i, put i.te(i) /; );
+$onputS
+test
+$offput
+putclose;
+
+$ontext
+ If you take off the semicolon at the end of the loop it writes
+
+this is now correct - the ; triggered to read the next line which was
+a $ control ......
+
+ Seattle
+ test
+ Portland
+ test
+ i3
+ test
+$offtext
+
+file temp2; put temp2;
+loop(i, put i.te(i) /; )
+$onputS
+test
+$offput
+putclose;
+
+execute 'diff temp1.put temp2.put'
+abort$errorlevel 'files are not equal';

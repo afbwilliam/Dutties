@@ -1,0 +1,218 @@
+$title LogMIP User's Manual Example 3 - Synthesis of 8 Processe (LOGMIP3,SEQ=336)
+$ontext
+This model selects optimal processes from within a given superstructure.
+
+References:
+
+MARCO DURAN , PH.D. THESIS , 1984. CARNEGIE-MELLON UNIVERSITY,
+   PITTSBURGH , PA.
+
+Turkay & Grossmann, LOGIC-BASED MINLP ALGORITHMS FOR THE OPTIMAL
+   SYNTHESIS OF PROCESS NETWORKS, Computers and Chemical Engineering 20,
+   8, p. 959-978, 1996
+
+Aldo Vecchietti, LogMIP User's Manual, http://www.logmip.ceride.gov.ar/
+$offtext
+
+
+ SETS   I      PROCESS STREAMS                 / 1*25 /
+        J      PROCESS UNITS                   / 1*8 /
+
+
+ PARAMETERS   CV(I)     VARIABLE COST COEFF FOR PROCESS UNITS - STREAMS/
+                             3 = -10  ,  5 = -15  ,  9 = -40
+                            19 =  25  , 21 =  35  , 25 = -35
+                            17 =  80  , 14 =  15  , 10 =  15
+                             2 =  1   ,  4 =  1   , 18 = -65
+                            20 = -60  , 22 = -80                     /;
+
+ VARIABLES  PROF     PROFIT ;
+
+ BINARY VARIABLES    Y(J)         ;
+ POSITIVE VARIABLES  X(I) , CF(J) ;
+ EQUATIONS
+
+* EQUATIONS COMMON TO NLP SUBPROBLEMS AND MASTER PROBLEMS:
+* --------------------------------------------------------
+            MASSBAL1     MASS BALANCE #1
+            MASSBAL2     MASS BALANCE #2
+            MASSBAL3     MASS BALANCE #3
+            MASSBAL4     MASS BALANCE #4
+            MASSBAL5     MASS BALANCE #5
+            MASSBAL6     MASS BALANCE #6
+            MASSBAL7     MASS BALANCE #7
+            MASSBAL8     MASS BALANCE #8
+            SPECS1       DESIGN SPECIFICATION 1
+            SPECS2       DESIGN SPECIFICATION 2
+            SPECS3       DESIGN SPECIFICATION 3
+            SPECS4       DESIGN SPECIFICATION 4
+
+* EQUATIONS FOR THE MASTER PROBLEMS ONLY:
+* ---------------------------------------
+            LOGICAL1     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 1 EXISTS
+            LOGICAL2     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 2 EXISTS
+            LOGICAL3     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 3 EXISTS
+            LOGICAL4     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 4 EXISTS
+            LOGICAL5     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 5 EXISTS
+            LOGICAL6     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 6 EXISTS
+            LOGICAL7     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 7 EXISTS
+            LOGICAL8     CONSTRAINTS WHICH ALLOW FLOW IFF UNIT 8 EXISTS
+
+
+* EQUATIONS FOR THE NLP SUBPROBLEMS ONLY:
+* ---------------------------------------
+            INOUT11      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 1
+            INOUT12
+            INOUT13
+            INOUT14
+            INOUT21      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 2
+            INOUT22
+            INOUT23
+            INOUT24
+            INOUT31      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 3
+            INOUT32
+            INOUT34
+            INOUT41      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 4
+            INOUT42
+            INOUT43
+            INOUT44
+            INOUT45
+            INOUT51      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 5
+            INOUT52
+            INOUT53
+            INOUT54
+            INOUT61      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 6
+            INOUT62
+            INOUT63
+            INOUT64
+            INOUT71      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 7
+            INOUT72
+            INOUT73
+            INOUT74
+            INOUT81      INPUT-OUTPUT RELATIONS FOR PROCESS UNIT 8
+            INOUT82
+            INOUT83
+            INOUT84
+            INOUT85
+            INOUT86
+            OBJETIVO          OBJECTIVE FUNCTION DEFINITION ;
+
+* BOUNDS SECTION:
+* ---------------
+ X.UP('3')  =  2.0 ;
+ X.UP('5')  =  2.0 ;
+ X.UP('9')  =  2.0 ;
+ X.UP('10') =  1.0 ;
+ X.UP('14') =  1.0 ;
+ X.UP('17') =  2.0 ;
+ X.UP('19') =  2.0 ;
+ X.UP('21') =  2.0 ;
+ X.UP('25') =  3.0 ;
+
+* EQUATIONS COMMON TO NLP SUBPROBLEMS AND MASTER PROBLEMS:
+* --------------------------------------------------------
+ MASSBAL1    ..   X('13')         =E=  X('19') + X('21')          ;
+ MASSBAL2    ..   X('17')         =E=  X('9') + X('16') + X('25') ;
+ MASSBAL3    ..   X('11')         =E=  X('12') + X('15')          ;
+ MASSBAL4    ..   X('3') + X('5') =E=  X('6') + X('11')           ;
+ MASSBAL5    ..   X('6')          =E=  X('7') + X('8')            ;
+ MASSBAL6    ..   X('23')         =E=  X('20') + X('22')          ;
+ MASSBAL7    ..   X('23')         =E=  X('14') + X('24')          ;
+ MASSBAL8    ..   X('1')          =E=  X('2') + X('4')            ;
+
+ SPECS1      ..   X('10')  =L=  0.8 * X('17')                     ;
+ SPECS2      ..   X('10')  =G=  0.4 * X('17')                     ;
+ SPECS3      ..   X('12')  =L=  5.0 * X('14')                     ;
+ SPECS4      ..   X('12')  =G=  2.0 * X('14')                     ;
+
+ LOGICAL1    ..   X('2') + X('3')   =L=  10. * Y('1')          ;
+ LOGICAL2    ..   X('4') + X('5')   =L=  10. * Y('2')          ;
+ LOGICAL3    ..   X('9')   =L=  10. * Y('3')                   ;
+ LOGICAL4    ..   X('12') + X('14')  =L=  10. * Y('4')         ;
+ LOGICAL5    ..   X('15')  =L=  10. * Y('5')                   ;
+ LOGICAL6    ..   X('19')  =L=  10. * Y('6')                   ;
+ LOGICAL7    ..   X('21')  =L=  10. * Y('7')                   ;
+ LOGICAL8    ..   X('10') + X('17')  =L=  10. * Y('8')         ;
+
+ INOUT11..   EXP(X('3')) -1. =E= X('2')            ;
+ INOUT14..   CF('1') =E= 5                         ;
+ INOUT12..   X('2') =E= 0                          ;
+ INOUT13..   X('3') =E= 0                          ;
+ INOUT21..   EXP(X('5')/1.2) -1. =E= X('4')        ;
+ INOUT24..   CF('2') =E= 8                         ;
+ INOUT22..   X('4') =E= 0                          ;
+ INOUT23..   X('5') =E= 0                          ;
+ INOUT31..   1.5 * X('9') + X('10') =E= X('8')     ;
+ INOUT34..   CF('3') =E= 6                         ;
+ INOUT32..   X('9') =E= 0                          ;
+ INOUT41..   1.25 * (X('12')+X('14')) =E= X('13')  ;
+ INOUT45..   CF('4') =E= 10                        ;
+ INOUT42..   X('12') =E= 0                         ;
+ INOUT43..   X('13') =E= 0                         ;
+ INOUT44..   X('14') =E= 0                         ;
+ INOUT51..   X('15') =E= 2. * X('16')              ;
+ INOUT54..   CF('5') =E= 6                         ;
+ INOUT52..   X('15') =E= 0                         ;
+ INOUT53..   X('16') =E= 0                         ;
+ INOUT61..   EXP(X('20')/1.5) -1. =E= X('19')      ;
+ INOUT64..   CF('6') =E= 7                         ;
+ INOUT62..   X('19') =E= 0                         ;
+ INOUT63..   X('20') =E= 0                         ;
+ INOUT71..   EXP(X('22')) -1. =E= X('21')          ;
+ INOUT74..   CF('7') =E= 4                         ;
+ INOUT72..   X('21') =E= 0                         ;
+ INOUT73..   X('22') =E= 0                         ;
+ INOUT81..   EXP(X('18')) -1. =E= X('10') + X('17');
+ INOUT86..   CF('8') =E= 5                         ;
+ INOUT82..   X('10') =E= 0                         ;
+ INOUT83..   X('17') =E= 0                         ;
+ INOUT84..   X('18') =E= 0                         ;
+ INOUT85..   X('25') =E= 0                         ;
+
+ OBJETIVO  .. PROF  =E= SUM(J,CF(J)) + SUM(I , X(I)*CV(I)) + 122 ;
+
+ LOGIC EQUATION ATMOST1; ATMOST1.. Y('1') xor Y('2');
+ LOGIC EQUATION ATMOST2; ATMOST2.. Y('4') xor Y('5');
+ LOGIC EQUATION ATMOST3; ATMOST3.. Y('6') xor Y('7');
+
+ LOGIC EQUATION IMP0; IMP0..  Y('1') -> Y('3') or Y('4') or Y('5');
+ LOGIC EQUATION IMP1; IMP1..  Y('2') -> Y('3') or Y('4') or Y('5');
+ LOGIC EQUATION IMP2; IMP2..  Y('3') -> Y('8')                    ;
+ LOGIC EQUATION IMP3; IMP3..  Y('3') -> Y('1') or Y('2')          ;
+ LOGIC EQUATION IMP4; IMP4..  Y('4') -> Y('1') or Y('2')          ;
+ LOGIC EQUATION IMP5; IMP5..  Y('4') -> Y('6') or Y('7')          ;
+ LOGIC EQUATION IMP6; IMP6..  Y('5') -> Y('1') or Y('2')          ;
+ LOGIC EQUATION IMP7; IMP7..  Y('5') -> Y('8')                    ;
+ LOGIC EQUATION IMP8; IMP8..  Y('6') -> Y('4')                    ;
+ LOGIC EQUATION IMP9; IMP9..  Y('7') -> Y('4')                    ;
+
+* Initialization
+ Y.L('1') = 1;
+ Y.L('2') = 0;
+ Y.L('3') = 1;
+ Y.L('4') = 0;
+ Y.L('5') = 0;
+ Y.L('6') = 0;
+ Y.L('7') = 0;
+ Y.L('8') = 1;
+
+$ONECHO > '%LM.INFO%'
+ default bigm 100
+ DISJUNCTION Y('1') INOUT11 INOUT14 ELSE INOUT12 INOUT13
+ DISJUNCTION Y('2') INOUT21 INOUT24 ELSE INOUT22 INOUT23
+ DISJUNCTION Y('3') INOUT31 INOUT34 ELSE INOUT32
+ DISJUNCTION Y('4') INOUT41 INOUT45 ELSE INOUT42 INOUT43 INOUT44
+ DISJUNCTION Y('5') INOUT51 INOUT54 ELSE INOUT52 INOUT53
+ DISJUNCTION Y('6') INOUT61 INOUT64 ELSE INOUT62 INOUT63
+ DISJUNCTION Y('7') INOUT71 INOUT74 ELSE INOUT72 INOUT73
+ DISJUNCTION Y('8') INOUT81 INOUT86 ELSE INOUT82 INOUT83 INOUT84 INOUT85
+
+* optional, if not set LOGMIP will find the modeltype suitable
+ MODELTYPE MINLP
+$OFFECHO
+
+ OPTION OPTCR = 0, LIMCOL = 0, LIMROW = 0, EMP = LOGMIP;
+
+ MODEL EXAMPLE3  / ALL / ;
+
+ SOLVE EXAMPLE3 USING EMP MINIMIZING PROF   ;

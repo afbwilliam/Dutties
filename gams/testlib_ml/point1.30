@@ -1,0 +1,58 @@
+$title execute_loadpoint is a merge operation (POINT1,SEQ=30)
+
+* execute_loadpoint is a merge, although not tested here
+
+
+sets s / i1*i3 /,s1(s),s2(s),s3(s),s4(s),s5(s),s6(s),s7(s)
+parameters       p1(s),p2(s),p3(s),p4(s),p5(s),p6(s),p7(s)
+positive variables v1(s)
+         variables v2(s),v3(s);
+
+s1(s)   = yes;
+p1(s)   = ord(s);
+v1.l(s) = 10*(ord(s)-1); v1.m(s) = 100*(card(s)-ord(s));
+v1.lo('i2') = -123;
+v1.up('i3') = 321;
+
+
+display s1,p1,v1.l,v1.m,v1.lo,v1.up,v1.scale;
+
+execute_unload 'gdx1' s1,p1,v1;
+
+execute_loadpoint 'gdx1'
+
+  s2 = s1 s3 = p1 s4=v1.l s5=v1.m s6=v1.up s7=v1.lo
+
+  p2 = s1 p3 = p1 p4=v1.l p5=v1.m p6=v1.up p7=v1.lo
+
+  v2 = v1 v3.l= s1 v3.m=p1 v3.lo=v1.up v3.up=v1.lo;
+
+abort$sum(s, s2(s) xor s1   (s)) 's2 <> s1'    ,s2,s1   ;
+abort$sum(s, s3(s) xor p1   (s)) 's3 <> p1'    ,s3,p1   ;
+abort$sum(s, s4(s) xor v1.l (s)) 's4 <> v1.l' , s4,v1.l ;
+abort$sum(s, s5(s) xor v1.m (s)) 's5 <> v1.m' , s5,v1.m ;
+abort$sum(s, s6(s) xor v1.up(s)) 's6 <> v1.up', s6,v1.up;
+abort$sum(s, s7(s) xor v1.lo(s)) 's7 <> v1.lo', s7,v1.lo;
+
+abort$sum(s, p2(s) xor s1   (s)) 'p1 <> s1'    ,p2,s1   ;
+abort$sum(s, p3(s) <>  p1   (s)) 'p3 <> p1'    ,p3,p1   ;
+abort$sum(s, p4(s) <>  v1.l (s)) 'p4 <> v1.l' , p4,v1.l ;
+abort$sum(s, p5(s) <>  v1.m (s)) 'p5 <> v1.m' , p5,v1.m ;
+abort$sum(s, p6(s) <>  v1.up(s)) 'p6 <> v1.up', p6,v1.up;
+abort$sum(s, p7(s) <>  v1.lo(s)) 'p7 <> v1.lo', p7,v1.lo;
+
+abort$sum(s, v2.l (s) <>  v1.l   (s)) 'v2.l  <> v1.l ',v2.l ,v1.l ;
+abort$sum(s, v2.m (s) <>  v1.m   (s)) 'v2.m  <> v1.m ',v2.m ,v1.m ;
+abort$sum(s, v2.lo(s) <>  -inf      ) 'v2.lo <> -inf ',v2.lo      ;
+abort$sum(s, v2.up(s) <>  +inf      ) 'v2.up <> +inf ',v2.up      ;
+abort$sum(s, v3.l (s) xor s1     (s)) 'v3.l  <> s1   ',v3.l ,s1   ;
+abort$sum(s, v3.m (s) <>  p1     (s)) 'v3.m  <> p1   ',v3.m ,p1   ;
+abort$sum(s, v3.lo(s) <>  v1.up  (s)) 'v3.lo <> v1.up',v3.lo,v1.up;
+abort$sum(s, v3.up(s) <>  v1.lo  (s)) 'v3.up <> v1.lo',v3.up,v1.lo;
+
+
+display s2,s3,s4,s5,s6,s7;
+display p2,p3,p4,p5,p6,p7;
+display v2.l,v2.m,v2.lo,v2.up;
+display v3.l,v3.m,v3.lo,v3.up;
+

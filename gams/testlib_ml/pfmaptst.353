@@ -1,0 +1,587 @@
+$title 'Checks files in distribution' (GMSPFMAPTEST,SEQ=352)
+
+$ontext
+Compares the list of existing files with the list of expected files.
+
+Contributor: Lutz
+$offtext
+
+$offlisting
+$if not set GOLD $set GOLD 0
+*For changes on all platforms
+$set ALLPF (AIX,DEG,LEG,LNX,SIG,SOL,SOX,VS8,WEI)
+$set ALLNX (                            VS8,WEI)
+$set ALLUX (AIX,DEG,LEG,LNX,SIG,SOL,SOX        )
+
+alias (*,prd,prda,dir,fil);
+set ppp                                Possible platforms /aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei/;
+
+*Sets containing input data
+set curfil(prd,dir,fil)                Files of current version
+    lstall(ppp,prd,dir,fil)            Files of last version containing all platforms
+    lstfil(prd,dir,fil)                Files of last version
+    curprd(prd)                        All products contained in current version
+    lstprd(prd)                        All products contained in last version
+*Sets containing expected products/files
+    expprd(prd)                        Expected products
+    expfil(prd,dir,fil)                Expected files
+*Sets containing errors
+    nexprd(prd)                        Products being not expected but contained in current version
+    misprd(prd)                        Products missing in current version
+    drwprd(prd)                        Products dropped wrongly (dropped but not in previous version)
+    adwprd(prd)                        Products added wrongly (added but already in previous version)
+    nexfil(prd,dir,fil)                Files per product and directory being not expected but contained in current version
+    misfil(prd,dir,fil)                Files per product and directory missing in current version
+    drwfil(prd,dir,fil)                Files per product and directory dropped wrongly (dropped but not in previous version)
+    adwfil(prd,dir,fil)                Files per product and directory added wrongly (added but already in previous version)
+    nexfila(prd,dir,fil)               Files per product and directory being not expected but contained in current version (for solver aliases)
+    misfila(prd,dir,fil)               Files per product and directory missing in current version (for solver aliases)
+    wronga(prd)                        Alias entered for a product which does not exist
+*Sets containing expexted changes
+$onempty
+    newprd(ppp,prd)             New products /
+                                %ALLNX%         .(GAMSDOTNET, GDXMRW, GDXRRW, HARUTILITIES)
+                                %ALLPF%         .(CHK4UPD, BIB2GMS, ENDECRYPT, GDXCOPY, GDXDUMP, GDXDIFF, GDXMERGE, GDXRANK, HEXDUMP, MPS2GMS, GDXTROLL, GDX2VEDA)
+                                AIX             .(                                      GMDAPI, JOATAPI       )
+                                DEG             .(gamsJava, gamsPython, GDXMRW, GDXRRW, GMDAPI, JOATAPI       )
+                                LEG             .(gamsJava, gamsPython, GDXMRW, GDXRRW, GMDAPI, JOATAPI, SULUM)
+                                LNX             .(gamsJava, gamsPython,                 GMDAPI, JOATAPI, SULUM)
+                                SIG             .(gamsJava, gamsPython,                 GMDAPI, JOATAPI       )
+                                SOL             .(gamsJava,                             GMDAPI, JOATAPI       )
+                                SOX             .(gamsJava,                             GMDAPI, JOATAPI       )
+                                VS8             .(gamsJava, gamsPython,                 GMDAPI, JOATAPI, SULUM)
+                                WEI             .(gamsJava, gamsPython,                 GMDAPI, JOATAPI, SULUM)
+                                /
+    drpprd(ppp,prd)             Dropped products /
+                                %ALLNX%         . GMDCCLIB
+                                /
+
+
+$onecho > modlib.txt
+'powerset.381','linearne.382','saras.383','epscmmip.384','bidpwl.385','trnspwlx.386','pwlfunc.inc'
+$offecho
+
+$onecho > tstlib.txt
+'deasolu.gdx'   ,'er1c_cb.c'      ,'er1f_cb.f90'   ,'er2c_cb.c'   ,'er2f_cb.f90'   ,'er3c_cb.c'
+'er3f_cb.f90'   ,'ex1c.c'         ,'ex1c_cb.c'     ,'ex1d.dpr'    ,'ex1d_cb.dpr'   ,'ex1f.f90'
+'ex1f_cb.f90'   ,'Ex1j.h'         ,'Ex1j.java'     ,'Ex1jwrap.c'  ,'ex1xc_cb.c'    ,'ex1xf.f90'
+'ex2c_cb.c'     ,'ex2d_cb.dpr'    ,'ex2f_cb.f90'   ,'ex3c_cb.c'   ,'ex3d.dpr'      ,'ex3f_cb.f90'
+'ex4c_cb.c'     ,'ex4d.dpr'       ,'ex4f_cb.f90'   ,'ex4xc_cb.c'  ,'ex4xf_cb.f90'  ,'ex5c.c'
+'ex5f.f90'      ,'exmcp1c.c'      ,'exmcp1f.f90'   ,'exmcp2c.c'   ,'exmcp2c_cb.c'  ,'exmcp2f.f90'
+'exmcp2f_cb.f90','exmcp3c_cb.c'   ,'exmcp3f_cb.f90','exmcp4c_cb.c','exmcp4f_cb.f90','exmcp5c.c'
+'geheader.h'    ,'geheader2_d.pas','geheader_d.pas','gehelper.f90','msg2_f.f90'
+'testexeq.562'  ,'ex1.563'        ,'ex1x.564'      ,'ex2.565'     ,'ex3.566'       ,'ex4.567'
+'ex4x.568'      ,'ex5.569'        ,'er1.570'       ,'er2.571'     ,'er3.572'       ,'exmcp1.573'
+'exmcp2.574'    ,'exmcp3.575'     ,'exmcp4.576'    ,'exmcp5.577'  ,'complink.578'  ,'lindgl02.579'
+'qcp10.580'     ,'empdisj6.581'   ,'gdx9.582'      ,'empdisj7.583','traceuc.584'   ,'asynntrp.585'
+$offecho
+
+$onecho > emplib.txt
+'simplevi4.93','transsp.94','oa.95'
+$offecho
+
+*$onecho > datalib.txt
+*''
+*$offecho
+
+    newfil(ppp,prd,dir,fil)     New files per product and directory /
+                                %ALLPF%  .(Documents     . './docs/gams'    . 'mac-install.pdf'
+                                           gamsAPI       .('./apifiles/Data'.('transport.accdb','transport.xls')
+                                                           './apifiles/Test'.('testCStrseq.gms','testCSBenders.gms','testCSCutstock.gms','testCSWarehouse.gms','testCSex1.gms','testCSex2.gms'
+                                                                              'testJtrseq.gms', 'testJBenders.gms', 'testJCutstock.gms', 'testJWarehouse.gms'
+                                                                              'testPtrseq.gms', 'testPBenders.gms', 'testPCutstock.gms', 'testPWarehouse.gms','testJInterrupt.gms'
+                                                                              'testCPPtrseq.gms','testVBtrseq.gms','testVBex1.gms','testVBex2.gms')
+                                                           './apifiles/C'              .('xp_example1.c','xp_example2.c')
+                                                           './apifiles/C++'            .('xp_example1.cpp','xp_example1.vcproj','xp_example2.cpp','xp_example2.vcproj')
+                                                           './apifiles/C++'            . 'TransportSeq.sln'
+                                                           './apifiles/C++/Transport1' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport1.cpp','Transport1.vcxproj')
+                                                           './apifiles/C++/Transport2' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport2.cpp','Transport2.vcxproj')
+                                                           './apifiles/C++/Transport3' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport3.cpp','Transport3.vcxproj')
+                                                           './apifiles/C++/Transport4' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport4.cpp','Transport4.vcxproj')
+                                                           './apifiles/C++/Transport5' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport5.cpp','Transport5.vcxproj')
+                                                           './apifiles/C++/Transport6' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport6.cpp','Transport6.vcxproj','Lock.cpp','Lock.h')
+                                                           './apifiles/C++/Transport7' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport7.cpp','Transport7.vcxproj')
+                                                           './apifiles/C++/Transport8' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport8.cpp','Transport8.vcxproj','Lock.cpp','Lock.h')
+                                                           './apifiles/C++/Transport9' .('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport9.cpp','Transport9.vcxproj')
+                                                           './apifiles/C++/Transport10'.('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport10.cpp','Transport10.vcxproj')
+                                                           './apifiles/C++/Transport11'.('app.ico','app.rc','AssemblyInfo.cpp','resource.h','stdafx.cpp','stdafx.h','Transport11.cpp','Transport11.vcxproj')
+                                                           './apifiles/CSharp'     .('xp_example1.cs','xp_example1.csproj','xp_example2.cs','xp_example2.csproj')
+                                                           './apifiles/Delphi'     .('xp_example1.cfg','xp_example1.dof','xp_example1.dpr','xp_example1do.cfg','xp_example1do.dof','xp_example1do.dpr',
+                                                                                     'xp_example1dp.cfg','xp_example1dp.dof','xp_example1dp.dpr','xp_example2.cfg','xp_example2.dof','xp_example2.dpr')
+                                                           './apifiles/Fortran'    .('xp_example1.f90','xp_example1ifort32.f90','xp_example1ifort64.f90','xp_example2.f90')
+                                                           './apifiles/Java'       .('xp_example1.java','xp_example2.java')
+                                                           './apifiles/Python'     .('xp_example1.py','xp_example2.py')
+                                                           './apifiles/VBnet'      .('xp_example1.vb','xp_example1.vbproj','xp_example2.vb','xp_example2.vbproj')
+                                                           './apifiles/CSharp'     . 'Interrupt.sln'
+                                                           './apifiles/CSharp/Interrupt'             .('Interrupt.cs','Interrupt.csproj')
+                                                           './apifiles/CSharp/Interrupt/Properties'  . 'AssemblyInfo.cs'
+                                                           './apifiles/CSharp/Transport12'           .('Transport12.cs','Transport12.csproj')
+                                                           './apifiles/CSharp/Transport12/Properties'. 'AssemblyInfo.cs'
+                                                           './apifiles/Fortran/api'. 'gamsxf9glu.h'
+                                                           './apifiles/CSharp'     . 'InterruptGui.sln'
+                                                           './apifiles/CSharp/InterruptGui'            .('Form1.cs','Form1.Designer.cs','InterruptGui.cs','InterruptGui.csproj','TextBoxBaseWriter.cs')
+                                                           './apifiles/CSharp/InterruptGui/Properties' .('AssemblyInfo.cs','Resources.Designer.cs','Resources.resx','Settings.Designer.cs','Settings.settings')
+                                                           './apifiles/Java'       .('Transport1.java','Transport2.java','Transport3.java','Transport4.java','Transport5.java'
+                                                                                     'Transport6.java','Transport7.java','Transport8.java','Transport9.java','Transport10.java'
+                                                                                     'Transport11.java','Transport12.java','Benders2Stage.java','Benders2StageMT.java','Cutstock.java','Warehouse.java','ConsoleInterrupt.java')
+                                                           './apifiles/Python'     .('transport1.py','transport2.py','transport3.py','transport4.py','transport5.py',
+                                                                                     'transport6.py','transport7.py','transport8.py','transport9.py','transport10.py'
+                                                                                     'transport11.py','benders_2stage.py','benders_2stage_mt.py','cutstock.py','warehouse.py',
+                                                                                     'interrupt.py','interrupt_gui.py')
+                                                           './apifiles/VBnet'            . 'TransportSeq.sln'
+                                                           './apifiles/VBnet/Transport1' .('Transport1.vb','Transport1.vbproj')
+                                                           './apifiles/VBnet/Transport1/My Project' .('app.manifest','Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport2' .('Transport2.vb','Transport2.vbproj')
+                                                           './apifiles/VBnet/Transport2/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport3' .('Transport3.vb','Transport3.vbproj')
+                                                           './apifiles/VBnet/Transport3/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport4' .('Transport4.vb','Transport4.vbproj')
+                                                           './apifiles/VBnet/Transport4/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport5' .('Transport5.vb','Transport5.vbproj')
+                                                           './apifiles/VBnet/Transport5/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport6' .('Transport6.vb','Transport6.vbproj')
+                                                           './apifiles/VBnet/Transport6/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport7' .('Transport7.vb','Transport7.vbproj')
+                                                           './apifiles/VBnet/Transport7/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport8' .('Transport8.vb','Transport8.vbproj')
+                                                           './apifiles/VBnet/Transport8/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport9' .('Transport9.vb','Transport9.vbproj')
+                                                           './apifiles/VBnet/Transport9/My Project' .('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport10'.('Transport10.vb','Transport10.vbproj')
+                                                           './apifiles/VBnet/Transport10/My Project'.('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './apifiles/VBnet/Transport11'.('Transport11.vb','Transport11.vbproj')
+                                                           './apifiles/VBnet/Transport11/My Project'.('Application.Designer.vb','Application.myapp','AssemblyInfo.vb','Resources.Designer.vb','Resources.resx','Settings.Designer.vb','Settings.settings')
+                                                           './docs/api'             .'introduction.html'
+                                                           './docs/api/expert-level'.'gamsxqdrep.html')
+                                           GMDAPI        .('./apifiles/Java/api'   .('gmd.java','gmdjni.c'))
+                                           JOATAPI       .('./apifiles/Java/api'   .('cfgm.java','cfgmjni.c','dctm.java','dctmjni.c','gevm.java','gevmjni.c','gmom.java','gmomjni.c'))
+                                           gdxAPI        .('./apifiles/Fortran/api'.'gdxf9glu.h'
+                                                           './docs/api/expert-level'.('gdxioapi.chm','gdxioapi.pdf','gdxqdrep.html'))
+                                           optionAPI     .('./apifiles/Fortran/api'.'optf9glu.h'
+                                                           './docs/api/expert-level'.'optqdrep.html')
+                                           KESTREL       . './docs/solvers'.'kestrel.pdf'
+                                           LS            . './docs/solvers'.'leastsquares.pdf'
+                                           Tools         .('./docs/tools'              . 'gdxrrw.pdf'
+                                                           './gdxrrw/source'           . 'gdxrrw_0.2.0.tar.gz')
+                                           ModelLibrary  . './gamslib_ml'.(
+$include modlib.txt
+)
+                                           TestLibrary   . './testlib_ml'.(
+$include tstlib.txt
+)
+                                           EmpLibrary    . './emplib_ml'.(
+$include emplib.txt
+)
+                                          )
+                                %ALLNX% .((BARON,CPLEX,DECISC).'.'                    . 'cplex125.dll'
+                                          GAMSDOTNET    .('.'                         .('GAMS.net4.dll','GAMS.net4.XML')
+                                                          './docs/api'                . 'GAMS.net4.chm')
+                                          GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       . 'GAMSJavaAPI.jar')
+                                          GAMSPYTHON    .('./docs/api'                . 'GAMS_python.pdf'
+                                                          './apifiles/Python/api'     .('gamssetup.py')
+                                                          './apifiles/Python/api/gams'.('workspace.pyd','options.pyd','execution.pyd','database.pyd','__init__.py'))
+                                          BIB2GMS       . '.'                         .('bib2gms.exe')
+                                          CHK4UPD       . '.'                         .('chk4upd.exe')
+                                          ENDECRYPT     . '.'                         .('endecrypt.exe')
+                                          GDX2VEDA      . '.'                         .('gdx2veda.exe')
+                                          GDXCOPY       . '.'                         .('gdxcopy.exe')
+                                          GDXDIFF       . '.'                         .('gdxdiff.exe')
+                                          GDXDUMP       . '.'                         .('gdxdump.exe')
+                                          GDXMERGE      . '.'                         .('gdxmerge.exe')
+                                          GDXRANK       .('.'                         .('gdxrank.exe')
+                                                          './inclib'                  .('rank.gms'))
+                                          GDXRRW        . './gdxrrw/win3264'          .('gdxrrw_0.2.0.zip')
+                                          GDXTROLL      . '.'                         .('gdxtroll.exe')
+                                          HARUTILITIES  . '.'                         .('har2gdx.exe','gdx2har.exe')
+                                          HEXDUMP       . '.'                         .('hexdump.exe')
+                                          MPS2GMS       . '.'                         .('mps2gms.exe'))
+                                %ALLUX% .(CHK4UPD       . '.'                         .  chk4upd
+                                          BIB2GMS       . '.'                         .  bib2gms
+                                          ENDECRYPT     . '.'                         .  endecrypt
+                                          GDXCOPY       . '.'                         .  gdxcopy
+                                          GDXDUMP       . '.'                         .  gdxdump
+                                          GDXDIFF       . '.'                         .  gdxdiff
+                                          GDXMERGE      . '.'                         .  gdxmerge
+                                          GDXRANK       .('.'                         .  gdxrank
+                                                          './inclib'                  . 'rank.gms')
+                                          HEXDUMP       . '.'                         .  hexdump
+                                          MPS2GMS       . '.'                         .  mps2gms
+                                          GDXTROLL      . '.'                         .  gdxtroll
+                                          GDX2VEDA      . '.'                         .  gdx2veda)
+       (DEG,LEG,LNX,SIG,SOL,SOX,VS8,WEI). GAMSJAVA      .('./apifiles/Java/api/javadoc'.('allclasses-frame.html','help-doc.html','package-list','allclasses-noframe.html','index.html','serialized-form.html',
+                                                                                         'constant-values.html','overview-summary.html','stylesheet.css','deprecated-list.html','overview-tree.html')
+                                                          './apifiles/Java/api/javadoc/index-files'.
+                                                                                       ('index-1.html','index-13.html','index-17.html','index-6.html'
+                                                                                        'index-10.html','index-14.html','index-18.html','index-3.html','index-7.html'
+                                                                                        'index-11.html','index-15.html','index-4.html','index-8.html'
+                                                                                        'index-12.html','index-16.html','index-2.html','index-5.html','index-9.html')
+                                                          './apifiles/Java/api/javadoc/com/gams/api'.
+                                                                                       ('GAMSDatabase.html','GAMSOptions.EInteractiveSolver.html','GAMSEquation.html','GAMSOptions.EKeep.html','GAMSEquationRecord.html','GAMSOptions.ESavePoint.html',
+                                                                                        'GAMSException.html','GAMSOptions.ESolPrint.html','GAMSExecutionException.html','GAMSOptions.ESolveLink.html','GAMSGlobals.ArchType.html','GAMSOptions.EStepSum.html',
+                                                                                        'GAMSGlobals.DataType.html','GAMSOptions.EStringChk.html','GAMSGlobals.EquType.html','GAMSOptions.ESys11.html','GAMSGlobals.ExitCodeMessage.html','GAMSOptions.ESysOut.html',
+                                                                                        'GAMSGlobals.ModelStat.html','GAMSOptions.ETFormat.html','GAMSGlobals.OSType.html','GAMSOptions.EZeroResRep.html','GAMSGlobals.SolveStat.html','GAMSOptions.EgdxCompress.html',
+                                                                                        'GAMSGlobals.SpecialValues.html','GAMSOptions.EgdxConvert.html','GAMSGlobals.UpdateAction.html','GAMSOptions.html','GAMSGlobals.VarType.html','GAMSParameter.html',
+                                                                                        'GAMSGlobals.html','GAMSParameterRecord.html','GAMSJob.html','GAMSSet.html','GAMSModelInstance.SymbolUpdateType.html','GAMSSetRecord.html',
+                                                                                        'GAMSModelInstance.html','GAMSSymbol.html','GAMSModelInstanceOpt.html','GAMSSymbolIterable.html','GAMSModifier.html','GAMSSymbolRecord.html',
+                                                                                        'GAMSOptions.EAction.html','GAMSVariable.html','GAMSOptions.ECase.html','GAMSVariableRecord.html','GAMSOptions.ECharSet.html','GAMSWorkspace.html',
+                                                                                        'GAMSOptions.EDFormat.html','GAMSWorkspaceInfo.html','GAMSOptions.EExecMode.html','package-frame.html','GAMSOptions.EFileCase.html','package-summary.html',
+                                                                                        'GAMSOptions.EForceWork.html','package-tree.html','GAMSOptions.EHoldFixed.html','GAMSCheckpoint.html'))
+       (    LEG,LNX,SIG,        VS8,WEI). GAMSJAVA      . './apifiles/Java/api/javadoc/resources'.('background.gif','tab.gif','titlebar.gif','titlebar_end.gif')
+       (DEG,            SOL,SOX        ). GAMSJAVA      . './apifiles/Java/api/javadoc/resources'.('inherit.gif')
+                           (LEG,LNX)    .(gamsAPI       . './apifiles/Python/api_26'.('_gamsxcc.so','gamsxcc.py')
+                                          gdxAPI        . './apifiles/Python/api_26'.('_gdxcc.so','gdxcc.py')
+                                          gmdAPI        . './apifiles/Python/api_26'.('_gmdcc.so','gmdcc.py')
+                                          joatAPI       . './apifiles/Python/api_26'.('_cfgmcc.so','cfgmcc.py','_dctmcc.so','dctmcc.py','_gevmcc.so','gevmcc.py','_gmomcc.so','gmomcc.py')
+                                          optionAPI     . './apifiles/Python/api_26'.('_optcc.so','optcc.py')
+                                          gamsPython    .('./apifiles/Python/api_26'.('gamssetup.py')
+                                                          './apifiles/Python/api_26/gams'.('database.so','execution.so','options.so','workspace.so','__init__.py')))
+                           (VS8,WEI)    .(gamsAPI       . './apifiles/Python/api_26'.('_gamsxcc.pyd','gamsxcc.py')
+                                          gdxAPI        . './apifiles/Python/api_26'.('_gdxcc.pyd','gdxcc.py')
+                                          gmdAPI        . './apifiles/Python/api_26'.('_gmdcc.pyd','gmdcc.py')
+                                          joatAPI       . './apifiles/Python/api_26'.('_cfgmcc.pyd','cfgmcc.py','_dctmcc.pyd','dctmcc.py','_gevmcc.pyd','gevmcc.py','_gmomcc.pyd','gmomcc.py')
+                                          optionAPI     . './apifiles/Python/api_26'.('_optcc.pyd','optcc.py')
+                                          gamsPython    .('./apifiles/Python/api_26'.('gamssetup.py')
+                                                          './apifiles/Python/api_26/gams'.('database.pyd','execution.pyd','options.pyd','workspace.pyd','__init__.py')))
+                                AIX     .(GMDAPI        .('./apifiles/Java/api'       . 'libgmdjni64.so'
+                                                          './apifiles/Python/api'     .('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py')
+                                                          './apifiles/C/api'          .('gmdcc.c','gmdcc.h'))
+                                          JOATAPI       .('./apifiles/Java/api'       .('libcfgmjni64.so','libgevmjni64.so','libdctmjni64.so','libgmomjni64.so')
+                                                          './apifiles/Python/api'     .('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py'
+                                                                                        'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py'
+                                                                                        'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py'
+                                                                                        'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py')
+                                                          './apifiles/C/api'          .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h'
+                                                                                        'cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h'))
+                                          GAMS          . '.'   . 'libgmdcclib64.so'
+                                          XPRESS        . '.'           . ('libxprl.so.x7.4','libxprl-2.6.5-x7.4.so','libxprs.so.23.01.06')
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.so','libex1c_cb.so','libexmcp1c.so','libexmcp2f.so','libexmcp2c_cb.so',
+                                                                          'libex4d.so','libex1d_cb.so','libex1c.so','libex2c_cb.so','libexmcp4c_cb.so',
+                                                                          'libex5c.so','liber3c_cb.so','libexmcp2f_cb.so','libex5f.so','libexmcp1f.so',
+                                                                          'liber1f_cb.so','libexmcp3c_cb.so','libex1xc_cb.so','libex4xc_cb.so','liber2f_cb.so',
+                                                                          'libex3d.so','libex1f.so','libex4xf_cb.so','liber2c_cb.so','libex4c_cb.so','libex2f_cb.so',
+                                                                          'libex3f_cb.so','libexmcp3f_cb.so','libex2d_cb.so','libex3c_cb.so','libex4f_cb.so',
+                                                                          'libex1xf.so','liber1c_cb.so','libexmcp5c.so','libex1f_cb.so','libex1d.so',
+                                                                          'libexmcp4f_cb.so','liber3f_cb.so'))
+                                DEG     .(gamsAPI       . './apifiles/Python/api'     . '_gamsxcc.so'
+                                          gdxAPI        . './apifiles/Python/api'     . '_gdxcc.so'
+                                          optionAPI     . './apifiles/Python/api'     . '_optcc.so'
+                                          GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       .('GAMSJavaAPI.jar','libutiljni64.dylib'))
+                                          GAMSPYTHON    .('./docs/api'                . 'GAMS_python.pdf'
+                                                          './apifiles/Python/api'     .('gamssetup.py')
+                                                          './apifiles/Python/api/gams'.('workspace.so','options.so','execution.so','database.so','__init__.py'))
+                                          GMDAPI        .('./apifiles/Java/api'  . 'libgmdjni64.dylib'
+                                                          './apifiles/C/api'     .('gmdcc.c','gmdcc.h')
+                                                          './apifiles/Python/api'.('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py','_gmdcc.so'))
+                                          JOATAPI       .('./apifiles/Java/api'  .('libcfgmjni64.dylib','libgevmjni64.dylib','libdctmjni64.dylib','libgmomjni64.dylib')
+                                                          './apifiles/C/api'     .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h','cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h')
+                                                          './apifiles/Python/api'.('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py','_gmomcc.so',
+                                                                                   'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py','_dctmcc.so',
+                                                                                   'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py','_cfgmcc.so',
+                                                                                   'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py','_gevmcc.so'))
+                                          GAMS          . '.'           . 'libgmdcclib64.dylib'
+                                          GDXMRW        . '.'           .('gams.mexmaci64','gdxInfo.mexmaci64','rgdx.mexmaci64','wgdx.mexmaci64')
+                                          GDXRRW        . './gdxrrw/osx'. 'gdxrrw_0.2.0.tgz'
+                                          GUROBI        . '.'           . 'libgurobi51.so'
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.dylib','libex1c_cb.dylib','libexmcp1c.dylib','libexmcp2f.dylib','libexmcp2c_cb.dylib',
+                                                                          'libex4d.dylib','libex1d_cb.dylib','libex1c.dylib','libex2c_cb.dylib','libexmcp4c_cb.dylib',
+                                                                          'libex5c.dylib','liber3c_cb.dylib','libexmcp2f_cb.dylib','libex5f.dylib','libexmcp1f.dylib',
+                                                                          'liber1f_cb.dylib','libexmcp3c_cb.dylib','libex1xc_cb.dylib','libex4xc_cb.dylib','liber2f_cb.dylib',
+                                                                          'libex3d.dylib','libex1f.dylib','libex4xf_cb.dylib','liber2c_cb.dylib','libex4c_cb.dylib','libex2f_cb.dylib',
+                                                                          'libex3f_cb.dylib','libexmcp3f_cb.dylib','libex2d_cb.dylib','libex3c_cb.dylib','libex4f_cb.dylib',
+                                                                          'libex1xf.dylib','liber1c_cb.dylib','libexmcp5c.dylib','libex1f_cb.dylib','libex1d.dylib',
+                                                                          'libexmcp4f_cb.dylib','liber3f_cb.dylib')
+                                          Tools         . './gdxrrw/osx'. 'gdxrrw_0.2.0.tgz')
+                                LEG     .(BARON         . '.'           . 'libcplex125.so'
+                                          GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       .('GAMSJavaAPI.jar','libutiljni64.so'))
+                                          GAMSPYTHON    .('./docs/api'                . 'GAMS_python.pdf'
+                                                          './apifiles/Python/api'     .('gamssetup.py')
+                                                          './apifiles/Python/api/gams'.('workspace.so','options.so','execution.so','database.so','__init__.py'))
+                                          GMDAPI        .('./apifiles/Java/api'  . 'libgmdjni64.so'
+                                                          './apifiles/C/api'     .('gmdcc.c','gmdcc.h')
+                                                          './apifiles/Python/api'.('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py','_gmdcc.so'))
+                                          JOATAPI       .('./apifiles/Java/api'  .('libcfgmjni64.so','libgevmjni64.so','libdctmjni64.so','libgmomjni64.so')
+                                                          './apifiles/C/api'     .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h','cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h')
+                                                          './apifiles/Python/api'.('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py','_gmomcc.so',
+                                                                                   'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py','_dctmcc.so',
+                                                                                   'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py','_cfgmcc.so',
+                                                                                   'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py','_gevmcc.so'))
+                                          GAMS          . '.'           . 'libgmdcclib64.so'
+                                          GDXMRW        . '.'           .('gams.mexa64','gdxInfo.mexa64','rgdx.mexa64','wgdx.mexa64')
+                                          GDXRRW        . './gdxrrw/linux64'.'gdxrrw_0.2.0_r_x86_64-redhat-linux-gnu.tar.gz'
+                                          GUROBI        . '.'           . 'libgurobi.so.5.1.0'
+                                          XPRESS        . '.'           . ('libxprl.so.x7.4','libxprl-2.6.5-x7.4.so','libxprs.so.23.01.06')
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.so','libex1c_cb.so','libexmcp1c.so','libexmcp2f.so','libexmcp2c_cb.so',
+                                                                          'libex4d.so','libex1d_cb.so','libex1c.so','libex2c_cb.so','libexmcp4c_cb.so',
+                                                                          'libex5c.so','liber3c_cb.so','libexmcp2f_cb.so','libex5f.so','libexmcp1f.so',
+                                                                          'liber1f_cb.so','libexmcp3c_cb.so','libex1xc_cb.so','libex4xc_cb.so','liber2f_cb.so',
+                                                                          'libex3d.so','libex1f.so','libex4xf_cb.so','liber2c_cb.so','libex4c_cb.so','libex2f_cb.so',
+                                                                          'libex3f_cb.so','libexmcp3f_cb.so','libex2d_cb.so','libex3c_cb.so','libex4f_cb.so',
+                                                                          'libex1xf.so','liber1c_cb.so','libexmcp5c.so','libex1f_cb.so','libex1d.so',
+                                                                          'libexmcp4f_cb.so','liber3f_cb.so')
+                                          SCIP          . '.'           . 'libgmpxx.so.4'
+                                          SULUM         . '.'           .('libsulum10.so','libslmcclib64.so', 'optsulum.def', 'optsulum.html')
+                                          SULUM         . './docs/solvers'.'sulum.pdf'
+                                          Tools         . './gdxrrw/linux64'.'gdxrrw_0.2.0_r_x86_64-redhat-linux-gnu.tar.gz')
+                                LNX     .(BARON         . '.'           . 'libcplex125.so'
+                                          GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       .('GAMSJavaAPI.jar','libutiljni.so'))
+                                          GAMSPYTHON    .('./docs/api'                . 'GAMS_python.pdf'
+                                                          './apifiles/Python/api'     .('gamssetup.py')
+                                                          './apifiles/Python/api/gams'.('workspace.so','options.so','execution.so','database.so','__init__.py'))
+                                          GMDAPI        .('./apifiles/Java/api'  . 'libgmdjni.so'
+                                                          './apifiles/C/api'     .('gmdcc.c','gmdcc.h')
+                                                          './apifiles/Python/api'.('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py','_gmdcc.so'))
+                                          JOATAPI       .('./apifiles/Java/api'  .('libcfgmjni.so','libgevmjni.so','libdctmjni.so','libgmomjni.so')
+                                                          './apifiles/C/api'     .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h','cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h')
+                                                          './apifiles/Python/api'.('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py','_gmomcc.so',
+                                                                                   'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py','_dctmcc.so',
+                                                                                   'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py','_cfgmcc.so',
+                                                                                   'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py','_gevmcc.so'))
+                                          GAMS          . '.'           . 'libgmdcclib.so'
+                                          GUROBI        . '.'           . 'libgurobi.so.5.0.2'
+                                          XPRESS        . '.'           . ('libxprl.so.x7.4','libxprl-2.6.5-x7.4.so','libxprs.so.23.01.06')
+                                          SCIP          . '.'           . 'libgmpxx.so.4'
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.so','libex1c_cb.so','libexmcp1c.so','libexmcp2f.so','libexmcp2c_cb.so',
+                                                                          'libex4d.so','libex1d_cb.so','libex1c.so','libex2c_cb.so','libexmcp4c_cb.so',
+                                                                          'libex5c.so','liber3c_cb.so','libexmcp2f_cb.so','libex5f.so','libexmcp1f.so',
+                                                                          'liber1f_cb.so','libexmcp3c_cb.so','libex1xc_cb.so','libex4xc_cb.so','liber2f_cb.so',
+                                                                          'libex3d.so','libex1f.so','libex4xf_cb.so','liber2c_cb.so','libex4c_cb.so','libex2f_cb.so',
+                                                                          'libex3f_cb.so','libexmcp3f_cb.so','libex2d_cb.so','libex3c_cb.so','libex4f_cb.so',
+                                                                          'libex1xf.so','liber1c_cb.so','libexmcp5c.so','libex1f_cb.so','libex1d.so',
+                                                                          'libexmcp4f_cb.so','liber3f_cb.so')
+                                          SULUM         . '.'           .('libsulum10.so','libslmcclib.so', 'optsulum.def', 'optsulum.html')
+                                          SULUM         . './docs/solvers'.'sulum.pdf')
+                                SIG     .(gamsAPI       . './apifiles/Python/api'     . '_gamsxcc.so'
+                                          gdxAPI        . './apifiles/Python/api'     . '_gdxcc.so'
+                                          optionAPI     . './apifiles/Python/api'     . '_optcc.so'
+                                          GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       .('GAMSJavaAPI.jar','libutiljni64.so'))
+                                          GAMSPYTHON    .('./docs/api'                . 'GAMS_python.pdf'
+                                                          './apifiles/Python/api'     .('gamssetup.py')
+                                                          './apifiles/Python/api/gams'.('workspace.so','options.so','execution.so','database.so','__init__.py'))
+                                          GMDAPI        .('./apifiles/Java/api'  . 'libgmdjni64.so'
+                                                          './apifiles/C/api'     .('gmdcc.c','gmdcc.h')
+                                                          './apifiles/Python/api'.('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py','_gmdcc.so'))
+                                          JOATAPI       .('./apifiles/Java/api'  .('libcfgmjni64.so','libgevmjni64.so','libdctmjni64.so','libgmomjni64.so')
+                                                          './apifiles/C/api'     .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h','cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h')
+                                                          './apifiles/Python/api'.('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py','_gmomcc.so',
+                                                                                   'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py','_dctmcc.so',
+                                                                                   'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py','_cfgmcc.so',
+                                                                                   'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py','_gevmcc.so'))
+                                          GAMS          . '.'           . 'libgmdcclib64.so'
+                                          XPRESS        . '.'           . ('libxprl.so.x7.4','libxprl-2.6.5-x7.4.so','libxprs.so.23.01.06')
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.so','libex1c_cb.so','libexmcp1c.so','libexmcp2f.so','libexmcp2c_cb.so',
+                                                                          'libex4d.so','libex1d_cb.so','libex1c.so','libex2c_cb.so','libexmcp4c_cb.so',
+                                                                          'libex5c.so','liber3c_cb.so','libexmcp2f_cb.so','libex5f.so','libexmcp1f.so',
+                                                                          'liber1f_cb.so','libexmcp3c_cb.so','libex1xc_cb.so','libex4xc_cb.so','liber2f_cb.so',
+                                                                          'libex3d.so','libex1f.so','libex4xf_cb.so','liber2c_cb.so','libex4c_cb.so','libex2f_cb.so',
+                                                                          'libex3f_cb.so','libexmcp3f_cb.so','libex2d_cb.so','libex3c_cb.so','libex4f_cb.so',
+                                                                          'libex1xf.so','liber1c_cb.so','libexmcp5c.so','libex1f_cb.so','libex1d.so',
+                                                                          'libexmcp4f_cb.so','liber3f_cb.so'))
+                                SOL     .(GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       .('GAMSJavaAPI.jar','libutiljni.so'))
+                                          GMDAPI        .('./apifiles/Java/api'       . 'libgmdjni.so'
+                                                          './apifiles/Python/api'     .('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py')
+                                                          './apifiles/C/api'          .('gmdcc.c','gmdcc.h'))
+                                          JOATAPI       .('./apifiles/Java/api'       .('libcfgmjni.so','libgevmjni.so','libdctmjni.so','libgmomjni.so')
+                                                          './apifiles/Python/api'     .('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py'
+                                                                                        'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py'
+                                                                                        'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py'
+                                                                                        'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py')
+                                                          './apifiles/C/api'          .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h'
+                                                                                        'cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h'))
+                                          GAMS          . '.'           . 'libgmdcclib.so'
+                                          XPRESS        . '.'           . ('libxprl.so.x7.4','libxprl-2.6.5-x7.4.so','libxprs.so.23.01.06')
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.so','libex1c_cb.so','libexmcp1c.so','libexmcp2f.so','libexmcp2c_cb.so',
+                                                                          'libex4d.so','libex1d_cb.so','libex1c.so','libex2c_cb.so','libexmcp4c_cb.so',
+                                                                          'libex5c.so','liber3c_cb.so','libexmcp2f_cb.so','libex5f.so','libexmcp1f.so',
+                                                                          'liber1f_cb.so','libexmcp3c_cb.so','libex1xc_cb.so','libex4xc_cb.so','liber2f_cb.so',
+                                                                          'libex3d.so','libex1f.so','libex4xf_cb.so','liber2c_cb.so','libex4c_cb.so','libex2f_cb.so',
+                                                                          'libex3f_cb.so','libexmcp3f_cb.so','libex2d_cb.so','libex3c_cb.so','libex4f_cb.so',
+                                                                          'libex1xf.so','liber1c_cb.so','libexmcp5c.so','libex1f_cb.so','libex1d.so',
+                                                                          'libexmcp4f_cb.so','liber3f_cb.so'))
+                                SOX     .(GAMSJAVA      .('./docs/api'                .('GAMS_java.pdf')
+                                                          './apifiles/Java/api'       .('GAMSJavaAPI.jar','libutiljni64.so'))
+                                          GMDAPI        .('./apifiles/Java/api'       . 'libgmdjni64.so'
+                                                          './apifiles/Python/api'     .('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py')
+                                                          './apifiles/C/api'          .('gmdcc.c','gmdcc.h'))
+                                          JOATAPI       .('./apifiles/Java/api'       .('libcfgmjni64.so','libgevmjni64.so','libdctmjni64.so','libgmomjni64.so')
+                                                          './apifiles/Python/api'     .('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py'
+                                                                                        'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py'
+                                                                                        'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py'
+                                                                                        'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py')
+                                                          './apifiles/C/api'          .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h'
+                                                                                        'cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h'))
+                                          GAMS          . '.'           . 'libgmdcclib64.so'
+                                          XPRESS        . '.'           . ('libxprl.so.x7.4','libxprl-2.6.5-x7.4.so','libxprs.so.23.01.06')
+                                          TestLibrary   . './testlib_ml'.('libexmcp2c.so','libex1c_cb.so','libexmcp1c.so','libexmcp2f.so','libexmcp2c_cb.so',
+                                                                          'libex4d.so','libex1d_cb.so','libex1c.so','libex2c_cb.so','libexmcp4c_cb.so',
+                                                                          'libex5c.so','liber3c_cb.so','libexmcp2f_cb.so','libex5f.so','libexmcp1f.so',
+                                                                          'liber1f_cb.so','libexmcp3c_cb.so','libex1xc_cb.so','libex4xc_cb.so','liber2f_cb.so',
+                                                                          'libex3d.so','libex1f.so','libex4xf_cb.so','liber2c_cb.so','libex4c_cb.so','libex2f_cb.so',
+                                                                          'libex3f_cb.so','libexmcp3f_cb.so','libex2d_cb.so','libex3c_cb.so','libex4f_cb.so',
+                                                                          'libex1xf.so','liber1c_cb.so','libexmcp5c.so','libex1f_cb.so','libex1d.so',
+                                                                          'libexmcp4f_cb.so','liber3f_cb.so'))
+                                VS8     .(GAMS          . '.'                    .('gmdcclib.dll','pthreadVCE2.dll')
+                                          GAMSJAVA      .('./apifiles/Java/api'  . 'utiljni.dll')
+                                          GMDAPI        .('./apifiles/Java/api'  . 'gmdjni.dll'
+                                                          './apifiles/C/api'     .('gmdcc.c','gmdcc.h')
+                                                          './apifiles/Python/api'.('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py','_gmdcc.pyd'))
+                                          JOATAPI       .('./apifiles/Java/api'  .('cfgmjni.dll','gevmjni.dll','dctmjni.dll','gmomjni.dll')
+                                                          './apifiles/C/api'     .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h','cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h')
+                                                          './apifiles/Python/api'.('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py','_gmomcc.pyd',
+                                                                                   'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py','_dctmcc.pyd',
+                                                                                   'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py','_cfgmcc.pyd',
+                                                                                   'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py','_gevmcc.pyd'))
+                                          GDXMRW        . '.'                    .('gams.mexw32','gdxInfo.mexw32','rgdx.mexw32','wgdx.mexw32')
+                                          GUROBI        . '.'                    . 'gurobi51.dll'
+                                          TestLibrary   . './testlib_ml'.('exmcp2c.dll','ex1c_cb.dll','exmcp1c.dll','exmcp2f.dll','exmcp2c_cb.dll',
+                                                                          'ex4d.dll','ex1d_cb.dll','ex1c.dll','ex2c_cb.dll','exmcp4c_cb.dll',
+                                                                          'ex5c.dll','er3c_cb.dll','exmcp2f_cb.dll','ex5f.dll','exmcp1f.dll',
+                                                                          'er1f_cb.dll','exmcp3c_cb.dll','ex1xc_cb.dll','ex4xc_cb.dll','er2f_cb.dll',
+                                                                          'ex3d.dll','ex1f.dll','ex4xf_cb.dll','er2c_cb.dll','ex4c_cb.dll','ex2f_cb.dll',
+                                                                          'ex3f_cb.dll','exmcp3f_cb.dll','ex2d_cb.dll','ex3c_cb.dll','ex4f_cb.dll',
+                                                                          'ex1xf.dll','er1c_cb.dll','exmcp5c.dll','ex1f_cb.dll','ex1d.dll',
+                                                                          'exmcp4f_cb.dll','er3f_cb.dll')
+                                          SULUM         . '.'           .('sulum10.dll','slmcclib.dll', 'optsulum.def', 'optsulum.html')
+                                          SULUM         . './docs/solvers'.'sulum.pdf'
+                                          Tools         . './gdxrrw/win3264'. 'gdxrrw_0.2.0.zip')
+                                WEI     .(GAMS          . '.'                    .('gmdcclib64.dll','pthreadVCE2.dll')
+                                          GAMSJAVA      .('./apifiles/Java/api'  . 'utiljni64.dll')
+                                          GMDAPI        .('./apifiles/Java/api'  . 'gmdjni64.dll'
+                                                          './apifiles/C/api'     .('gmdcc.c','gmdcc.h')
+                                                          './apifiles/Python/api'.('gmdcc.i','gmdcc.py','gmdcc_wrap.c','gmdsetup.py','_gmdcc.pyd'))
+                                          JOATAPI       .('./apifiles/Java/api'  .('cfgmjni64.dll','gevmjni64.dll','dctmjni64.dll','gmomjni64.dll')
+                                                          './apifiles/C/api'     .('gmomcc.c','gmomcc.h','dctmcc.c','dctmcc.h','cfgmcc.c','cfgmcc.h','gevmcc.c','gevmcc.h')
+                                                          './apifiles/Python/api'.('gmomcc.i','gmomcc.py','gmomcc_wrap.c','gmomsetup.py','_gmomcc.pyd',
+                                                                                   'dctmcc.i','dctmcc.py','dctmcc_wrap.c','dctmsetup.py','_dctmcc.pyd',
+                                                                                   'cfgmcc.i','cfgmcc.py','cfgmcc_wrap.c','cfgmsetup.py','_cfgmcc.pyd',
+                                                                                   'gevmcc.i','gevmcc.py','gevmcc_wrap.c','gevmsetup.py','_gevmcc.pyd'))
+                                          GDXMRW        . '.'                    .('gams.mexw64','gdxInfo.mexw64','rgdx.mexw64','wgdx.mexw64')
+                                          GUROBI        . '.'                    . 'gurobi51.dll'
+                                          TestLibrary   . './testlib_ml'.('exmcp2c.dll','ex1c_cb.dll','exmcp1c.dll','exmcp2f.dll','exmcp2c_cb.dll',
+                                                                          'ex4d.dll','ex1d_cb.dll','ex1c.dll','ex2c_cb.dll','exmcp4c_cb.dll',
+                                                                          'ex5c.dll','er3c_cb.dll','exmcp2f_cb.dll','ex5f.dll','exmcp1f.dll',
+                                                                          'er1f_cb.dll','exmcp3c_cb.dll','ex1xc_cb.dll','ex4xc_cb.dll','er2f_cb.dll',
+                                                                          'ex3d.dll','ex1f.dll','ex4xf_cb.dll','er2c_cb.dll','ex4c_cb.dll','ex2f_cb.dll',
+                                                                          'ex3f_cb.dll','exmcp3f_cb.dll','ex2d_cb.dll','ex3c_cb.dll','ex4f_cb.dll',
+                                                                          'ex1xf.dll','er1c_cb.dll','exmcp5c.dll','ex1f_cb.dll','ex1d.dll',
+                                                                          'exmcp4f_cb.dll','er3f_cb.dll')
+                                          SULUM         . '.'           .('sulum10.dll','slmcclib64.dll', 'optsulum.def', 'optsulum.html')
+                                          SULUM         . './docs/solvers'.'sulum.pdf'
+                                          Tools         . './gdxrrw/win3264'. 'gdxrrw_0.2.0.zip')
+                                /
+    drpfil(ppp,prd,dir,fil)     Dropped files per product and directory /
+                                %ALLPF% .(GAMS          . './QAdata/optobj'              .('t01.tst','t02.tst','t03.tst','alex.tst','path1.tst','path2.tst','path3.tst','path4.tst','xa01.tst','minos01.tst')
+                                          gamsAPI       .('./apifiles'                   . 'GAMS.net4.chm'
+                                                          './apifiles/CSharp/Transport9' . 'transport.accdb'
+                                                          './apifiles/CSharp/Transport10'. 'transport.xlsx'
+                                                          './apifiles/C'                 .('example1.c','example2.c')
+                                                          './apifiles/C++'               .('example1.cpp','example1.vcproj','example2.cpp','example2.vcproj')
+                                                          './apifiles/CSharp'            .('example1.cs','example1.csproj','example2.cs','example2.csproj')
+                                                          './apifiles/Delphi'            .('example1.cfg','example1.dof','example1.dpr','example1do.cfg','example1do.dof','example1do.dpr',
+                                                                                           'example1dp.cfg','example1dp.dof','example1dp.dpr','example2.cfg','example2.dof','example2.dpr')
+                                                          './apifiles/Fortran'           .('example1.f90','example1ifort32.f90','example1ifort64.f90','example2.f90')
+                                                          './apifiles/Java'              .('example1.java','example2.java')
+                                                          './apifiles/Python'            .('example1.py','example2.py')
+                                                          './apifiles/VBnet'             .('example1.vb','example1.vbproj','example2.vb','example2.vbproj'))
+                                          gdxAPI        . './apifiles'                   .('gdxioapi.chm','gdxioapi.pdf')
+                                          Documents     . './docs/bigdocs/gams2002'      .('gamsbas.bas','gamsbas.gms','rgamsbas.bat'))
+                                %ALLNX% .((BARON,CPLEX,DECISC).'.'                       . 'cplex124.dll'
+                                          GAMS          . '.'                            .('GAMS.net4.dll','GAMS.net4.XML','gmsop_nx.exe'))
+                                %ALLUX% .(GAMS          . '.'                            .('gmsop_ux.out','gmsop_us.run'))
+                                AIX     .(XPRESS        . '.'           .('libxprl-2.6.3-x7.3.so','libxprs.so.23.01.03','libxprl.so.x7.3'))
+                                DEG     .(GUROBI        . '.'           . 'libgurobi.so.5.0.1')
+                                LEG     .(BARON         . '.'           . 'libcplex124.so'
+                                          GUROBI        . '.'           . 'libgurobi.so.5.0.1')
+                                LEG     .(XPRESS        . '.'           .('libxprl-2.6.4-x7.3.so','libxprs.so.23.01.05','libxprl.so.x7.3'))
+                                LNX     .(BARON         . '.'           . 'libcplex124.so'
+                                          GUROBI        . '.'           . 'libgurobi.so.5.0.1')
+                                LNX     .(XPRESS        . '.'           .('libxprl-2.6.4-x7.3.so','libxprs.so.23.01.05','libxprl.so.x7.3'))
+                                SIG     .(XPRESS        . '.'           .('libxprl-2.6.3-x7.3.so','libxprs.so.23.01.05','libxprl.so.x7.3'))
+                                SOL     .(XPRESS        . '.'           .('libxprl-2.6.3-x7.3.so','libxprs.so.23.01.03','libxprl.so.x7.3'))
+                                SOX     .(XPRESS        . '.'           .('libxprl-2.6.3-x7.3.so','libxprs.so.23.01.03','libxprl.so.x7.3'))
+                                VS8     .(GMDCCLIB      . '.'           . 'gmdcclib.dll'
+                                          GUROBI        . '.'           . 'gurobi50.dll')
+                                WEI     .(GMDCCLIB      . '.'           . 'gmdcclib64.dll'
+                                          GUROBI        . '.'           . 'gurobi50.dll')
+                                /
+$offempty
+;
+
+SET APM(ppp,prda,prd) 'Alias Product Map' /
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).COINBONMIN. BONMIN
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).BONMINH.    BONMIN
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).COINCBC.    CBC
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).COINCOUENNE.COUENNE
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).COINIPOPT.  IPOPT
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).IPOPTH.     IPOPT
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).COINOS.     OS
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).COINSCIP.   SCIP
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).CONOPT.     CONOPTD
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).CONOPT3.    CONOPTD
+  (        lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).LGO.        LGOD
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).LOGMIP.     JAMS
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).MILESE.     MILES
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).MINOS.      MINOS55
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).MINOS5.     MINOS55
+  (        lnx    ,sol    ,vs8                    ).OSL.        OSL3
+  (        lnx    ,sol    ,vs8                    ).OSLSE.      OSL3
+  (aix,bgp,lnx,sig,sol,sox,vs8,deg,dei,dig,leg,wei).PATH.       PATHC
+  (    bgp,lnx,sig        ,vs8,deg    ,dig,leg,wei).SOPLEX.     OSISOPLEX
+/;
+
+SET prdAlias(prda) 'Aliases of Products';
+option prdAlias < APM;
+
+$call rm -f datalib.txt emplib.txt modlib.txt tstlib.txt
+
+$gdxin "%gams.sysdir%gmspfmap"
+$load curfil=pfmap
+
+$gdxin allpfmap
+$load lstall=pfmap
+
+$if %GOLD% == 1 $goto mkallpf
+
+lstfil(prd,dir,fil)=lstall('%system.buildcode%',prd,dir,fil);
+
+option curprd<curfil, lstprd<lstfil;
+
+expprd(prd)$(not prdAlias(prd)) = lstprd(prd) and not drpprd('%system.buildcode%',prd) or newprd('%system.buildcode%',prd);
+expfil(prd,dir,fil)$(not prdAlias(prd)) = lstfil(prd,dir,fil) and not (drpfil('%system.buildcode%',prd,dir,fil) or drpprd('%system.buildcode%',prd)) or newfil('%system.buildcode%',prd,dir,fil);
+
+nexprd(curprd)$(not prdAlias(curprd)) = not expprd(curprd);
+misprd(expprd)$(not prdAlias(expprd)) = not curprd(expprd);
+drwprd(prd)$(not prdAlias(prd))       = drpprd('%system.buildcode%',prd) and not lstprd(prd);
+adwprd(prd)$(not prdAlias(prd))       = newprd('%system.buildcode%',prd) and     lstprd(prd);
+
+nexfil(curfil(prd,dir,fil))$(not prdAlias(prd)) = not expfil(curfil);
+misfil(expfil(prd,dir,fil))$(not prdAlias(prd)) = not curfil(expfil);
+drwfil(prd,dir,fil)$(not prdAlias(prd))         = drpfil('%system.buildcode%',prd,dir,fil) and not lstfil(prd,dir,fil);
+adwfil(prd,dir,fil)$(not prdAlias(prd))         = newfil('%system.buildcode%',prd,dir,fil) and     lstfil(prd,dir,fil);
+
+* OSL is special. OSL3 is copied form 32bit platforms to 64bit platforms, but the alias gets lost (for the test, but it is usable)
+nexfila(prdAlias,dir,fil) = curfil(prdAlias,dir,fil) and not sum(APM('%system.buildcode%',prdAlias,prd),expfil(prd,dir,fil)) and not (sameas(prdAlias,'OSL') or sameas(prdAlias,'OSLSE'));
+* This is slow, use loop instead
+* misfila(prdAlias,dir,fil) = (not curfil(prdAlias,dir,fil)) and sum(APM('%system.buildcode%',prdAlias,prd),expfil(prd,dir,fil));
+set fa(dir,fil),fo(dir,fil);
+loop(APM('%system.buildcode%',prda,prd),
+  fa(dir,fil) = curfil(prda,dir,fil);
+  fo(dir,fil) = expfil(prd,dir,fil);
+  misfila(prda,dir,fil) = not fa(dir,fil) and fo(dir,fil) and not sameas(prda,'OSL');
+);
+wronga(prdAlias) = sum(APM('%system.buildcode%',prdAlias,prd),1) and (sum(APM('%system.buildcode%',prdAlias,expprd),1)=0);
+
+option nexfil:0:0:3,misfil:0:0:3,drwfil:0:0:3,adwfil:0:0:3,nexfila:0:0:3,misfila:0:0:3,wronga:0:0:3;
+
+abort$(card(nexprd) + card(misprd) + card(drwprd) + card(adwprd) + card(nexfil) + card(misfil) + card(drwfil) + card(adwfil) + card(nexfila) + card(misfila) + card(wronga))
+      nexprd, misprd, drwprd, adwprd, nexfil, misfil, drwfil, adwfil, nexfila, misfila, wronga;
+$exit
+$label mkallpf
+set curall(ppp,prd,dir,fil)     Files of current version containing all platforms;
+curall(ppp,prd,dir,fil) = lstall(ppp,prd,dir,fil) and not (drpfil(ppp,prd,dir,fil) or drpprd(ppp,prd)) or newfil(ppp,prd,dir,fil);
+execute_unload 'allpfmap' curall=pfmap;

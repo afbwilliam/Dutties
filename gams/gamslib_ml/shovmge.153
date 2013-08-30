@@ -1,0 +1,194 @@
+$TITLE  Miller-Spencer - economic effects of UK membership (SHOVMGE,SEQ=153)
+$Ontext
+
+Miller-Spencer - economic effects of UK membership
+
+
+Miller, M H, and Spencer, J E, The Static Economic Effects of the UK
+joining the EEC: A General Equilibrium Approach. R.E.Stud, 1975.
+
+$Offtext
+
+SET     R       Regions /UK, EC, CW, RW/,
+
+        F       Primary factors /K, L/,
+
+        G       Goods / X, Z /,
+
+        SC      Scenarios /BENCH        Benchmark replication,
+                           POST_NT      Integration without transfer,
+                           POST_T       Integration with tariff transfer.'
+                           GFT          Global free trade/
+
+        NON_EC(R)  Regions which are not the EC /UK, CW, RW/;
+
+ALIAS (R,RR), (R,RT);
+
+TABLE ESUB(R,*)  Elasticities (top level and by aggregate)
+
+        Top     X       Z
+UK      0.1     3.0     3.0
+EC      0.1     3.0     3.0
+CW      0.1     3.0     3.0
+RW      0.1     3.0     3.0
+
+TABLE LSHR(R,G) Labor value shares (Table I of MS)
+
+        X       Z
+UK      0.64    0.35
+EC      0.64    0.45
+CW      0.60    0.32
+RW      0.65    0.41;
+
+PARAMETER FSHR(G,R,F) Factor value shares in production;
+
+FSHR(G,R,"L") = LSHR(R,G);
+FSHR(G,R,"K") = 1 - LSHR(R,G);
+
+TABLE CREF(G,R,R) Reference consumption levels   (Tables VIIa and VIIb of MS)
+
+         UK              EC             CW                RW
+X.UK    26.9811          1.5601         0.5619            5.9015
+X.EC     0.8046         80.9840         0.1577            9.6285
+X.CW     0.0461          0.0127         5.8316            0.3753
+X.RW     2.3914          6.9002         0.7337          190.1027
+Z.UK     0.5354          0.0367         0.0028            0.0829
+Z.EC     0.0494          1.9401         0.0008            0.1221
+Z.CW     0.1782          0.1586         0.1856            0.3932
+Z.RW     0.5156          1.2882         0.0311            1.9737
+
+TABLE PREF(R,*)  Reference prices.  (Table III of MS)
+
+             X       Z       K       L
+UK      0.3301  0.6117  0.2730  0.2135
+EC      0.5661  2.0740  0.5165  0.3850
+CW      0.7064  0.6436  0.3340  0.3950
+RW      0.6367  1.0020  0.4685  0.8438
+
+TABLE TREF(G,R,R)  Reference tariff rates   (Table II of MS.)
+
+              UK          EC          CW          RW
+X.UK                   0.150       0.050       0.125
+X.EC       0.150                   0.200       0.125
+X.CW                   0.150                   0.125
+X.RW       0.150       0.150       0.200
+Z.UK                   0.200                   0.200
+Z.EC                                           0.200
+Z.CW                   0.200                   0.200
+Z.RW                   0.200
+
+TABLE T_NT(G,R,R)  Tariff rates - no transfer   (Table II of MS.)
+
+              UK          EC          CW          RW
+X.UK                               0.200       0.125
+X.EC                               0.200       0.125
+X.CW       0.150       0.150                   0.125
+X.RW       0.150       0.150       0.200
+Z.UK                                           0.200
+Z.EC                                           0.200
+Z.CW       0.200       0.200                   0.200
+Z.RW       0.200       0.200
+
+TABLE T_TR(G,R,R,R)  Tariff rates with transfers  (Table II of MS.)
+
+           UK.UK       UK.EC       EC.EC       CW.CW       RW.RW
+X.UK                                           0.200       0.125
+X.EC                                           0.200       0.125
+X.CW       0.105       0.045       0.150                   0.125
+X.RW       0.105       0.045       0.150       0.200
+Z.UK                                                       0.200
+Z.EC                                                       0.200
+Z.CW       0.020       0.180       0.200                   0.200
+Z.RW       0.020       0.180       0.200
+
+PARAMETER T(G,R,R,R,SC)  Tariff rates by scenario;
+
+T(G,R,RR,RR,"BENCH")   = TREF(G,R,RR);
+T(G,R,RR,RR,"POST_NT") = T_NT(G,R,RR);
+T(G,R,RR,RT,"POST_T")  = T_TR(G,R,RR,RT);
+T(G,R,RR,RT,"GFT")     = 0;
+
+PARAMETER SREF(G,R,R) Benchmark Subsidies.
+/ Z.UK.UK 0.20
+  Z.EC.UK 0.20  /;
+
+PARAMETER PCREF(G,R,RR)  Benchmark consumption price index;
+
+PCREF(G,R,RR) = PREF(R,G) * (1 + TREF(G,R,RR)) * (1 - SREF(G,R,RR));
+
+PARAMETER TBAL(*,R)  TRADE BALANCE CHECK;
+
+TBAL(G,R) = SUM(RR, PREF(R,G)  * CREF(G,R,RR) * (1 - SREF(G,R,RR))) -
+            SUM(RR, PREF(RR,G) * CREF(G,RR,R) * (1 - SREF(G,RR,R)));
+TBAL("TOTAL",R) = SUM(G, TBAL(G,R));
+
+DISPLAY TBAL;
+
+PARAMETER  S(G,R,RR,SC)   Subsidy rates by scenario;
+S(G,R,RR,"BENCH") = SREF(G,R,RR);
+
+
+PARAMETER       E(F,R)          Factor endowments,
+                FD(F,G,R)       Reference factor demand,
+                YREF(G,R)       Reference output level
+                DREF(G,R)       Reference demand;
+
+DREF(G,R) = SUM(RR, PCREF(G,RR,R) * CREF(G,RR,R));
+
+YREF(G,R) = SUM(RR, CREF(G,R,RR));
+
+FD(F,G,R) = FSHR(G,R,F) * YREF(G,R) * PREF(R,G) / PREF(R,F);
+
+E(F,R)    = SUM(G, FD(F,G,R));
+
+$ONTEXT
+
+$MODEL:MILLER
+
+$SECTORS:
+        U(R)  Y(G,R)  D(G,R)
+
+$COMMODITIES:
+        PU(R)  PC(G,R)  W(F,R)  P(G,R)
+
+$CONSUMERS:
+        RA(R)
+
+$PROD:Y(G,R)    s:1.0
+        O:P(G,R)        Q:YREF(G,R)
+        I:W(F,R)        Q:FD(F,G,R)     P:PREF(R,F)
+
+$PROD:D(G,R)  s:ESUB(R,G)
+        O:PC(G,R)       Q:DREF(G,R)
+        I:P(G,RR)       Q:CREF(G,RR,R)  P:PCREF(G,RR,R)
++       A:RA(RR)        T:(-S(G,RR,R,SC))
++       A:RA(R)         T:(T(G,RR,R,R,SC)*(1-S(G,RR,R,SC)))
++       A:RA("EC")      T:(T(G,RR,R,"EC",SC)*(1-S(G,RR,R,SC)))$NON_EC(R)
+
+$PROD:U(R)  s:1
+        O:PU(R)         Q:(SUM(G, DREF(G,R)))
+        I:PC(G,R)       Q:DREF(G,R)
+
+$DEMAND:RA(R)  s:1
+        E:W(F,R)        Q:E(F,R)
+        D:PU(R)
+
+$OFFTEXT
+
+PARAMETER EV(R,SC)  EQUIVALENT VARIATION (%);
+
+$SYSINCLUDE mpsgeset MILLER
+
+W.L(F,R) = PREF(R,F);
+P.L(G,R) = PREF(R,G);
+
+LOOP(SC,
+
+$INCLUDE MILLER.GEN
+SOLVE MILLER USING MCP;
+
+EV(R,SC) = 100 * (U.L(R)-1);
+
+);
+
+DISPLAY EV;

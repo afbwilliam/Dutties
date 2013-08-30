@@ -1,0 +1,105 @@
+$Title Oil Pipeline Design Problem using BCH Facility (BCHOIL,SEQ=288)
+$Ontext
+
+  J. Brimberg, P. Hansen, K.-W. Lih, N. Mladenovic, M. Breton 2003.
+  An Oil Pipeline Design Problem. Operations Research, Vol 51, No. 2 228-239
+
+  Michael Bussieck, Hua Ni
+  Technical Note: Solving an Oil Pipeline Design Problem with the GAMS
+  Branch-and-Cut Facility
+  Technical report, GAMS Development Corp. 2003.
+
+$Offtext
+
+$onecho > oilbase.inc
+Set n             nodes in the oil pipeline network
+    nw(n)         subset of nodes
+    k             type of oil pipe
+    kk(k)         reduced set of pipe line types
+    regnode(n)    non-port nodes
+    port(n)       port
+    arc(n,n)      arcs in the network
+Parameters
+    cap(k)        capacity of type k oil pipe
+    pipecost(k)   monetary units for type k capacity
+    p(n)          production at each node
+    edgedist(n,n) one way distance
+    dist(n,n)     the distance of the arcs
+Scalar
+    cap1          capacity of type 1 oil pipe
+    pipecost1     monetary units for pipe of type 1
+
+* Data structure for the cut generation
+Set ss           index for mip solutions / 1*100 /
+    dsh(ss,n,n)  the descendant structure of previous integer solutions
+Scalar
+    siter        current solution
+
+Alias (n,nn,m);
+
+Variables bk(n,n,k)     build variable for type k pipe on the arc
+          b(n,n)        build variable for some pipe on the arc
+          f(n,n)        flow variable on the arc
+          cost          the cost for installing pipes in the network
+
+Binary variables bk,b;
+Positive variables f;
+
+Equations obj           oil pipeline network construction cost
+          oneout(n)     at most one out-flow each node
+          oneoutp(n)    one out-flow for each production node
+          bal(n)        flow conservation constraints
+          bigM(n,n)     the flow capacity constraints
+          defb(n,n)     Additional pipe constraint;
+
+obj..
+     sum(arc(nw,n), dist(arc)*(pipecost1*b(arc) + sum(kk, pipecost(kk)*bk(arc,kk)))) =e= cost;
+
+oneout(m)$(not p(m))..
+     sum((arc(m,n)), b(m,n)) =l= 1;
+
+oneoutp(m)$p(m)..
+     sum((arc(m,n)), b(m,n)) =e= 1;
+
+bal(regnode(nw))..
+     p(nw)  =e= sum(arc(nw,m), f(nw,m)) - sum(arc(m,nw), f(m,nw));
+
+bigM(arc(nw,n))..
+     cap1*b(arc) + sum(kk, cap(kk)*bk(arc,kk)) =g= f(arc);
+
+defb(arc(nw,n))..
+     sum(kk, bk(arc,kk)) =l= b(arc);
+
+Model oilbase /all/;
+$offecho
+
+$include oilbase.inc
+$include bchoil_d.inc
+$echo heurcnt=0; > pwl.ind
+
+execute_unload 'net.gdx', n k kk port regnode arc p cap dist pipecost cap1 pipecost1;
+siter = 1;
+execute_unload 'dsh.gdx', ss siter dsh;
+
+$ifi %system.mip% == cplex   $goto cont
+$abort 'BCH Facility not available for MIP solver %system.mip%.'
+$label cont
+
+$onecho > %system.mip%.opt
+userheurcall bchoil_h.inc optcr 0 reslim 10 lo=2 lf=bchoil_c.log o=bchoil_h.lst --mipsolver=%system.mip%
+userheurfirst 5
+userheurobjfirst 5
+userheurfreq 20
+userheurinterval 1000
+
+usercutcall bchoil_c.inc lo=2 lf=bchoil_c.log o=bchoil_c.lst --mipsolver=%system.mip%
+usercutfirst 0
+usercutfreq 0
+usercutnewint yes
+$offecho
+
+$ifi %system.mip% == cplex $echo varsel 3 >> cplex.opt
+
+nw(n) = yes;
+oilbase.optfile=1;
+solve oilbase minimizing cost using mip;

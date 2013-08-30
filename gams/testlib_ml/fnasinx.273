@@ -1,0 +1,60 @@
+$TITLE 'Test correctness of arcsin intrinsic eXceptions' (FNASINX,SEQ=273)
+
+$ontext
+
+Test some exceptional cases here
+
+We use the principal branch of arcsin, corresponding to
+  arcsin(-1) = -PI/2
+  arcsin( 0) = 0
+  arcsin( 1) = PI/2
+
+ENUM            VAL
+----            ---
+rcOK            0
+rcFUNC          1
+rcGRAD          2
+rcHESS          3
+rcSYSTEM        4
+
+ecOK            0
+ecDOMAIN        1
+ecSINGULAR      2
+ecOVERFLOW      3
+ecSIGLOSS       4
+
+$offtext
+
+$include fnset_x.inc
+
+reps = 1e-13;
+relToInput = 0;
+set T / t1 * t6 /;
+
+$set OFLO  1.e299
+
+table data(T,V)
+        x       f_              fx_     fxx_    rc_     ec_
+t1     -2                                       1       1
+t2     -1.5                                     1       1
+t3     -1    -1.5707963267949  %OFLO% -%OFLO%   2       2
+t4      1     1.5707963267949  %OFLO%  %OFLO%   2       2
+t5      1.5                                     1       1
+t6      2                                       1       1
+;
+
+loop {T,
+  data(T,  'f')  = arcsin.value(   data(T,'x'));
+  data(T, 'fx')  = arcsin.grad(1:  data(T,'x'));
+  data(T,'fxx')  = arcsin.hess(1:1:data(T,'x'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display data;
+
+abort$(execerror lt 6)
+  'Should get function evaluation errors';
+execerror = 0;
+
+$include fntest_x.inc

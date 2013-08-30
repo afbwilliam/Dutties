@@ -1,0 +1,22 @@
+$title test for order when using set.id or set#id or #id (SET11,SEQ=450)
+
+$ontext
+
+Contributor: Alex
+
+$offtext
+
+set i / 1,2,3 /
+    j / 3,2,1 /,j1
+    k / set.j /,k1
+    l / set.i /,l1
+* we just give a warning
+    m / (1,2,3):(1,2,3),(3,2,1).(4,5,6), (4,5,6):(4,5,6) /;
+
+
+l1(l-1) = yes; display l1;
+* k1 is not ordered
+k1(k-1) = yes; display k1;
+$if errorfree $abort order nor inherited
+$clearerrors
+$terminate

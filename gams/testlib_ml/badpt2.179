@@ -1,0 +1,67 @@
+$title 'Test acceptance of models with generation errors' (BADPT2,SEQ=179)
+
+$ontext
+In this model we attempt to solve a number of models that have
+generation errors of various types.  We set the error limit
+and the sys12 switch to allow this non-default behavior.
+
+Contributor: Steve Dirkse, Nov 2004
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar
+    tol     /    %TESTTOL% /;
+
+* get the model definitions
+$include badpt.inc
+
+maxexecerror = 10;
+option sys12 = 1;
+scalar haveBaron / 0 /;
+$if NOT SOLVER baron $goto NO_BARON
+haveBaron = 1;
+option nlp = baron, optcr = 0, optca = 0;
+$goto HAVE_SOLVER
+
+$label NO_BARON
+$if NOT SOLVER pathnlp $exit
+option nlp = pathnlp;
+* bounds will cause PATHNLP to shift the initial iterate
+* if the initial point it gets is bad
+y.lo = -INF;
+y.up = +INF;
+
+$label HAVE_SOLVER
+solve logzero using nlp min z;
+if {haveBaron,
+  abort$(logzero.solvestat <> %solvestat.NormalCompletion% or logzero.modelstat > %modelstat.LocallyOptimal%) 'wrong status codes';
+  abort$(logzero.numnopt  <> 0) '    NONOPT flags set';
+  abort$(logzero.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(x.l-1) > tol)  'bad solution: x.l ', x.l;
+  abort$(abs(x.m) > tol)    'bad solution: x.m ', x.m;
+  abort$(abs(z.l) > tol)    'bad solution: z.l ', z.l;
+  abort$(abs(z.m) > tol)    'bad solution: z.m ', z.m;
+  abort$(abs(f.l) > tol)    'bad solution: f.l ', f.l;
+  abort$(abs(f.m-1) > tol)  'bad solution: f.m ', f.m;
+  abort$(abs(g.l-1) > tol)  'bad solution: g.l ', g.l;
+  abort$(abs(g.m-.5) > tol) 'bad solution: g.m ', g.m;
+else
+  abort$(logzero.solvestat <> %solvestat.SetupFailure% or logzero.modelstat <> %modelstat.NoSolutionReturned%) 'wrong status codes';
+};
+
+solve divzero using nlp min z;
+if {haveBaron,
+  abort$(divzero.solvestat <> %solvestat.NormalCompletion% or divzero.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(divzero.numnopt  <> 0) '    NONOPT flags set';
+  abort$(divzero.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(x.l-1) > tol)  'bad solution: x.l ', x.l;
+  abort$(abs(x.m) > tol)    'bad solution: x.m ', x.m;
+  abort$(abs(z.l+1) > tol)  'bad solution: z.l ', z.l;
+  abort$(abs(z.m) > tol)    'bad solution: z.m ', z.m;
+  abort$(abs(s.l) > tol)    'bad solution: s.l ', s.l;
+  abort$(abs(s.m-1) > tol)  'bad solution: s.m ', s.m;
+  abort$(abs(t.l-1) > tol)  'bad solution: t.l ', t.l;
+  abort$(abs(t.m-.5) > tol) 'bad solution: t.m ', t.m;
+else
+  abort$(divzero.solvestat <> %solvestat.SetupFailure% or divzero.modelstat <> %modelstat.NoSolutionReturned%) 'wrong status codes';
+};

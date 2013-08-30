@@ -1,0 +1,37 @@
+$Title Traveling Salesman Problem Instance solved with explicit Permutation Enumeration (PTSP,SEQ=374)
+
+$Ontext
+
+In this model, we use specific GAMS option syntax to compute all
+permutations of the cities. We compute the cost for each permutation
+and by that find the optimal tour. Since the number of permutations
+grows exponentially, this is not a good idea for larger instances, but
+it demonstrates the GAMS feature that produces all permutations of a
+set.
+
+$Offtext
+
+$include br17.inc
+
+$if not set N $set N 7
+$ife %N%>17 $abort Maximum number of cities is 17
+set i(ii) subset of cities / i1*i%N% /;
+alias (i,j,k);
+
+$eval pmax fact(card(i))
+Set p all permutations of cities / p1*p%pmax% /
+    m(p,ii,ii) actual permutations;
+
+* Let GAMS produce all permutations:
+option m > i;
+
+Set bestTour(i,i);
+Scalar pObj, bestObj / inf /;
+
+* Iterate through permutations and compute cost of the permutation/tour
+loop(p,
+  pObj = 0;
+  loop((i,j)$m(p,i,j), pObj = pObj + sum(m(p,i++1,k), c(j,k)));
+  if (pObj<bestObj, bestTour(i,j) = m(p,i,j); bestObj=pObj);
+);
+display bestObj, bestTour;

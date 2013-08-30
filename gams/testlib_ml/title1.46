@@ -1,0 +1,5 @@
+$title My Title (TITLE1,SEQ=46)
+file test / temp.gms /;
+putclose test '$if NOT "My Title (TITLE1,SEQ=46)" == "' system.title '" $error title error'
+execute '=gams temp.gms lo=%GAMS.lo%'
+abort$errorlevel 'propagate error condition';

@@ -1,0 +1,43 @@
+$title 'Test matching operator: compile and execution time' (MATCH01,SEQ=371)
+
+$ontext
+Contributor: Alex Meeraus
+$offtext
+
+set i / i1*i3 /
+    j / j1*j3 /
+    k / k1*k9 /
+    kij(k,i,j)    / k1*k9:(i1*i3.j1*j3) /
+    ijk(i,j,k)    / (i1*i3.j1*j3):k1*k9 /
+    ijij(i,j,i,j) / (i1*i3.j1*j3):(i1*i3.j1*j3) /
+    xkij (k,i,j)  ,okij (k,i,j),  dkij(k,i,j)
+    xijk (i,j,k)  ,oijk (i,j,k),  dijk(i,j,k)
+    xijij(i,j,i,j),oijij(i,j,i,j),dijij(i,j,i,j);
+
+option kij:0:0:1,ijk:0:0:1,ijij:0:0:1; display kij,ijk,ijij;
+
+* now we compute with slow assigmnets
+scalar cnt; alias(i,ii),(j,jj);
+cnt=0; loop((i,j), cnt=cnt+1; xkij(k,i,j) = ord(k)=cnt);
+cnt=0; loop((i,j), cnt=cnt+1; xijk(i,j,k) = ord(k)=cnt);
+xijij(i,j,i,j) = yes;
+
+* compare data statemenst
+dkij(k,i,j) = xkij(k,i,j) xor kij(k,i,j);
+dijk(i,j,k) = xijk(i,j,k) xor ijk(i,j,k);
+dijij(i,j,ii,jj) = xijij(i,j,ii,jj) xor ijij(i,j,ii,jj);
+abort$card(dkij) dkij;
+abort$card(dijk) dijk;
+abort$card(dijij) dijij;
+
+* compute with fast option statemenst
+option okij(k:i,j),oijk(i,j:k),oijij(i,j:i,j);
+
+* compare the fast option assignment
+option clear=dkij,clear=dijk,clear=dijij;
+dkij(k,i,j) = xkij(k,i,j) xor kij(k,i,j);
+dijk(i,j,k) = xijk(i,j,k) xor ijk(i,j,k);
+dijij(i,j,ii,jj) = xijij(i,j,ii,jj) xor ijij(i,j,ii,jj);
+abort$card(dkij) dkij;
+abort$card(dijk) dijk;
+abort$card(dijij) dijij;

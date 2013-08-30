@@ -1,0 +1,21 @@
+$title Nonlinear model cannot be solved as QCP (QCP06,SEQ=503)
+
+$ontext
+Contributor: Jan-H. Jagla, November 2010
+$offtext
+
+$call gamslib -q chenery
+$include chenery.gms
+
+Solve chenrad using qcp maximizing td ;
+
+if (chenrad.modelstat = %modelstat.Optimal% or
+    chenrad.modelstat = %modelstat.LocallyOptimal% or
+    chenrad.solvestat = %solvestat.NormalCompletion%, abort "Why didn't it fail for sl=0?");
+
+option solvelink=5;
+Solve chenrad using qcp maximizing td ;
+
+if (chenrad.modelstat = %modelstat.Optimal% or
+    chenrad.modelstat = %modelstat.LocallyOptimal% or
+    chenrad.solvestat = %solvestat.NormalCompletion%, abort "Why didn't it fail for sl=5?");

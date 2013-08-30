@@ -1,0 +1,24 @@
+$title 'Test correctness of errorf intrinsic' (FNERRF2,SEQ=187)
+
+$include fnset_x.inc
+
+* this data set should be more precise, as precise as you can be with
+* Matlab.
+* we use two identities to compute errorf:
+* erf(-z) = -erf(z)
+* computed using errorf(x) = 0.5 * (1+erf(x/sqrt(2)));
+$gdxin fnerrf2
+$load aeps0 aeps1 aeps2 reps0 reps1 reps2 relToInput T data
+$gdxin
+
+reps1 = 2e-14;
+
+loop {T,
+  data(T,  'f')    = errorf.value (data(T,'x'));
+  data(T, 'fx')    = errorf.grad  (data(T,'x'));
+  data(T,'fxx')    = errorf.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

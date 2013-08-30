@@ -1,0 +1,1079 @@
+<html>
+<head>
+<title>XPRESS Options</title>
+</head>
+<body>
+<h2>XPRESS Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/xpress.pdf">XPRESS manual</a>.
+
+<h2>Summary of XPRESS Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Newton-barrier Options</h3></th></tr>
+<tr><td><a href="#XPRESSbarCrash">
+barCrash</a></td>
+<td>determines the type of crash used for the crossover from barrier</td></tr>
+<tr><td><a href="#XPRESSbarDualStop">
+barDualStop</a></td>
+<td>stopping tolerance for dual infeasibilities in barrier: 0=auto</td></tr>
+<tr><td><a href="#XPRESSbarGapStop">
+barGapStop</a></td>
+<td>stopping tolerance for relative duality gap in barrier: 0=auto</td></tr>
+<tr><td><a href="#XPRESSbarIndefLimit">
+barIndefLimit</a></td>
+<td>limit consecutive indefinite barrier iterations that will be performed</td></tr>
+<tr><td><a href="#XPRESSbarIterLimit">
+barIterLimit</a></td>
+<td>maximum number of barrier iterations</td></tr>
+<tr><td><a href="#XPRESSbarOrder">
+barOrder</a></td>
+<td>controls the Cholesky factorization in barrier: 0=auto</td></tr>
+<tr><td><a href="#XPRESSbarOutput">
+barOutput</a></td>
+<td>controls the level of solution output from barrier</td></tr>
+<tr><td><a href="#XPRESSbarPrimalStop">
+barPrimalStop</a></td>
+<td>stopping tolerance for primal infeasibilities in barrier: 0=auto</td></tr>
+<tr><td><a href="#XPRESSbarStart">
+barStart</a></td>
+<td>controls the computation of the barrier starting point: 0=auto</td></tr>
+<tr><td><a href="#XPRESSbarStepStop">
+barStepStop</a></td>
+<td>stopping tolerance on the step size of the barrier search direction</td></tr>
+<tr><td><a href="#XPRESSbarThreads">
+barThreads</a></td>
+<td>number of threads for parallel barrier algorithm</td></tr>
+<tr><td><a href="#XPRESScrossover">
+crossover</a></td>
+<td>crossover control for barrier method</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>LP Options</h3></th></tr>
+<tr><td><a href="#XPRESSbigM">
+bigM</a></td>
+<td>infeasibility penalty used in the "big M" method</td></tr>
+<tr><td><a href="#XPRESSbigMMethod">
+bigMMethod</a></td>
+<td>controls use of "big M" method - 0=no, 1=yes</td></tr>
+<tr><td><a href="#XPRESSdefaultAlg">
+defaultAlg</a></td>
+<td>sets the default LP algorithm</td></tr>
+<tr><td><a href="#XPRESSeigenvalueTol">
+eigenvalueTol</a></td>
+<td>zero tolerance for negative eigenvalues of quadratic matrices</td></tr>
+<tr><td><a href="#XPRESSetaTol">
+etaTol</a></td>
+<td>zero tolerance on eta elements</td></tr>
+<tr><td><a href="#XPRESSfeasTol">
+feasTol</a></td>
+<td>zero tolerance for RHS and bound values</td></tr>
+<tr><td><a href="#XPRESSinvertFreq">
+invertFreq</a></td>
+<td>frequency of basis re-inversion</td></tr>
+<tr><td><a href="#XPRESSinvertMin">
+invertMin</a></td>
+<td>minimum number of iterations between basis re-inversion</td></tr>
+<tr><td><a href="#XPRESSlpLog">
+lpLog</a></td>
+<td>print control for LP log</td></tr>
+<tr><td><a href="#XPRESSmatrixTol">
+matrixTol</a></td>
+<td>zero tolerance on matrix elements</td></tr>
+<tr><td><a href="#XPRESSoptimalityTol">
+optimalityTol</a></td>
+<td>zero tolerance on reduced costs</td></tr>
+<tr><td><a href="#XPRESSpenalty">
+penalty</a></td>
+<td>minimum absolute penalty variable coefficient used in the "big M" method</td></tr>
+<tr><td><a href="#XPRESSpivotTol">
+pivotTol</a></td>
+<td>zero tolerance on pivot elements in simplex method</td></tr>
+<tr><td><a href="#XPRESSpricingAlg">
+pricingAlg</a></td>
+<td>determines the pricing method to use</td></tr>
+<tr><td><a href="#XPRESSrelPivotTol">
+relPivotTol</a></td>
+<td>minimum size of pivot element relative to largest element in column</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP Options</h3></th></tr>
+<tr><td><a href="#XPRESSbackTrack">
+backTrack</a></td>
+<td>determines selection of next node in tree search</td></tr>
+<tr><td><a href="#XPRESSbreadthFirst">
+breadthFirst</a></td>
+<td>determines number of nodes to include in a breadth-first search</td></tr>
+<tr><td><a href="#XPRESScoverCuts">
+coverCuts</a></td>
+<td>number of rounds of lifted cover inequalities at the top node</td></tr>
+<tr><td><a href="#XPRESScutDepth">
+cutDepth</a></td>
+<td>maximum depth in search tree at which cuts will be generated</td></tr>
+<tr><td><a href="#XPRESScutFreq">
+cutFreq</a></td>
+<td>frequency at which cuts are generated in the tree search</td></tr>
+<tr><td><a href="#XPRESScutStrategy">
+cutStrategy</a></td>
+<td>specifies the cut strategy</td></tr>
+<tr><td><a href="#XPRESSgomCuts">
+gomCuts</a></td>
+<td>number of rounds of Gomery cuts at the top node</td></tr>
+<tr><td><a href="#XPRESSheurThreads">
+heurThreads</a></td>
+<td>number of threads for running root node heuristics</td></tr>
+<tr><td><a href="#XPRESSloadMipSol">
+loadMipSol</a></td>
+<td>loads a MIP solution (the initial point)</td></tr>
+<tr><td><a href="#XPRESSmaxMipSol">
+maxMipSol</a></td>
+<td>maximum number of integer solutions in MIP tree search</td></tr>
+<tr><td><a href="#XPRESSmaxNode">
+maxNode</a></td>
+<td>maximum number of nodes to explore in MIP tree search</td></tr>
+<tr><td><a href="#XPRESSmipAbsCutoff">
+mipAbsCutoff</a></td>
+<td>nodes with objective worse than this value are ignored</td></tr>
+<tr><td><a href="#XPRESSmipAbsStop">
+mipAbsStop</a></td>
+<td>stopping tolerance for gap: if met XPRESS returns proven optimal</td></tr>
+<tr><td><a href="#XPRESSmipAddCutoff">
+mipAddCutoff</a></td>
+<td>amount to add to MIP incumbent to get the new cutoff</td></tr>
+<tr><td><a href="#XPRESSmipCleanup">
+mipCleanup</a></td>
+<td>clean up the MIP solution (round-fix-solve) to get duals</td></tr>
+<tr><td><a href="#XPRESSmipLog">
+mipLog</a></td>
+<td>print control for MIP log</td></tr>
+<tr><td><a href="#XPRESSmipPresolve">
+mipPresolve</a></td>
+<td>bitmap controlling the MIP presolve</td></tr>
+<tr><td><a href="#XPRESSmipRelCutoff">
+mipRelCutoff</a></td>
+<td>relative difference between the MIP incumbent and the new cutoff</td></tr>
+<tr><td><a href="#XPRESSmipRelStop">
+mipRelStop</a></td>
+<td>stopping tolerance for relative gap: if met XPRESS returns proven optimal</td></tr>
+<tr><td><a href="#XPRESSmipThreads">
+mipThreads</a></td>
+<td>number of threads for parallel mip algorithm</td></tr>
+<tr><td><a href="#XPRESSmipTol">
+mipTol</a></td>
+<td>integrality tolerance for discrete vars</td></tr>
+<tr><td><a href="#XPRESSmipTrace">
+mipTrace</a></td>
+<td>name of MIP trace file</td></tr>
+<tr><td><a href="#XPRESSmipTraceNode">
+mipTraceNode</a></td>
+<td>node interval between MIP trace file entries</td></tr>
+<tr><td><a href="#XPRESSmipTraceTime">
+mipTraceTime</a></td>
+<td>time interval, in seconds, between MIP trace file entries</td></tr>
+<tr><td><a href="#XPRESSnodeSelection">
+nodeSelection</a></td>
+<td>sets node selection strategy</td></tr>
+<tr><td><a href="#XPRESSobjGoodEnough">
+objGoodEnough</a></td>
+<td>stop once an objective this good is found</td></tr>
+<tr><td><a href="#XPRESSpreprobing">
+preprobing</a></td>
+<td>set per-node probing strategy for binary variables</td></tr>
+<tr><td><a href="#XPRESSpseudoCost">
+pseudoCost</a></td>
+<td>default pseudo-cost</td></tr>
+<tr><td><a href="#XPRESSsleepOnThreadWait">
+sleepOnThreadWait</a></td>
+<td>control behavior of waiting threads in a MIP solve</td></tr>
+<tr><td><a href="#XPRESSsymmetry">
+symmetry</a></td>
+<td>adjust overall effort in symmetry detection</td></tr>
+<tr><td><a href="#XPRESSsymSelect">
+symSelect</a></td>
+<td>adjust what is searched in symmetry detection</td></tr>
+<tr><td><a href="#XPRESStreeCoverCuts">
+treeCoverCuts</a></td>
+<td>number of rounds of lifted cover inequalities at tree nodes</td></tr>
+<tr><td><a href="#XPRESStreeGomCuts">
+treeGomCuts</a></td>
+<td>number of rounds of Gomery cuts at tree nodes</td></tr>
+<tr><td><a href="#XPRESSvarSelection">
+varSelection</a></td>
+<td>determines how to use pseudo-costs</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP Solution Pool Options</h3></th></tr>
+<tr><td><a href="#XPRESSsolnpool">
+solnpool</a></td>
+<td>solution pool file name</td></tr>
+<tr><td><a href="#XPRESSsolnpoolCapacity">
+solnpoolCapacity</a></td>
+<td>limit on number of solutions to store</td></tr>
+<tr><td><a href="#XPRESSsolnpoolCullDiversity">
+solnpoolCullDiversity</a></td>
+<td>cull N solutions based on solution diversity</td></tr>
+<tr><td><a href="#XPRESSsolnpoolCullObj">
+solnpoolCullObj</a></td>
+<td>cull N solutions based on objective values</td></tr>
+<tr><td><a href="#XPRESSsolnpoolCullRounds">
+solnpoolCullRounds</a></td>
+<td>terminate enumeration after N culling rounds</td></tr>
+<tr><td><a href="#XPRESSsolnpoolDupPolicy">
+solnpoolDupPolicy</a></td>
+<td>sets policy for detecting/storing duplicate solutions</td></tr>
+<tr><td><a href="#XPRESSsolnpoolPop">
+solnpoolPop</a></td>
+<td>controls method used to populate the solution pool</td></tr>
+<tr><td><a href="#XPRESSsolnpoolPrefix">
+solnpoolPrefix</a></td>
+<td>file name prefix for GDX solution files</td></tr>
+<tr><td><a href="#XPRESSsolnpoolVerbosity">
+solnpoolVerbosity</a></td>
+<td>controls verbosity of solution pool routines</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>QP Options</h3></th></tr>
+<tr><td><a href="#XPRESSifCheckConvexity">
+ifCheckConvexity</a></td>
+<td>controls convexity check for QP models - 0=no, 1=yes</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#XPRESSadvBasis">
+advBasis</a></td>
+<td>use advanced basis provided by GAMS</td></tr>
+<tr><td><a href="#XPRESSalgorithm">
+algorithm</a></td>
+<td>choose between simplex and barrier algorithm</td></tr>
+<tr><td><a href="#XPRESSbasisOut">
+basisOut</a></td>
+<td>directs optimizer to output an MPS basis file</td></tr>
+<tr><td><a href="#XPRESScrash">
+crash</a></td>
+<td>control for basis crashing procedure</td></tr>
+<tr><td><a href="#XPRESSextraPresolve">
+extraPresolve</a></td>
+<td>initial number of extra elements to allow for in the presolve</td></tr>
+<tr><td><a href="#XPRESSlpIterLimit">
+lpIterLimit</a></td>
+<td>set the iteration limit for simplex solves</td></tr>
+<tr><td><a href="#XPRESSmpsNameLength">
+mpsNameLength</a></td>
+<td>maximum number of integer solutions in MIP tree search</td></tr>
+<tr><td><a href="#XPRESSmpsOutputFile">
+mpsOutputFile</a></td>
+<td>Name of MPS output file</td></tr>
+<tr><td><a href="#XPRESSpresolve">
+presolve</a></td>
+<td>sets presolve strategy</td></tr>
+<tr><td><a href="#XPRESSreform">
+reform</a></td>
+<td>substitute out objective var and equ when possible</td></tr>
+<tr><td><a href="#XPRESSreRun">
+reRun</a></td>
+<td>rerun with primal simplex when not optimal/feasible</td></tr>
+<tr><td><a href="#XPRESSreslim">
+reslim</a></td>
+<td>overrides GAMS reslim option</td></tr>
+<tr><td><a href="#XPRESSscaling">
+scaling</a></td>
+<td>bitmap control for internal scaling algorithm</td></tr>
+<tr><td><a href="#XPRESSthreads">
+threads</a></td>
+<td>global default thread count</td></tr>
+<tr><td><a href="#XPRESStrace">
+trace</a></td>
+<td>turns on output of infeasibility diagnosis during presolve</td></tr>
+<tr><td><a href="#XPRESSwritePrtSol">
+writePrtSol</a></td>
+<td>directs optimizer to output a "printsol" file</td></tr></table>
+<h2>Detailed Descriptions of XPRESS Options</h2>
+
+<h4><a name="XPRESSadvBasis">
+advBasis</a>
+<i> (integer)</i> use advanced basis provided by GAMS</h4><p>
+
+
+
+<h4><a name="XPRESSalgorithm">
+algorithm</a>
+<i> (string)</i> choose between simplex and barrier algorithm</h4><p>
+
+This option is used to select the barrier method to solve LPs. By default the
+barrier method will do a crossover to find a basic solution.
+
+<br><i>(default = simplex)</i>
+<table>
+<tr valign="top"><td width=20 align=right>barrier</td><td>Use the barrier algorithm</td></tr>
+<tr valign="top"><td width=20 align=right>simplex</td><td>Use the simplex algorithm</td></tr>
+</table>
+
+<h4><a name="XPRESSbackTrack">
+backTrack</a>
+<i> (integer)</i> determines selection of next node in tree search<br>&nbsp;&nbsp;&nbsp;Synonym:
+ndsel2</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESSbarCrash">
+barCrash</a>
+<i> (integer)</i> determines the type of crash used for the crossover from barrier</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="XPRESSbarDualStop">
+barDualStop</a>
+<i> (real)</i> stopping tolerance for dual infeasibilities in barrier: 0=auto</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbarGapStop">
+barGapStop</a>
+<i> (real)</i> stopping tolerance for relative duality gap in barrier: 0=auto</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbarIndefLimit">
+barIndefLimit</a>
+<i> (integer)</i> limit consecutive indefinite barrier iterations that will be performed</h4><p>
+
+
+<br><i>(default = 15)</i>
+
+<h4><a name="XPRESSbarIterLimit">
+barIterLimit</a>
+<i> (integer)</i> maximum number of barrier iterations<br>&nbsp;&nbsp;&nbsp;Synonym:
+bmxitr</h4><p>
+
+
+
+<h4><a name="XPRESSbarOrder">
+barOrder</a>
+<i> (integer)</i> controls the Cholesky factorization in barrier: 0=auto</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbarOutput">
+barOutput</a>
+<i> (integer)</i> controls the level of solution output from barrier</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESSbarPrimalStop">
+barPrimalStop</a>
+<i> (real)</i> stopping tolerance for primal infeasibilities in barrier: 0=auto</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbarStart">
+barStart</a>
+<i> (integer)</i> controls the computation of the barrier starting point: 0=auto</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbarStepStop">
+barStepStop</a>
+<i> (real)</i> stopping tolerance on the step size of the barrier search direction</h4><p>
+
+
+<br><i>(default = 1e-10)</i>
+
+<h4><a name="XPRESSbarThreads">
+barThreads</a>
+<i> (integer)</i> number of threads for parallel barrier algorithm</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbasisOut">
+basisOut</a>
+<i> (string)</i> directs optimizer to output an MPS basis file</h4><p>
+
+In general this option is not used in a
+GAMS environment, as GAMS maintains basis information for you automatically.
+
+
+<h4><a name="XPRESSbigM">
+bigM</a>
+<i> (real)</i> infeasibility penalty used in the "big M" method</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSbigMMethod">
+bigMMethod</a>
+<i> (integer)</i> controls use of "big M" method - 0=no, 1=yes<br>&nbsp;&nbsp;&nbsp;Synonym:
+ifbigM</h4><p>
+
+
+
+<h4><a name="XPRESSbreadthFirst">
+breadthFirst</a>
+<i> (integer)</i> determines number of nodes to include in a breadth-first search<br>&nbsp;&nbsp;&nbsp;Synonym:
+maxnbf</h4><p>
+
+If <tt>nodeselection</tt> = 4, this determines the number of nodes to include in a
+breadth-first search.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESScoverCuts">
+coverCuts</a>
+<i> (integer)</i> number of rounds of lifted cover inequalities at the top node<br>&nbsp;&nbsp;&nbsp;Synonym:
+nitcov</h4><p>
+
+A lifted
+cover inequality is an additional constraint that can be particularly
+effective
+at reducing the size of the feasible region without removing potential
+integral
+solutions. The process of generating these can be carried out a number of
+times, further reducing the feasible region, albeit incurring a time penalty.
+There is usually a good payoff from generating these at the top node, since
+these inequalities then apply to every subsequent node in the tree search.
+
+
+<h4><a name="XPRESScrash">
+crash</a>
+<i> (integer)</i> control for basis crashing procedure</h4><p>
+
+A crash procedure is used to quickly find a good basis. This option is only
+relevant when no advanced basis is available.
+
+
+<h4><a name="XPRESScrossover">
+crossover</a>
+<i> (integer)</i> crossover control for barrier method<br>&nbsp;&nbsp;&nbsp;Synonym:
+cross</h4><p>
+
+Determines whether the barrier method will cross over to the simplex method
+when at optimal solution has been found, in order to provide an end basis.
+
+
+<h4><a name="XPRESScutDepth">
+cutDepth</a>
+<i> (integer)</i> maximum depth in search tree at which cuts will be generated</h4><p>
+
+Generating cuts can take a lot of time, and is often less important at deeper
+levels of the tree since tighter bounds on the variables have already reduced
+the feasible region. A value of 0 signifies that no cuts will be generated.
+
+
+<h4><a name="XPRESScutFreq">
+cutFreq</a>
+<i> (integer)</i> frequency at which cuts are generated in the tree search</h4><p>
+
+If the depth of the node modulo <tt>cutfreq</tt> is zero, then cuts will be generated.
+
+
+<h4><a name="XPRESScutStrategy">
+cutStrategy</a>
+<i> (integer)</i> specifies the cut strategy<br>&nbsp;&nbsp;&nbsp;Synonym:
+cutstrat</h4><p>
+
+An aggressive cut strategy, generating a greater
+number of cuts, will result in fewer nodes to be explored, but with an
+associated
+time cost in generating the cuts. The fewer cuts generated, the less time
+taken,
+but the greater subsequent number of nodes to be explored.
+
+
+<h4><a name="XPRESSdefaultAlg">
+defaultAlg</a>
+<i> (integer)</i> sets the default LP algorithm<br>&nbsp;&nbsp;&nbsp;Synonym:
+ialg</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>primal simplex</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Newton barrier</td></tr>
+</table>
+
+<h4><a name="XPRESSeigenvalueTol">
+eigenvalueTol</a>
+<i> (real)</i> zero tolerance for negative eigenvalues of quadratic matrices</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="XPRESSetaTol">
+etaTol</a>
+<i> (real)</i> zero tolerance on eta elements<br>&nbsp;&nbsp;&nbsp;Synonym:
+zteta</h4><p>
+
+During each iteration, the basis inverse is
+premultiplied by an elementary matrix, which is the identity except for one
+column the eta vector. Elements of eta vectors whose absolute value is smaller
+than <tt>etatol</tt> are taken to be zero in this step.
+
+
+<h4><a name="XPRESSextraPresolve">
+extraPresolve</a>
+<i> (integer)</i> initial number of extra elements to allow for in the presolve<br>&nbsp;&nbsp;&nbsp;Synonym:
+nextra</h4><p>
+
+The space required to store extra presolve elements is allocated dynamically, so it is not
+necessary to set this control. In some cases, the presolve may terminate early
+if this is not increased.
+
+
+<h4><a name="XPRESSfeasTol">
+feasTol</a>
+<i> (real)</i> zero tolerance for RHS and bound values<br>&nbsp;&nbsp;&nbsp;Synonym:
+ztolze</h4><p>
+
+This is the zero tolerance on right hand side values, bounds and range values.
+If one of these is less than or equal to feastol in absolute value, it is
+treated
+as zero.
+
+<br><i>(default = 1e-06)</i>
+
+<h4><a name="XPRESSgomCuts">
+gomCuts</a>
+<i> (integer)</i> number of rounds of Gomery cuts at the top node<br>&nbsp;&nbsp;&nbsp;Synonym:
+nitgom</h4><p>
+
+The number of rounds of Gomory cuts at the top node. These can always be
+generated if the current node does not yield an integral solution. However,
+Gomory cuts are not usually as effective as lifted cover inequalities in
+reducing
+the size of the feasible region.
+
+
+<h4><a name="XPRESSheurThreads">
+heurThreads</a>
+<i> (integer)</i> number of threads for running root node heuristics</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSifCheckConvexity">
+ifCheckConvexity</a>
+<i> (integer)</i> controls convexity check for QP models - 0=no, 1=yes</h4><p>
+
+
+
+<h4><a name="XPRESSinvertFreq">
+invertFreq</a>
+<i> (integer)</i> frequency of basis re-inversion<br>&nbsp;&nbsp;&nbsp;Synonym:
+invfrq</h4><p>
+
+The frequency with which the basis will be inverted. A value of -1 implies
+automatic.
+
+
+<h4><a name="XPRESSinvertMin">
+invertMin</a>
+<i> (integer)</i> minimum number of iterations between basis re-inversion<br>&nbsp;&nbsp;&nbsp;Synonym:
+invmin</h4><p>
+
+
+
+<h4><a name="XPRESSloadMipSol">
+loadMipSol</a>
+<i> (integer)</i> loads a MIP solution (the initial point)</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSlpIterLimit">
+lpIterLimit</a>
+<i> (integer)</i> set the iteration limit for simplex solves<br>&nbsp;&nbsp;&nbsp;Synonym:
+iterlim</h4><p>
+
+For MIP models, this is a
+per-node iteration limit for the B&amp;B tree. Overrides the iterlim option.
+
+
+<h4><a name="XPRESSlpLog">
+lpLog</a>
+<i> (integer)</i> print control for LP log<br>&nbsp;&nbsp;&nbsp;Synonym:
+itrlog</h4><p>
+
+
+
+<h4><a name="XPRESSmatrixTol">
+matrixTol</a>
+<i> (real)</i> zero tolerance on matrix elements<br>&nbsp;&nbsp;&nbsp;Synonym:
+ztolda</h4><p>
+
+The zero tolerance on matrix elements. If the value of a matrix element is
+less
+than or equal to <tt>matrixtol</tt> in absolute value, it is treated as zero.
+
+
+<h4><a name="XPRESSmaxMipSol">
+maxMipSol</a>
+<i> (integer)</i> maximum number of integer solutions in MIP tree search<br>&nbsp;&nbsp;&nbsp;Synonym:
+maxsol</h4><p>
+
+This specifies a limit on the number of integer solutions to be found (the
+total
+number, not necessarily the number of distinct solutions). 0 means no limit.
+
+
+<h4><a name="XPRESSmaxNode">
+maxNode</a>
+<i> (integer)</i> maximum number of nodes to explore in MIP tree search<br>&nbsp;&nbsp;&nbsp;Synonym:
+maxnod</h4><p>
+
+If the GAMS nodlim model suffix is set, that setting takes precedence.
+
+
+<h4><a name="XPRESSmipAbsCutoff">
+mipAbsCutoff</a>
+<i> (real)</i> nodes with objective worse than this value are ignored<br>&nbsp;&nbsp;&nbsp;Synonym:
+cutoff</h4><p>
+
+If the user knows that they are interested only in values of the objective
+function
+which are better than some value, this can be assigned to mipabscutoff.
+This allows the Optimizer to ignore solving any nodes which may yield worse
+objective values, saving solution time.
+
+
+<h4><a name="XPRESSmipAbsStop">
+mipAbsStop</a>
+<i> (real)</i> stopping tolerance for gap: if met XPRESS returns proven optimal</h4><p>
+
+The global search is stopped if the gap is reduced to this value.
+This check is implemented in the Optimizer library, and if the search
+is stopped on this check the Optimizer returns a status of proven
+optimal.  For this reason you should use the GAMS <modelname>.optca
+parameter instead of this option.
+
+
+<h4><a name="XPRESSmipAddCutoff">
+mipAddCutoff</a>
+<i> (real)</i> amount to add to MIP incumbent to get the new cutoff<br>&nbsp;&nbsp;&nbsp;Synonym:
+addcut</h4><p>
+
+The amount to add to the objective function of the best integer solution found
+to give the new cutoff. Once an integer solution has been found whose
+objective
+function is equal to or better than mipabscutoff, improvements on
+this value may not be interesting unless they are better by at least a certain
+amount. If <tt>mipaddcutoff</tt> is nonzero, it will be added to <tt>mipabscutoff</tt> each
+time an integer solution is found which is better than this new value. This
+cuts off sections of the tree whose solutions would not represent substantial
+improvements in the objective function, saving processor time. Note that this
+should usually be set to a negative number for minimization problems, and
+positive for maximization problems. Notice further that the maximum of the
+absolute and relative cut is actually used.
+
+
+<h4><a name="XPRESSmipCleanup">
+mipCleanup</a>
+<i> (integer)</i> clean up the MIP solution (round-fix-solve) to get duals</h4><p>
+
+If nonzero, clean up the integer solution obtained, i.e. round and fix the
+discrete variables and re-solve as an LP to get some marginal values for the
+discrete vars.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESSmipLog">
+mipLog</a>
+<i> (integer)</i> print control for MIP log<br>&nbsp;&nbsp;&nbsp;Synonym:
+gprint</h4><p>
+
+
+<br><i>(default = -100)</i>
+
+<h4><a name="XPRESSmipPresolve">
+mipPresolve</a>
+<i> (integer)</i> bitmap controlling the MIP presolve<br>&nbsp;&nbsp;&nbsp;Synonym:
+ifintp</h4><p>
+
+Bitmap determining type of integer processing to be performed. If set to 0, no
+processing will be performed.
+
+
+<h4><a name="XPRESSmipRelCutoff">
+mipRelCutoff</a>
+<i> (real)</i> relative difference between the MIP incumbent and the new cutoff<br>&nbsp;&nbsp;&nbsp;Synonym:
+percut</h4><p>
+
+Percentage of the LP solution value to be added to the value of the objective
+function when an integer solution is found, to give the new value of
+mipabscutoff. The effect is to cut off the search in parts of the tree whose
+best possible objective function would not be substantially better than the
+current solution.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSmipRelStop">
+mipRelStop</a>
+<i> (real)</i> stopping tolerance for relative gap: if met XPRESS returns proven optimal</h4><p>
+
+The global search is stopped if the relative gap is reduced to this
+value.  This check is implemented in the Optimizer library, and if the
+search is stopped on this check the Optimizer returns a status of proven
+optimal.  For this reason you should use the GAMS <modelname>.optcr
+parameter instead of this option.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSmipThreads">
+mipThreads</a>
+<i> (integer)</i> number of threads for parallel mip algorithm</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSmipTol">
+mipTol</a>
+<i> (real)</i> integrality tolerance for discrete vars<br>&nbsp;&nbsp;&nbsp;Synonym:
+ztolis</h4><p>
+
+This is the tolerance within which a decision variables value is considered to
+be integral.
+
+<br><i>(default = 5e-6)</i>
+
+<h4><a name="XPRESSmipTrace">
+mipTrace</a>
+<i> (string)</i> name of MIP trace file</h4><p>
+
+A miptrace file with the specified name will be created. This file records
+the best integer and best bound values every <tt>miptracenode</tt> nodes and at
+<tt>miptracetime</tt>-second intervals.
+
+
+<h4><a name="XPRESSmipTraceNode">
+mipTraceNode</a>
+<i> (integer)</i> node interval between MIP trace file entries</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="XPRESSmipTraceTime">
+mipTraceTime</a>
+<i> (real)</i> time interval, in seconds, between MIP trace file entries</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="XPRESSmpsNameLength">
+mpsNameLength</a>
+<i> (integer)</i> maximum number of integer solutions in MIP tree search<br>&nbsp;&nbsp;&nbsp;Synonym:
+rcnamelen</h4><p>
+
+Maximum length of MPS names in characters. Internally it is rounded up to
+the smallest multiple of 8. MPS names are right padded with blanks. Maximum
+value is 64.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSmpsOutputFile">
+mpsOutputFile</a>
+<i> (string)</i> Name of MPS output file<br>&nbsp;&nbsp;&nbsp;Synonym:
+output</h4><p>
+
+If specified XPRESS-MP will generate an MPS file corresponding to the GAMS
+model. The argument is the file name to be used. It can not have an extension:
+XPRESS-MP forces the extension to be .MAT even if an extension was
+specified. You can prefix the file name with a path.
+
+
+<h4><a name="XPRESSnodeSelection">
+nodeSelection</a>
+<i> (integer)</i> sets node selection strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESSobjGoodEnough">
+objGoodEnough</a>
+<i> (real)</i> stop once an objective this good is found</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSoptimalityTol">
+optimalityTol</a>
+<i> (real)</i> zero tolerance on reduced costs<br>&nbsp;&nbsp;&nbsp;Synonym:
+ztcost</h4><p>
+
+On each iteration, the simplex
+method searches for a variable to enter the basis which has a negative reduced
+cost. The candidates are only those variables which have reduced costs less
+than the negative value of <tt>optimalitytol</tt>.
+
+
+<h4><a name="XPRESSpenalty">
+penalty</a>
+<i> (real)</i> minimum absolute penalty variable coefficient used in the "big M" method<br>&nbsp;&nbsp;&nbsp;Synonym:
+penlty</h4><p>
+
+
+
+<h4><a name="XPRESSpivotTol">
+pivotTol</a>
+<i> (real)</i> zero tolerance on pivot elements in simplex method<br>&nbsp;&nbsp;&nbsp;Synonym:
+ztolpv</h4><p>
+
+On each iteration, the simplex method
+seeks a nonzero matrix element to pivot on. Any element with absolute value
+less than pivottol is treated as zero for this purpose.
+
+
+<h4><a name="XPRESSpreprobing">
+preprobing</a>
+<i> (integer)</i> set per-node probing strategy for binary variables</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>disabled</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>light probing</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>full probing - all binaries examined</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>full probing and repeat while effective</td></tr>
+</table>
+
+<h4><a name="XPRESSpresolve">
+presolve</a>
+<i> (integer)</i> sets presolve strategy</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>presolve not applied</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>presolve applied</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>presolve applied, but redundant bounds are not removed</td></tr>
+</table>
+
+<h4><a name="XPRESSpricingAlg">
+pricingAlg</a>
+<i> (integer)</i> determines the pricing method to use<br>&nbsp;&nbsp;&nbsp;Synonym:
+iphsf</h4><p>
+
+This determines the pricing method to use on each iteration, selecting which
+variable enters the basis. In general Devex pricing requires more time on each
+iteration, but may reduce the total number of iterations, whereas partial
+pricing
+saves time on each iteration, although possibly results in more iterations.
+
+
+<h4><a name="XPRESSpseudoCost">
+pseudoCost</a>
+<i> (real)</i> default pseudo-cost<br>&nbsp;&nbsp;&nbsp;Synonym:
+rtolps</h4><p>
+
+The default pseudo cost used in estimation of the degradation associated with
+an unexplored node in the tree search. A pseudo cost is associated with each
+integer decision variable and is an estimate of the amount by which the
+objective
+function will be worse if that variable is forced to an integral value.
+
+
+<h4><a name="XPRESSreform">
+reform</a>
+<i> (integer)</i> substitute out objective var and equ when possible</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESSrelPivotTol">
+relPivotTol</a>
+<i> (real)</i> minimum size of pivot element relative to largest element in column<br>&nbsp;&nbsp;&nbsp;Synonym:
+ztolrp</h4><p>
+
+At each iteration a pivot element is chosen within a given column of the
+matrix.
+The relative pivot tolerance, relpivottol, is the size of the element chosen
+relative to the largest possible pivot element in the same column.
+
+
+<h4><a name="XPRESSreRun">
+reRun</a>
+<i> (integer)</i> rerun with primal simplex when not optimal/feasible</h4><p>
+
+Applies only in cases where presolve is turned on and the model is diagnosed
+as infeasible or unbounded. If rerun is nonzero, we rerun the model using
+primal simplex with presolve turned off in hopes of getting better diagnostic
+information. If rerun is zero, no good diagnostic information exists, so we
+return no solution, only an indication of unboundedness/infeasibility.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSreslim">
+reslim</a>
+<i> (real)</i> overrides GAMS reslim option</h4><p>
+
+Sets the resource limit. When the solver has used more than this amount of
+CPU time (in seconds) the system will stop the search and report the best
+solution found so far.
+
+
+<h4><a name="XPRESSscaling">
+scaling</a>
+<i> (integer)</i> bitmap control for internal scaling algorithm<br>&nbsp;&nbsp;&nbsp;Synonym:
+scale</h4><p>
+
+Bitmap to determine how internal scaling is done. If set to 0, no scaling will
+take place. The default of 35 implies row and column scaling done by the
+maximum element method.
+
+
+<h4><a name="XPRESSsleepOnThreadWait">
+sleepOnThreadWait</a>
+<i> (integer)</i> control behavior of waiting threads in a MIP solve</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSsolnpool">
+solnpool</a>
+<i> (string)</i> solution pool file name</h4><p>
+
+
+
+<h4><a name="XPRESSsolnpoolCapacity">
+solnpoolCapacity</a>
+<i> (integer)</i> limit on number of solutions to store</h4><p>
+
+
+<br><i>(default = 999999999)</i>
+
+<h4><a name="XPRESSsolnpoolCullDiversity">
+solnpoolCullDiversity</a>
+<i> (integer)</i> cull N solutions based on solution diversity</h4><p>
+
+
+<br><i>(default = -1)</i>
+
+<h4><a name="XPRESSsolnpoolCullObj">
+solnpoolCullObj</a>
+<i> (integer)</i> cull N solutions based on objective values</h4><p>
+
+
+<br><i>(default = -1)</i>
+
+<h4><a name="XPRESSsolnpoolCullRounds">
+solnpoolCullRounds</a>
+<i> (integer)</i> terminate enumeration after N culling rounds</h4><p>
+
+
+<br><i>(default = 999999999)</i>
+
+<h4><a name="XPRESSsolnpoolDupPolicy">
+solnpoolDupPolicy</a>
+<i> (integer)</i> sets policy for detecting/storing duplicate solutions</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>keep all</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>compare all vars, exact matches discarded</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>compare rounded discrete, exact continuous</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>compare rounded discrete only</td></tr>
+</table>
+
+<h4><a name="XPRESSsolnpoolPop">
+solnpoolPop</a>
+<i> (integer)</i> controls method used to populate the solution pool</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>generate solutions using the normal search algorithm</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>invoke the solution enumerator to generate solutions</td></tr>
+</table>
+
+<h4><a name="XPRESSsolnpoolPrefix">
+solnpoolPrefix</a>
+<i> (string)</i> file name prefix for GDX solution files</h4><p>
+
+
+<br><i>(default = soln)</i>
+
+<h4><a name="XPRESSsolnpoolVerbosity">
+solnpoolVerbosity</a>
+<i> (integer)</i> controls verbosity of solution pool routines</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="XPRESSsymmetry">
+symmetry</a>
+<i> (integer)</i> adjust overall effort in symmetry detection</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no symmetry detection</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>conservative effort</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>intensive symmetry search</td></tr>
+</table>
+
+<h4><a name="XPRESSsymSelect">
+symSelect</a>
+<i> (integer)</i> adjust what is searched in symmetry detection</h4><p>
+
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>automatic</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>search the whole matrix (otherwise the 0, 1, and -1 coefs only)</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>search all entities (otherwise binaries only)</td></tr>
+</table>
+
+<h4><a name="XPRESSthreads">
+threads</a>
+<i> (integer)</i> global default thread count</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESStrace">
+trace</a>
+<i> (integer)</i> turns on output of infeasibility diagnosis during presolve<br>&nbsp;&nbsp;&nbsp;Synonym:
+itrace</h4><p>
+
+Control of the infeasibility diagnosis during presolve - if nonzero,
+infeasibility
+will be explained.
+
+
+<h4><a name="XPRESStreeCoverCuts">
+treeCoverCuts</a>
+<i> (integer)</i> number of rounds of lifted cover inequalities at tree nodes<br>&nbsp;&nbsp;&nbsp;Synonym:
+ntrcov</h4><p>
+
+The number of rounds of lifted cover inequalities generated at nodes other
+than
+the top node in the tree. Compare with the description for covercuts.
+
+
+<h4><a name="XPRESStreeGomCuts">
+treeGomCuts</a>
+<i> (integer)</i> number of rounds of Gomery cuts at tree nodes<br>&nbsp;&nbsp;&nbsp;Synonym:
+ntrgom</h4><p>
+
+The number of rounds of Gomory cuts generated at nodes other than the first
+node in the tree. Compare with the description for gomcuts.
+
+
+<h4><a name="XPRESSvarSelection">
+varSelection</a>
+<i> (integer)</i> determines how to use pseudo-costs<br>&nbsp;&nbsp;&nbsp;Synonym:
+kcritm</h4><p>
+
+This determines how to combine the pseudo costs associated with the integer
+variables to obtain an overall estimated degradation in the objective function
+that may be expected in any integer solution from exploring a given node. It
+is relevant only if <tt>backtrack</tt> has been set to 1.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="XPRESSwritePrtSol">
+writePrtSol</a>
+<i> (integer)</i> directs optimizer to output a "printsol" file<br>&nbsp;&nbsp;&nbsp;Synonym:
+fprint</h4><p>
+
+
+</body></html>

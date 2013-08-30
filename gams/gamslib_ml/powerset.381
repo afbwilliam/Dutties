@@ -1,0 +1,35 @@
+$title PowerSetLeft and PowerSetRight examples (POWERSET,SEQ=381)
+$ontext
+The system.PowerSetLeft and system.PowerSetRight are predefined
+procedures to create a three dimensional set xxx(n,s,b) which
+can be interpreted as a numbering system with base b and s digits.
+The total number of tuples is power(card(b),card(s)).
+
+With PowerSetLeft the index on the left changes first.
+With PowerSetRight the index on the right changes first.
+
+Here is simple 2 x 2 example:
+
+sets n / n1*n4 /, s / s0,s1 /, b / 0,1 /,
+     x(n,s,b) / system.PowerSetRight /;
+option x:0:0:2; display x;
+
+----     32 SET x
+
+n1.s0.0,    n1.s1.0
+n2.s0.0,    n2.s1.1
+n3.s0.1,    n3.s1.0
+n4.s0.1,    n4.s1.1
+
+The example below uses a base 16 and two positions/digits. The index
+set n can conveniently be computed at compile time via a $eval command.
+$offtext
+
+set b hex base / 0*9,A*F /
+    s digits   / d1,d2 /
+$eval n power(card(b),card(s))
+    n number   / n1*n%n% /
+    powR(n,s,b) powers set / system.PowerSetRight /
+    powL(n,s,b) powers set / system.PowerSetLeft /
+
+option powR:0:0:2, powL:0:0:2; display powR, powL;

@@ -1,0 +1,68 @@
+$title 'Test correctness of NCPVUxxx intrinsics' (FNNCPVUx,SEQ=235)
+
+* ncpvusin(r,s,mu) = ncpvupow(r,s,mu) = min(r,s) if |r-s|>=mu
+* the smoothed case is tested elsewhere, here we just look at
+* the case where the smoothing isn't used
+$include fnset_xyz.inc
+
+reps = 4e-16;
+relToInput = 0;
+set T / t1 * t8 /;
+
+table data(T,V)
+*       r       s       mu
+        x       y       z       f_      fx_     fxx_    fy_     fyy_
+t1      1       1       0       1                       1
+t2      -1      -1      0       -1                      1
+t3      1       -1      0       -1                      1
+t4      -1      1       0       -1      1
+t5      1       1       -1      1                       1
+t6      -1      -1      -1      -1                      1
+t7      1       -1      -1      -1                      1
+t8      -1      1       -1      -1      1
+;
+
+
+loop {T,
+  data(T,  'f')  = ncpvusin.value (data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fx')  = ncpvusin.grad(1:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fy')  = ncpvusin.grad(2:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fz')  = ncpvusin.grad(3:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxx')  = ncpvusin.hess(1:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxy')  = ncpvusin.hess(1:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxz')  = ncpvusin.hess(1:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyx')  = ncpvusin.hess(2:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyy')  = ncpvusin.hess(2:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyz')  = ncpvusin.hess(2:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzx')  = ncpvusin.hess(3:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzy')  = ncpvusin.hess(3:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzz')  = ncpvusin.hess(3:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display data;
+
+$include fntest_xyz.inc
+
+loop {T,
+  data(T,  'f')  = ncpvupow.value (data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fx')  = ncpvupow.grad(1:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fy')  = ncpvupow.grad(2:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'fz')  = ncpvupow.grad(3:  data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxx')  = ncpvupow.hess(1:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxy')  = ncpvupow.hess(1:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fxz')  = ncpvupow.hess(1:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyx')  = ncpvupow.hess(2:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyy')  = ncpvupow.hess(2:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fyz')  = ncpvupow.hess(2:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzx')  = ncpvupow.hess(3:1:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzy')  = ncpvupow.hess(3:2:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T,'fzz')  = ncpvupow.hess(3:3:data(T,'x'),data(T,'y'),data(T,'z'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display data;
+
+$include fntest_xyz.inc

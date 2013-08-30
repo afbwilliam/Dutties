@@ -1,0 +1,26 @@
+$title 'Test acceptance of models with generation errors' (BADPT5,SEQ=204)
+
+SET solver 'master set of solvers' / system.solverNames /;
+SET solverPlatformMap(solver,*) / system.SolverPlatformMap /;
+SET avail(solver)  'Solvers available for this platform';
+SET mt 'modelTypes' / system.modeltypes /;
+avail(solver) = sum(solverPlatformMap(solver,'%system.platform%'),1)
+   and solvers(solver);
+alias(nlpsolv,solver);
+
+file fp /'bpscript.gms'/;
+put fp;
+
+put '$call =testlib badpt4' /;
+put '$if errorlevel 1 $abort Could not retrieve test model' /;
+put 'scalar rc / 0 /;' /;
+loop {nlpsolv$[SolverCapabilities(nlpsolv,'NLP') and avail(nlpsolv)],
+  put "execute '=gams badpt4 domlim 99 nlp " nlpsolv.tl:0 "';" /;
+  put "rc = rc + errorlevel;" /;
+};
+put 'display rc;' /;
+put 'abort$rc "bpscript: test failed";' /;
+putclose;
+
+execute '=gams bpscript.gms';
+abort$errorlevel 'badpt5: test failed';

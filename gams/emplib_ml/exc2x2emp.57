@@ -1,0 +1,88 @@
+$title pure exchange model (ie no production) (EXC2X2EMP,SEQ=57)
+
+$ontext
+Model from Ermoliev et al, On Convergence of SJM
+In this version, replace utility maximization with demand functions
+This is similar to scarfemp-dual.gms except there is no production
+
+Rather than form the MCP explicitly,
+we instead use the KKT of the dual form optimization problem:
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    sum(., p(.)) = 1, p >= 0
+
+coupled with the income complementarity relationship.
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_c  p'*c   s.t.  u_h(c) >= 1
+
+In this model, player 1 has u_1(x1) x1('2')
+while player 2 has u_2(x2) = sqrt(x2('1')*x2('2'))
+
+Contributor: Michael Ferris, October 2010
+$offtext
+
+set i /1*2/;
+alias(i,j);
+
+parameter w1(j) 'endowment of player 1' /
+            1 1
+            2 1 /,
+          w2(j) 'endowment of player 2' /
+            1 1 /;
+
+* Following is the complementarity model generated
+
+equations objdef, income(j), norm;
+positive variables p(j);
+free variables z, w(j);
+
+* Same as scarfmcp model except production "z" = 0
+* expenditure functions are e_1 (p) = p2 and e_2(p) = 2 sqrt(p1*p2) resp
+
+objdef..
+  z =e=
+  sum(j, w(j)*(log(p('2')$sameas(j,'1') + log(2*sqrt(p('1')*p('2')))$sameas(j,'2'))))
+
+  - sum(j, p(j)*(w1(j) + w2(j)));
+
+income(j)..
+  w(j) =e= sum(i, p(i)*(w1(i)$sameas(j,'1') + w2(i)$sameas(j,'2')));
+
+norm..
+  sum(j, p(j)) =e= 1;
+
+model nashemp /objdef,income,norm/;
+
+file myinfo /'%emp.info%'/;
+putclose myinfo 'dualequ income w';
+
+p.l(j) = 1;
+w.l(j) = 0.5;
+solve nashemp using emp max z;
+
+* now form problem explicitly
+* move p away from zero to allow evaluation of d_p
+p.lo(j) = 1e-8;
+
+equations d_p(j), Nnorm;
+free variables mu;
+
+d_p(j)..
+  (-w('1')/p(j))$sameas(j,'2')
+  - 0.5*w('2')/p(j)
+  + w1(j) + w2(j) + mu =g= 0;
+
+Nnorm..
+  1 =e= sum(j, p(j));
+
+model nash /income.w,d_p.p,Nnorm.mu/;
+
+nash.iterlim = 0;
+mu.l = norm.m;
+solve nash using mcp;
+
+parameter x1(j), x2(j);
+x1(j) = 1$sameas(j,'2')*w.l('1')/p.l(j) ;
+x2(j) = 0.5*w.l('2')/p.l(j);
+
+display x1, x2;

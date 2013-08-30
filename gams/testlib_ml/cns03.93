@@ -1,0 +1,56 @@
+$title CNS test - holdfixed and singular models (cns03,SEQ=93)
+
+$ontext
+  This model is singular if it is square.
+  The way it is reported depends on
+  whether holdfixed is turned on or off.
+
+$offtext
+
+maxexecerror = 1;
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+scalar havesol / 0 /;
+
+variable x1,x2,x3;
+equation e1,e2;
+
+e1 .. x1 =e= 5;
+e2 .. x1 + x2 +x3 =e= 7;
+
+x1.fx = 5;
+
+model m / all /;
+
+* Case 1: with holdfixed=0, GAMS passes on a square 2x2 model
+*         in x2 and x3 - x1 is ignored since it is fixed
+m.holdfixed = 0;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%)                            'bad solvestat';
+if   { (m.modelstat = %modelstat.LocallyInfeasible%),
+* locally infeasible, should report a row that way
+  abort$(m.numinfes < 1)                            'wrong .numinfes';
+* this next check may be too ambitious - we'll see how it flies
+  abort$(m.numdepnd < 1)                            'wrong .numdepnd';
+elseif (m.modelstat = %modelstat.SolvedSingular%),
+* solved singular, should indicate that one dependency exists
+  havesol = 1;
+  abort$(m.numdepnd <> 1)                           'wrong .numdepnd';
+else
+  havesol = 1;
+  abort$(m.modelstat <> %modelstat.Solved%)                         'bad modelstat';
+};
+if {havesol,
+  abort$(abs(x2.l+x3.l-2) > tol)     'bad x2.l+x3.l';
+  abort$(abs(e1.l-5) > tol)          'bad e1.l';
+  abort$(abs(e2.l-7) > tol)          'bad e2.l';
+};
+
+* Case 2: with holdfixed=1, GAMS reduces the model to something that
+*         is not square. It takes out x1 and e1 and is left with 2
+*         variables (x2 & x3) and 1 equation.
+m.holdfixed = 1;
+solve m using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(m.solvestat <> %solvestat.SolveProcessingSkipped% or m.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;

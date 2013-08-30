@@ -1,0 +1,72 @@
+$title Kilosa farm problem (KILOSAFARM,SEQ=74)
+
+$ontext
+
+Kilosa farm problem using chance constraints from Lindo manual
+
+Reference: LINDO API 7.0 User Manual
+
+$offtext
+
+Scalar
+*       Random parameters
+        ksi_r  'random rainfall during the growing season (mm) [~ Normal(515.5,137.0)]' / 515 /
+        eps_m  'white noise in the yield of maize              [~ Normal(  0.0, 10.0)]' /   0 /
+        eps_s  'white noise in the yield of sorghum            [~ Normal(  0.0, 10.0)]' /   0 /;
+
+Variable Z Objective;
+Positive Variables
+         XM acreage of maize in hectares
+         XS acreage of sorghum in hectares;
+
+Equations OBJ, CALORIES, PROTEIN;
+
+OBJ..      Z =e= XM + XS;
+CALORIES.. 2.8*(0.020*ksi_r - 1.65 + eps_m)*XM + 2.8*(0.008*ksi_r + 5.92 + eps_s)*XS =g= 44;
+PROTEIN..  6.4*(0.020*ksi_r - 1.65 + eps_m)*XM + 8.0*(0.008*ksi_r + 5.92 + eps_s)*XS =g= 89;
+
+Model kf / all /;
+
+$ifi %gams.emp%==de $set doDisc 1
+$if not set doDisc $set doDisc 0
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+* chance <prob> <equ1> [equ2 ... equn]
+$ifthen %doDisc%==0
+$onput
+randvar ksi_r normal 515.5 137
+randvar eps_m normal     0  10
+randvar eps_s normal     0  10
+chance calories 0.9
+chance protein  0.9
+$offput
+$else
+scalar r;
+$if not set samplesize $set samplesize 5
+put   'randvar ksi_r discrete '; for (r=1 to %samplesize%, put (1/%samplesize%):8:6 ' ' normal(515.5,137):7:3);
+put / 'randvar eps_m discrete '; for (r=1 to %samplesize%, put (1/%samplesize%):8:6 ' ' normal(0,10):7:3);
+put / 'randvar eps_s discrete '; for (r=1 to %samplesize%, put (1/%samplesize%):8:6 ' ' normal(0,10):7:3);
+put / 'chance calories 0.9'
+    / 'chance protein  0.9';
+$endif
+putclose emp;
+
+Set scen        scenarios / s1*s100 /;
+Parameter
+    s_ksi_r(scen)
+    s_eps_m(scen)
+    s_eps_s(scen)
+    s_xm(scen)
+    s_xs(scen);
+
+
+Set dict / scen .scenario.''
+           ksi_r.randvar .s_ksi_r
+           eps_m.randvar .s_eps_m
+           eps_s.randvar .s_eps_s
+           xm   .level   .s_xm
+           xs   .level   .s_xs    /;
+
+solve kf min z use emp scenario dict;
+
+display s_ksi_r, s_eps_m, s_eps_s, s_xm, s_xs;

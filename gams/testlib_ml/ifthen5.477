@@ -1,0 +1,23 @@
+$title $ifthen false without sameline (IFTHEN5,SEQ=477)
+
+$ontext
+  The $if statement syntax allows for a missing command
+
+  $if condition  true_line
+
+  or
+  $if condition
+  true_line
+
+This is not allowed with $ifthen or $elseif. We cannot skip the next line
+if we have no true_line and condition=FALSE.
+
+Contributor: Alex
+$offtext
+
+
+$ifthen a==b
+$endif
+$terminate
+$endif
+$abort first $endif was ignored

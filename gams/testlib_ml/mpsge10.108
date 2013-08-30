@@ -1,0 +1,52 @@
+$title MPSGE scaleopt test - m.scaleopt must be 0 (MPSGE10,SEQ=108)
+
+$ontext
+scaleopt must set to 0.  You cannot use the GAMS scaling in an MPSGE
+model.
+$offtext
+
+SETS
+i       / i1 * i2 /,
+j       / j1 * j2 /,
+h       / h1 * h2 /;
+
+parameter       d0(i,h)         Reference demands,
+                e0(i,h)         Reference endowments;
+
+d0(i,h) = uniform(0,1);
+e0(i,h) = uniform(0,1);
+
+$ontext
+
+$model:exchange
+
+$commodities:
+        price(i,j)
+
+$consumers:
+        ra(h)
+
+
+$demand:ra(h) s:1
+        d:price(i,j)    q:d0(i,h)
+        e:price(i,j)    q:e0(i,h)
+
+$offtext
+
+$sysinclude mpsgeset exchange
+
+* exchange.scaleopt = 0; is the default
+$include EXCHANGE.GEN
+solve exchange using mcp;
+* OK if scaleopt is 0
+abort$( exchange.solvestat <> %solvestat.NormalCompletion%)            'wrong solvestat';
+abort$( exchange.modelstat <> %modelstat.Optimal%)            'wrong modelstat';
+
+exchange.scaleopt = 1;
+$include EXCHANGE.GEN
+solve exchange using mcp;
+* not OK if scaleopt is nonzero, even if  .scales are left at unity
+* expect solvestat 9 ERROR SETUP FAILURE
+abort$( exchange.solvestat <> %solvestat.SetupFailure%)            'wrong solvestat';
+* expect modelstat 13 ERROR NO SOLUTION
+abort$( exchange.modelstat <> %modelstat.ErrorNoSolution%)           'wrong modelstat';

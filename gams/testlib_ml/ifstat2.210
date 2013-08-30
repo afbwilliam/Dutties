@@ -1,0 +1,5 @@
+$title '$IF should allow keywords for SET and ENV' (IFSTAT2,SEQ=210)
+$if NOT set smax $set smax okok
+$log %smax%
+$set smax ok
+$log %smax%

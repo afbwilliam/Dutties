@@ -1,0 +1,17 @@
+$title 'test var/equ data statements with $onempty' (VARDAT03,SEQ=376)
+
+$ontext
+Contributor: Alex Meeraus
+$offtext
+
+$if not gamsversion 227 $exit
+
+set i / 1*3 /, j /a*c/;
+$onempty
+variable x(i,j) / /, y;
+$onmulti
+variable x(i,j) / 1.(a 1,b 2, c 3).l  /, y / l 30 /;
+display x.l,x.up,x.lo,x.m,y.l;
+
+abort$(y.l <> 30 ) y.l;
+abort$sum(j, x.l('1',j) <> ord(j)) x.l;

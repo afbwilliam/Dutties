@@ -1,0 +1,71 @@
+$TITLE 'GDX - compressed and MT operation' (GDXCOMP2,SEQ=559)
+
+$ontext
+This model checks that the GDX file produced by GAMSCMEX with "gdx=<filename>"
+is what we expect for different settings of the environment variables
+GDXCOMPRESS and GDXTHREADS.
+
+Contributor: Steve Dirkse, May 2012
+$offtext
+
+$call gamslib -q 1
+$onecho > subtest.gms
+$ondollar
+$setddlist GDXDEF GDXTMP GDXCOMPRESS_VAL GDXTHREADS_VAL
+
+$if not set GDXDEF $set GDXDEF def.gdx
+$if not set GDXTMP $set GDXTMP tmp.gdx
+$if not set GDXCOMPRESS_VAL $abort 'expected GDXCOMPRESS_VAL to be set'
+$if not set GDXTHREADS_VAL $abort 'expected GDXTHREADS_VAL to be set'
+
+$setenv GDXCOMPRESS %GDXCOMPRESS_VAL%
+$setenv GDXTHREADS %GDXTHREADS_VAL%
+$call =gams trnsport lp=bdmlp gdx=%GDXTMP% lo=0
+
+$call wc -c %GDXDEF% | sed s/%GDXDEF%// > "%gams.scrdir%def.%gams.scrext%"
+$call wc -c %GDXTMP% | sed s/%GDXTMP%// > "%gams.scrdir%tmp.%gams.scrext%"
+
+scalar def 'size of default GDX file' /
+$include "%gams.scrdir%def.%gams.scrext%"
+/
+
+display 'GDXCOMPRESS_VAL = %GDXCOMPRESS_VAL%';
+display 'GDXTHREADS_VAL  = %GDXTHREADS_VAL%';
+
+$ifthen %GDXCOMPRESS_VAL% == 0
+
+scalar tmp 'size of uncompressed GDX file' /
+$include "%gams.scrdir%tmp.%gams.scrext%"
+/
+abort$(def>tmp) "wrong file sizes: default > uncompressed"
+
+$else
+
+scalar tmp 'size of compressed GDX file' /
+$include "%gams.scrdir%tmp.%gams.scrext%"
+/
+abort$(def<tmp) "wrong file sizes: default < compressed"
+
+$endif
+
+scalar rc;
+execute 'gdxdiff %GDXDEF% %GDXTMP% > %system.nullfile%';
+rc = errorlevel;
+abort$[rc <> 0] 'GDXDIFF says %GDXDEF% and %GDXTMP% are different', rc;
+$offecho
+
+* first generate with defaults
+$call =gams trnsport lp=bdmlp gdx=def.gdx lo=0
+$if errorlevel 1 $abort 'could not run trnsport'
+
+scalar rc;
+file fp;
+
+set nthreads / '-8' * '-1', 0, 1 * 8 /;
+set compr / 0, 1/;
+
+loop {(compr, nthreads),
+  put_utility fp 'shell' / 'gams subtest lo=0 --GDXDEF=def.gdx --GDXCOMPRESS_VAL=',compr.val:0:0,' --GDXTHREADS_VAL=',nthreads.val:0:0;
+  rc = errorlevel;
+  abort$[rc <> 0] 'subtest failed', rc, compr, nthreads;
+};

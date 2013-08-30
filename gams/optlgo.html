@@ -1,0 +1,252 @@
+<html>
+<head>
+<title>LGO Options</title>
+</head>
+<body>
+<h2>LGO Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/lgo.pdf">LGO manual</a>.
+
+<h2>Summary of LGO Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General LGOoptions</h3></th></tr>
+<tr><td><a href="#LGOacc_tr">
+acc_tr</a></td>
+<td>Global search termination - acceptability threshold</td></tr>
+<tr><td><a href="#LGOcon_tol">
+con_tol</a></td>
+<td>Maximal constraint violation tolerance in local search</td></tr>
+<tr><td><a href="#LGOfct_trg">
+fct_trg</a></td>
+<td>Partial stopping criterion in second local search phase</td></tr>
+<tr><td><a href="#LGOfi_tol">
+fi_tol</a></td>
+<td>Local search (merit function improvement) tolerance</td></tr>
+<tr><td><a href="#LGOg_maxfct">
+g_maxfct</a></td>
+<td>Maximum number of function evaluations in global search</td></tr>
+<tr><td><a href="#LGOirngs">
+irngs</a></td>
+<td>Random number seed</td></tr>
+<tr><td><a href="#LGOkt_tol">
+kt_tol</a></td>
+<td>Kuhn-Tucker local optimality condition violation tolerance</td></tr>
+<tr><td><a href="#LGOmax_nosuc">
+max_nosuc</a></td>
+<td>Maximum number of function evaluations without improvement</td></tr>
+<tr><td><a href="#LGOopmode">
+opmode</a></td>
+<td>Operational mode</td></tr>
+<tr><td><a href="#LGOpenmult">
+penmult</a></td>
+<td>Constraint penalty multiplier.</td></tr>
+<tr><td><a href="#LGOtlimit">
+tlimit</a></td>
+<td>Time limit in seconds.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Gams system interface only</h3></th></tr>
+<tr><td><a href="#LGObad_obj">
+bad_obj</a></td>
+<td>Default value for objective function, if evaluation errors occur</td></tr>
+<tr><td><a href="#LGOCallConopt">
+CallConopt</a></td>
+<td>call CONOPT to get duals for final point</td></tr>
+<tr><td><a href="#LGOdebug">
+debug</a></td>
+<td>Debug option.</td></tr>
+<tr><td><a href="#LGOInclude">
+Include</a></td>
+<td>Start reading from a new file</td></tr>
+<tr><td><a href="#LGOlog_err">
+log_err</a></td>
+<td>Log first log_err errors</td></tr>
+<tr><td><a href="#LGOlog_iter">
+log_iter</a></td>
+<td>Iteration log time interval.</td></tr>
+<tr><td><a href="#LGOlog_time">
+log_time</a></td>
+<td>Iteration log time interval in seconds.</td></tr>
+<tr><td><a href="#LGOvar_lo">
+var_lo</a></td>
+<td>Smallest (default) lower bound, unless set by user.</td></tr>
+<tr><td><a href="#LGOvar_up">
+var_up</a></td>
+<td>Largest (default) upper bound, unless set by user.</td></tr></table>
+<h2>Detailed Descriptions of LGO Options</h2>
+
+<h4><a name="LGOacc_tr">
+acc_tr</a>
+<i> (real)</i> Global search termination - acceptability threshold</h4><p>
+
+Global search termination criterion parameter (acceptability threshold). The
+global search phase (BB, GARS, or MS) ends, if an overall merit function value
+is found in the global search phase that is not greater than <tt>acc_tr</tt>.
+
+<br><i>(default = -1e10)</i>
+
+<h4><a name="LGObad_obj">
+bad_obj</a>
+<i> (real)</i> Default value for objective function, if evaluation errors occur</h4><p>
+
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="LGOCallConopt">
+CallConopt</a>
+<i> (real)</i> call CONOPT to get duals for final point</h4><p>
+
+Number of seconds given for cleanup phase using CONOPT.
+CONOPT terminates
+after at most <tt>CallConopt</tt> seconds. The cleanup phase determines duals
+for final solution point.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="LGOcon_tol">
+con_tol</a>
+<i> (real)</i> Maximal constraint violation tolerance in local search</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LGOdebug">
+debug</a>
+<i> (integer)</i> Debug option.</h4><p>
+
+Prints out complete LGO status report to listing file.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LGOfct_trg">
+fct_trg</a>
+<i> (real)</i> Partial stopping criterion in second local search phase</h4><p>
+
+Target objective function value.
+
+<br><i>(default = -1e10)</i>
+
+<h4><a name="LGOfi_tol">
+fi_tol</a>
+<i> (real)</i> Local search (merit function improvement) tolerance</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LGOg_maxfct">
+g_maxfct</a>
+<i> (integer)</i> Maximum number of function evaluations in global search</h4><p>
+
+Maximum number of merit (model) function evaluations before termination of
+global search phase (BB, GARS, or MS). In the default setting, <tt>n</tt> is the number
+of variables and <tt>m</tt> is the number of constraints. The difficulty of global
+optimization
+models varies greatly: for difficult models, <tt>g_maxfct</tt> can be increased
+as deemed necessary.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LGOInclude">
+Include</a>
+<i> (string)</i> Start reading from a new file</h4><p>
+
+
+
+<h4><a name="LGOirngs">
+irngs</a>
+<i> (integer)</i> Random number seed</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LGOkt_tol">
+kt_tol</a>
+<i> (real)</i> Kuhn-Tucker local optimality condition violation tolerance</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LGOlog_err">
+log_err</a>
+<i> (integer)</i> Log first log_err errors</h4><p>
+
+Error reported (if applicable) every <tt>log_err</tt> iterations.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LGOlog_iter">
+log_iter</a>
+<i> (integer)</i> Iteration log time interval.</h4><p>
+
+Log output occurs every <tt>log_iter</tt> iterations.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LGOlog_time">
+log_time</a>
+<i> (real)</i> Iteration log time interval in seconds.</h4><p>
+
+Log output occurs every <tt>log_time</tt> seconds.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="LGOmax_nosuc">
+max_nosuc</a>
+<i> (integer)</i> Maximum number of function evaluations without improvement</h4><p>
+
+Maximum number of merit function evaluations in global search phase (BB,
+GARS, or MS) where no improvement is made. Algorithm phase terminates
+upon reaching this limit. The default of <tt>-1</tt> uses <tt>100(nvars+ncons)</tt>, where
+<tt>nvars</tt> is the number of variables and <tt>ncons</tt> the number of constraints.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LGOopmode">
+opmode</a>
+<i> (integer)</i> Operational mode</h4><p>
+
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>LS.
+Local search from the given nominal solution without a preceding local
+search (LS)</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>BB + LS.
+Global branch-and-bound search and local search (BB+LS)</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>RS+LS.
+Global adaptive random search and local search (GARS+LS)</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>MS+LS.
+Global multistart random search and local search (MS+LS)</td></tr>
+</table>
+
+<h4><a name="LGOpenmult">
+penmult</a>
+<i> (real)</i> Constraint penalty multiplier.</h4><p>
+
+Global merit function is defined as objective +
+the constraint violations weighted by <tt>penmult</tt>.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="LGOtlimit">
+tlimit</a>
+<i> (real)</i> Time limit in seconds.<br>&nbsp;&nbsp;&nbsp;Synonym:
+reslim</h4><p>
+
+This is equivalent to the GAMS option <tt>reslim</tt>. If
+specified, this overrides the GAMS <tt>reslim</tt> option.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="LGOvar_lo">
+var_lo</a>
+<i> (real)</i> Smallest (default) lower bound, unless set by user.</h4><p>
+
+
+<br><i>(default = -1e6)</i>
+
+<h4><a name="LGOvar_up">
+var_up</a>
+<i> (real)</i> Largest (default) upper bound, unless set by user.</h4><p>
+
+
+<br><i>(default = 1e6)</i>
+</body></html>

@@ -1,0 +1,41 @@
+$title 'test indexed var/equ data statements with $onmulti' (VARDAT04,SEQ=377)
+
+$ontext
+Contributor: Alex Meeraus
+$offtext
+
+$if not gamsversion 227 $exit
+
+* note that the var/equ statement does not create 'l' .. as UELs
+
+set i / 1*3 /, j /a*c/;
+variable y(i) / 2.l 10, 2.up 10 /
+$onmulti
+    y   / 1.l 20, 1.scale 20, 3.l 20   /
+    y   / 2.l 30, 2.m 30, 2.scale=30, 3.(l,m) 30, 3.scale 30 / ;
+display y.l,y.m,y.lo,y.up,y.scale;
+
+$set data   (1,2).a.l 20, 2.a.up 50, 3.a.m 60, 1.(a,c).scale 100, 2.a.lo 0
+$set update (1 1, 2 2, 3 3).(a 1.1,b 1.2, c 1.3).l
+
+variable x(i,j) / %data%, 3.a.fx 70 /
+$onmulti
+* note the embedded data definitions
+         x(i,j) / %update% /
+$offmulti
+
+* default was set to free
+parameter px (i,j,*) / 1*3.a*c.lo -inf, 1*3.a*c.up inf, 1*3.a*c.scale 1  /
+* not the zero in %data%
+$onmulti
+          px (i,j,*) / %data%, 3.a.(l,lo,up) 70 /
+          px (i,j,*) / %update% /
+
+$offmulti
+display x.l,x.m,x.lo,x.up,x.scale,px;
+
+abort$sum((i,j), px(i,j,'l')     <> x.l(i,j))     'incorrect .l';
+abort$sum((i,j), px(i,j,'m')     <> x.m(i,j))     'incorrect .m';
+abort$sum((i,j), px(i,j,'lo')    <> x.lo(i,j))    'incorrect .lo';
+abort$sum((i,j), px(i,j,'up')    <> x.up(i,j))    'incorrect .up';
+abort$sum((i,j), px(i,j,'scale') <> x.scale(i,j)) 'incorrect .scale';

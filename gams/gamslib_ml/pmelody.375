@@ -1,0 +1,51 @@
+$Title Choose notes for melodic lines and chords with permutations (PMELODY,SEQ=375)
+
+$Ontext
+
+Having all permuations of a set can be handy. At stackoverflow.com
+some practical uses of generating all permuations are discussed:
+
+http://stackoverflow.com/questions/2556871/what-are-some-practical-uses-of-generating-all-permutations-of-a-list-such-as
+
+There is one cute application by Julius Davies to write music:
+
+"
+ One of my clients is a composer of music (Andre Cormier), and he
+ asked me to write a permutation calculator to help him choose notes
+ for melodic lines and chords:
+
+ http://juliusdavies.ca/andre/note_permute.html
+"
+
+In this model we use explicit GAMS syntax to generate permuations of
+numbers and produce a similar output. Note, that we don't eliminate
+duplicate permutations.
+
+$Offtext
+
+
+Sets n       pitch classes / C, 'C#', D, 'D#', E, F, 'F#', G, 'G#', A, 'A#', B  /
+     ni(n)   initial note  / C /
+     i       semitone jumps / i1*i4 /;
+$eval pmax fact(card(i))
+Set  p       permuation index / p1*p%pmax% /;
+Parameters
+$oneps
+     j(i)    actual seminote jumps / i1 1, i2 1, i3 0, i4 5 /
+$offeps
+     m(p,i)  permutation of jumps
+     mm(p,i) accumulated jumps;
+
+option m > j;
+mm(p,i) = 0; loop(i, mm(p,i) = mm(p,i-1) + m(p,i));
+
+set np(p,i,n) note at ith jump;
+loop(ni(n), np(p,i,n+mm(p,i)) = yes);
+option np:1:1:1; display np;
+
+file f / perm.txt /; put f '* Permutation of semitone jumps';
+loop(p,
+   put / 'C  ';
+   loop(np(p,i,n), put n.tl:3:0)
+   loop(i, put m(p,i):2:0);
+)

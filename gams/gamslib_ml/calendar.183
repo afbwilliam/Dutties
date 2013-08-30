@@ -1,0 +1,134 @@
+$title Calendar Function Examples (CALENDAR,SEQ=183)
+$inlinecom { } eolcom ??
+
+$ontext
+Calendar Function Examples
+
+
+GAMS Development Corporation, Formulation and Language Example.
+
+The Date and Time Functions are:
+
+      Serial = Jstart     (start of Gams Job)
+      Serial = JNow       (current date/time stamp)
+
+      Year   = GYear  (serial)
+      Month  = GMonth (serial)
+      Day    = GDay   (serial)
+      Hours  = GHour  (serial)
+      Minute = GMinute(serial)
+      Second = GSecond(serial)
+      DoW    = GDoW   (serial)   (1=Monday,2=Tuesday,..)
+      Leap   = GLeap  (serial)   (0=no leap year, 1=leap year)
+
+      DSerial = JDate(Year,Month,Day)         (full days)
+      TSerial = JTime(Hour,Minute,Second);    (fraction of day)
+
+      Inputs to the J(ulian) Functions are Gregorian dates and the
+      G(regorian) Functions are days since January 1, 1900.
+
+   The Jstart/Jnow return a serial number that measures the time
+   elapsed since January 1, 1900, at 00:00:00 in days.
+
+   Note the relationship below:
+
+   jstart == jdate(gyear(jstart),gmonth (jstart),gday   (jstart))
+           + Jtime(ghour(jstart),gminute(jstart),gsecond(jstart))
+$offtext
+
+
+scalar start  date + time at start of GAMS job
+       now    current date + time
+
+       year, month, day, hour, minute, second, dow, leap
+       date, time, diff, sdate, stime, diff;
+
+start = jstart; now=jnow;
+
+year = gyear(start); month  = gmonth (start); day    = gday   (start);
+hour = ghour(start); minute = gminute(start); second = gsecond(start);
+dow  = gdow (start);
+leap = gleap(start);
+display start,now, year, month, day, hour, minute, second, dow, leap;
+
+date  = jdate(year,month,day);
+time  = jtime(hour,minute,second);
+diff  = start - (date+time);
+sdate = floor(start);
+stime = mod(start,1);
+display date,time,diff,sdate,stime;
+
+
+  { get resolution of jnow by looking at the first 5 changes }
+
+scalar test, i, old, new, sec;
+new=jnow;
+for(i=1 to 5,
+   old = new;
+   while(old=new,   ?? burn time until Jnow changes
+     new=jnow;);
+   test =  new - old; display test;
+   sec  =  gsecond(new)-gsecond(old);
+   display sec );
+
+
+  { now we want to know when to celebrate the year 2000 }
+
+
+scalar s2000,days2000,hours2000,min2000,sec2000;
+
+   s2000     = jdate(2000,1,1)-jnow;
+   days2000  = floor(s2000);
+   hours2000 = floor(mod(s2000,1)*24);
+   min2000   = floor(mod(s2000*24,1)*60);
+   sec2000   = mod(s2000*24*60,1)*60;
+display 'all truncated numbers',days2000,hours2000,min2000,sec2000;
+
+   days2000  = s2000;
+   hours2000 = mod(days2000,1)*24;
+   min2000   = mod(hours2000,1)*60;
+   sec2000   = mod(min2000,1)*60;
+display 'all fractional numbers',days2000,hours2000,min2000,sec2000;
+
+
+  { print a calendar for a number of years }
+
+set w / Mon, Tue, Wed, Thu, Fri, Sat, Sun /
+    m / January, February, March, April, May, June, July, August, September, October, November, December /
+    y / 1997,1998,1999,2000/
+parameter dim(y,m) days in month
+          ym(y)    year
+          sm(m)    next month;
+
+sm(m--1) = ord(m);
+ym(y)    = ord(y)+1996;
+dim(y,m) = jdate(ym(y)+(card(m)=ord(m)),sm(m),1)-jdate(ym(y),ord(m),1)
+display sm,dim;
+
+file calendar; put calendar @12 'C a l e n d a r' /
+                            @12 '---------------' /;
+loop(y,
+   put // @13 'Year = ' y.tl
+   loop(m,
+      put // @15 ,m.tl /;
+      loop(w, put w.tl:>5);old=1;
+      for(i=1 to dim(y,m),
+         date  = jdate(ym(y),ord(m),i);
+         put$old / ;
+         put @((gdow(date)-1)*5+1) i:5:0;
+         old = calendar.cc >= card(w)*5 ) ) );
+
+
+  { print a calendar from today for 400 days }
+
+file calendar; put //// @12 'C a l e n d a r' /
+                        @12 '---------------' /;
+month = 0;
+for(i=jstart to jstart+400,
+   if(month<>gmonth(i),
+      month = gmonth(i);
+      put // @15 ,month:2:0 '/' gyear(i):4:0 /;
+      loop(w, put w.tl:>5); put / );
+   put$(calendar.cc >= card(w)*5) /;
+   put @((gdow(i)-1)*5+1) gday(i):5:0 );
+

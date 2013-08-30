@@ -1,0 +1,38 @@
+$title 'Test correctness of rpower intrinsic' (FNRPOW,SEQ=194)
+
+* rpower(x,y) = x**y
+* these points are the "easy" ones, i.e. there should not be any
+* exceptions as all the inputs are of reasonable size.
+$include fnset_xy.inc
+
+$gdxin fnrpow
+$load aeps reps relToInput T data
+$gdxin
+
+* hack, reps in GDX file to narrow for Delphi math libs
+reps = reps * 2;
+
+* hack for GDX bug
+relToInput = max(0,relToInput);
+
+data(T,'fyx_') = data(T,'fxy_');
+
+loop {T,
+  data(T,  'f')  = rpower.value(   data(T,'x'),data(T,'y'));
+  data(T, 'fx')  = rpower.grad(1:  data(T,'x'),data(T,'y'));
+  data(T, 'fy')  = rpower.grad(2:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')  = rpower.hess(1:1:data(T,'x'),data(T,'y'));
+  data(T,'fxy')  = rpower.hess(1:2:data(T,'x'),data(T,'y'));
+  data(T,'fyx')  = rpower.hess(2:1:data(T,'x'),data(T,'y'));
+  data(T,'fyy')  = rpower.hess(2:2:data(T,'x'),data(T,'y'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+* SGI flushes underflow to zero by default.
+* This makes for less accurate results for some derivs if x < 1, c > 1
+* $if %system.platform% == SGI $if defined aeps aeps = max(aeps,1e-285);
+
+display relToInput;
+$include fntest_xy.inc
+

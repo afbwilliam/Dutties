@@ -1,0 +1,593 @@
+<html>
+<head>
+<title>GLOMIQO Options</title>
+</head>
+<body>
+<h2>GLOMIQO Options</h2>
+The Global Mixed-Integer Quadratic Optimizer (GloMIQO) considers
+Mixed-Integer Quadratically-Constrained Quadratic Programs
+(MIQCQP).<BR> GAMS/GloMIQO was developed by Ruth Misener and
+Christodoulos A. Floudas in Computer-Aided Systems Laboratory;
+Department of Chemical and Biological Engineering; Princeton
+University.<BR> <a href="http://titan.princeton.edu">CASL</a>.<BR><BR>
+<p>For more information about this solver please inspect the
+complete <a href="docs/solvers/glomiqo.pdf">GLOMIQO manual</a>.
+
+<h2>Summary of GLOMIQO Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#GLOMIQOabs_opt_tol">
+abs_opt_tol</a></td>
+<td>absolute stopping tolerance</td></tr>
+<tr><td><a href="#GLOMIQOdumpsolutions">
+dumpsolutions</a></td>
+<td>name of solutions index gdx file for writing alternate solutions</td></tr>
+<tr><td><a href="#GLOMIQOmax_number_nodes">
+max_number_nodes</a></td>
+<td>node limit</td></tr>
+<tr><td><a href="#GLOMIQOmax_time">
+max_time</a></td>
+<td>resource limit</td></tr>
+<tr><td><a href="#GLOMIQOreadparams">
+readparams</a></td>
+<td>read secondary option file in GloMIQO syntax</td></tr>
+<tr><td><a href="#GLOMIQOrel_opt_tol">
+rel_opt_tol</a></td>
+<td>relative stopping tolerance</td></tr>
+<tr><td><a href="#GLOMIQOtrydual">
+trydual</a></td>
+<td>call CONOPT or SNOPT to produce duals</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for Solving the MILP Relaxations</h3></th></tr>
+<tr><td><a href="#GLOMIQOcplex_optfile">
+cplex_optfile</a></td>
+<td>read a secondary GAMS/CPLEX options file that will be applied to every LP and MILP subsolve</td></tr>
+<tr><td><a href="#GLOMIQOcut_generation_epsilon">
+cut_generation_epsilon</a></td>
+<td>absolute violation threshold for separating hyperplanes</td></tr>
+<tr><td><a href="#GLOMIQOnominal_time_limit">
+nominal_time_limit</a></td>
+<td>nominal time limit for solving MILP subproblems</td></tr>
+<tr><td><a href="#GLOMIQOpopulate_solution_pool">
+populate_solution_pool</a></td>
+<td>emphasis on generating starting points</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for Finding Feasible Solutions</h3></th></tr>
+<tr><td><a href="#GLOMIQOfeas_soln_time_limit">
+feas_soln_time_limit</a></td>
+<td>time limit (s) for an NLP solve</td></tr>
+<tr><td><a href="#GLOMIQOfeas_tolerance">
+feas_tolerance</a></td>
+<td>absolute feasibility tolerance</td></tr>
+<tr><td><a href="#GLOMIQOnlp_solver">
+nlp_solver</a></td>
+<td>use CONOPT or SNOPT to find feasible solutions</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for Branching</h3></th></tr>
+<tr><td><a href="#GLOMIQObranching_bounds_push_away">
+branching_bounds_push_away</a></td>
+<td>branch a minimum fraction away from the variable bounds</td></tr>
+<tr><td><a href="#GLOMIQObranching_weight">
+branching_weight</a></td>
+<td>branch on a convex combination of midpoint and solution</td></tr>
+<tr><td><a href="#GLOMIQOnum_reliability_tests">
+num_reliability_tests</a></td>
+<td>number of strong branching initialization tests</td></tr>
+<tr><td><a href="#GLOMIQOreliability_branching">
+reliability_branching</a></td>
+<td>heuristic choice for building reliable pseudocosts</td></tr>
+<tr><td><a href="#GLOMIQOreliability_branching_mu">
+reliability_branching_mu</a></td>
+<td>score parameter for building reliability</td></tr>
+<tr><td><a href="#GLOMIQOuse_reliability_branching">
+use_reliability_branching</a></td>
+<td>use reliability branching?</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for Bounding</h3></th></tr>
+<tr><td><a href="#GLOMIQOfbbt_improvement_bound">
+fbbt_improvement_bound</a></td>
+<td>bounds reduction improvement threshold needed to exit FBBT loop</td></tr>
+<tr><td><a href="#GLOMIQOmax_fbbt_iterations">
+max_fbbt_iterations</a></td>
+<td>maximum number of FBBT iterations</td></tr>
+<tr><td><a href="#GLOMIQOmax_obbt_iterations">
+max_obbt_iterations</a></td>
+<td>maximum number of OBBT iterations</td></tr>
+<tr><td><a href="#GLOMIQOmax_time_each_obbt">
+max_time_each_obbt</a></td>
+<td>time limit (s) for each OBBT LP</td></tr>
+<tr><td><a href="#GLOMIQOobbt_improvement_bound">
+obbt_improvement_bound</a></td>
+<td>bounds reduction improvement threshold</td></tr>
+<tr><td><a href="#GLOMIQOuse_obbt">
+use_obbt</a></td>
+<td>use optimality-based bounds tightening?</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for Logging to the Console</h3></th></tr>
+<tr><td><a href="#GLOMIQOlogging_freq">
+logging_freq</a></td>
+<td>how often should we log progress to the console?</td></tr>
+<tr><td><a href="#GLOMIQOlogging_level">
+logging_level</a></td>
+<td>logging information level</td></tr>
+<tr><td><a href="#GLOMIQOprint_options">
+print_options</a></td>
+<td>print the option parameter choices used in a single run?</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options for Addressing Special Structure</h3></th></tr>
+<tr><td><a href="#GLOMIQOadaptive_add_rlt">
+adaptive_add_rlt</a></td>
+<td>use the dynamic approach to adaptively determine deep RLT cuts?</td></tr>
+<tr><td><a href="#GLOMIQOadaptive_add_rlt_tree_depth">
+adaptive_add_rlt_tree_depth</a></td>
+<td>tree depth for heuristic that adaptively determines deep RLT cuts</td></tr>
+<tr><td><a href="#GLOMIQOadd_bilinear_terms">
+add_bilinear_terms</a></td>
+<td>allow addition of nonconvex bilinear terms to generate deep RLT cuts</td></tr>
+<tr><td><a href="#GLOMIQOconvexity_cuts">
+convexity_cuts</a></td>
+<td>derive convexity-based separating cuts for multivariable terms?</td></tr>
+<tr><td><a href="#GLOMIQOdominant_ec_only">
+dominant_ec_only</a></td>
+<td>add only the low-dimension edge-concave aggregations introducing dominant cuts into relaxations?</td></tr>
+<tr><td><a href="#GLOMIQOeigenvector_projections">
+eigenvector_projections</a></td>
+<td>use eigenvector projections as additional cuts?</td></tr>
+<tr><td><a href="#GLOMIQOeigenvector_projection_partitioning">
+eigenvector_projection_partitioning</a></td>
+<td>allow partitioning on eigenvector projections?</td></tr>
+<tr><td><a href="#GLOMIQOlow_dim_edge_concave_agg">
+low_dim_edge_concave_agg</a></td>
+<td>use low-dimension edge-concave aggregations?</td></tr>
+<tr><td><a href="#GLOMIQOmax_partitioned_quantities">
+max_partitioned_quantities</a></td>
+<td>number of partitioned quantities</td></tr>
+<tr><td><a href="#GLOMIQOmax_rlt_cuts">
+max_rlt_cuts</a></td>
+<td>maximum number of violated RLT cuts to add before resolving the relaxation?</td></tr>
+<tr><td><a href="#GLOMIQOnaive_add_ec">
+naive_add_ec</a></td>
+<td>naively integrate all low-dimension edge-concave aggregations into relaxations?</td></tr>
+<tr><td><a href="#GLOMIQOnaive_add_rlt">
+naive_add_rlt</a></td>
+<td>naively add all RLT cuts to the relaxations?</td></tr>
+<tr><td><a href="#GLOMIQOnumber_of_partitions">
+number_of_partitions</a></td>
+<td>how many partitions per variable?</td></tr>
+<tr><td><a href="#GLOMIQOpartitioning_scheme">
+partitioning_scheme</a></td>
+<td>Partitioning scheme can be linear or logarithmic</td></tr>
+<tr><td><a href="#GLOMIQOpiecewise_linear_partitions">
+piecewise_linear_partitions</a></td>
+<td>use piecewise-linear partitioning?</td></tr>
+<tr><td><a href="#GLOMIQOrlt">
+rlt</a></td>
+<td>find RLT variable/equation and equation/equation pairs?</td></tr>
+<tr><td><a href="#GLOMIQOuse_alpha_bb">
+use_alpha_bb</a></td>
+<td>apply globally-valid alphaBB cuts to tighten a node relaxation</td></tr>
+<tr><td><a href="#GLOMIQOuse_edge_concave_dynamic">
+use_edge_concave_dynamic</a></td>
+<td>apply locally-valid edge-concave cuts to tighten a node relaxation</td></tr></table>
+<h2>Detailed Descriptions of GLOMIQO Options</h2>
+
+<h4><a name="GLOMIQOabs_opt_tol">
+abs_opt_tol</a>
+<i> (real)</i> absolute stopping tolerance</h4><p>
+
+
+<br><i>(default = GAMS optca)</i>
+
+<h4><a name="GLOMIQOadaptive_add_rlt">
+adaptive_add_rlt</a>
+<i> (integer)</i> use the dynamic approach to adaptively determine deep RLT cuts?</h4><p>
+
+In the first few levels of the branch-and-bound tree, query the RLT
+equations after solving an initial relaxation. Add violated equations
+to the relaxation and resolve.  Track the most commonly-violated
+equations and include those cuts in later nodes.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOadaptive_add_rlt_tree_depth">
+adaptive_add_rlt_tree_depth</a>
+<i> (integer)</i> tree depth for heuristic that adaptively determines deep RLT cuts</h4><p>
+
+To the specified tree depth, solve the relaxation of a node twice if
+RLT equations are violated.  After this depth, automatically add the
+most commonly violated cuts to the solution of each node
+
+<br><i>Range: [1,100]</i>
+
+<br><i>(default = 3)</i>
+
+<h4><a name="GLOMIQOadd_bilinear_terms">
+add_bilinear_terms</a>
+<i> (integer)</i> allow addition of nonconvex bilinear terms to generate deep RLT cuts</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQObranching_bounds_push_away">
+branching_bounds_push_away</a>
+<i> (real)</i> branch a minimum fraction away from the variable bounds</h4><p>
+
+
+<br><i>Range: [0,0.5]</i>
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="GLOMIQObranching_weight">
+branching_weight</a>
+<i> (real)</i> branch on a convex combination of midpoint and solution</h4><p>
+
+The branching weight specifies the emphasis on the midpoint of a
+variable, so larger branching weights imply branching closer to the
+center of a variable range.
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.25)</i>
+
+<h4><a name="GLOMIQOconvexity_cuts">
+convexity_cuts</a>
+<i> (integer)</i> derive convexity-based separating cuts for multivariable terms?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOcplex_optfile">
+cplex_optfile</a>
+<i> (string)</i> read a secondary GAMS/CPLEX options file that will be applied to every LP and MILP subsolve</h4><p>
+
+Gain direct access to the
+\href{http://www.gams.com/dd/docs/solvers/cplex.pdf}{GAMS/CPLEX}
+options.  Specifying an options file allows, for example, the
+possibility of running the CPLEX subsolver with multiple threads.
+The value of the string should match the name of the GAMS/CPLEX
+options file.
+
+
+<h4><a name="GLOMIQOcut_generation_epsilon">
+cut_generation_epsilon</a>
+<i> (real)</i> absolute violation threshold for separating hyperplanes</h4><p>
+
+Absolute violation threshold to generate separating hyperplanes for
+convex multivariable terms
+
+<br><i>Range: [1e-7,10]</i>
+
+<br><i>(default = 1e-4)</i>
+
+<h4><a name="GLOMIQOdominant_ec_only">
+dominant_ec_only</a>
+<i> (integer)</i> add only the low-dimension edge-concave aggregations introducing dominant cuts into relaxations?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOdumpsolutions">
+dumpsolutions</a>
+<i> (string)</i> name of solutions index gdx file for writing alternate solutions</h4><p>
+
+The GDX file specified by this option will contain a set call
+<tt>index</tt> that contains the names of GDX files with the
+individual solutions. For details see example model <tt>dumpsol</tt>
+in the GAMS Test Library.
+
+
+<h4><a name="GLOMIQOeigenvector_projections">
+eigenvector_projections</a>
+<i> (integer)</i> use eigenvector projections as additional cuts?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOeigenvector_projection_partitioning">
+eigenvector_projection_partitioning</a>
+<i> (integer)</i> allow partitioning on eigenvector projections?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOfbbt_improvement_bound">
+fbbt_improvement_bound</a>
+<i> (real)</i> bounds reduction improvement threshold needed to exit FBBT loop</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.999)</i>
+
+<h4><a name="GLOMIQOfeas_soln_time_limit">
+feas_soln_time_limit</a>
+<i> (real)</i> time limit (s) for an NLP solve</h4><p>
+
+
+<br><i>(default = 30)</i>
+
+<h4><a name="GLOMIQOfeas_tolerance">
+feas_tolerance</a>
+<i> (real)</i> absolute feasibility tolerance</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="GLOMIQOlogging_freq">
+logging_freq</a>
+<i> (real)</i> how often should we log progress to the console?</h4><p>
+
+Wait at least the specified time in seconds before next output to the
+console
+
+<br><i>(default = 5)</i>
+
+<h4><a name="GLOMIQOlogging_level">
+logging_level</a>
+<i> (integer)</i> logging information level</h4><p>
+
+Log to the console at the specified level (-1: default; 0: minimal
+logging; 3: extensive logging)
+
+<br><i>Range: [-1,3]</i>
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>minimal plus warnings</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>minimal</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>entering info</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>updating info</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>includes Cplex updates</td></tr>
+</table>
+
+<h4><a name="GLOMIQOlow_dim_edge_concave_agg">
+low_dim_edge_concave_agg</a>
+<i> (integer)</i> use low-dimension edge-concave aggregations?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOmax_fbbt_iterations">
+max_fbbt_iterations</a>
+<i> (integer)</i> maximum number of FBBT iterations</h4><p>
+
+
+<br><i>Range: [1,100]</i>
+
+<br><i>(default = 50)</i>
+
+<h4><a name="GLOMIQOmax_number_nodes">
+max_number_nodes</a>
+<i> (integer)</i> node limit</h4><p>
+
+
+<br><i>(default = GAMS nodlim)</i>
+
+<h4><a name="GLOMIQOmax_obbt_iterations">
+max_obbt_iterations</a>
+<i> (integer)</i> maximum number of OBBT iterations</h4><p>
+
+
+<br><i>Range: [1,100]</i>
+
+<br><i>(default = 30)</i>
+
+<h4><a name="GLOMIQOmax_partitioned_quantities">
+max_partitioned_quantities</a>
+<i> (integer)</i> number of partitioned quantities</h4><p>
+
+
+<br><i>Range: [0,50]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GLOMIQOmax_rlt_cuts">
+max_rlt_cuts</a>
+<i> (integer)</i> maximum number of violated RLT cuts to add before resolving the relaxation?</h4><p>
+
+
+<br><i>Range: [1,1000]</i>
+
+<br><i>(default = 100)</i>
+
+<h4><a name="GLOMIQOmax_time">
+max_time</a>
+<i> (real)</i> resource limit</h4><p>
+
+
+<br><i>(default = GAMS reslim)</i>
+
+<h4><a name="GLOMIQOmax_time_each_obbt">
+max_time_each_obbt</a>
+<i> (real)</i> time limit (s) for each OBBT LP</h4><p>
+
+
+<br><i>Range: [1,100]</i>
+
+<br><i>(default = 10)</i>
+
+<h4><a name="GLOMIQOnaive_add_ec">
+naive_add_ec</a>
+<i> (integer)</i> naively integrate all low-dimension edge-concave aggregations into relaxations?</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GLOMIQOnaive_add_rlt">
+naive_add_rlt</a>
+<i> (integer)</i> naively add all RLT cuts to the relaxations?</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GLOMIQOnlp_solver">
+nlp_solver</a>
+<i> (string)</i> use CONOPT or SNOPT to find feasible solutions</h4><p>
+
+
+<br><i>(default = conopt)</i>
+<table>
+<tr valign="top"><td width=20 align=right>conopt</td><td>Conopt</td></tr>
+<tr valign="top"><td width=20 align=right>snopt</td><td>Snopt</td></tr>
+</table>
+
+<h4><a name="GLOMIQOnominal_time_limit">
+nominal_time_limit</a>
+<i> (real)</i> nominal time limit for solving MILP subproblems</h4><p>
+
+Nominal time limit for solving MILP subproblems. Terminate
+long-running MILP subproblems over this time limit once they reach an
+integer feasible point
+
+<br><i>Range: [0.1,1000]</i>
+
+<br><i>(default = 100)</i>
+
+<h4><a name="GLOMIQOnumber_of_partitions">
+number_of_partitions</a>
+<i> (integer)</i> how many partitions per variable?</h4><p>
+
+
+<br><i>Range: [0,16]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOnum_reliability_tests">
+num_reliability_tests</a>
+<i> (integer)</i> number of strong branching initialization tests</h4><p>
+
+
+<br><i>Range: [1,100]</i>
+
+<br><i>(default = 8)</i>
+
+<h4><a name="GLOMIQOobbt_improvement_bound">
+obbt_improvement_bound</a>
+<i> (real)</i> bounds reduction improvement threshold</h4><p>
+
+Bounds reduction improvement threshold needed to exit OBBT loop This
+parameter also determines whether to continue obbt in child; if the
+parent bound improvement is less than this threshold, then child node
+won't try OBBT
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.95)</i>
+
+<h4><a name="GLOMIQOpartitioning_scheme">
+partitioning_scheme</a>
+<i> (string)</i> Partitioning scheme can be linear or logarithmic</h4><p>
+
+Linear partitioning uses a number of binary variables linear in the
+number of partitions while logarithmic partitioning uses a number of
+binary variables logarithmic in the number of breakpoints.  Linear
+partitioning tends to be numerically favorable for a few breakpoints
+while logarithmic partitioning is better for a larger number of
+breakpoints.
+
+<br><i>(default = linear)</i>
+<table>
+<tr valign="top"><td width=20 align=right>linear</td><td>Linear partitioning</td></tr>
+<tr valign="top"><td width=20 align=right>logarithmic</td><td>Logarithmic partitioning</td></tr>
+</table>
+
+<h4><a name="GLOMIQOpiecewise_linear_partitions">
+piecewise_linear_partitions</a>
+<i> (integer)</i> use piecewise-linear partitioning?</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GLOMIQOpopulate_solution_pool">
+populate_solution_pool</a>
+<i> (integer)</i> emphasis on generating starting points</h4><p>
+
+Emphasis on generating many starting points for NLP solves using the
+CPLEX solution pool feature.  Larger number implies more starting
+points.
+
+<br><i>Range: [0,4]</i>
+
+<br><i>(default = 3)</i>
+
+<h4><a name="GLOMIQOprint_options">
+print_options</a>
+<i> (integer)</i> print the option parameter choices used in a single run?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOreadparams">
+readparams</a>
+<i> (string)</i> read secondary option file in GloMIQO syntax</h4><p>
+
+
+
+<h4><a name="GLOMIQOreliability_branching">
+reliability_branching</a>
+<i> (string)</i> heuristic choice for building reliable pseudocosts</h4><p>
+
+
+<br><i>(default = error)</i>
+<table>
+<tr valign="top"><td width=20 align=right>error</td><td>Max Error Branching</td></tr>
+<tr valign="top"><td width=20 align=right>forward</td><td>Forward branching</td></tr>
+<tr valign="top"><td width=20 align=right>reverse</td><td>Reverse branching</td></tr>
+</table>
+
+<h4><a name="GLOMIQOreliability_branching_mu">
+reliability_branching_mu</a>
+<i> (real)</i> score parameter for building reliability</h4><p>
+
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.15)</i>
+
+<h4><a name="GLOMIQOrel_opt_tol">
+rel_opt_tol</a>
+<i> (real)</i> relative stopping tolerance</h4><p>
+
+
+<br><i>(default = GAMS optcr)</i>
+
+<h4><a name="GLOMIQOrlt">
+rlt</a>
+<i> (integer)</i> find RLT variable/equation and equation/equation pairs?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOtrydual">
+trydual</a>
+<i> (real)</i> call CONOPT or SNOPT to produce duals</h4><p>
+
+Spend the specified amount of time in seconds or less in producing a
+dual solution by calling CONOPT or SNOPT.
+
+<br><i>Range: [0,maxdouble]</i>
+
+<br><i>(default = 5)</i>
+
+<h4><a name="GLOMIQOuse_alpha_bb">
+use_alpha_bb</a>
+<i> (integer)</i> apply globally-valid alphaBB cuts to tighten a node relaxation</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOuse_edge_concave_dynamic">
+use_edge_concave_dynamic</a>
+<i> (integer)</i> apply locally-valid edge-concave cuts to tighten a node relaxation</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOuse_obbt">
+use_obbt</a>
+<i> (integer)</i> use optimality-based bounds tightening?</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GLOMIQOuse_reliability_branching">
+use_reliability_branching</a>
+<i> (integer)</i> use reliability branching?</h4><p>
+
+
+<br><i>(default = 1)</i>
+</body></html>

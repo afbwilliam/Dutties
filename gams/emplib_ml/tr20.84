@@ -1,0 +1,128 @@
+$title Extended transport model with stochastic demand and costs (tr20,SEQ=84)
+$eolcom //
+
+set c
+    ck(c)    Center
+    cc(c)    Cities
+    stoch  / val, prob /
+    r      / l, m, h /;
+
+parameter coord(c,*);
+parameter dist(c,c);
+parameter b(c,c);
+parameter rv(stoch,r)
+alias (c,cp);
+
+$gdxin tr20_scen
+$load c ck cc coord dist b rv
+
+Parameters cap    Maximum capacity of one truck / 10.0 /
+           cf     Transportation cost per mile and per truck - full run / 0.2 /
+           ce     Transportation cost per mile and per truck - empty run / 0.18 /
+           b(c,c) Demand of center and cities
+           maxt   Maximum amount of trucks;
+
+set dnet(c,c); dnet(ck,cc) = yes; dnet(cc,ck) = yes;
+set enet(c,c); enet(c,cp) = not sameas(c,cp);
+
+
+maxt=sum(dnet(c,cp), b(dnet));
+
+Parameter
+      df(c,c)  random demand factor
+      cr(c,c)  Recourse cost (rent-a-truck) per mile
+      crr(c,r) stochastic outcome of cr;
+
+$load crr
+
+* -----------------------------------------------
+* define the core model
+* -----------------------------------------------
+
+Free Variable z total cost;
+
+Positive Variables f(c,c)    Full runs
+                   e(c,c)    Empty runs
+                   y(c,c)    Recourse
+                   a(c)      Allocation
+                   stayat(c) Trucks staying at c - i.e. no full or empty runs;
+
+Equations
+         tcosts       define objective function
+         demand(c,c)  serve demand of center and all cities
+         node(c)      node constraint for the trucks
+         maxtruck     maximum number of trucks to be allocated;
+
+tcosts .. z =e=    sum(dnet(c,cp), dist(dnet)*(cf*f(dnet) + cr(dnet)*y(dnet)))
+                 + sum(enet(c,cp), ce*dist(enet)*e(enet));
+
+demand(dnet(c,cp))..  f(dnet)*cap + y(dnet) =g= df(dnet)*b(dnet);
+
+node(c) .. sum(dnet(c,cp), f(c,cp)) + sum(enet(c,cp), e(enet)) + stayat(c)
+           =e= a(c) + sum(enet(cp,c), e(enet));
+
+maxtruck.. cap*sum(c, a(c)) =l= 0.9*maxt;
+
+
+Model transport /tcosts,demand,node,maxtruck/;
+
+Set s            scenarios / s1*s100 /;
+
+parameters s_df(s,c,c);
+Set dict / s     .scenario.''
+           df    .randvar. s_df/;
+
+df(dnet)       = 1;
+cr(dnet(c,cp)) = crr(c,'m');
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%';
+loop(dnet,
+   put / 'randvar ' df.tn(dnet) ' discrete '
+   loop(r, put rv('prob',r):5:2 rv('val',r):5:2));
+   put / 'stage 2 df f e y stayat demand node';
+putclose;
+
+solve transport min z using emp scenario dict;
+
+* Sampling
+Scalar h1;
+
+loop(s,
+  loop(dnet,
+    h1=uniform(0,1);
+    if( h1<rv('prob','l') ,
+      s_df(s,dnet)=rv('val','l');
+    elseif h1<=(rv('prob','l')+rv('prob','m')),
+      s_df(s,dnet)=rv('val','m');
+    else
+      s_df(s,dnet)=rv('val','h');
+    );
+  );
+);
+
+put emp '* problem %gams.i%';
+put / 'jrandvar '
+loop(dnet, put df.tn(dnet));
+loop(s,
+  put (1/card(s)):8:6;
+  loop(dnet, put s_df(s,dnet):5:2; );
+);
+put / 'stage 2 df f e y stayat demand node';
+putclose;
+
+solve transport min z using emp scenario dict;
+
+parameters s_cr(s,c,c);
+
+Set dict2 / s     .scenario.''
+            df    .randvar. s_df
+            cr    .randvar. s_cr/;
+
+put emp '* problem %gams.i%';
+loop(dnet(c,cp),
+   put / 'jrandvar ' df.tn(dnet) ' ' cr.tn(dnet)
+   loop(r, put rv('prob',r):5:2 rv('val',r):5:2 crr(c,r):6:3));
+   put / 'stage 2 df cr f e y stayat demand node';
+putclose;
+
+solve transport min z using emp scenario dict2;

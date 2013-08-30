@@ -1,0 +1,45 @@
+$title 'Testing the clear option with fitting data' (GDXXRW2,SEQ=173)
+
+$if %system.platform% == WIN $goto runme
+$if %system.platform% == WEX $goto runme
+$log GDXXRW test skipped for this platform
+$exit
+
+$label runme
+$call msappavail -Excel
+$if not errorlevel 1 $goto realrunme
+$log no Excel
+$exit
+
+$label realrunme
+
+set i / i1*i10 /, i5(i) / i1*i5 /
+    j / j1*j10 /, j5(j) / j1*j5 /;
+
+parameter a(i,j),b(i,j),a11(i,j),a20(i,j),a02(i,j),c11(i,j),c20(i,j),c02(i,j),d11(i,j),d20(i,j),d02(i,j);
+
+a(i,j) = (ord(i)-1)*card(j) + ord(j);
+b(i5,j5) = 10*a(i5,j5);
+
+execute_unload 'temp.gdx';
+execute '=gdxxrw temp.gdx o=temp.xls trace=0 par=a rng=one! rdim=1 cdim=1 par=a rng=two! rdim=2 cdim=0 par=a rng=three! rdim=0 cdim=2';
+execute '=gdxxrw temp.gdx o=temp.xls trace=0 par=b rng=one!a1:F6 clear rdim=1 cdim=1 par=b rng=two!a1:c50 clear rdim=2 cdim=0 par=b rng=three!a1:ax3 clear rdim=0 cdim=2';
+
+execute '=gdxxrw temp.xls trace=0 par=a11 rng=one! rdim=1 cdim=1 par=a20 rng=two! rdim=2 cdim=0 par=a02 rng=three! rdim=0 cdim=2';
+execute_load 'temp.gdx',a11,a20,a02;
+
+display a11,a20,a02;
+
+c11(i,j) = a(i,j); c11(i5,j5) = b(i5,j5);
+c20(i,j) = a(i,j); c20(i5,j ) = b(i5,j );
+c02(i,j) = a(i,j); c02(i5,j ) = b(i5,j );
+
+d11(i,j) = a11(i,j) <> c11(i,j);
+d20(i,j) = a20(i,j) <> c20(i,j);
+d02(i,j) = a02(i,j) <> c02(i,j);
+
+display d11,d20,d02;
+
+abort$card(d11) d11;
+abort$card(d20) d20;
+abort$card(d02) d02;

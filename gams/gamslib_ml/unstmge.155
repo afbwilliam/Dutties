@@ -1,0 +1,51 @@
+$TITLE  Globally Unstable Equilibria (UNSTMGE,SEQ=155)
+$Ontext
+
+Globally Unstable Equilibria
+
+
+Scarf, H, Some Examples of Global Instability of the Competitive
+Equilibrium. International Economic Review 1 (1960), 157-171.
+
+$Offtext
+
+set     i               index of consumers and goods /i1*i3/;
+
+scalar          sigma   elasticity of substitution /0.8/,
+                alpha   budget share of commodity 1 /0.9/,
+                a       scarf's parameter a,
+                b       scarf's parameter b
+                index   stability index (negative=unstable);
+
+        a = (1-sigma) / sigma;
+
+        b = alpha / (1 - alpha);
+
+        index = (a + 1) / (a - 1) - b;
+
+        display a, b, index;
+
+$ontext
+
+$MODEL:UNSTABLE
+
+$COMMODITIES:
+        P(I)
+
+$CONSUMERS:
+        AGENT(I)
+
+$DEMAND:AGENT(I)  s:SIGMA
+        E:P(I)                  Q:1
+        D:P(I)                  Q:ALPHA
+        D:P(I++1)               Q:(1-ALPHA)
+
+$offtext
+
+$sysinclude mpsgeset unstable
+
+option seed = 1001;
+p.l(i) = uniform(0,1);
+
+$include UNSTABLE.GEN
+solve unstable using mcp;

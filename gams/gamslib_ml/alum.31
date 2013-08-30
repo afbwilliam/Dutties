@@ -1,0 +1,1833 @@
+$Title World Aluminum Model  (ALUM,SEQ=31)
+$Stitle Introduction
+
+$Ontext
+
+This model focuses on the long-term trends in investment, production
+and trade patterns in the world aluminum industry.
+
+
+Brown, M, Dammert, A, Meeraus, A, and Stoutjesdijk, A, Worldwide
+Investment Analysis - The Case of Aluminum. Tech. rep., The World
+Bank, 1983.
+
+  Model Structure:
+
+  Section 1 :  General set definitions
+
+  Section 2 :  Demand characteristics for primary aluminum
+
+  Section 3 :  Mine data
+
+  Section 4 :  Technology
+
+  Section 5 :  Capacities and deposits
+
+  Section 6 :  Infrastructure and investment costs
+
+  Section 7 :  Operating costs
+
+  Section 8 :  Transport description
+
+  Section 9 :  Prices, tariffs and levies
+
+  Section 10:  Model reduction
+
+  Section 11:  Cost calculations on data
+
+  Section 12:  Data checks
+
+  Section 13:  Model specification
+
+  Section 14:  Scenario
+
+  Section 15:  Report
+
+
+  In sections 2 through 8, set and parameter declarations are made
+  made first, followed by data, and finally structural link checks.
+
+  Throughout the model TONS means Metric Tons. And TPY = Tons per year.
+
+$Offtext
+
+
+*  the following set called print order is used only to determine the
+*  display features of the report section.
+
+ Set po      print order     /
+
+        usa         , western-us  , eastern-us  , west-can    , east-can    , wn-america  , en-america  , n-america  ,
+        w-europe    , west-eur    , japan       , japan+oc    , n-austral   , w-austral   , oceania     , oecd       ,
+        c-amer+car  , jamaica     , jamaica1    , jamaica2    , haiti+dr    , guyana      , surinam     , brazil     ,
+        venezuela   , argentina   , ws-america  , es-america  , s-amer+car  , ghana       , ayek-guin   , fria-guin  ,
+        toug-guin   , s-leone     , camer+oa    , n-africa    , rest-guin   , zaire       , rest-afric  , s-africa   ,
+        w-africa    , e-africa    , africa      , india       , indonesia   , china       , o-asia      , asean      ,
+        korea+oea   , mid-east    , rest-asia   , asia-x      , ldcs        , ee+ussr     , e-europe    , asian-ussr /
+
+$Stitle general set definitions
+
+ Set i       mining regions  /
+
+        usa         , w-europe    , n-austral   , w-austral   , jamaica1    , jamaica2    , haiti+dr    , guyana     ,
+        surinam     , brazil      , venezuela   , ghana       , ayek-guin   , fria-guin   , toug-guin   , s-leone    ,
+        camer+oa    , india       , indonesia   , china       , o-asia      , ee+ussr      /
+
+     r       producing regions  /
+
+        western-us  , eastern-us  , west-can    , east-can    , w-europe    , japan       , w-austral   , oceania ,
+        c-amer+car  , jamaica     , guyana      , surinam     , brazil      , venezuela   , argentina   , ghana      ,
+        ayek-guin   , n-africa    , rest-guin   , zaire       , rest-afric  , s-africa    , india       , china      ,
+        asean       , korea+oea   , mid-east    , rest-asia   , e-europe    , asian-ussr  /
+
+     j       marketing areas  /
+
+        wn-america  , en-america  , w-europe    , japan       , oceania     , c-amer+car  , ws-america  , es-america ,
+        n-africa    , s-africa    , w-africa    , e-africa    , china       , asean       , korea+oea   , mid-east   ,
+        rest-asia   , ee+ussr     /
+
+     g       seven region groupings  /
+
+        n-america   , west-eur    , japan+oc    , s-amer+car  , africa      , asia-x      , ee+ussr     /
+
+     f       three way grouping   / oecd        , ldcs        , ee+ussr     /
+
+
+     gi(g,i) map of seven regional groups to mines/
+
+        n-america.usa
+        west-eur.w-europe
+        japan+oc.(n-austral,w-austral)
+        s-amer+car.(jamaica1,jamaica2,haiti+dr,guyana,surinam,brazil,venezuela)
+        africa.(ghana,ayek-guin,fria-guin,toug-guin,s-leone,camer+oa)
+        asia-x.(india,indonesia,china,o-asia)
+        ee+ussr.ee+ussr  /
+
+     gr(g,r) map of seven regional groups to refineries and smelters  /
+
+        n-america.(western-us,eastern-us,west-can,east-can)
+        west-eur.w-europe
+        japan+oc.(w-austral,oceania,japan)
+        s-amer+car.(guyana,surinam,brazil,venezuela,jamaica,c-amer+car,argentina)
+        africa.(ghana,ayek-guin,n-africa,rest-guin,zaire,rest-afric,s-africa)
+        asia-x.(india,china,asean,korea+oea,rest-asia,mid-east)
+        ee+ussr.(e-europe,asian-ussr)   /
+
+     gj(g,j) map of seven regional groups to markets/
+
+        n-america.(wn-america,en-america)
+        west-eur.w-europe
+        japan+oc.(oceania,japan)
+        s-amer+car.(c-amer+car,ws-america,es-america)
+        africa.(n-africa,s-africa,w-africa,e-africa)
+        asia-x.(china,asean,korea+oea,rest-asia,mid-east)
+        ee+ussr.(ee+ussr)  /
+
+     fg(f,g) map of seven regional groups to three way grouping /
+
+        oecd.(n-america,west-eur, japan+oc)
+        ldcs.(s-amer+car, africa, asia-x)
+        ee+ussr.ee+ussr     /
+
+
+
+     fr(f,r) map of producing regions to three way grouping
+
+     fi(f,i) map of mining regions to three way grouping
+
+     fj(f,j) map of markets to three way grouping
+
+     c       commodities/
+
+             tri-201         trihydrate ba 2:1 si 4%
+             tri-221         trihydrate ba 2.2:1 si 3%
+             tri-241         trihydrate ba 2.4:1 si 3%
+             tri-341         trihydrate ba 3.4:1 si 1.5%
+             tri-mo-271      mixed      ba 2.7:1 si 1.5%
+             tri-mo-221      mixed      ba 2.2:1 si 4%
+             mono            monohydrate bauxite
+             highsi          high silica bauxite
+             alumina
+             aluminum
+             electr          electricity                /
+
+     cf(c)   final products  / aluminum /
+
+     ci(c)   intermediates   / alumina  /
+
+     cl(c)   electricity     / electr /
+
+     cm(c)   bauxites / tri-201, tri-221, tri-241, tri-341, tri-mo-271, tri-mo-221, mono, highsi /
+
+     cmi     miscellaneous inputs /
+
+             labor       man-hours per ton
+             energy      million btu per ton
+             soda-ash    tons per ton
+             lime        tons per ton
+             fuel-lub    million btu per ton
+             therm-egy   million btu per ton
+             coke        tons per ton
+             fluorides   kilograms per ton
+             pitch       tons per ton
+             other       in 1980 us$ per ton    /
+
+     l       commodity - electricity supply types /
+             el-actual   electricity for plants in production
+             el-locost   potential electricity supplies
+             el-hicost   electricity from tradable fuels  /
+
+     p       processes for refining and smelting /
+
+             ref-t201    ref-trihydrates ba 2:1 si 4%
+             ref-t221    ref-trihydrates ba 2.2:1 si 3%
+             ref-t241    ref-trihydrates ba 2.4:1 si 3%
+             ref-t341    ref-trihydrates ba 3.4:1 si 1.5%
+             ref-tm271   ref tri-monohydrates ba 2.7:1 si1.5%
+             ref-tm221   ref-tri-monohydrates ba 2.2:1 si 4%
+             ref-m       ref-monohydrates high temp press
+             ref-hs      ref-high silica soda sinter process
+             smelting    smelting of alumina                  /
+
+
+     m       productive units for refining and smelting  /
+
+             refineryt  refinery for trihydrates
+             refinerytm refinery for tri-monohydrates
+             refinerym  refinery for monohydrates
+             refineryss refinery for high silica
+             smelter    to process alumina into aluminum /
+
+      mr(m)  productive units for refining               / refineryt, refinerytm, refinerym, refineryss /
+
+      ms(m)  productive units for smelting               / smelter  /
+
+      seg    investment segments                         / 1*4 /;
+
+ Alias(r,rp),(g,gp),(f,fp);
+
+ fr(f,r) = yes$sum(g, fg(f,g)*gr(g,r));
+ fi(f,i) = yes$sum(g, fg(f,g)*gi(g,i));
+ fj(f,j) = yes$sum(g, fg(f,g)*gj(g,j));
+ Display fr,fi,fj;
+
+ Scalar interval  time interval for mine resource constraint / 20 /;
+
+$Stitle demand characteristics for primary aluminum
+
+ Parameter d(j)        aluminum demand in the year 2000       (1000 tpy)
+           nmaa2000(r) non-metal alumina demand in year 2000  (1000 tpy)
+           nmba2000(i) non-metal bauxite demand in year 2000  (1000 tpy)
+
+ Parameter nmba1980(i) non-metal grade bauxite production in 1980 /
+
+           usa          272
+           guyana      1765
+           surinam      493
+           n-austral    230
+           china        200  /
+
+           nmaa1980(r) non-metal grade alumina demand at smelters in 1980 /
+
+           eastern-us   884
+           w-europe     857
+           japan        582 /;
+
+
+*  nonmetal bauxite consumption grows at the annual rate of 5% and
+*  nonmetal alumina consumption grows at the annual rate of 3.5%.
+
+  nmba2000(i)  = nmba1980(i)*1.05**20;
+  nmaa2000(r)  = nmaa1980(r)*1.035**20;
+
+ Table dem2000 high and low demand forecasts for aluminum in the year 2000 and historical 1980
+
+               high         low        1980
+
+ w-europe      8016        6398        3884
+ ee+ussr       6099        4884        2776
+ china         1575        1575         618
+ c-amer+car     364         281          96
+ oceania        376         328         243
+ asean         1243         886          65
+ korea+oea     1374        1120         240
+ japan         4331        3762        1637
+ rest-asia     1350         987         278
+ mid-east       216         216          70
+ n-africa        74          70          35
+ s-africa       376         361          78
+ wn-america    5750        4489        2382
+ en-america    5750        4489        2382
+ ws-america     340         263         117
+ es-america    1549        1407         378
+ w-africa        70          70          31
+ e-africa        70          46          16
+           ;
+ d(j) = dem2000(j,"high");
+
+$Stitle mine data
+
+ Parameter sratio(i,cm) strip ratios for mine locations and bauxite types /
+
+ usa.highsi                               1.5      ,  (w-europe,ee+ussr).mono                    1.5
+ guyana.tri-201                           1.37     ,  brazil.tri-221                             1.37
+ (venezuela,ghana).tri-221                1.22     ,  o-asia.tri-241                             1.22
+ (fria-guin,s-leone,indonesia).tri-221    1.       ,  (jamaica1,surinam,camer+oa,india).tri-241  1.
+ w-austral.tri-341                        1.       ,  (n-austral,ayek-guin,toug-guin).tri-mo-221 1.
+ (jamaica2,haiti+dr).tri-mo-271           1.       ,  china.highsi                               1.        /
+
+$Stitle technology
+
+ Set   ar     row labels for matrix a    /
+              tri-201   , tri-221   , tri-241   , tri-341   , tri-mo-271, tri-mo-221, mono      , highsi    ,
+              alumina   , aluminum  , labor     , energy    , soda-ash  , lime      , fuel-lub  , therm-egy ,
+              coke      , fluorides , pitch     , other     , electr    /
+
+ Parameter batoaa(cm)  ratio of bauxite to alumina  (weight)
+           aatoal(ci)  ratio of alumina to aluminum (weight);
+
+$Maxcol 100
+
+ Table a input-output coefficients
+
+             ref-t201  ref-t221  ref-t241  ref-t341  ref-tm271  ref-tm221   ref-m  ref-hs  smelting
+
+ tri-201       -2.000                                                                                 the electrical
+ tri-221                 -2.200                                                                       energy require-
+ tri-241                           -2.400                                                             ment is based
+ tri-341                                     -3.400                                                   on the prebaked
+ tri-mo-271                                             -2.700                                        system.  in 1980
+ tri-mo-221                                                        -2.200                             13500 - 14300kwh
+ mono                                                                      -2.500                     was required.
+ highsi                                                                            -2.300             assuming an energy
+ alumina        1.000     1.000     1.000     1.000      1.000      1.000   1.000   1.000    -1.930   productivity im-
+ aluminum                                                                                     1.000   provement of .5%
+ labor         -1.800    -1.800    -1.800    -1.800     -2.000     -2.000  -2.000  -4.000    -8.600   per year approxi-
+ energy       -13.100   -13.100   -13.100   -13.100    -14.100    -14.100 -14.700 -43.000             ately 12600kwh
+ soda-ash       -.110     -.090     -.100     -.070      -.090      -.120   -.150   -.050             is required in
+ lime           -.100     -.100     -.100     -.100      -.100      -.100   -.100  -1.750             the period of
+ therm-egy                                                                                   -4.400   1995 - 2000.
+ coke                                                                                         -.375
+ fluorides                                                                                  -30.000
+ pitch                                                                                        -.1
+ other        -30.0     -30.0     -30.0     -30.0      -30.0      -30.0   -30.0   -60.0    -220.0
+ electr                                                                                     -12.6
+
+$Maxcol 120
+
+ Table b(m,p) capacity utilization
+
+             ref-t201  ref-t221  ref-t241  ref-t341  ref-tm271  ref-tm221  ref-m  ref-hs  smelting
+
+ refineryt      1.0       1.0       1.0       1.0
+ refinerytm                                              1.0        1.0
+ refinerym                                                                   1.0
+ refineryss                                                                         1.0
+ smelter                                                                                     1.0
+       ;
+
+
+
+  batoaa(cm) = - smin(p, a(cm,p));
+  aatoal(ci) = - smin(p, a(ci,p));
+ Display batoaa, aatoal;
+
+$Stitle capacities and deposits
+
+ Set cc   column labels for initial capacity and reserves matrix /
+          initial, invest, reserves, initial-70, reserve-70, t-70, tm-70, m-70, ss-70, smelt-70 /
+
+     ec1  column labels for electrical energy resources matrix   / hydro, flaredgas, coal, lc   /
+
+     mapcc(m,cc) map data labels for 1970 to productive units    / refineryt.t-70
+                                                                   refinerytm.tm-70
+                                                                   refinerym.m-70
+                                                                   refineryss.ss-70
+                                                                   smelter.smelt-70    /
+
+ Parameter capm(i)          existing and commited mine capacities                (1000 tpy)
+           zmbar(i)         maximum mine output level                        (million tons)
+           capr(r,m)        total refinery and smelter capacities                (1000 tpy)
+           ubar(r,*)        electricity supply                    (gigawatt hours per year)
+           utm              capacity utilization for mines
+           utr(m)           capacity utilization for refineries;
+
+$Maxcol 90
+
+ Table  capm1(i,*)   mine capacities and reserves in 1980 and 1970                             comment
+
+                initial      invest    reserves          initial-70       reserve-70
+*             (1000 tpy)   (1000 tpy) (million tpy)      (1000 tpy)      (million tpy)      capacities represent
+                                                                                            total material removed.
+ usa             1945                     40                2300              59
+ jamaica1        8420                   1050                8420            1140
+ jamaica2        4350                    542                4350             590            the "invest column
+ haiti+dr        1200                     50                2000              65            refers to firm
+ guyana          3720                    700                4800             140            investment commit-
+ surinam         5260                    490                6500             540            ments.
+ brazil          5150         1500      4070                 550            2500
+ venezuela                               500                                 500
+ w-europe        8803                   1200                8400            1280
+ ee+ussr        10126                    600               10100             700
+ n-austral      16250                   3400                4560            3450
+ w-austral      13500         4400      1200                5500            1250
+ india           2150                    600                1500             250
+ indonesia       1215                    700                1340             390
+ china           1665                    200                 650             210
+ o-asia           605                    130                1200             140
+ ghana            279                    500                 420             250
+ ayek-guin       9600                   1200                                1200
+ fria-guin       1440                    300                2700             300
+ toug-guin       2500                   4000                                2000
+ s-leone          755                    280                 490             120
+ camer+oa                               1020                                1020
+                 ;
+
+* maximum mine output levels and capacity.
+  zmbar(i)    = capm1(i,"reserves")*1000;
+  capm(i)     = capm1(i,"initial") + capm1(i,"invest");
+ Display capm,zmbar;
+
+$Maxcol 120
+
+ Table capr1(r,*) capacity in 1000 tpy dec. 1980
+
+                refineryt refinerytm refinerym refineryss smelter   t-70   tm-70    m-70  ss-70  smelt-70
+
+ western-us                                                1725                                    1621
+ eastern-us        5060      2160                 800      3150     4350   1850            800     2613
+ west-can                                                   268                                     268
+ east-can           670       560                           843      670    560                     672
+ jamaica           1840      1000                                   1840    500
+ c-amer+car
+ guyana             350                                              350
+ surinam           1320                                      66     1320                             66
+ brazil             500                                     258      130                            240
+ argentina                                                  140
+ venezuela                                                  400                                     120
+ w-europe           627      3551       2872               3946                     2872           2557
+ e-europe           350       910      4126                2000                     3800           1325
+ asian-ussr                                                1200                                    1135
+ oceania                     3670                           527             1000                    280
+ w-austral         3670                                             1400
+ asean
+ korea+oea          160                                      98       50                             35
+ china                                            888       410                            380      200
+ japan              790      1820                          1216      430     980                   1216
+ india              670                                     360      360                            244
+ rest-asia          200                                      60
+ mid-east                                                   265
+ n-africa                                                   133
+ ghana                                                      281                                     255
+ ayek-guin
+ rest-guin         660                                               660
+ zaire
+ rest-afric                                                                                          55
+ s-africa                                                    89
+
+ Table capr2(r,m) committed investments in 1000 tpy
+
+                   refineryt  refinerytm  refinerym  refineryss  smelter
+
+ western-us                                                        59
+ eastern-us                     130                               226
+ west-can
+ east-can                                                         114
+ jamaica
+ c-amer+car                                                        45
+ guyana
+ surinam
+ brazil              1350                                         406
+ argentina                                                         35
+ venezuela           1000                                          70
+ w-europe                      1360          100                  533
+ e-europe
+ asian-ussr
+ oceania                        310                              1025
+ w-austral           1500
+ asean                450                                         325
+ korea+oea
+ china
+ japan                 20                                         -87
+ india                 20                                          24
+ rest-asia            200                                          60
+ mid-east                                                         135
+ n-africa                                                         173
+ s-africa                                                          86
+          ;
+* add initial capacity to committed investments
+  capr(r,m) = capr1(r,m) + capr2(r,m)     ;
+ Display capr;
+
+ Parameter ut      capacity utilization coefficients  /
+
+            refineryt      .92
+            refinerytm     .92
+            refinerym      .92
+            refineryss     .92
+            smelter        .95
+            mining         .90  /;
+
+  utm    = ut("mining");  utr(m) = ut(m);
+ Display utm,utr;
+
+$Maxcol 72
+ Table egyres(r,*) energy resources
+
+                 hydro     flaredgas       coal        lc                          comments
+
+ western-us                                          1.0                  units: hydro and flared gas reserves are
+ eastern-us                                           .5                         in thousand gigawatts.
+ west-can          130                               1.0
+ east-can            1                               1.0                  lc   : this is the fraction of the
+ jamaica                                                                         electricity needed by the smelting
+ c-amer+car         51        18                     1.0                         industry that is available from
+ guyana             20                                                           existing cheap hydro power sources.
+ surinam             4                               1.0
+ brazil            250                               1.0
+ argentina         250                               1.0
+ venezuela          50        35                     1.0
+ w-europe                                             .7
+ e-europe                                            1.2
+ asian-ussr         50                                .9
+ oceania           150                    450        1.0                 oceania: coal reserves in million
+ w-austral                                                                        gigawatt hours
+ asean             120        15                    -1.0                 negative lc:
+ china              17                               1.0                           in asean and korea+oea lc is
+ japan                                                .2                           negative indicating no currently
+ india             160                                .6                           existing cheap power is available
+ rest-asia          40                               1.0                           to the smelting industry.  minus
+ mid-east                    320                     1.1                           1 is used in place of zero as it
+ n-africa                     40                     1.0                           facilitates data checks.
+ ghana             170        90                     1.0
+ rest-guin          56                               0.0
+ zaire             110
+ s-africa                                            1.0
+ korea+oea                                          -1.0
+         ;
+$Maxcol 120
+
+
+$Ontext
+  el-theory:  theoretical electrical energy requirements for existing capacity:
+
+   (capacity of smelter) x (utilization factor) x (gigawatt hrs of electricity needed per 1000 tons of aluminum)
+
+  el-actual:  actual energy resources available to the industry:   el-theory x lc
+
+  el-locost:  potential low cost energy available from more expensive hydro, flared gas and coal supplies:
+                    0.1 x hydro potential  +  0.25 x flared gas potential
+
+  el-hicost:  potential energy supply from expensive coal and nuclear sources.
+
+  note:  (a)  in australia (oceania) only 15000 gigawatt hrs per year generated from coal is considered;
+         (b)  in zaire, despite 109000 gigawatt hrs per yr in potential hydro power, only 2450 gigawatt hrs
+              per year is considered as practically available for aluminum smelting purposes;
+         (c)  in c-amer+car although there is no smelting industry 607 gigawatt hrs per yr of electrical energy
+              is available;
+         (d)  most hydro-potential power available in eastern canada is not available.  but a small fraction,
+              together with some from western canada, totaling 3000 gigawatt hrs is available.
+$Offtext
+
+  ubar(r,"el-theory") = capr1(r,"smelter")*0.95*14.3;
+
+  ubar(r,"el-actual")$( egyres(r,"lc") gt 0 ) = ubar(r,"el-theory")*egyres(r,"lc");
+
+  ubar("c-amer+car","el-actual") = 607;
+
+  ubar(r,"el-locost") = (0.1*egyres(r,"hydro") + 0.25*egyres(r,"flaredgas"))*1000;
+
+  ubar("oceania","el-locost") = ubar("oceania","el-locost") + 33.3*egyres("oceania","coal");
+
+  ubar("zaire","el-locost") = .02247*egyres("zaire","hydro")*1000;
+
+  ubar("east-can","el-locost") = 3000;
+
+ Display egyres,ubar;
+
+$Stitle infrastructure and investment costs
+
+ Set rhigh(r) refinery locations with high level infrastructure
+
+     rmid(r)  refinery locations with medium level infrastructure
+
+     rlow(r)  refinery locations with low level infrastructure
+
+     ihigh(i) mine locations with high level infrastructure
+
+     imid(i)  mine locations with medium level infrastructure
+
+     ilow(i)  mine locations with low level infrastructure
+
+     icc     column labels for investment cost data tables      / fix-cost, prop-cost, scale , omegahat /
+
+     sin1    cost level escalators for investment at locations  / high, mid, low /
+
+     sin2    cost level escalation map for refinery location
+
+     sin3    cost level escalation map for mine locations;
+
+
+ rhigh(r)$gr("n-america",r) = yes; rhigh(r)$gr("west-eur",r) = yes;
+
+ rlow(r)$gr("africa",r)     = yes; rlow("asian-ussr")        = yes; rlow("n-africa")   = no ; rlow("s-africa") = no;
+
+ rmid(r) = yes$(not rhigh(r))$(not rlow(r)) ;
+
+ sin2(rhigh,"high") = yes; sin2(rmid,"mid") = yes; sin2(rlow,"low") = yes;
+
+ Display rhigh,rmid,rlow;
+
+ Scalar     life        financial life time of productive unit    (years)
+            rho         riskless discount rate
+            sigma       capital recovery factor
+
+ Parameter  omegam(i,seg)   fixed portion of investment cost: mines                     (us$ 1000 tpy)
+            omegar(m,seg,r) fixed portion of investment costs: refineries and smelters  (us$ 1000 tpy)
+            sbm(i,seg)      plant size at segments: mines                               (1000 tpy)
+            sbr(m,seg,r)    plant size at segments: refineries and smelters             (1000 tpy)
+            iem(i)          miscellaneous investment costs: mines
+            ier(r)          miscellaneous investment costs: refineries and smelters;
+
+* to compensate for differences in existing infrastructure the parameter infac, below, is set to raise
+* the effective investment costs for certain groupings.
+
+ Parameter infac(r)   inaccess and infrastructure factor for refineries and smelters ;
+
+  infac(rhigh) = 1.0 ;
+  infac(rmid)  = 1.1 ;
+  infac(rlow)  = 1.25 ;
+
+
+ Parameter infmi(i) factor for mine capital costs /
+
+  (usa,ee+ussr,w-europe,china)                                                          1.0
+  (jamaica1,jamaica2,haiti+dr,n-austral,w-austral,ghana,guyana,surinam,brazil,
+  venezuela,india,indonesia,o-asia,ayek-guin,fria-guin,s-leone)                         1.1
+  (camer+oa,toug-guin)                                                                  1.25              /;
+
+* the following scalars are used temporarily due to a problem in gams.
+
+ Scalar  one1 / 1.05 /, one2 / 1.1 /;
+
+ ihigh(i) = yes$(infmi(i) le one1);
+ imid(i)  = yes$(infmi(i) eq one2);
+ ilow(i)  = yes$(infmi(i) gt one2);
+ sin3(ihigh,"high") = yes; sin3(imid,"mid") = yes; sin3(ilow,"low") = yes;
+
+*investment costs
+
+ rho   = .1;
+
+ life  =  20;
+
+ sigma = rho*(1+rho)**life/((1+rho)**life-1);
+
+ Display rho, life, sigma;
+
+* mining productive unit outputs are in tons of bauxite
+
+ Table inv(*,icc)   investment costs and economies of scale
+
+               fix-cost     prop-cost      scale
+*             (us$mill) (us$mill/1000tpy) 1000 tpy
+
+  mining         30.0         .0275        16000
+  refineryt      330           0.72         2000
+  refinerytm     350           0.76         2000
+  refinerym      370           0.81         2000
+  refineryss     412           0.90         2000
+  smelter        100           2.4           200
+
+$Maxcol 72
+
+ Table ip(sin1,*)
+             prop   hds-s  hds-r  max-s  max-r  hds-i  max-i               hds: diseconomies of scale size
+ high         1.2     10     5      20     10     4       6                max: maximum size
+ mid          1.2      4     2      15      4     3       5                s  : smelters     r: refineries
+ low          1.2      2     2      10      3     2       4                i  : mines
+
+$Maxcol 120
+                                                            ;
+ inv(m,"omegahat")        = inv(m,"fix-cost") + inv(m,"prop-cost")*inv(m,"scale");
+ inv("mining","omegahat") = inv("mining","fix-cost") + inv("mining","prop-cost")*inv("mining","scale");
+
+ omegar(m,"1",r) = inv(m,"fix-cost")*infac(r);
+ omegar(m,"2",r) = inv(m,"omegahat")*infac(r);
+ omegar(mr,"3",r) = sum(sin1$sin2(r,sin1), omegar(mr,"2",r)*ip(sin1,"hds-r"));
+ omegar(ms,"3",r) = sum(sin1$sin2(r,sin1), omegar(ms,"2",r)*ip(sin1,"hds-s"));
+ omegar(mr,"4",r) = sum(sin1$sin2(r,sin1), omegar(mr,"2",r)*ip(sin1,"max-r")*ip(sin1,"prop"));
+ omegar(ms,"4",r) = sum(sin1$sin2(r,sin1), omegar(ms,"2",r)*ip(sin1,"max-s")*ip(sin1,"prop"));
+
+ sbr(m,"1",r) = 0;
+ sbr(m,"2",r) = inv(m,"scale");
+ sbr(mr,"3",r) = sum(sin1$sin2(r,sin1), sbr(mr,"2",r)*ip(sin1,"hds-r"));
+ sbr(ms,"3",r) = sum(sin1$sin2(r,sin1), sbr(ms,"2",r)*ip(sin1,"hds-s"));
+ sbr(mr,"4",r) = sum(sin1$sin2(r,sin1), sbr(mr,"2",r)*ip(sin1,"max-r"));
+ sbr(ms,"4",r) = sum(sin1$sin2(r,sin1), sbr(ms,"2",r)*ip(sin1,"max-s"));
+
+ iem(i) = sum(cm, infmi(i)*sratio(i,cm));
+ omegam(i,"1") = inv("mining","fix-cost")*iem(i);
+ omegam(i,"2") = inv("mining","omegahat")*iem(i);
+ omegam(i,"3") = sum(sin1$sin3(i,sin1), omegam(i,"2")*ip(sin1,"hds-i"));
+ omegam(i,"4") = sum(sin1$sin3(i,sin1), omegam(i,"2")*ip(sin1,"max-i")*ip(sin1,"prop"));
+
+ sbm(i,"1") = 0;
+ sbm(i,"2") = inv("mining","scale");
+ sbm(i,"3") = sum(sin1$sin3(i,sin1), sbm(i,"2")*ip(sin1,"hds-i"));
+ sbm(i,"4") = sum(sin1$sin3(i,sin1), sbm(i,"2")*ip(sin1,"max-i"));
+
+ Display inv,infac,infmi,iem,ip,omegar,omegam,sbr,sbm;
+
+$Stitle operating costs
+
+ Set mcc  column labels for mine operating costs data / wdrying, nodrying/
+
+ Parameter obr(i,cm)     overburden ratio
+           mdata(i,*)    mine cost data;
+
+** temporary**
+
+ Scalar str1 /1.5/, str2 /1.37/, str3 /1.22/ ;
+**
+
+ obr(i,cm)$sratio(i,cm)               = 1;
+ obr(i,cm)$(sratio(i,cm) eq str1)     = 4;
+ obr(i,cm)$(sratio(i,cm) eq str2)     = 3;
+ obr(i,cm)$(sratio(i,cm) eq str3)     = 2;
+$Maxcol 90
+ mdata(i,"lmm")                       = .3;                                                  labor for maintenance
+ mdata(i,"lmm")$fi("ldcs",i)          = .4;                                                  & mining: m-hr/ton
+ mdata(i,"lstrip")                    = sum(cm$obr(i,cm), mdata(i,"lmm")*0.33*obr(i,cm));
+ mdata(i,"ldry")                      = .1;                                                  labor for drying
+ mdata(i,"ldry")$fi("ldcs",i)         = .2;                                                  m-hr/ton
+ mdata(i,"l-m+dry")                   = mdata(i,"lmm") + mdata(i,"ldry");
+
+ mdata(i,"wage")                      = 11;                                                  wages: us$/m-hr
+ mdata(i,"wage")$gi("s-amer+car",i)   =  6;
+ mdata(i,"wage")$gi("africa",i)       =  5;
+ mdata(i,"wage")$gi("asia-x",i)       =  2;
+ mdata(i,"wage")$gi("ee+ussr",i)      =  4;
+
+ mdata(i,"fdry")                      =  2.4;                                                drying fuel: us-gal/ton
+ mdata("n-austral","fdry")            =  0  ;                                                because of solar drying
+ mdata("w-austral","fdry")            =  0  ;                                                due to low bauxite content
+
+ mdata(i,"fcost")$mdata(i,"fdry")     =   .8;                                                fuel cost: us$/us-gal
+ mdata(i,"mf+lub")                    =  1.2;                                                lubricant cost: us$
+
+ mdata(i,"other")                     =  3.5;                                                miscellaneous cost
+ Display sratio,obr,mdata;
+$Maxcol 120
+
+ Parameter ors(r,p)   operating costs at refineries and smelters (us$ per ton)
+           mlc(i)     labor cost at mines                        (us$ per ton)
+           mfc(i,mcc) fuel cost at mines                         (us$ per ton)
+           om(i)      operating cost at mines                    (us$ per ton)
+
+
+           orswl(cmi) refineries and smelter operating cost excluding labor /
+
+                      soda-ash  170  , fuel-lub   1  , therm-egy   7.5, energy     4.5, pitch     250  ,
+                      other       1  , lime      40  , coke      675  , fluorides   .8                 /
+
+           orsl(r)    refinery and smelter labor cost d(us$ per man-hr)  /
+
+                      (western-us, eastern-us, west-can, east-can, w-austral, oceania, mid-east
+                      japan, argentina, w-europe)                                                            11
+                      (surinam, brazil, venezuela, c-amer+car, s-africa, zaire, ghana, ayek-guin
+                      rest-guin, guyana, e-europe, jamaica, asian-ussr, rest-afric)                           5
+                      (korea+oea, n-africa, india, china, asean, rest-asia)                                   3   /
+
+           costrs(r,cmi) cost data for unit input at refineries and smelters;
+
+  costrs(r,cmi)     = orswl(cmi);
+  costrs(r,"labor") = orsl(r);
+
+
+* refinery and smelter operating costs.
+
+  ors(r,p)          = sum(cmi, abs( a(cmi,p) * costrs(r,cmi) ) );
+
+ Display costrs,ors;
+
+* min costs computation:
+*  step 1: labor costs
+*  step 2: fuel costs
+*  step 3: operating costs for locations with drying costs
+*  step 4: operating costs for locations without drying costs
+*  step 5: special cases
+
+* step 1.
+
+  mlc(i) = (mdata(i,"l-m+dry") + mdata(i,"lstrip"))*mdata(i,"wage");
+
+* step 2.
+
+  mfc(i,"nodrying")$(mdata(i,"fdry") le 0) = mdata(i,"mf+lub");
+
+  mfc(i,"wdrying")$(mdata(i,"fdry") gt 0) = mdata(i,"fdry")*mdata(i,"fcost") + mdata(i,"mf+lub");
+
+* step 3.
+
+  om(i)$(mdata(i,"fdry") gt 0) = mlc(i) + mfc(i,"wdrying") + mdata(i,"other");
+
+* step 4.
+
+  om(i)$(mdata(i,"fdry") le 0) = mlc(i) + mfc(i,"nodrying") + mdata(i,"other");
+
+
+ Display ors,om;
+
+$Stitle transport description
+*  this section describes the transport structure of the model.  the port sets are defined first, followed by
+*  the set of "land" transport modes that exist between the mines and the ports.  then land distances and sea
+*  distances between mines and ports, and between ports, respectively, are defined.  the assumption is that
+*  only mines might be located away from ports, and that all refineries, smelters, and market centers are
+*  either located next to ports or are ports themselves.
+
+ Parameter mur(i,r)        transport cost (us$ per ton)
+            murs(i,r)       transport cost (us$ per ton): sea
+            murl(i)         transport cost (us$ per ton): land
+            mui(r,rp)       transport cost (us$ per ton): interplant
+            muf(r,j)        transport cost (us$ per ton): final
+
+ Set   n        ports   /
+
+                accra,       albahrayn,   alexandria,  antalya,   banana,    belawan,     belem,      bombay
+                bunbury,     ciudad-guy,  conakry,     douala,    freetown,  itea,        kamsar,     kaohsiun
+                leningrad,   linden,      miragoane,   mobile,    nacala,    new-york,    panama,     paramarib
+                perth,       pontianak,   portland,    p-alfred,  p-johore,  p-madryn,    p-rhoades,  rich-bay
+                rio-de-jan,  rotterdam,   shanghai,    sydney,    tokyo,     valparaiso,  vancouver,  veracruz
+                vishakap,    vladivstk,   weipa /
+
+       nl(n)    large ports
+
+       ns(n)    small ports  / linden, paramarib, vishakap, douala, itea, freetown, p-johore, perth /
+
+       modes    modes of transportation between mines and ports /
+                rail      , road       , river-shal  , river-deep , conveyor   /
+
+       cotc     commodities for ocean transport cost determination / bauxite, alumina, aluminum /
+
+       freight  freight categories /
+                f     aluminuim freight carrier
+                fnl   obo carriers -             60000 dwt
+                fns   bauxite carriers -         25000 dwt /
+
+       cotcf(cotc) freight commodities with bilevel freight charges / bauxite, alumina /
+
+
+* the following sets provide the various mappings between ports and mines, refineries, smelters and markets.
+
+
+ in(i,n)    mines to ports map       /
+
+                usa.mobile,            jamaica1.p-rhoades,    jamaica2.p-rhoades,    haiti+dr.miragoane
+                guyana.linden,         surinam.paramarib,     brazil.belem,          venezuela.ciudad-guy
+                w-europe.itea,         ee+ussr.leningrad,     n-austral.weipa,       w-austral.bunbury
+                india.vishakap,        indonesia.pontianak,   china.shanghai,        o-asia.p-johore
+                ghana.accra,           ayek-guin.kamsar,      fria-guin.conakry,     toug-guin.conakry
+                s-leone.freetown,      camer+oa.douala /
+
+
+ rn(r,n)    production locations to ports map    /
+
+                guyana.linden,         surinam.paramarib,     brazil.belem,          venezuela.ciudad-guy
+                w-europe.rotterdam,    e-europe.leningrad,    w-austral.bunbury,     india.vishakap
+                china.shanghai,        ghana.accra,           ayek-guin.kamsar,      western-us.portland
+                eastern-us.mobile,     west-can.vancouver,    east-can.p-alfred,     jamaica.p-rhoades
+                c-amer+car.veracruz,   argentina.p-madryn,    asian-ussr.vladivstk,  oceania.weipa
+                asean.belawan,         korea+oea.kaohsiun,    japan.tokyo,           rest-asia.antalya
+                mid-east.albahrayn,    n-africa.alexandria,   rest-guin.conakry,     zaire.banana
+                rest-afric.nacala,     s-africa.rich-bay /
+
+
+ jn(j,n)    markets to ports map       /
+
+                w-europe.rotterdam,    ee+ussr.leningrad,     china.shanghai,        c-amer+car.panama
+                oceania.sydney,        asean.belawan,         korea+oea.kaohsiun,    japan.tokyo
+                rest-asia.bombay,      mid-east.albahrayn,    n-africa.alexandria,   s-africa.rich-bay
+                wn-america.portland,   en-america.new-york,   ws-america.valparaiso, es-america.rio-de-jan
+                w-africa.douala,       e-africa.nacala /;
+
+  nl(n) = yes$(not ns(n));
+  alias (n,np);
+ Display n,ns,nl,modes,rp;
+
+
+ Table dmp(i,modes) distances in miles from mine to port by mode
+
+             rail    road  river-shal river-deep  conveyor
+
+ usa                                    174
+ jamaica1      4
+ jamaica2      4
+ haiti+dr              4
+ guyana                      140
+ surinam      50             200
+ brazil       14                          690
+ venezuela    20            250
+ w-europe             20
+ ee+ussr     30
+ n-austral    24
+ w-austral                                          30
+ india       100
+ indonesia    80
+ china       170
+ o-asia                      20
+ ghana        50
+ ayek-guin    75
+ fria-guin    75
+ toug-guin   200
+ s-leone      34
+ camer+oa    350
+
+
+ Parameter mpc(modes) transport cost per ton per mile from i to n  / rail       .05 , road     .4 , river-shal .016
+                                                                     river-deep .006, conveyor .03 /
+
+
+ Table otc(cotc,*)  ocean transport cost
+
+              fixed    f    fnl     fns
+*          (1980 us$   (1980 us$ per metric ton
+*          per metric      per nautical mile)
+*             ton)
+
+  bauxite      3.5         .0024   .0036
+  alumina      3.5         .00288  .00432
+  aluminum     4.0   .01
+
+$Eject
+
+ Table sd(n,np) sea distances (nautical miles)
+
+             accra albahrayn alexandria antalya banana belawan belem bombay bunbury ciudad-guy conakry douala freetown
+
+  albahrayn   9590
+  alexandria  6622     3296
+  antalya     4283     3478       349
+  banana      1067     7181      7755      8426
+  belawan     6832     3598      4733      3243   6821
+  belem       4271     8360      5107      5107   6592    9659
+  bombay      6832     1700      3213      3394   6821    2154  9565
+  bunbury     7374     5270      6460      6658   4600    9700 10688   4156
+  ciudad-guy  3951     9696      6400      6400   5594   10034  1222   9784   10347
+  conakry     1036     6800      3950      4576   2468    3080  2500   7900    8000     3050
+  douala       671     7389      5649      6514    742    3674  4226   7102    6200     4600      1726
+  freetown     955     7041      4073      3818   2070    8401  2600   7787    7900     2996       100   1626
+  itea        3457     3895       600       500   5596    5644  4279   3648    7009     4397      4750   6249    4673
+  kamsar      1130     6866      3898      4476   2245    8656  3316   7962    8050     2996        80   1600     175
+  kaohsiun   10866     7389      7589      8426  11530    3035 10958   4848    4600    10059     11550   6710   11437
+  leningrad   5123     7550      4582      4342   6214   10766  5243   5959   10361     7521      5265   6991    5365
+  linden      4170    10968      5180      5180   7250   10998   896   9623   11570      419      3396   5122    3496
+  miragoane   4622     8295      5327      5000   8204    8518  1866  10665    9200      681      3000   5293    3667
+  mobile      5616     9776      6438      6317   9685    9208  3124  11667   10814     1963      4700   5997    4710
+  nacala      4565     8226      3935      4981   3125    5372  6765   3461   11425     7391      5560   4785    5520
+  new-york    6213     8251      5119      4998   9025   10504  2975  11398   11570     1939      5200   6723    5383
+  panama      5016     9754      6294      6173   8712    9370  2757   9343    9444     1539      4200   5860    4234
+  paramarib   4397    11113      7860      5097   7339    9474   747   9407    9400      646      5450   7540    5500
+  perth       7374     6067      6486      6656   5550    2573  9221   3986      76     8976      8032   7293    7977
+  pontianak   7865     3316      4852      5000   7515     800 11351   2109    2000    10885      8900   8205    8889
+  portland    9920    13267     10163     10040  11018    7509  6307   7509    8850     5408      8950  11269    8953
+  p-alfred    6552     8358      5390      4981   9364   12292  3680  11737   11425     2644      5560   7062    5600
+  p-johore    7199     3652      5100      5446   7188     368 10026   2441    2473    10401      8900   8085    8769
+  p-madryn    4351     8660      7112      7102   6689    8996  3274   8300    8951     4551      3780   4524    3712
+  p-rhoades   4785     8276      5998      5097   8823    9964  2159  10875    9400     1103      5450   6328    3830
+  rich-bay    2619     4957      5504      6000    795    5291  4368   4597    4755     5594      3300   2432    3190
+  rio-de-jan  3200     8280      8827      6062   5547   10232  2174   7920    8078     3400      2640   4239    2613
+  rotterdam   3628     6541      3245      3243   5163    8142  4214   6415    9700     4231      3080   5009    3127
+  shanghai   10405     5859      7307      8244   9395    2574 11237   4648    4100    10338     10800   6249   10976
+  sydney      8859     7874      9322      8654   8852    4593  9761   6023    2100     9213      9900   8264    9614
+  tokyo       7647     6551      8081      8252  10087    4548 10555   4538    4410     9231     11668  10974   11768
+  valparaiso  6870    10651      8910      8789   7918    9710  6142  10674    7705     4155      6160   8476    6850
+  vancouver   7514    13630     10698     10160  11177    7445  6470  12292    9270     5571      9100  11203    9107
+  veracruz    5838     9891      6923      6661   9800   12167  3925  12261   11294     2519      4900   6510    4883
+  vishakap    7271     3813      5170      4931   7370    1281 10119   1670    3600    10576      8322   7472    8230
+  vladivstk  11202     6656      8307      9214  11664    3371 11072   5445    5050     9879     11900  10950   11773
+  weipa       9473     6120      7664      7846   3500    2836 10920   4849    2713    10139     11817  11000   11900
+
+
+
+
+
+       +     itea kamsar kaohsiun leningrad linden miragoane mobile nacala new-york panama paramarib perth pontianak
+
+  kamsar     3650
+  kaohsiun   8680  11612
+  leningrad  3469   3993   12410
+  linden     4352   3215   10078      5199
+  miragoane  6284   3287    9366      4544    1057
+  mobile     5930   4661   10579      6103    2404     2770
+  nacala     4396   5162    6449      4923    7061     7504    9038
+  new-york   4185   5142   10528      4428    2217     1489    1874   8361
+  panama     6773   5939    8510      6080    1558      776    1413   9991    2018
+  paramarib  4269   3442   10211      5108     215     1272    2691   7445    2334    1691
+  perth      7086   8132    4600     12095    9192    10263   10814   4300   11849    9487     9407
+  pontianak  5919   8542    3130      9804   10687    11401   11900   3709   10505   10625    10604   2811
+  portland   9214   8953    5156      9763    5427     4715    5405   9891    5887    3869     5560   8894     6028
+  p-alfred   4155   5481   11724      4362    3077     2579    2991   8464    1460    3204     3150  11425    10572
+  p-johore   5799   9023    2668      9704    9990    11281   11540   4080   10871   10505     9841   2391      420
+  p-madryn   6700   2993   10158      7957    3954     5140    6645   6033    5871    5491     3813   8111     9699
+  p-rhoades  4885   3830    9114      5360    1334      430    1108   8539    1474     594     1549  10081    11220
+  rich-bay   6079   3365    9306      7420    5026     5948    7461   1797    6801    8194     5980   4755     6100
+  rio-de-jan 6602   2613   11309      6806    2853     4367    5133   5653    4770    4484     2713   8034     9266
+  rotterdam  2417   2980   11052      1102    4097     4039    4850   6604    3376    4842     4056   9731     8097
+  shanghai   8498  11151     369     11643   10357     9645   10061   6249   10584    8648    10490   4000     2075
+  sydney     8908   9989    5178     13926    9192     8520    9210   6400    9692    7674    10735   2157     4600
+  tokyo      8506   8777     838     12603    9059     8538    9105   6931    9700    7692     9274   4340     2767
+  valparaiso 9389   6163   10500      8510    4174     3392    4026   8015    4634    2616     4307   7748    10903
+  vancouver  9334   9107    5100      9926    5590     4878    5568  11158    6050    4032     5723   9265     5960
+  veracruz   5835   4883    9983      6140    2429     2239    2876   9100    1989    1463     2578  10950    12388
+  vishakap   5625   8401    4314      9752   10415    10980   12661   2706    8673   11805    11266   3600     1700
+  vladivstk  9468  11948     726     13197    9315     9480   10693   7076    9775    7757    10325   5022     2872
+  weipa      8199  11900    3500     12172   10618    10160   10013   6548   10618    8600    10291   2600     2000
+
+       +     portland p-alfred p-johore p-madryn p-rhoades rich-bay rio-de-jan rotterdam shanghai sydney tokyo
+
+  p-alfred      7073
+  p-johore      7142    12659
+  p-madryn      8471     6455     8996
+  p-rhoades     4463     2744    11242     5224
+  rich-bay      7561     7134     5658     3720      7586
+  rio-de-jan    8353     5354     8846     1151      4194     3323
+  rotterdam     8711     3310     8509     6358      4308     6505      5300
+  shanghai      5445    11852     2207    12267      9393     9585     11109      10591
+  sydney        6737    10878     4222     6810      8268     6624      9455      12516      4636
+  tokyo         4328    10896     2899    10697      8286     8478     11513      10768      1117   4330
+  valparaiso    5764     5820    10483     2852      3120     6050      3670       7458     10148   6294  9280
+  vancouver      371     7236     7078     8100      4626     7932      9797       8874      5379   7108  4272
+  veracruz      5332     3540    11968     6375      1210     7576      4079       5088      9463   8157  9155
+  vishakap     10726    12230     1300     9203     11354     5040      8363      10793      3856   5760  4199
+  vladivstk     4278    12568     3004    12338      9228     8457     11780      12599       998   5105   962
+  weipa         6294    11804     2468     8611     10291     7217      9605      10805      3000   1900  3500
+
+
+       +     valparaiso vancouver veracruz vishakap vladivstk
+
+  vancouver      6135
+  veracruz       4079     5495
+  vishakap      10734    10813     9736
+  vladivstk      9606     4396    10097     4304
+  weipa          8165     6614    10064     3970     4150
+             ;
+
+
+ Parameter seacost(n,np,cotc)     port to port transport cost (us$ per ton)
+            fcp(n,np,cotc,freight) freight charge possibilities;
+
+  sd(n,np) = max(sd(n,np),sd(np,n));
+
+*note:
+*     this construction may cause problems of double counting or zero distances.  this is the result of the format of
+*     the distance matrix: which is a lower triangular matrix plus an irregular block
+
+
+* set allowed combinations of fcp to 1 as follows:
+
+* for aluminum shipments, the freight charge is incurred if sea distances exist between any two ports.
+
+ fcp(n,np,"aluminum","f")$sd(n,np) = 1;
+
+
+* bauxite and alumina incur lower freight charge levels if the two
+* ports are large ports - transporting by obo carriers of 60,000 dwt.
+
+ fcp(n,np,cotcf,"fnl")$(nl(n)$nl(np)$sd(n,np)) = 1;
+
+
+* bauxite and alumina incur the higher freight charge levels if at least
+* one port is a small port - transporting by bauxite carriers of 25,000 dwt.
+
+ fcp(n,np,cotcf,"fns")$((not(nl(n)*nl(np)))$sd(n,np)) = 1;
+
+
+ seacost(n,np,cotc)$sd(n,np) =
+   otc(cotc,"fixed") + sum(freight$(fcp(n,np,cotc,freight) ne 0), otc(cotc,freight)*sd(n,np));
+
+*  murs(i,i)  = sum((n,np)$(in(i,n)*rn(i,np)),seacost(n,np,"bauxite") );
+*  mui(i,ip)  = sum((n,np)$(rn(i,n)*rn(ip,np)),seacost(n,np,"alumina") );
+*  muf(i,j)   = sum((n,np)$(jn(j,n)*rn(i,np)),seacost(n,np,"aluminum") );
+*note:
+*     the assignments written this way take too much time to execute.  until further improvements in gams we use the
+*     following formulation using some extra parameters.
+
+ Parameter mursx intermediate transport cost calculations: bauxite
+           muix  intermediate transport cost calculations: alumina
+           mufx  intermediate transport cost calculations: aluminum;
+
+  mursx(i,np)  = sum(n$in(i,n), seacost(n,np,"bauxite")   );
+  murs(i,r)    = sum(np$rn(r,np), mursx(i,np)            );
+
+  muix(r,np)   = sum(n$rn(r,n), seacost(n,np,"alumina")   );
+  mui(r,rp)    = sum(np$rn(rp,np), muix(r,np)           );
+
+  mufx(r,np)   = sum(n$rn(r,n), seacost(n,np,"aluminum")  );
+  muf(r,j)     = sum(np$jn(j,np), mufx(r,np)              );
+
+  murl(i)      = sum( modes, dmp(i,modes)*mpc(modes)      );
+  mur (i,r)    = murs(i,r) + murl(i);
+
+ Display fcp,otc,sd,murs,murl,mur,mui,muf,seacost;
+
+$Stitle prices, tariffs and levies
+
+*  define mappings for levies
+
+ Set nir(i,r) regional clusters having no levies from i to r /
+
+                usa.(western-us,eastern-us)
+                (jamaica1,jamaica2).jamaica
+                guyana.guyana
+                surinam.surinam
+                brazil.brazil
+                venezuela.venezuela
+                w-europe.w-europe
+                ee+ussr.(e-europe,asian-ussr)
+                (n-austral,w-austral).(oceania,w-austral)
+                india.india
+                indonesia.asean
+                china.china
+                o-asia.rest-asia
+                ghana.ghana
+                (ayek-guin,fria-guin,toug-guin).(ayek-guin,rest-guin)  /
+
+     rr(r,r) production clusters having no levies on alumina/
+
+               (western-us,eastern-us,west-can,east-can).(western-us,
+                eastern-us,west-can,east-can)
+               (e-europe,asian-ussr).(e-europe,asian-ussr)
+               (oceania,w-austral).(oceania,w-austral)
+               (ayek-guin,rest-guin).(ayek-guin,rest-guin) /;
+
+  rr(r,r) = yes;
+
+
+*  define mappings for tariffs
+
+ Set frtrade(j,r) no tariff on aluminum shipments to from/
+
+                w-europe.(w-europe,jamaica,guyana,surinam,ghana,zaire,rest-afric,ayek-guin,rest-guin)
+                ee+ussr.(e-europe, asian-ussr)
+                oceania.(oceania, w-austral)
+                china.china
+                c-amer+car.c-amer+car
+                asean.asean
+                korea+oea.korea+oea
+                japan.japan
+                rest-asia.india
+                rest-asia.rest-asia
+                n-africa.n-africa
+                (wn-america,en-america).(western-us,eastern-us,west-can,east-can)
+                es-america.(argentina,brazil)
+                ws-america.venezuela
+                w-africa.(ghana,ayek-guin) /
+
+
+      fraa(rp,r) no tariff on alumina shipments to from /
+
+                 jamaica.jamaica
+                 guyana.guyana
+                 surinam.surinam
+                 brazil.brazil
+                 venezuela.venezuela
+                 w-europe.(w-europe,jamaica,guyana,surinam,ghana,zaire,ayek-guin,rest-guin,rest-afric)
+                 e-europe.(e-europe,asian-ussr)
+                 asian-ussr.(e-europe,asian-ussr)
+                 asean.asean
+                 china.china
+                 india.india
+                 rest-asia.rest-asia
+                 n-africa.n-africa
+                 ghana.ghana
+                 (ayek-guin,rest-guin).(ayek-guin,rest-guin)
+                 zaire.zaire     /
+
+     l80         labels for electricity cost in 1980 / ela-1980, ell-1980, elh-1980 /
+
+     ll80(l,l80) map from 1980 price labelsto electricity types / el-actual.ela-1980
+                                                                  el-locost.ell-1980
+                                                                  el-hicost.elh-1980   /
+
+     nftrade(j,r)  mapping of regions and plants with tariff on shipments
+     nfaa(rp,r)    mapping of regions with tariffs on alumina;
+
+  nftrade(j,r) = yes$( not frtrade(j,r));
+  nfaa(rp,r)   = yes$( not fraa(rp,r));
+
+ Display nftrade, nfaa;
+
+ Parameter alphaa(rp)  alumina tariffs in us$ per ton
+            prelec(r,l) electrcity price in usmils per kwh or us$ per mwh;
+
+$Maxcol 95
+
+ Table pelec(r,*)  us mils per kwh or us$ per mwh
+
+                           el-actual   el-locost   el-hicost   ela-1980   ell-1980   elh-1980
+
+  western-us                   20                     50          5          5          28      el-locost :
+  eastern-us                   24                     50          5          5          28        electricity generated
+  west-can                      4         30          50          5          5          28        with flared gas is
+  east-can                      4         30          50          5          5          28        considered at us$20
+  jamaica                                             50                                28        per mwh; hydro power
+  c-amer+car                   20         20          50          3          3          24        is priced at us$20
+  guyana                                  20          50         13         13          28        per mwh for high head
+  surinam                       4.5       30          50          7          7          29        rivers and us$30 per
+  brazil                       20         20          50          7          7          29        mwh for low head
+  argentina                     8         30          50          7          7          29        rivers.
+  venezuela                    26         30          50          3          3          24
+  w-europe                     20                     50          5          5          28      el-hicost
+  e-europe                     20                     50          4          4          23        refers to coal fired
+  asian-ussr                   20         20          50         30         30          30        or nuclear plants.
+  oceania                      12         20          50          4          4          28
+  w-austral                                           50         28         28          28
+  asean                                   20          50         20         20          28
+  korea+oea                                           50         28         28          28
+  china                        20         20          50         28         28          28
+  japan                        30                     50         28         28          28
+  india                        20         30          50          7          7          28
+  rest-asia                    20         30          50          4          4          28
+  mid-east                      3         20          50          4          4          28
+  n-africa                     20         20          50          7          7          29
+  ghana                         4.8       20          50          7          7          29
+  ayek-guin                                           50         29         29          29
+  rest-guin                               20          50          7          7          29
+  zaire                                    6          50          7          7          29
+  rest-afric                                          50          7          7          29
+  s-africa                     20                     50          7          7          29
+                                                         ;
+
+ prelec(r,l) = pelec(r,l);
+ Display prelec;
+
+$Maxcol 120
+
+ Scalar     pa       market price for alumina (us$ per ton)                       / 330 /
+            gamma    complement of actual trade flow                              /  1  /
+
+* units for tariff data tariff values are given as fractions of import prices.
+
+ Parameter tariffaa(r)   tariff on imported alumina /
+
+            jamaica             .12
+            guyana              .15
+            surinam             .05
+            brazil              .15
+            venezuela           .05
+            w-europe            .056
+            e-europe            .05
+            asian-ussr          .05
+            asean               .10
+            china               .05
+            india               .40
+            rest-asia           .40
+            n-africa            .05
+            ghana               .50
+            ayek-guin           .35
+            rest-guin           .35
+            zaire               .05  /
+
+
+
+            alphal(j)     tariff on imported aluminum     /
+
+            wn-america    .00
+            en-america    .00
+            c-amer+car    .059
+            ws-america    .50
+            es-america    .45
+            w-europe      .058
+            ee+ussr       .05
+            oceania       .00
+            asean         .10
+            korea+oea     .10
+            china         .20
+            japan         .09
+            rest-asia     .40
+            mid-east      .00
+            n-africa      .05
+            w-africa      .06
+            e-africa      .00
+            s-africa      .00   /;
+
+* convert tariffs from percentages to us $.
+  alphaa(rp) = pa*tariffaa(rp);
+ Display alphaa;
+
+*note: units for levy data levies on alumina and bauxite are expressed as fractions per ton of aluminum content.
+
+ Parameter betab(i)  levies on bauxite  /
+
+            jamaica1         .026
+            jamaica2         .026
+            haiti+dr         .073
+            surinam          .049
+            indonesia        .003
+            ghana            .005
+            ayek-guin        .021
+            fria-guin        .021
+            toug-guin        .021  /
+
+            betaa(r) levies on alumnina    /
+
+            surinam   .020
+            asean     .003
+            ghana     .005
+            ayek-guin .021
+            rest-guin .021  /;
+
+*convert the bauxite and alumina levies to a per ton of aluminum basis
+  betab(i)  =  sum(cm$sratio(i,cm), betab(i)/(sum(ci, aatoal(ci))*batoaa(cm)));
+
+  betaa(r)  =  betaa(r)/(sum(ci, aatoal(ci)));
+ Display alphal,betab,betaa;
+
+$Stitle model reduction
+
+ Set   cpospi commodity production possibilities at mines
+       cnir   regional clusters with levies on bauxite shipments from i to r;
+
+ cpospi(i,cm)$sratio(i,cm) = yes ;
+
+ cnir(cm,i,r)$(cpospi(i,cm)-nir(i,r)) = yes;
+
+ Scalar pl  world market price of aluminum (us$ per ton aluminum);
+ pl = na;
+
+ Display cpospi,cnir;
+
+$Stitle cost calculations on data
+
+ Set clab  labels /
+
+                      bauxite    bauxite costs     , alumina     alumina costs, aluminum    aluminum costs
+                      net-levy                     , transport   cost by sea  , del-cost    delivered cost
+                      naoh       caustic soda      , cao         lime         , power       electricity costs
+                      mc2        energy            , labour                   , thermal     energy
+                      coke-1     coke inputs       , mfp         fluorides    , pit         pitch
+                      other-in   other input costs , operating   costs        , capital     costs
+                      inland     transport costs   , levy                     , tariff
+                      tot-exp    total export cost , less-tax    tax savings  , less-dry    savings on drying
+                      tot-local  local process cost, tot-f-o-b   export cost                                    /
+
+     case             case identification numbers    /  1*23 /
+
+     comb1(case,i,r)  combinations: case-mines-refineries /
+
+                       1.jamaica1.eastern-us,    2.jamaica2.eastern-us,   3.brazil.eastern-us,
+                       4.ayek-guin.eastern-us,   5.w-europe.w-europe,     6.ayek-guin.w-europe,
+                       7.n-austral.w-europe,     8.w-austral.w-austral,   9.w-austral.w-austral,
+                      10.brazil.brazil,         11.ayek-guin.ayek-guin,   12.ayek-guin.ayek-guin,
+                      13.surinam.surinam,       14.ghana.ghana,           15.ghana.mid-east,
+                      16.indonesia.asean,       17.indonesia.asean,       18.indonesia.japan,
+                      19.indonesia.korea+oea,   20.jamaica2.jamaica,      21.jamaica2.jamaica,
+                      22.jamaica2.jamaica,      23.surinam.surinam                                  /
+
+     comb2(case,rp,j) combinations: cases-smelters-markets /
+
+                       1.eastern-us.en-america,  2.eastern-us.en-america,  3.eastern-us.en-america,
+                       4.eastern-us.en-america,  5.w-europe.w-europe,      6.w-europe.w-europe,
+                       7.w-europe.w-europe,      8.eastern-us.en-america,  9.w-europe.w-europe,
+                      10.eastern-us.en-america, 11.eastern-us.en-america, 12.w-europe.w-europe,
+                      13.eastern-us.en-america, 14.ghana.w-europe,        15.surinam.w-europe,
+                      16.japan.japan,           17.asean.japan,           18.japan.japan,
+                      19.western-us.en-america, 20.jamaica.en-america,    21.jamaica.en-america,
+                      22.eastern-us.en-america, 23.surinam.en-america                               /
+
+ Parameter x1  cost components at mines
+           x2  cost components at refineries
+           x3  cost components at smelters
+           x4  cost components at markets
+
+
+**    compute income tax savings for local processing    **
+*  logic: if the ore mined at i is processed at r (same location) then a percentage of the total
+*         investment cost can be deducted from production or export levy imposed at i
+
+ Parameter lts(i,r) tax deductions as a percentage of investment cost  / jamaica1.jamaica   .02
+                                                                         jamaica2.jamaica   .02
+                                                                         surinam.surinam    .02
+                                                                         haiti+dr.c-amer+car .02  /;
+
+ pl = 2000;
+
+ Parameter betabp    convert production or export levy at i from rate to dollar
+           tax1a     tax savings from refineries
+           tax1b     tax savings from smelters
+           taxs2     total tax savings ;
+
+ betabp(i) = pl*betab(i);
+ Parameter bbb,aaa; aaa(i,r) = 1$nir(i,r);
+ bbb(i,r)$((aaa(i,r) eq 1) and (lts(i,r) ne 0)) = betabp(i);
+
+ tax1a(i,r) = -sum((cm,p,mr)$(sratio(i,cm) gt 0 and a(cm,p) lt 0 and b(mr,p) gt 0),
+                            (1000*lts(i,r)*omegar(mr,"2",r)/sbr(mr,"2",r))/a(cm,p) );
+ tax1b(i,r)  = (1000*lts(i,r)*omegar("smelter","2",r)/sbr("smelter","2",r))/sum(cm$sratio(i,cm), aatoal("alumina")*
+                                                                                  batoaa(cm));
+
+ taxs2(i) = sum((r,rp)$(nir(i,r)*rr(r,rp)),  tax1a(i,r) + tax1b(i,rp) ) ;
+ taxs2(i)$((betabp(i) - taxs2(i)) lt 0) = betabp(i);
+ Display aaa,bbb,tax1a,tax1b,taxs2;
+
+
+**    select electricity cost level    **
+ Parameter cel1, celcost(r)  electriciy cost at smelter;
+
+* option 1: cheapest electricity
+*cel1(r,l)                  = -a("electr","smelting")*prelec(r,l)$(ubar(r,l) gt 0);
+*cel1(r,l)$(cel1(r,l) eq 0) = 12.6*50;
+*celcost(r)                 = smin(l, cel1(r,l));
+
+* option 2: select the minimum between locost and expensive
+ celcost(r)                   = 12.6*prelec(r,"el-locost")$ubar(r,"el-locost");
+ celcost(r)$(celcost(r) eq 0) = 12.6*50;
+
+* option 3: all locations have most expensive
+*celcost(r) = 12.6*50;
+ Display celcost;
+
+**     main section    **
+ Set      cmm(cm),proc(p),mmm(m);
+
+
+ Loop((case,i,r)$comb1(case,i,r), loop((rp,j)$comb2(case,rp,j),
+
+  cmm(cm) = yes$sratio(i,cm);
+  proc(p) = yes$sum(cmm, a(cmm,p) lt 0);
+  mmm(m)  = yes$sum(proc, b(m,proc));
+  Display cmm,proc,mmm;
+
+  Loop((cm,p,m)$(cmm(cm)*proc(p)*mmm(m)),
+
+
+   x1("operating",case)          = om(i);
+   x1("capital",case)            = (sigma*1000*omegam(i,"2")/sbm(i,"2"))/ut("mining");
+   x1("inland",case)             = murl(i);
+   x1("levy",case)               = betabp(i)$( (aaa(i,r) eq 0) or (aaa(i,r) ne 0 and lts(i,r) ne 0));
+   x1("tot-exp",case)            = sum(clab, x1(clab,case));
+   x1("less-tax",case)           = taxs2(i)$(bbb(i,r) ne 0);
+   x1("tot-local",case)          = x1("tot-exp",case) - x1("less-tax",case);
+
+   x2("bauxite",case)            = - a(cm,p)*(x1("operating",case) + x1("capital",case) + x1("inland",case));
+   x2("transport",case)          = - a(cm,p)*murs(i,r);
+   x2("net-levy",case)           = -a(cm,p)*pl*betab(i)$(not nir(i,r));
+   x2("del-cost",case)           = sum(clab, x2(clab,case));
+   x2("naoh",case)               = - a("soda-ash",p)*costrs(r,"soda-ash");
+   x2("cao",case)                = - a("lime",p)*costrs(r,"lime");
+   x2("mc2",case)                = - a("energy",p)*costrs(r,"energy");
+   x2("labour",case)             = - a("labor",p)*costrs(r,"labor");
+   x2("other-in",case)           = - a("other",p)*costrs(r,"other");
+   x2("operating",case)          = x2("naoh",case) + x2("cao",case) + x2("mc2",case) + x2("labour",case)
+                                 + x2("other-in",case);
+   x2("capital",case)            = (1000*sigma*omegar(m,"2",r)/sbr(m,"2",r))/ut(m);
+   x2("tot-f-o-b",case)          = x2("del-cost",case) + x2("operating",case) + x2("capital",case);
+
+
+   x3("alumina",case)            = - a("alumina","smelting")*x2("tot-f-o-b",case);
+   x3("net-levy",case)           = - a("alumina","smelting")*(pl*betaa(r)$(not rr(r,rp)) + alphaa(rp)$nfaa(rp,r));
+   x3("transport",case)          = - a("alumina","smelting")*mui(r,rp);
+   x3("del-cost",case)           = sum(clab, x3(clab,case));
+   x3("power",case)              = celcost(rp);
+   x3("labour",case)             = - a("labor","smelting")*costrs(rp,"labor");
+   x3("thermal",case)            = - a("therm-egy","smelting")*costrs(rp,"therm-egy");
+   x3("coke-1",case)             = - a("coke","smelting")*costrs(rp,"coke");
+   x3("mfp",case)                = - a("fluorides","smelting")*costrs(rp,"fluorides");
+   x3("pit",case)                = - a("pitch","smelting")*costrs(rp,"pitch");
+   x3("other-in",case)           = - a("other","smelting")*costrs(rp,"other");
+   x3("operating",case)          = x3("power",case) + x3("labour",case) + x3("thermal",case) + x3("coke-1",case)
+                                 + x3("mfp",case) + x3("pit",case) + x3("other-in",case);
+   x3("capital",case)            = (1000*sigma*omegar("smelter","2",rp)/sbr("smelter","2",rp))/ut("smelter");
+   x3("tot-f-o-b",case)          = x3("del-cost",case) + x3("operating",case) + x3("capital",case);
+
+   x4("aluminum",case)           = x3("tot-f-o-b",case);
+   x4("transport",case)          = muf(rp,j);
+   x4("levy",case)               = (pl*alphal(j)$nftrade(j,rp));
+   x4("del-cost",case)           = sum(clab, x4(clab,case))      ) ) );
+
+ Display x1,x2,x3,x4;
+
+$Stitle data checks
+
+ Set dc1(i)        inconsistency between mine capacities and reserves
+     dc3(r,m)      productive unit with capacity but no process to operate
+     dc4(r,p)      productive unit having capacity and process mapping but no input commodities
+     dc5(r)        location with nonzero smelter capacity but with zero electricity availability
+
+     dc6(r)        location with nonzero smelter capacity but negative electricity availability
+     dc7(i)        mines with capacity but no infrastructure factor
+     dc8(r,cmi)    refineries and smelters with nonzero capacity but zero operating cost
+     dc9(i)        mines with capacity but with no labor cost or fuel cost or operating costs
+
+     dc10(i)       unmapped mines to ports
+     dc11(r)       unmapped production centers to ports
+     dc12(j)       unmapped markets to ports
+     dc13(i,modes) mines having nonzero distances to ports but zero cost
+
+     dc14(r)       existing cheap electricity available at no cost
+     dc15(r)       refineries and smelters with low cost future power sources but at no cost
+     dc16(j)       markets having a nonzero tariff on imported aluminum but zero demand
+     dc17(j)       inconsistency between the world price of aluminum  and aluminum demand level
+
+     dc18(i,r)     bauxite levy and port mapping but no sea transport cost
+     dc19(rp,r)    alumina levy between refiners with port mapping but no sea transport cost
+     dc20(rp,r)    alumina tariffs between refiners with port mapping but no sea transport cost
+     dc21(j,r)     aluminum tariff between smelters and markets with port mapping but no sea cost;
+
+
+  dc1(i)$( (capm(i) ne 0) and (zmbar(i) eq 0) )                      = yes;
+  dc3(r,m)$( (capr(r,m) ne 0) and (sum(p, b(m,p)) eq 0) )            = yes;
+  dc4(r,p)$( ((sum(m, capr(r,m)) ne 0) and (sum(m, b(m,p)) ne 0) )
+                                       and (sum(ar, a(ar,p)) eq 0) ) = yes;
+
+  dc5(r)$((capr(r,"smelter") ne 0) and (egyres(r,"lc") eq 0) )       = yes;
+  dc6(r)$((capr(r,"smelter") ne 0) and (egyres(r,"lc") lt 0) and (ubar(r,"el-actual") lt 0)) = yes;
+
+  dc7(i)$( ( infmi(i) eq 0) and (capm(i) ne 0) )                   = yes;
+  dc8(r,cmi)$( (sum(m, capr(r,m)) ne 0) and (costrs(r,cmi) eq 0) ) = yes;
+  dc9(i)$( (capm(i) ne 0) and ((sum(mcc, mlc(i)) eq 0) or (sum(mcc, mfc(i,mcc)) eq 0) or (om(i) eq 0)) ) = yes;
+
+  dc10(i)  = yes$(sum(n$in(i,n), 1) ne 1);
+  dc11(r)  = yes$(sum(n$rn(r,n), 1) ne 1);
+  dc12(j)  = yes$(sum(n$jn(j,n), 1) ne 1);
+  dc13(i,modes)$(  (dmp(i,modes) ne 0) and (mpc(modes) eq 0) ) = yes;
+
+  dc14(r)$( (prelec(r,"el-actual") eq 0) and (egyres(r,"lc") gt 0) )                         = yes;
+  dc15(r)$( (prelec(r,"el-locost") eq 0) and ((egyres(r,"hydro") + egyres(r,"flaredgas")
+                                                                 + egyres(r,"coal")) gt 0) ) = yes;
+  dc16(j)$( (alphal(j) ne 0) and (d(j) eq 0) )                                               = yes;
+
+  dc18(i,r)$(   (murs(i,r) eq 0) and (sum(cm$cnir(cm,i,r), betab(i)) ne 0)) = yes;
+  dc19(rp,r)$(  (mui(r,rp) eq 0) and (betaa(r) ne 0)$nfaa(rp,r) )           = yes;
+  dc20(rp,r)$(  (mui(r,rp) eq 0) and (tariffaa(rp) ne 0)$nfaa(rp,r) )       = yes;
+  dc21(j,r)$(   (muf(r,j) eq 0) and (alphal(j) ne 0)$nftrade(j,r) )         = yes;
+
+$Stitle data check and program abort
+
+*  the following procedure will test if the data checks made earlier are non-zero, and if they are it will display a
+*
+*  message followed by the data where the error possibly occurs.  the job will then be aborted.
+
+  Abort$sum(i,dc1(i))"inconsistency between mine capacities and zmbar",dc1,capm,zmbar
+  Abort$sum((r,m),dc3(r,m))"following locations have prod. units which have capacity but no process"
+                                   dc3,capr,b
+  Abort$sum((r,p),dc4(r,p))"these locations have prod units with cap and process mapping but no comm data"
+                                   dc4,b,a
+  Abort$sum(r,dc5(r))"smelter locations with smelter capacity but zero electricity availability",dc5,
+                         capr,egyres
+  Abort$sum(r,dc6(r))"locations with nonzero smelter capacity but negative electricity requirements",dc6,capr,
+                         egyres,ubar
+  Abort$sum(i,dc7(i))"mines with capacity but no infrastructure factor data",dc7,capm,infmi
+  Abort$sum((r,cmi),dc8(r,cmi))"refineries and smelters having nonzero capacity but zero operating costs",dc8,capr,
+                                 costrs
+  Abort$sum(i,dc9(i))"mines with capacity but with no labor cost or fuel cost or operating costs"
+                       dc9,capm,mlc,mfc,om
+  Abort$sum(i,dc10(i))"mines without a map to ports",dc10,i,n,in
+  Abort$sum(r,dc11(r))"production regions without map to ports",dc11,r,n,rn
+  Abort$sum(j,dc12(j))"marketing regions without a map to ports",dc12,j,n,jn
+  Abort$sum((i,modes),dc13(i,modes))"mines having nonzero distances to ports but at zero cost",dc13,dmp,mpc
+  Abort$sum(r,dc14(r))
+  "smelters with electricity from existing cheap power sources but at no cost",dc14,prelec,egyres
+  Abort$sum(r,dc15(r))"refineries and smelters with low cost future power sources but at no cost",dc15,prelec,egyres
+  Abort$sum(j,dc16(j))"markets with a nonzero tariff on imported aluminum but with no demand",dc16,alphal,d
+  Abort$sum((i,r),dc18(i,r))"levy between bauxite producer and user with port map but no sea transport cost"
+                                  dc18,betab,murs
+  Abort$sum((rp,r),dc19(rp,r))"alumina levy between refiners with port map but at no sea transport cost"
+                                      dc19,betaa,mui
+  Abort$sum((rp,r),dc20(rp,r))
+  "alumina tariff between refiner and smelter with port map but no sea trans cost"
+  dc20,tariffaa,mui
+  Abort$sum((j,r),dc21(j,r))"aluminum tariff between smelters and markets with port mapping but no sea cost"
+                                dc21,alphal,muf;
+$Stitle model specification
+
+ Variables
+
+ xf(r,j)          shipment: final products                                          (1000 tpy)
+ xi(r,rp)         shipment: intermediates                                           (1000 tpy)
+ xm(c,i,r)        shipment: bauxites                                                (1000 tpy)
+ z(p,r)           process level                                                     (1000 tpy)
+ zm(cm,i)         mining output level                                               (1000 tpy)
+ u(l,r)           electricity supply                                 (gigawatt hours per year)
+ hm(i)            expansions (linear): mines                (million tons per annual capacity)
+ hr(r,m)          expansions (linear): refinery and smelter (million tons per annual capacity)
+ sm(seg,i)        expansions (fixed): mines                 (million tons per annual capacity)
+ sr(m,seg,r)      expansions (fixed): refinery and smelter  (million tons per annual capacity)
+ ym(i)            binary expansion variable: mines
+ yr(r,m)          binary expansion variable: refineries and smelters
+ phikm            investment cost: mines                                         (us$ million)
+ phikr            investment cost: refineries and smelters                       (us$ million)
+ phiom            operating cost: mines                                          (us$ million)
+ phior            operating cost: refineries and smelters                        (us$ million)
+ phit             cost: transport                                                (us$ million)
+ phitf            cost: tariffs                                                  (us$ million)
+ phil             cost: royalties and levies                                     (us$ million)
+ phi1             cost: total                                                    (us$ million)
+ phi2             cost: total cost without tariffs                               (us$ million)
+ phi3             cost: total cost without levies                                (us$ million)
+ phi4             cost: total cost without levies or tariffs                     (us$ million);
+
+ Positive Variables xf,xi,xm,z,zm,u,hm,hr,sm,sr;
+ Binary Variables   ym,yr;
+
+
+
+$Eject
+
+ Equations
+
+ mbm(cm,i)        material balance: mines                                         (1000 units)
+ mbr(c,r)         material balance: refineries and smelters                       (1000 units)
+ fdb(j)           final demand balance                                            (1000 units)
+ ccm(i)           capacity constraint: mines                                     (million typ)
+ ccr(r,m)         capacity constraint: refineries and smelters                   (million typ)
+ i1m(i)           definition of h: mines
+ i1r(r,m)         definition of h: refineries and smelters
+ i2m(i)           convex combination and 0-1 constraint: mines
+ i2r(r,m)         convex combination and 0-1 constraint: refineries and smelters
+ res(cm,i)        bauxite reserve constraint                                       (1000 tons)
+ tba(f)           trade restrictions: bauxite
+ taa(f)           trade restrictions: alumina
+ tal(f)           trade restrictions: aluminum
+ akm              accounting: mine investments                                   (us$ million)
+ akr              accounting: refinery and smelter investments                   (us$ million)
+ aom              accounting: mine operating costs                               (us$ million)
+ aor              accounting: refineries and smelters operating costs            (us$ million)
+ at               accounting: transport cost                                     (us$ million)
+ atf              accounting: tariffs                                            (us$ million)
+ al               accounting: royalties and levies                               (us$ million)
+ a1               accounting: total cost                                         (us$ million)
+ a2               accounting: total cost without tariffs                         (us$ million)
+ a3               accounting: total cost without levies                          (us$ million)
+ a4               accounting: total cost with no levies or tariffs               (us$ million);
+
+$Double
+$Eject
+
+ mbm(cm,i)$cpospi(i,cm)..  zm(cm,i)$cpospi(i,cm) =g= sum(r, xm(cm,i,r)) + nmba2000(i);
+
+ mbr(c,r).. sum(p, a(c,p)*z(p,r)) + sum(i, xm(c,i,r)$(cm(c)$cpospi(i,c))) + sum(rp, xi(rp,r)$ci(c))
+          + sum(l$prelec(r,l), u(l,r)$cl(c)) =g= sum(j, xf(r,j)$cf(c)) + sum(rp, xi(r,rp)$ci(c)) + nmaa2000(r)$ci(c);
+
+ fdb(j)..   sum(r, xf(r,j) ) =g= d(j);
+
+ res(cm,i)$cpospi(i,cm)..  interval*zm(cm,i) =l= zmbar(i)$cpospi(i,cm) ;
+
+ ccm(i)..   sum(cm$cpospi(i,cm), zm(cm,i)) =l= utm*(capm(i) + hm(i));
+
+ ccr(r,m).. sum(p, b(m,p)*z(p,r)) =l= utr(m)*(capr(r,m) + hr(r,m));
+
+ i1m(i)..   hm(i) =e= sum(seg, sbm(i,seg)*sm(seg,i));
+
+ i1r(r,m).. hr(r,m) =e= sum(seg, sbr(m,seg,r)*sr(m,seg,r));
+
+ i2m(i)..   ym(i) =e= sum(seg, sm(seg,i));
+
+ i2r(r,m).. yr(r,m) =e= sum(seg, sr(m,seg,r));
+
+ tba(f)..   sum((cm,i,r)$(fr(f,r)*cpospi(i,cm)), xm(cm,i,r)$fi(f,i) - gamma*xm(cm,i,r)) =g= 0;
+
+ taa(f)..   (1-gamma)*sum((ci,r)$fr(f,r), -a(ci,"smelting")*z("smelting",r) )
+                                =g= sum((r,rp)$fr(f,rp), xi(r,rp)$(not fr(f,r)) );
+
+ tal(f)..   sum((r,j)$fj(f,j), xf(r,j)$fr(f,r) - gamma*xf(r,j)) =g= 0;
+
+ aom..      phiom =e= sum((cm,i)$cpospi(i,cm),om(i)*zm(cm,i))/1000;
+
+ aor..      phior =e= ( sum((r,p), ors(r,p)*z(p,r)) + sum((r,l), prelec(r,l)*u(l,r)) )/1000;
+
+ at..       phit =e= sum(r, sum(j, muf(r,j)*xf(r,j)) + sum(rp, mui(r,rp)*xi(r,rp))
+              + sum((cm,i)$cpospi(i,cm), mur(i,r)*xm(cm,i,r)))/1000;
+
+ akm..      phikm =e= sigma*sum((seg,i), omegam(i,seg)*sm(seg,i));
+
+ akr..      phikr =e= sigma*sum((seg,r,m), omegar(m,seg,r)*sr(m,seg,r));
+
+ atf..      phitf =e= (sum(j, pl*alphal(j)*sum(r$nftrade(j,r), xf(r,j)))
+                     + sum(rp, alphaa(rp)*sum(r$nfaa(rp,r), xi(r,rp))))/1000;
+
+ al..       phil =e= pl*(sum((cm,i,r)$cnir(cm,i,r), betab(i)*xm(cm,i,r))
+                   + sum((r,rp)$(not rr(r,rp)), betaa(r)*xi(r,rp)))/1000;
+
+ a1..       phi1  =e= phit + phiom + phior + phikm + phikr + phitf + phil ;
+
+ a2..       phi2  =e= phit + phiom + phior + phikm + phikr  + phil ;
+
+ a3..       phi3  =e= phit + phiom + phior + phikm + phikr + phitf ;
+
+ a4..       phi4  =e= phit + phiom + phior + phikm + phikr ;
+
+$Stitle scenario and model
+$Single
+
+ pl = 2000;
+ d(j) = dem2000(j,"low");
+ gamma = 0;
+
+ u.up(l,r) = ubar(r,l);
+ u.up("el-hicost",r) = +inf;
+
+ Model gam global aluminum model / all /;
+
+ Solve gam minimizing phi4 using mip;
+
+ abort$(gam.modelstat <> %modelstat.Optimal% and
+        gam.modelstat <> %modelstat.IntegerSolution%) 'no solution';
+
+$Stitle report
+
+ Set  rcol    report columns /
+              ncap-exist,ncap-com,ncap-new,ncap-tot,ecap-tot,production,shipped,non-ind,ecap-ut /
+
+      rcolel  column labels for electricity reporting /
+              el-actual,el-locost,el-hicost,el-total,el-cost,av-cost /;
+
+
+ Parameter  repb         bauxite production and consumption   (1000 tpy)
+            arepb        bauxite production and consumption   (1000 tpy)
+            brepb        bauxite production and consumption   (1000 tpy)
+
+            repaa        alumina production and consumption   (1000 tpy)
+            arepaa       alumina production and consumption   (1000 tpy)
+            brepaa       alumina production and consumption   (1000 tpy)
+
+            repam        aluminium production and consumption (1000 tpy)
+            arepam       aluminium production and consumption (1000 tpy)
+            brepam       aluminium production and consumption (1000 tpy)
+
+            repel        electricity report by plants
+            arepel       electricity report by regions
+            brepel       electricity report by blocks;
+
+
+ repb(i,r)                       = sum(cm, xm.l(cm,i,r));
+ repb("**total**",r)             = sum(i, repb(i,r));
+ repb(i,"shipped")               = sum(r, repb(i,r));
+ repb(i,"non-ind")               = nmba2000(i);
+ repb(i,"production")            = sum(cm, zm.l(cm,i));
+
+ repb(i,"ecap-tot")              = ut("mining")*(capm(i)+hm.l(i));
+ repb(i,"ncap-tot")              = capm(i)+hm.l(i);
+ repb(i,"ncap-exist")            = capm1(i,"initial");
+ repb(i,"ncap-com")              = capm1(i,"invest");
+ repb(i,"ncap-new")              = hm.l(i);
+
+ repb(i,"ecap-ut")$repb(i,"ecap-tot")
+                                 = repb(i,"production")/repb(i,"ecap-tot");
+ repb("**total**",rcol)          = sum(i,repb(i,rcol));
+ repb("**total**","ecap-ut")     = repb("**total**","production")/repb("**total**","ecap-tot");
+
+ arepb(g,rcol)                   = sum(i$gi(g,i),repb(i,rcol));
+ arepb(g,gp)                     = sum((i,r)$(gi(g,i)*gr(gp,r)), repb(i,r));
+ arepb("**total**",g)            = sum(gp, arepb(gp,g));
+ arepb("**total**",rcol)         = repb("**total**",rcol);
+ arepb(g,"ecap-ut")$arepb(g,"ecap-tot")
+                                 = arepb(g,"production")/arepb(g,"ecap-tot");
+
+ brepb(f,rcol)                   = sum(g$fg(f,g),arepb(g,rcol));
+ brepb(f,fp)                     = sum((g,gp)$(fg(f,g)*fg(fp,gp)), arepb(g,gp));
+ brepb("**total**",f)            = sum(fp, brepb(fp,f));
+ brepb("**total**",rcol)         = arepb("**total**",rcol);
+ brepb(f,"ecap-ut")$brepb(f,"ecap-tot")
+                                 = brepb(f,"production")/brepb(f,"ecap-tot");
+
+
+ Set       smelt  /  smelter  /;
+
+ repaa(r,rp)                     = xi.l(r,rp);
+ repaa(r,"non-ind")              = nmaa2000(r);
+ repaa(r,"production")           = sum(p$(a("alumina",p) ge 0), a("alumina",p)*z.l(p,r));
+ repaa(r,r)                      = repaa(r,"production") - sum(rp, repaa(r,rp)) - repaa(r,"non-ind");
+
+ repaa(r,"shipped")              = repaa(r,"production") - repaa(r,"non-ind");
+ repaa("**total**",rp)           = sum(r, repaa(r,rp));
+ repaa(r,"ecap-tot")             = sum(m$(not smelt(m)), ut(m)*(capr(r,m)+hr.l(r,m)));
+ repaa(r,"ncap-tot")             = sum(m$(not smelt(m)), capr(r,m)+hr.l(r,m));
+ repaa(r,"ncap-exist")           = sum(m$(not smelt(m)), capr1(r,m));
+ repaa(r,"ncap-com")             = sum(m$(not smelt(m)), capr2(r,m));
+
+ repaa(r,"ncap-new")             = sum(m$(not smelt(m)), hr.l(r,m));
+ repaa(r,"ecap-ut")$repaa(r,"ecap-tot")
+                                 = sum((p,m)$(not smelt(m)), b(m,p)*z.l(p,r))/repaa(r,"ecap-tot");
+ repaa("**total**",rcol)         = sum(r, repaa(r,rcol));
+ repaa("**total**","ecap-ut")    = repaa("**total**","production")/repaa("**total**","ecap-tot");
+
+ arepaa(g,rcol)                  = sum(r$gr(g,r),repaa(r,rcol));
+ arepaa(g,gp)                    = sum((r,rp)$(gr(g,r)*gr(gp,rp)), repaa(r,rp));
+ arepaa("**total**",g)           = sum(gp, arepaa(gp,g));
+ arepaa("**total**",rcol)        = repaa("**total**",rcol);
+ arepaa(g,"ecap-ut")$arepaa(g,"ecap-tot")
+                                 = arepaa(g,"production")/arepaa(g,"ecap-tot");
+
+ brepaa(f,rcol)                  = sum(g$fg(f,g),arepaa(g,rcol));
+ brepaa(f,fp)                    = sum((g,gp)$(fg(f,g)*fg(fp,gp)), arepaa(g,gp));
+ brepaa("**total**",f)           = sum(fp, brepaa(fp,f));
+ brepaa("**total**",rcol)        = arepaa("**total**",rcol);
+ brepaa(f,"ecap-ut")$brepaa(f,"ecap-tot")
+                                 = brepaa(f,"production")/brepaa(f,"ecap-tot");
+
+ repam(r,j)                      = xf.l(r,j);
+ repam("**total**",j)            = sum(r, repam(r,j));
+ repam(r,"shipped")              = sum(j, repam(r,j));
+ repam(r,"production")           = a("aluminum","smelting")*z.l("smelting",r);
+ repam(r,"ecap-tot")             = ut("smelter")*(capr(r,"smelter")+hr.l(r,"smelter"));
+ repam(r,"ncap-tot")             = (capr(r,"smelter")+hr.l(r,"smelter"));
+
+ repam(r,"ncap-exist")           = capr1(r,"smelter");
+ repam(r,"ncap-com")             = capr2(r,"smelter");
+ repam(r,"ncap-new")             = hr.l(r,"smelter");
+ repam(r,"ecap-ut")$repam(r,"ecap-tot")
+                                 = b("smelter","smelting")*z.l("smelting",r)/repam(r,"ecap-tot");
+ repam("**total**",rcol)         = sum(r, repam(r,rcol));
+ repam("**total**","ecap-ut")    = repam("**total**","production")/repam("**total**","ecap-tot");
+
+ arepam(g,rcol)                  = sum(r$gr(g,r),repam(r,rcol));
+ arepam(g,gp)                    = sum((r,j)$(gr(g,r)*gj(gp,j)), repam(r,j));
+ arepam("**total**",g)           = sum(gp, arepam(gp,g));
+ arepam("**total**",rcol)        = repam("**total**",rcol);
+ arepam(g,"ecap-ut")$arepam(g,"ecap-tot")
+                                 = arepam(g,"production")/arepam(g,"ecap-tot");
+
+ brepam(f,rcol)                  = sum(g$fg(f,g),arepam(g,rcol));
+ brepam(f,fp)                    = sum((g,gp)$(fg(f,g)*fg(fp,gp)), arepam(g,gp));
+ brepam("**total**",f)           = sum(fp, brepam(fp,f));
+ brepam("**total**",rcol)        = arepam("**total**",rcol);
+ brepam(f,"ecap-ut")$brepam(f,"ecap-tot")
+                                 = brepam(f,"production")/brepam(f,"ecap-tot");
+
+
+ Display brepb,brepaa,brepam,arepb,arepaa,arepam,repb,repaa,repam;
+
+ repel(r,l)                      = u.l(l,r);
+ repel(r,"el-total")             = sum(l, repel(r,l));
+ repel(r,"el-cost")              = sum(l, repel(r,l)*prelec(r,l))/1000;
+ repel(r,"av-cost")$repel(r,"el-total")
+                                 = (repel(r,"el-cost")/repel(r,"el-total"))*1000;
+ repel("**total**",rcolel)       = sum(r, repel(r,rcolel));
+ repel("**total**","av-cost")    = (repel("**total**","el-cost")/repel("**total**","el-total"))*1000;
+ repel(r,"cost/ton")$repam(r,"production")
+                                 = (repel(r,"el-cost")/repam(r,"production"))*1000;
+
+ arepel(g,rcolel)                = sum(r$gr(g,r), repel(r,rcolel));
+ arepel("**total**",rcolel)      = repel("**total**",rcolel);
+ arepel(g,"av-cost")$arepel(g,"el-total")
+                                 = (arepel(g,"el-cost")/arepel(g,"el-total"))*1000;
+ arepel("**total**","av-cost")   = repel("**total**","av-cost");
+ arepel(g,"cost/ton")$arepam(g,"production")
+                                 = (arepel(g,"el-cost")/arepam(g,"production"))*1000;
+
+ brepel(f,rcolel)                = sum(g$fg(f,g), arepel(g,rcolel));
+ brepel("**total**",rcolel)      = arepel("**total**",rcolel);
+ brepel(f,"av-cost")$brepel(f,"el-total")
+                                 = (brepel(f,"el-cost")/brepel(f,"el-total"))*1000;
+ brepel("**total**","av-cost")   = arepel("**total**","av-cost");
+ brepel(f,"cost/ton")$brepam(f,"production")
+                                 = (brepel(f,"el-cost")/brepam(f,"production"))*1000;
+
+ repel("**total**","cost/ton")   = (repel("**total**","el-cost")/repam("**total**","production"))*1000;
+ arepel("**total**","cost/ton")  = repel("**total**","cost/ton");
+ brepel("**total**","cost/ton")  = repel("**total**","cost/ton");
+
+ Display repel,arepel,brepel;
+ Display phikm.l,phikr.l,phiom.l,phior.l,phit.l,phitf.l,phil.l,phi1.l,phi2.l,phi3.l,phi4.l;

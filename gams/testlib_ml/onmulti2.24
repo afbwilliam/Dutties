@@ -1,0 +1,12 @@
+$title Onmulti operates like a replace (ONMULTI2,SEQ=24)
+set i    / a, b, c /
+parameter a / (a,b,c) = 10 /;
+
+$onmulti
+
+parameter a / b = 0, c = 20 /;
+
+abort$(card(a) <>  2) "card(a) <>  2",a;
+abort$(a('a')  <> 10) "a('a')  <> 10",a;
+abort$(a('b')  <>  0) "a('b')  <>  0",a;
+abort$(a('c')  <> 20) "a('c')  <> 20",a;

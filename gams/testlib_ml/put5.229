@@ -1,0 +1,9 @@
+$title 'Test put fallback when writing directory' (PUT5,SEQ=229)
+
+$ontext
+test for AB0831
+$offtext
+
+$echo file alx / 'nicename.put' /; put alx 'bad stuff'; > temp.gms
+$call =gams temp.gms  pdir=badpath lo=%GAMS.lo%
+$if errorlevel 1 $abort previous gams call failed

@@ -1,0 +1,44 @@
+$Title Repayment factors for loans  (REPAY,SEQ=72)
+
+$Ontext
+
+   This sample problem computes the monthly payments for a 1000 dollar
+   loan to be repaid in equal installments. The monthly payment is derived
+   as follows.
+
+
+GAMS Development Corporation, Formulation and Language Example.
+
+   p(0) = 1000
+   p(1) = p(0)*(1+rate)/periods - pay
+
+   p(t) = p(t-1)*(1+rate)/periods - pay = 0
+
+   where "p" is the principal outstanding at the beginning of a period and
+   "rate" is the annual interest rate. "periods" are the payment periods
+   per year. "pay" is the payment per period. The loan has to be repaid
+   completely after "t" payments within "years" years. The number of
+   payments "t" is "periods"*"years".
+
+   with  sum(n, q**(ord(n)-1)) = (1-q**card(n))/(1-q)    find
+
+       pay = 1000*rate/periods/(1-(1+rates/periods)**(-periods*years)).
+
+$Offtext
+
+
+Sets r list of rates      / 1*41 /
+     m list of maturities / 12-years, 15-years, 30-years /
+
+Parameters rates(r)  annual rates
+           years(m)  maturities  / 12-years 12, 15-years 15, 30-years 30 /
+           periods   payments per year
+           pay       monthly payments for 1000 dollar loan ;
+
+rates(r) = .08 + .00125*(ord(r)-1);  periods = 12;
+
+pay(r,"rate") = 100*rates(r);
+pay(r,m) = 1000*rates(r)/periods
+          /(1-power(1+rates(r)/periods,-periods*years(m)));
+
+Display pay;

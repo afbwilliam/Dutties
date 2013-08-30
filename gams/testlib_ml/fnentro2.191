@@ -1,0 +1,36 @@
+$title 'Test correctness of entropy intrinsic' (FNENTRO2,SEQ=191)
+
+$include fnset_x.inc
+
+reps = 5e-15;
+relToInput = 0;
+set T / t1 * t5 /;
+
+* ecDOMAIN=1
+* ecSINGULAR=2
+* ecOVERFLOW=3
+
+table data(T,V)
+        x         f_               fx_                 fxx_    rc_     ec_
+t1     -1         0                0                   0       1       1
+t2      0         0              1e299               -1e299    2       2
+t3      0.5  0.346573590279973 -0.306852819440055     -2
+t4      1         0               -1                  -1
+t5     10   -23.0258509299405  -3.30258509299405      -0.1
+;
+
+loop {T,
+  data(T,  'f')    = entropy.value (data(T,'x'));
+  data(T, 'fx')    = entropy.grad  (data(T,'x'));
+  data(T,'fxx')    = entropy.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+abort$(execerror ne 5)
+  'Should get 5 execution errors at x <= 0';
+execerror = 0;
+
+$include fntest_x.inc
+
+display data;

@@ -1,0 +1,22 @@
+$title 'Test for projecting scalars' (PIPE10,SEQ=232)
+
+$ontext
+ AB00770
+$offtext
+
+*scalar case is correct
+scalar p /3/, q/2/;
+display p,q;
+option q<p;
+display p,q;
+abort$(q<>p) 'bad result';
+
+*using variables went wrong with Distribution 21.7
+positive variable x;
+x.l=3;
+positive variable y;
+y.l=2;
+display x.l,y.l;
+option y<x;
+display x.l, y.l;
+abort$(x.l<>y.l) 'bad y.l';

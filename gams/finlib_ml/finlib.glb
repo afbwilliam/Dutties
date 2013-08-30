@@ -1,0 +1,398 @@
+Version = 5
+LibraryName =  Practical Financial Optimization Models by Consiglio, Nielsen and Zenios
+Columns = 6
+1 = SeqNr
+2 = Name
+3 = Chapter
+4 = PFONr
+5 = Description
+6 = License
+InitialSort = 1
+*$*$*$
+Files = DedicationNoBorrow.gms,BondData.inc
+1 = 001
+2 = DedicationNoBorrow
+3 = Data Management
+4 = 4.2.3
+5 = Portfolio dedication (without borrowing)
+6 = Demo
+
+*$*$*$
+Files = MeanVar.gms,Estimate.gdx
+1 = 002
+2 = MeanVar
+3 = Mean-Variance Portfolio Optimization
+4 = 3.2.3
+5 = Mean-variance efficient portfolios
+6 = Demo
+
+*$*$*$
+Files = Estimate.gms,AssetsUniverse.inc,AssetsData.inc,ExchangeRates.inc
+1 = 003
+2 = Estimate
+3 = Mean-Variance Portfolio Optimization
+4 =
+5 = Data estimation for mean-variance model
+6 = Demo
+
+*$*$*$
+Files = MeanVarShort.gms,Estimate.gdx
+1 = 004
+2 = MeanVarShort
+3 = Mean-Variance Portfolio Optimization
+4 = 3.2 Sec.
+5 = Mean-variance model allowing short sales
+6 = Demo
+
+*$*$*$
+Files = Sharpe.gms,Estimate.gdx
+1 = 005
+2 = Sharpe
+3 = Mean-Variance Portfolio Optimization
+4 = 2.8.11 Def.
+5 = Sharpe model.
+6 = Demo
+
+*$*$*$
+Files = Borrow.gms,Estimate.gdx
+1 = 006
+2 = Borrow
+3 = Mean-Variance Portfolio Optimization
+4 = 3.2.2 Sec.
+5 = Mean-Variance model with borrowing constraints.
+6 = Demo
+
+*$*$*$
+Files = MeanVarMip.gms,Estimate.gdx
+1 = 007
+2 = MeanVarMip
+3 = Mean-Variance Portfolio Optimization
+4 = 3.2.3, 3.2.4 Sec.
+5 = Mean-variance model with diversification constraints.
+6 = Demo
+
+*$*$*$
+Files = InternationalMeanVar.gms,Estimate.gdx
+1 = 008
+2 = InternationalMeanVar
+3 = Mean-Variance Portfolio Optimization
+4 =
+5 = International Asset Allocation model.
+6 = Demo
+
+*$*$*$
+Files = JDate.gms
+1 = 009
+2 = JDate
+3 = Portfolio Models for Fixed Income
+4 =
+5 = Using GAMS time/date functions.
+6 = Demo
+
+*$*$*$
+Files = DiscreteFinCalc.gms
+1 = 010
+2 = DiscreteFinCalc
+3 = Portfolio Models for Fixed Income
+4 = 2.4.5 Def.
+5 = Financial Calculator for discrete time discounting
+6 = Demo
+GAMS as a Financial Calculator: Calculating various financially relevant quantities.
+This file contains the discrete discounting formulas. See ContinuosFinCalc.gms for the corresponding continuos time formulas.
+
+*$*$*$
+Files = ContinuousFinCalc.gms
+1 = 011
+2 = ContinuousFinCalc
+3 = Portfolio Models for Fixed Income
+4 = 2.4.4 Def.
+5 = Financial Calculator for continuos time discounting
+6 = Demo
+GAMS as a Financial Calculator: Calculating various financially
+relevant quantities. This file contains the continuous discounting formulas. See
+DiscreteFinCalc.gms for the corresponding discrete time formulas.
+
+*$*$*$
+Files = Bootstrap.gms,BondData.inc
+1 = 012
+2 = Bootstrap
+3 = Portfolio Models for Fixed Income
+4 = 4.2.6 Sec.
+5 = Bootstrapping the yield curve.
+6 = Demo
+
+*$*$*$
+Files = Dedication.gms,BondData.inc
+1 = 013
+2 = Dedication
+3 = Portfolio Models for Fixed Income
+4 = 4.2.3
+5 = Dedication model.
+6 = Demo
+
+*$*$*$
+Files = Horizon.gms,BondData.inc
+1 = 014
+2 = Horizon
+3 = Portfolio Models for Fixed Income
+4 = 4.2.4
+5 = Portfolio Horizon returns model.
+6 = Demo
+
+*$*$*$
+Files = DedicationMIP.gms,BondData.inc
+1 = 015
+2 = DedicationMIP
+3 = Portfolio Models for Fixed Income
+4 = 4.2 Sec.
+5 = Dedication model with tradeability constraints.
+6 = Demo
+
+*$*$*$
+Files = Immunization.gms,BondData.inc,SpotRates.inc,YieldRates.inc
+1 = 016
+2 = Immunization
+3 = Portfolio Models for Fixed Income
+4 = 4.3.1
+5 = Immunization models (present value, duration).
+6 = Demo
+
+*$*$*$
+Files = FactorImmunization.gms,BondData.inc,FactorData.inc,SpotRates.inc,YieldRates.inc
+1 = 017
+2 = FactorImmunization
+3 = Portfolio Models for Fixed Income
+4 = 4.4.1
+5 = Factor immunization models
+6 = Demo
+
+*$*$*$
+Files = FactorYieldImmunization.gms,FactorImmunization.gms,BondData.inc,FactorData.inc,SpotRates.inc,YieldRates.inc
+1 = 018
+2 = FactorYieldImmunization
+3 = Portfolio Models for Fixed Income
+4 = 4.5 Sec.
+5 = Factor immunization models, maximizing the non-linear portfolio yield
+6 = Demo
+
+NOTE: Restart this model from saved results of Factor:
+      gams FactorImmunization  -save FactorSave
+      gams FactorYieldImmunization -restart FactorSave
+
+*$*$*$
+Files = CreditImmunization.gms,BondAndLiabilityData.inc,CreditYieldRates.inc,FactorLoadings.inc,TimeDefinitionSets.inc
+1 = 019
+2 = CreditImmunization
+3 = Portfolio Models for Fixed Income
+4 = 4.5 Sec.
+5 = Factor Immunization model for corporate bonds.
+6 = Demo
+
+*$*$*$
+Files = MAD.gms,Corporate.inc,WorldIndices.inc
+1 = 020
+2 = MAD
+3 = Scenario Optimization
+4 = 5.3.1
+5 = Mean-absolute deviation model.
+6 =
+
+*$*$*$
+Files = TrackingMAD.gms,Corporate.inc,WorldIndices.inc,Index.inc
+1 = 021
+2 = TrackingMAD
+3 = Scenario Optimization
+4 = 5.3.4
+5 = Tracking models using MAD.
+6 =
+
+*$*$*$
+Files = Regret.gms,Corporate.inc,WorldIndices.inc,Index.inc
+1 = 022
+2 = Regret
+3 = Scenario Optimization
+4 = 5.4.1
+5 = Regret models.
+6 =
+
+*$*$*$
+Files = CVaR.gms,Corporate.inc,WorldIndices.inc
+1 = 023
+2 = CVaR
+3 = Scenario Optimization
+4 = 5.5.1, 5.5.2
+5 = Conditional Value at Risk models.
+6 =
+
+*$*$*$
+Files = Utility.gms,Corporate.inc,WorldIndices.inc
+1 = 024
+2 = Utility
+3 = Scenario Optimization
+4 = 5.6.1
+5 = Utility models.
+6 =
+
+*$*$*$
+Files = PutCall.gms,Corporate.inc,Index.inc,WorldIndices.inc
+1 = 025
+2 = PutCall
+3 = Scenario Optimization
+4 = 5.7.1, 5.7.2, 5.7.3
+5 = Put/Call efficient frontier model.
+6 =
+
+*$*$*$
+Files = StochDedication.gms,BondData.inc,FactorData.inc,SpotRates.inc
+1 = 026
+2 = StochDedication
+3 = Dynamic Optimization with Stochastic Programming
+4 = 6.4.1
+5 = Stochastic Dedication model.
+6 = Demo
+
+*$*$*$
+Files = StochDedicationBL.gms,BondData.inc,FactorData.inc,SpotRates.inc
+1 = 027
+2 = StochDedicationBL
+3 = Dynamic Optimization with Stochastic Programming
+4 = 6.4.2
+5 = Stochastic Dedication model with borrowing and lending variables.
+6 =
+
+*$*$*$
+Files = TwoStageDeterministic.gms
+1 = 028
+2 = TwoStageDeterministic
+3 = Dynamic Optimization with Stochastic Programming
+4 = 6.5 Sec.
+5 = Deterministic Two-stage program.
+6 = Demo
+
+*$*$*$
+Files = TwoStageStochastic.gms
+1 = 029
+2 = TwoStageStochastic
+3 = Dynamic Optimization with Stochastic Programming
+4 = 6.5 Sec.
+5 = Stochastic Two-stage program.
+6 = Demo
+
+*$*$*$
+Files = ThreeStageSPDA.gms
+1 = 030
+2 = ThreeStageSPDA
+3 = Dynamic Optimization with Stochastic Programming
+4 = 6.6 Sec.
+5 = A three stage stochastic programming model for SPDA
+6 = Demo
+
+*$*$*$
+Files = ReadData.gms,BondIndexData.xls,BroadIndexData.xls
+1 = 031
+2 = ReadData
+3 = Index Funds
+4 =
+5 = Reads excel files and converts them to gdx format
+6 = Demo
+
+*$*$*$
+Files = StructuralModel.gms,InputData.gdx
+1 = 032
+2 = StructuralModel
+3 = Index Funds
+4 = 7.3.1
+5 = Linear program for indexed funds
+6 = Demo
+
+*$*$*$
+Files = ComovementsModel.gms,InputData.gdx
+1 = 033
+2 = ComovementsModel
+3 = Index Funds
+4 = 7.3.3
+5 = Two-sided tracking model
+6 =
+
+*$*$*$
+Files = SelectiveHedging.gms,InputData.gdx
+1 = 034
+2 = SelectiveHedging
+3 = Index Funds
+4 = 10.5.1
+5 = Scenario Optimization for selective hedging
+6 =
+
+*$*$*$
+Files = BondIndex.gms,BondIndexData.gdx
+1 = 035
+2 = BondIndex
+3 = Case Studies in Financial Optimization
+4 = 7.4.4
+5 = Tracking international bond index - The BSI Model.
+6 =
+
+*$*$*$
+Files = BondIndexData.gms,BondsUniverse.inc,BondPricesAccrualsUSD.inc,BondPricesAccrualsDEM.inc,BondPricesAccrualsCHF.inc,InitialBondsAccruals.inc,RiskFreeReinvestmentRates.inc,RiskFreeReinvestmentRates.inc,Probabilities.inc,IndexReturns.inc,ExchangeRates-BondIndex.inc
+1 = 036
+2 = BondIndexData
+3 = Case Studies in Financial Optimization
+4 =
+5 = Data for the Bond Index Model.
+6 = Demo
+
+*$*$*$
+Files = Corporate.gms,CorporateCommonInclude.inc,CorporateScenarios.inc
+1 = 037
+2 = Corporate
+3 = Case Studies in Financial Optimization
+4 = 11.5.1, 11.5.2
+5 = Corporate bond indexation model
+6 =
+
+*$*$*$
+Files = CorporateCVaR.gms,CorporateCommonInclude.inc,CorporateScenarios.inc
+1 = 038
+2 = CorporateCVaR
+3 = Case Studies in Financial Optimization
+4 = 5.5.1
+5 = Conditional Value at Risk models for corporate bond management.
+6 =
+
+*$*$*$
+Files = GuaranteeModel.gms,GuaranteeCommonInclude.inc,AssetReturns-Guarantee.inc,AbandonProbabilities.inc,PeriodicCapFactors.inc,CapFactors.inc
+1 = 039
+2 = GuaranteeModel
+3 = Case Studies in Financial Optimization
+4 = 12.4.1
+5 = Managing insurance policies with guarantee - The Prometeia Model.
+6 =
+
+*$*$*$
+Files = PersonalAssetAllocation.gms,AssetReturns-PersonalAssetAllocation.inc,CapFactorsScenarios.inc,PersonalCommonInclude.inc,InflationScenarios.inc,LiabilityScenarios.inc
+1 = 040
+2 = PersonalAssetAllocation
+3 = Case Studies in Financial Optimization
+4 = 13.5.1
+5 = PAA.gms: Personal asset allocation.
+6 =
+
+*$*$*$
+Files = GuaranteeData.gms,AssetReturns-Guarantee.inc,AbandonProbabilities.inc,PeriodicCapFactors.inc,CapFactors.inc
+1 = 041
+2 = GuaranteeData
+3 = Case Studies in Financial Optimization
+4 =
+5 = Data for the Insurance Policies with Guarantee - The Prometeia Model.
+6 = Demo
+
+*$*$*$
+Files = GuaranteeModelGDX.gms
+1 = 042
+2 = GuaranteeModelGDX
+3 = Case Studies in Financial Optimization
+4 = 12.4.1
+5 = Managing insurance policies with guarantee - The Prometeia Model - GDX Input
+6 = Demo
+
+*$*$*$

@@ -1,0 +1,42 @@
+$title 'test gdxmerge - verify that an aliased set can be merged' (GDXMERG1,SEQ=363)
+
+$ontext
+In this model we:
+   1.  Write a small helper gams file
+   2.  Execute this file a few times to generate different gdx files
+   3.  call on gdxmerge to merge the gdx files
+   4.  read some data back to verify the contents
+
+Contributor: Paul van der Eijk
+$offtext
+
+$onecho > helper.gms
+set i /i1*i5/;
+alias(i,j);
+parameter A(i,j);
+A(i,j)=10 * Ord(i) + Ord(j) + %base%;
+$offecho
+
+$call gams helper --base=1000 gdx=f1.gdx lo=0
+$call gams helper --base=2000 gdx=f2.gdx lo=0
+$call gams helper --base=3000 gdx=f3.gdx lo=0
+$call gdxmerge f1.gdx f2.gdx f3.gdx > %system.nullfile%
+
+set i /i1*i5/;
+alias(i, j);
+set m /f1, f2, f3/;
+$gdxin merged.gdx
+set mi(m, i);
+set mj(m, i);
+parameter mA(m, i, j);
+*this is fine
+$load mA=A
+*without update to gdxmerge this load fails
+$load mi=i mj=j
+$gdxin
+
+parameter VA(m, i, j);
+VA(m, i, j)= 10 * Ord(i) + Ord(j) + Ord(m) * 1000;
+VA(m, i, j) = VA(m, i, j) - mA(m, i, j);
+Abort$(Card(VA) <> 0) "merged failed";
+Abort$(Card(i)*Card(m) <> card(mi)) "card of aliased set is wrong";

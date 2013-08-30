@@ -1,0 +1,419 @@
+$TITLE Three Approaches to Differential Tax Policy Analysis (THREEMGE,SEQ=154)
+$Ontext
+Three Approaches to Differential Tax Policy Analysis
+
+
+Rutherford, T F, Applied General Equilibrium Modeling with MPSGE as
+a GAMS Subsystem: An Overview of the Modeling Framework and Syntax.
+Computational Economics 14 (1999), 1-46.
+
+       ------------------------------------------------------------------
+       SECTION (i)     DATA SPECIFICATION AND BENCHMARKING
+
+$Offtext
+
+SETS        G           GOODS AND SECTORS /X, Y/,
+            F           PRIMARY FACTORS   /K, L/,
+            H           HOUSEHOLDS     /OWNER, WORKER/;
+
+ALIAS (S,G);
+
+TABLE A(G,S) MAKE MATRIX (GOODS OUTPUTS BY SECTOR)
+
+            X           Y
+X         100
+Y                      80
+
+TABLE B(G,S) USE MATRIX (GOODS INPUTS BY SECTOR)
+
+            X           Y
+X                      20
+Y          10
+
+TABLE C(G,H)  HOUSEHOLD DEMAND
+
+        OWNER      WORKER
+X          30          50
+Y          40          30
+
+TABLE FD(F,S)  FACTOR DEMAND BY SECTOR
+
+            X           Y
+K          20          40
+L          50          10
+
+TABLE E(F,H)  FACTOR ENDOWMENTS
+
+        OWNER      WORKER
+K          60
+L                     100
+
+TABLE D(F,H)  FACTOR DEMAND BY HOUSEHOLDS
+
+       WORKER
+L          40
+
+TABLE T(F,S)  TAX PAYMENT BY FACTOR BY SECTOR
+
+            X           Y
+K          20          10
+
+PARAMETER TRN(H) TRANSFER REVENUE
+
+        / OWNER  10,    WORKER 20 /;
+
+PARAMETER ELAS(S)  ELASTICITY OF SUBSTITUTION IN PRODUCTION;
+
+ELAS(S) = 1;
+
+PARAMETER ESUB(H)  ELASTICITY OF SUBSTITUTION IN DEMAND;
+
+ESUB(H) = 0.5;
+
+SCALAR  GREV  BENCHMARK GOVERNMENT REVENUE;
+
+GREV     = SUM(H, TRN(H));
+
+PARAMETER TF(F,S)  FACTOR TAX RATE;
+
+TF(F,S) = T(F,S) / FD(F,S);
+
+PARAMETER PF(F,S)  BENCHMARK FACTOR PRICES GROSS OF TAX;
+
+PF(F,S) = 1 + TF(F,S);
+
+PARAMETER  THETA(G)  WEIGHTS IN NUMERAIRE PRICE INDEX;
+THETA(G) = SUM(H, C(G,H));
+THETA(G) = THETA(G) / SUM(S, THETA(S));
+
+PARAMETER WBAR(H)  BENCHMARK WELFARE INDEX;
+WBAR(H) = SUM(G, C(G,H)) + SUM(F, D(F,H));
+
+*       ------------------------------------------------------------------
+*       MODEL #1        TAX POLICY WITH EXOGENOUSLY SPECIFIED TAX RATES
+
+*       SECTION (ii)    MPS/GE MODEL DECLARATION
+
+$ONTEXT
+
+$MODEL:HARBERGER
+
+$SECTORS:
+      AL(S)
+
+$COMMODITIES:
+      P(G)  W(F)  PT
+
+$CONSUMERS:
+      RA(H) GOVT
+
+$REPORT:
+        V:CD(G,H)       D:P(G)          DEMAND:RA(H)
+        V:DF(F,H)       D:W(F)          DEMAND:RA(H)
+        V:EMPLOY(S)     I:W("L")        PROD:AL(S)
+        V:WLF(H)        W:RA(H)
+
+$PROD:AL(S)  s:0  a:ELAS(S)
+      O:P(G)      Q:A(G,S)
+      I:P(G)      Q:B(G,S)
+      I:W(F)      Q:FD(F,S)   P:PF(F,S)   A:GOVT   T:TF(F,S)  a:
+
+$DEMAND:RA(H)  s:1  a:ESUB(H)
+      D:P(G)      Q:C(G,H)   a:
+      D:W(F)      Q:D(F,H)
+      E:W(F)      Q:E(F,H)
+      E:PT        Q:TRN(H)
+
+$DEMAND:GOVT
+      D:PT        Q:GREV
+
+$OFFTEXT
+
+*       READ THE HEADER FILE:
+
+$SYSINCLUDE mpsgeset HARBERGER
+
+*       ------------------------------------------------------------------
+*       SECTION (iii)   BENCHMARK REPLICATION
+
+HARBERGER.ITERLIM = 0;
+$INCLUDE HARBERGER.GEN
+SOLVE HARBERGER USING MCP;
+ABORT$(ABS(HARBERGER.OBJVAL) GT 1.E-4)
+        "*** HARBERGER benchmark does not calibrate.";
+HARBERGER.ITERLIM = 1000;
+
+*       ------------------------------------------------------------------
+*       SECTION (iv)  COUNTER-FACTUAL SPECIFICATION AND SOLUTION:
+
+SET SC COUNTERFACTUAL SCENARIOS TO BE COMPUTED /
+        L       UNIFORM TAX ON LABOR,
+        K       UNIFORM TAX ON CAPITAL,
+        VA      UNIFORM VALUE-ADDED TAX/
+
+PARAMETER       TAXRATE(F,S,SC) COUNTERFACTUAL TAX RATES,
+                REPORT(*,*,*,SC)  SOLUTION REPORT - % CHANGES,
+                PINDEX          PRICE DEFLATOR;
+
+
+*       SPECIFY COUNTER-FACTUAL TAX RATES TO ACHIEVE CETERIS
+*       PARIBUS BALANCED BUDGET:
+
+TAXRATE("L",S,"L")  = GREV / SUM(G, FD("L",G));
+TAXRATE("K",S,"K")  = GREV / SUM(G, FD("K",G));
+TAXRATE("L",S,"VA") = GREV / SUM((F,G), FD(F,G));
+TAXRATE("K",S,"VA") = GREV / SUM((F,G), FD(F,G));
+
+LOOP(SC,
+
+*       INSTALL TAX RATES FOR THIS COUNTERFACTUAL:
+
+        TF(F,S) = TAXRATE(F,S,SC);
+
+$INCLUDE HARBERGER.GEN
+SOLVE HARBERGER USING MCP;
+
+*       ------------------------------------------------------------------
+*       SECTION (v)  REPORT WRITING:
+
+*       REPORT SOME RESULTS:
+
+        PINDEX = SUM(G, P.L(G) * THETA(G));
+
+        REPORT("HARBERGER","REVENUE","_",SC) = 100 * (PT.L/PINDEX - 1);
+        REPORT("HARBERGER","TAXRATE","_",SC) =
+                100 * SMAX((F,S), TAXRATE(F,S,SC));
+        REPORT("HARBERGER","WELFARE","TOTAL",SC)   =
+                100 * (SUM(H, WBAR(H)*(WLF.L(H)-1)) / SUM(H, WBAR(H)));
+        REPORT("HARBERGER","WELFARE",H,SC)   = 100 * (WLF.L(H) - 1);
+        REPORT("HARBERGER","EMPLOY",S,SC)    = 100 * (EMPLOY.L(S)/FD("L",S) - 1);
+        REPORT("HARBERGER","PRICE",G,SC)     = 100 * (P.L(G)/PINDEX - 1);
+        REPORT("HARBERGER","PRICE",F,SC)     = 100 * (W.L(F)/PINDEX - 1);
+        REPORT("HARBERGER","OUTPUT",S,SC)    = 100 * (AL.L(S) - 1);
+);
+
+*       ------------------------------------------------------------------
+*       MODEL #2        DIFFERENTIAL TAX POLICY WITH ENDOGENOUS
+*                       ADJUSTMENT OF RATES TO ACHIEVE EQUAL YIELD
+
+*       SECTION (ii)    MPS/GE MODEL DECLARATION
+
+$ONTEXT
+
+$MODEL:SHOVEN
+
+$SECTORS:
+      AL(S)
+
+$COMMODITIES:
+      P(G)  W(F)  PT
+
+$CONSUMERS:
+      RA(H) GOVT
+
+$AUXILIARY:
+      TAU
+
+$REPORT:
+        V:CD(G,H)       D:P(G)          DEMAND:RA(H)
+        V:DF(F,H)       D:W(F)          DEMAND:RA(H)
+        V:EMPLOY(S)     I:W("L")        PROD:AL(S)
+        V:WLF(H)        W:RA(H)
+
+$PROD:AL(S)  s:0  a:ELAS(S)
+      O:P(G)      Q:A(G,S)
+      I:P(G)      Q:B(G,S)
+      I:W(F)      Q:FD(F,S)   P:PF(F,S)  A:GOVT  N:TAU  M:TF(F,S) a:
+
+$DEMAND:RA(H)  s:1  a:ESUB(H)
+      D:P(G)      Q:C(G,H)   a:
+      D:W(F)      Q:D(F,H)
+      E:W(F)      Q:E(F,H)
+      E:PT        Q:TRN(H)
+
+$DEMAND:GOVT
+      D:PT        Q:GREV
+
+$CONSTRAINT:TAU
+        PT =G= SUM(G, THETA(G) * P(G));
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset SHOVEN
+
+*       ------------------------------------------------------------------
+*       SECTION (iii)   BENCHMARK REPLICATION
+
+*       THE DEFAULT INITIAL VALUE FOR AUXILIARY VARIABLES IS ZERO,
+*       SO TO REPLICATE THE BENCHMARK WE NEED TO ASSIGN THE LEVEL
+*       VALUE TO UNITY:
+
+TAU.L = 1;
+
+*       REINSTALL THE BENCHMARK TAX RATE:
+
+TF(F,S) = PF(F,S) - 1;
+
+*       VERIFY THAT THE BENCHMARK EQUILIBRIUM IS REPLICATED:
+
+SHOVEN.ITERLIM = 0;
+$INCLUDE SHOVEN.GEN
+SOLVE SHOVEN USING MCP;
+ABORT$(ABS(SHOVEN.OBJVAL) GT 1.E-4) "*** SHOVEN benchmark does not calibrate.";
+SHOVEN.ITERLIM = 1000;
+
+*       ------------------------------------------------------------------
+*       SECTION (iv)  COUNTER-FACTUAL SPECIFICATION AND SOLUTION:
+
+LOOP(SC,
+
+*       INSTALL TAX RATES FOR THIS COUNTERFACTUAL:
+
+        TF(F,S) = TAXRATE(F,S,SC);
+
+$INCLUDE SHOVEN.GEN
+SOLVE SHOVEN USING MCP;
+
+*       ------------------------------------------------------------------
+*       SECTION (v)  REPORT WRITING:
+
+        PINDEX = SUM(G, P.L(G) * THETA(G));
+
+        REPORT("SHOVEN","REVENUE","_",SC) = 100 * (PT.L/PINDEX - 1);
+        REPORT("SHOVEN","TAXRATE","_",SC) =
+                100 * TAU.L * SMAX((F,S), TAXRATE(F,S,SC));
+        REPORT("SHOVEN","WELFARE","TOTAL",SC)   =
+                100 * (SUM(H, WBAR(H)*(WLF.L(H)-1)) / SUM(H, WBAR(H)));
+        REPORT("SHOVEN","WELFARE",H,SC)   = 100 * (WLF.L(H) - 1);
+        REPORT("SHOVEN","EMPLOY",S,SC)    = 100 * (EMPLOY.L(S)/FD("L",S) - 1);
+        REPORT("SHOVEN","PRICE",G,SC)     = 100 * (P.L(G)/PINDEX - 1);
+        REPORT("SHOVEN","PRICE",F,SC)     = 100 * (W.L(F)/PINDEX - 1);
+        REPORT("SHOVEN","OUTPUT",S,SC)    = 100 * (AL.L(S) - 1);
+);
+
+*
+
+PARAMETER V(H)          BENCHMARK VALUATION OF PUBLIC GOOD,
+          VSHR(H)       PUBLIC GOODS DEMAND AS A FRACTION OF PRIVATE DEMAND;
+
+V(H)  = TRN(H);
+
+VSHR(H) = V(H) / SUM(G, C(G,H));
+
+PARAMETER GD(G) INPUTS TO GOVERNMENT DEMAND;
+
+GD(G) = SUM(H, VSHR(H) * C(G,H));
+
+*       READJUST PRIVATE DEMAND, MOVING PART OF PRIVATE DEMAND
+*       INTO THE PUBLIC GOODS SECTOR INPUTS:
+
+C(G,H) = (1-VSHR(H)) * C(G,H);
+
+*       ------------------------------------------------------------------
+*       MODEL #3        DIFFERENTIAL TAX POLICY WITH ENDOGENOUS
+*                       ADJUSTMENT OF RATES TO MAINTAIN OPTIMAL
+*                       PROVISION OF A PURE PUBLIC GOOD.
+
+*       SECTION (ii)    MPS/GE MODEL DECLARATION
+
+$ONTEXT
+
+$MODEL:SAMUELSON
+
+$SECTORS:
+      AL(S)  GP
+
+$COMMODITIES:
+      P(G)  W(F)  PG  VG(H)
+
+$CONSUMERS:
+      RA(H) GOVT
+
+$AUXILIARY:
+      TAU  LGP
+
+$REPORT:
+        V:CD(G,H)       D:P(G)          DEMAND:RA(H)
+        V:DF(F,H)       D:W(F)          DEMAND:RA(H)
+        V:EMPLOY(S)     I:W("L")        PROD:AL(S)
+        V:WLF(H)        W:RA(H)
+
+$PROD:AL(S)  s:0  a:ELAS(S)
+      O:P(G)      Q:A(G,S)
+      I:P(G)      Q:B(G,S)
+      I:W(F)      Q:FD(F,S)   P:PF(F,S)
++       A:GOVT  N:TAU$TF(F,S)  M:TF(F,S)$TF(F,S) a:
+
+$PROD:GP  s:0
+        O:PG    Q:GREV
+        I:P(G)  Q:GD(G)
+
+$DEMAND:RA(H)  s:1  a:ESUB(H)
+      D:P(G)      Q:C(G,H)   a:
+      D:W(F)      Q:D(F,H)
+      D:VG(H)     Q:V(H)
+      E:VG(H)     Q:V(H)   R:LGP
+      E:W(F)      Q:E(F,H)
+
+$DEMAND:GOVT
+      D:PG        Q:GREV
+
+$CONSTRAINT:TAU
+        GREV * PG =G= SUM(H, V(H) * VG(H));
+
+$CONSTRAINT:LGP
+        LGP =G= GP;
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset SAMUELSON
+
+*       THE DEFAULT INITIAL VALUE FOR AUXILIARY VARIABLES IS ZERO,
+*       SO TO REPLICATE THE BENCHMARK WE NEED TO ASSIGN THE LEVEL
+*       VALUE TO UNITY:
+
+TAU.L = 1;
+LGP.L = 1;
+
+*       REINSTALL THE BENCHMARK TAX RATE:
+
+TF(F,S) = PF(F,S) - 1;
+
+*       VERIFY THAT THE BENCHMARK EQUILIBRIUM IS REPLICATED:
+
+SAMUELSON.ITERLIM = 0;
+$INCLUDE SAMUELSON.GEN
+SOLVE SAMUELSON USING MCP;
+ABORT$(ABS(SAMUELSON.OBJVAL) GT 1.E-4)
+        "*** SAMUELSON benchmark does not calibrate.";
+SAMUELSON.ITERLIM = 1000;
+
+LOOP(SC,
+
+*       INSTALL TAX RATES FOR THIS COUNTERFACTUAL:
+
+        TF(F,S) = TAXRATE(F,S,SC);
+
+$INCLUDE SAMUELSON.GEN
+SOLVE SAMUELSON USING MCP;
+
+        PINDEX = SUM(G, P.L(G) * THETA(G));
+
+*       REPORT PERCENTAGE CHANGES:
+
+        REPORT("SAMUELSON","REVENUE","_",SC) = 100*(GP.L * PG.L / PINDEX - 1);
+        REPORT("SAMUELSON","TAXRATE","_",SC) =
+                        100 * TAU.L * SMAX((F,S), TF(F,S));
+        REPORT("SAMUELSON","WELFARE","TOTAL",SC)   =
+                100 * (SUM(H, WBAR(H)*(WLF.L(H)-1)) / SUM(H, WBAR(H)));
+        REPORT("SAMUELSON","WELFARE",H,SC)   = 100 * (WLF.L(H) - 1);
+        REPORT("SAMUELSON","PROVISION","_",SC) = 100 * (GP.L - 1);
+        REPORT("SAMUELSON","EMPLOY",S,SC) = 100 * (EMPLOY.L(S)/FD("L",S) - 1);
+        REPORT("SAMUELSON","PRICE",G,SC)   = 100 * (P.L(G)/PINDEX - 1);
+        REPORT("SAMUELSON","PRICE",F,SC)   = 100 * (W.L(F)/PINDEX - 1);
+        REPORT("SAMUELSON","OUTPUT",S,SC)  = 100 * (AL.L(S) - 1);
+
+);
+
+*       GENERATE A FINAL REPORT:
+
+OPTION REPORT:1:2:1;
+DISPLAY REPORT;

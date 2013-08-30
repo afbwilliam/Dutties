@@ -1,0 +1,70 @@
+$title constant evaluation with non-stop arithmetic (EVAL01,SEQ=455)
+
+$ontext
+Contributor: Alex
+$offtext
+
+
+$ondollar
+$ifthen SIG==%system.buildcode%
+* SIG gets log(-1) wrong!
+$ eval a UNDF
+$else
+$ eval a log(-1)
+$endif
+$eval b %a%$0
+$eval c round(ifthen(1,log(10),UNDF),3)
+$ifthen SIG==%system.buildcode%
+* SIG gets log(-1) wrong!
+$ eval d ifthen(0,log(10),sqrt(-1))
+$else
+$ eval d ifthen(0,log(10),log(-1))
+$endif
+$eval e 2^3
+$eval f sqrt(-1)
+$ifthen SIG==%system.buildcode%
+* SIG gets log(-1) wrong!
+$ eval g UNDF
+$ eval h UNDF
+$else
+$ eval g (-1)**2.5
+$ eval h log(-1)+log(log(-1))
+$endif
+$eval i undf + 10
+$eval j log(-1)$0
+$eval k 1e-300*1e-300
+$eval l exp(1e-200)
+$eval r 10-inf
+$eval s -(1/0) + 100
+$eval t -(1e200*1e200-1e200*1e200)
+$eval u 1e200*1e200-1e200*1e200
+$eval v -1e200*1e200
+$eval w 10/0
+$eval x -1/0
+$eval y -inf + inf
+$eval z 1e200*1e200
+$show
+$clearerrors
+
+
+$if not "%a%" == "UNDF"  $error a=%a% is wrong
+$if not "%b%" == "0"     $error b=%b% is wrong
+$if not "%c%" == "2.303" $error c=%c% is wrong
+$if not "%d%" == "UNDF"  $error d=%d% is wrong
+$if not "%e%" == "8"     $error e=%e% is wrong
+$if not "%f%" == "UNDF"  $error f=%f% is wrong
+$if not "%g%" == "UNDF"  $error g=%g% is wrong
+$if not "%h%" == "UNDF"  $error h=%h% is wrong
+$if not "%i%" == "UNDF"  $error i=%i% is wrong
+$if not "%j%" == "0"     $error j=%j% is wrong
+$if not "%k%" == "0"     $error k=%k% is wrong
+$if not "%l%" == "1"     $error l=%l% is wrong
+$if not "%r%" == "-INF"  $error r=%r% is wrong
+$if not "%s%" == "-INF"  $error s=%s% is wrong
+$if not "%t%" == "UNDF"  $error t=%t% is wrong
+$if not "%u%" == "UNDF"  $error u=%u% is wrong
+$if not "%v%" == "-INF"  $error v=%v% is wrong
+$if not "%w%" == "+INF"  $error w=%w% is wrong
+$if not "%x%" == "-INF"  $error x=%x% is wrong
+$if not "%y%" == "UNDF"  $error y=%y% is wrong
+$if not "%z%" == "+INF"  $error z=%z% is wrong

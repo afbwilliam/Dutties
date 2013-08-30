@@ -1,0 +1,397 @@
+*
+* optipopt.def
+*
+
+adaptive_mu_globalization enumstr 0 "obj-constr-filter" 1 1 Globalization strategy for the adaptive mu selection mode.
+ "kkt-error" 1 nonmonotone decrease of kkt-error
+ "never-monotone-mode" 1 disables globalization
+ "obj-constr-filter" 1 2-dim filter for objective and constraint violation
+adaptive_mu_kkt_norm_type enumstr 0 "2-norm-squared" 1 1 Norm used for the KKT error in the adaptive mu globalization strategies.
+ "1-norm" 1 use the 1-norm (abs sum)
+ "2-norm" 1 use 2-norm
+ "2-norm-squared" 1 use the 2-norm squared (sum of squares)
+ "max-norm" 1 use the infinity norm (max)
+adaptive_mu_kkterror_red_fact double 0 0.9999 0 1 1 1 Sufficient decrease factor for 'kkt-error' globalization strategy.
+adaptive_mu_kkterror_red_iters integer 0 4 0 maxint 1 1 Maximum number of iterations requiring sufficient progress.
+adaptive_mu_monotone_init_factor double 0 0.8 0 maxdouble 1 1 Determines the initial value of the barrier parameter when switching to the monotone mode.
+adaptive_mu_restore_previous_iterate enumstr 0 "no" 1 1 Indicates if the previous iterate should be restored if the monotone mode is entered.
+ "no" 1 don't restore accepted iterate
+ "yes" 1 restore accepted iterate
+barrier_tol_factor double 0 10 0 maxdouble 1 1 Factor for mu in barrier stop test.
+filter_margin_fact double 0 1e-05 0 1 1 1 Factor determining width of margin for obj-constr-filter adaptive globalization strategy.
+filter_max_margin double 0 1 0 maxdouble 1 1 Maximum width of margin in obj-constr-filter adaptive globalization strategy.
+fixed_mu_oracle enumstr 0 "average_compl" 1 1 Oracle for the barrier parameter when switching to fixed mode.
+ "average_compl" 1 base on current average complementarity
+ "loqo" 1 LOQO's centrality rule
+ "probing" 1 Mehrotra's probing heuristic
+ "quality-function" 1 minimize a quality function
+mu_allow_fast_monotone_decrease enumstr 0 "yes" 1 1 Allow skipping of barrier problem if barrier test is already met.
+ "no" 1 Take at least one iteration per barrier problem
+ "yes" 1 Allow fast decrease of mu if barrier test it met
+mu_init double 0 0.1 0 maxdouble 1 1 Initial value for the barrier parameter.
+mu_linear_decrease_factor double 0 0.2 0 1 1 1 Determines linear decrease rate of barrier parameter.
+mu_max double 0 100000 0 maxdouble 1 1 Maximum value for barrier parameter.
+mu_max_fact double 0 1000 0 maxdouble 1 1 Factor for initialization of maximum value for barrier parameter.
+mu_min double 0 1e-11 0 maxdouble 1 1 Minimum value for barrier parameter.
+mu_oracle enumstr 0 "quality-function" 1 1 Oracle for a new barrier parameter in the adaptive strategy.
+ "loqo" 1 LOQO's centrality rule
+ "probing" 1 Mehrotra's probing heuristic
+ "quality-function" 1 minimize a quality function
+mu_strategy enumstr 0 "adaptive" 1 1 Update strategy for barrier parameter.
+ "adaptive" 1 use the adaptive update strategy
+ "monotone" 1 use the monotone (Fiacco-McCormick) strategy
+mu_superlinear_decrease_power double 0 1.5 1 2 1 1 Determines superlinear decrease rate of barrier parameter.
+quality_function_balancing_term enumstr 0 "none" 1 1 The balancing term included in the quality function for centrality.
+ "cubic" 1 Max(0,Max(dual_inf,primal_inf)-compl)^3
+ "none" 1 no balancing term is added
+quality_function_centrality enumstr 0 "none" 1 1 The penalty term for centrality that is included in quality function.
+ "cubed-reciprocal" 1 complementarity * the reciprocal of the centrality measure cubed
+ "log" 1 complementarity * the log of the centrality measure
+ "none" 1 no penalty term is added
+ "reciprocal" 1 complementarity * the reciprocal of the centrality measure
+quality_function_max_section_steps integer 0 8 0 maxint 1 1 Maximum number of search steps during direct search procedure determining the optimal centering parameter.
+quality_function_norm_type enumstr 0 "2-norm-squared" 1 1 Norm used for components of the quality function.
+ "1-norm" 1 use the 1-norm (abs sum)
+ "2-norm" 1 use 2-norm
+ "2-norm-squared" 1 use the 2-norm squared (sum of squares)
+ "max-norm" 1 use the infinity norm (max)
+quality_function_section_qf_tol double 0 0 0 1 1 1 Tolerance for the golden section search procedure determining the optimal centering parameter (in the function value space).
+quality_function_section_sigma_tol double 0 0.01 0 1 1 1 Tolerance for the section search procedure determining the optimal centering parameter (in sigma space).
+sigma_max double 0 100 0 maxdouble 1 1 Maximum value of the centering parameter.
+sigma_min double 0 1e-06 0 maxdouble 1 1 Minimum value of the centering parameter.
+tau_min double 0 0.99 0 1 1 1 Lower bound on fraction-to-the-boundary parameter tau.
+acceptable_compl_inf_tol double 0 0.01 0 maxdouble 1 2 'Acceptance' threshold for the complementarity conditions.
+acceptable_constr_viol_tol double 0 0.01 0 maxdouble 1 2 'Acceptance' threshold for the constraint violation.
+acceptable_dual_inf_tol double 0 1e+10 0 maxdouble 1 2 'Acceptance' threshold for the dual infeasibility.
+acceptable_iter integer 0 15 0 maxint 1 2 Number of 'acceptable' iterates before triggering termination.
+acceptable_obj_change_tol double 0 1e+20 0 maxdouble 1 2 'Acceptance' stopping criterion based on objective function change.
+acceptable_tol double 0 1e-06 0 maxdouble 1 2 'Acceptable' convergence tolerance (relative).
+compl_inf_tol double 0 0.0001 0 maxdouble 1 2 Desired threshold for the complementarity conditions.
+constr_viol_tol double 0 0.0001 0 maxdouble 1 2 Desired threshold for the constraint violation.
+diverging_iterates_tol double 0 1e+20 0 maxdouble 1 2 Threshold for maximal value of primal iterates.
+dual_inf_tol double 0 1 0 maxdouble 1 2 Desired threshold for the dual infeasibility.
+max_cpu_time double 0 1000 0 maxdouble 1 2 Maximum number of CPU seconds.
+max_iter integer 0 maxint 0 maxint 1 2 Maximum number of iterations.
+mu_target double 0 0 0 maxdouble 1 2 Desired value of complementarity.
+s_max double 0 100 0 maxdouble 1 2 Scaling threshold for the NLP error.
+tol double 0 1e-08 0 maxdouble 1 2 Desired convergence tolerance (relative).
+hessian_approximation enumstr 0 "exact" 1 3 Indicates what Hessian information is to be used.
+ "exact" 1 Use second derivatives provided by the NLP.
+ "limited-memory" 1 Perform a limited-memory quasi-Newton approximation
+hessian_approximation_space enumstr 0 "nonlinear-variables" 1 3 Indicates in which subspace the Hessian information is to be approximated.
+ "all-variables" 1 in space of all variables (without slacks)
+ "nonlinear-variables" 1 only in space of nonlinear variables.
+limited_memory_aug_solver enumstr 0 "sherman-morrison" 1 3 Strategy for solving the augmented system for low-rank Hessian.
+ "extended" 1 use an extended augmented system
+ "sherman-morrison" 1 use Sherman-Morrison formula
+limited_memory_init_val double 0 1 0 maxdouble 1 3 Value for B0 in low-rank update.
+limited_memory_init_val_max double 0 1e+08 0 maxdouble 1 3 Upper bound on value for B0 in low-rank update.
+limited_memory_init_val_min double 0 1e-08 0 maxdouble 1 3 Lower bound on value for B0 in low-rank update.
+limited_memory_initialization enumstr 0 "scalar1" 1 3 Initialization strategy for the limited memory quasi-Newton approximation.
+ "constant" 1 sigma = limited_memory_init_val
+ "scalar1" 1 sigma = s^Ty/s^Ts
+ "scalar2" 1 sigma = y^Ty/s^Ty
+ "scalar3" 1 arithmetic average of scalar1 and scalar2
+ "scalar4" 1 geometric average of scalar1 and scalar2
+limited_memory_max_history integer 0 6 0 maxint 1 3 Maximum size of the history for the limited quasi-Newton Hessian approximation.
+limited_memory_max_skipping integer 0 2 1 maxint 1 3 Threshold for successive iterations where update is skipped.
+limited_memory_special_for_resto enumstr 0 "no" 1 3 Determines if the quasi-Newton updates should be special during the restoration phase.
+ "no" 1 use the same update as in regular iterations
+ "yes" 1 use the a special update during restoration phase
+limited_memory_update_type enumstr 0 "bfgs" 1 3 Quasi-Newton update formula for the limited memory approximation.
+ "bfgs" 1 BFGS update (with skipping)
+ "sr1" 1 SR1 (not working well)
+bound_frac double 0 0.01 0 0.5 1 4 Desired minimum relative distance from the initial point to bound.
+bound_mult_init_method enumstr 0 "constant" 1 4 Initialization method for bound multipliers
+ "constant" 1 set all bound multipliers to the value of bound_mult_init_val
+ "mu-based" 1 initialize to mu_init/x_slack
+bound_mult_init_val double 0 1 0 maxdouble 1 4 Initial value for the bound multipliers.
+bound_push double 0 0.01 0 maxdouble 1 4 Desired minimum absolute distance from the initial point to bound.
+constr_mult_init_max double 0 1000 0 maxdouble 1 4 Maximum allowed least-square guess of constraint multipliers.
+least_square_init_duals enumstr 0 "no" 1 4 Least square initialization of all dual variables
+ "no" 1 use bound_mult_init_val and least-square equality constraint multipliers
+ "yes" 1 overwrite user-provided point with least-square estimates
+least_square_init_primal enumstr 0 "no" 1 4 Least square initialization of the primal variables
+ "no" 1 take user-provided point
+ "yes" 1 overwrite user-provided point with least-square estimates
+slack_bound_frac double 0 0.01 0 0.5 1 4 Desired minimum relative distance from the initial slack to bound.
+slack_bound_push double 0 0.01 0 maxdouble 1 4 Desired minimum absolute distance from the initial slack to bound.
+accept_after_max_steps integer 0 -1 -1 maxint 1 5 Accept a trial point after maximal this number of steps.
+accept_every_trial_step enumstr 0 "no" 1 5 Always accept the first trial step.
+ "no" 1 don't arbitrarily accept the full step
+ "yes" 1 always accept the full step
+alpha_for_y enumstr 0 "primal" 1 5 Method to determine the step size for constraint multipliers.
+ "acceptor" 1 Call LSAcceptor to get step size for y
+ "bound-mult" 1 use step size for the bound multipliers (good for LPs)
+ "dual-and-full" 1 use the dual step size, and full step if delta_x <= alpha_for_y_tol
+ "full" 1 take a full step of size one
+ "max" 1 use the max of primal and bound multipliers
+ "min" 1 use the min of primal and bound multipliers
+ "min-dual-infeas" 1 choose step size minimizing new dual infeasibility
+ "primal" 1 use primal step size
+ "primal-and-full" 1 use the primal step size, and full step if delta_x <= alpha_for_y_tol
+ "safer-min-dual-infeas" 1 like 'min_dual_infeas', but safeguarded by 'min' and 'max'
+alpha_for_y_tol double 0 10 0 maxdouble 1 5 Tolerance for switching to full equality multiplier steps.
+alpha_min_frac double 0 0.05 0 1 1 5 Safety factor for the minimal step size (before switching to restoration phase).
+alpha_red_factor double 0 0.5 0 1 1 5 Fractional reduction of the trial step size in the backtracking line search.
+constraint_violation_norm_type enumstr 0 "1-norm" 1 5 Norm to be used for the constraint violation in the line search.
+ "1-norm" 1 use the 1-norm
+ "2-norm" 1 use the 2-norm
+ "max-norm" 1 use the infinity norm
+corrector_compl_avrg_red_fact double 0 1 0 maxdouble 1 5 Complementarity tolerance factor for accepting corrector step (unsupported!).
+corrector_type enumstr 0 "none" 1 5 The type of corrector steps that should be taken (unsupported!).
+ "affine" 1 corrector step towards mu=0
+ "none" 1 no corrector
+ "primal-dual" 1 corrector step towards current mu
+delta double 0 1 0 maxdouble 1 5 Multiplier for constraint violation in the switching rule.
+eta_phi double 0 1e-08 0 0.5 1 5 Relaxation factor in the Armijo condition.
+filter_reset_trigger integer 0 5 1 maxint 1 5 Number of iterations that trigger the filter reset.
+gamma_phi double 0 1e-08 0 1 1 5 Relaxation factor in the filter margin for the barrier function.
+gamma_theta double 0 1e-05 0 1 1 5 Relaxation factor in the filter margin for the constraint violation.
+kappa_sigma double 0 1e+10 0 maxdouble 1 5 Factor limiting the deviation of dual variables from primal estimates.
+kappa_soc double 0 0.99 0 maxdouble 1 5 Factor in the sufficient reduction rule for second order correction.
+line_search_method enumstr 0 "filter" 1 5 Globalization method used in backtracking line search
+ "cg-penalty" 1 Chen-Goldfarb penalty function
+ "filter" 1 Filter method
+ "penalty" 1 Standard penalty function
+max_filter_resets integer 0 5 0 maxint 1 5 Maximal allowed number of filter resets
+max_soc integer 0 4 0 maxint 1 5 Maximum number of second order correction trial steps at each iteration.
+nu_inc double 0 0.0001 0 maxdouble 1 5 Increment of the penalty parameter.
+nu_init double 0 1e-06 0 maxdouble 1 5 Initial value of the penalty parameter.
+obj_max_inc double 0 5 1 maxdouble 1 5 Determines the upper bound on the acceptable increase of barrier objective function.
+recalc_y enumstr 0 "no" 1 5 Tells the algorithm to recalculate the equality and inequality multipliers as least square estimates.
+ "no" 1 use the Newton step to update the multipliers
+ "yes" 1 use least-square multiplier estimates
+recalc_y_feas_tol double 0 1e-06 0 maxdouble 1 5 Feasibility threshold for recomputation of multipliers.
+rho double 0 0.1 0 1 1 5 Value in penalty parameter update formula.
+s_phi double 0 2.3 1 maxdouble 1 5 Exponent for linear barrier function model in the switching rule.
+s_theta double 0 1.1 1 maxdouble 1 5 Exponent for current constraint violation in the switching rule.
+skip_corr_if_neg_curv enumstr 0 "yes" 1 5 Skip the corrector step in negative curvature iteration (unsupported!).
+ "no" 1 don't skip
+ "yes" 1 skip
+skip_corr_in_monotone_mode enumstr 0 "yes" 1 5 Skip the corrector step during monotone barrier parameter mode (unsupported!).
+ "no" 1 don't skip
+ "yes" 1 skip
+slack_move double 0 1.81899e-12 0 maxdouble 1 5 Correction size for very small slacks.
+theta_max_fact double 0 10000 0 maxdouble 1 5 Determines upper bound for constraint violation in the filter.
+theta_min_fact double 0 0.0001 0 maxdouble 1 5 Determines constraint violation threshold in the switching rule.
+tiny_step_tol double 0 2.22045e-15 0 maxdouble 1 5 Tolerance for detecting numerically insignificant steps.
+tiny_step_y_tol double 0 0.01 0 maxdouble 1 5 Tolerance for quitting because of numerically insignificant steps.
+watchdog_shortened_iter_trigger integer 0 10 0 maxint 1 5 Number of shortened iterations that trigger the watchdog.
+watchdog_trial_iter_max integer 0 3 1 maxint 1 5 Maximum number of watchdog iterations.
+linear_scaling_on_demand enumstr 0 "yes" 1 6 Flag indicating that linear scaling is only done if it seems required.
+ "no" 1 Always scale the linear system.
+ "yes" 1 Start using linear system scaling if solutions seem not good.
+linear_solver enumstr 0 "ma27" 1 6 Linear solver used for step computations.
+ "ma27" 1 use the Harwell routine MA27
+ "ma57" 1 use the Harwell routine MA57
+ "ma86" 1 use the Harwell routine MA86
+ "mumps" 1 use MUMPS package
+ "pardiso" 1 use the Pardiso package
+linear_system_scaling enumstr 0 "mc19" 1 6 Method for scaling the linear system.
+ "mc19" 1 use the Harwell routine MC19
+ "none" 1 no scaling will be performed
+ "slack-based" 1 use the slack values
+ma27_ignore_singularity enumstr 0 "no" 1 7 Enables MA27's ability to solve a linear system even if the matrix is singular.
+ "no" 1 Don't have MA27 solve singular systems
+ "yes" 1 Have MA27 solve singular systems
+ma27_la_init_factor double 0 5 1 maxdouble 1 7 Real workspace memory for MA27.
+ma27_liw_init_factor double 0 5 1 maxdouble 1 7 Integer workspace memory for MA27.
+ma27_meminc_factor double 0 10 1 maxdouble 1 7 Increment factor for workspace size for MA27.
+ma27_pivtol double 0 1e-08 0 1 1 7 Pivot tolerance for the linear solver MA27.
+ma27_pivtolmax double 0 0.0001 0 1 1 7 Maximum pivot tolerance for the linear solver MA27.
+ma27_skip_inertia_check enumstr 0 "no" 1 7 Always pretend inertia is correct.
+ "no" 1 check inertia
+ "yes" 1 skip inertia check
+ma28_pivtol double 0 0.01 0 1 1 8 Pivot tolerance for linear solver MA28.
+ma57_automatic_scaling enumstr 0 "yes" 1 9 Controls MA57 automatic scaling
+ "no" 1 Do not scale the linear system matrix
+ "yes" 1 Scale the linear system matrix
+ma57_block_size integer 0 16 1 maxint 1 9 Controls block size used by Level 3 BLAS in MA57BD
+ma57_node_amalgamation integer 0 16 1 maxint 1 9 Node amalgamation parameter
+ma57_pivot_order integer 0 5 0 5 1 9 Controls pivot order in MA57
+ma57_pivtol double 0 1e-08 0 1 1 9 Pivot tolerance for the linear solver MA57.
+ma57_pivtolmax double 0 0.0001 0 1 1 9 Maximum pivot tolerance for the linear solver MA57.
+ma57_pre_alloc double 0 1.05 1 maxdouble 1 9 Safety factor for work space memory allocation for the linear solver MA57.
+ma57_small_pivot_flag integer 0 0 0 1 1 9 If set to 1, then when small entries defined by CNTL(2) are detected they are removed and the corresponding pivots placed at the end of the factorization.  This can be particularly efficient if the matrix****
+ma86_nemin integer 0 32 1 maxint 1 10 Node Amalgamation parameter
+ma86_order enumstr 0 "auto" 1 10 Controls type of ordering used by HSL_MA86
+ "amd" 1 Use the HSL_MC68 approximate minimum degree algorithm
+ "auto" 1 Try both AMD and MeTiS, pick best
+ "metis" 1 Use the MeTiS nested dissection algorithm (if available)
+ma86_print_level integer 0 -1 minint maxint 1 10 Debug printing level for the linear solver MA86
+ma86_scaling enumstr 0 "mc64" 1 10 Controls scaling of matrix
+ "mc64" 1 Scale linear system matrix using MC64
+ "mc77" 1 Scale linear system matrix using MC77 [1,3,0]
+ "none" 1 Do not scale the linear system matrix
+ma86_small double 0 1e-20 0 maxdouble 1 10 Zero Pivot Threshold
+ma86_static double 0 0 0 maxdouble 1 10 Static Pivoting Threshold
+ma86_u double 0 1e-08 0 0.5 1 10 Pivoting Threshold
+ma86_umax double 0 0.0001 0 0.5 1 10 Maximum Pivoting Threshold
+mumps_dep_tol double 0 0 mindouble maxdouble 1 11 Pivot threshold for detection of linearly dependent constraints in MUMPS.
+mumps_mem_percent integer 0 1000 0 maxint 1 11 Percentage increase in the estimated working space for MUMPS.
+mumps_permuting_scaling integer 0 7 0 7 1 11 Controls permuting and scaling in MUMPS
+mumps_pivot_order integer 0 7 0 7 1 11 Controls pivot order in MUMPS
+mumps_pivtol double 0 1e-06 0 1 1 11 Pivot tolerance for the linear solver MUMPS.
+mumps_pivtolmax double 0 0.1 0 1 1 11 Maximum pivot tolerance for the linear solver MUMPS.
+mumps_scaling integer 0 77 -2 77 1 11 Controls scaling in MUMPS
+bound_relax_factor double 0 1e-10 0 maxdouble 1 12 Factor for initial relaxation of the bounds.
+check_derivatives_for_naninf enumstr 0 "no" 1 12 Indicates whether it is desired to check for Nan/Inf in derivative matrices
+ "no" 1 Don't check (faster).
+ "yes" 1 Check Jacobians and Hessian for Nan and Inf.
+dependency_detection_with_rhs enumstr 0 "no" 1 12 Indicates if the right hand sides of the constraints should be considered during dependency detection
+ "no" 1 only look at gradients
+ "yes" 1 also consider right hand side
+dependency_detector enumstr 0 "none" 1 12 Indicates which linear solver should be used to detect linearly dependent equality constraints.
+ "ma28" 1 use MA28
+ "mumps" 1 use MUMPS
+ "none" 1 don't check; no extra work at beginning
+ "wsmp" 1 use WSMP
+fixed_variable_treatment enumstr 0 "make_parameter" 1 12 Determines how fixed variables should be handled.
+ "make_constraint" 1 Add equality constraints fixing variables
+ "make_parameter" 1 Remove fixed variable from optimization variables
+ "relax_bounds" 1 Relax fixing bound constraints
+honor_original_bounds enumstr 0 "yes" 1 12 Indicates whether final points should be projected into original bounds.
+ "no" 1 Leave final point unchanged
+ "yes" 1 Project final point back into original bounds
+jac_c_constant enumstr 0 "no" 1 12 Indicates whether all equality constraints are linear
+ "no" 1 Don't assume that all equality constraints are linear
+ "yes" 1 Assume that equality constraints Jacobian are constant
+jac_d_constant enumstr 0 "no" 1 12 Indicates whether all inequality constraints are linear
+ "no" 1 Don't assume that all inequality constraints are linear
+ "yes" 1 Assume that equality constraints Jacobian are constant
+kappa_d double 0 1e-05 0 maxdouble 1 12 Weight for linear damping term (to handle one-sided bounds).
+num_linear_variables integer 0 0 0 maxint 1 12 Number of linear variables
+nlp_scaling_constr_target_gradient double 0 0 0 maxdouble 1 13 Target value for constraint function gradient size.
+nlp_scaling_max_gradient double 0 100 0 maxdouble 1 13 Maximum gradient after NLP scaling.
+nlp_scaling_method enumstr 0 "gradient-based" 1 13 Select the technique used for scaling the NLP.
+ "equilibration-based" 1 scale the problem so that first derivatives are of order 1 at random points (only available with MC19)
+ "gradient-based" 1 scale the problem so the maximum gradient at the starting point is scaling_max_gradient
+ "none" 1 no problem scaling will be performed
+ "user-scaling" 1 scaling parameters will come from the user
+nlp_scaling_min_value double 0 1e-08 0 maxdouble 1 13 Minimum value of gradient-based scaling values.
+nlp_scaling_obj_target_gradient double 0 0 0 maxdouble 1 13 Target value for objective function gradient size.
+inf_pr_output enumstr 0 "original" 1 14 Determines what value is printed in the 'inf_pr' output column.
+ "internal" 1 max-norm of violation of internal equality constraints
+ "original" 1 maximal constraint violation in original NLP
+print_eval_error enumstr 0 "yes" 1 14 Switch to enable printing information about function evaluation errors into the GAMS listing file.
+ "no" 1
+ "yes" 1
+print_info_string enumstr 0 "no" 1 14 Enables printing of additional info string at end of iteration output.
+ "no" 1 don't print string
+ "yes" 1 print string at end of each iteration output
+print_level integer 0 5 0 12 1 14 Output verbosity level.
+print_timing_statistics enumstr 0 "no" 1 14 Switch to print timing statistics.
+ "no" 1 don't print statistics
+ "yes" 1 print all timing statistics
+replace_bounds enumstr 0 "no" 1 14 Indicates if all variable bounds should be replaced by inequality constraints
+ "no" 1 leave bounds on variables
+ "yes" 1 replace variable bounds by inequality constraints
+report_mininfeas_solution enumstr 0 "no" 1 14 Switch to report intermediate solution with minimal constraint violation to GAMS if the final solution is not feasible.
+ "no" 1
+ "yes" 1
+pardiso_iter_coarse_size integer 0 5000 1 maxint 1 15 Maximum Size of Coarse Grid Matrix
+pardiso_iter_dropping_factor double 0 0.5 0 1 1 15 dropping value for incomplete factor
+pardiso_iter_dropping_schur double 0 0.1 0 1 1 15 dropping value for sparsify schur complement factor
+pardiso_iter_inverse_norm_factor double 0 5e+06 1 maxdouble 1 15
+pardiso_iter_max_levels integer 0 10 1 maxint 1 15 Maximum Size of Grid Levels
+pardiso_iter_max_row_fill integer 0 10000000 1 maxint 1 15 max fill for each row
+pardiso_iter_relative_tol double 0 1e-06 0 1 1 15 Relative Residual Convergence
+pardiso_iterative enumstr 0 "no" 1 15 Switch on iterative solver in Pardiso library
+ "no" 1
+ "yes" 1
+pardiso_matching_strategy enumstr 0 "complete+2x2" 1 15 Matching strategy to be used by Pardiso
+ "complete" 1 Match complete (IPAR(13)=1)
+ "complete+2x2" 1 Match complete+2x2 (IPAR(13)=2)
+ "constraints" 1 Match constraints (IPAR(13)=3)
+pardiso_max_droptol_corrections integer 0 4 1 maxint 1 15 Maximal number of decreases of drop tolerance during one solve.
+pardiso_max_iter integer 0 500 1 maxint 1 15 Maximum number of Krylov-Subspace Iteration
+pardiso_msglvl integer 0 0 0 maxint 1 15 Pardiso message level
+pardiso_out_of_core_power integer 0 0 0 maxint 1 15 Enables out-of-core variant of Pardiso
+pardiso_redo_symbolic_fact_only_if_inertia_wrong enumstr 0 "no" 1 15 Toggle for handling case when elements were perturbed by Pardiso.
+ "no" 1 Always redo symbolic factorization when elements were perturbed
+ "yes" 1 Only redo symbolic factorization when elements were perturbed if also the inertia was wrong
+pardiso_repeated_perturbation_means_singular enumstr 0 "no" 1 15 Interpretation of perturbed elements.
+ "no" 1 Don't assume that matrix is singular if elements were perturbed after recent symbolic factorization
+ "yes" 1 Assume that matrix is singular if elements were perturbed after recent symbolic factorization
+pardiso_skip_inertia_check enumstr 0 "no" 1 15 Always pretend inertia is correct.
+ "no" 1 check inertia
+ "yes" 1 skip inertia check
+bound_mult_reset_threshold double 0 1000 0 maxdouble 1 16 Threshold for resetting bound multipliers after the restoration phase.
+constr_mult_reset_threshold double 0 0 0 maxdouble 1 16 Threshold for resetting equality and inequality multipliers after restoration phase.
+evaluate_orig_obj_at_resto_trial enumstr 0 "yes" 1 16 Determines if the original objective function should be evaluated at restoration phase trial points.
+ "no" 1 skip evaluation
+ "yes" 1 evaluate at every trial point
+expect_infeasible_problem enumstr 0 "no" 1 16 Enable heuristics to quickly detect an infeasible problem.
+ "no" 1 the problem probably be feasible
+ "yes" 1 the problem has a good chance to be infeasible
+expect_infeasible_problem_ctol double 0 0.001 0 maxdouble 1 16 Threshold for disabling 'expect_infeasible_problem' option.
+expect_infeasible_problem_ytol double 0 1e+08 0 maxdouble 1 16 Multiplier threshold for activating 'expect_infeasible_problem' option.
+max_resto_iter integer 0 3000000 0 maxint 1 16 Maximum number of successive iterations in restoration phase.
+max_soft_resto_iters integer 0 10 0 maxint 1 16 Maximum number of iterations performed successively in soft restoration phase.
+required_infeasibility_reduction double 0 0.9 0 1 1 16 Required reduction of infeasibility before leaving restoration phase.
+resto_failure_feasibility_threshold double 0 0 0 maxdouble 1 16 Threshold for primal infeasibility to declare failure of restoration phase.
+resto_penalty_parameter double 0 1000 0 maxdouble 1 16 Penalty parameter in the restoration phase objective function.
+resto_proximity_weight double 0 1 0 maxdouble 1 16 Weighting factor for the proximity term in restoration phase objective.
+soft_resto_pderror_reduction_factor double 0 0.9999 0 maxdouble 1 16 Required reduction in primal-dual error in the soft restoration phase.
+start_with_resto enumstr 0 "no" 1 16 Tells algorithm to switch to restoration phase in first iteration.
+ "no" 1 don't force start in restoration phase
+ "yes" 1 force start in restoration phase
+fast_step_computation enumstr 0 "no" 1 17 Indicates if the linear system should be solved quickly.
+ "no" 1 Verify solution of linear system by computing residuals.
+ "yes" 1 Trust that linear systems are solved well.
+first_hessian_perturbation double 0 0.0001 0 maxdouble 1 17 Size of first x-s perturbation tried.
+jacobian_regularization_exponent double 0 0.25 0 maxdouble 1 17 Exponent for mu in the regularization for rank-deficient constraint Jacobians.
+jacobian_regularization_value double 0 1e-08 0 maxdouble 1 17 Size of the regularization for rank-deficient constraint Jacobians.
+max_hessian_perturbation double 0 1e+20 0 maxdouble 1 17 Maximum value of regularization parameter for handling negative curvature.
+max_refinement_steps integer 0 10 0 maxint 1 17 Maximum number of iterative refinement steps per linear system solve.
+mehrotra_algorithm enumstr 0 "no" 1 17 Indicates if we want to do Mehrotra's algorithm.
+ "no" 1 Do the usual Ipopt algorithm.
+ "yes" 1 Do Mehrotra's predictor-corrector algorithm.
+min_hessian_perturbation double 0 1e-20 0 maxdouble 1 17 Smallest perturbation of the Hessian block.
+min_refinement_steps integer 0 1 0 maxint 1 17 Minimum number of iterative refinement steps per linear system solve.
+neg_curv_test_tol double 0 0 0 maxdouble 1 17 Tolerance for heuristic to ignore wrong inertia.
+perturb_always_cd enumstr 0 "no" 1 17 Active permanent perturbation of constraint linearization.
+ "no" 1 perturbation only used when required
+ "yes" 1 always use perturbation
+perturb_dec_fact double 0 0.333333 0 1 1 17 Decrease factor for x-s perturbation.
+perturb_inc_fact double 0 8 1 maxdouble 1 17 Increase factor for x-s perturbation.
+perturb_inc_fact_first double 0 100 1 maxdouble 1 17 Increase factor for x-s perturbation for very first perturbation.
+residual_improvement_factor double 0 1 0 maxdouble 1 17 Minimal required reduction of residual test ratio in iterative refinement.
+residual_ratio_max double 0 1e-10 0 maxdouble 1 17 Iterative refinement tolerance
+residual_ratio_singular double 0 1e-05 0 maxdouble 1 17 Threshold for declaring linear system singular after failed iterative refinement.
+warm_start_bound_frac double 0 0.001 0 0.5 1 18 same as bound_frac for the regular initializer.
+warm_start_bound_push double 0 0.001 0 maxdouble 1 18 same as bound_push for the regular initializer.
+warm_start_init_point enumstr 0 "no" 1 18 Warm-start for initial point
+ "no" 1 do not use the warm start initialization
+ "yes" 1 use the warm start initialization
+warm_start_mult_bound_push double 0 0.001 0 maxdouble 1 18 same as mult_bound_push for the regular initializer.
+warm_start_mult_init_max double 0 1e+06 mindouble maxdouble 1 18 Maximum initial value for the equality multipliers.
+warm_start_slack_bound_frac double 0 0.001 0 0.5 1 18 same as slack_bound_frac for the regular initializer.
+warm_start_slack_bound_push double 0 0.001 0 maxdouble 1 18 same as slack_bound_push for the regular initializer.
+*
+* indicator section
+*
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+gr_Barrier_Parameter_Update group 1 1 Barrier Parameter Update
+gr_Convergence group 2 1 Convergence
+gr_Hessian_Approximation group 3 1 Hessian Approximation
+gr_Initialization group 4 1 Initialization
+gr_Line_Search group 5 1 Line Search
+gr_Linear_Solver group 6 1 Linear Solver
+gr_MA27_Linear_Solver group 7 1 MA27 Linear Solver
+gr_MA28_Linear_Solver group 8 1 MA28 Linear Solver
+gr_MA57_Linear_Solver group 9 1 MA57 Linear Solver
+gr_MA86_Linear_Solver group 10 1 MA86 Linear Solver
+gr_Mumps_Linear_Solver group 11 1 Mumps Linear Solver
+gr_NLP group 12 1 NLP
+gr_NLP_Scaling group 13 1 NLP Scaling
+gr_Output group 14 1 Output
+gr_Pardiso_Linear_Solver group 15 1 Pardiso Linear Solver
+gr_Restoration_Phase group 16 1 Restoration Phase
+gr_Step_Calculation group 17 1 Step Calculation
+gr_Warm_Start group 18 1 Warm Start
+*** End of file

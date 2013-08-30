@@ -1,0 +1,46 @@
+$title 'checks +/- INF on =L=, =G=, and =N= equations' (LP13,SEQ=329)
+
+$if not set MTYPE $set MTYPE lp
+
+$onecho > t1.gms
+
+variable x;
+equations e1,e2,e3,e4;
+
+e1.. x =e= 1;
+e2.. x =l= inf;
+e3.. x =g= -inf;
+e4.. x =n= inf;
+
+model m / all /;
+
+solve m min x us %MTYPE%;
+
+abort$(m.solvestat <> %solvestat.NormalCompletion% and (m.modelstat <> %modelstat.Optimal% or m.modelstat <> %modelstat.LocallyOptimal%))
+        'wrong termination';
+abort$(e2.lo <> -inf or e2.up <> inf or e2.l <> 1 or e2.m <> 0)
+        e2.lo,e2.l,e2.up,e2.m;
+abort$(e3.lo <> -inf or e3.up <> inf or e3.l <> 1 or e3.m <> 0)
+        e3.lo,e3.l,e3.up,e3.m;
+abort$(e4.lo <> -inf or e4.up <> inf or e4.l <> 1 or e4.m <> 0)
+        e4.lo,e4.l,e4.up,e4.m;
+$offecho
+
+$escape &
+$onecho > test1.inc
+$set solver %&gams.%MTYPE%%&
+$if not set gams.%MTYPE% $set solver %&system.%MTYPE%%&
+$call gams t1 %MTYPE%=%&solver%& lo=2
+$if errorlevel 1 $abort t1 failed with %MTYPE%=%&solver%&
+$offecho
+$include test1.inc
+
+$if NOT gamsversion 146 $terminate
+
+$onecho > test2.inc
+$set solver %&gams.%MTYPE%%&
+$if not set gams.%MTYPE% $set solver %&system.%MTYPE%%&
+$call gams t1 %MTYPE%=%&solver%& solvelink=%SOLVELINK.AsyncSimulate% lo=2
+$if errorlevel 1 $abort t1 failed with solvelink %SOLVELINK.AsyncSimulate% %MTYPE%=%&solver%&
+$offecho
+$include test2.inc

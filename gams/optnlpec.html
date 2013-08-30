@@ -1,0 +1,290 @@
+<html>
+<head>
+<title>NLPEC Options</title>
+</head>
+<body>
+<h2>NLPEC Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/nlpec.pdf">NLPEC manual</a>.
+
+<h2>Summary of NLPEC Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Reformulation Options</h3></th></tr>
+<tr><td><a href="#NLPECaggregate">
+aggregate</a></td>
+<td>controls constraint aggregation</td></tr>
+<tr><td><a href="#NLPECconstraint">
+constraint</a></td>
+<td>controls use of equality/inequality</td></tr>
+<tr><td><a href="#NLPECNCPBounds">
+NCPBounds</a></td>
+<td>sets explicit bounds on arguments of NCP functions</td></tr>
+<tr><td><a href="#NLPECrefType">
+refType</a></td>
+<td>reformulation type</td></tr>
+<tr><td><a href="#NLPECslack">
+slack</a></td>
+<td>what type of slacks to put in</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#NLPECallSolves">
+allSolves</a></td>
+<td>do all solves in a loop regardless of previous failure</td></tr>
+<tr><td><a href="#NLPECdotGams">
+dotGams</a></td>
+<td>name of gams source file for scalar model</td></tr>
+<tr><td><a href="#NLPECdumpValid">
+dumpValid</a></td>
+<td>dump valid reformulation options to a GDX file and exit</td></tr>
+<tr><td><a href="#NLPECequReform">
+equReform</a></td>
+<td>outdated and deprecated</td></tr>
+<tr><td><a href="#NLPECfinalMu">
+finalMu</a></td>
+<td>final value of parameter mu</td></tr>
+<tr><td><a href="#NLPECinitMu">
+initMu</a></td>
+<td>initial value of parameter mu</td></tr>
+<tr><td><a href="#NLPECinitSLo">
+initSLo</a></td>
+<td>lower bound for artificials added to the problem</td></tr>
+<tr><td><a href="#NLPECinitSUp">
+initSUp</a></td>
+<td>upper bound for artificials added to the problem</td></tr>
+<tr><td><a href="#NLPECnoCheck">
+noCheck</a></td>
+<td>do not check consistency of reformulation options</td></tr>
+<tr><td><a href="#NLPECnumSolves">
+numSolves</a></td>
+<td>number of extra solves</td></tr>
+<tr><td><a href="#NLPECsubSolver">
+subSolver</a></td>
+<td>subsolver to run</td></tr>
+<tr><td><a href="#NLPECsubSolverOpt">
+subSolverOpt</a></td>
+<td>optfile value to pass to the subsolver</td></tr>
+<tr><td><a href="#NLPECterminate">
+terminate</a></td>
+<td>terminate after generating scalar GAMS source code</td></tr>
+<tr><td><a href="#NLPECtestTol">
+testTol</a></td>
+<td>tolerance for complementarity check in MPEC/MCP</td></tr>
+<tr><td><a href="#NLPECupdateFac">
+updateFac</a></td>
+<td>update factor for mu</td></tr></table>
+<h2>Detailed Descriptions of NLPEC Options</h2>
+
+<h4><a name="NLPECaggregate">
+aggregate</a>
+<i> (string)</i> controls constraint aggregation</h4><p>
+
+Determines if certain constraints are aggregated or not. E.g. to force
+<tt>w >= 0</tt> and <tt>y >= 0</tt> to be complementary we can write
+either <tt>w^T y <= 0</tt> or <tt>w_i^T y_i = 0, for all i</tt>.
+
+<br><i>(default = none)</i>
+<table>
+<tr valign="top"><td width=20 align=right>none</td><td>use no aggregation</td></tr>
+<tr valign="top"><td width=20 align=right>partial</td><td>aggregate doubly-bounded variables separately from others</td></tr>
+<tr valign="top"><td width=20 align=right>full</td><td>use maximum aggregation possible</td></tr>
+</table>
+
+<h4><a name="NLPECallSolves">
+allSolves</a>
+<i> (integer)</i> do all solves in a loop regardless of previous failure</h4><p>
+
+In case multiple (looped) solves are specified, the default is to skip
+subsequent solves when any solve terminates without getting a
+solution. Setting this flag removes the check and all solves are done,
+regardless of previous failures.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECconstraint">
+constraint</a>
+<i> (string)</i> controls use of equality/inequality</h4><p>
+
+Determines if certain constraints are written down using equalities or
+inequalities.  E.g. to force <tt>w >= 0</tt> and <tt>y >= 0</tt> to be
+complementary we can write either <tt>w^T y <= 0</tt> or <tt>w^T y =
+0</tt>. This option only plays a role when bounding a quantity whose
+sign cannot be both positive and negative and which must be 0 at a
+solution.
+
+<br><i>(default = equality)</i>
+<table>
+<tr valign="top"><td width=20 align=right>equality</td><td>use =E= constraints</td></tr>
+<tr valign="top"><td width=20 align=right>inequality</td><td>use =G= constraints</td></tr>
+</table>
+
+<h4><a name="NLPECdotGams">
+dotGams</a>
+<i> (string)</i> name of gams source file for scalar model</h4><p>
+
+
+<br><i>(default = nlpec.gms)</i>
+
+<h4><a name="NLPECdumpValid">
+dumpValid</a>
+<i> (integer)</i> dump valid reformulation options to a GDX file and exit</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECequReform">
+equReform</a>
+<i> (integer)</i> outdated and deprecated</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECfinalMu">
+finalMu</a>
+<i> (real)</i> final value of parameter mu</h4><p>
+
+If specified, an extra solve is carried out with <tt>mu</tt> set to
+this value. Can be set independently for singly and doubly bounded
+variables.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECinitMu">
+initMu</a>
+<i> (real)</i> initial value of parameter mu</h4><p>
+
+A single solve of the nonlinear program is carried out for this
+value. Note that <tt>mu</tt> must be positive for some settings of
+<tt>reftype</tt>, e.g. penalty. Can be set independently for singly
+and doubly bounded variables.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECinitSLo">
+initSLo</a>
+<i> (real)</i> lower bound for artificials added to the problem</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECinitSUp">
+initSUp</a>
+<i> (real)</i> upper bound for artificials added to the problem</h4><p>
+
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="NLPECNCPBounds">
+NCPBounds</a>
+<i> (string)</i> sets explicit bounds on arguments of NCP functions</h4><p>
+
+Determines which of the two arguments to an NCP function
+<tt>Phi(r,s)</tt> are explicitly constrained to be nonnegative. The
+explicit constraints are in addition to those imposed by the
+constraint <tt>Phi(r,s) = 0</tt>, which implies nonnegativity of
+<tt>r</tt> and <tt>s</tt>.
+
+<br><i>(default = none)</i>
+<table>
+<tr valign="top"><td width=20 align=right>none</td><td>no explicit bounds included</td></tr>
+<tr valign="top"><td width=20 align=right>function</td><td>explicit bounds on function/slacks included</td></tr>
+<tr valign="top"><td width=20 align=right>variable</td><td>explicit bounds on variables included</td></tr>
+<tr valign="top"><td width=20 align=right>all</td><td>both function and variable bounds included</td></tr>
+</table>
+
+<h4><a name="NLPECnoCheck">
+noCheck</a>
+<i> (integer)</i> do not check consistency of reformulation options</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECnumSolves">
+numSolves</a>
+<i> (integer)</i> number of extra solves</h4><p>
+
+This should be set in conjunction with the <tt>updatefac</tt> option.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECrefType">
+refType</a>
+<i> (string)</i> reformulation type</h4><p>
+
+Determines the type of reformulation used. Our notation and
+descriptions are taken from a special case of the MPEC, the NCP: find
+<tt>x >= 0, f(x) >= 0, x^T f(x) = 0</tt>.
+
+<br><i>(default = mult)</i>
+<table>
+<tr valign="top"><td width=20 align=right>mult</td><td>inner product &lt;x,f&gt; = 0</td></tr>
+<tr valign="top"><td width=20 align=right>min</td><td>NCP function min(x,f)</td></tr>
+<tr valign="top"><td width=20 align=right>CMxf</td><td>Chen-Mangasarian NCP function, explicit</td></tr>
+<tr valign="top"><td width=20 align=right>CMfx</td><td>Chen-Mangasarian NCP function, explicit</td></tr>
+<tr valign="top"><td width=20 align=right>fCMxf</td><td>Chen-Mangasarian NCP function, intrinsic</td></tr>
+<tr valign="top"><td width=20 align=right>fCMfx</td><td>Chen-Mangasarian NCP function, intrinsic</td></tr>
+<tr valign="top"><td width=20 align=right>FB</td><td>Fischer-Burmeister NCP function, explicit</td></tr>
+<tr valign="top"><td width=20 align=right>fFB</td><td>Fischer-Burmeister NCP function, intrinsic</td></tr>
+<tr valign="top"><td width=20 align=right>FB_neg</td><td>Fischer-Burmeister NCP function negated, explicit</td></tr>
+<tr valign="top"><td width=20 align=right>fFB_neg</td><td>Fischer-Burmeister NCP function negated, intrinsic</td></tr>
+<tr valign="top"><td width=20 align=right>Bill</td><td>Billups function for doubly-bounded variables, explicit</td></tr>
+<tr valign="top"><td width=20 align=right>fBill</td><td>Billups function for doubly-bounded variables, intrinsic</td></tr>
+<tr valign="top"><td width=20 align=right>penalty</td><td>objective penalty</td></tr>
+<tr valign="top"><td width=20 align=right>median</td><td>something else</td></tr>
+<tr valign="top"><td width=20 align=right>fVUsin</td><td>Veelken-Ulbrich NCP function (smoothed min), intrinsic</td></tr>
+<tr valign="top"><td width=20 align=right>fVUpow</td><td>Veelken-Ulbrich NCP function (smoothed min), intrinsic</td></tr>
+</table>
+
+<h4><a name="NLPECslack">
+slack</a>
+<i> (string)</i> what type of slacks to put in</h4><p>
+
+Determines if slacks are used to treat the functions <tt>h_i</tt>. For
+single-bounded variables, we use at most one slack (either free or
+positive) for each <tt>h_i</tt>. For doubly-bounded variables, we can
+have no slacks, one slack (necessarily free), or two slacks (either
+free or positive) for each <tt>h_i</tt>.
+
+<br><i>(default = positive)</i>
+<table>
+<tr valign="top"><td width=20 align=right>none</td><td>no slacks will be used</td></tr>
+<tr valign="top"><td width=20 align=right>free</td><td>free slacks will be used</td></tr>
+<tr valign="top"><td width=20 align=right>positive</td><td>non-negative slacks will be used</td></tr>
+<tr valign="top"><td width=20 align=right>one</td><td>one free slack will be used for each h_i in the doubly bounded case</td></tr>
+</table>
+
+<h4><a name="NLPECsubSolver">
+subSolver</a>
+<i> (string)</i> subsolver to run</h4><p>
+
+
+
+<h4><a name="NLPECsubSolverOpt">
+subSolverOpt</a>
+<i> (integer)</i> optfile value to pass to the subsolver</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECterminate">
+terminate</a>
+<i> (integer)</i> terminate after generating scalar GAMS source code</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="NLPECtestTol">
+testTol</a>
+<i> (real)</i> tolerance for complementarity check in MPEC/MCP</h4><p>
+
+
+<br><i>(default = 1e-005)</i>
+
+<h4><a name="NLPECupdateFac">
+updateFac</a>
+<i> (real)</i> update factor for mu</h4><p>
+
+The factor that multiplies <tt>mu</tt> before each of the extra solves
+triggered by the <tt>numsolves</tt> option. Can be set independently
+for singly and doubly bounded variables.
+
+<br><i>(default = 1e-1)</i>
+</body></html>

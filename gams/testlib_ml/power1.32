@@ -1,0 +1,14 @@
+$title compare real and integer power for normal values (POWER1,SEQ=32)
+
+set i / 1*41 /; parameter iexp(i); iexp(i) = ord(i)-ceil(card(i)/2);
+
+parameter rep;
+
+rep(i,'exp') =  iexp(i);
+rep(i,'pow') = power(2,iexp(i));
+rep(i,'**')  = 2**iexp(i);
+rep(i,'diff') = rep(i,'pow') - rep(i,'**');
+
+display rep;
+
+abort$sum(i, abs(rep(i,'diff')) > 1e-10) 'something wrong';

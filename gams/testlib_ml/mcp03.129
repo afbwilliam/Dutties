@@ -1,0 +1,13 @@
+$title Illustrate rules for matching =L= equations in MCP (MCP03,SEQ=129)
+
+$ontext
+
+This model illustrates the matching rules for equation/variable pairs
+in MCP models, for equations of type =L=.
+
+Contributor: Steve Dirkse, May 2004
+$offtext
+
+$set EQTYPE =L=
+
+$include mcp0x.inc

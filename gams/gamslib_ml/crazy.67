@@ -1,0 +1,117 @@
+$Title Examples of Extended Arithmetic  (CRAZY,SEQ=67)
+
+$Ontext
+
+   This example program tests and demonstrates the definition of special
+   (crazy) values. All gams operations are defined over the closed
+   interval from -infinity (-INF) to +infinity (INF) and the three other
+   special values: epsilon (EPS), missing (NA) and undefined (UNDF).
+
+
+GAMS Development Corporation, Formulation and Language Example.
+
+$Offtext
+
+* notice that any characters are legal in a "quoted" label
+
+Set op1 / minus-inf, "-4.000", zero, "+2.500", plus-inf, epsilon, missing
+          undefined /;
+
+Alias(op1,op2);
+
+* the value UNDF can not be entered, only produced by an illegal
+* operation, as is shown below
+
+Parameter a(op1) / minus-inf -inf, "-4.000" -4, zero     0, "+2.500" 2.5
+                   plus-inf  +inf, epsilon  eps, missing na   /;
+
+          a("undefined") = 0/0; display a;
+
+Parameters
+
+b(op1,op2) "operand 1 plus operand 2: o1 + o2"
+c(op1,op2) "operand 1 minus operand 2: o1 - o2"
+d(op1,op2) "operand 1 to the power operand 2: o1 ** o2 (o2 is  real)"
+e(op1,op2) "operand 1 times operand 2: o1 * o2"
+f(op1,op2) "operand 1 divided by operand 2: o1 / o2"
+g(op1,op2) "operand 1 eq operand 2: o1 eq o2"
+h(op1,op2) "operand 1 le operand 2: o1 le o2"
+i(op1,op2) "operand 1 ge operand 2: o1 ge o2"
+j(op1,op2) "operand 1 ne operand 2: o1 ne o2"
+k(op1,op2) "operand 1 lt operand 2: o1 lt o2"
+l(op1,op2) "operand 1 gt operand 2: o1 gt o2"
+m(op1,op2) "operand 1 or operand 2: o1 or o2"
+n(op1,op2) "operand 1 and operand 2: o1 and o2"
+o(op1,op2) "operand 1 xor operand 2: o1 xor o2"
+p(op1,op2) "operand 1 to the power operand 2: o1 ** o2  (o2 is integer)"
+q(op1,op2) "maximum of operand 1, operand 2: max(o1,o2)"
+r(op1,op2) "minimum of operand 1, operand 2: min(o1,o2)"
+r1(op1,op2)"normal random number with mean o1 and std o2: normal(o1,o2)"
+s(op1,op2) "mod of operand 1, operand 2: mod(o1,o2)"
+t(op1,op2) "round argument 1 by argument 2 places: round(o1,o2)"
+t1(op1,op2)"uniform random number between o1 and o2: uniform(o1,o2)"
+u(op1,op2) "dollar control on right hand side: u = o1$o2"
+v(op1,op2) "dollar control on left hand side: v$o2 = o1"
+
+ aa(*,op1)  single argument functions;
+
+ Scalar  looptest  tests $-control on loops
+         sumtest   test $-control on sum operations
+         sumt      sum test
+         prot      prod test
+         mint      smin test
+         maxt      smax test;
+
+ b(op1,op2) = a(op1) + a(op2);
+ c(op1,op2) = a(op1) - a(op2);
+ d(op1,op2) = a(op1)**a(op2);
+ p(op1,op2) = power(a(op1),a(op2));
+ e(op1,op2) = a(op1)*a(op2);
+ f(op1,op2) = a(op1)/a(op2);
+ g(op1,op2) = a(op1) eq a(op2);
+ h(op1,op2) = a(op1) le a(op2);
+ i(op1,op2) = a(op1) ge a(op2);
+ j(op1,op2) = a(op1) ne a(op2);
+ k(op1,op2) = a(op1) lt a(op2);
+ l(op1,op2) = a(op1) gt a(op2);
+ m(op1,op2) = a(op1) or a(op2);
+ n(op1,op2) = a(op1) and a(op2);
+ o(op1,op2) = a(op1) xor a(op2);
+ q(op1,op2) = max(a(op1),a(op2));
+ r(op1,op2) = min(a(op1),a(op2));
+ r1(op1,op2)= normal(a(op1),a(op2));
+ s(op1,op2) = mod(a(op1),a(op2));
+ t(op1,op2) = round(a(op1),a(op2));
+ t1(op1,op2)= uniform(a(op1),a(op2));
+ u(op1,op2) = a(op1)$a(op2);
+ v(op1,op2)$a(op2) = a(op1);
+
+ aa("absolute",  op1) = abs   (a(op1));
+ aa("arctan",    op1) = arctan(a(op1));
+ aa("ceiling",   op1) = ceil  (a(op1));
+ aa("cos",       op1) = cos   (a(op1));
+ aa("floor",     op1) = floor (a(op1));
+ aa("errorf",    op1) = errorf(a(op1));
+ aa("exponent",  op1) = exp   (a(op1));
+ aa("loge",      op1) = log   (a(op1));
+ aa("log10",     op1) = log10 (a(op1));
+ aa("sine",      op1) = sin   (a(op1));
+ aa("sign",      op1) = sign  (a(op1));
+ aa("squareroot",op1) = sqrt  (a(op1));
+ aa("square",    op1) = sqr   (a(op1));
+ aa("mapval",    op1) = mapval(a(op1));
+ aa("truncate",  op1) = trunc (a(op1));
+ aa("not",       op1) = not    a(op1);
+
+ Display a,b,c,e,f,g,h,i,j,k,l,m,n,o,d,p,q,r,r1,s,t,t1,u,v,aa;
+
+ looptest = 0;
+ Loop(op1$a(op1), looptest = looptest + 10**(ord(op1)-1) );
+ sumtest = sum(op1$a(op1), 10**(ord(op1)-1));
+ sumt = sum(op1, a(op1));  prot = prod(op1, a(op1));
+ mint = smin(op1, a(op1)); maxt = smax(op1, a(op1));
+
+Option decimals=0;
+Display looptest, sumtest, sumt, prot, mint, maxt;
+
+execerror = 0;

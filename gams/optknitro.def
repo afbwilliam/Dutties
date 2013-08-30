@@ -1,0 +1,195 @@
+*
+* optknitro.def
+*
+
+algorithm enumint 0 0 1 2 controls which algorithm to use
+ 0 1 automatic, based on problem characteristics
+ 1 1 interior/direct
+ 2 1 interior/CG
+ 3 1 active-set method
+ 5 1 multi-method, perhaps in parallel
+bar_feasible enumint 0 0 1 1 specifies whether special emphasis is placed on getting and staying feasible
+ 0 1 No special emphasis on feasibility
+ 1 1 Iterates must satisfy inequality cons once they become sufficiently feasible
+ 2 1 Special emphasis is placed on getting feasible before trying to optimize
+ 3 1 Implement both options 1 and 2 above
+bar_feasmodetol double 0 1e-4 0 maxdouble 1 1 tolerance for activation of bar_feasible mode
+bar_initmu double 0 1e-1 0 maxdouble 1 1 initial barrier parameter value
+bar_initpt enumint 0 0 1 1 initial point strategy for barrier algorithms
+ 0 1 let KNITRO choose the initial point strategy
+ 1 1 shift the initial point to improve barrier performance
+ 2 1 do not alter the initial point supplied by the user
+bar_murule enumint 0 0 1 1 controls the barrier parameter update strategy
+ 0 1 automatic
+ 1 1 monotonic decrease in barrier parameter
+ 2 1 adaptive rule based on the complementarity gap
+ 3 1 use a probing (affine-scaling) step
+ 4 1 use a Mehrotra predictor-corrector type rule, with safeguards on the corrector step
+ 5 1 use a Mehrotra predictor-corrector type rule, with no safeguards on the corrector step
+ 6 1 minimize a quality function at each iteration
+bar_switchrule enumint 0 0 1 1 controls switch to new feasibility-only phase
+ 0 1 automatic
+ 1 1 never switch to feasibility phase
+ 2 1 allow switches to feasibility phase
+ 3 1 more aggressive switches to feasibility phase
+delta double 0 1e-0 0 maxdouble 1 2 initial trust region radius scaling factor
+feastol double 0 1e-6 0 maxdouble 1 2 relative feasibility error tolerance
+feastolabs double 0 0.0 0 maxdouble 1 2 absolute feasibility error tolerance
+gradopt enumint 0 1 1 2 controls gradient computation
+ 1 1 use exact gradients computed by GAMS
+ 2 1 KNITRO computes gradients by forward finite differences
+ 3 1 KNITRO computes gradients by central finite differences
+hessopt enumint 0 1 1 2 controls Hessian computation
+ 1 1 use exact Hessians computed by GAMS
+ 2 1 use a dense quasi-Newton BFGS Hessian
+ 3 1 use a dense quasi-Newton SR1 Hessian
+ 4 1 compute Hessian-vector products using finite differences
+ 5 1 use exact Hessian-vector products computed by GAMS
+ 6 1 use a limited-memory quasi-Newton BFGS Hessian
+honorbnds enumint 0 0 1 2 maintain feasibility of intermediate iterates w.r.t. variable bounds
+ 0 1 intermediate iterates may be infeasible w.r.t. variable bounds
+ 1 1 all iterates will be feasible w.r.t. variable bounds
+ 2 1 the initial iterate will be made feasible w.r.t. variable bounds
+linsolver enumint 0 0 1 2 controls which linear system solver to use
+ 0 1 automatic: based on problem characteristics
+ 1 1 reserved for internal use, currently automatic
+ 2 1 hybrid: linear solver used depends on the particular linear system to be solved
+ 3 1 QR: use dense LAPACK QR routines, only suitable for small problems
+ 4 1 MA27: use the HSL MA27 sparse symmetric indefinite solver
+ 5 1 MA57: use the HSL MA57 sparse symmetric indefinite solver
+ma_terminate enumint 0 1 1 3 condition for terminating the multi-algorithm method
+ 0 1 terminate after all algorithms have completed
+ 1 1 terminate at first local optimum
+ 2 1 terminate at first feasible solution
+ma_maxtime_cpu double 0 1e8 0 maxdouble 1 3 cumulative CPU time limit for multi-algorithm method
+ma_maxtime_real double 0 1e8 0 maxdouble 1 3 cumulative real or wall-clock time limit for multi-algorithm method
+maxcgit integer 0 0 0 maxint 1 2 limit on inner CG iterations per minor iteration
+ 0 upper bound determined automatically
+ n at most n CG iterations may be performed
+maxcrossit integer 0 0 0 maxint 1 1 limit on crossover iterations
+maxit integer 0 0 0 maxint 1 2 major iteration limit
+ 0 upper bound determined automatically
+ n at most n iterations may be performed
+maxtime_cpu double 0 1e8 0 maxdouble 1 2 CPU time limit
+maxtime_real double 0 1e8 0 maxdouble 1 2 real or wall-clock time limit
+mip_branchrule enumint 0 0 1 4 branching rule to use for MIP B&B
+ 0 1 automatic
+ 1 1 use most fractional (most infeasible) branching
+ 2 1 use pseudo-cost branching
+ 3 1 use strong branching
+mip_gub_branch boolean 0 0 1 4 toggles branching on generalized upper bounds
+mip_heuristic enumint 0 0 1 4 MIP heuristic to use in searching for an initial integer feasible point
+ 0 1 automatic
+ 1 1 none
+ 2 1 feasibility pump
+ 3 1 heuristic based on MPEC formulation
+mip_heuristic_maxit integer 0 100 0 maxint 1 4 maximum iterations to allow the MIP heuristic
+mip_implications boolean 0 1 1 4 toggles addition of constraints derived from logical implications
+mip_integer_tol double 0 1e-8 0 maxdouble 1 4 integrality tolerance
+mip_integral_gap_abs double 0 1e-6 0 maxdouble 1 4 absolute stopping tolerance for MIP
+mip_integral_gap_rel double 0 1e-6 0 maxdouble 1 4 relative stopping tolerance for MIP
+mip_lpalg enumint 0 0 1 4 algorithm to use for LP subproblems
+ 0 1 automatic
+ 1 1 interior/direct
+ 2 1 interior/CG
+ 3 1 active-set method
+mip_maxnodes integer 0 100000 0 maxint 1 4 maximum number of nodes to explore: 0=no limit
+mip_maxsolves integer 0 200000 0 maxint 1 4 maximum number of subproblem solves: 0=no limit
+mip_maxtime_cpu double 0 1e8 0 maxdouble 1 4 cumulative CPU time limit for MIP
+mip_maxtime_real double 0 1e8 0 maxdouble 1 4 cumulative real or wall-clock time limit for MIP
+mip_method enumint 0 0 1 4 specify MIP method to use
+ 0 1 automatic
+ 1 1 standard branch and bound
+ 2 1 hybrid Quesada-Grossman (for convex, nonlinear only)
+mip_outinterval integer 0 10 1 maxint 1 4 node printing interval for MIP
+mip_outlevel enumint 0 1 1 4 how much MIP information to print
+ 0 1 do not print any node information
+ 1 1 print one line per node
+mip_rootalg enumint 0 0 1 4 algorithm to use for the root node solve
+ 0 1 automatic, based on problem characteristics
+ 1 1 interior/direct
+ 2 1 interior/CG
+ 3 1 active-set method
+mip_rounding enumint 0 0 1 4 MIP rounding rule to apply
+ 0 1 automatic
+ 1 1 do not round if a node is infeasible
+ 2 1 round using a fast heuristic only
+ 3 1 round and solve a subproblem if likely to succeed
+ 4 1 always round and solve a subproblem
+mip_selectrule enumint 0 0 1 4 selection rule for the next node in the B&B tree
+ 0 1 automatic
+ 1 1 search using a depth first procedure
+ 2 1 select the node with the best relaxation bound
+ 3 1 use depth first unless pruned, then best bound
+mip_strong_candlim integer 0 10 0 maxint 1 4 max candidates to explore in strong branching
+mip_strong_level integer 0 10 0 maxint 1 4 max levels on which to perform strong branching
+mip_strong_maxit integer 0 1000 0 maxint 1 4 max iterations to allow for strong branching
+mip_terminate enumint 0 0 1 4 condition for terminating the MIP algorithm
+ 0 1 terminate at optimum
+ 1 1 terminate at first integer feasible point
+ms_enable boolean 0 0 1 5 toggles multi-start method
+ms_maxbndrange double 0 1e3 0 maxdouble 1 5 maximum range to vary unbounded x when generating start points
+ms_maxsolves integer 0 0 0 maxint 1 5 maximum number of start points to try during multi-start
+ 0 upper bound determined automatically
+ n try exactly n start points
+ms_maxtime_cpu double 0 1e8 0 maxdouble 1 5 cumulative CPU time limit for multi-start
+ms_maxtime_real double 0 1e8 0 maxdouble 1 5 cumulative real or wall-clock time limit for multi-start
+ms_startptrange double 0 1e20 0 maxdouble 1 5 maximum range to vary all x when generating start points
+ms_terminate enumint 0 0 1 5 termination condition for multi-start
+ 0 1 terminate after ms_maxsolves
+ 1 1 terminate at first local optimum (if before ms_maxsolves)
+ 2 1 terminate at first feasible solution (if before ms_maxsolves)
+objrange double 0 1e20 0 maxdouble 1 2 parameter used in unboundedness check
+option_file string 0 "" 1 2 additional option file name - read only by KNITRO solver lib
+opttol double 0 1e-6 0 maxdouble 1 2 relative optimality error tolerance
+opttolabs double 0 0.0 0 maxdouble 1 2 absolute optimality error tolerance
+outlev enumint 0 2 1 2 controls the level of output
+ 0 1 printing of all output is suppressed
+ 1 1 only summary information is printed
+ 2 1 print basic information every 10 iterations
+ 3 1 print basic information at each iteration
+ 4 1 print basic information and the function count at each iteration
+ 5 1 in addition to 4, the primal variable values are printed
+ 6 1 in addition to 5, the dual variable and constraint values are printed
+output_time boolean 0 0 1 2 print output on where time is used
+pivot double 0 1e-8 0 0.5 1 2 initial pivot threshold used in the factorization routine
+presolve enumint 0 1 1 2 control presolve level
+ 0 1 no presolving
+ 1 1 basic presolving
+ 2 1 advanced presolving
+reform boolean 0 1 1 2 allow objective reformulation
+scale enumint 0 1 1 2 toggles problem scaling
+ 0 1 no scaling is performed
+ 1 1 the problem may be scaled
+secret strlist 0 0 2 pass on secret KNITRO options
+soc enumint 0 1 1 2 toggles the second order correction option
+ 0 1 no second-order correction steps are attempted
+ 1 1 second-order correction steps may be attempted
+ 2 1 second-order correction steps are always attempted if the original step is rejected and there are nonlinear constraints
+threads integer 0 1 minint maxint 1 2 default thread count
+xtol double 0 1e-15 0 maxdouble 1 2 tolerance for termination on a small stepsize
+*
+* synonym section
+*
+feasible synonym bar_feasible
+feasmodetol synonym bar_feasmodetol
+mu synonym bar_initmu
+barrule synonym bar_murule
+*
+* deprecated section
+*
+synon deprecated
+ mu
+ feasible
+ feasmodetol
+ barrule
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+barrier group 1 1 Barrier options
+general group 2 1 General options
+ma group 3 1 Multi-algorithm options
+mip group 4 1 MIP options
+ms group 5 1 Multi-start options
+*** End of file

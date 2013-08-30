@@ -1,0 +1,473 @@
+$Title Test extrinsic functions in stodclib (STOLIB01,SEQ=520)
+
+$ontext
+This test makes sure that the random number generators, the probability density
+functions, the cumulative distribution functions and the inverse cumulative
+distribution functions from stodclib work as expected.
+
+Contributor: L. Westermann
+$offtext
+
+
+$funclibin stolib stodclib
+
+function dseed       /stolib.SetSeed       /;
+function dunif       /stolib.Duniform      /;
+function pdfunif     /stolib.pdfuniform    /;
+function cdfunif     /stolib.cdfuniform    /;
+function icdfunif    /stolib.icdfuniform    /;
+function dnorm       /stolib.Dnormal       /;
+function pdfnorm     /stolib.pdfnormal     /;
+function cdfnorm     /stolib.cdfnormal     /;
+function icdfnorm    /stolib.icdfnormal     /;
+function dinvgaus    /stolib.Dinvgaussian  /;
+function pdfinvgaus  /stolib.pdfinvgaussian/;
+function cdfinvgaus  /stolib.cdfinvgaussian/;
+function icdfinvgaus /stolib.icdfinvgaussian/;
+function drayl       /stolib.Drayleigh     /;
+function pdfrayl     /stolib.pdfrayleigh   /;
+function cdfrayl     /stolib.cdfrayleigh   /;
+function icdfrayl    /stolib.icdfrayleigh   /;
+function dcauchy     /stolib.Dcauchy       /;
+function pdfcauchy   /stolib.pdfcauchy     /;
+function cdfcauchy   /stolib.cdfcauchy     /;
+function icdfcauchy  /stolib.icdfcauchy     /;
+function dlognorm    /stolib.Dlognormal    /;
+function pdflognorm  /stolib.pdflognormal  /;
+function cdflognorm  /stolib.cdflognormal  /;
+function icdflognorm /stolib.icdflognormal  /;
+function dexpo       /stolib.Dexponential  /;
+function pdfexpo     /stolib.pdfexponential/;
+function cdfexpo     /stolib.cdfexponential/;
+function icdfexpo    /stolib.icdfexponential/;
+function dlogist     /stolib.Dlogistic     /;
+function pdflogist   /stolib.pdflogistic   /;
+function cdflogist   /stolib.cdflogistic   /;
+function icdflogist  /stolib.icdflogistic   /;
+function dgamma      /stolib.Dgamma        /;
+function pdfgamma    /stolib.pdfgamma      /;
+function cdfgamma    /stolib.cdfgamma      /;
+function icdfgamma   /stolib.icdfgamma      /;
+function dchisq      /stolib.Dchisquare    /;
+function pdfchisq    /stolib.pdfchisquare  /;
+function cdfchisq    /stolib.cdfchisquare  /;
+function icdfchisq   /stolib.icdfchisquare  /;
+function dweibull    /stolib.Dweibull      /;
+function pdfweibull  /stolib.pdfweibull    /;
+function cdfweibull  /stolib.cdfweibull    /;
+function icdfweibull /stolib.icdfweibull    /;
+function dbeta       /stolib.Dbeta         /;
+function pdfbeta     /stolib.pdfbeta       /;
+function cdfbeta     /stolib.cdfbeta       /;
+function icdfbeta    /stolib.icdfbeta       /;
+function df          /stolib.DF            /;
+function pdff        /stolib.pdfF          /;
+function cdff        /stolib.cdfF          /;
+function icdff       /stolib.icdfF          /;
+function dstudt      /stolib.Dstudentt     /;
+function pdfstudt    /stolib.pdfstudentt   /;
+function cdfstudt    /stolib.cdfstudentt   /;
+function icdfstudt   /stolib.icdfstudentt   /;
+function dpareto     /stolib.Dpareto       /;
+function pdfpareto   /stolib.pdfpareto     /;
+function cdfpareto   /stolib.cdfpareto     /;
+function icdfpareto  /stolib.icdfpareto     /;
+function dgumbel     /stolib.Dgumbel       /;
+function pdfgumbel   /stolib.pdfgumbel     /;
+function cdfgumbel   /stolib.cdfgumbel     /;
+function icdfgumbel  /stolib.icdfgumbel     /;
+function dlaplace    /stolib.Dlaplace      /;
+function pdflaplace  /stolib.pdflaplace    /;
+function cdflaplace  /stolib.cdflaplace    /;
+function icdflaplace /stolib.icdflaplace    /;
+function dtri        /stolib.Dtriangular   /;
+function pdftri      /stolib.pdftriangular /;
+function cdftri      /stolib.cdftriangular /;
+function icdftri     /stolib.icdftriangular /;
+function dunifint    /stolib.Duniformint   /;
+function cdfunifint  /stolib.cdfuniformint /;
+function icdfunifint /stolib.icdfuniformint /;
+function pdfunifint  /stolib.pdfuniformint /;
+function dbino       /stolib.Dbinomial     /;
+function cdfbino     /stolib.cdfbinomial   /;
+function icdfbino    /stolib.icdfbinomial   /;
+function pdfbino     /stolib.pdfbinomial   /;
+function dnegbino    /stolib.Dnegbinomial  /;
+function cdfnegbino  /stolib.cdfnegbinomial/;
+function icdfnegbino /stolib.icdfnegbinomial/;
+function pdfnegbino  /stolib.pdfnegbinomial/;
+function dgeomet     /stolib.Dgeometric    /;
+function cdfgeomet   /stolib.cdfgeometric  /;
+function icdfgeomet  /stolib.icdfgeometric  /;
+function pdfgeomet   /stolib.pdfgeometric  /;
+function dhypergeo   /stolib.Dhypergeo     /;
+function cdfhypergeo /stolib.cdfhypergeo   /;
+function icdfhypergeo /stolib.icdfhypergeo   /;
+function pdfhypergeo /stolib.pdfhypergeo   /;
+function dlogarithmic    /stolib.Dlogarithmic  /;
+function cdflogarithmic  /stolib.cdflogarithmic/;
+function icdflogarithmic /stolib.icdflogarithmic/;
+function pdflogarithmic  /stolib.pdflogarithmic/;
+function dpoisson    /stolib.Dpoisson      /;
+function cdfpoisson  /stolib.cdfpoisson    /;
+function icdfpoisson /stolib.icdfpoisson    /;
+function pdfpoisson  /stolib.pdfpoisson    /;
+
+file fx; put fx;
+
+scalar x;
+*Dummy return
+x = dseed(12345);
+
+set l /0*100/
+    skipg(l)
+    skipig(l)
+    k /0*100/
+    j /1*100/
+    i /1*100000/;
+
+parameter st(l), ist(l);
+
+skipg(l)  = no;
+skipig(l) = no;
+st(l)     = 0.1*(ord(l)-1);
+ist(l)    = 0.01*(ord(l)-1);
+
+$onechoV > cont.gms
+$if %Add0%    == def $set Add0    1
+$if %icdfTol% == def $set icdfTol 1e-8
+$if %histTol% == def $set histTol 1e-2
+$if %gradTol% == def $set gradTol 1e-3
+parameter histo%1%2(j)
+          pdf%1%2(l)
+          cdf%1%2(l)
+          cdfhisto%1%2(l)
+          icdf%1%2(l)
+          dpdf%1%2(l,*)
+          dcdf%1%2(l,*)
+          dicdf%1%2(l,*)
+          err0%1%2(l) 'cdf(icdf(x)) <> x'
+          err1%1%2(l) 'icdf(cdf(x)) <> x'
+          err2%1%2(l) 'cdf(x) <> histo(j<=x)'
+          err3%1%2(l,*) 'pdf: grad/hess <> gradn/hessn'
+          err4%1%2(l,*) 'cdf: grad/hess <> gradn/hessn'
+          err5%1%2(l,*) 'icdf: grad/hess <> gradn/hessn';
+histo%1%2(j) = 0;
+
+loop(i,
+  x = d%1(%3);
+  loop(j$sameas(j,'1'),
+    histo%1%2(j+round(x/st('1')-0.5))= histo%1%2(j+round(x/st('1')-0.5))+1;
+  )
+);
+pdf%1%2(l)$(not skipg(l)) = pdf%1(st(l),%3);
+icdf%1%2(l)$(ist(l)>0 and ist(l)<1 and not skipig(l)) = icdf%1(ist(l),%3);
+cdf%1%2(l)$(ist(l)>0 and ist(l)<1 and pdf%1%2(l)>1e-8 and not skipig(l)) = cdf%1(icdf%1%2(l),%3);
+err0%1%2(l)$(ist(l)>0 and ist(l)<1 and pdf%1%2(l)>1e-8 and not skipig(l)) = cdf%1%2(l) - ist(l);
+err0%1%2(l)$(abs(err0%1%2(l)) <= %icdfTol%) = 0;
+cdf%1%2(l)$(not skipg(l)) = cdf%1(st(l),%3);
+icdf%1%2(l)$(cdf%1%2(l)>0 and cdf%1%2(l)<1 and pdf%1%2(l)>1e-8) = icdf%1(cdf%1%2(l),%3);
+err1%1%2(l)$(cdf%1%2(l)>0 and cdf%1%2(l)<1 and pdf%1%2(l)>1e-8) = icdf%1%2(l) - st(l);
+err1%1%2(l)$(abs(err1%1%2(l)) <= %icdfTol%) = 0;
+cdfhisto%1%2(l)$(not skipg(l)) = cdf%1(0,%3)$%Add0% + sum(j$(ord(j)*st('1')<=st(l)),histo%1%2(j))/card(i);
+err2%1%2(l) = cdf%1%2(l) - cdfhisto%1%2(l);
+err2%1%2(l)$(abs(err2%1%2(l)) <= %histTol%) = 0;
+loop {l$(not skipg(l)),
+  dpdf%1%2(l,'f ')  = pdf%1      (   st(l), %3);
+  dpdf%1%2(l,'gn')  = pdf%1.gradn(1: st(l), %3);
+  dpdf%1%2(l,'g' )  = pdf%1.grad (1: st(l), %3);
+  dpdf%1%2(l,'hn')  = pdf%1.hessn(1: st(l), %3);
+  dpdf%1%2(l,'h' )  = pdf%1.hess (1: st(l), %3);
+  dcdf%1%2(l,'f ')  = cdf%1      (   st(l), %3);
+  dcdf%1%2(l,'gn')  = cdf%1.gradn(1: st(l), %3);
+  dcdf%1%2(l,'g' )  = cdf%1.grad (1: st(l), %3);
+  dcdf%1%2(l,'hn')  = cdf%1.hessn(1: st(l), %3);
+  dcdf%1%2(l,'h' )  = cdf%1.hess (1: st(l), %3);
+*  data(T, 'rc')   = 0;
+*  data(T, 'ec')   = 0;
+};
+err3%1%2(l,'g') = abs(dpdf%1%2(l,'gn') - dpdf%1%2(l,'g'))/max(1,abs(dpdf%1%2(l,'g')));
+err3%1%2(l,'g')$(err3%1%2(l,'g') <= %gradTol%) = 0;
+err3%1%2(l,'h') = abs(dpdf%1%2(l,'hn') - dpdf%1%2(l,'h'))/max(1,abs(dpdf%1%2(l,'h')));
+err3%1%2(l,'h')$(err3%1%2(l,'h') <= %gradTol%) = 0;
+err4%1%2(l,'g') = abs(dcdf%1%2(l,'gn') - dcdf%1%2(l,'g'))/max(1,abs(dcdf%1%2(l,'g')));
+err4%1%2(l,'g')$(err4%1%2(l,'g') <= %gradTol%) = 0;
+err4%1%2(l,'h') = abs(dcdf%1%2(l,'hn') - dcdf%1%2(l,'h'))/max(1,abs(dcdf%1%2(l,'h')));
+err4%1%2(l,'h')$(err4%1%2(l,'h') <= %gradTol%) = 0;
+loop {l$(ist(l)>0.05 and ist(l)<0.95 and not skipig(l)),
+  dicdf%1%2(l,'f ') = icdf%1      (   ist(l), %3);
+  dicdf%1%2(l,'gn') = icdf%1.gradn(1: ist(l), %3);
+  dicdf%1%2(l,'g' ) = icdf%1.grad (1: ist(l), %3);
+  dicdf%1%2(l,'hn') = icdf%1.hessn(1: ist(l), %3);
+  dicdf%1%2(l,'h' ) = icdf%1.hess (1: ist(l), %3);
+};
+err5%1%2(l,'g') = abs(dicdf%1%2(l,'gn') - dicdf%1%2(l,'g'))/max(1,abs(dicdf%1%2(l,'g')));
+err5%1%2(l,'g')$(err5%1%2(l,'g') <= %gradTol%) = 0;
+err5%1%2(l,'h') = abs(dicdf%1%2(l,'hn') - dicdf%1%2(l,'h'))/max(1,abs(dicdf%1%2(l,'h')));
+err5%1%2(l,'h')$(err5%1%2(l,'h') <= %gradTol%) = 0;
+abort$(card(err0%1%2) + card(err1%1%2) + card(err2%1%2) + card(err3%1%2) + card(err4%1%2) + card(err5%1%2))
+       err0%1%2, err1%1%2, err2%1%2, err3%1%2, err4%1%2, err5%1%2;
+$offecho
+$onechoV > disc.gms
+$if %icdfTol% == def $set icdfTol 0
+$if %histTol% == def $set histTol 1e-2
+parameter histo%1%2(k)
+          pdf%1%2(l)
+          cdf%1%2(l)
+          cdfhisto%1%2(l)
+          icdf%1%2(l)
+          err0%1%2(l) 'cdf(icdf(x)) <> x'
+          err1%1%2(l) 'icdf(cdf(x)) <> x'
+          err2%1%2(l) 'cdf(x) <> histo(j<=x)';
+histo%1%2(k) = 0;
+
+loop(i,
+  x = d%1(%3);
+  loop(k$sameas(k,'0'),
+    histo%1%2(k+x)= histo%1%2(k+x)+1;
+  )
+);
+pdf%1%2(l)$(not skipg(l)) = pdf%1(st(l),%3);
+icdf%1%2(l)$(ist(l)>0 and ist(l)<1 and not skipig(l)) = icdf%1(ist(l),%3);
+cdf%1%2(l)$(ist(l)>0 and ist(l)<1 and pdf%1%2(l)>1e-8 and not skipig(l)) = cdf%1(icdf%1%2(l),%3);
+err0%1%2(l)$(ist(l)>0 and ist(l)<1 and pdf%1%2(l)>1e-8 and not skipig(l)) = icdf%1(cdf%1%2(l),%3) - icdf%1(ist(l),%3);
+err0%1%2(l)$(abs(err0%1%2(l)) <= %icdfTol%) = 0;
+cdf%1%2(l)$(not skipg(l)) = cdf%1(st(l),%3);
+icdf%1%2(l)$(cdf%1%2(l)>0 and cdf%1%2(l)<1 and pdf%1%2(l)>1e-8) = icdf%1(cdf%1%2(l),%3);
+err1%1%2(l)$(cdf%1%2(l)>0 and cdf%1%2(l)<1 and pdf%1%2(l)>1e-8) = icdf%1%2(l) - st(l);
+err1%1%2(l)$(abs(err1%1%2(l)) <= %icdfTol%) = 0;
+cdfhisto%1%2(l)$(not skipg(l)) = sum(k$(ord(k)-1<=st(l)),histo%1%2(k))/card(i);
+err2%1%2(l) = cdf%1%2(l) - cdfhisto%1%2(l);
+err2%1%2(l)$(abs(err2%1%2(l)) <= %histTol%) = 0;
+abort$(card(err0%1%2) + card(err1%1%2) + card(err2%1%2))
+       err0%1%2, err1%1%2, err2%1%2;
+$offecho
+
+$set Add0    def
+$set icdfTol def
+$set histTol def
+$set gradTol def
+
+st(l) = 1*(ord(l)-1);
+put_utility 'log' / 'Uniform Integer';
+$batinclude disc unifint _1_5 1,5
+$batinclude disc unifint _3_15 3,15
+
+put_utility 'log' / 'Binomial';
+$batinclude disc bino _20_05 20,0.5
+$batinclude disc bino _20_07 20,0.7
+$batinclude disc bino _40_05 40,0.5
+
+put_utility 'log' / 'Negative Binomial';
+$batinclude disc negbino _10_02 10,0.2
+$batinclude disc negbino _10_05 10,0.5
+$batinclude disc negbino _10_08 10,0.8
+
+put_utility 'log' / 'Geometric';
+$batinclude disc geomet _02 0.2
+$batinclude disc geomet _05 0.5
+$batinclude disc geomet _08 0.8
+
+put_utility 'log' / 'Hypergeometric';
+$batinclude disc hypergeo _30_20_20 30,20,20
+$batinclude disc hypergeo _60_50_20 60,50,20
+$batinclude disc hypergeo _60_20_20 60,20,20
+
+skipg(l)$(st(l)<1)=yes;
+put_utility 'log' / 'Logarithmic';
+$batinclude disc logarithmic _033 0.33
+$batinclude disc logarithmic _066 0.66
+$batinclude disc logarithmic _099 0.99
+skipg(l)=no;
+
+put_utility 'log' / 'Poisson';
+$batinclude disc poisson _1 1
+$batinclude disc poisson _4 4
+$batinclude disc poisson _10 10
+
+st(l) = 0.1*(ord(l)-1);
+
+skipg(l)$(st(l)=1)=yes;
+skipg(l)$(st(l)=5)=yes;
+put_utility 'log' / 'Uniform';
+$batinclude cont unif _1_5 1,5
+skipg(l)=no;
+
+put_utility 'log' / 'Normal';
+$batinclude cont norm _0 0,1
+$batinclude cont norm _5 5,1
+
+skipg(l)$(st(l)<=0.1)=yes;
+$set Add0    0
+$set icdfTol 1e-4
+put_utility 'log' / 'Inverse Gaussian';
+$batinclude cont invgaus _2_1  2,1
+$batinclude cont invgaus _2_5  2,5
+$batinclude cont invgaus _2_30 2,30
+
+$batinclude cont invgaus _1_10 1,1
+$batinclude cont invgaus _1_02 1,0.2
+$batinclude cont invgaus _1_30 1,3
+$batinclude cont invgaus _3_10 3,1
+$batinclude cont invgaus _3_02 3,0.2
+skipg(l)=no;
+$set Add0    def
+$set icdfTol def
+
+skipg(l)$(st(l)=0)=yes;
+put_utility 'log' / 'Rayleigh';
+$batinclude cont rayl _05 0.5
+$batinclude cont rayl _10 1
+$batinclude cont rayl _20 2
+$batinclude cont rayl _30 3
+$batinclude cont rayl _40 4
+skipg(l)=no;
+
+skipig(l)$(ist(l)<=0.06 or ist(l)>=0.94)=yes;
+put_utility 'log' / 'Cauchy';
+$batinclude cont cauchy _0_05 0,0.5
+$batinclude cont cauchy _0_10 0,1.0
+$batinclude cont cauchy _0_20 0,2.0
+$batinclude cont cauchy _2_10 2,1.0
+$batinclude cont cauchy _5_10 5,1.0
+skipig(l)=no;
+
+$set Add0    0
+$set gradTol 1e-2
+skipg(l)$(st(l)<=0)=yes;
+put_utility 'log' / 'Lognormal';
+$batinclude cont lognorm _0_025 0,0.25
+$batinclude cont lognorm _0_1 0,1
+$batinclude cont lognorm _0_10 0,10
+skipg(l)=no;
+$set Add0    def
+$set gradTol def
+
+skipg(l)$(st(l)=0)=yes;
+put_utility 'log' / 'Exponential';
+$batinclude cont expo _05 0.5
+$batinclude cont expo _10 1.0
+$batinclude cont expo _15 1.5
+skipg(l)=no;
+
+put_utility 'log' / 'Logistic';
+$batinclude cont logist _5_2 5,2
+$batinclude cont logist _9_3 9,3
+$batinclude cont logist _9_4 9,4
+$batinclude cont logist _6_2 6,2
+$batinclude cont logist _2_1 2,1
+
+skipg(l)$(st(l)=0)=yes;
+put_utility 'log' / 'Gamma';
+$batinclude cont gamma _1_20 1,2
+$batinclude cont gamma _2_20 2,2
+$batinclude cont gamma _3_20 3,2
+$batinclude cont gamma _5_10 5,1
+$batinclude cont gamma _9_05 9,0.5
+skipg(l)=no;
+
+skipg(l)$(st(l)=0)=yes;
+put_utility 'log' / 'ChiSquare';
+$batinclude cont chisq _1 1
+$batinclude cont chisq _2 2
+$batinclude cont chisq _3 3
+skipg(l)=no;
+
+skipg(l)$(st(l)=0)=yes;
+put_utility 'log' / 'Weibull';
+$batinclude cont weibull _05_1 0.5,1
+$batinclude cont weibull _10_1 1,1
+$batinclude cont weibull _15_1 1.5,1
+$batinclude cont weibull _50_1 5,1
+$batinclude cont weibull _50_2 5,2
+skipg(l)=no;
+
+st(l) = 0.01*(ord(l)-1);
+skipg(l)$(st(l)<=0.1 or st(l)>=0.9)=yes;
+put_utility 'log' / 'Beta';
+$batinclude cont beta _05_05 0.5,0.5
+$batinclude cont beta _50_10 5,1
+$batinclude cont beta _10_30 1,3
+$batinclude cont beta _20_20 2,2
+$batinclude cont beta _20_50 2,5
+st(l) = 0.1*(ord(l)-1);
+skipg(l)=no;
+
+skipg(l)$(st(l)=0)=yes;
+skipig(l)$(ist(l)<=0.1 or ist(l)>=0.9)=yes;
+put_utility 'log' / 'F';
+$batinclude cont f _1_1 1,1
+$batinclude cont f _2_1 2,1
+$batinclude cont f _5_2 5,2
+$batinclude cont f _100_1 100,1
+$batinclude cont f _100_100 100,100
+skipg(l)=no;
+skipig(l)=no;
+
+skipig(l)$(ist(l)<=0.06 or ist(l)>=0.94)=yes;
+put_utility 'log' / 'Student T';
+$batinclude cont studt _1 1
+$batinclude cont studt _2 2
+$batinclude cont studt _5 5
+skipig(l)=no;
+
+$set Add0 0
+skipg(l)$(st(l)<=1)=yes;
+skipig(l)$(ist(l)<=0.06 or ist(l)>=0.94)=yes;
+put_utility 'log' / 'Pareto';
+$batinclude cont pareto _1_1 1,1 $(st(l)>=1)
+$batinclude cont pareto _1_2 1,2 $(st(l)>=1)
+$batinclude cont pareto _1_3 1,3 $(st(l)>=1)
+skipg(l)=no;
+skipg(l)$(st(l)<=2)=yes;
+$batinclude cont pareto _2_2 2,2 $(st(l)>=2)
+skipg(l)=no;
+skipig(l)=no;
+$set Add0 def
+
+put_utility 'log' / 'Gumbel';
+$batinclude cont gumbel _05_2 0.5,2
+$batinclude cont gumbel _10_2 1,2
+$batinclude cont gumbel _15_3 1.5,3
+$batinclude cont gumbel _30_4 3,4
+
+skipg (l)$( st(l)=0  )=yes;
+skipig(l)$(ist(l)=0.5)=yes;
+put_utility 'log' / 'Laplace';
+$batinclude cont laplace _0_1 0,1
+$batinclude cont laplace _0_2 0,2
+$batinclude cont laplace _0_4 0,4
+skipg(l)=no;
+skipg(l)$(st(l)=6)=yes;
+$batinclude cont laplace _6_2 6,2
+skipg(l)=no;
+skipg(l)$(st(l)=5)=yes;
+$batinclude cont laplace _5_4 5,4
+skipg (l)=no;
+skipig(l)=no;
+
+skipg(l)$(st(l)=1)=yes;
+skipg(l)$(st(l)=2)=yes;
+skipg(l)$(st(l)=5)=yes;
+skipig(l)$(ist(l)=(2-1)/(5-1))=yes;
+put_utility 'log' / 'Triangular';
+$batinclude cont tri _1_2_5 1,2,5
+skipg(l)=no;
+skipig(l)=no;
+skipg(l)$(st(l)=3)=yes;
+skipg(l)$(st(l)=6)=yes;
+skipg(l)$(st(l)=9)=yes;
+skipig(l)$(ist(l)=(6-3)/(9-3))=yes;
+$batinclude cont tri _3_6_9 3,6,9
+skipg(l)=no;
+skipig(l)=no;
+skipg(l)$(st(l)=2)=yes;
+skipg(l)$(st(l)=7)=yes;
+$batinclude cont tri _2_7_7 2,7,7
+skipg(l)=no;
+skipg(l)$(st(l)=8)=yes;
+skipg(l)$(st(l)=10)=yes;
+$batinclude cont tri _8_8_10 8,8,10
+skipg(l)=no;
+
+$call rm -rf disc.gms cont.gms

@@ -1,0 +1,123 @@
+$Title Test disjunctions using not (equivalence) (EMPDISJ3,SEQ=507)
+
+$ontext
+Contributor: Jan-H. Jagla, January 2011
+$offtext
+
+$onechoV > testm1.inc
+abort$(abs(%1.objval-(-2.0))>1e-6) 'Objective value wrong [%1,%2]' , %1.objval;
+abort$(abs(b.l-0.0)         >1e-6) 'b.l wrong [%1,%2]'             , b.l      ;
+abort$(abs(x.l-2.0)         >1e-6) 'x.l wrong [%1,%2]'             , x.l      ;
+$offecho
+
+$onechoV > testm2.inc
+abort$(abs(%1.objval-(-2.1))>1e-6) 'Objective value wrong [%1,%2]' , %1.objval;
+abort$(abs(b.l-1.0)         >1e-6) 'b.l wrong [%1,%2]'             , b.l      ;
+abort$(abs(x.l-1.0)         >1e-6) 'x.l wrong [%1,%2]'             , x.l      ;
+$offecho
+
+variable z,x;
+binary variable b;
+equation obj1,obj2,e1,e2;
+
+obj1.. z =e= -0.9*b - x;
+obj2.. z =e= -1.1*b - x;
+e1.. x =l= 1;
+e2.. x =e= 1;
+
+x.up = 2;
+
+$onecho > jams.opt
+Filename mymodel.gms
+Dict mydoc.txt
+$offecho
+
+model m1  / obj1,e1 /; m1.optcr=0; m1.optfile=1;
+model m2  / obj2,e1 /; m2.optcr=0; m2.optfile=1;
+model m1e / obj1,e2 /; m1e.optcr=0; m1e.optfile=1;
+model m2e / obj2,e2 /; m2e.optcr=0; m2e.optfile=1;
+
+* Test with ConvexHull (default reformulation)
+execute 'echo disjunction chull b e1 else not e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 CHull
+solve m2 us emp min z;
+$batinclude testm2.inc m2 CHull
+$ontext  The following are disabled for now, because convex hull reform on equality equations is not allowed currently.
+execute 'echo disjunction chull b e2 else not e2 > "%emp.info%"';
+solve m1e us emp min z;
+$batinclude testm1.inc m1e CHull
+solve m2e us emp min z;
+$batinclude testm2.inc m2e CHull
+$offtext
+
+* Test with bigM
+execute 'echo disjunction bigM b e1 else not e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 BigM
+solve m2 us emp min z;
+$batinclude testm2.inc m2 BigM
+execute 'echo disjunction bigM b e2 else not e2 > "%emp.info%"';
+solve m1e us emp min z;
+$batinclude testm1.inc m1e BigM
+solve m2e us emp min z;
+$batinclude testm2.inc m2e BigM
+
+* Test with bigM and threshold 0 (means equalities will never be split)
+* m1/m2 test only for the sake of completeness (threshold has no impact on inequalities)
+execute 'echo disjunction bigM 1e4 1e-4 0 b e1 else not e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 BigM2
+solve m2 us emp min z;
+$batinclude testm2.inc m2 BigM2
+execute 'echo disjunction bigM 1e4 1e-4 0 b e2 else not e2 > "%emp.info%"';
+solve m1e us emp min z;
+$batinclude testm1.inc m1e BigM2
+solve m2e us emp min z;
+$batinclude testm2.inc m2e BigM2
+
+$IF not SOLVER cplex $GOTO SCIP
+* Test with Indicators and CPLEX
+option mip=cplex;
+execute 'echo disjunction indic b e1 else not e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 Indic
+solve m2 us emp min z;
+$batinclude testm2.inc m2 Indic
+execute 'echo disjunction indic b e2 else not e2 > "%emp.info%"';
+solve m1e us emp min z;
+$batinclude testm1.inc m1e Indic
+solve m2e us emp min z;
+$batinclude testm2.inc m2e Indic
+
+$LABEL SCIP
+$IF not SOLVER scip $GOTO XPRESS
+* Test with Indicators and SCIP
+option mip=scip;
+execute 'echo disjunction indic b e1 else not e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 Indic
+solve m2 us emp min z;
+$batinclude testm2.inc m2 Indic
+execute 'echo disjunction indic b e2 else not e2 > "%emp.info%"';
+solve m1e us emp min z;
+$batinclude testm1.inc m1e Indic
+solve m2e us emp min z;
+$batinclude testm2.inc m2e Indic
+
+$LABEL XPRESS
+$IF not SOLVER xpress $GOTO DONE
+* Test with Indicators and XPRESS
+option mip=xpress;
+execute 'echo disjunction indic b e1 else not e1 > "%emp.info%"';
+solve m1 us emp min z;
+$batinclude testm1.inc m1 Indic
+solve m2 us emp min z;
+$batinclude testm2.inc m2 Indic
+execute 'echo disjunction indic b e2 else not e2 > "%emp.info%"';
+solve m1e us emp min z;
+$batinclude testm1.inc m1e Indic
+solve m2e us emp min z;
+$batinclude testm2.inc m2e Indic
+
+$LABEL DONE

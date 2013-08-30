@@ -1,0 +1,18 @@
+$TITLE 'Test correctness of arcsin intrinsic' (FNASIN,SEQ=272)
+
+$include fnset_x.inc
+
+$gdxin fnasin
+$load aeps reps0 reps1 reps2 T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = arcsin.value (data(T,'x'));
+  data(T, 'fx')    = arcsin.grad  (data(T,'x'));
+  data(T,'fxx')    = arcsin.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+execerror = 0;
+$include fntest_x.inc

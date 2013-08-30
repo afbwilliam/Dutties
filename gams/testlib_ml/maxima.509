@@ -1,0 +1,132 @@
+$Title Test several maxima of Cmex  (MAXIMA,SEQ=509)
+
+$ontext
+Check if maximum...
+- identifier length
+- explanatory text length
+- number of indices
+- input line length
+- loop depths
+- nested include file depths
+is as expected.
+
+Contributor: M. Bussieck
+$offtext
+
+$maxgoto 1000
+$set id x
+$set cnt 1
+$label startid
+$eval cnt %cnt%+1
+$eval cntmod mod(%cnt%,10)
+$set id %id%%cntmod%
+scalar %id%;
+$if errorfree $goto startid
+$clearerror
+$eval maxidlength %cnt%-1
+
+$set id
+$set cnt 0
+$label startet
+$eval cnt %cnt%+1
+$eval cntmod mod(%cnt%,10)
+$set id %id%%cntmod%
+$if defined y $kill y
+scalar y %id% /1/;
+$if errorfree $goto startet
+$clearerror
+$eval maxetlength %cnt%-1
+
+set i /1/;
+$set id x
+$set idx i
+$set cnt 1
+$label startidx
+$eval cnt %cnt%+1
+$set idx %idx%,i
+$set id %id%x
+parameter %id%(%idx%);
+$if errorfree $goto startidx
+$clearerror
+$eval maxidxlength %cnt%-1
+
+* Need awk since put only writes to 32768 chars per line
+$echo '{printf("*"); for(i=1;i<maxd;i++) printf("x");}' > il.awk
+$set cnt 0
+$set add 1000
+$label startil
+$eval cnt %cnt%+%add%
+$call echo x | awk -v maxd=%cnt% -f il.awk > ilx.gms && gams ilx.gms lo=0
+$if errorlevel 1 $goto stopil
+$goto startil
+$label stopil
+$clearerror
+$ife %add%=1 $goto doneil
+$eval cnt %cnt%-%add%
+$eval add round(%add%/10)
+$goto startil
+$label doneil
+$eval maxillength %cnt%-2
+
+$onechoV > if.gms
+set d /1*%maxd%/
+file fx /ifx.gms/; put fx 'scalar i /1/';
+loop(d, put 'if(i,' /);
+put 'display i;' /;
+loop(d, put ')' /);
+$offecho
+
+$set cnt 0
+$set add 10
+$label startloop
+$eval cnt %cnt%+%add%
+$call gams if.gms --maxd=%cnt% lo=0 && gams ifx.gms lo=0
+$if errorlevel 1 $goto stoploop
+$goto startloop
+$label stoploop
+$clearerror
+$ife %add%=1 $goto doneloop
+$eval cnt %cnt%-%add%
+$eval add round(%add%/10)
+$goto startloop
+$label doneloop
+$eval maxloopdepth %cnt%-1
+
+$onechoV > inc.gms
+set i /1*%maxi%/; alias(i,ii);
+file fx /incx.gms/;
+put fx '$echo set i; > i1.inc ' /;
+loop((i,ii)$sameas(i,ii-1), put '$echo $include i'i.tl:0'.inc > i'ii.tl:0'.inc' /);
+putclose '$include i%maxi%.inc';
+$offecho
+
+$set cnt 0
+$label startinc
+$eval cnt %cnt%+1
+$call gams inc.gms --maxi=%cnt% lo=0 && gams incx.gms lo=0
+$if errorlevel 1 $goto stopinc
+$goto startinc
+$label stopinc
+$clearerror
+$eval maxincdepth %cnt%+1-1
+
+$log 'Maximum identifier length:        ' %maxidlength%
+$log 'Maximum explanatory text length:  ' %maxetlength%
+$log 'Maximum number of indices:        ' %maxidxlength%
+$log 'Maximum input line length:        ' %maxillength%
+$log 'Maximum loop depths:              ' %maxloopdepth%
+$log 'Maximum nested includefile depths:' %maxincdepth%
+
+$set expidlength   63
+$set expetlength   255
+$set expidxlength  20
+$set expillength   80000
+$set exploopdepth  119
+$set expincdepth   40
+
+Abort$(%maxidlength%<>%expidlength%)   'Maximum identifier length should be %expidlength%'
+Abort$(%maxetlength%<>%expetlength%)   'Maximum explanatory text length should be %expetlength%'
+Abort$(%maxidxlength%<>%expidxlength%) 'Maximum  number of indices be %expidxlength%'
+Abort$(%maxillength%<>%expillength%)   'Maximum input line length should be %expillength%'
+Abort$(%maxloopdepth%<>%exploopdepth%) 'Maximum loop depths should be %exploopdepth%'
+Abort$(%maxincdepth%<>%expincdepth%)   'Maximum nested includefile depths should be %expincdepth%'

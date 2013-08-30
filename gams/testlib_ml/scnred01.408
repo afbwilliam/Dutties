@@ -1,0 +1,91 @@
+$TITLE Basic Scenred2 test - tree construction (SCNRED01,SEQ=408)
+
+$Ontext
+Simple check of tree construction in SCENRED-2
+
+Contributor: Steve Dirkse
+$Offtext
+
+sets
+  n  'nodes' /
+     n0     'root - stage 1',
+    (n1*n4) 'stage 2'
+    (n5*n8) 'stage 3'
+  /
+  stage2(n) / (n1*n4) /
+  stage3(n) / (n5*n8) /
+  ancestor(n,n)  'input to scenred, in (child,parent) order'
+  newAncestor(n,n)  'output from scenred'
+  ;
+parameters
+  prob(n)   node probabilities
+  newProb(n)   node probabilities output from scenred
+  price(n)  node prices /
+                     n0 1
+    n1  0.3,   n2 0.3,   n3 0.7,   n4 0.7
+    n5  0.3,   n6 0.7,   n7 0.3,   n8 0.7
+  /
+  ;
+
+ancestor(stage2(n),'n0') = yes;
+ancestor(stage3(n),n-4) = yes;
+
+prob(n) = 1/ card(stage3);
+prob('n0') = 1;
+
+$set sr2prefix scnred01
+$libinclude scenred2
+
+* SETUP SCENRED OPTION FILE *
+file opts / 'sr2%sr2prefix%.opt' /;
+putclose opts 'order           1'
+            / 'section  epsilon'
+            / ' 2  0.05'
+            / ' 3  0.05'
+            / 'end';
+
+* SCENRED2 METHOD CHOICE *
+scenRedParms('construction_method') = 1;
+scenRedParms('reduction_method')    = 1;
+scenRedParms('sroption')            = 1;
+
+$libinclude runscenred2 %sr2prefix% tree_con n ancestor prob newancestor prob price
+
+* now do some checks on the scenred 2 outputs: first the report
+display scenRedReport;
+abort$[scenRedReport('orig_nodes')  <> 9]  'bad report orig_nodes';
+abort$[scenRedReport('orig_leaves') <> 4]  'bad report orig_leaves';
+abort$[scenRedReport('red_nodes')  <> 7]   'bad report red_nodes';
+abort$[scenRedReport('red_leaves') <> 4]   'bad report red_leaves';
+abort$[scenRedReport('construction_method') <> 1] 'bad construction_method';
+
+alias (n,child,parent);
+sets
+  check(n)
+  newStage2(n) 'new set of stage-2 nodes';
+
+
+* check that the tree is what we expect
+display newAncestor;
+abort$[card(newAncestor) <> 6] 'bogus ancestors in constructed tree';
+
+check(n) = NO;
+check(stage3(parent)) = sum{newAncestor(child,parent), YES};
+abort$[card(check) <> 0] 'leaf nodes must not be parents', check;
+
+check(stage3(child)) = sum{newAncestor(child,parent), YES};
+abort$[card(check) <> 4] 'all 4 leaf nodes must be in tree', check;
+
+newStage2(stage2(parent)) = sum{newAncestor(stage3(child),parent), YES};
+abort$[card(newStage2) <> 2] 'new tree must have 2 stage-2 nodes', newStage2;
+
+abort$[2 <> sum{newAncestor(n,'n0'), 1}]
+  'root node must have 2 children', newAncestor;
+
+abort$[2 <> sum{newAncestor(newStage2,'n0'), 1}]
+  'children of root must be new stage-2 nodes', newAncestor;
+
+display prob;
+abort$[prob('n0') <> 1] 'bad root probability';
+abort$[sum{newStage2(n), abs(prob(n)-.5)}  <> 0] 'bad stage 2 probabilities';
+abort$[sum{stage3(n),    abs(prob(n)-.25)} <> 0] 'bad stage 3 probabilities';

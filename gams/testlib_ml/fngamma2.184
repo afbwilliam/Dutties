@@ -1,0 +1,83 @@
+$title 'Test correctness of gamma intrinsic' (FNGAMMA2,SEQ=184)
+
+$include fnset_x.inc
+
+reps0 = 1e-12;
+reps1 = 1e-12;
+* mathnew seems pretty sloppy on 2nd derivs for gamma
+reps2 = 1e-8;
+relToInput = 0;
+set T / t1*t5,
+        t11*t19
+        t21*t24,
+        t30*t39
+        t41
+ /;
+
+* ecDOMAIN=1
+* ecSINGULAR=2
+* ecOVERFLOW=3
+
+$offdigit
+table data(T,V)
+        x       f_                      fx_                     fxx_            rc_     ec_
+t1      0     1e299                     -1e299                  1e299           1       2
+t2     167   9.00369170577843e+297 4.60538543750298e+298        1e299           3       3
+t3     167.2 2.50470014291271e+298      1e299                   1e299           2       3
+t4     168    1e299                     1e299                   1e299           1       3
+t5     200    1e299                     1e299                   1e299           1       3
+
+* the results for t11 and following were obtained via AD techniques using C++,
+* operator overloading, and the GNU GMP/MPFR library with 128-bit precision,
+* using the same algorithm for f_ as is used in mathnew, and the same
+* constants (which are expressed with varying precision)
+* The results agree with Matlab and Mathematica, at least to the
+* precision that we can expect to get from mathnew.
+*       x       f_                      fx_                     fxx_            rc_     ec_
+t11   1.1    0.95135076986687694   -0.40313958879496883    1.5344026430087969
+t12   1.2    0.91816874239976062   -0.26538739835740634    1.2403736810281688
+t13   1.3    0.89747069630627720   -0.15184386483996461    1.0436498185554464
+t14   1.4    0.88726381750307530   -.054464285364277855    0.9131050681684681
+t15   1.5    0.88622692545275803    .032338397448885034    0.8296269073766023
+t16   1.6    0.89351534928769028    0.11262533379171629    0.7812182092671105
+t17   1.7    0.90863873285329047    0.18949467676429813    0.7602807857968788
+t18   1.8    0.93138377098024272    0.26543639583830106    0.7620528501995596
+t19   1.9    0.96176583190738744    0.34256575607418686    0.7836845153955821
+
+*       x       f_                      fx_                     fxx_            rc_     ec_
+t21     1       1                  -0.57721566490153280    1.9781119906559450
+t22     2       1                   0.42278433509846720    0.8236806608528795
+t23     3       2                   1.84556867019693441    2.4929299919026934
+t24     4       6                   7.53670601059080322   11.1699273161019490
+
+*       x       f_                      fx_                     fxx_            rc_     ec_
+t30    13   479001600             1.2099556529671019e9    3.09464168186868391e9
+t31    13.1 6.16897056913806032e8 1.56319183480344967e9   4.00999842248353189e9
+t32    13.2 7.95120469074831396e8 2.02108495363419775e9   5.19989073043754923e9
+t33    13.3 1.02564002516962921e9 2.61507356531350175e9   6.74773847056521706e9
+t34    13.4 1.32402477401656776e9 3.38616348223977668e9   8.76262298431965663e9
+t35    13.5 1.71054206831957322e9 4.38787507497616271e9   1.1387273471779630e10
+t36    13.6 2.21159357330380622e9 5.69010910083087566e9   1.4808566532857686e10
+t37    13.7 2.86159549906601985e9 7.38422048505039388e9   1.9271338079886285e10
+t38    13.8 3.70544205227829227e9 9.58968163820238767e9   2.5096563559100057e10
+t39    13.9 4.80173506817199650e9 1.2462838690899158e10   3.2705302406668464e10
+
+*       x       f_                      fx_                     fxx_            rc_     ec_
+t41    100  9.33262154439437e+155 4.29315696145646e+156   1.97585963221017e+157
+;
+$ondigit
+
+loop {T,
+  data(T,  'f')  = gamma.value(   data(T,'x'));
+  data(T, 'fx')  = gamma.grad(1:  data(T,'x'));
+  data(T,'fxx')  = gamma.hess(1:1:data(T,'x'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display data;
+
+abort$(execerror lt 8)  'Should get execution errors';
+execerror = 0;
+
+$include fntest_x.inc

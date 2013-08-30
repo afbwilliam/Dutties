@@ -1,0 +1,39 @@
+$title CNS model - solvable, singular (cns09,SEQ=99)
+
+$ontext
+  Solvable, singular model with infeasible starting point
+  Apart from the start point, identical to cns10
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+scalar havesol / 0 /;
+
+variable x, y;
+equation e1, e2;
+
+e1 .. x+y =e= 1;
+e2 .. x+y =e= 1;
+
+model m / all /;
+option limrow = 0, limcol = 0;
+
+x.l = 1;  y.l = 1;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%)                            'bad solvestat';
+if   { (m.modelstat = %modelstat.LocallyInfeasible%),
+* locally infeasible, should report a row that way
+  abort$(m.numinfes < 1)                            'wrong .numinfes';
+elseif (m.modelstat = %modelstat.SolvedSingular%),
+* solved singular, should indicate that one dependency exists
+  havesol = 1;
+  abort$(m.numdepnd <> 1)                           'wrong .numdepnd';
+else
+  havesol = 1;
+  abort$(m.modelstat <> %modelstat.Solved%)                         'bad modelstat';
+};
+if {havesol,
+  abort$(abs(x.l+y.l-1) > tol)       'bad x.l+y.l';
+  abort$(abs(e1.l-1) > tol)          'bad e1.l';
+  abort$(abs(e2.l-1) > tol)          'bad e2.l';
+};

@@ -1,0 +1,119 @@
+$Title  External Function - Example 1 (EX1,SEQ=563)
+
+$ontext
+  This is the first in a sequence of examples that show how to
+  use the external function (=X=) facility with GAMS.
+  The first model is a simple unconstrained quadratic model
+  and the quadratic function is defined in an external function.
+$offtext
+
+set i / i1*i4 /
+alias (i,j);
+
+parameter Q(i,j) Covariance Matrix
+          X0(i)  Targets;
+Q(i,j) = power(0.5, abs(ord(i)-ord(j)) );
+X0(i)  = ord(i);
+display Q, X0;
+
+variables x(i), z;
+equations zdef, zdefX;
+
+* The desired equation, implemented in GAMS, is
+
+  zdef .. sum( (i,j), (x(i)-x0(i)) * Q(i,j) * (x(j)-x0(j) ) ) =e= z;
+
+* It is implemented as an external equation as:
+
+  zdefX .. sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 1;
+
+$ontext
+  The coefficients in the equation show that the X-variables are
+  numbered from 1 to card(i) and Z has number card(i)+1 in the
+  External Function code.
+  There is only one external equation and it has number 1, the value
+  of the right hand side.
+  Note that all variables in the equations must be assigned a variable
+  number and that they all must appear in the external function. You
+  cannot as yet tell the solver that some of the terms are linear
+  -- all terms are nonlinear from the solver's point of view.
+$offtext
+
+model ex1      'GAMS implementation'                         / zdef /;
+model ex1c     'External functions in C'                     / zdefX /;
+model ex1c_cb  'External functions in C, with callbacks'     / zdefX /;
+model ex1d     'External functions in Delphi'                / zdefX /;
+model ex1d_cb  'External functions in Delphi with callbacks' / zdefX /;
+model ex1f     'External functions in F77'                   / zdefX /;
+model ex1f_cb  'External functions in F77, with callbacks'   / zdefX /;
+model Ex1j     'External functions in Java'                  / zdefX /;
+
+
+option limcol = 0;
+
+*  Check the solution against the targets:
+
+parameter report(*,*,*) Solution Summary;
+scalar totdist /0/;
+
+$onechoV > runme.gms
+z.l = 0;
+z.m = 0;
+x.l(i) = 0;
+x.m(i) = 0;
+zdef.l = 0;
+zdef.m = 0;
+solve %1 using nlp minimizing z;
+abort$(%1.solvestat <> 1) 'problems running model %1';
+report('Solve ','Stat',  '%1') = %1.solvestat;
+report('Model ','Stat',  '%1') = %1.modelstat;
+report(i,'Target',  '%1') = x0(i);
+report(i,'Value',   '%1') = x.l(i);
+report(i,'Distance','%1') = abs(x.l(i) - x0(i));
+totdist = totdist + sum(i,abs(x.l(i) - x0(i)));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC '1' set runC_cb '1' set runD '1' set runD_cb '1' set runF '1' set runF_cb '1' set runJ '1'
+
+$ifthen not set nocomp
+$  ifi set runC    $call gams complink lo=%gams.lo% --lang=c         --files=ex1c.c                                       --libname=ex1c%ext%      
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=ex1c_cb.c                                     --libname=ex1c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runD    $call gams complink lo=%gams.lo% --lang=Delphi    --files=ex1d.dpr
+$  if errorlevel 1 $abort Error compiling Delphi Library
+$  ifi set runD_cb $call gams complink lo=%gams.lo% --lang=Delphi    --files=ex1d_cb.dpr
+$  if errorlevel 1 $abort Error compiling Delphi Library
+$  ifi set runF    $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 ex1f.f90"%eq%               --libname=ex1f%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 ex1f_cb.f90"%eq% --libname=ex1f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$  ifi set runJ    $call gams complink lo=%gams.lo% --lang=java      --files=Ex1j.java                                     --libname=Ex1j%ext%    --namestub=Ex1j
+$  if errorlevel 1 $abort Error compiling Java Library
+$endif
+
+$                batinclude runme ex1
+$if set runC    $batinclude runme ex1c
+$if set runC_cb $batinclude runme ex1c_cb
+$if set runD    $batinclude runme ex1d
+$if set runD_cb $batinclude runme ex1d_cb
+$if set runF    $batinclude runme ex1f
+$if set runF_cb $batinclude runme ex1f_cb
+*for Java: before using the DLL make sure jvm.dll is in the PATH (e.g. C:\Program Files\Java\jre6\bin\client)
+$if set runJ    $batinclude runme Ex1j
+
+display report;
+
+if ((totdist < 1.0E-5),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect ex1.lst for details.";
+);

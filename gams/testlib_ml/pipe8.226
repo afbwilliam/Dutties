@@ -1,0 +1,10 @@
+$title 'Test that projecting to self works OK' (PIPE8,SEQ=226)
+
+* AB00772
+
+set i(i) /i1,i2/;
+parameter x(i),y(i);
+x(i)=ord(i);  y(i) = x(i);
+option x<x;
+display x,y
+abort$sum(i, x(i) <> y(i)) x,y;

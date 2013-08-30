@@ -1,0 +1,14 @@
+$title day of week test starting Monday Jan 7, 2002 (DATTIM2,SEQ=17)
+
+set w /day-1*day-7/, err(w);
+parameters date, dow(w);
+
+date   = jdate(2002,1,7);
+dow(w) =  gdow(date + ord(w) - 1);
+
+err(w) = dow(w) <> ord(w);
+
+display dow;
+
+abort$card(err) 'gdow is wrong', err,dow;
+

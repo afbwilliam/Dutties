@@ -1,0 +1,5 @@
+$title 'Test that we can read a Mac-formatted file' (COMPILE6,SEQ=336)
+
+$call gmsunzip -qo macsource.zip
+$call gams trnsport.mac lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot read mac formatted file'

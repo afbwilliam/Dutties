@@ -1,0 +1,16 @@
+$title Test if we can get the user and computer name in a trace file (TRACEUC,SEQ=584)
+* Contributer: Michael Bussieck
+
+
+$call gamslib -q trnsport
+$onecho > TRNSPORT.trc
+* Trace Record Definition
+* GamsStep
+* UserName ComputerName LP
+$offecho
+$call gams trnsport lo=2 lp bdmlp trace=TRNSPORT.trc
+* Make sure trace works (we find bdmlp)
+$call grep -i bdmlp TRNSPORT.trc > %system.nullfile%
+$if errorlevel 1 $abort 'bdmlp not found in trace file'
+$call grep -i unknown TRNSPORT.trc > %system.nullfile%
+$if not errorlevel 1 $abort 'unknown detected in user or computer name'

@@ -1,0 +1,96 @@
+$title 'Test correctness of rpower intrinsic' (FNRPOW3,SEQ=196)
+
+* test x**y
+* Test the exception cases - we assume other tests have been made
+* for the usual case of nice input and no exceptions
+
+$include fnset_xy.inc
+
+reps = 2e-13;
+relToInput = 0;
+set T / t1 * t27 /;
+
+* ecDOMAIN=1
+* ecSINGULAR=2
+* ecOVERFLOW=3
+
+$set EPP   1e-40
+$set DF    1e10
+$set OFLO  1.e299
+
+* eps implies we compute the right value in the model
+table data(T,V)
+        x       y       f_      fx_     fy_     fxx_    fxy_    fyy_    rc_     ec_
+t1      -1      0                                                       1       1
+t2      0       -1                                                      1       1
+t3      0       0       1                                               2       1
+t4      0       0.5     0       %DF%    0                               2       1
+t5      0       1       0       1       0                               3       2
+t6      0       1.5     0       0       0       %OFLO%                  3       2
+t7      0       2       0       0       0       2                       3       2
+t8      0       2.5     0       0       0       0       0       0
+t9      %EPP%   0       1                                               2       1
+t10     %EPP%   0.5     0       %DF%    0                               2       1
+t11     %EPP%   1       0       1       0                               3       2
+t12     %EPP%   1.5     0       0       0       %OFLO%                  3       2
+t13     %EPP%   2       0       0       0       2                       3       2
+t14     %EPP%   2.5     0       0       0       0       0       0
+t15     0.5     0.5     EPS     EPS     EPS     EPS     EPS     EPS
+t16     0.5     1.5     EPS     EPS     EPS     EPS     EPS     EPS
+t17     1.5     0.5     EPS     EPS     EPS     EPS     EPS     EPS
+t18     1.5     1.5     EPS     EPS     EPS     EPS     EPS     EPS
+
+* test cases where x > 1 and we have some exceptions
+t19     1e10    31      %OFLO%  %OFLO%  %OFLO%  %OFLO%  %OFLO%  %OFLO%  1       3
+t20     1e149   2       EPS     EPS     %OFLO%  EPS     %OFLO%  %OFLO%  2       3
+t21     10      298     EPS     %OFLO%  EPS     %OFLO%  %OFLO%  EPS     2       3
+t22     1e147   2       EPS     EPS     EPS     EPS     EPS     %OFLO%  0       0
+t23     10      297     EPS     EPS     EPS     %OFLO%  EPS     EPS     0       0
+
+* test cases where x < 1 and we have some exceptions
+t24     1e-10   -31     %OFLO%  -%OFLO% -%OFLO% %OFLO%  %OFLO%  %OFLO%  1       3
+t25     1e-1    -298.9  EPS     -%OFLO% -%OFLO% %OFLO%  %OFLO%  %OFLO%  2       3
+t26     1e-24   -12     EPS     -%OFLO% EPS     %OFLO%  %OFLO%  EPS     2       3
+t27     1e-24   -11     EPS     EPS     EPS     %OFLO%  EPS     EPS     0       0
+
+;
+
+set TT(T);
+
+TT(T) = data(T,'f_') and eps = data(t,'f_');
+data(TT,'f_'  ) = exp(data(TT,'y')*log(data(TT,'x')));
+
+TT(T) = data(T,'fx_') and eps = data(t,'fx_');
+data(TT,'fx_' ) = data(TT,'f_')*(data(TT,'y')/data(TT,'x'));
+
+TT(T) = data(T,'fy_') and eps = data(t,'fy_');
+data(TT,'fy_' ) = data(TT,'f_')*log(data(TT,'x'));
+
+TT(T) = data(T,'fxx_') and eps = data(t,'fxx_');
+data(TT,'fxx_') = data(TT,'fx_')*(data(TT,'y')-1)/data(TT,'x');
+
+TT(T) = data(T,'fxy_') and eps = data(t,'fxy_');
+data(TT,'fxy_') = (data(TT,'fy_')*data(TT,'y')+data(TT,'f_'))/data(TT,'x');
+
+TT(T) = data(T,'fyy_') and eps = data(t,'fyy_');
+data(TT,'fyy_') = data(TT,'fy_')*log(data(TT,'x'));
+
+data(T,'fyx_') = data(T,'fxy_');
+
+loop {T,
+  data(T,  'f')    = rpower.value(   data(T,'x'),data(T,'y'));
+  data(T, 'fx')    = rpower.grad(1:  data(T,'x'),data(T,'y'));
+  data(T, 'fy')    = rpower.grad(2:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')    = rpower.hess(1:1:data(T,'x'),data(T,'y'));
+  data(T,'fxy')    = rpower.hess(1:2:data(T,'x'),data(T,'y'));
+  data(T,'fyx')    = rpower.hess(2:1:data(T,'x'),data(T,'y'));
+  data(T,'fyy')    = rpower.hess(2:2:data(T,'x'),data(T,'y'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+abort$(execerror lt 10)
+ 'Should get execution errors getting func/grad/hess of x**y';
+execerror = 0;
+
+$include fntest_xy.inc

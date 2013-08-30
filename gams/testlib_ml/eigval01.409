@@ -1,0 +1,49 @@
+$title Test eigenvalue utility (EIGVAL01,SEQ=409)
+
+$ontext
+
+Eigenvalue example.
+
+Contributor: Erwin Kalvelagen, October 2008.
+
+
+octave:1> a=[9 1 1; 1 9 1; 1 1 9]
+a =
+
+  9  1  1
+  1  9  1
+  1  1  9
+
+octave:2> eig(a)
+ans =
+
+   8
+   8
+  11
+
+
+$offtext
+
+set i /i1*i3/;
+alias (i,j);
+
+table a(i,j)
+      i1   i2   i3
+i1     9    1    1
+i2     1    9    1
+i3     1    1    9
+
+;
+
+scalar rc;
+parameter e(i) 'eigenvalues';
+
+execute_unload 'mat.gdx',i,a;
+execute 'eigenvalue mat.gdx i a ev.gdx e > eigenvalue.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from eigenvalue', rc;
+execute_load 'ev.gdx',e;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading eigenvalues from ev.gdx', rc;
+
+display a,e;

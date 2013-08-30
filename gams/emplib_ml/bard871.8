@@ -1,0 +1,40 @@
+$title Practical Bilevel Optimization Example 8.7.1 (BARD871,SEQ=8)
+
+$ontext
+Example from Chapter 8, example 8.7.1, page 358
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications,
+Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+*The reported solution is
+scalar x_l /11.25/
+       y_l /    5/
+       tol / 1e-3/;
+
+positive variables x,y; variables objout,objin;
+equations defout,defin,e1,e2;
+
+defout.. objout =e= 16*sqr(x) + 9*sqr(y);
+defin..  objin  =e= power(x+y-20,4);
+
+e1.. -4*x + y =l= 0;
+e2..  4*x + y =l= 50;
+
+model bard / all /;
+
+$echo bilevel x min objin * defin e2 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l ;
+y.l = y_l;
+
+solve bard us emp min objout;
+
+abort$(  (abs(x.l - x_l ) > tol)
+      or (abs(y.l - y_l ) > tol) ) 'Deviated from known solution';
+
+

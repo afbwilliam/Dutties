@@ -1,0 +1,563 @@
+<html>
+<head>
+<title>GEV Options</title>
+</head>
+<body>
+<h2>GEV Options</h2>
+
+<h2>Summary of GEV Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General options</h3></th></tr>
+<tr><td><a href="#GEVAlgFileType">
+AlgFileType</a></td>
+<td>File type of scratch files</td></tr>
+<tr><td><a href="#GEVCheat">
+Cheat</a></td>
+<td>optCheat solver default</td></tr>
+<tr><td><a href="#GEVCurSolver">
+CurSolver</a></td>
+<td>Solver id of the last gevcallsolver</td></tr>
+<tr><td><a href="#GEVCutOff">
+CutOff</a></td>
+<td>CutOff solver default</td></tr>
+<tr><td><a href="#GEVDomLim">
+DomLim</a></td>
+<td>Domain violation limit solver default</td></tr>
+<tr><td><a href="#GEVGamsVersion">
+GamsVersion</a></td>
+<td>GAMS CMEX Version</td></tr>
+<tr><td><a href="#GEVGenSolver">
+GenSolver</a></td>
+<td>Indicator for generic solver executable</td></tr>
+<tr><td><a href="#GEVHeapLimit">
+HeapLimit</a></td>
+<td>Maximum Heap size allowed</td></tr>
+<tr><td><a href="#GEVIDEFlag">
+IDEFlag</a></td>
+<td>IDE Flag</td></tr>
+<tr><td><a href="#GEVInteger1">
+Integer1</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVInteger2">
+Integer2</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVInteger3">
+Integer3</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVInteger4">
+Integer4</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVInteger5">
+Integer5</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVIterLim">
+IterLim</a></td>
+<td>Iteration limit solver default</td></tr>
+<tr><td><a href="#GEVKeep">
+Keep</a></td>
+<td>Keep scratch directory</td></tr>
+<tr><td><a href="#GEVLicense1">
+License1</a></td>
+<td>License line 1</td></tr>
+<tr><td><a href="#GEVLicense2">
+License2</a></td>
+<td>License line 2</td></tr>
+<tr><td><a href="#GEVLicense3">
+License3</a></td>
+<td>License line 3</td></tr>
+<tr><td><a href="#GEVLicense4">
+License4</a></td>
+<td>License line 4</td></tr>
+<tr><td><a href="#GEVLicense5">
+License5</a></td>
+<td>License line 5</td></tr>
+<tr><td><a href="#GEVLogOption">
+LogOption</a></td>
+<td>Log option</td></tr>
+<tr><td><a href="#GEVNameCtrFile">
+NameCtrFile</a></td>
+<td>Control file name</td></tr>
+<tr><td><a href="#GEVNameCurDir">
+NameCurDir</a></td>
+<td>Current directory</td></tr>
+<tr><td><a href="#GEVNameExtFFile">
+NameExtFFile</a></td>
+<td>External Function file name</td></tr>
+<tr><td><a href="#GEVNameGamsDate">
+NameGamsDate</a></td>
+<td>GAMS Date</td></tr>
+<tr><td><a href="#GEVNameGamsTime">
+NameGamsTime</a></td>
+<td>GAMS Time</td></tr>
+<tr><td><a href="#GEVNameInstr">
+NameInstr</a></td>
+<td>Intruction file name</td></tr>
+<tr><td><a href="#GEVNameLogFile">
+NameLogFile</a></td>
+<td>Log file name</td></tr>
+<tr><td><a href="#GEVNameMatrix">
+NameMatrix</a></td>
+<td>Matrix file name</td></tr>
+<tr><td><a href="#GEVNameParams">
+NameParams</a></td>
+<td>Parameter file name</td></tr>
+<tr><td><a href="#GEVNameScenFile">
+NameScenFile</a></td>
+<td>Scenario file name</td></tr>
+<tr><td><a href="#GEVNameScrDir">
+NameScrDir</a></td>
+<td>Scratch directory</td></tr>
+<tr><td><a href="#GEVNameScrExt">
+NameScrExt</a></td>
+<td>Scratch extension</td></tr>
+<tr><td><a href="#GEVNameStaFile">
+NameStaFile</a></td>
+<td>Status file name</td></tr>
+<tr><td><a href="#GEVNameSysDir">
+NameSysDir</a></td>
+<td>System directory</td></tr>
+<tr><td><a href="#GEVNameWrkDir">
+NameWrkDir</a></td>
+<td>Working directory</td></tr>
+<tr><td><a href="#GEVNodeLim">
+NodeLim</a></td>
+<td>Node limit solver default</td></tr>
+<tr><td><a href="#GEVOptCA">
+OptCA</a></td>
+<td>optAbsolute Optimality criterion solver default</td></tr>
+<tr><td><a href="#GEVOptCR">
+OptCR</a></td>
+<td>optRelative Optimality criterion solver default</td></tr>
+<tr><td><a href="#GEVPageSize">
+PageSize</a></td>
+<td>Output file page size</td></tr>
+<tr><td><a href="#GEVPageWidth">
+PageWidth</a></td>
+<td>Output file page width</td></tr>
+<tr><td><a href="#GEVReal1">
+Real1</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVReal2">
+Real2</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVReal3">
+Real3</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVReal4">
+Real4</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVReal5">
+Real5</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVReform">
+Reform</a></td>
+<td>Reform option</td></tr>
+<tr><td><a href="#GEVResLim">
+ResLim</a></td>
+<td>Resource (CPU) solver default limit</td></tr>
+<tr><td><a href="#GEVSysOut">
+SysOut</a></td>
+<td>Solver Status file reporting option</td></tr>
+<tr><td><a href="#GEVThreadsRaw">
+ThreadsRaw</a></td>
+<td></td></tr>
+<tr><td><a href="#GEVTryInt">
+TryInt</a></td>
+<td>TryInt solver default</td></tr>
+<tr><td><a href="#GEVUseCheat">
+UseCheat</a></td>
+<td>UseCheat solver default</td></tr>
+<tr><td><a href="#GEVUseCutOff">
+UseCutOff</a></td>
+<td>UseCutOff solver default</td></tr>
+<tr><td><a href="#GEVWorkFactor">
+WorkFactor</a></td>
+<td>Work space multiplier for some solvers</td></tr>
+<tr><td><a href="#GEVWorkSpace">
+WorkSpace</a></td>
+<td>Work space for some solvers</td></tr></table>
+<h2>Detailed Descriptions of GEV Options</h2>
+
+<h4><a name="GEVAlgFileType">
+AlgFileType</a>
+<i> (integer)</i> File type of scratch files</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GEVCheat">
+Cheat</a>
+<i> (real)</i> optCheat solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVCurSolver">
+CurSolver</a>
+<i> (integer)</i> Solver id of the last gevcallsolver</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVCutOff">
+CutOff</a>
+<i> (real)</i> CutOff solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVDomLim">
+DomLim</a>
+<i> (integer)</i> Domain violation limit solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVGamsVersion">
+GamsVersion</a>
+<i> (integer)</i> GAMS CMEX Version</h4><p>
+
+
+<br><i>(default = 999)</i>
+
+<h4><a name="GEVGenSolver">
+GenSolver</a>
+<i> (integer)</i> Indicator for generic solver executable</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVHeapLimit">
+HeapLimit</a>
+<i> (real)</i> Maximum Heap size allowed</h4><p>
+
+
+<br><i>(default = 1e20)</i>
+
+<h4><a name="GEVIDEFlag">
+IDEFlag</a>
+<i> (integer)</i> IDE Flag</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>unknown environment</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>runs under GAMS IDE</td></tr>
+</table>
+
+<h4><a name="GEVInteger1">
+Integer1</a>
+<i> (integer)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVInteger2">
+Integer2</a>
+<i> (integer)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVInteger3">
+Integer3</a>
+<i> (integer)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVInteger4">
+Integer4</a>
+<i> (integer)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVInteger5">
+Integer5</a>
+<i> (integer)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVIterLim">
+IterLim</a>
+<i> (integer)</i> Iteration limit solver default</h4><p>
+
+
+<br><i>(default = 2000000000)</i>
+
+<h4><a name="GEVKeep">
+Keep</a>
+<i> (integer)</i> Keep scratch directory</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVLicense1">
+License1</a>
+<i> (string)</i> License line 1</h4><p>
+
+
+
+<h4><a name="GEVLicense2">
+License2</a>
+<i> (string)</i> License line 2</h4><p>
+
+
+
+<h4><a name="GEVLicense3">
+License3</a>
+<i> (string)</i> License line 3</h4><p>
+
+
+
+<h4><a name="GEVLicense4">
+License4</a>
+<i> (string)</i> License line 4</h4><p>
+
+
+
+<h4><a name="GEVLicense5">
+License5</a>
+<i> (string)</i> License line 5</h4><p>
+
+
+
+<h4><a name="GEVLogOption">
+LogOption</a>
+<i> (integer)</i> Log option</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no log output</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>log output to screen (console)</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>log output to logfile</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>log output to standard output</td></tr>
+</table>
+
+<h4><a name="GEVNameCtrFile">
+NameCtrFile</a>
+<i> (string)</i> Control file name</h4><p>
+
+
+
+<h4><a name="GEVNameCurDir">
+NameCurDir</a>
+<i> (string)</i> Current directory</h4><p>
+
+
+
+<h4><a name="GEVNameExtFFile">
+NameExtFFile</a>
+<i> (string)</i> External Function file name</h4><p>
+
+
+
+<h4><a name="GEVNameGamsDate">
+NameGamsDate</a>
+<i> (string)</i> GAMS Date</h4><p>
+
+
+
+<h4><a name="GEVNameGamsTime">
+NameGamsTime</a>
+<i> (string)</i> GAMS Time</h4><p>
+
+
+
+<h4><a name="GEVNameInstr">
+NameInstr</a>
+<i> (string)</i> Intruction file name</h4><p>
+
+
+
+<h4><a name="GEVNameLogFile">
+NameLogFile</a>
+<i> (string)</i> Log file name</h4><p>
+
+
+
+<h4><a name="GEVNameMatrix">
+NameMatrix</a>
+<i> (string)</i> Matrix file name</h4><p>
+
+
+
+<h4><a name="GEVNameParams">
+NameParams</a>
+<i> (string)</i> Parameter file name</h4><p>
+
+
+
+<h4><a name="GEVNameScenFile">
+NameScenFile</a>
+<i> (string)</i> Scenario file name</h4><p>
+
+
+
+<h4><a name="GEVNameScrDir">
+NameScrDir</a>
+<i> (string)</i> Scratch directory</h4><p>
+
+
+
+<h4><a name="GEVNameScrExt">
+NameScrExt</a>
+<i> (string)</i> Scratch extension</h4><p>
+
+
+<br><i>(default = dat)</i>
+
+<h4><a name="GEVNameStaFile">
+NameStaFile</a>
+<i> (string)</i> Status file name</h4><p>
+
+
+
+<h4><a name="GEVNameSysDir">
+NameSysDir</a>
+<i> (string)</i> System directory</h4><p>
+
+
+
+<h4><a name="GEVNameWrkDir">
+NameWrkDir</a>
+<i> (string)</i> Working directory</h4><p>
+
+
+
+<h4><a name="GEVNodeLim">
+NodeLim</a>
+<i> (integer)</i> Node limit solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVOptCA">
+OptCA</a>
+<i> (real)</i> optAbsolute Optimality criterion solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVOptCR">
+OptCR</a>
+<i> (real)</i> optRelative Optimality criterion solver default</h4><p>
+
+
+<br><i>(default = 0.1)</i>
+
+<h4><a name="GEVPageSize">
+PageSize</a>
+<i> (integer)</i> Output file page size</h4><p>
+
+
+<br><i>(default = 78)</i>
+
+<h4><a name="GEVPageWidth">
+PageWidth</a>
+<i> (integer)</i> Output file page width</h4><p>
+
+
+<br><i>(default = 123)</i>
+
+<h4><a name="GEVReal1">
+Real1</a>
+<i> (real)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVReal2">
+Real2</a>
+<i> (real)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVReal3">
+Real3</a>
+<i> (real)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVReal4">
+Real4</a>
+<i> (real)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVReal5">
+Real5</a>
+<i> (real)</i> </h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVReform">
+Reform</a>
+<i> (integer)</i> Reform option</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="GEVResLim">
+ResLim</a>
+<i> (real)</i> Resource (CPU) solver default limit</h4><p>
+
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="GEVSysOut">
+SysOut</a>
+<i> (integer)</i> Solver Status file reporting option</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVThreadsRaw">
+ThreadsRaw</a>
+<i> (integer)</i> </h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GEVTryInt">
+TryInt</a>
+<i> (real)</i> TryInt solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVUseCheat">
+UseCheat</a>
+<i> (integer)</i> UseCheat solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVUseCutOff">
+UseCutOff</a>
+<i> (integer)</i> UseCutOff solver default</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="GEVWorkFactor">
+WorkFactor</a>
+<i> (real)</i> Work space multiplier for some solvers</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="GEVWorkSpace">
+WorkSpace</a>
+<i> (real)</i> Work space for some solvers</h4><p>
+
+
+<br><i>(default = 0)</i>
+</body></html>

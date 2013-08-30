@@ -1,0 +1,23 @@
+*
+* optlingo.def
+*
+
+DotLng string 0 "lingo.lng" 1 2 LINGO input file name
+DotLngOnly boolean 0 0 0 2 Generate .lng file only
+Include immediate ReadFile 0 2 Start reading from a new file
+Inspect boolean 0 0 0 2 Inspect LINGO output files via interactive shell
+IterLim integer 0 0 0 maxint 1 1 Minor iteration limit
+LingoPath string 0 "" 1 1 Path to LINGO system files
+ObjName string 0 "" 0 2 Obj variable name
+OptCR double 0 0 0 maxdouble 1 1 Relative termination for MIPs and Global Optimization Problems
+ResLim double 0 0 0 maxdouble 1 1 Resource limit
+RunLingo string 0 "" 0 1 Lingo executable
+Option strlist 0 0 1 Verbation LINGO options
+myeolchar EOLCOMM #
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+General group 1 1 General option
+Other group 2 1 Other options
+*** End of file

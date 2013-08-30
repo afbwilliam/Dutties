@@ -1,0 +1,16 @@
+$title Check GDX output of loop2 (resorting search records in a loop) (LOOP3,SEQ=135)
+
+$ontext
+
+Check that the loop2 model gives the same results with different
+option settings.
+
+Contributor: Paul van der Eijk, May-26-2004
+$offtext
+
+$call gams loop2.gms sys11=1 gdx=sys1 lo=%GAMS.lo%
+$if errorlevel 1 $error Sys11 could not run loop2.gms
+$call gams loop2.gms sys11=2 gdx=sys2 lo=%GAMS.lo%
+$if errorlevel 1 $error Sys11 could not run loop2.gms
+$call gdxdiff sys1 sys2 > %system.nullfile%
+$if errorlevel 1 $error Sys11 problem in loop

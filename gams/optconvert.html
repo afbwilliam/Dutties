@@ -1,0 +1,375 @@
+<html>
+<head>
+<title>CONVERT Options</title>
+</head>
+<body>
+<h2>CONVERT Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/convert.pdf">CONVERT manual</a>.
+
+<h2>Summary of CONVERT Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Target languages</h3></th></tr>
+<tr><td><a href="#CONVERTAll">
+All</a></td>
+<td>Generates all supported file formats</td></tr>
+<tr><td><a href="#CONVERTAlphaECP">
+AlphaECP</a></td>
+<td>Generates AlphaECP input file</td></tr>
+<tr><td><a href="#CONVERTAmpl">
+Ampl</a></td>
+<td>Generates Ampl input file</td></tr>
+<tr><td><a href="#CONVERTAmplNLC">
+AmplNLC</a></td>
+<td>Generate Ampl NLC compatible file</td></tr>
+<tr><td><a href="#CONVERTAnalyze">
+Analyze</a></td>
+<td>Generates three text files for rows columns and matrix</td></tr>
+<tr><td><a href="#CONVERTAnalyzeS">
+AnalyzeS</a></td>
+<td>Generates short form of Analyze</td></tr>
+<tr><td><a href="#CONVERTBaron">
+Baron</a></td>
+<td>Generates Baron input file</td></tr>
+<tr><td><a href="#CONVERTCplexLP">
+CplexLP</a></td>
+<td>Generate CPLEX LP format input file</td></tr>
+<tr><td><a href="#CONVERTCplexMPS">
+CplexMPS</a></td>
+<td>Generate CPLEX MPS format input file</td></tr>
+<tr><td><a href="#CONVERTCppAD">
+CppAD</a></td>
+<td>Generate AD IPOPT format</td></tr>
+<tr><td><a href="#CONVERTDict">
+Dict</a></td>
+<td>Generate Convert to GAMS Dictionary</td></tr>
+<tr><td><a href="#CONVERTDictMap">
+DictMap</a></td>
+<td>Generate Convert to GAMS Dictionary Map</td></tr>
+<tr><td><a href="#CONVERTFileList">
+FileList</a></td>
+<td>Generate file list of file formats generated</td></tr>
+<tr><td><a href="#CONVERTFixedMPS">
+FixedMPS</a></td>
+<td>Generate fixed format MPS file</td></tr>
+<tr><td><a href="#CONVERTGams">
+Gams</a></td>
+<td>Generate GAMS scalar model. This is the default conversion format used.</td></tr>
+<tr><td><a href="#CONVERTLago">
+Lago</a></td>
+<td>Generate a partial Lago file</td></tr>
+<tr><td><a href="#CONVERTLgo">
+Lgo</a></td>
+<td>Generate an LGO Fortran file</td></tr>
+<tr><td><a href="#CONVERTLindoMPI">
+LindoMPI</a></td>
+<td>Generate Lindo MPI file</td></tr>
+<tr><td><a href="#CONVERTLingo">
+Lingo</a></td>
+<td>Generate Lingo input file</td></tr>
+<tr><td><a href="#CONVERTLocalSolver">
+LocalSolver</a></td>
+<td>Generate LocalSolver input file (only with ConvertD)</td></tr>
+<tr><td><a href="#CONVERTLSPSol">
+LSPSol</a></td>
+<td>Generate Output function in LocalSolver input file (only with ConvertD)</td></tr>
+<tr><td><a href="#CONVERTMemo">
+Memo</a></td>
+<td>Generate a memo file containing model statistics and files created.</td></tr>
+<tr><td><a href="#CONVERTMinopt">
+Minopt</a></td>
+<td>Generate Minopt input file</td></tr>
+<tr><td><a href="#CONVERTNLP2MCP">
+NLP2MCP</a></td>
+<td>Generates GAMS scalar MCP model</td></tr>
+<tr><td><a href="#CONVERTOSiL">
+OSiL</a></td>
+<td>Generates Optimization Services instance Language (OSil) file</td></tr>
+<tr><td><a href="#CONVERTSFS">
+SFS</a></td>
+<td>Generates Solver Foundation Services OML file</td></tr>
+<tr><td><a href="#CONVERTViennaDag">
+ViennaDag</a></td>
+<td>Generate Vienna Dag input file</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Other options</h3></th></tr>
+<tr><td><a href="#CONVERTConeReform">
+ConeReform</a></td>
+<td>Reformulation of cone =C= constraints to NLP format</td></tr>
+<tr><td><a href="#CONVERTGmsInsert">
+GmsInsert</a></td>
+<td>Insert text before solve</td></tr>
+<tr><td><a href="#CONVERTHessian">
+Hessian</a></td>
+<td>Writes GDX version of current point - Jacobian and Hessian</td></tr>
+<tr><td><a href="#CONVERTInclude">
+Include</a></td>
+<td>Start reading from a new file</td></tr>
+<tr><td><a href="#CONVERTJacobian">
+Jacobian</a></td>
+<td>Writes GDX version of current point - Jacobian</td></tr>
+<tr><td><a href="#CONVERTMatch">
+Match</a></td>
+<td>Force a complete match for all MCP variable/equation pairs</td></tr>
+<tr><td><a href="#CONVERTObjVar">
+ObjVar</a></td>
+<td>Name of objective variable.</td></tr>
+<tr><td><a href="#CONVERTReform">
+Reform</a></td>
+<td>Force reformulations</td></tr>
+<tr><td><a href="#CONVERTTerminate">
+Terminate</a></td>
+<td>Force Gams to terminate after conversion</td></tr></table>
+<h2>Detailed Descriptions of CONVERT Options</h2>
+
+<h4><a name="CONVERTAll">
+All</a>
+<i> (integer)</i> Generates all supported file formats</h4><p>
+
+
+
+<h4><a name="CONVERTAlphaECP">
+AlphaECP</a>
+<i> (string)</i> Generates AlphaECP input file</h4><p>
+
+
+<br><i>(default = alpha.ecp)</i>
+
+<h4><a name="CONVERTAmpl">
+Ampl</a>
+<i> (string)</i> Generates Ampl input file</h4><p>
+
+
+<br><i>(default = ampl.mod)</i>
+
+<h4><a name="CONVERTAmplNLC">
+AmplNLC</a>
+<i> (string)</i> Generate Ampl NLC compatible file</h4><p>
+
+
+<br><i>(default = amplnlc.c)</i>
+
+<h4><a name="CONVERTAnalyze">
+Analyze</a>
+<i> (string)</i> Generates three text files for rows columns and matrix</h4><p>
+
+
+<br><i>(default = analyze.txt)</i>
+
+<h4><a name="CONVERTAnalyzeS">
+AnalyzeS</a>
+<i> (string)</i> Generates short form of Analyze</h4><p>
+
+
+<br><i>(default = analyzes.txt)</i>
+
+<h4><a name="CONVERTBaron">
+Baron</a>
+<i> (string)</i> Generates Baron input file</h4><p>
+
+
+<br><i>(default = gams.bar)</i>
+
+<h4><a name="CONVERTConeReform">
+ConeReform</a>
+<i> (integer)</i> Reformulation of cone =C= constraints to NLP format</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>keep =C= format</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>convert conic constraints to NLP format</td></tr>
+</table>
+
+<h4><a name="CONVERTCplexLP">
+CplexLP</a>
+<i> (string)</i> Generate CPLEX LP format input file</h4><p>
+
+
+<br><i>(default = cplex.lp)</i>
+
+<h4><a name="CONVERTCplexMPS">
+CplexMPS</a>
+<i> (string)</i> Generate CPLEX MPS format input file</h4><p>
+
+
+<br><i>(default = cplex.mps)</i>
+
+<h4><a name="CONVERTCppAD">
+CppAD</a>
+<i> (string)</i> Generate AD IPOPT format</h4><p>
+
+
+<br><i>(default = cppadFunc.cpps)</i>
+
+<h4><a name="CONVERTDict">
+Dict</a>
+<i> (string)</i> Generate Convert to GAMS Dictionary</h4><p>
+
+
+<br><i>(default = dict.txt)</i>
+
+<h4><a name="CONVERTDictMap">
+DictMap</a>
+<i> (string)</i> Generate Convert to GAMS Dictionary Map</h4><p>
+
+
+<br><i>(default = dictmap.gdx)</i>
+
+<h4><a name="CONVERTFileList">
+FileList</a>
+<i> (string)</i> Generate file list of file formats generated</h4><p>
+
+
+<br><i>(default = files.txt)</i>
+
+<h4><a name="CONVERTFixedMPS">
+FixedMPS</a>
+<i> (string)</i> Generate fixed format MPS file</h4><p>
+
+
+<br><i>(default = fixed.mps)</i>
+
+<h4><a name="CONVERTGams">
+Gams</a>
+<i> (string)</i> Generate GAMS scalar model. This is the default conversion format used.</h4><p>
+
+
+<br><i>(default = gams.gms)</i>
+
+<h4><a name="CONVERTGmsInsert">
+GmsInsert</a>
+<i> (string)</i> Insert text before solve</h4><p>
+
+
+<br><i>(default = $if NOT '%gams.u1%' == '' $include '%gams.u1%')</i>
+
+<h4><a name="CONVERTHessian">
+Hessian</a>
+<i> (string)</i> Writes GDX version of current point - Jacobian and Hessian</h4><p>
+
+
+<br><i>(default = hessian.gdx)</i>
+
+<h4><a name="CONVERTInclude">
+Include</a>
+<i> (string)</i> Start reading from a new file</h4><p>
+
+
+
+<h4><a name="CONVERTJacobian">
+Jacobian</a>
+<i> (string)</i> Writes GDX version of current point - Jacobian</h4><p>
+
+
+<br><i>(default = jacobian.gdx)</i>
+
+<h4><a name="CONVERTLago">
+Lago</a>
+<i> (string)</i> Generate a partial Lago file</h4><p>
+
+
+<br><i>(default = lago.gms)</i>
+
+<h4><a name="CONVERTLgo">
+Lgo</a>
+<i> (string)</i> Generate an LGO Fortran file</h4><p>
+
+
+<br><i>(default = lgomain.for)</i>
+
+<h4><a name="CONVERTLindoMPI">
+LindoMPI</a>
+<i> (string)</i> Generate Lindo MPI file</h4><p>
+
+
+<br><i>(default = lindo.mpi)</i>
+
+<h4><a name="CONVERTLingo">
+Lingo</a>
+<i> (string)</i> Generate Lingo input file</h4><p>
+
+
+<br><i>(default = lingo.lng)</i>
+
+<h4><a name="CONVERTLocalSolver">
+LocalSolver</a>
+<i> (string)</i> Generate LocalSolver input file (only with ConvertD)</h4><p>
+
+
+<br><i>(default = localsolver.lsp)</i>
+
+<h4><a name="CONVERTLSPSol">
+LSPSol</a>
+<i> (string)</i> Generate Output function in LocalSolver input file (only with ConvertD)</h4><p>
+
+
+<br><i>(default = lspsol.gms)</i>
+
+<h4><a name="CONVERTMatch">
+Match</a>
+<i> (integer)</i> Force a complete match for all MCP variable/equation pairs</h4><p>
+
+
+
+<h4><a name="CONVERTMemo">
+Memo</a>
+<i> (string)</i> Generate a memo file containing model statistics and files created.</h4><p>
+
+
+<br><i>(default = memo.txt)</i>
+
+<h4><a name="CONVERTMinopt">
+Minopt</a>
+<i> (string)</i> Generate Minopt input file</h4><p>
+
+
+<br><i>(default = minopt.dat)</i>
+
+<h4><a name="CONVERTNLP2MCP">
+NLP2MCP</a>
+<i> (string)</i> Generates GAMS scalar MCP model</h4><p>
+
+
+<br><i>(default = gamsmcp.gms)</i>
+
+<h4><a name="CONVERTObjVar">
+ObjVar</a>
+<i> (string)</i> Name of objective variable.</h4><p>
+
+
+<br><i>(default = GAMS index name, e.g. x1)</i>
+
+<h4><a name="CONVERTOSiL">
+OSiL</a>
+<i> (string)</i> Generates Optimization Services instance Language (OSil) file</h4><p>
+
+
+<br><i>(default = osil.xml)</i>
+
+<h4><a name="CONVERTReform">
+Reform</a>
+<i> (integer)</i> Force reformulations</h4><p>
+
+
+<br><i>(default = 100)</i>
+
+<h4><a name="CONVERTSFS">
+SFS</a>
+<i> (string)</i> Generates Solver Foundation Services OML file</h4><p>
+
+
+<br><i>(default = sfs.oml)</i>
+
+<h4><a name="CONVERTTerminate">
+Terminate</a>
+<i> (integer)</i> Force Gams to terminate after conversion</h4><p>
+
+
+
+<h4><a name="CONVERTViennaDag">
+ViennaDag</a>
+<i> (string)</i> Generate Vienna Dag input file</h4><p>
+
+
+<br><i>(default = vienna.dag)</i>
+</body></html>

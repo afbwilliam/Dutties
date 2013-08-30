@@ -1,0 +1,8 @@
+$title With onmulti we can expand the domain (ONMULTI1,SEQ=23)
+set i    / a, b /
+    k(i) / a    /;
+
+$onmulti
+
+set i    / a,    c /
+    k    / a, b, c /;

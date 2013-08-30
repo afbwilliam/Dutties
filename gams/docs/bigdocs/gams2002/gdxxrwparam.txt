@@ -1,0 +1,30 @@
+se=0
+set=i1            rng=sheet1!a2:c2      cdim=1
+dset=i1a          rng=sheet1!a2:c2      cdim=1
+set=i3            rng=sheet1!a9:e10     cdim=1
+dset=i4           rng=sheet1!a13        cdim=1
+se=0
+set=i4a           rng=sheet1!a13        cdim=1            dim=1
+se=0
+set=i5            rng=sheet1!a16        cdim=1
+set=i6            rng=sheet1!b20:d20    cdim=1
+dset=i6a          rng=sheet1!b20:d20    cdim=1
+dset=i6c          rng=sheet1!b20:d21    cdim=1
+dset=i7           rng=sheet1!b26:e26    cdim=1
+dset=i8           rng=sheet1!b27:e27    cdim=1
+set=i9            rng=sheet1!b20:c21    cdim=1
+set=i10           rng=sheet1!b26:e27    cdim=2
+set=i10a          rng=sheet1!b26:e27    cdim=2
+set=j1            rng=sheet1!a35:a37    cdim=0    rdim=1
+dset=j1a          rng=sheet1!a35:a37    cdim=0    rdim=1
+set=j2            rng=sheet1!a40:b43    cdim=0    rdim=1
+set=j3            rng=sheet1!a46:b50    cdim=0    rdim=1
+dset=j4           rng=sheet1!a21:a23    cdim=0    rdim=1
+dset=j5           rng=sheet1!a53:a56    cdim=0    rdim=1
+dset=j6           rng=sheet1!b53:b56    cdim=0    rdim=1
+par=distance      rng=sheet1!a20:d23    cdim=1    rdim=1
+par=distance2     rng=sheet1!a20:d23
+par=modedistance  rng=sheet1!a26:e31    cdim=2    rdim=1
+par=modedistance2 rng=sheet1!a52:e56    cdim=1    rdim=2
+par=modedistance3 rng=skipempty!a2:g69  cdim=1    rdim=2
+par=modedistance4 rng=skipempty!a2:g69  cdim=1    rdim=2

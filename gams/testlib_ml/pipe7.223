@@ -1,0 +1,32 @@
+$title 'Test the elemcount on two dim sets' (PIPE7,SEQ=223)
+
+* AB00753:cmex::after remap using option card is wrong
+
+set i /i1*i100/
+    j /j1*j100/;
+
+set ij(i,j);
+ij(i,j)$(uniform(0,1) < 0.01)=yes;
+
+scalar n1,n2,nd1,nd2;
+n1 = card(ij); display n1;
+
+set ji(j,i);
+option ji < ij;
+
+n2 = card(ji); display n2;
+nd1 = sum(j, 1$sum(ji(j,i), yes));
+nd2 = sum(i, 1$sum(ji(j,i), yes));
+display nd1,nd2;
+
+abort$(n1 <> n2)"card dim=2 wrong";
+
+set k /k1*k3/;
+set ijk(i,j,k);
+ijk(i,j,k)$(uniform(0,1) < 0.02) = yes;
+n1 = card(ijk); display n1;
+
+set jki(j,k,i);
+option jki < ijk;
+n2 = card(jki);
+abort$(n1 <> n2)"card dim=3 wrong";

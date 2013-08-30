@@ -1,0 +1,87 @@
+$title Test limits on nonlinear code length per block (NLCODE2,SEQ=110)
+
+$ontext
+  Test that we can have equation blocks with close to the maximum
+  number of NL instructions per block, and that we can do this
+  for two blocks at once.
+  This puts the total count over the per-block limit, which should not
+  cause any problems.
+  If the limits in GAMS/Base are changed, change maxInsPerBlock below.
+  Could we get maxInsPerBlock from GAMS/Base?
+
+  Limit for non-linear instruction code is now 2147483k. It is the same for the
+  block. We can not test it on all out machines because of memory limitations.
+$offtext
+* this check requires a license
+$if not set DEMOSIZE      $set DEMOSIZE   0
+$if not %DEMOSIZE% == 0   $exit
+
+scalars
+  ins1, insDelta,
+  maxInsPerBlock / 16777216 /;
+
+sets   I     / i1 * i2000 /,
+       II(I) / i1 * i2 /,
+       J     / j1 * j1000 /;
+
+parameter c(J), b(J);
+b(J) = uniform(0.5,1.5);
+c(J) = uniform(0,2);
+
+free variable v(I), z;
+positive variable x(J);
+x.lo(J) = c(J) + 1e-4;
+
+equations f(I), g(I), obj;
+
+* ugly and strange way to write v = sum {.., sqr(x-c)}
+
+f(II).. v(II) =g= sum {J, (x(J)-c(J))**b(J) * (x(J)-c(J))**(2-b(J))};
+g(II).. v(II) =g= sum {J, (x(J)-c(J))**b(J) * (x(J)-c(J))**(2-b(J))};
+
+obj..  z =e= sum{II, v(II)} / card(II);
+
+model m / obj, f, g /;
+
+* to get a dump of the NL instructions do this
+* option sys3 = 3;
+
+option limrow = 0, limcol = 0;
+m.solprint = %SOLPRINT.Summary%;
+
+II(I) = (ord(I) le 1);
+solve m using nlp min z;
+display m.numnlins;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)  'wrong status codes';
+ins1 = m.numnlins;
+
+II(I) = (ord(I) le 2);
+solve m using nlp min z;
+display m.numnlins;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)  'wrong status codes';
+insDelta = m.numnlins - ins1;
+
+
+* now bump up size enough so the total is greater
+* than the amount allowed in one block, but each block is OK
+* card(II)*insDelta =~ 1.9 * maxInsPerBlock
+II(I) = yes$(ord(I) <= 1.9 * maxInsPerBlock / insDelta);
+solve m using nlp min z;
+display m.numnlins;
+* just check that we're in the ballpark here
+abort$(m.numnlins gt 1.99 * maxInsPerBlock) 'wrong instruction count';
+abort$(m.numnlins lt 1.85 * maxInsPerBlock) 'wrong instruction count';
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)  'wrong status codes';
+
+
+* now bump up size enough to trigger an error for
+* too many NL instructions in an equation block
+II(I) = yes$(ord(I) <= 2.2 * maxInsPerBlock / insDelta);
+
+* we do not have a good way to test for this yet!
+$exit
+
+solve m using nlp min z;
+display m.numnlins;
+
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Optimal%)  'wrong status codes';

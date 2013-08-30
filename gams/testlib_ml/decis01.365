@@ -1,0 +1,29 @@
+$Title Test of small DECIS Models with DECISC and DECISM (decis01,SEQ=365)
+$Ontext
+
+This models tests the GAMS modlib models
+197.APL1P
+198.APL1PCA
+199.FARM
+
+with both DECISC and DECISM
+
+Contributor: Jan-H. Jagla
+$Offtext
+
+$set decistst decistst.gms
+
+$onechoV > %decistst%
+
+$call gamslib -q %1
+$call gams %1 --decisalg=decisc lo=2
+$if errorlevel 1 $abort "%1 with decisc failed"
+$call gams %1 --decisalg=decism lo=2
+$if errorlevel 1 $abort "%1 with decism failed"
+
+$offecho
+
+$batinclude %decistst% apl1p
+$batinclude %decistst% apl1pca
+$batinclude %decistst% farm
+

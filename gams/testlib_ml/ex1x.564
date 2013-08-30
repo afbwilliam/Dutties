@@ -1,0 +1,89 @@
+$Title  External Function - Example 1x (EX1X,SEQ=564)
+
+$ontext
+  This is a revised version ot example 1 in which the Fortran
+  routine shows how to use the advanced features of defining
+  constant derivatives and Hessian time Vector values.
+$offtext
+
+set i / i1*i20 /
+alias (i,j);
+
+parameter Q(i,j) Covariance Matrix
+          X0(i)  Targets;
+Q(i,j) = power(0.5, abs(ord(i)-ord(j)) );
+X0(i)  = ord(i);
+display Q, X0;
+
+variables x(i), z;
+equations zdef, zdefX;
+
+* The desired equation, implemented in GAMS, is
+
+  zdef .. sum( (i,j), (x(i)-x0(i)) * Q(i,j) * (x(j)-x0(j) ) ) =e= z;
+
+* It is implemented as an external equation as:
+
+  zdefX .. sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 1;
+
+$ontext
+  We cannot in zdefX define that some coefficients are constant.
+  This will be done using a new facility in the external module.
+$offtext
+
+model ex1x     'GAMS implementation'                           / zdef /;
+model ex1xc_cb 'External functions with extra capability: C'   / zdefX /;
+model ex1xf    'External functions with extra capability: F77' / zdefX /;
+
+option limcol = 0, sysout = on;
+
+*  Check the solution against the targets:
+
+parameter report(*,*,*) Solution Summary;
+scalar totdist /0/;
+
+$onechoV > runme.gms
+z.l = 0;
+z.m = 0;
+x.l(i) = 0;
+x.m(i) = 0;
+zdef.l = 0;
+zdef.m = 0;
+solve %1 using nlp minimizing z;
+abort$(%1.solvestat <> 1) 'problems running model %1';
+report('Solve ','Stat',  '%1') = %1.solvestat;
+report('Model ','Stat',  '%1') = %1.modelstat;
+report(i,'Target',  '%1') = x0(i);
+report(i,'Value',   '%1') = x.l(i);
+report(i,'Distance','%1') = abs(x.l(i) - x0(i));
+totdist = totdist + sum(i,abs(x.l(i) - x0(i)));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runF '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=ex1xc_cb.c                                     --libname=ex1xc_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF    $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 ex1xf.f90"%eq%               --libname=ex1xf%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme ex1x
+$if set runC_cb $batinclude runme ex1xc_cb
+$if set runF    $batinclude runme ex1xf
+
+display report;
+
+if ((totdist < 1.0E-5),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect ex1.lst for details.";
+);

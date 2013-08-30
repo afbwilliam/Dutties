@@ -1,0 +1,9 @@
+$title option clear cannot clear predefined symbols (CLEAR5,SEQ=13)
+option clear=sameas, clear=diag ;
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$problem
+$error cannot option clear predefined symbols
+

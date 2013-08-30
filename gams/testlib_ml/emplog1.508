@@ -1,0 +1,43 @@
+$Title Test disjunctions and logical conditions  (EMPLOG1,SEQ=508)
+
+$ontext
+This model compares the results of the two variants of the food model, with and
+without EMP.
+
+Contributor: Jan-H. Jagla, January 2011
+$offtext
+
+$call gamslib -q food
+$if errorlevel 1 $abort Could not retrieve model food from gamslib
+
+$call emplib -q foodemp
+$if errorlevel 1 $abort Could not retrieve model foodemp from emplib
+
+$call gams food.gms lo=2 gdx=food.gdx
+$if errorlevel 1 $abort Failure running food
+
+$call gams foodemp.gms lo=2 gdx=foodemp.gdx
+$if errorlevel 1 $abort Failure running foodemp
+
+Sets m      planing period
+     p      raw oils
+
+Variables
+     induse(m,p)   indicator for usage of raw oil per month
+     induseEMP(m,p)   indicator for usage of raw oil per month
+     profit        objective variable
+     profitEMP        objective variable;
+
+$gdxin food
+$load m,p,induse,profit
+
+$gdxin foodemp
+$load induseEMP=induse,profitEMP=profit
+
+abort$(abs(profit.l-profitEMP.l) > 1e-6) 'profit.l differs', profit.l, profitEMP.l;
+
+*model has multiple solution, following test is not necessarily passed
+$exit
+set indusediff(m,p);
+indusediff(m,p) = abs(induse.l(m,p) - induseEMP.l(m,p)) > 1e-6;
+abort$card(induseDiff) 'induse.l differs', induseDiff, induse.l, induseEMP.l;

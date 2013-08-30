@@ -1,0 +1,13 @@
+$title Illustrate rules for matching =N= equations in MCP (MCP04,SEQ=130)
+
+$ontext
+
+This model illustrates the matching rules for equation/variable pairs
+in MCP models, for equations of type =N=.
+
+Contributor: Steve Dirkse, May 2004
+$offtext
+
+$set EQTYPE =N=
+
+$include mcp0x.inc

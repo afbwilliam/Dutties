@@ -1,0 +1,95 @@
+$title 'test new dictionary (starting with cmex 147)' (DICT1,SEQ=328)
+
+$ontext
+
+Starting with CMEX 147 the dictionary contains only those labels
+that are referenced by the model rim.  We test this by adding
+set elements to sets that are not used.  We use convert to
+create two dictionary files and compare to be equal.
+
+Contributor: Alex Meeraus
+$offtext
+
+$if not gamsversion 147 $terminate
+
+$ondollar
+$echo garbage > t1.gms
+$onechoV      > t1.gms
+$if NOT set N $set N '0'
+$set first '' set last  '' set jjfirst '' set jjlast ''
+$if NOT '%N%' == '0' $set first 'f1*f%N%' set last  'l1*l%N%' set jjfirst 'jf1*jf%N%,' set jjlast ',jl1*jl%N%'
+$onempty
+option profile=1;
+set first(*) / %first% /;
+
+  Sets
+       ii   canning plants   / seattle, san-diego /
+       jj  markets           / %jjfirst% new-york, chicago, topeka %jjlast% /
+       j(jj) markets         /           new-york, chicago, topeka  /
+alias(i,ii)
+set last(*) / %last% /;
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        2.5           1.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+  Variables
+       x(ii,jj)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       empty(jj,i)  empty equation
+       supply(i)   observe supply limit at plant i
+       cost        define objective function
+       demand(jj)   satisfy demand at market j ;
+
+  empty(jj,i)$no .. z =e= 0;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model transport /all/ ;
+
+  Solve transport using lp minimizing z ;
+*execute 'dir %gams.scrdir%'
+* copy dictionary file to current directory
+execute 'awk -v inum=%N% -f dict.awk "%gams.scrdir%gamscntr.%gams.scrext%"'
+$offecho
+
+$call rm -f dict0.txt dict100.txt
+
+* dictionary file name is located in line 24 in the control file
+$echo 'NR==24 { system("cp \"" $0 "\"   dict" inum ".txt");}' > dict.awk
+
+$call gams t1   --N=0    lp=convert lo=2
+$call gams t1   --N=100  lp=convert lo=2
+
+$if not exist dict0.txt   $abort 'missing dict0.txt'
+$if not exist dict100.txt $abort 'missing dict100.txt'
+
+* $call diff -q dict0.txt dict100.txt
+$call diff dict0.txt dict100.txt > %system.nullfile%
+$if errorlevel 1 $abort dictionaries are not equal

@@ -1,0 +1,147 @@
+$title Data Envelopment Analysis - DEA (DEA,SEQ=192)
+$ontext
+Data Envelopment Analysis (DEA) is a technique for measuring the relative
+performance of organizational units where presence of multiple inputs and
+outputs makes comparison difficult.
+
+            efficiency = weighted sum of output / weighted sum of input
+
+Find weights that maximize the efficiency for one unit while ensuring
+that no other units has an efficiency < 1 using these weights. A primal
+and dual formulation is presented.
+
+
+Dyson, Thanassoulis, and Boussofiane, A DEA Tutorial.
+Warwick Business School. http://www.deazone.com/tutorial/
+
+$offtext
+
+sets  i     units
+      is(i) selected unit
+      j     inputs and outputs
+      ji(j) inputs
+      jo(j)            outputs
+
+Parameter data(i,j) unit input  output
+          vlo       v lower bound
+          ulo       u lower bound
+          norm      normalizing constant
+
+Variables v(ji) input weights
+          u(jo) output weights
+          eff   efficiency
+          var   dual convexity
+
+          lam(i) dual weights
+          vs(ji) input duals
+          us(jo) output duals
+          Z
+
+positive variables u,v,vs,us,lam;
+
+Equations defe(i)  efficiency definition - weighted output
+          denom(i) weighted input
+          lime(i)  'output / input < 1'
+          dii(i,ji) input duals
+          dio(i,jo) output dual
+          defvar    variable return to scale
+          dobj      dual objective;
+
+*  primal model
+
+defe(is)..   eff =e= sum(jo, u(jo)*data(is,jo)) - 1*var;
+
+denom(is)..  sum(ji, v(ji)*data(is,ji)) =e= norm;
+
+lime(i)..    sum(jo, u(jo)*data(i,jo)) =l= sum(ji, v(ji)*data(i,ji)) + var;
+
+*  dual model
+
+dii(is,ji).. sum(i, lam(i)*data(i,ji)) + vs(ji) =e= z*data(is,ji);
+
+dio(is,jo).. sum(i, lam(i)*data(i,jo)) - us(jo) =e=     data(is,jo);
+
+defvar..     sum(i, lam(i)) =e= 1;
+
+dobj.. eff =e= norm*z - vlo*sum(ji, vs(ji)) - ulo*sum(jo, us(jo));
+
+
+
+
+
+model deap  primal / defe, denom,lime /
+      deadc dual with CRS / dobj, dii, dio /
+      deadv dual with VRS / dobj, dii, dio, defvar  /
+
+sets  i  units / Depot1*Depot20 /
+      j     inputs and outputs / stock, wages, issues, receipts, reqs /
+      ji(j) inputs             / stock, wages                         /
+      jo(j)            outputs /               issues, receipts, reqs /
+
+
+Table data(i,j)
+         stock  wages  issues  receipts  reqs
+Depot1     3      5      40       55      30
+Depot2     2.5    4.5    45       50      40
+Depot3     4      6      55       45      30
+Depot4     6      7      48       20      60
+Depot5     2.3    3.5    28       50      25
+Depot6     4      6.5    48       20      65
+Depot7     7     10      80       65      57
+Depot8     4.4    6.4    25       48      30
+Depot9     3      5      45       64      42
+Depot10    5      7      70       65      48
+Depot11    5      7      45       65      40
+Depot12    2      4      45       40      44
+Depot13    5      7      65       25      35
+Depot14    4      4      38       18      64
+Depot15    2      3      20       50      15
+Depot16    3      6      38       20      60
+Depot17    7     11      68       64      54
+Depot18    4      6      25       38      20
+Depot19    3      4      45       67      32
+Depot20    3      6      57       60      40
+
+$eolcom //
+option limcol=0           // no column listing
+       limrow=0           // no row listing
+       solveopt=replace;  // don't keep old var and equ values
+
+
+
+var.fx = 0;       // to run CRS with the primal model
+*var.lo = -inf;   // to run VRS with the primal model
+*var.up = +inf;   // to run VRS with the primal model
+vlo=1e-4;
+ulo=1e-4;
+norm=100;
+
+v.lo(ji) = vlo;
+u.lo(jo) = ulo;
+
+*deadc.solprint=%solprint.Quiet%;
+*deadv.solprint=%solprint.Quiet%;
+*deap.solprint=%solprint.Quiet%;
+
+set ii(i) set of units to analyze / depot1,depot2,depot18 /;
+
+*ii(i) = yes;      // use to run all depots
+is(i) = no;
+
+parameter rep summary report;
+
+loop(ii,
+   is(ii) = yes;
+   solve deap us lp max eff;
+   rep(i,ii) =  sum(jo, u.l(jo)*data(i,jo))/sum(ji, v.l(ji)*data(i,ji));
+   rep('MStat-p',ii) = deap.modelstat;
+   solve deadc us lp min eff ;
+   rep('MStat-d',ii) = deadc.modelstat;
+   rep('obj-check',ii) = deadc.objval - deap.objval;
+   is(ii) = no);
+
+rep(i,'Min') = smin(ii, rep(i,ii));
+rep(i,'Max') = smax(ii, rep(i,ii));
+rep(i,'Avg') =  sum(ii, rep(i,ii))/card(ii);
+
+display rep;

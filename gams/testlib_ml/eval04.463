@@ -1,0 +1,102 @@
+$title test constant compile time evaluation operators (EVAL04,SEQ=463)
+
+$ontext
+
+Operators
+
+OR XOR EQV IMP
+AND
+NOT
+< <= = <> >= > LE LE EQ NE GE GT
++ - unary -
+* /
+
+** ** ** Additional tests are welcome ** ** **
+
+Contributor: Alex
+$offtext
+
+$ondollar
+
+set f / opOR,opXOR,opEQV,opIMP,opAND,opEQ,opNE,opLE,opGE,opLT,opGT,opNOT,opPLUS,
+        opMINUS,opUNARY,opMUL,opDIV /
+    c / 1*10 /
+    v / calculated, expected /;
+
+$onundf
+
+table res(f,c,v) calculated and expected function values
+
+            calculated           expected
+opOR.1      [undf or undf]       undf
+opOR.2      [0 or 0]             0
+opOR.3      [0 or 1]             1
+opOR.4      [1 or 0]             1
+opOR.5      [1 or 1]             1
+opOR.6      [inf or inf]         1
+
+opXOR.1     [undf or undf]       undf
+opXOR.2     [0 xor 0]            0
+opXOR.3     [0 xor 1]            1
+opXOR.4     [1 xor 0]            1
+opXOR.5     [1 xor 1]            0
+opXOR.6     [inf xor inf]        0
+
+opEQV.1     [undf or undf]       undf
+opEQV.2     [0 eqv 0]            1
+opEQV.3     [0 eqv 1]            0
+opEQV.4     [1 eqv 0]            0
+opEQV.5     [1 eqv 1]            1
+opEQV.6     [inf eqv inf]        1
+
+opIMP.1     [undf or undf]       undf
+opIMP.2     [0 imp 0]            1
+opIMP.3     [0 imp 1]            1
+opIMP.4     [1 imp 0]            0
+opIMP.5     [1 imp 1]            1
+opIMP.6     [inf imp inf]        1
+
+opAND.1     [undf and undf]      undf
+opAND.2     [0 and 0]            0
+opAnd.3     [+inf and -inf]      1
+
+opEQ.1      [undf = undf]        1
+opEQ.2      [undf = 1]           0
+
+opNE.1      [undf <> undf]       0
+opNE.2      [undf <> 1]          1
+
+opLE.1      [undf <= inf]        undf
+opLE.2      [-inf <= +inf]       1
+
+opNOT.1     [not undf]           undf
+opNOT.2     [not 0]              1
+opNOT.3     [not inf]            0
+
+opPLUS.1    [undf + 5]           undf
+
+opMINUS.1   [undf - 3]           undf
+opMINUS.2   [inf-inf]            undf
+opMINUS.3   [-(inf+1)-inf]      -inf
+
+opUNARY.1   [-(undf+1)]          undf
+opUNARY.2   [-(inf+3)]          -inf
+
+opMUL.1     [undf*3]             undf
+opMUL.2     [1e200*1e200]        inf
+opMUL.3     [inf*0]              undf
+
+opDIV.1     [undf/3]             undf
+opDIV.2     [0/undf]             undf
+opDIV.3     [inf/inf]            undf
+opDIV.4     [5/0]                inf
+
+
+Parameters diff(f,c,v) differences; set fc(f,c) differences;
+
+fc(f,c) = res(f,c,'calculated') <> res(f,c,'expected');
+diff(fc,v) = res(fc,v);
+
+display diff;
+
+abort$card(diff) 'results do not match';

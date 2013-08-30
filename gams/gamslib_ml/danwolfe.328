@@ -1,0 +1,203 @@
+$Title Dantzig Wolfe Decomposition and Grid Computing (DANWOLFE,SEQ=328)
+
+$ontext
+
+This example implements the well known Dantzig Wolfe decomposition method. This
+method exploits the structure in linear programs where the coefficient matrix
+has the special form:
+
+     B0  B1  B2 ... Bk
+         A1
+             A2
+                .
+                 .  Ak
+
+The specific model is a multi-commodity network flow problem where Ak
+corresponds to a commodity flow and Bk represents arc capacities.
+
+
+Dantzig, G B, and Wolfe, P, Decomposition principle for linear
+programs. Operations Research 8 (1960), 101-111.
+
+$offtext
+
+$Eolcom !
+
+$setddlist nodes comm maxtime
+$if NOT set nodes   $set nodes    20
+$if NOT set comm    $set comm      5
+$if NOT set maxtime $set maxtime 100
+$if NOT errorfree $abort wrong double dash parameters: --nodes=n --comm=n --maxtime=secs
+
+sets i      nodes   / n1*n%nodes% /
+     k commodities  / k1*k%comm% /
+     e(i,i) edges
+alias (i,j)
+
+parameters
+    cost(i,j) cost for edge use
+    bal(k,i)  balance
+    kdem(k)   demand
+    cap(i,j)  bundle capacity ;
+
+variables
+   x(k,i,j) multi commodity flow
+   z        objective
+positive variable x;
+equations
+   defbal(k,i) balancing constraint
+   defcap(i,j) bundling capacity
+   defobj;
+
+defobj.. z =e= sum((k,e), cost(e)*x(k,e));
+
+defbal(k,i).. sum(e(i,j), x(k,e)) - sum(e(j,i),x(k,e)) =e= bal(k,i);
+
+defcap(e).. sum(k, x(k,e)) =l= cap(e);
+
+model mcf multi-commodity flow problem /all/;
+
+
+**** make a random instance
+
+scalars inum, edgedensity /0.3/ ;
+
+e(i,j)  = uniform(0,1) < edgedensity; e(i,i) = no;
+cost(e) = uniform(1,10);
+cap(e)  = uniform(50,100)*log(card(k));
+
+loop(k,
+   kdem(k) = uniform(50,150);
+   inum    = uniformInt(1,card(i)); bal(k,i)$(ord(i)=inum) = kdem(k);
+   inum    = uniformInt(1,card(i)); bal(k,i)$(ord(i)=inum) = bal(k,i) - kdem(k);
+   kdem(k) = sum(i$(bal(k,i)>0), bal(k,i)) );
+
+
+**** see if the random model is feasible
+
+option limrow=0, limcol=0;
+option solprint=off, solvelink=%solvelink.CallModule%;
+solve mcf min z using lp;
+abort$(mcf.modelstat <> %modelstat.Optimal%) 'problem not feasible. Increase edge density.'
+
+parameter xsingle(k,i,j) single solve; xsingle(k,e) = x.l(k,e); display$(card(i) < 30) xsingle;
+
+**** define master model
+
+set p paths idents / p1*p100 /
+    ap(k,p)     active path
+    pe(k,p,i,j) edge path incidence vector
+parameter
+    pcost(k,p) path cost
+
+positive variable xp(k,p), slack(k);
+equations
+    mdefcap(i,j) bundle constraint
+    mdefbal(k) balance constraint
+    mdefobj objective;
+
+mdefobj.. z =e= sum(ap, pcost(ap)*xp(ap)) + sum(k, 99999*slack(k));
+
+mdefbal(k).. sum(ap(k,p), xp(ap)) + slack(k) =e= kdem(k);
+
+mdefcap(e).. sum(pe(ap,e), xp(ap)) =l= cap(e);
+
+model master / mdefobj, mdefbal, mdefcap /;
+
+**** define pricing model
+
+parameter ebal(i)
+positive variable xe(i,j)
+equations
+    pdefbal(i) balance constraint
+    pdefobj objective;
+
+pdefobj.. z =e= sum(e, (cost(e)-mdefcap.m(e))*xe(e));
+
+pdefbal(i).. sum(e(i,j), xe(e)) - sum(e(j,i),xe(e)) =e= ebal(i);
+
+model pricing / pdefobj, pdefbal /;
+
+
+**** serial decomposition method
+
+Scalar done  loop indicator, iter iteration counter;
+Set nextp(k,p) next path to be added ;
+
+* clear path data
+done = 0; iter = 0;
+ap(k,p) = no; pe(k,p,e) = no;
+pcost(k,p) = 0;
+nextp(k,p) = no; nextp(k,'p1') = yes;
+
+While(not done, iter=iter+1;
+   solve master using lp minimizing z;
+   done = 1;
+   loop(k$kdem(k),
+     ebal(i) = bal(k,i)/kdem(k);
+     solve pricing using lp minimizing z;
+     pricing.solprint=%solprint.Quiet%; ! turn off all outputs fpr pricing model
+     if (mdefbal.m(k) - z.l > 1e-6,  ! add new path
+       ap(nextp(k,p)) = yes;
+       pe(nextp(k,p),e) = xe.l(e);
+       pcost(nextp(k,p)) = sum(pe(nextp,e), cost(e));
+       nextp(k,p) = nextp(k,p-1);  ! bump the path to the next free one
+       abort$(sum(nextp(k,p),1)=0) 'set p too small';
+       done = 0 ) ) );
+
+abort$(abs(master.objval-mcf.objval)>1e-3) 'different objective values', master.objval, mcf.objval;
+
+parameter xserial(k,i,j); xserial(k,e) = sum(pe(ap(k,p),e), xp.l(ap)); display$(card(i) < 30) xserial;
+
+
+**** Now the same with the Grid option
+
+parameter h(k) model handles;
+pricing.solvelink=%solvelink.AsyncGrid%; pricing.solprint=%solprint.Summary%;
+
+* clear path data
+done = 0; iter = 0;
+ap(k,p) = no; pe(k,p,e) = no;
+pcost(k,p) = 0;
+nextp(k,p) = no; nextp(k,'p1') = yes;
+
+While(not done, iter=iter+1;
+   solve master using lp minimizing z;
+   done = 1;
+   pricing.number = 0;
+   loop(k$kdem(k),
+     ebal(i) = bal(k,i)/kdem(k);
+     solve pricing using lp minimizing z;
+     pricing.solprint=%solprint.Quiet%; ! turn off all outputs for pricing model
+     h(k) = pricing.handle );
+   repeat
+     loop(k$h(k),
+      if(handlecollect(h(k)),
+         if (mdefbal.m(k) - z.l > 1e-6,
+           ap(nextp(k,p)) = yes;
+           pe(nextp(k,p),e) = xe.l(e);
+           pcost(nextp(k,p)) = sum(pe(nextp,e), cost(e));
+           nextp(k,p) = nextp(k,p-1); abort$(sum(nextp(k,p),1)=0) 'set p too small';
+           done = 0 );
+         display$handledelete(h(k)) 'trouble deleting handles' ;
+         h(k) = 0 ) ) ;
+         display$sleep(card(h)*0.1) 'sleep a bit';
+   until card(h) = 0 or timeelapsed > %maxtime%;
+
+   abort$(card(h) and timeelapsed <= %maxtime%) 'not all solves returned', h; );
+
+if( timeelapsed > %maxtime%,
+  display 'Algorithm interrupted because maxtime=%maxtime% has been exceeded!';
+);
+
+abort$(abs(master.objval-mcf.objval)>1e-3 and timeelapsed <= %maxtime%) 'different objective values', master.objval, mcf.objval;
+
+parameter xgrid(k,i,j); xgrid(k,e) = sum(pe(ap(k,p),e), xp.l(ap)); display$(card(i) < 30) xgrid;
+
+parameter xall summary of flows;
+
+xall(k,e,'single') = xsingle(k,e);
+xall(k,e,'serial') = xserial(k,e);
+xall(k,e,'grid')   = xgrid(k,e);
+
+option xall:3:3:1; display xall;

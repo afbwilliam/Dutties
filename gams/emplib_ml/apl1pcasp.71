@@ -1,0 +1,82 @@
+$title Stochastic Electric Power Expansion Planning Problem (APL1PCASP,SEQ=71)
+
+$ontext
+
+Stochastic Electric Power Expansion Planning Problem.
+This is a two-stage stochastic linear program.
+Facing uncertain demand, decisions about generation
+capacity need to be made.
+
+This model is also used as an example in the
+GAMS/DECIS user's guide.
+
+
+Infanger, G, Planning Under Uncertainty - Solving Large-Scale
+Stochastic Linear Programs, 1988.
+
+$offtext
+
+set g generators / g1, g2/;
+set dl demand levels /h, m, l/;
+
+parameter alpha(g) availability / g1  0.68, g2  0.64 /;
+parameter ccmin(g) min capacity / g1  1000, g2  1000 /;
+parameter ccmax(g) max capacity / g1 10000, g2 10000 /;
+parameter c(g) investment       / g1   4.0, g2   2.5 /;
+
+table f(g,dl) operating cost
+             h    m    l
+   g1        4.3  2.0  0.5
+   g2        8.7  4.0  1.0;
+
+parameter hm1(dl) / h 300, m 400, l 200 /;
+parameter hm2(dl) / h 100, m 150, l 300 /;
+parameter df1 random demand multiplier /1/
+          df2 random demand multiplier /1/;
+parameter us(dl) cost of unserved demand / h   10, m   10, l   10 /;
+
+* -----------------------------------------------
+* define the core model
+* -----------------------------------------------
+
+free variable tcost         total cost;
+positive variable x(g)      capacity of generators;
+positive variable y(g, dl)  operation level;
+positive variable s(dl)     unserved demand;
+
+equations
+cost        total cost
+cmin(g)     minimum capacity
+cmax(g)     maximum capacity
+omax(g)     maximum operating level
+demand(dl)  satisfy demand;
+
+cost .. tcost =e=     sum(g, c(g)*x(g))
+                    + sum(g, sum(dl, f(g,dl)*y(g,dl)))
+                    + sum(dl,us(dl)*s(dl));
+
+cmin(g) .. x(g) =g= ccmin(g);
+cmax(g) .. x(g) =l= ccmax(g);
+omax(g) .. sum(dl, y(g,dl)) =l= alpha(g)*x(g);
+demand(dl) .. sum(g, y(g,dl)) + s(dl) =g= df1*hm1(dl) + df2*hm2(dl);
+
+model apl1p /all/;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%' /;
+$onput
+randvar df1 discrete 0.5 2.1   0.5 1.0
+randvar df2 discrete 0.2 2.0   0.8 0.2
+stage 2 df1 df2
+stage 2 omax demand
+stage 2 y s
+$offput
+putclose;
+
+Set scen scenarios / s1*s4 /;
+parameter  s_df1(scen), s_df2(scen);
+
+Set dict / scen .scenario. ''
+           df1  .randvar . s_df1
+           df2  .randvar . s_df2 /;
+
+solve apl1p using emp min tcost scenario dict;

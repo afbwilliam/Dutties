@@ -1,0 +1,31 @@
+$title NLP Test for logoption (LONLP,SEQ=460)
+
+$ontext
+Make sure lo=0 is quiet and lo=2 and lo=3 run without a problem
+
+Contributor: Jan-H. Jagla, September 2009
+$offtext
+
+$set solver %gams.nlp%
+$if %solver% == '' $set solver %system.nlp%
+$log Solver is %solver%
+
+$set model circle
+$call gamslib -q %model%
+$echo "abort$(m.solvestat <> %solvestat.NormalCompletion%) 'Normal Completion expected';" >> %model%.gms
+
+$call rm -f %model%.log
+$call gams %model% nlp=%solver% lo=0
+$if     errorlevel 1 $abort 'problems with lo=0'
+$call test -s %model%.log
+$if not errorlevel 1 $abort '%model%.log exists'
+
+$call gams %model% nlp=%solver% lo=2
+$if     errorlevel 1 $abort 'problems with lo=2'
+$call test -s %model%.log
+$if     errorlevel 1 $abort '%model%.log does not exist'
+
+$call gams %model% nlp=%solver% lo=3 > %model%lo3.log
+$if     errorlevel 1 $abort 'problems with lo=3'
+$call test -s %model%lo3.log
+$if     errorlevel 1 $abort '%model%lo3.log does not exist'

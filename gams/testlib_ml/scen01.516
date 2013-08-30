@@ -1,0 +1,206 @@
+$title Compile time test for Gather-Update-Solve-Scatter (GUSS) (SCEN01, SEQ=516)
+
+$ontext
+
+The early implementation of GUSS had subtle side effects. Therefore,
+the GAMS compiler enforces strict rules for the use of GUSS. This test
+collects a number of these tests.
+
+Contributor: Michael Bussieck
+
+$offtext
+
+
+$call gamslib -q trnsport
+$if errorlevel 1 $abort 'could not retrieve trnsport.gms'
+
+$onechoV >> trnsport.gms
+Solve transport using lp minimizing z scenario dict;
+$if errorfree $abort 'unknown should trigger a compilation error'
+$clearerror
+
+set dict1;
+Solve transport using lp minimizing z scenario dict1;
+$if errorfree $abort 'dict no data should trigger a compilation error'
+$clearerror
+
+set dict2 /x/;
+Solve transport using lp minimizing z scenario dict2;
+$if errorfree $abort 'dict different dim should trigger a compilation error'
+$clearerror
+
+set dict3 /x.x.x/;
+Solve transport using lp minimizing z scenario dict3;
+$if errorfree $abort 'dict unknown keyword should trigger a compilation error'
+$clearerror
+
+set dict4 /xxx.scenario.x/;
+Solve transport using lp minimizing z scenario dict4;
+$if errorfree $abort 'unknown symbol in pos 1 should trigger a compilation error'
+$clearerror
+
+set dict5 /x.scenario.x/;
+Solve transport using lp minimizing z scenario dict5;
+$if errorfree $abort 'symbol in pos 1 not a set should trigger a compilation error'
+$clearerror
+
+set dict6 /i.scenario.x/;
+Solve transport using lp minimizing z scenario dict6;
+$if errorfree $abort 'symbol in pos 3 not blank should trigger a compilation error'
+$clearerror
+
+set dict7 /i.scenario.'', j.scenario.''/;
+Solve transport using lp minimizing z scenario dict7;
+$if errorfree $abort 'symbol in pos 3 not blank should trigger a compilation error'
+$clearerror
+
+set dict8 /i.scenario.''/;
+Solve transport using lp minimizing z scenario dict8;
+$if errorfree $abort 'no updaters should trigger a compilation error'
+$clearerror
+
+set s;
+set dict9 /s.scenario.''/;
+Solve transport using lp minimizing z scenario dict9;
+$if errorfree $abort 'empty scenario set should trigger a compilation error'
+$clearerror
+
+$onmulti
+set dict9 /x.x.x/;
+$offmulti
+$if errorfree $abort 'compile time writing to protected dict should trigger a compilation error'
+$clearerror
+
+dict9('x','x','x') = yes;
+$if errorfree $abort 'execution time writing to protected dict should trigger a compilation error'
+$clearerror
+
+set s /s1/;
+parameter as(s,i) /s1.#i 1/, bs(s,j);
+set dict10 /s.scenario.'', a.param.as/;
+dict10('b','param','bs') = yes;
+Solve transport using lp minimizing z scenario dict10;
+$if errorfree $abort 'execution time writing to dict should trigger a compilation error'
+$clearerror
+
+set dict11 /s.scenario.'', a.param.as, b.param.bs/;
+Solve transport using lp minimizing z scenario dict11;
+$if errorfree $abort 'symbol in pos 3 has no data should trigger a compilation error'
+$clearerror
+
+bs(s,j)=1;
+$kill a
+Solve transport using lp minimizing z scenario dict11;
+$if errorfree $abort 'symbol in pos 1 has no data should trigger a compilation error'
+$clearerror
+a(i) = 1;
+
+set dict12 /s.scenario.'', supply.param.as/;
+Solve transport using lp minimizing z scenario dict12;
+$if errorfree $abort 'symbol in pos 1 not a parameter should trigger a compilation error'
+$clearerror
+
+set bs_set(s,j) / s1.#j /;
+set dict13 /s.scenario.'', b.param.bs_set/;
+Solve transport using lp minimizing z scenario dict13;
+$if errorfree $abort 'symbol in pos 3 not a parameter should trigger a compilation error'
+$clearerror
+
+parameter bsX(s,i,j) / s1.#i.#j 1 /;
+set dict14 /s.scenario.'', b.param.bsX/;
+Solve transport using lp minimizing z scenario dict14;
+$if errorfree $abort 'symbol dimension mismatch should trigger a compilation error'
+$clearerror
+
+Parameter xfix(s,i,j);
+set dict15 /s.scenario.'', x.fixed.xfix/;
+Solve transport using lp minimizing z scenario dict15;
+$if errorfree $abort 'symbol in pos 3 has no data should trigger a compilation error'
+$clearerror
+
+xfix(s,i,j) = 1;
+set dict16 /s.scenario.'', c.fixed.xfix/;
+Solve transport using lp minimizing z scenario dict16;
+$if errorfree $abort 'symbol in pos 1 not a varibale should trigger a compilation error'
+$clearerror
+
+Set xfix_set(s,i,j) /s1.#i.#j/;
+set dict17 /s.scenario.'', x.fixed.xfix_set/;
+Solve transport using lp minimizing z scenario dict17;
+$if errorfree $abort 'symbol in pos 3 not of type parameter should trigger a compilation error'
+$clearerror
+
+parameter xfixX(s,i) / s1.#i 1 /;
+set dict18 /s.scenario.'', x.fixed.xfixX/;
+Solve transport using lp minimizing z scenario dict18;
+$if errorfree $abort 'symbol dimension mismatch should trigger a compilation error'
+$clearerror
+
+variable y(i,j);
+set dict19 /s.scenario.'', y.fixed.xfix/;
+Solve transport using lp minimizing z scenario dict19;
+$if errorfree $abort 'symbol in pos 1 not used in model should trigger a compilation error'
+$clearerror
+
+parameter ds(s,i,j) / s1.#i.#j 1 /;
+set dict20 /s.scenario.'', d.param.ds/;
+Solve transport using lp minimizing z scenario dict20;
+$if errorfree $abort 'symbol in pos 1 not used in model should trigger a compilation error'
+$clearerror
+
+parameter xfixp(i,s,j) / #i.s1.#j 1 /;
+set dict21 /s.scenario.'', x.fixed.xfixp/;
+Solve transport using lp minimizing z scenario dict21;
+$if errorfree $abort 'symbol in pos 3 has inconsistent domain should trigger a compilation error'
+$clearerror
+
+equation e1; e1.. sum((i,j)$c(i,j), x(i,j)) =e= 1;
+model t1 / transport, e1 /;
+set dict22 /s.scenario.'', c.param.ds/;
+Solve t1 using lp minimizing z scenario dict22;
+$if errorfree $abort 'varparms used in $ conditions should trigger a compilation error'
+$clearerror
+
+equation e2; e2.. sum((i,j), power(x(i,j),c(i,j))) =e= 1;
+model t2 / transport, e2 /;
+set dict23 /s.scenario.'', c.param.ds/;
+Solve t2 using lp minimizing z scenario dict23;
+$if errorfree $abort 'varparms used in exogenuous function arguments should trigger a compilation error'
+$clearerror
+
+equation e3; e3$(sum((i,j),c(i,j))>5).. z =e= 4;
+model t3 / transport, e3 /;
+set dict24 /s.scenario.'', c.param.ds/;
+Solve t3 using lp minimizing z scenario dict24;
+$if errorfree $abort 'varparms used in $ conditions should trigger a compilation error'
+$clearerror
+
+set dict25 /s.scenario.'', c.param.ds, c.param.xfix/;
+Solve transport using lp minimizing z scenario dict25;
+$if errorfree $abort 'param symbol in pos 1 more than once controlled should trigger a compilation error'
+$clearerror
+
+set dict26 /s.scenario.'', x.upper.ds, x.upper.xfix/;
+Solve transport using lp minimizing z scenario dict26;
+$if errorfree $abort 'variable symbol in pos 1 more than once controlled should trigger a compilation error'
+$clearerror
+
+set dict27 /s.scenario.'', x.upper.ds, x.fixed.xfix/;
+Solve transport using lp minimizing z scenario dict27;
+$if errorfree $abort 'variable symbol in pos 1 more than once controlled should trigger a compilation error'
+$clearerror
+
+set dict28 /s.scenario.'', x.fixed.xfix, x.lower.ds/;
+Solve transport using lp minimizing z scenario dict28;
+$if errorfree $abort 'variable symbol in pos 1 more than once controlled should trigger a compilation error'
+$clearerror
+
+set dict29 /s.scenario.'', x.level.ds, x.marginal.ds/;
+Solve transport using lp minimizing z scenario dict29;
+$if errorfree $abort 'variable symbol in pos 4 more than once in write section should trigger a compilation error'
+$clearerror
+
+$offecho
+
+$call "gams trnsport a=c lo=%gams.lo%"
+$if errorlevel 1 $abort 'Test failed. Please inspect trnsport.lst for details'

@@ -1,0 +1,739 @@
+<html>
+<head>
+<title>SULUM Options</title>
+</head>
+<body>
+<h2>SULUM Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/sulum.pdf">SULUM manual</a>.
+
+<h2>Summary of SULUM Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options related to the simplex optimizer</h3></th></tr>
+<tr><td><a href="#SULUMsimdualprice">
+simdualprice</a></td>
+<td>Controls which pricing strategy should be used by the dual simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimdualpricehotstart">
+simdualpricehotstart</a></td>
+<td>Controls which pricing strategy should be used by the dual simplex optimizer, when a hotstart is available.</td></tr>
+<tr><td><a href="#SULUMsimloglevel">
+simloglevel</a></td>
+<td>Controls the amounts of output from the simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimmaxiter">
+simmaxiter</a></td>
+<td>Maximum iterations allowed in simplex optimizers.</td></tr>
+<tr><td><a href="#SULUMsimobjcutnosol">
+simobjcutnosol</a></td>
+<td>Controls if a solution is needed when the optimizer stops premature due to objective cut .</td></tr>
+<tr><td><a href="#SULUMsimobjlocut">
+simobjlocut</a></td>
+<td>If the optimal objective value can be proved to be less than this value, then the optimizer terminates.</td></tr>
+<tr><td><a href="#SULUMsimobjupcut">
+simobjupcut</a></td>
+<td>If the optimal objective value can be proved to be larger than this value, then the optimizer terminates.</td></tr>
+<tr><td><a href="#SULUMsimperturblevel">
+simperturblevel</a></td>
+<td>Controls the level of perturbations in the simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimprimprice">
+simprimprice</a></td>
+<td>Controls which pricing strategy should be used by the primal simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimprimpricehotstart">
+simprimpricehotstart</a></td>
+<td>Controls which pricing strategy should be used by the primal simplex optimizer, when a hotstart is available.</td></tr>
+<tr><td><a href="#SULUMsimprob">
+simprob</a></td>
+<td>Some time it might be faster to solve the respective dual formulation instead of the primal.</td></tr>
+<tr><td><a href="#SULUMsimquadprecision">
+simquadprecision</a></td>
+<td>Controls if quad precision is used in the simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimscale">
+simscale</a></td>
+<td>Controls if the simplex optimizer should scale data to be more numerical stable.</td></tr>
+<tr><td><a href="#SULUMsimscalehotstart">
+simscalehotstart</a></td>
+<td>Controls if the simplex optimizer should scale data to be more numerical stable, when a hotstart is present.</td></tr>
+<tr><td><a href="#SULUMsimshifting">
+simshifting</a></td>
+<td>Controls the if shifting is used in the simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimsolveunscaled">
+simsolveunscaled</a></td>
+<td>Controls if the simplex optimizer should reoptimize on a unscaled problem if tolerances are not met.</td></tr>
+<tr><td><a href="#SULUMsimtimelimit">
+simtimelimit</a></td>
+<td>Maximum time allowed in the simplex optimizer.</td></tr>
+<tr><td><a href="#SULUMsimtoldual">
+simtoldual</a></td>
+<td>Absolut tolerance used by the simplex optimizer to determine if a solution is dual feasible or not.</td></tr>
+<tr><td><a href="#SULUMsimtolmarko">
+simtolmarko</a></td>
+<td>Absolut tolerance used by the simplex optimizer to control the stability of pivot size in LU factorization module.</td></tr>
+<tr><td><a href="#SULUMsimtolpivot">
+simtolpivot</a></td>
+<td>Absolut tolerance used by the simplex optimizer to control the minimum size of a pivot element.</td></tr>
+<tr><td><a href="#SULUMsimtolprim">
+simtolprim</a></td>
+<td>Absolut tolerance used by the simplex optimizer to determine if a solution is primal feasible or not.</td></tr>
+<tr><td><a href="#SULUMsimusequadinf">
+simusequadinf</a></td>
+<td>Controls if Sulum Simplex Optimizer should use switch to quad precision, when a problem is determined infeasible.</td></tr>
+<tr><td><a href="#SULUMsimwarmstart">
+simwarmstart</a></td>
+<td>If this key is switched off then the optimizer disregard any solution stored in the model.</td></tr>
+<tr><td><a href="#SULUMusebasis">
+usebasis</a></td>
+<td>Use basis from GAMS</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options related to logging in Sulum</h3></th></tr>
+<tr><td><a href="#SULUMloglevel">
+loglevel</a></td>
+<td>Controls the amount of output from Sulum in general.</td></tr>
+<tr><td><a href="#SULUMlognomodulemessage">
+lognomodulemessage</a></td>
+<td>Skip writting stop and start for each optimizer module in logging.</td></tr>
+<tr><td><a href="#SULUMlogprefix">
+logprefix</a></td>
+<td>Skip doing prefix in logging i.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Options related to the presolve module</h3></th></tr>
+<tr><td><a href="#SULUMPresolve">
+Presolve</a></td>
+<td>Controls which type of presolve strategy should be used by the presolve module.</td></tr>
+<tr><td><a href="#SULUMpresolvecompress">
+presolvecompress</a></td>
+<td>Controls if the problem should be compressed after a call to the presolve module.</td></tr>
+<tr><td><a href="#SULUMpresolvecompresshotstart">
+presolvecompresshotstart</a></td>
+<td>Controls if the problem should be compressed after a call to the presolve module were a hotstart is present.</td></tr>
+<tr><td><a href="#SULUMpresolvehotstart">
+presolvehotstart</a></td>
+<td>Controls which type of presolve strategy should be used by the presolve module, when a hotstart is present.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Other options</h3></th></tr>
+<tr><td><a href="#SULUMdebug">
+debug</a></td>
+<td>This option can be switch on in debug mode and development phase to find bugs easier.</td></tr>
+<tr><td><a href="#SULUMdualcrash">
+dualcrash</a></td>
+<td>Controls if the dual simplex optimizer should crash a advanced start basis.</td></tr>
+<tr><td><a href="#SULUMdumpsolution">
+dumpsolution</a></td>
+<td>Controls export of alternate MIP solutions</td></tr>
+<tr><td><a href="#SULUMlpreadfreecons">
+lpreadfreecons</a></td>
+<td>Controls if Sulum LP reader should read free constraints.</td></tr>
+<tr><td><a href="#SULUMlpwritefreecons">
+lpwritefreecons</a></td>
+<td>Controls if Sulum LP writer should write free constraints.</td></tr>
+<tr><td><a href="#SULUMlpwritenames">
+lpwritenames</a></td>
+<td>Controls if Sulum LP writer should replace constraint and variable names with generic ones .</td></tr>
+<tr><td><a href="#SULUMlpwritenumonline">
+lpwritenumonline</a></td>
+<td>Controls how many items Sulum LP writer should write on each line.</td></tr>
+<tr><td><a href="#SULUMlpwriteprecision">
+lpwriteprecision</a></td>
+<td>Controls how many items Sulum LP writer should write on each line.</td></tr>
+<tr><td><a href="#SULUMlpwritevarorder">
+lpwritevarorder</a></td>
+<td>Controls if Sulum LP writer should write variables in same order i.</td></tr>
+<tr><td><a href="#SULUMmpsreadfreecons">
+mpsreadfreecons</a></td>
+<td>Controls if Sulum MPS reader should read free constraints.</td></tr>
+<tr><td><a href="#SULUMmpswritefreecons">
+mpswritefreecons</a></td>
+<td>Controls if Sulum MPS writer should write free constraints.</td></tr>
+<tr><td><a href="#SULUMmpswritenames">
+mpswritenames</a></td>
+<td>Controls if Sulum MPS writer should replace constraint and variable names with generic ones .</td></tr>
+<tr><td><a href="#SULUMnames">
+names</a></td>
+<td>Indicator for loading names</td></tr>
+<tr><td><a href="#SULUMoptimizer">
+optimizer</a></td>
+<td>Controls which optimizer will be used.</td></tr>
+<tr><td><a href="#SULUMoptsolvezero">
+optsolvezero</a></td>
+<td>Tolerance on what is considered zero in solves with basis call by the user.</td></tr>
+<tr><td><a href="#SULUMopttimelimit">
+opttimelimit</a></td>
+<td>Maximum time allowed in the optimizer.</td></tr>
+<tr><td><a href="#SULUMprimcrash">
+primcrash</a></td>
+<td>Controls if the primal simplex optimizer should crash a advanced start basis.</td></tr>
+<tr><td><a href="#SULUMprintoptions">
+printoptions</a></td>
+<td>List values of all options to GAMS listing file</td></tr>
+<tr><td><a href="#SULUMrerun">
+rerun</a></td>
+<td>Resolve without presolve in case of unbounded or infeasible</td></tr>
+<tr><td><a href="#SULUMupdatesolquality">
+updatesolquality</a></td>
+<td>Decides if the optimizer should update information solution quality items at the end of a call to the optimizer.</td></tr>
+<tr><td><a href="#SULUMwriteprob">
+writeprob</a></td>
+<td>Save the problem instance</td></tr>
+<tr><td><a href="#SULUMwrnlargea">
+wrnlargea</a></td>
+<td>If a absolute value in the constraint matrix is larger than this value a warning will be displayed, but only if debug is on.</td></tr>
+<tr><td><a href="#SULUMwrnlargec">
+wrnlargec</a></td>
+<td>If a absolute value in the objective is larger than this value a warning will be displayed, but only if debug is on.</td></tr>
+<tr><td><a href="#SULUMwrnlargelo">
+wrnlargelo</a></td>
+<td>If the absolute value of a lower bound is larger than this value a warning will be displayed, but only if debug is on.</td></tr>
+<tr><td><a href="#SULUMwrnlargeup">
+wrnlargeup</a></td>
+<td>If the absolute value of a upper bound is larger than this value a warning will be displayed, but only if debug is on.</td></tr>
+<tr><td><a href="#SULUMwrnsmalla">
+wrnsmalla</a></td>
+<td>If a absolute value in the constraint matrix is smaller than this value a warning will be displayed, but only if debug is on.</td></tr></table>
+<h2>Detailed Descriptions of SULUM Options</h2>
+
+<h4><a name="SULUMdebug">
+debug</a>
+<i> (integer)</i> This option can be switch on in debug mode and development phase to find bugs easier.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMdualcrash">
+dualcrash</a>
+<i> (integer)</i> Controls if the dual simplex optimizer should crash a advanced start basis.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMdumpsolution">
+dumpsolution</a>
+<i> (string)</i> Controls export of alternate MIP solutions</h4><p>
+
+
+
+<h4><a name="SULUMloglevel">
+loglevel</a>
+<i> (integer)</i> Controls the amount of output from Sulum in general.</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="SULUMlognomodulemessage">
+lognomodulemessage</a>
+<i> (integer)</i> Skip writting stop and start for each optimizer module in logging.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMlogprefix">
+logprefix</a>
+<i> (integer)</i> Skip doing prefix in logging i.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMlpreadfreecons">
+lpreadfreecons</a>
+<i> (integer)</i> Controls if Sulum LP reader should read free constraints.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMlpwritefreecons">
+lpwritefreecons</a>
+<i> (integer)</i> Controls if Sulum LP writer should write free constraints.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMlpwritenames">
+lpwritenames</a>
+<i> (integer)</i> Controls if Sulum LP writer should replace constraint and variable names with generic ones .</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMlpwritenumonline">
+lpwritenumonline</a>
+<i> (integer)</i> Controls how many items Sulum LP writer should write on each line.</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="SULUMlpwriteprecision">
+lpwriteprecision</a>
+<i> (integer)</i> Controls how many items Sulum LP writer should write on each line.</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="SULUMlpwritevarorder">
+lpwritevarorder</a>
+<i> (integer)</i> Controls if Sulum LP writer should write variables in same order i.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMmpsreadfreecons">
+mpsreadfreecons</a>
+<i> (integer)</i> Controls if Sulum MPS reader should read free constraints.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMmpswritefreecons">
+mpswritefreecons</a>
+<i> (integer)</i> Controls if Sulum MPS writer should write free constraints.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMmpswritenames">
+mpswritenames</a>
+<i> (integer)</i> Controls if Sulum MPS writer should replace constraint and variable names with generic ones .</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMnames">
+names</a>
+<i> (integer)</i> Indicator for loading names</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="SULUMoptimizer">
+optimizer</a>
+<i> (integer)</i> Controls which optimizer will be used.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The optimizer decides which optimizer to call based on the model structure.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The primal simplex optimizer should be applied.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>The dual simplex optimizer should be applied.</td></tr>
+</table>
+
+<h4><a name="SULUMoptsolvezero">
+optsolvezero</a>
+<i> (real)</i> Tolerance on what is considered zero in solves with basis call by the user.</h4><p>
+
+
+<br><i>Range: [0,1.0e-8]</i>
+
+<br><i>(default = 1.0e-12)</i>
+
+<h4><a name="SULUMopttimelimit">
+opttimelimit</a>
+<i> (real)</i> Maximum time allowed in the optimizer.</h4><p>
+
+
+<br><i>(default = GAMS reslim)</i>
+
+<h4><a name="SULUMPresolve">
+Presolve</a>
+<i> (integer)</i> Controls which type of presolve strategy should be used by the presolve module.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not apply any presolve strategies.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The optimizer automatically decides if presolve and which type of presolve should be applied.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Presolve will only use very simple methods to reduce problem size.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>The presolve will only use strategies based on primal information.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>The presolve will only use strategies based on dual information.</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Presolve will reduce problem size using all methods.</td></tr>
+</table>
+
+<h4><a name="SULUMpresolvecompress">
+presolvecompress</a>
+<i> (integer)</i> Controls if the problem should be compressed after a call to the presolve module.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The presolve automatically decides if final problem should be compressed.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Presolve usewill use compression.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Do not apply any presolve compression.</td></tr>
+</table>
+
+<h4><a name="SULUMpresolvecompresshotstart">
+presolvecompresshotstart</a>
+<i> (integer)</i> Controls if the problem should be compressed after a call to the presolve module were a hotstart is present.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The presolve automatically decides if final problem should be compressed.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Presolve usewill use compression.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Do not apply any presolve compression.</td></tr>
+</table>
+
+<h4><a name="SULUMpresolvehotstart">
+presolvehotstart</a>
+<i> (integer)</i> Controls which type of presolve strategy should be used by the presolve module, when a hotstart is present.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not apply any presolve strategies.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The optimizer automatically decides if presolve and which type of presolve should be applied.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Presolve will only use very simple methods to reduce problem size.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>The presolve will only use strategies based on primal information.</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>The presolve will only use strategies based on dual information.</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Presolve will reduce problem size using all methods.</td></tr>
+</table>
+
+<h4><a name="SULUMprimcrash">
+primcrash</a>
+<i> (integer)</i> Controls if the primal simplex optimizer should crash a advanced start basis.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMprintoptions">
+printoptions</a>
+<i> (integer)</i> List values of all options to GAMS listing file</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="SULUMrerun">
+rerun</a>
+<i> (integer)</i> Resolve without presolve in case of unbounded or infeasible</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="SULUMsimdualprice">
+simdualprice</a>
+<i> (integer)</i> Controls which pricing strategy should be used by the dual simplex optimizer.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The simplex optimizer analyzes the model and decides the best choice in the given situation.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.</td></tr>
+</table>
+
+<h4><a name="SULUMsimdualpricehotstart">
+simdualpricehotstart</a>
+<i> (integer)</i> Controls which pricing strategy should be used by the dual simplex optimizer, when a hotstart is available.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The simplex optimizer analyzes the model and decides the best choice in the given situation.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.</td></tr>
+</table>
+
+<h4><a name="SULUMsimloglevel">
+simloglevel</a>
+<i> (integer)</i> Controls the amounts of output from the simplex optimizer.</h4><p>
+
+
+<br><i>(default = 5)</i>
+
+<h4><a name="SULUMsimmaxiter">
+simmaxiter</a>
+<i> (integer)</i> Maximum iterations allowed in simplex optimizers.</h4><p>
+
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="SULUMsimobjcutnosol">
+simobjcutnosol</a>
+<i> (integer)</i> Controls if a solution is needed when the optimizer stops premature due to objective cut .</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimobjlocut">
+simobjlocut</a>
+<i> (real)</i> If the optimal objective value can be proved to be less than this value, then the optimizer terminates.</h4><p>
+
+
+<br><i>(default = mindouble)</i>
+
+<h4><a name="SULUMsimobjupcut">
+simobjupcut</a>
+<i> (real)</i> If the optimal objective value can be proved to be larger than this value, then the optimizer terminates.</h4><p>
+
+
+<br><i>(default = maxdouble)</i>
+
+<h4><a name="SULUMsimperturblevel">
+simperturblevel</a>
+<i> (integer)</i> Controls the level of perturbations in the simplex optimizer.</h4><p>
+
+
+<br><i>(default = 50)</i>
+
+<h4><a name="SULUMsimprimprice">
+simprimprice</a>
+<i> (integer)</i> Controls which pricing strategy should be used by the primal simplex optimizer.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The simplex optimizer analyzes the model and decides the best choice in the given situation.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.</td></tr>
+</table>
+
+<h4><a name="SULUMsimprimpricehotstart">
+simprimpricehotstart</a>
+<i> (integer)</i> Controls which pricing strategy should be used by the primal simplex optimizer, when a hotstart is available.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The simplex optimizer analyzes the model and decides the best choice in the given situation.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The simplex optimizer will use steepest edge strategy, which is the most expensive pricing strategy, but also often the one with fewest iterations.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>The simplex optimizer will use approximate steepest edge strategy, which relaxes the steepeste edge strategy by using only appriximate norms.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>The simplex optimizer will scan only a subset of candidates and choose between promising candidates by a very cheap scheme.</td></tr>
+</table>
+
+<h4><a name="SULUMsimprob">
+simprob</a>
+<i> (integer)</i> Some time it might be faster to solve the respective dual formulation instead of the primal.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The optimizer decides if the primal or dual formulation should be solved.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The primal formulation should be solved.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>The dual formulation should be solved.</td></tr>
+</table>
+
+<h4><a name="SULUMsimquadprecision">
+simquadprecision</a>
+<i> (integer)</i> Controls if quad precision is used in the simplex optimizer.</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimscale">
+simscale</a>
+<i> (integer)</i> Controls if the simplex optimizer should scale data to be more numerical stable.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimscalehotstart">
+simscalehotstart</a>
+<i> (integer)</i> Controls if the simplex optimizer should scale data to be more numerical stable, when a hotstart is present.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimshifting">
+simshifting</a>
+<i> (integer)</i> Controls the if shifting is used in the simplex optimizer.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimsolveunscaled">
+simsolveunscaled</a>
+<i> (integer)</i> Controls if the simplex optimizer should reoptimize on a unscaled problem if tolerances are not met.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimtimelimit">
+simtimelimit</a>
+<i> (real)</i> Maximum time allowed in the simplex optimizer.</h4><p>
+
+
+<br><i>(default = GAMS reslim)</i>
+
+<h4><a name="SULUMsimtoldual">
+simtoldual</a>
+<i> (real)</i> Absolut tolerance used by the simplex optimizer to determine if a solution is dual feasible or not.</h4><p>
+
+
+<br><i>Range: [1.0e-10,1.0e-4]</i>
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="SULUMsimtolmarko">
+simtolmarko</a>
+<i> (real)</i> Absolut tolerance used by the simplex optimizer to control the stability of pivot size in LU factorization module.</h4><p>
+
+
+<br><i>Range: [1.0e-4,9.0e-1]</i>
+
+<br><i>(default = 8.0e-3)</i>
+
+<h4><a name="SULUMsimtolpivot">
+simtolpivot</a>
+<i> (real)</i> Absolut tolerance used by the simplex optimizer to control the minimum size of a pivot element.</h4><p>
+
+
+<br><i>Range: [1.0e-12,1.0e-5]</i>
+
+<br><i>(default = 1.0e-9)</i>
+
+<h4><a name="SULUMsimtolprim">
+simtolprim</a>
+<i> (real)</i> Absolut tolerance used by the simplex optimizer to determine if a solution is primal feasible or not.</h4><p>
+
+
+<br><i>Range: [1.0e-10,1.0e-4]</i>
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="SULUMsimusequadinf">
+simusequadinf</a>
+<i> (integer)</i> Controls if Sulum Simplex Optimizer should use switch to quad precision, when a problem is determined infeasible.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMsimwarmstart">
+simwarmstart</a>
+<i> (integer)</i> If this key is switched off then the optimizer disregard any solution stored in the model.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMupdatesolquality">
+updatesolquality</a>
+<i> (integer)</i> Decides if the optimizer should update information solution quality items at the end of a call to the optimizer.</h4><p>
+
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The given option is off.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The given option is on.</td></tr>
+</table>
+
+<h4><a name="SULUMusebasis">
+usebasis</a>
+<i> (integer)</i> Use basis from GAMS</h4><p>
+
+
+<br><i>(default = GAMS bratio)</i>
+
+<h4><a name="SULUMwriteprob">
+writeprob</a>
+<i> (string)</i> Save the problem instance</h4><p>
+
+
+
+<h4><a name="SULUMwrnlargea">
+wrnlargea</a>
+<i> (real)</i> If a absolute value in the constraint matrix is larger than this value a warning will be displayed, but only if debug is on.</h4><p>
+
+
+<br><i>(default = 1.0e+8)</i>
+
+<h4><a name="SULUMwrnlargec">
+wrnlargec</a>
+<i> (real)</i> If a absolute value in the objective is larger than this value a warning will be displayed, but only if debug is on.</h4><p>
+
+
+<br><i>(default = 1.0e+8)</i>
+
+<h4><a name="SULUMwrnlargelo">
+wrnlargelo</a>
+<i> (real)</i> If the absolute value of a lower bound is larger than this value a warning will be displayed, but only if debug is on.</h4><p>
+
+
+<br><i>(default = 1.0e+8)</i>
+
+<h4><a name="SULUMwrnlargeup">
+wrnlargeup</a>
+<i> (real)</i> If the absolute value of a upper bound is larger than this value a warning will be displayed, but only if debug is on.</h4><p>
+
+
+<br><i>(default = 1.0e+8)</i>
+
+<h4><a name="SULUMwrnsmalla">
+wrnsmalla</a>
+<i> (real)</i> If a absolute value in the constraint matrix is smaller than this value a warning will be displayed, but only if debug is on.</h4><p>
+
+
+<br><i>(default = 1.0e+8)</i>
+</body></html>

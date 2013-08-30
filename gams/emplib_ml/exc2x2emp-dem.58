@@ -1,0 +1,179 @@
+$title pure exchange model (ie no production) (EXC2X2EMP-DEM,SEQ=58)
+
+$ontext
+Model from Ermoliev et al, On Convergence of SJM
+Model uses explicit demand functions
+Computational issues with x2('2') = 0 at solution
+
+gams exc2x2 --sol=mcp1
+   This sets up the standard Arrow Debreu model and solves using MCP
+
+gams exc2x2 --sol=mcp2
+   This sets up the Ermoliev aggregate embedded model, solved using MCP
+
+gams exc2x2 --sol=neg
+   This does Negishi iterations on the Ermoliev embedded model - ie
+   sequence of NLP's trying to get to fixed point on "budget"
+   constraint.
+
+Contributor: Michael Ferris, October 2010
+$offtext
+
+$if NOT set sol $set sol mcp1
+
+set i /1*2/;
+alias(i,j);
+
+parameter w1(j) 'endowment of player 1' /
+            1 1
+            2 1 /,
+          w2(j) 'endowment of player 2' /
+            1 1 /;
+
+variables obj1, obj2, obj3;
+positive variables p(j), x1(j), x2(j);
+equations defobj1, defobj2, defobj3, budget1, budget2, norm;
+
+defobj1.. obj1 =e= x1('2');
+budget1..
+ sum(j, p(j) * x1(j)) =l= sum(j, w1(j)*p(j));
+
+defobj2.. obj2 =e= sqrt(x2('1')*x2('2'));
+budget2..
+  sum(j, p(j) * x2(j)) =l= sum(j, w2(j)*p(j));
+
+* market player
+defobj3.. obj3 =e= sum(j, p(j)*(x1(j) + x2(j) - w1(j) - w2(j)));
+norm..
+  sum(j, p(j)) =e= 1;
+
+* The combined KKT forms a complementarity system
+* solution is p = (0,1), x1 = (x11,1), x2 = (x21,0)
+* with 0 <= x11 + x21 <= 2
+
+* model does not satisfy gross substitutability assumption
+* so tatonment process fails
+
+file myinfo /'%emp.info%'/;
+put myinfo 'equilibrium';
+put      / 'max obj1 x1 defobj1 budget1';
+put      / 'max obj2 x2 defobj2 budget2';
+putclose / 'max obj3 p  defobj3 norm   ';
+
+model nashemp /defobj1,defobj2,defobj3,budget1,budget2,norm/;
+
+* protect function evaluations
+* x1.lo(j) = 1e-6; x2.lo(j) = 1e-6;
+
+x1.l(j) = 1;  x2.l(j) = 1;
+p.l(j) = 1;
+budget1.m = 1; budget2.m = 1; norm.m = 1;
+
+$if %sol% == mcp1 solve nashemp using emp;
+
+$ontext
+* Following is the complementarity model generated
+
+equations d_x1(j), d_x2(j), d_p(j), Nbudget1, Nbudget2, Nnorm;
+positive variables x1(j), x2(j), p(j), lambda1, lambda2;
+free variables mu;
+
+d_x1(j)..
+  -1$sameas(j,'2') + lambda1*p(j) =g= 0;
+
+* rewrite budget as negative due to "max" problem
+Nbudget1..
+ sum(j, w1(j)*p(j)) =g= sum(j, p(j) * x1(j));
+
+* fix this constraint by multiplying through by x2(j)
+d_x2(j)..
+  -0.5*sqrt(x2('1')*x2('2')) + lambda2*p(j)*x2(j) =g= 0;
+*  -0.5*sqrt(x2('1')*x2('2'))/x2(j) + lambda2*p(j) =g= 0;
+
+Nbudget2..
+  sum(j, w2(j)*p(j)) =g= sum(j, p(j) * x2(j));
+
+d_p(j)..
+   - x1(j) - x2(j) + w1(j) + w2(j) + mu =g= 0;
+
+Nnorm..
+  1 =e= sum(j, p(j));
+
+model nashmcp /d_x1.x1,Nbudget1.lambda1,d_x2.x2,Nbudget2.lambda2,d_p.p,Nnorm.mu/;
+
+lambda1.l = budget1.m; lambda2.l = budget2.m; mu.l = norm.m;
+nashmcp.iterlim = 0;
+solve nashmcp using mcp;
+
+$offtext
+
+* new variables for negishi version
+variable  utility, wVar(i)  'Negishi weights computed endogenously';
+
+equations
+  utilDef          'utility in Negishi version'
+  prodLimit(j)
+  budget(i)  'set income = expenditure';
+
+utilDef .. utility =e=
+        wVar('1') * log(x1('2'))
+        + wVar('2') * 0.5 * sum(j, log(x2(j)));
+
+budget(i) .. wVar(i) =e=
+          sum(j, (w1(j)$sameas(i,'1') + w2(j)$sameas(i,'2')) * p(j));
+
+prodLimit(j) ..
+        x1(j) + x2(j) =l= w1(j) + w2(j);
+
+model endogW     / utilDef, prodLimit, budget /;
+
+model fixedW 'basic NLP model - fixed Negishi weights'      / utilDef, prodLimit /;
+
+put myinfo '* negishi model';
+put      / 'dualVar p prodLimit';
+putclose / 'dualEqu budget wVar';
+
+$if not %sol% == mcp2 $goto skipmcp2
+
+wVar.l(i) = 1;
+* add a numeraire, since the weights are unique only
+* in a relative sense
+wVar.fx('1') = 1;
+
+solve endogW maximizing utility using emp;
+
+wVar.fx(i) = wVar.l(i);
+
+solve fixedW maximizing utility using nlp;
+
+$label skipmcp2
+
+$if not %sol% == neg $goto skipneg
+
+set iters / iter1 * iter60 /;
+scalar
+  err / 1 /,
+  m 'control the Negishi weight adjustment' / .95 /;
+parameter
+  wBarI(i,iters),
+  errI(iters);
+
+wVar.fx(i) = 1/card(i);
+x1.lo(j) = 1e-6; x2.lo(j) = 1e-6;
+
+loop {iters$[err > 1e-6],
+  wBarI(i,iters) = wVar.l(i);
+  solve fixedW using nlp maximizing utility;
+  wVar.fx(i) = (1-m)*wVar.l(i) +
+  m*(w1(i)$sameas(i,'1') + w2(i)$sameas(i,'2')) * prodlimit.m(i);
+  err = sum(i, abs(wVar.l(i) - wBarI(i,iters)));
+  errI(iters) = err;
+};
+* set prices for reporting purposes
+p.l(j) = prodLimit.m(j);
+
+display wBarI, errI;
+
+$label skipneg
+
+display x1.l, x2.l, p.l;

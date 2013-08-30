@@ -1,0 +1,79 @@
+$Title External Function - Example MCP 2 (EXMCP2,SEQ=574)
+
+$ontext
+  DLL Test Problem Number MCP2 -- dense nonlinear system 
+$offtext
+
+
+set	i	/i1*i8/;
+alias (i,j);
+
+variables	x(i)	Unknowns;
+equations	equ(j)	System of equations
+		equx(j)	System of equations with external functions;
+
+equ(j)..	sqr(x(j)) + sum(i, 0.1 * ord(i) * x(i)) =e= 1;
+
+equx(j)..	sum(i, ord(i) * x(i)) =x= ord(j);
+
+parameter	x0(J)	Starting point (for GAMS and external functions);
+
+x0(j) = uniform(0,1);
+option sysout=on;
+
+
+x.l(j) = x0(j);
+model exmcp2     'GAMS implementation'                      /equ /;
+model exmcp2c    'External functions in C'                  /equx/;
+model exmcp2c_cb 'External functions in C, with callbacks'  /equx/;
+model exmcp2f    'External functions in F77'                /equx/;
+model exmcp2f_cb 'External functions in F77, with callbacks'/equx/;
+
+scalar totdist /0/;
+parameter solution(J,*);
+
+*	Check that the model dimension here is consistent
+*	with the external function implementation
+abort$(card(i) ne 8) " Inconsistent dimension -- it must equal 8!";
+
+$onechoV > runme.gms
+x.l(j) = x0(j);
+solve %1 using mcp;
+solution(j,"%1") = x.l(j);
+totdist = totdist + sum {J, abs(x.l(J)-solution(J,'exmcp2'))};
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC '1' set runC_cb '1' set runF '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC    $call gams complink lo=%gams.lo% --lang=c         --files=exmcp2c.c                                        --libname=exmcp2c%ext%      
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=exmcp2c_cb.c                                     --libname=exmcp2c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF    $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 exmcp2f.f90"%eq%               --libname=exmcp2f%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 exmcp2f_cb.f90"%eq% --libname=exmcp2f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme exmcp2
+$if set runC    $batinclude runme exmcp2c
+$if set runC_cb $batinclude runme exmcp2c_cb
+$if set runF    $batinclude runme exmcp2f
+$if set runF_cb $batinclude runme exmcp2f_cb
+
+display solution;
+
+if {(totdist < 1.0E-6),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect exmcp2.lst for details.";
+};

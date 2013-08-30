@@ -1,0 +1,24 @@
+$title 'Tests $if exist and $if dexist' (IFSTAT3,SEQ=231)
+
+$ontext
+The "$if exist foo" test in GAMS checks for files only - it should
+return false for a directory named foo.
+A new test "$if dexist foo" has been added to check for a
+directory named foo
+$offtext
+
+$ondollar
+$call rm -fr notthere
+$if dexist nothere $error directory is not there
+$if  exist nothere $error      file is not there
+$call mkdir notthere
+$if NOT dexist notthere $error directory exist
+$if      exist notthere $error notthere is a directory not a file
+$set d \
+$if %system.filesys% == UNIX $set d /
+$echo something > notthere%d%temp.txt
+$if NOT  exist notthere%d%temp.txt $error file is there
+$if     dexist notthere%d%temp.txt $error temp.txt is a file not a directory
+$call rm -fr notthere
+$if  exist notthere%d%temp.txt $error      file does not exist
+$if dexist notthere%d%temp.txt $error directory does not exist

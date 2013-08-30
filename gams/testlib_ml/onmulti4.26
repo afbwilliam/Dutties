@@ -1,0 +1,18 @@
+$title The onmulti merge may destroy the ordered property (ONMULTI4,SEQ=26)
+
+set dummy / a,b,c,d,e /;
+
+set i    / c,d,e / , k;
+
+$onmulti
+
+set i    / a,b,c / ;
+
+k(i-1) = yes;
+
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error this should not be allowed

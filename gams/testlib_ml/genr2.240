@@ -1,0 +1,15 @@
+$TITLE 'Generate test data for read2 test of gdxMrw' (GENR2,SEQ=240)
+* we do not use set j - J is an internal Matlab function?
+set i / i1 * i2 /;
+set k / k1 * k2 /;
+set iiiii(i,i,i,i,i);
+set ikikikikik(i,k,i,k,i,k,i,k,i,k);
+
+set emptee(i,i,i);
+
+alias(i,i1,i2,i3,i4,i5);
+alias(k,k1,k2,k3,k4,k5);
+iiiii(i1,i2,i3,i4,i5) = yes;
+ikikikikik(i1,k1,i2,k2,i3,k3,i4,k4,i5,k5) = yes;
+
+execute_unload 'ex2.gdx';

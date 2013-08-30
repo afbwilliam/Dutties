@@ -1,0 +1,8 @@
+$title handy way to test at compile time (TESTER,SEQ=45)
+$error just force an error
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error this should have an error

@@ -1,0 +1,24 @@
+$title CONVERT test suite - hessian.gdx (CONVERT6,SEQ=400)
+
+$ontext
+Test to see if we wrote the hessian.gdx file.
+AB01571
+
+Contributor: Alex Meeraus, Steve Dirkse
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$call gamslib -q chenery
+$include chenery
+$set hess hess.gdx
+$call rm -f %hess%
+$echo hessian %hess% > convertd.opt
+option nlp=convertd; chenrad.optfile=1;
+Solve chenrad using nlp maximizing td ;
+execute '=test -e %hess%';
+abort$errorlevel 'we did not find %hess%';
+* check for a valid GDX file, not just any file
+execute 'gdxdump %hess% -Version > %NUL%';
+abort$errorlevel 'Invalid %hess%';

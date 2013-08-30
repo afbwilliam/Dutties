@@ -1,0 +1,101 @@
+$title Test how bounds change the 1-variable CNS model sqr(x)=4 (cns01,SEQ=91)
+
+$ontext
+  Single equation square nonlinear system with bounds varying
+  from free over exactly at the solution to a fixed variable.
+
+  The model without bounds has two solutions, x = 2 and x = -2,
+  and the one that is returned may depend on the initial value.
+  Bounds may of course exclude one of the solutions.
+
+$offtext
+
+maxexecerror = 1;
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+
+variable x;
+equation f;
+model m / f /;
+
+f .. x*x =e= 4;
+
+option limrow = 0, limcol = 0;
+
+
+* Case 1: either x = -2 or x = 2 is OK.
+x.l = 8;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Solved%)  'bad return codes';
+abort$(abs(sqr(x.l)-4) > tol)                  'x.l should be + or -2',x.l;
+
+* Case 2: either x = -2 or x = 2 is OK.
+x.l = -8;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Solved%)  'bad return codes';
+abort$(abs(sqr(x.l)-4) > tol)                  'x.l should be + or -2',x.l;
+
+* Case 3: The Jacobian is singular in the initial point, but OK at
+*         the two solutions. The return will be solver specific.
+x.l = 0;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%)                       'bad solvestat';
+if   { (m.modelstat = %modelstat.LocallyInfeasible%),
+* locally infeasible, should report a row that way
+  abort$(m.numinfes < 1)                       'wrong .numinfes';
+else
+  abort$(m.modelstat <> %modelstat.Solved%)                    'bad modelstat';
+  abort$(abs(sqr(x.l)-4) > tol)                'x.l should be + or -2',x.l;
+};
+
+* Case 4: Must return x = 2 because of the bounds.
+x.lo = 1; x.up = 3; x.l = 8;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or
+       (m.modelstat <> %modelstat.SolvedUnique% eqv m.modelstat <> %modelstat.Solved%)) 'bad return codes';
+abort$(abs(x.l-2) > tol)  'x.l should be 2',x.l;
+
+* Case 5: Must return x = 2 because of the bounds. Note that the
+*         solution is at the bound, but the bound is not violated.
+x.lo = 2; x.up = 3; x.l = 8;
+solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or
+       (m.modelstat <> %modelstat.SolvedUnique% eqv m.modelstat <> %modelstat.Solved%)) 'bad return codes';
+abort$(abs(x.l-2) > tol)  'x.l should be 2',x.l;
+
+
+* Case 6a: The model is nonsquare because there are no non-fixed
+*          variables left but there is one equation.   How this is treated
+*          depends on the holdfixed setting
+*          If holdfixed is 0 GAMS rejects this model as nonsquare
+*          - it never gets to the solver
+m.holdfixed = 0; x.lo = 2; x.up = 2; x.l = 8; solve m using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(m.solvestat <> %solvestat.SolveProcessingSkipped% or m.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;
+
+* Case 6b: If holdfixed = 1 GAMS accepts the model and the solver
+*          should give a reasonable return.   N.B. GAMS' acceptance
+*          of this model happens somewhat by chance - it will not always
+*          be the case that setting holdfixed=1 will recover
+*          squareness.  In this case, the number of equations that
+*          drop out is equal to the number of fixed variables, so we
+*          stay square
+m.holdfixed = 1; x.lo = 2; x.up = 2; x.l = 8; solve m using cns;
+abort$(m.solvestat <> %solvestat.NormalCompletion%)                            'bad solvestat';
+abort$(m.modelstat <> %modelstat.SolvedUnique% and m.modelstat <> %modelstat.Solved%)     'bad modelstat';
+
+* Case 8a: Same checks as 6a and 6b, but the variable is fixed to an
+*          infeasible point
+m.holdfixed = 0; x.lo = 3; x.up = 3; x.l = 8; solve m using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(m.solvestat <> %solvestat.SolveProcessingSkipped% or m.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;
+
+* Case 8b: If holdfixed = 1 GAMS will see a square model, but
+*          the removed row will look like 9 =e= 4.  GAMS will
+*          give an error on model generation.
+m.holdfixed = 1; x.lo = 3; x.up = 3; x.l = 8; solve m using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(m.solvestat <> %solvestat.SolveProcessingSkipped% or m.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;

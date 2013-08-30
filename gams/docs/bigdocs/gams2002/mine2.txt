@@ -1,0 +1,9 @@
+line 1 of text to be sent
+line 2 of text to be sent
+...
+last line of text to be sent
+more
+additional line 1 of text to be sent
+additional line 2 of text to be sent
+...
+additional last line of text to be sent

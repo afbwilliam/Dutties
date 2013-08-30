@@ -1,0 +1,37 @@
+$TITLE 'MINOS test suite - anti-cycling via expand frequency' (MINOS01,SEQ=433)
+
+$ontext
+In this test we run MINOS on an example that is known to cycle with
+the default expand frequency.  It should not cycle if we set the
+expand frequency to a lower value.
+
+Note that the case is difficult to reproduce: it's the 4th run in a
+DICOPT model that requires OSL3 be the MIP solver.  If you have a
+better example let me know.
+
+Contributor: Steve Dirkse
+$offtext
+
+
+SET solver 'master set of solvers' / system.solverNames /;
+SET solverPlatformMap(solver,*) / system.SolverPlatformMap /;
+SET avail(*)  'Solvers available for this platform';
+avail(solver) = sum(solverPlatformMap(solver,'%system.platform%'),1)
+   and solvers(solver);
+
+set dummy / osl3, dicopt /;
+abort.noerror$[not avail('osl3')]   'this test requires OSL3: not found, so pass!';
+abort.noerror$[not avail('dicopt')] 'this test requires DICOPT: not found, so pass!';
+
+$call gamslib -q pump
+$if errorlevel 1 $abort problems with gamslib -q pump
+
+$onecho > dicopt.600
+nlpoptfile 600
+$offecho
+$onecho > minos.600
+expand frequency 500
+$offecho
+
+execute 'gams pump optfile=600 minlp=dicopt nlp=minos mip=osl3 lo=2';
+abort$errorlevel 'gams run did not terminate normally';

@@ -1,0 +1,53 @@
+$title Test loading of old GDX files from other platforms (gdx2,SEQ=89)
+
+$set slash /
+$set backslash \
+$ifi NOT %system.filesys% == unix $set slash \
+
+$set cgdx     =gams gtrans lo=0 --gdxfile gdx%slash%' gdist.tl:0 '%slash%t'  plat.tl:0 '
+
+$echo {print "'" substr($0,match($0,/[1-9][0-9]\.[0-9]/),4)"'"} > d.awk
+$echo {print substr($0,match($0,/gdx\//)+10,3)}                 > p.awk
+$call gmsunzip -v gdxtest | grep -i tlnx.gdx     | awk -f d.awk | sort | uniq > gdist.txt
+$call gmsunzip -v gdxtest | grep -i t...\.gdx | awk -f p.awk | sort | uniq >  plat.txt
+$call rm -rf gdx
+
+Set gdist distribution GDX files /
+$include gdist.txt
+    /
+    plat platforms /
+$include plat.txt
+    /;
+
+* Create run script
+$echo display x.l; > rtrans.gms
+
+$escape =
+$onecho > gtrans.gms
+set i,j; parameter c(*,*);
+$gdxin %=gdxfile%=
+$load i j c
+$gdxout t.gdx
+$unload i j c
+
+$gdxout
+execute_load   "%=gdxfile%=" i,j,c
+execute_load   "t.gdx"       i,j,c
+execute_unload "t.gdx"       i,j,c
+$offecho
+$escape %
+
+file fx /gdxscript.gms/; fx.pw=1024;
+
+put fx / '$call gmsunzip -Coq gdxtest gdx%backslash%*'
+       / '$if errorlevel 1 $abort "Could not run gmsunzip"'
+loop((gdist,plat),
+  put  / '$if exist gdx%slash%' gdist.tl:0 '%slash%t' plat.tl:0 '.gdx $call %cgdx%'
+       / '$if errorlevel 1 $error "GDX ' plat.tl:0 ' Distribution:' gdist.tl:0 '"';
+);
+putclose fx;
+
+Scalar rc;
+execute '=gams gdxscript lo=0';
+rc=errorlevel;
+abort$rc 'GDX Test Failed';

@@ -1,0 +1,7 @@
+$title Test of correctness for levels & marginals of NLP (NLPQCP01,SEQ=76)
+$ontext
+Run qcp01 as an NLP
+$offtext
+
+$set MTYPE nlp
+$include qcp01.gms

@@ -1,0 +1,137 @@
+$Title Compile and link external equation libraries (COMPLINK,SEQ=578)
+
+$ontext
+This model is used for compiling and linking of external equation libraries.
+$offtext
+
+
+$log --- External Equation Compile and Linking for build code %system.buildcode%
+$log %lang% %cb% %libname% %files% %namestub%
+$log %sysenv.LD_LIBRARY_PATH%
+$ifthen.out %system.buildcode%==VS8
+$ifthen.vs8 %lang%==java
+$  call javac %files%
+$  set JDK C:\Program Files (x86)\Java\jdk1.7.0_02\
+$  set files %namestub%wrap.c "%JDK%lib\jvm.lib" -I"%JDK%include" -I"%JDK%include\win32"
+$  set lang c
+$endif.vs8
+$ifi %lang%==fortran90 $call ifort -Fe%libname% -fpp -DVS8 -LD -MT -nologo %files%
+$ifi %lang%==c         $call cl -DGE_EXPORTS -Fe%libname% -LD %files%
+$ifi %lang%==delphi    $call dcc32 -cc %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==WEI
+$ifthen.wei %lang%==java
+$  call javac %files%
+$  set JDK C:\Program Files\Java\jdk1.7.0_02\
+$  set files %namestub%wrap.c "%JDK%lib\jvm.lib" -I"%JDK%include" -I"%JDK%include\win32"
+$  set lang c
+$endif.wei
+$ifi %lang%==fortran90 $call ifort -Fe%libname% -fpp -DVS8 -LD -MT -nologo %files%
+$ifi %lang%==c         $call cl -DGE_EXPORTS -Fe%libname% -LD %files%
+$ifi %lang%==delphi    $call p3pc --UNAME Win64_EMT_icc -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==LNX
+$ifthen.lnx %lang%==java
+$  set JDK /opt/jdk_x86/
+$  call javac %files%
+$  set files %namestub%wrap.c -I"%JDK%include" -I"%JDK%include/linux" -ljvm -L%JDK%jre/lib/i386/client 
+$  set lang c
+$endif.lnx
+$ifi %lang%==fortran90 $call gfortran -m32 -fPIC -nostartfiles -shared -Wl,-Bsymbolic -o %libname% %files% -lm
+$ifi %lang%==c         $call gcc -m32 -fPIC -nostartfiles -shared -Wl,-Bsymbolic -o %libname% %files% -lm
+$ifi %lang%==delphi    $call p3pc --UNAME Linux_gcc -B %files%
+$if errorlevel 1 $abort problems compiling and linking LNX
+
+$elseif.out %system.buildcode%==LEG
+$ifthen.leg %lang%==java
+$  set JDK /opt/jdk_x64/
+$  call javac %files%
+$  set files %namestub%wrap.c -I"%JDK%include" -I"%JDK%include/linux" -ljvm -L%JDK%jre/lib/amd64/server 
+$  set lang c
+$endif.leg
+$ifi %lang%==fortran90 $call gfortran -fPIC -nostartfiles -shared -Wl,-Bsymbolic -o %libname% %files% -lm
+$ifi %lang%==c         $call gcc -fPIC -nostartfiles -shared -Wl,-Bsymbolic -o %libname% %files% -lm
+$ifi %lang%==delphi    $call p3pc --UNAME Linux86_64_gcc -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==DIG
+*$ifthen.dig %lang%==java
+*$  set JDK /usr/
+*$  set LIB /usr/local/src/gcc_4_5_3_release/libjava/
+*$  call %JDK%bin/javac %files%
+*$  set files %namestub%wrap.c -I"%LIB%include" -I"%LIB%classpath/include/" -ljvm -L/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries 
+*$  set lang c
+*$endif.dig
+$ifi %lang%==fortran90 $call gfortran -m32 -fPIC -nostartfiles -shared -o %libname% %files% -lm
+$ifi %lang%==c         $echo gcc -m32 -fPIC -dynamiclib -shared -o %libname% %files% -lm -ldl > runcc
+$ifi %lang%==c         $call cat ./runcc && source ./runcc
+$ifi %lang%==delphi    $call p3pc --UNAME Darwin-i386-gcc -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==DEG
+*$ifthen.deg %lang%==java
+*$  set JDK /usr/
+*$  set LIB /usr/local/src/gcc_4_5_3_release/libjava/
+*$  call %JDK%bin/javac %files%
+*$  set files %namestub%wrap.c -I"%LIB%include" -I"%LIB%classpath/include/" -ljvm -L/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries 
+*$  set lang c
+*$endif.deg
+$ifi %lang%==fortran90 $call gfortran -m64 -fPIC -nostartfiles -shared -o %libname% %files% -lm
+$ifi %lang%==c         $call gcc -m64 -fPIC -dynamiclib -shared -o %libname% %files% -lm -ldl > runcc
+$ifi %lang%==c         $call cat ./runcc && source ./runcc
+$ifi %lang%==delphi    $call p3pc --UNAME Darwin-x64-gcc -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==SIG
+$ifthen.sig %lang%==java
+$  set JDK /usr/jdk/instances/jdk1.7.0/
+$  call /usr/java/bin/javac %files%
+$  set files %namestub%wrap.c -I"%JDK%include" -I"%JDK%include/solaris" -ljvm -L"%JDK%jre/lib/amd64/server"
+$  set lang c
+$endif.sig
+$ifi %lang%==fortran90 $call gfortran -m64 -fPIC -nostartfiles -shared -Wl,-Bsymbolic -o %libname% %files%
+$ifi %lang%==c         $call gcc -m64 -fPIC -nostartfiles -shared -Wl,-Bsymbolic -o %libname% %files% -lm
+$ifi %lang%==delphi    $call p3pc --UNAME Linux86_64_gcc -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==SOL
+$ifthen.sol %lang%==java
+$  set JDK /s/jdk1.6.0_20/
+$  call %JDK%bin/javac %files%
+$  set files %namestub%wrap.c -I"%JDK%include" -I"%JDK%include/solaris" -ljvm -L"%JDK%sun4x_58/jre/lib/sparc/client
+$  set lang c
+$endif.sol
+$ifi %lang%==fortran90 $call f90 -KPIC -G -Bsymbolic -o %libname% %files% -lfsu -lsunmath -lm
+$ifi %lang%==c         $call cc  -KPIC -G -Bsymbolic -o %libname% %files% -lm -ldl
+$ifi %lang%==delphi    $call p3pc --UNAME SunOS-sparc32 -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==SOX
+$ifthen.sox %lang%==java
+$  set JDK /s/jdk1.6.0_20/
+$  call %JDK%bin/javac %files%
+$  set files %namestub%wrap.c -I"%JDK%include" -I"%JDK%include/solaris" -ljvm -L"%JDK%sun4x_58/jre/lib/sparcv9/server
+$  set lang c
+$endif.sox
+$ifi %lang%==fortran90 $call f90 -m64 -KPIC -G -Bsymbolic -o %libname% %files% -lfsu -lsunmath -lm
+$ifi %lang%==c         $call cc  -m64 -KPIC -G -Bsymbolic -o %libname% %files% -lm -ldl
+$ifi %lang%==delphi    $call p3pc --UNAME SunOS-sparc64 -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$elseif.out %system.buildcode%==AIX
+$ifthen.aix %lang%==java
+$  set JDK /usr/java6_64/
+$  call %JDK%bin/javac %files%
+$  set files %namestub%wrap.c -I"%JDK%include" -I"%JDK%include/aix" -ljvm -L%JDK%jre/lib/ppc64/j9vm/
+$  set lang c                                                                  
+$endif.aix
+$ifi %lang%==fortran90 $call xlf90_r -brtl -bnoentry -lc -G -bernotok -bexpall -b64 -o %libname% %files%
+$ifi %lang%==c         $call xlc_r -G -brtl -bnoentry -b64 -o %libname% %files% -lm
+$ifi %lang%==delphi    $call p3pc --UNAME AIX64_xlc -B %files%
+$if errorlevel 1 $abort problems compiling and linking
+
+$else.out
+$abort Unknown build code %system.buildcode%
+$endif.out

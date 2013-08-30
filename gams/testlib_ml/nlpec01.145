@@ -1,0 +1,142 @@
+$TITLE NLPEC test suite - options test (NLPEC01,SEQ=145)
+
+$ontext
+This model takes a set of NLPEC option combinations and runs the NLPEC solver
+on the mpec01 model from testlib for each combination.  Any errors
+(e.g. internal to NLPEC, in the syntax or semantics of the
+reforumulated NLP model, etc.) should get flagged because mpec01
+includes internal tests that a correct solution has been obtained and
+will abort otherwise.
+
+The NLPEC option combinations to test are read by default from a GDX
+file.  This GDX file is created by running NLPEC in a special mode.
+In this mode all possible output combinations from NLPEC's
+checkOptions routine (i.e. after invalid combos are patched up to be
+valid) are written to a GDX file.  In the current implementation (Aug
+2004), the set of over 1,115,136 possible combinations is reduced to
+2838 valid ones, a reduction of 99.75%
+
+To regenerate the GDX file you can solve an MPEC model using NLPEC and
+an option file with the line
+
+   DumpValid
+
+This will terminate without solving after the GDX data file is
+generated.
+
+Contributor: Steven Dirkse
+$offtext
+
+
+sets  RefType, Slack, Constraint, Aggregate, NCPBounds;
+alias (RefType   , sRefType   , dRefType);
+alias (Slack     , sSlack     , dSlack);
+alias (Constraint, sConstraint, dConstraint);
+alias (Aggregate , sAggregate , dAggregate);
+alias (NCPBounds , sNCPBounds , dNCPBounds);
+
+set validOpts(sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+              dRefType, dSlack, dConstraint, dAggregate, dNCPBounds);
+
+scalars nInputOpts, nOutputOpts, pReduc, isFileOK, rc;
+
+$gdxin validnlpecopts.gdx
+$load RefType  Slack  Constraint  Aggregate  NCPBounds
+$load validOpts
+$load nInputOpts nOutputOpts isFileOK
+
+* now some sets to allow multiple runs of each case, with different
+* DNLP solvers
+* requires CMEX Rev 141 - system.solverNames
+
+$version 141
+
+set solverNames / system.solverNames /;
+set dummy / dnlp /;
+set solv / CONOPT, MINOS, SNOPT, BARON /;
+
+*** HACK! HACK! CONOPT will not solve this one on Windows, so
+*** we knock it here.  Un-knock it when CONOPT is fixed.
+*  RefType            fCMfx        mult
+*  Slack               none        none
+*  Constraint      equality  inequality
+*  Aggregate           none        none
+*  NCPBounds       function        none
+validOpts('fCMfx','none',  'equality','none','function',
+          'mult' ,'none','inequality','none','none'     ) = NO;
+
+*** ANOTHER HACK!
+*** the reform with refType FB_neg is not working completely as
+*** expected so we knock it out of the tests for now
+validOpts('FB_neg',sSlack, sConstraint, sAggregate, sNCPBounds,
+        dRefType, dSlack, dConstraint, dAggregate, dNCPBounds) = NO;
+validOpts(sRefType,sSlack, sConstraint, sAggregate, sNCPBounds,
+          'FB_neg',dSlack, dConstraint, dAggregate, dNCPBounds) = NO;
+
+$ontext
+set validOpts (sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+               dRefType, dSlack, dConstraint, dAggregate, dNCPBounds) /
+ mult.none.equality.none.none.mult.none.inequality.none.none /;
+$offtext
+$gdxin
+
+abort$[not isFileOK] "input file marked invalid";
+pReduc = (nInputOpts-nOutputOpts) / nInputOpts;
+
+file opt / 'nlpec.opt' / ;
+scalar count  / 0 /;
+scalar fails  / 0 /;
+
+execute 'echo Allruns.txt started on %system.date1% >  allruns.txt';
+execute 'echo Default DNLP solver is %system.dnlp%  >> allruns.txt';
+execute 'echo fail.txt started on %system.date1% > fail.txt';
+
+set testedOpts(sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+               dRefType, dSlack, dConstraint, dAggregate, dNCPBounds);
+
+testedOpts(sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+           dRefType, dSlack, dConstraint, dAggregate, dNCPBounds) =
+ validOpts(sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+           dRefType, dSlack, dConstraint, dAggregate, dNCPBounds);
+
+testedOpts(sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+           dRefType, dSlack, dConstraint, dAggregate, dNCPBounds)$
+           [sameas(sRefType,'min') and sameas(sSlack,'none')] = NO;
+
+
+loop {testedOpts(sRefType, sSlack, sConstraint, sAggregate, sNCPBounds,
+                 dRefType, dSlack, dConstraint, dAggregate, dNCPBounds),
+  count := count + 1
+  putclose opt '* NLPEC option file ' count:0:0
+           / 'RefType    ' sRefType.tl    ' ' dRefType.tl
+           / 'Slack      ' sSlack.tl      ' ' dSlack.tl
+           / 'Constraint ' sConstraint.tl ' ' dConstraint.tl
+           / 'Aggregate  ' sAggregate.tl  ' ' dAggregate.tl
+           / 'NCPBounds  ' sNCPBounds.tl  ' ' dNCPBounds.tl / ;
+
+  execute '=gams mpec01.gms lo=2 optfile=1';
+  rc = errorlevel;
+  loop {solv$[rc
+              and SolverCapabilities(solv,'dnlp')
+              and not sameas(solv,'%system.dnlp%')],
+*   while we haven't gotten a solution,
+*   try non-default DNLP solvers in candidate list
+    opt.ap = 1;
+    putclose opt 'subSolver ', solv.tl /;
+    opt.ap = 0;
+    execute '=gams mpec01.gms lo=2 optfile=1';
+    rc = errorlevel;
+  };
+  if {rc,
+    execute 'cat nlpec.opt >> fail.txt';
+    fails := fails + 1;
+  };
+  execute 'cat nlpec.opt >> allruns.txt';
+};
+
+display " Count of possible option combinations: ", nInputOpts;
+display "Count of combinations after validation: ", nOutputOpts;
+display "                           % reduction: ", pReduc;
+display "Count of attempted runs: ", count;
+display "Count of    failed runs: ", fails;
+abort$fails "Count of failed runs: ", fails;

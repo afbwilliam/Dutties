@@ -1,0 +1,6 @@
+$title MPSGE naming test: labels cannot contain a . (MPSGE07,SEQ=84)
+
+$set ILABEL    "dot.is.bad"
+$set SETUPFAIL  1
+
+$include exchange.inc

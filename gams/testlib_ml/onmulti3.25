@@ -1,0 +1,16 @@
+$title Onmulti may violate the ordered property (ONMULTI3,SEQ=25)
+set dummy / d,e,a,b,c /
+set i    / a, b, c  / , k ;
+
+k(i+1) = yes;
+
+$onmulti
+
+set i    / e,d / ;
+
+$if errorfree $goto problem
+$clearerror
+$exit
+
+$label problem
+$error unordered property not recognized

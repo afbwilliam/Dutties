@@ -1,0 +1,199 @@
+$title Herves (Transposable Element) Activity Calculations  (HERVES,SEQ=305)
+$ontext
+  This program takes raw data from an Excel sheet, transforms the data
+  and finds the optimal values for alpha and beta following a procedure
+  outlined by Stephen Wright. An integral is computed numerically
+  using a trapezoidal approximations. The optimization results are then
+  written back into the Excel file.
+
+  This procedure was originally coded by David O'Brochta in Mathematica
+  and recast in a GAMS optimization framework by Wilhelmine Meeraus.
+
+  The Excel file contains the data from the field and labwork described
+  in W Meeraus, 2004.
+
+References
+
+   Stephen I Wright, Quang Hien Le, Daniel J Schoen and Thomas E Bureau,
+   Population Dynamics of an Ac-like Transposable Element in Self- and
+   Cross-Pollinating Arabidopsis, Genetics 158: 127-1288 (July 2001).
+
+   David O'Brochta, Private Communications, University of Maryland Biotechnology
+   Institute, 2004.
+
+   Wilhelmine H Meeraus, A Combined Fieldwork and Laboratory Investigation into
+   the Behaviour of the Herves Transposable Element, London School of Hygiene
+   & Tropical Medicine, Theses, 2004.
+$offtext
+$eolcom //
+
+* only run on Windows platforms
+
+$if %system.filesys% == UNIX $exit
+$call msappavail -Excel
+$if errorlevel 1 $goto noExcel
+$goto Excel
+$label noExcel
+$log Microsoft Excel is not available!
+$exit
+$label Excel
+
+
+* you can use command line --xls=xxx and --sheet=xxx which
+* will allow further automation
+
+* the sheet names are aa,ag,am,Zu,Zag
+
+$if NOT set xls   $set xls    'hervesio.xls' // work book name
+$if NOT set sheet $set sheet  'Ag'           // sheet name
+
+$set rng      '%sheet%!A4'  // starting range to read data
+$set rows     '%sheet%!A5'  // starting range to read row ids
+$set gdx      'temp.gdx'    // name of temp GDX file
+$set rngout   '%sheet%_Opt!A1' // starting range to store results
+
+*   1. Extract raw data from an xls sheet into a GDX file
+*      and load into GAMS. The result of this step are
+*      the set of samples i and the counts cnt. Empty or all
+*      zero rows and columns will be dropped automatically from
+*      the xls data.
+
+sets imax max sample size  / 1*50 /
+     i(imax) samples;
+parameter cnt(imax) counts;
+
+
+alias     (*,code,LabId,Cut);
+parameter raw(code,LabId,Cut) Raw Observations;
+set       rr(code,LabID) row labels including empty rows;
+
+* empty rows will be reported
+
+$call =gdxxrw "%xls%" output="%gdx%" trace=0 par=raw rng="%rng%" rdim=2 cdim=1 set=rr rng="%rows%" rdim=2 values=NoData
+$if errorlevel 1 $abort Something wrong with reading raw data from %xls%
+$gdxin "%gdx%"    // open GDX file
+$load raw rr      // load data into gams
+$gdxin            // close gdx file
+
+sets rid(code,labID) row identifier
+     cid(Cut)        column identifier;
+parameter ct column totals;
+
+option rid < raw, cid < raw, rid:0:0:1; // map domains and set print option
+abort$(card(rid) > card(imax)) 'size of imax is to small', imax, rid;
+ct(cid) = sum(rid, raw(rid,cid));
+display raw,ct;
+
+set rrdiff all zero rows;
+rrdiff(rr) = yes - rid(rr); display rrdiff;
+
+i(imax)   = ord(imax) <= card(rid);
+
+cnt(imax) = sum(cid, ct(cid) = ord(imax));
+display i,cnt;
+
+*   2. Prepare model constants and set up numerical integration
+*      data sets.
+
+parameter diploid sample size
+          nhat
+          bin(imax)  binomial for diploid ;
+
+diploid = card(i);
+
+bin(i(imax))  = fact(card(i))/fact(card(i)-ord(imax))/fact(ord(imax));
+
+* numerical integration data
+set s     integral discritization steps / s0*s1000 /
+    ss(s) excluding first element ;
+parameter xx(s) values for steps s (0-1)
+          ws(s) weight for trapezoid approximation
+          deltaxx;
+
+ss(s)   = ord(s) > 1;   // drop values for x = 0
+deltaxx = 1/(card(s)-1);
+xx(s)   = (ord(s)-1)*deltaxx;
+ws(s)   = 1; ws(s)$(ord(s) = 1) = 0.5; ws(s)$(ord(s) = card(s)) = 0.5;
+
+parameter t0(s)   intermediate value one
+          t1(imax,s) intermediate value two;
+
+t0(s)      = sqr(xx(s))+ 2*xx(s)*(1 - xx(s));
+t1(i(imax),s) = ws(s)*power(t0(s),ord(imax))*power(1 - t0(s),card(i)-ord(imax));
+
+*   3. Define optimization model and set relevant bounds.
+*      Note that not all parameters are known at this point.
+
+
+variables chi  sum of CHI squares
+          a    alpha values
+          b    beta values
+          est(imax)    estimates
+equations defchi       definition of CHI
+          defest(imax) definition of estimates;
+
+defchi..  chi =e= sum(i, sqr(cnt(i)-est(i))/est(i));
+
+defest(i)..  est(i) =e= nhat*(a+b)/a/beta(a,b)*bin(i)*deltaxx*sum(s, t1(i,s)*xx(s)**(a-1)*(1-xx(s))**(b-1));
+
+model m / all /;
+
+* set bounds and initial values
+
+a.lo = 0.01; a.up = 1.0;
+b.lo = 1;     b.up = 10;
+a.l = .1;     b.l  = 5;
+est.l(i) = 1;
+option  domlim=1000,limcol=0,limrow=0,solprint=on;
+
+parameter rep(*,*) summary report;
+
+*   4. First Optimization
+
+nhat    = 4/3*sum(i(imax), ord(imax)*cnt(i))/card(i);
+
+solve m min chi us dnlp;
+
+display  diploid, nhat, a.l,b.l,chi.l;
+
+rep(i ,'w-obs') = cnt(i);
+rep(i ,'w-est') = est.l(i);
+rep(i ,'w-chi') = sqr(cnt(i)-est.l(i))/est.l(i);
+rep('total','w-chi') = sum(i, rep(i,'w-chi'));
+rep('total','w-obs') = sum(i, cnt(i));
+rep('alpha','w-est') = a.l;
+rep('beta' ,'w-est') = b.l;
+rep('nhat' ,'w-est') = nhat;
+rep('SStat' ,'w-est') = m.solvestat;
+rep('MStat' ,'w-est') = m.modelstat;
+
+*   5. Second solve with modified counts
+
+// use a cutoff of 70% and solve again
+
+cnt(i(imax))$(ord(imax) > 0.7*card(i)) = 0;
+nhat    = 4/3*sum(i(imax), ord(imax)*cnt(i))/card(i);
+display nhat;
+
+solve m min chi us dnlp;
+
+display  diploid, nhat, a.l,b.l,chi.l;
+
+rep(i ,'wo-obs') = cnt(i);
+rep(i ,'wo-est') = est.l(i);
+rep(i ,'wo-chi') = sqr(cnt(i)-est.l(i))/est.l(i);
+rep('total','wo-obs') = sum(i, cnt(i));
+rep('total','wo-chi') = sum(i, rep(i,'wo-chi'));
+rep('alpha','wo-est') = a.l;
+rep('beta' ,'wo-est') = b.l;
+rep('nhat' ,'wo-est') = nhat;
+rep('SStat' ,'wo-est') = m.solvestat;
+rep('MStat' ,'wo-est') = m.modelstat;
+
+display rep;
+
+*   6. Update xls sheet with results in a new sheet
+
+execute_unload "%gdx%", rep; abort$errorlevel 'unload to %gdx% failed';
+execute '=gdxxrw "%gdx%" output="%xls%" trace=0 par=rep rng="%rngout%" rdim=1 cdim=1';
+abort$errorlevel 'write to %xls% failed';

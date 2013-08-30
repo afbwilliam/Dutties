@@ -1,0 +1,170 @@
+<html>
+<head>
+<title>BENCH Options</title>
+</head>
+<body>
+<h2>BENCH Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/bench.pdf">BENCH manual</a>.
+
+<h2>Summary of BENCH Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General options</h3></th></tr>
+<tr><td><a href="#BENCHallsolvers">
+allsolvers</a></td>
+<td>run all valid solvers</td></tr>
+<tr><td><a href="#BENCHcumulative">
+cumulative</a></td>
+<td>apply limits cumulatively across runs of multiple solvers</td></tr>
+<tr><td><a href="#BENCHdualcstol">
+dualcstol</a></td>
+<td>dual complementary slackness tolerance: passed to EXAMINER</td></tr>
+<tr><td><a href="#BENCHdualfeastol">
+dualfeastol</a></td>
+<td>dual feasibility tolerance: passed to EXAMINER</td></tr>
+<tr><td><a href="#BENCHexaminer">
+examiner</a></td>
+<td>call EXAMINER to verify solution</td></tr>
+<tr><td><a href="#BENCHoutlev">
+outlev</a></td>
+<td>log output level</td></tr>
+<tr><td><a href="#BENCHpaver">
+paver</a></td>
+<td>write PAVER trace files</td></tr>
+<tr><td><a href="#BENCHpaverex">
+paverex</a></td>
+<td>write PAVER trace files for the EXAMINER run</td></tr>
+<tr><td><a href="#BENCHprimalcstol">
+primalcstol</a></td>
+<td>primal complementary slackness tolerance: passed to EXAMINER</td></tr>
+<tr><td><a href="#BENCHprimalfeastol">
+primalfeastol</a></td>
+<td>primal feasibility tolerance: passed to EXAMINER</td></tr>
+<tr><td><a href="#BENCHreturnlastsol">
+returnlastsol</a></td>
+<td>return solution from the last solver</td></tr>
+<tr><td><a href="#BENCHsolvers">
+solvers</a></td>
+<td>list of solvers to benchmark</td></tr></table>
+<h2>Detailed Descriptions of BENCH Options</h2>
+
+<h4><a name="BENCHallsolvers">
+allsolvers</a>
+<i> (integer)</i> run all valid solvers</h4><p>
+
+Indicator if all valid solvers for given modeltype should be run.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BENCHcumulative">
+cumulative</a>
+<i> (integer)</i> apply limits cumulatively across runs of multiple solvers</h4><p>
+
+Indicator if resource time and iteration limits are interpreted as total
+limits for all solvers or for individual solvers. For example if enabled
+and <tt>reslim=1500</tt> then all solvers have a total of 1500 seconds. If not
+enabled, then each solver has a limit of 1500 seconds.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BENCHdualcstol">
+dualcstol</a>
+<i> (real)</i> dual complementary slackness tolerance: passed to EXAMINER</h4><p>
+
+By dual CS we refer to complementary slackness between dual variables
+and the primal constraints.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="BENCHdualfeastol">
+dualfeastol</a>
+<i> (real)</i> dual feasibility tolerance: passed to EXAMINER</h4><p>
+
+This tolerance
+is used for the checks on the dual variables and the dual constraints.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="BENCHexaminer">
+examiner</a>
+<i> (integer)</i> call EXAMINER to verify solution</h4><p>
+
+Flag to call GAMS/EXAMINER to independently verify solution for feasibility
+and optimality.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BENCHoutlev">
+outlev</a>
+<i> (integer)</i> log output level</h4><p>
+
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>BENCH summary log output only</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>BENCH summary log output and log output of each solver</td></tr>
+</table>
+
+<h4><a name="BENCHpaver">
+paver</a>
+<i> (integer)</i> write PAVER trace files</h4><p>
+
+Indicator if PAVER trace files should be written. Enabling causes a
+trace file <tt>solver.pvr</tt> to be written for each solver called. If the solver
+uses an option file, then the resulting file is <tt>solver-optnum.pvr</tt>, where
+optnum is the option file number. The files created can be submitted
+to the <a href="http://www.gamsworld.org/performance/paver/">PAVER Server</a> for automated performance analysis.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BENCHpaverex">
+paverex</a>
+<i> (integer)</i> write PAVER trace files for the EXAMINER run</h4><p>
+
+Indicator if PAVER trace files should be written for the Examiner run.
+Enabling causes a trace file <tt>solver-ex.pvr</tt> to be written for each solver
+called. If any Examiner check fails (independent or solver), then we return
+a model status 14 (no solution returned) and a solver status of 4 (terminated
+by solver). If no Examiner check is done, for example, because the
+return status is infeasible, then the status codes are returned as is. If the
+solver uses an option file, then the resulting file is <tt>solver-optnum-ex.pvr</tt>,
+where optnum is the option file number. The files created can be submitted
+to the <a href="http://www.gamsworld.org/performance/paver/">PAVER Server</a> for automated performance analysis.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BENCHprimalcstol">
+primalcstol</a>
+<i> (real)</i> primal complementary slackness tolerance: passed to EXAMINER</h4><p>
+
+By primal CS we refer to complementary slackness between primal
+variables and the dual constraints.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="BENCHprimalfeastol">
+primalfeastol</a>
+<i> (real)</i> primal feasibility tolerance: passed to EXAMINER</h4><p>
+
+This tolerance is used for the checks on the primal variables and the primal
+constraints.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="BENCHreturnlastsol">
+returnlastsol</a>
+<i> (integer)</i> return solution from the last solver</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="BENCHsolvers">
+solvers</a>
+<i> (string)</i> list of solvers to benchmark</h4><p>
+
+<tt>solver[.n]</tt> Solver is the name of the GAMS solver that should be used,
+and n is the integer corresponding to optfile for the root node. If .n is
+missing, the optfile treated as zero (i.e., the solver) will not look for an
+options file. This is a required option.
+
+</body></html>

@@ -1,0 +1,64 @@
+$title Rounding Problems in MIPs (BADMIP,SEQ=290)
+
+$ontext
+
+Most mixed-integer solvers are based on linear programming engines
+which use floating-point arithmetic. Occasionally, this leads
+to wrong solutions. Many MIP solvers failed on this example.
+
+Neumaier and Shcherbina have suggested procedures to overcome
+this problem. It should be the MIP below has a feasible space
+which is one single point only and the relaxed solution is far
+away from the integer solution. Most MIP codes will fail when
+the upper bound of the variables are large. In practice, this
+can be overcome by using tight upper bounds on integer variables
+to get a good relaxation. Looking at the relaxed problem
+will give more insight.
+
+
+Neumaier, A, and Shcherbina, O, Safe Bounds in Linear and
+Mixed-Integer Programming. Mathematical Programming A to appear,
+(2003)
+
+$offtext
+
+sets i     / 1*20 /
+     ii(i) / 2*19 /;
+
+scalar s / 6 /;
+variables obj x(i); integer variable x;
+equations eq1, eq2(i), eq3, defobj;
+
+eq1..  (s+1)*x('1') - x('2') =g= s - 1;
+
+eq2(ii(i))..  -s*x(i-1) + (s+1)*x(i) - x(i+1) =g= power(-1,ord(i))*(s+1);
+
+eq3.. -s*x('18') - (3*s-1)*x('19') + 3*x('20') =g= -(5*s-7);
+
+defobj.. obj =e= - x('20');
+
+model m /all /;
+
+x.up(i)$(ord(i) <= 13) = 10;
+x.up(i)$(ord(i) >= 14) = 1e6;
+
+m.limcol=0; m.limrow=0;
+
+solve m using mip min obj;
+
+parameter sol(i) single point solution
+          diff(i) difference with known solution;
+
+sol(i) = round(2-mod(ord(i),2));
+
+if(m.modelstat = %modelstat.Optimal% or
+   m.modelstat = %modelstat.IntegerSolution%,
+   diff(i) = round(x.l(i)-sol(i),6);
+   if(card(diff)=0,
+      display 'the correct solution was found -- congratulations'
+   else
+      display 'the solution is incorrect', sol;
+      abort$1 'MIP found wrong solution' );
+else
+   solve m using rmip min obj;
+   abort$1 'MIP failed' );

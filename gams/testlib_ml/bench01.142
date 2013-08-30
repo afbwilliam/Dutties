@@ -1,0 +1,40 @@
+$TITLE BENCH test suite - CALL (BENCH01,SEQ=142)
+
+$ONTEXT
+
+Checks status codes, levels and marginals with single
+solver specified for modeltypes
+
+   - LP  (lp02)
+   - QCP (qcp01)
+   - NLP (nlplp02)
+
+Contributor: Armin Pruessner, July 2004
+$OFFTEXT
+
+
+$if not exist lp02.gms  $call testlib -q lp02
+$if not exist qcp01.gms $call testlib -q qcp01
+$if not exist nlp02.gms $call testlib -q nlplp02
+
+
+* LP TEST
+$echo solvers %system.lp% > bench.opt
+$echo returnlastsol 1    >> bench.opt
+$call gams lp02 lp=bench lo=2 lf=bench01_%system.lp%.log o=bench01_%system.lp%.lst optfile 1
+$if errorlevel 1 $abort 'lp02 with optfile 1 failed check bench01_%system.lp%.lst'
+
+
+* QCP TEST
+$echo solvers %system.qcp% > bench.opt
+$echo returnlastsol 1    >> bench.opt
+$call gams qcp01 qcp=bench lo=2 lf=bench01_%system.qcp%01.log o=bench01_%system.qcp%.lst optfile 1
+$if errorlevel 1 $abort 'qcp01 with optfile 1 failed check bench01_%system.qcp%01.lst'
+
+
+* NLP TEST
+$echo solvers %system.nlp% > bench.opt
+$echo returnlastsol 1    >> bench.opt
+$call gams nlplp02 nlp=bench lo=2 lf=bench01_%system.nlp%.log o=bench01_%system.nlp%.lst optfile 1
+$if errorlevel 1 $abort 'nlplp02 with optfile 1 failed check bench01_%system.nlp%.lst'
+

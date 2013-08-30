@@ -1,0 +1,24 @@
+$title Test GDX environment variables with trailing blanks (GDXCOPY5,SEQ=451)
+
+$ontext
+Trailing or leading blanks in the GDX environment variables caused
+the automatically translation via gdxcopy to fail. There was no indication
+why the gdxcopy failed, other than a usage screen.
+
+In GAMS we have to work hard to get a trailing blank, in shell script
+this error is easily made.
+$offtext
+
+$ifi %system.platform% == AIX $exit No V6 GDX exists for this platform
+$ifi %system.platform% == BGP $exit No V6 GDX exists for this platform
+$ifi %system.platform% == DEX $exit No V6 GDX exists for this platform
+$ifi %system.platform% == DII $exit No V6 GDX exists for this platform
+$ifi %system.platform% == SOX $exit No V6 GDX exists for this platform
+
+$SetEnv GDXCONVERT "v6 "
+$SetEnv GDXCOMPRESS "1 "
+
+set dummy /1/;
+
+* This will trigger an execution error in GAMS23.2 and previous
+execute_unload 'dummy.gdx', dummy;

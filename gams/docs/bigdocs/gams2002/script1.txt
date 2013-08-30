@@ -1,0 +1,10 @@
+*GAMSIDE script V1
+filerun;%ProjDir%trandata.gms; s=r1
+filewait;%ProjDir%trandata.gms;
+message;Data job done   ;
+filerun;%ProjDir%tranmodl.gms; r=r1 s=r2
+filewait;%ProjDir%tranmodl.gms;
+message;Model job done ;
+filerun;%ProjDir%tranrept.gms; r=r2
+filewait;%ProjDir%tranrept.gms;
+message;Whole job done   ;

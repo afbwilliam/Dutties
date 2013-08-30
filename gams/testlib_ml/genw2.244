@@ -1,0 +1,17 @@
+$TITLE 'Generate test data for write2 test of gdxMrw' (GENW2,SEQ=244)
+
+set i / 1 * 50 /,
+    i1(i) / 1, 50 /,
+    i2(i),
+    i3(i),
+    dim3(i,i,i);
+
+i2(i) = i1(i);
+i3(i) = i1(i);
+dim3(i1,i2,i3) = yes;
+execute_unload 'write2a_.gdx', i, dim3;
+
+set k / first, middle, last /;
+set s(k,k,k,k,k,k,k,k,k,k);
+s(k,k,k,k,k,k,k,k,k,k) = not sameas(k,'middle');
+execute_unload 'write2b_.gdx', s;

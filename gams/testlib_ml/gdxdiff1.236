@@ -1,0 +1,72 @@
+$title 'Test GDXDIFF handling of zeros when eps>0' (GDXDIFF1,SEQ=236)
+
+$ontext
+Gdxdiff should ignore small differences when a
+key appears in one symbol but not in the other symbol,
+and a nonzero error tolerance is in effect.
+Tests fix for issue AB00856
+
+Contributor: Paul van der Eijk
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+set i /i1*i5/,
+    j /j1*j5/;
+
+parameter P1(i, j), P2(i, j);
+variable  V1(i, j), V2(i,j);
+
+P1(i, j) = uniform(0, 1);
+P2(i, j) = P1(i, j);
+
+P1('i2', 'j3') = 0.0;
+P2('i2', 'j3') = 1e-6;
+
+V1.L(i, j) = P1(i, j);
+V2.L(i, j) = P2(i, j);
+
+execute_unload 'p1.gdx', P1=P, V1=V;
+execute_unload 'p2.gdx', P2=P, V2=V;
+
+Scalar rc;
+
+execute 'gdxdiff p1.gdx p2.gdx > %NUL%';
+rc=errorlevel;
+display rc;
+abort$(rc <> 1) 'GDXDIFF expected a difference';
+
+
+execute 'gdxdiff p1.gdx p2.gdx eps=1e-5 > %NUL%';
+rc=errorlevel;
+abort$(rc <> 0)'GDXDIFF no difference expected';
+
+set k /k1*k2/;
+
+parameter B1(i, j, k, k, k, k, k, k, k, k), B2(i, j, k, k, k, k, k, k, k, k);
+
+B1(i, j, k, k, k, k, k, k, k, k) = uniform(0,1);
+B2(i, j, k, k, k, k, k, k, k, k) = B1(i, j, k, k, k, k, k, k, k, k);
+
+execute_unload 'p1.gdx', B1=B;
+execute_unload 'p2.gdx', B2=B;
+execute 'gdxdiff p1.gdx p2.gdx > %NUL%';
+rc=errorlevel;
+abort$(rc <> 0)'GDXDIFF no difference expected';
+
+B2('i2', 'j3', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1')= -1;
+execute_unload 'p2.gdx', B2=B;
+execute 'gdxdiff p1.gdx p2.gdx > %NUL%';
+rc=errorlevel;
+abort$(rc <> 1) 'GDXDIFF expected a difference';
+
+B1('i2', 'j3', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1')= 1E-7;
+B2('i2', 'j3', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1', 'k1')= 0;
+execute_unload 'p1.gdx', B1=B;
+execute_unload 'p2.gdx', B2=B;
+execute 'gdxdiff p1.gdx p2.gdx eps=1e-6 > %NUL%';
+rc=errorlevel;
+abort$(rc <> 0)'GDXDIFF no difference expected';
+
+

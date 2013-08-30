@@ -1,0 +1,39 @@
+$title 'Test simple 2x2 MCP model where preprocessing solves it' (MCP05,SEQ=255)
+
+$ontext
+
+This model turfed up a bug in the PATH preprocessor.  The bug is known
+to exist in the 4.6.05 and 4.6.06 libraries, and is fixed in 4.6.07
+(Jun 2006).
+
+Contributor: Steve Dirkse, June 2006
+$offtext
+
+variables  x1,x2;
+equations  e1,e2;
+
+scalar a    / 10 /;
+scalar tol  / 1e-6 /;
+
+e1..             x2 =E= a;
+e2..    x1 -.5 * x2 =E= 0;
+
+* explicit match required if we want to insist on correct marginals
+model m / e1.x1, e2.x2 /;
+
+m.limrow=0; m.limcol=0;
+
+solve m using MCP;
+
+abort$[m.modelStat <> 1] 'bad model status', m.modelstat;
+abort$[m.solveStat <> 1] 'bad solve status', m.solvestat;
+
+abort$[abs(x1.l -a/2) > tol] 'bad x1.l', x1.l;
+abort$[abs(x1.m)      > tol] 'bad x1.m', x1.m;
+abort$[abs(x2.l -a  ) > tol] 'bad x2.l', x2.l;
+abort$[abs(x2.m)      > tol] 'bad x2.m', x2.m;
+
+abort$[abs(e1.l -a  ) > tol] 'bad e1.l', e1.l;
+abort$[abs(e1.m -a/2) > tol] 'bad e1.m', e1.m;
+abort$[abs(e2.l     ) > tol] 'bad e2.l', x2.l;
+abort$[abs(e2.m-a   ) > tol] 'bad e2.m', x2.m;

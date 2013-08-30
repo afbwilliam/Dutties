@@ -1,0 +1,9 @@
+$TITLE 'BARON test suite - bar_space_length is case sensitive' (BARON02,SEQ=315)
+
+variable x; equation e; model m /e/;
+e.. x =e= 1;
+m.workspace=1;
+
+option lp=baron;
+solve m us lp min x;
+abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat <> %modelstat.Optimal%) 'problems with BARON solver';

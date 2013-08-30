@@ -1,0 +1,45 @@
+$title 'Test optimization of a control set with a single element' (LOOP8,SEQ=213)
+
+$ontext
+
+*test
+*
+*Paul van der Eijk
+
+$offtext
+
+set i /i1*i3/
+    j /j1*j3/
+    k /k1*k3/
+    l /l1*l200/
+    m /m1*m2000/;
+
+set jj(j) /j3/;
+
+set A(i,j,k);
+A(i,j,k)$(uniform(0,1) <= 0.5)=yes;
+
+parameter B(i,j,k,l,m);
+B("i2","j3","k3",l,m)$(uniform(0,1) <= 0.05)=1;
+
+scalar T1 Time without modified control,
+       T2 Time with modified control;
+
+T1 = TimeExec;
+
+Loop((A(I,j,k)),
+   B(i,j,k,l,m) $= Sum(jj, B(i,jj,k,l,m));
+   );
+
+T1 := TimeExec - T1;
+T2 := TimeExec;
+*note that jj is modified inside the loop to the same element
+*because of the assignment, there is no optimization
+Loop((A(I,j,k)),
+   B(i,j,k,l,m) $= Sum(jj, B(i,jj,k,l,m));
+   jj("j3")=yes;
+   );
+T2 := TimeExec - T2;
+
+display T1,T2;
+Abort$(8 * T1 > T2) "Single element control does not improve performance";

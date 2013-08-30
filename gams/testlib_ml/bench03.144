@@ -1,0 +1,128 @@
+$TITLE BENCH test suite - LST (BENCH03,SEQ=144)
+
+$ONTEXT
+
+Checks bench listing output using:
+
+  - regular LP call
+  - LP call with Examiner
+  - LP call with Examiner fail (too tight tol)
+
+Contributor: Armin Pruessner, July 2004
+$OFFTEXT
+
+$ondollar
+
+$call gamslib -q trnsport
+
+$set bs
+$if %system.filesys% == UNIX $set bs \
+
+* LP TEST: REGULAR CALL (W/O EXAMINER)
+$call echo solvers cplex bdmlp minos > bench.opt
+$onecho > lp.lst
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     OBJECTIVE VALUE              153.6750
+     OBJECTIVE VALUE              153.6750
+     OBJECTIVE VALUE              153.6750
+$offecho
+
+$call gams trnsport lp=bench optfile=1 lo=2
+$call awk "/^ .*STATUS/ {print %bs%$0}" trnsport.lst > lp2.lst
+$call awk "/^ .*OBJECTIVE VALUE/ {print %bs%$0}"  trnsport.lst >> lp2.lst
+$call diff -bw lp.lst lp2.lst | wc -w  > "%gams.scrdir%err_lpreg.%gams.scrext%"
+
+* LP TEST: REGULAR CALL (W/ EXAMINER)
+$onecho > bench.opt
+solvers cplex bdmlp minos
+examiner 1
+$offecho
+$onecho > lp.lst
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     OBJECTIVE VALUE              153.6750
+     OBJECTIVE VALUE              153.6750
+     OBJECTIVE VALUE              153.6750
+     EXAMINER (SOLVER)  PASS
+     EXAMINER (INDEP.)  PASS
+     EXAMINER (SOLVER)  PASS
+     EXAMINER (INDEP.)  PASS
+     EXAMINER (SOLVER)  PASS
+     EXAMINER (INDEP.)  PASS
+$offecho
+
+$call gams trnsport lp=bench optfile=1 lo=2
+$call awk "/^ .*STATUS/ {print %bs%$0}" trnsport.lst > lp2.lst
+$call awk "/^ .*OBJECTIVE VALUE/ {print %bs%$0}"  trnsport.lst >> lp2.lst
+$call awk "/  EXAMINER/ {print %bs%$0}" trnsport.lst >> lp2.lst
+$call diff -bw lp.lst lp2.lst | wc -w  > "%gams.scrdir%err_lpex.%gams.scrext%"
+
+
+* LP TEST: REGULAR CALL (W/ EXAMINER AND TIGHT TOLERANCES)
+$onecho > bench.opt
+solvers bdmlp
+examiner 1
+primalfeastol 1e-16
+dualfeastol   1e-16
+primalcstol   1e-16
+dualcstol     1e-16
+$offecho
+$onecho > lp.lst
+     SOLVER             BDMLP / EXAMINER
+     SOLVER STATUS    1 NORMAL COMPLETION
+     MODEL STATUS     1 OPTIMAL
+     EXAMINER (SOLVER)  PASS
+     EXAMINER (INDEP.)  FAIL
+     OBJECTIVE VALUE              153.6750
+$offecho
+
+$call gams trnsport lp=bench optfile=1 lo=2
+$call awk "/SOLVER    / {print %bs%$0}" trnsport.lst >  lp2.lst
+$call awk "/^ .*STATUS/ {print %bs%$0}" trnsport.lst >> lp2.lst
+$call awk "/^ .*OBJECTIVE VALUE/ {print %bs%$0}"  trnsport.lst >> lp2.lst
+$call awk "/  EXAMINER/ {print %bs%$0}" trnsport.lst >> lp2.lst
+$call diff -bw lp.lst lp2.lst | wc -w > "%gams.scrdir%err_lpex_t.%gams.scrext%"
+
+
+
+* ABORT IF ERRORS OCCURED
+scalar err_lpreg /
+$include "%gams.scrdir%err_lpreg.%gams.scrext%"
+/;
+scalar err_lpex /
+$include "%gams.scrdir%err_lpex.%gams.scrext%"
+/;
+scalar err_lpex_t /
+$include "%gams.scrdir%err_lpex_t.%gams.scrext%"
+/;
+
+* sometimes BDMLP gets an exact solution,
+* so Examiner passes it even on tight tolerances
+$if %system.platform% == AIX err_lpex_t = 0;
+$if %system.platform% == AXU err_lpex_t = 0;
+$if %system.platform% == DAR err_lpex_t = 0;
+$if %system.platform% == DEX err_lpex_t = 0;
+$if %system.platform% == DII err_lpex_t = 0;
+$if %system.platform% == LEX err_lpex_t = 0;
+$if %system.platform% == LNX err_lpex_t = 0;
+$if %system.platform% == SGI err_lpex_t = 0;
+$if %system.platform% == SIS err_lpex_t = 0;
+$if %system.platform% == SOL err_lpex_t = 0;
+$if %system.platform% == SOX err_lpex_t = 0;
+$if %system.platform% == WEX err_lpex_t = 0;
+$if %system.platform% == WIN err_lpex_t = 0;
+* this is pretty lame - could invest some time to get a model/solver
+* combo that doesn't give an exact solution
+
+abort$(err_lpreg>0)   'LP log output incorrect - w/o Examiner'
+abort$(err_lpex>0)    'LP log output incorrect - w/  Examiner'
+abort$(err_lpex_t>0)  'LP log output incorrect - w/  Examiner and tight tolerances'

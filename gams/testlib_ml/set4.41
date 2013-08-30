@@ -1,0 +1,23 @@
+$title set $set with includes (SET4,SEQ=41)
+$set a this is from the main program
+$escape =
+$onecho > temp.gms
+$setglobal a this is global a incfile %=system.fn%=
+$if NOT '%=a%=' == 'this is from the main program' $error this should be from the main program
+$set a this is scoped a incfile %=system.fn%=
+$if NOT '%=a%=' == 'this is scoped a incfile %=system.fn%=' $error this is scoped a incfile %=system.fn%=
+$setlocal a this is local  a incfile %=system.fn%=
+$if NOT '%=a%=' == 'this is local  a incfile %=system.fn%=' $error this is scoped a incfile %=system.fn%=
+$show
+$offecho
+$escape %
+
+$if NOT '%a%' == 'this is from the main program' $error this should be from the main program
+$include temp.gms
+$if NOT '%a%' == 'this is from the main program' $error this should be from the main program
+
+$if NOT set       a $error a scoped should be defined
+$if     setlocal  a $error a local  should be undefined
+$if NOT setglobal a $error a global should be defined
+
+$show

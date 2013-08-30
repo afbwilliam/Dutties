@@ -1,0 +1,22 @@
+$title 'tests $goto, $ife, and $eval' (COMPILE5,SEQ=327)
+
+$eval int   10
+$eval dmax  10
+$eval hmax %dmax%*%int%
+
+set d / d1*d%dmax% / , dd(d)
+    h / h1*h%hmax% /
+    dh (d,h) create data with $goto
+    dhx(d,h) assign with special lag;
+
+dd(d) = no; dd('d1') = yes;
+dhx(d+floor((ord(h)-1)/%int%),h)$dd(d) = yes;
+
+set dh(d,h) /
+$eval he '0' $eval d '0'
+$label two $eval d '%d%+1' $eval hs '%he%+1' $eval he '%he%+%int%'
+d%d%.h%hs%*h%he%
+$ife %d%<%dmax% $goto two
+           / ;
+set error(d,h); error(d,h) = dhx(d,h) xor dh(d,h);
+abort$card(error) 'dha and dhx are not the same', error;

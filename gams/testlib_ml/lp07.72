@@ -1,0 +1,111 @@
+$title Test restarts with reslim (LP07,SEQ=72)
+
+$ontext
+More elaborate checks on iteration interrupt for optimal
+and infesible models
+$offtext
+
+  Sets
+       i   canning plants   / seattle, austin, san-diego /
+       j   markets          / new-york, madison, chicago, topeka /
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              austin      200
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              madison     150
+              chicago     300
+              topeka      275  / ;
+
+  Table c(i,j)  distance in thousands of miles
+                    new-york  madison     chicago      topeka
+      seattle          2.5      .05         1.7          1.8
+      austin           2.3     1.2          1.0           .5
+      san-diego        3.5     3.9          2.8          1.4  ;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j));
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model lp07 /all/ ;
+
+
+parameters x_l(i,j)
+           x_m(i,j)
+           z_l
+           z_m
+           cost_l
+           cost_m
+           supply_l(i)
+           supply_m(i)
+           demand_l(j)
+           demand_m(j) ;
+
+scalar tol /1e-6 /;
+
+option limcol=0,limrow=0,solprint=on;
+
+Solve lp07 using lp minimizing z ;
+abort$( lp07.solvestat <> %solvestat.NormalCompletion% or lp07.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( lp07.numnopt  <> 0 ) 'bad numopt';
+abort$( lp07.numinfes <> 0 ) 'bad infes';
+
+x_l(i,j)    = x.l(i,j)    ;
+x_m(i,j)    = x.m(i,j)    ;
+z_l         = z.l         ;
+z_m         = z.m         ;
+cost_l      = cost.l      ;
+cost_m      = cost.m      ;
+supply_l(i) = supply.l(i) ;
+supply_m(i) = supply.m(i) ;
+demand_l(j) = demand.l(j) ;
+demand_m(j) = demand.m(j) ;
+
+lp07.reslim = 0;
+Solve lp07 using lp minimizing z ;
+abort$( lp07.solvestat <> %solvestat.NormalCompletion% or lp07.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( lp07.numnopt  <> 0 ) 'bad numopt';
+abort$( lp07.numinfes <> 0 ) 'bad infes';
+abort$( abs(z.l-z_l) > tol ) 'bad z.l';
+abort$( abs(z.m-z_m) > tol ) 'bad z.m';
+abort$( smax((i,j), abs(x.l(i,j)-x_l(i,j)))   > tol ) 'bad x.l';
+abort$( smax((i,j), abs(x.m(i,j)-x_m(i,j)))   > tol ) 'bad x.m';
+abort$( smax(i, abs(supply.l(i)-supply_l(i))) > tol ) 'bad supply.l';
+abort$( smax(i, abs(supply.m(i)-supply_m(i))) > tol ) 'bad supply.m';
+abort$( smax(j, abs(demand.l(j)-demand_l(j))) > tol ) 'bad demand.l';
+abort$( smax(j, abs(demand.m(j)-demand_m(j))) > tol ) 'bad demand.m';
+abort$( abs(cost.l-cost_l) > tol ) 'bad cost.l';
+abort$( abs(cost.m-cost_m) > tol ) 'nad cost.m';
+
+lp07.reslim = 0;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp07 using lp minimizing z ;
+abort$( lp07.solvestat <> %solvestat.ResourceInterrupt%) 'bad return code';
+if(lp07.modelstat = %modelstat.IntermediateInfeasible%,
+   abort$( lp07.numnopt  <> 0 ) 'bad numopt';
+   abort$( lp07.numinfes =  0 ) 'bad infes';
+elseif lp07.modelstat = %modelstat.IntermediateNonoptimal%,
+   abort$( lp07.numnopt  = 0 ) 'bad numopt';
+   abort$( lp07.numinfes <> 0 ) 'bad infes';
+elseif lp07.modelstat <> %modelstat.NoSolutionReturned%,
+   abort$( lp07.numnopt  = 0 ) 'bad numopt';
+   abort$( lp07.numinfes = 0 ) 'bad infes';
+   );

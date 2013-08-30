@@ -1,0 +1,82 @@
+$title piped projection and counts to 1,2,3 dimensions and sorts (PIPE6,SEQ=116)
+
+$ontext
+
+Contributor: Alex Meeraus
+$offtext
+
+$version 137 goto OK
+$clearerror
+$stop
+$label OK
+
+* the right side has two identical domains
+* we match the name without aliasing
+
+$eolcom  //
+
+set i / 1*5 /; alias(i,i1,i2,i3,i4);
+
+parameter a4(i1,i2,i2,i4);   // note the declaration i2,i2
+
+a4(i1,i2,i3,i4)$(uniform(0,1) > .9) = uniform(1,2);
+
+parameters three123L(i1,i2,i3)
+           three123R(i1,i2,i3)
+           three432L(i4,i3,i2)
+           three432R(i4,i3,i2)
+           three312L(i3,i1,i2)
+           three312R(i3,i1,i2)
+           two12L(i1,i2)
+           two12R(i1,i2)
+           two34(i3,i4)
+           two41(i4,i1)
+           two23L(i2,i3)
+           two23R(i2,i3)
+           two24L(i2,i4)
+           two24R(i2,i4)
+           one1(i1)
+           one2L(i2)
+           one2R(i2)
+           one4(i4);
+
+option one1  < a4
+       one2R < a4
+       one2L <= a4
+       one4  < a4 ;
+
+abort$sum(i1, one1 (i1) <> sum((   i2,i3,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum(i2, one2L(i2) <> sum((i1,   i3,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum(i2, one2R(i2) <> sum((i1,   i3,i4)$a4(i1,i3,i2,i4), 1)) 'bad aggreagtion';
+abort$sum(i4, one4 (i4) <> sum((i1,i2,i3   )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+
+$exit
+
+option two12R <  a4
+       two12R <= a4
+       two34  <  a4
+       two41  <  a4
+       two23R <  a4
+       two23L <= a4
+       two24L <  a4
+       two24R <  a4
+
+abort$sum((i1,i2), two12L(i1,i2) <> sum((      i3,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i1,i2), two12R(i1,i2) <> sum((      i3,i4)$a4(i1,i3,i2,i4), 1)) 'bad aggreagtion';
+abort$sum((i3,i4), two34 (i3,i4) <> sum((i1,i2      )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i4,i1), two41 (i4,i1) <> sum((   i2,i3   )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i2,i3), two23L(i2,i3) <> sum((i1      ,i4)$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i2,i3), two23R(i2,i3) <> sum((i1      ,i4)$a4(i1,i3,i2,i4), 1)) 'bad aggreagtion';
+abort$sum((i2,i4), two24L(i2,i4) <> sum((i1   ,i3   )$a4(i1,i2,i3,i4), 1)) 'bad aggreagtion';
+abort$sum((i2,i4), two24L(i2,i4) <> sum((i1   ,i3   )$a4(i1,i3,i2,i4), 1)) 'bad aggreagtion';
+
+option three123 < a4
+       three432 < a4
+       three312 < a4;
+
+abort$sum((i1,i2,i3), three123L(i1,i2,i3) <> sum(i4$a4(i1,i2,i3,i4), 1)) 'bad sort';
+abort$sum((i1,i2,i3), three123R(i1,i2,i3) <> sum(i4$a4(i1,i3,i2,i4), 1)) 'bad sort';
+abort$sum((i4,i3,i2), three432L(i4,i3,i2) <> sum(i1$a4(i1,i2,i3,i4), 1)) 'bad sort';
+abort$sum((i4,i3,i2), three432R(i4,i3,i2) <> sum(i1$a4(i1,i3,i2,i4), 1)) 'bad sort';
+abort$sum((i3,i1,i2), three312L(i3,i1,i2) <> sum(i4$a4(i1,i2,i3,i4), 1)) 'bad sort';
+abort$sum((i3,i1,i2), three312R(i3,i1,i2) <> sum(i4$a4(i1,i3,i2,i4), 1)) 'bad sort';

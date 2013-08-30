@@ -1,0 +1,10 @@
+$title test for NL code generation error GT00470 (NLCODE1,SEQ=64)
+
+scalar zero / 0 /;
+positive variables u,v,x,y; variable z; equation e; model m / e /;
+
+e.. z =e= zero*(-u*v) + x*y;
+
+solve m us nlp min z;
+
+abort$(m.solvestat <> %solvestat.NormalCompletion%) 'something went wrong';

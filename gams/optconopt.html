@@ -1,0 +1,1172 @@
+<html>
+<head>
+<title>CONOPT Options</title>
+</head>
+<body>
+<h2>CONOPT Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/conopt.pdf">CONOPT manual</a>.
+
+<h2>Summary of CONOPT Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Algorithmic options</h3></th></tr>
+<tr><td><a href="#CONOPTLF2DRV">
+LF2DRV</a></td>
+<td>Limit on errors in Directional Second Derivative evaluation.</td></tr>
+<tr><td><a href="#CONOPTLFDEGI">
+LFDEGI</a></td>
+<td>Limit on number of degenerate iterations before starting degeneracy breaking strategy.</td></tr>
+<tr><td><a href="#CONOPTLFEERR">
+LFEERR</a></td>
+<td>Limit on number of function evaluation errors. Overwrites GAMS Domlim option</td></tr>
+<tr><td><a href="#CONOPTLFHSOK">
+LFHSOK</a></td>
+<td>Limit on errors in Hessian evaluation.</td></tr>
+<tr><td><a href="#CONOPTLFITER">
+LFITER</a></td>
+<td>Maximum number of iterations. Overwrites GAMS Iterlim option.</td></tr>
+<tr><td><a href="#CONOPTLFMXNS">
+LFMXNS</a></td>
+<td>Maximum number of new superbasic variables added in one iteration.</td></tr>
+<tr><td><a href="#CONOPTLFNICR">
+LFNICR</a></td>
+<td>Limit on number of iterations with slow progress (relative less than Rtobjl).</td></tr>
+<tr><td><a href="#CONOPTLFNSUP">
+LFNSUP</a></td>
+<td>Maximum number of superbasic variables in the approximation to the Reduced Hessian.</td></tr>
+<tr><td><a href="#CONOPTLFSCAL">
+LFSCAL</a></td>
+<td>Rescaling frequency.</td></tr>
+<tr><td><a href="#CONOPTLFSTAL">
+LFSTAL</a></td>
+<td>Limit on the number of stalled iterations.</td></tr>
+<tr><td><a href="#CONOPTLMDEBG">
+LMDEBG</a></td>
+<td>Method used by the function and derivative debugger.</td></tr>
+<tr><td><a href="#CONOPTLMMXSF">
+LMMXSF</a></td>
+<td>Method used to determine the step in Phase 0.</td></tr>
+<tr><td><a href="#CONOPTLMMXST">
+LMMXST</a></td>
+<td>Method used to determine the maximum step while tightening tolerances.</td></tr>
+<tr><td><a href="#CONOPTLMNDIA">
+LMNDIA</a></td>
+<td>Method for initializing the diagonal of the approximate Reduced Hessian</td></tr>
+<tr><td><a href="#CONOPTLMSCAL">
+LMSCAL</a></td>
+<td>Method used for scaling.</td></tr>
+<tr><td><a href="#CONOPTLS2NDI">
+LS2NDI</a></td>
+<td>Flag for approximating Hessian information for incoming superbasics.</td></tr>
+<tr><td><a href="#CONOPTLS2PTJ">
+LS2PTJ</a></td>
+<td>Flag for use of perturbations to compute 2nd derivatives in SQP method.</td></tr>
+<tr><td><a href="#CONOPTLSANRM">
+LSANRM</a></td>
+<td>Flag for turning Steepest Edge on.</td></tr>
+<tr><td><a href="#CONOPTLSCRSH">
+LSCRSH</a></td>
+<td>Flag for crashing an initial basis without fixed slacks</td></tr>
+<tr><td><a href="#CONOPTLSESLP">
+LSESLP</a></td>
+<td>Flag for enabling SLP mode.</td></tr>
+<tr><td><a href="#CONOPTLSESQP">
+LSESQP</a></td>
+<td>Flag for enabling of SQP mode.</td></tr>
+<tr><td><a href="#CONOPTLSISMP">
+LSISMP</a></td>
+<td>Flag for Ignoring Small Pivots in Triangular models</td></tr>
+<tr><td><a href="#CONOPTLSLACK">
+LSLACK</a></td>
+<td>Flag for selecting initial basis as Crash-triangular variables plus slacks.</td></tr>
+<tr><td><a href="#CONOPTLSPOST">
+LSPOST</a></td>
+<td>Pre-processor flag for identifying and using post-triangular equations.</td></tr>
+<tr><td><a href="#CONOPTLSPRET">
+LSPRET</a></td>
+<td>Pre-processor flag for identifying and using pre-triangular equations.</td></tr>
+<tr><td><a href="#CONOPTLSSCAL">
+LSSCAL</a></td>
+<td>Flag for dynamic scaling.</td></tr>
+<tr><td><a href="#CONOPTLSSQRS">
+LSSQRS</a></td>
+<td>Flag for Square System. Alternative to defining modeltype=CNS in GAMS</td></tr>
+<tr><td><a href="#CONOPTLSTCRS">
+LSTCRS</a></td>
+<td>Flag for using the triangular crash method.</td></tr>
+<tr><td><a href="#CONOPTLSTRIA">
+LSTRIA</a></td>
+<td>Flag for triangular or recursive system of equations.</td></tr>
+<tr><td><a href="#CONOPTLSTRID">
+LSTRID</a></td>
+<td>Flag for turning diagnostics on for the post-triangular equations.</td></tr>
+<tr><td><a href="#CONOPTRTBND1">
+RTBND1</a></td>
+<td>Bound filter tolerance for solution values close to a bound.</td></tr>
+<tr><td><a href="#CONOPTRTBNDT">
+RTBNDT</a></td>
+<td>Bound tolerance for defining variables as fixed.</td></tr>
+<tr><td><a href="#CONOPTRTIPVA">
+RTIPVA</a></td>
+<td>Absolute Pivot Tolerance for building initial basis.</td></tr>
+<tr><td><a href="#CONOPTRTIPVR">
+RTIPVR</a></td>
+<td>Relative Pivot Tolerance for building initial basis</td></tr>
+<tr><td><a href="#CONOPTRTMAXJ">
+RTMAXJ</a></td>
+<td>Upper bound on the value of a function value or Jacobian element.</td></tr>
+<tr><td><a href="#CONOPTRTMAXS">
+RTMAXS</a></td>
+<td>Upper bound on scale factors.</td></tr>
+<tr><td><a href="#CONOPTRTMAXV">
+RTMAXV</a></td>
+<td>Upper bound on solution values and equation activity levels</td></tr>
+<tr><td><a href="#CONOPTRTMINA">
+RTMINA</a></td>
+<td>Zero filter for Jacobian elements and inversion results.</td></tr>
+<tr><td><a href="#CONOPTRTMINJ">
+RTMINJ</a></td>
+<td>Filter for small Jacobian elements to be ignored during scaling.</td></tr>
+<tr><td><a href="#CONOPTRTMINS">
+RTMINS</a></td>
+<td>Lower bound for scale factors computed from values and 1st derivatives.</td></tr>
+<tr><td><a href="#CONOPTRTMNS2">
+RTMNS2</a></td>
+<td>Lower bound for scale factors based on large 2nd derivatives.</td></tr>
+<tr><td><a href="#CONOPTRTNWMA">
+RTNWMA</a></td>
+<td>Maximum feasibility tolerance (after scaling).</td></tr>
+<tr><td><a href="#CONOPTRTNWMI">
+RTNWMI</a></td>
+<td>Minimum feasibility tolerance (after scaling).</td></tr>
+<tr><td><a href="#CONOPTRTNWTR">
+RTNWTR</a></td>
+<td>Feasibility tolerance for triangular equations.</td></tr>
+<tr><td><a href="#CONOPTRTOBJL">
+RTOBJL</a></td>
+<td>Limit for relative change in objective for well-behaved iterations.</td></tr>
+<tr><td><a href="#CONOPTRTOBJR">
+RTOBJR</a></td>
+<td>Relative accuracy of the objective function.</td></tr>
+<tr><td><a href="#CONOPTRTONED">
+RTONED</a></td>
+<td>Accuracy of One-dimensional search.</td></tr>
+<tr><td><a href="#CONOPTRTPIVA">
+RTPIVA</a></td>
+<td>Absolute pivot tolerance.</td></tr>
+<tr><td><a href="#CONOPTRTPIVR">
+RTPIVR</a></td>
+<td>Relative pivot tolerance during basis factorizations.</td></tr>
+<tr><td><a href="#CONOPTRTPIVT">
+RTPIVT</a></td>
+<td>Absolute pivot tolerance for nonlinear elements in pre-triangular equations.</td></tr>
+<tr><td><a href="#CONOPTRTPIVU">
+RTPIVU</a></td>
+<td>Relative pivot tolerance during basis updates.</td></tr>
+<tr><td><a href="#CONOPTRTREDG">
+RTREDG</a></td>
+<td>Optimality tolerance for reduced gradient.</td></tr>
+<tr><td><a href="#CONOPTRVTIME">
+RVTIME</a></td>
+<td>Time Limit. Overwrites the GAMS Reslim option.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Debugging options</h3></th></tr>
+<tr><td><a href="#CONOPTLFDERR">
+LFDERR</a></td>
+<td>Limit on number of error messages from function and derivative debugger.</td></tr>
+<tr><td><a href="#CONOPTLKDEBG">
+LKDEBG</a></td>
+<td>Flag for debugging of first derivatives</td></tr>
+<tr><td><a href="#CONOPTRTMXJ2">
+RTMXJ2</a></td>
+<td>Upper bound on second order terms.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Output options</h3></th></tr>
+<tr><td><a href="#CONOPTLFEMSG">
+LFEMSG</a></td>
+<td>Limit on number of error messages related to large function value and Jacobian elements.</td></tr>
+<tr><td><a href="#CONOPTLFILOG">
+LFILOG</a></td>
+<td>Frequency for log-lines for non-SLP/SQP iterations.</td></tr>
+<tr><td><a href="#CONOPTLFILOS">
+LFILOS</a></td>
+<td>Frequency for log-lines for SLP or SQP iterations.</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Interface options</h3></th></tr>
+<tr><td><a href="#CONOPTcooptfile">
+cooptfile</a></td>
+<td></td></tr>
+<tr><td><a href="#CONOPTDO2DIR">
+DO2DIR</a></td>
+<td>Flag for computing and using directional 2nd derivatives.</td></tr>
+<tr><td><a href="#CONOPTDOHESS">
+DOHESS</a></td>
+<td>Flag for computing and using 2nd derivatives as Hessian of Lagrangian.</td></tr>
+<tr><td><a href="#CONOPTheaplimit">
+heaplimit</a></td>
+<td>Maximum Heap size in MB allowed</td></tr>
+<tr><td><a href="#CONOPTRVHESS">
+RVHESS</a></td>
+<td>Memory factor for Hessian generation: Skip if #Hessian elements > #Jacobian elements*Rvhess, 0 means unlimited.</td></tr></table>
+<h2>Detailed Descriptions of CONOPT Options</h2>
+
+<h4><a name="CONOPTcooptfile">
+cooptfile</a>
+<i> (string)</i> </h4><p>
+
+
+
+<h4><a name="CONOPTDO2DIR">
+DO2DIR</a>
+<i> (integer)</i> Flag for computing and using directional 2nd derivatives.</h4><p>
+
+If turned on, make directional second derivatives (Hessian matrix times
+directional vector) available to CONOPT. The default is
+on, but it will be turned off of the model has external
+equations (defined with =X=) and the user has not provided
+directional second derivatives. If both the Hessian of
+the Lagrangian (see <a href="#DOHESS">DOHESS</a>) and
+directional second derivatives are available then
+CONOPT will use both: directional second derivatives are
+used when the expected number of iterations in the SQP
+sub-solver is low and the Hessian is used when the
+expected number of iterations is large.
+
+<br><i>(default = auto)</i>
+
+<h4><a name="CONOPTDOHESS">
+DOHESS</a>
+<i> (integer)</i> Flag for computing and using 2nd derivatives as Hessian of Lagrangian.</h4><p>
+
+If turned on, compute the structure of the Hessian of the
+Lagrangian and make it available to CONOPT. The default is
+usually on, but it will be turned off if the model has
+external equations (defined with =X=) or if the Hessian becomes too dense.
+See also <a href="#DO2DIR">DO2DIR</a> and <a href="#RVHESS">RVHESS</a>.
+
+<br><i>(default = auto)</i>
+
+<h4><a name="CONOPTheaplimit">
+heaplimit</a>
+<i> (real)</i> Maximum Heap size in MB allowed</h4><p>
+
+
+<br><i>Range: [0,maxdouble]</i>
+
+<br><i>(default = Infinite)</i>
+
+<h4><a name="CONOPTLF2DRV">
+LF2DRV</a>
+<i> (integer)</i> Limit on errors in Directional Second Derivative evaluation.</h4><p>
+
+If the evaluation of Directional Second Derivatives (Hessian
+information in a particular direction) has failed more than Lf2drv
+times CONOPT will not attempt to evaluate them any more and will switch to
+methods that do not use Directional Second Derivatives.
+Note that second order information may not be defined even if function and derivative values
+are well-defined, e.g. in an expression like power(x,1.5) at x=0.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="CONOPTLFDEGI">
+LFDEGI</a>
+<i> (integer)</i> Limit on number of degenerate iterations before starting degeneracy breaking strategy.</h4><p>
+
+The default CONOPT pivoting strategy has focus on numerical
+stability, but it can potentially cycle. When the number of
+consecutive degenerate iterations exceeds LFDEGI CONOPT will
+switch to a pivoting strategy that is guaranteed to break
+degeneracy but with slightly weaker numerical properties.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="CONOPTLFDERR">
+LFDERR</a>
+<i> (integer)</i> Limit on number of error messages from function and derivative debugger.</h4><p>
+
+The function and derivative debugger (see <a href="#LKDEBG">LKDEBG</a>)
+may find a very large number of errors, all derived from the same source.
+To avoid very large amounts of output CONOPT will stop the debugger
+after LFDERR error have been found.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="CONOPTLFEERR">
+LFEERR</a>
+<i> (integer)</i> Limit on number of function evaluation errors. Overwrites GAMS Domlim option<br>&nbsp;&nbsp;&nbsp;Synonym:
+domlim</h4><p>
+
+Function values and their derivatives are assumed to be defined
+in all points that satisfy the bounds of the model. If the function
+value or a derivative is not defined in a point CONOPT will
+try to recover by going back to a previous safe point (if one exists), but it will
+not do it more than at most Lfeerr times. If CONOPT is stopped
+by functions or derivatives not being defined it will
+return with a intermediate infeasible or intermediate non-optimal model status.
+
+<br><i>(default = GAMS DomLim)</i>
+
+<h4><a name="CONOPTLFEMSG">
+LFEMSG</a>
+<i> (integer)</i> Limit on number of error messages related to large function value and Jacobian elements.</h4><p>
+
+Very large function value or derivatives (Jacobian elements) in a model will lead to
+numerical difficulties and most likely to inaccurate primal and/or dual solutions.
+CONOPT is therefore imposing an upper bound on the value of all function value and
+derivatives. This bound is 1.e30 for scaled models and <a href="#RTMAXJ">RTMAXJ</a> for unscaled
+models. If the bound is violated CONOPT will return with an
+intermediate infeasible or intermediate non-optimal
+solution and it will issue error messages for all the violating function value and
+Jacobian elements, up to a limit of Lfemsg error messages.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="CONOPTLFHSOK">
+LFHSOK</a>
+<i> (integer)</i> Limit on errors in Hessian evaluation.</h4><p>
+
+If the evaluation of Hessian information has failed more than Lfhsok times
+CONOPT will not attempt to evaluate it any more and will switch to
+methods that do not use the Hessian.
+Note that second order information may not be defined even if function and derivative values
+are well-defined, e.g. in an expression like power(x,1.5) at x=0.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="CONOPTLFILOG">
+LFILOG</a>
+<i> (integer)</i> Frequency for log-lines for non-SLP/SQP iterations.</h4><p>
+
+Lfilog and Lfilos can be used to control the amount of
+iteration send to the log file.
+The non-SLP/SQP iterations, i.e. iterations in phase 0, 1, and 3, are
+usually fast and writing a log line for each iteration may be too much,
+especially for smaller models. The default value for the log
+frequency for these iterations is therefore set to 10 for small models,
+5 for models with more than 500 constraints or 1000 variables and 1
+for models with more than 2000 constraints or 3000 variables.
+
+<br><i>(default = auto)</i>
+
+<h4><a name="CONOPTLFILOS">
+LFILOS</a>
+<i> (integer)</i> Frequency for log-lines for SLP or SQP iterations.</h4><p>
+
+Lfilog and Lfilos can be used to control the amount of
+iteration send to the log file.
+Iterations using the SLP and/or SQP sub-solver, i.e. iterations in
+phase 2 and 4, may involve several inner iterations and the work
+per iteration is therefore larger than for the non-SLP/SQP iterations
+and it may be relevant to write log lines more frequently. The default
+value for the log frequency is therefore 5 for small models and 1 for
+models with more than 500 constraints or 1000 variables.
+
+<br><i>(default = auto)</i>
+
+<h4><a name="CONOPTLFITER">
+LFITER</a>
+<i> (integer)</i> Maximum number of iterations. Overwrites GAMS Iterlim option.<br>&nbsp;&nbsp;&nbsp;Synonym:
+iterlim</h4><p>
+
+The iteration limit can be used to prevent models from spending too many
+resources. You should note that the cost of the different types of CONOPT
+iterations (phase 0 to 4) can be very different so the time limit
+(GAMS Reslim or option <a href="#RVTIME">RVTIME</a>) is
+often a better stopping criterion. However, the iteration limit is better
+for reproducing solution behavior across machines.
+
+<br><i>(default = GAMS IterLim)</i>
+
+<h4><a name="CONOPTLFMXNS">
+LFMXNS</a>
+<i> (integer)</i> Maximum number of new superbasic variables added in one iteration.</h4><p>
+
+When there has been a sufficient reduction
+in the reduced gradient in one subspace new non-basics
+can be selected to enter the superbasis.
+The ones with largest reduced gradient of proper sign
+are selected, up to a limit.
+If Lfmxns is positive then the limit is min(500,Lfmxns).
+If Lfmxns is zero (the default) then the limit is selected
+dynamically by CONOPT depending on model characteristics.
+
+<br><i>(default = auto)</i>
+
+<h4><a name="CONOPTLFNICR">
+LFNICR</a>
+<i> (integer)</i> Limit on number of iterations with slow progress (relative less than Rtobjl).</h4><p>
+
+The optimization is stopped if the relative change in objective
+is less than <a href="#RTOBJL">RTOBJL</a> for Lfnicr
+consecutive well-behaved iterations.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="CONOPTLFNSUP">
+LFNSUP</a>
+<i> (integer)</i> Maximum number of superbasic variables in the approximation to the Reduced Hessian.</h4><p>
+
+CONOPT uses and stores a dense lower-triangular matrix
+as an approximation to the Reduced Hessian. The rows and columns
+correspond to the superbasic variable. This matrix
+can use a large amount of memory and computations involving
+the matrix can be time consuming so CONOPT imposes a
+limit on on the size. The limit is LFNSUP if LFNSUP is defined by the
+modeler and otherwise a value determined from the overall
+size of the model.
+If the number of superbasics exceeds the limit, CONOPT
+will switch to a method based on a combination of SQP and
+Conjugate Gradient iterations assuming some kind of second order
+information is available. If no second order information
+is available CONOPT will use a quasi-Newton method on
+a subset of the superbasic variables and rotate the subset
+as the reduced gradient becomes small.
+
+<br><i>(default = auto)</i>
+
+<h4><a name="CONOPTLFSCAL">
+LFSCAL</a>
+<i> (integer)</i> Rescaling frequency.</h4><p>
+
+The row and column scales are recalculated at least
+every Lfscal new point (degenerate iterations do not
+count), or more frequently if conditions require it.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="CONOPTLFSTAL">
+LFSTAL</a>
+<i> (integer)</i> Limit on the number of stalled iterations.</h4><p>
+
+An iteration  is considered a stalled iteration it there
+is no change in objective because the linesearch is
+limited by nonlinearities or numerical difficulties.
+Stalled iterations will have Step = 0 and F in the OK
+column of the log file.
+After a stalled iteration CONOPT will usually
+try various heuristics to get a better basis and a
+better search direction. However, the heuristics
+may not work as intended or they may even return to the
+original bad basis, so to prevent cycling CONOPT
+stops after Lfstal stalled iterations and returns an
+Intermediate Infeasible or Intermediate Nonoptimal solution.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="CONOPTLKDEBG">
+LKDEBG</a>
+<i> (integer)</i> Flag for debugging of first derivatives</h4><p>
+
+ Lkdebg controls how often the derivatives are tested.
+ Debugging of derivatives is only relevant for user-written
+ functions in external equations defined with =X=.
+ The amount of debugging is controlled by
+ <a href="#LMDEBG">LMDEBG</a>.
+ See <a href="#RTMXJ2">RTMXJ2</a> for a definition of when derivatives
+ are considered wrong.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>.
+ The derivatives are tested in the initial point
+ only.</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>.
+ No debugging</td></tr>
+<tr valign="top"><td width=20 align=right>+n</td><td>.
+ The derivatives are tested in all iterations
+ that can be divided by Lkdebg, provided the
+ derivatives are computed in this iteration.
+ (During phase 0, 1, and 3 derivatives are only
+ computed when it appears to be necessary.)</td></tr>
+</table>
+
+<h4><a name="CONOPTLMDEBG">
+LMDEBG</a>
+<i> (integer)</i> Method used by the function and derivative debugger.</h4><p>
+
+The function and derivative debugger (turned on with
+<a href="#LKDEBG">LKDEBG</a>) can perform a
+fairly cheap test or a more extensive test, controlled
+by LMDEBG. See <a href="#RTMXJ2">RTMXJ2</a> for a
+definition of when derivatives are considered wrong.
+All tests are performed in the current point found by
+the optimization algorithm.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>.
+Perform tests for sparsity pattern and tests that
+the numerical values of the derivatives appear to be
+correct. This is the default.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>.
+As 0 plus make extensive test to determine if
+the functions and their derivatives are continuous
+around the current point.
+These tests are much more expensive and should only be
+used of the cheap test does not find an error but
+one is expected to exist.</td></tr>
+</table>
+
+<h4><a name="CONOPTLMMXSF">
+LMMXSF</a>
+<i> (integer)</i> Method used to determine the step in Phase 0.</h4><p>
+
+The steplength used by the
+Newton process in phase 0 is computed by one of two
+alternative methods controlled by LMMXSF:
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>.
+The standard ratio test method known from the Simplex method.
+CONOPT adds small perturbations to the bounds to avoid very small
+pivots and improve numerical stability. Linear constraints
+that initially are feasible will remain feasible with this default method.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>.
+A method based on bending (projecting the target values
+of the basic variables on the bounds) until the sum of
+infeasibilities is close to its minimum.
+Linear constraints that initially are feasible
+may become infeasible due to bending.
+The method does not use anti-degeneracy. This will
+to be taken care off by removing difficult constraints from
+the Newton Process at regular intervals.
+The bending method can sometimes be useful for CNS models that stop when
+a variable exceeds its bound in an intermediate point even though the final
+solution is known to be inside the bounds.</td></tr>
+</table>
+
+<h4><a name="CONOPTLMMXST">
+LMMXST</a>
+<i> (integer)</i> Method used to determine the maximum step while tightening tolerances.</h4><p>
+
+The steplength used by the Newton process when
+tightening tolerances is computed by one of two
+alternative methods controlled by LMMXST:
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>.
+The standard ratio test method known from the Simplex method.
+CONOPT adds small perturbations to the bounds to avoid very small
+pivots and improve numerical stability. Linear constraints
+that initially are feasible will remain feasible with this default method.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>.
+A method based on bending (projecting the target value
+of the basic variables on the bounds) until the sum of
+infeasibilities is close to its minimum.</td></tr>
+</table>
+
+<h4><a name="CONOPTLMNDIA">
+LMNDIA</a>
+<i> (integer)</i> Method for initializing the diagonal of the approximate Reduced Hessian</h4><p>
+
+Each time a nonbasic variable is made superbasic a new
+row and column is added to the approximate Reduced Hessian. The
+off-diagonal elements are set to zero and the diagonal
+to a value controlled by LMNDIA:
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>.
+The new diagonal element is set to the geometric mean of
+the existing diagonal elements.
+This gives the new diagonal element an intermediate
+value and new superbasic variables are therefore
+not given any special treatment. The initial
+steps should be of good size, but build-up of second order
+information in the new sub-space may be slower. The larger diagonal
+element may also in bad cases cause premature convergence.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>.
+The new diagonal elements is set to the minimum of the existing
+diagonal elements.
+This makes the new diagonal element small
+and the importance of the new superbasic variable will therefore be high.
+The initial steps can be rather small, but better
+second order information in the new sub-space should be build up faster.</td></tr>
+</table>
+
+<h4><a name="CONOPTLMSCAL">
+LMSCAL</a>
+<i> (integer)</i> Method used for scaling.</h4><p>
+
+CONOPT will by default use scaling of the equations
+and variables of the model to improve the numerical
+behavior of the solution algorithm and the accuracy
+of the final solution, see <a href="#LSSCAL">LSSCAL</a>
+and <a href="#LMSCAL">LMSCAL</a>.
+The objective of the scaling process is to reduce
+the values of all large primal and dual variables as well
+as the values of all large first derivatives so they
+become closer to 1. Small values are usually not
+scaled up, see <a href="#RTMAXS">RTMAXS</a> and
+<a href="#RTMINS">RTMINS</a>.
+Scaling method 3 is recommended. The others are only
+kept for backward compatibility.
+
+<br><i>(default = 3)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>.
+Scaling is based on repeatedly dividing the rows and
+columns by the geometric means of the largest and
+smallest elements in each row and column. Very
+small elements less than <a href="#RTMINJ">RTMINJ</a>
+are considered equal to RTMINJ.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>.
+Similar to 3 below, but the projection on the interval
+[Rtmins,Rtmaxs] is applied at a different stage.
+With method 1, abs(X)*abs(Jac) with small
+X and very large Jac is scaled very aggressively
+with a factor abs(Jac). With method 3, the scale
+factor is abs(X)*abs(Jac). The difference is seen
+in models with terms like Sqrt(X) close to X = 0.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>.
+As 1 but the terms are computed based on a moving
+average of the squares X and Jac. The purpose of the
+moving average is to keep the scale factor more
+stable. This is often an advantage, but for models
+with very large terms (large variables and in particular
+large derivatives) in the initial point the averaging
+process may not have enough time to bring
+the scale factors into the right region.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>.
+Rows are first scaled by dividing by the largest term
+in the row, then columns are scaled by dividing by
+by the maximum of the largest term and the value of
+the variable. A term is here defined as abs(X)*abs(Jac)
+where X is the value of the variable and Jac is the
+value of the derivative (Jacobian element). The scale
+factor are then projected on the interval between
+Rtmins and Rtmaxs.</td></tr>
+</table>
+
+<h4><a name="CONOPTLS2NDI">
+LS2NDI</a>
+<i> (integer)</i> Flag for approximating Hessian information for incoming superbasics.</h4><p>
+
+If Ls2ndi is turned on (1) CONOPT will try to estimate second order Hessian
+information for incoming superbasic variables based
+on directional second derivatives. This is more costly than
+the standard method described under <a href="#LMNDIA">LMNDIA</a>.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLS2PTJ">
+LS2PTJ</a>
+<i> (integer)</i> Flag for use of perturbations to compute 2nd derivatives in SQP method.</h4><p>
+
+If on (1) CONOPT may use perturbations of the Jacobian to
+compute directional 2nd derivatives if they are not provided
+with other cheaper and more accorate methods. With GAMS it
+is only relevant for models with functions defined in external
+function libraries or models with external equations defined
+with the =X= equation type.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSANRM">
+LSANRM</a>
+<i> (integer)</i> Flag for turning Steepest Edge on.</h4><p>
+
+Flag used to turn steepest edge pricing on (1)
+or off (0). Steepest edge pricing makes the individual
+iterations more expensive but it may decrease their number.
+Only experimentation can show if it is worth while.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLSCRSH">
+LSCRSH</a>
+<i> (integer)</i> Flag for crashing an initial basis without fixed slacks</h4><p>
+
+When turned on (1) CONOPT will try to crash a basis without fixed
+slacks in the basis. Fixed slacks are only included in
+a last round to fill linearly dependent rows. When turned
+off, large infeasible slacks will be included in the initial
+basis with preference for variables and slacks far from bound.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSESLP">
+LSESLP</a>
+<i> (integer)</i> Flag for enabling SLP mode.</h4><p>
+
+If Lseslp is on (the default) then the SLP (sequential
+linear programming) sub-solver can be used, otherwise
+it is turned off.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSESQP">
+LSESQP</a>
+<i> (integer)</i> Flag for enabling of SQP mode.</h4><p>
+
+If Lsesqp is on (the default) then the SQP (sequential
+quadratic programming) sub-solver can be used, otherwise
+it is turned off.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSISMP">
+LSISMP</a>
+<i> (integer)</i> Flag for Ignoring Small Pivots in Triangular models</h4><p>
+
+Ignore SMall Pivots. When turned on CONOPT will ignore
+the non-uniqueness from small pivots during a
+triangular solve (see <a href="#LSTRIA">LSTRIA</a>).
+Note, that the non-uniqueness may propagate to later equations,
+but we cannot check for it in nonlinear equations.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLSLACK">
+LSLACK</a>
+<i> (integer)</i> Flag for selecting initial basis as Crash-triangular variables plus slacks.</h4><p>
+
+When turned on together with <a href="#LSTCRS">LSTCRS</a>
+CONOPT will use the triangular crash
+procedure and select the initial basis as the
+crash-triangular variables plus slacks in all remaining rows.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLSPOST">
+LSPOST</a>
+<i> (integer)</i> Pre-processor flag for identifying and using post-triangular equations.</h4><p>
+
+When turned on (the default) CONOPT will try to identify
+post-triangular equations. Otherwise this phase is ignored.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSPRET">
+LSPRET</a>
+<i> (integer)</i> Pre-processor flag for identifying and using pre-triangular equations.</h4><p>
+
+When turned on (the default) CONOPT will try to identify
+pre-triangular equations. Otherwise this phase is ignored.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSSCAL">
+LSSCAL</a>
+<i> (integer)</i> Flag for dynamic scaling.</h4><p>
+
+When Lsscal is on (the default) CONOPT will use dynamic scaling of
+equations and variables. See also <a href="#LMSCAL">LMSCAL</a>.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTLSSQRS">
+LSSQRS</a>
+<i> (integer)</i> Flag for Square System. Alternative to defining modeltype=CNS in GAMS</h4><p>
+
+When turned on the modeler declares that this is a
+square system, i.e. the number of non-fixed variables
+must be equal to the number of constraints, no bounds
+must be active in the final solution, and the basis
+selected from the non-fixed variables must always be
+nonsingular.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLSTCRS">
+LSTCRS</a>
+<i> (integer)</i> Flag for using the triangular crash method.</h4><p>
+
+When turned on CONOPT will try to crash a triangular basis
+using ideas by Gould and Reid. The procedure relies
+on identifying and using good initial values provided by
+the modeler and only assigning values to variables that
+are not initialized. Should only be used when several
+important variables have been given reasonable initial
+values. The sum of infeasibilities may for some models
+grow during the crash procedure, so modelers are advised
+that the option should be used with caution.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLSTRIA">
+LSTRIA</a>
+<i> (integer)</i> Flag for triangular or recursive system of equations.</h4><p>
+
+If turned on the equations must form a recursive
+system. Equations that depend on known variables are
+allowed as long as they are consistent, e.g. x = 1 and
+2*x = 2. If the equations
+are not recursive the model is considered infeasible,
+and the equations with minimum row count are flagged
+together with the columns they intersect.
+See also <a href="#LSISMP">LSISMP</a>.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTLSTRID">
+LSTRID</a>
+<i> (integer)</i> Flag for turning diagnostics on for the post-triangular equations.</h4><p>
+
+If turned on certain diagnostic messages related to
+the post-triangular equations will be printed. The messages
+are mainly related to unusual modeling constructs where
+linear variables for example only appear in the objective
+or where certain constraints are guarantied redundant.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="CONOPTRTBND1">
+RTBND1</a>
+<i> (real)</i> Bound filter tolerance for solution values close to a bound.</h4><p>
+
+A variable is considered to be at a
+bound if its distance from the bound is less than Rtbnd1
+* Max(1,ABS(Bound)). If you need a very small value
+then your model is probably poorly scaled.
+
+<br><i>Range: [3.e-13,1.e-5]</i>
+
+<br><i>(default = 1.e-7)</i>
+
+<h4><a name="CONOPTRTBNDT">
+RTBNDT</a>
+<i> (real)</i> Bound tolerance for defining variables as fixed.</h4><p>
+
+A variable is considered fixed if the
+distance between the bounds is less than Rtbndt *
+Max(1,Abs(Bound)). The tolerance is also used on
+implied bounds (from converted inequalities) and these
+implied bounds may be infeasible up to Rtbndt.
+
+<br><i>Range: [3.e-13,1.e-5]</i>
+
+<br><i>(default = 1.e-7)</i>
+
+<h4><a name="CONOPTRTIPVA">
+RTIPVA</a>
+<i> (real)</i> Absolute Pivot Tolerance for building initial basis.</h4><p>
+
+Absolute pivot tolerance used during the search for
+a first logically non-singular basis. The default is fairly
+large to encourage a better conditioned initial basis.
+
+<br><i>Range: [3.e-13,1.e-3]</i>
+
+<br><i>(default = 1.e-7)</i>
+
+<h4><a name="CONOPTRTIPVR">
+RTIPVR</a>
+<i> (real)</i> Relative Pivot Tolerance for building initial basis</h4><p>
+
+Relative pivot tolerance used during the search for
+a first logically non-singular basis.
+
+<br><i>Range: [1.e-4,0.9]</i>
+
+<br><i>(default = 1.e-3)</i>
+
+<h4><a name="CONOPTRTMAXJ">
+RTMAXJ</a>
+<i> (real)</i> Upper bound on the value of a function value or Jacobian element.</h4><p>
+
+Very large values of variables, function value, and derivatives and in
+particular large variations in the absolute value of
+the variables, functions, and derivatives makes the model harder to
+solve and poses problems for both feasibility and
+optimality tests. CONOPT will usually try to scale the
+model (see <a href="#LSSCAL">LSSCAL</a>) to remove these
+problems. However, scaling can also make important aspects
+of a model appear un-important and there is therefore a
+limit to how aggressively we can scale a model (see
+<a href="#RTMAXS">RTMAXS</a> and <a href="#RTMINS">RTMINS</a>).
+To avoid serious scaling problems CONOPT poses upper
+bounds on all variables (see <a href="#RTMAXV">RTMAXV</a>)
+and all function value and derivatives, RTMAXJ.
+
+<br><i>Range: [1.e4,1.e30]</i>
+
+<br><i>(default = 1.e10)</i>
+
+<h4><a name="CONOPTRTMAXS">
+RTMAXS</a>
+<i> (real)</i> Upper bound on scale factors.</h4><p>
+
+Scale factors are projected on the interval from Rtmins to Rtmaxs. Is used to
+prevent very large or very small scale factors due to
+pathological types of constraints. RTMAXS is silently increased to
+max(RTMAXV,RTMAXS)/100 if RTMAXV or RTMAXJ have large
+non-default values.
+
+<br><i>Range: [1,1.e20]</i>
+
+<br><i>(default = 1.e9)</i>
+
+<h4><a name="CONOPTRTMAXV">
+RTMAXV</a>
+<i> (real)</i> Upper bound on solution values and equation activity levels</h4><p>
+
+See <a href="#RTMAXJ">RTMAXJ</a> for a discussion of
+why CONOPT poses upper bounds on variables and derivatives.
+If the value of a variable, including the objective
+function value, exceeds RTMAXV then the model is
+considered to be unbounded and the optimization process
+returns the solution with the large variable flagged
+as unbounded.
+
+<br><i>Range: [1.e5,1.e30]</i>
+
+<br><i>(default = 1.e10)</i>
+
+<h4><a name="CONOPTRTMINA">
+RTMINA</a>
+<i> (real)</i> Zero filter for Jacobian elements and inversion results.</h4><p>
+
+Contains the smallest absolute value that an intermediate
+result can have. If it is smaller, it is set to
+zero. It must be smaller than <a href="#RTPIVA">RTPIVA</a>/10.
+
+<br><i>(default = 1.e-20)</i>
+
+<h4><a name="CONOPTRTMINJ">
+RTMINJ</a>
+<i> (real)</i> Filter for small Jacobian elements to be ignored during scaling.</h4><p>
+
+A Jacobian element is considered insignificant
+if it is less than Rtminj. The value is used to select which
+small values are scaled up during scaling of the Jacobian.
+
+<br><i>Range: [1.e-7,1.e-3]</i>
+
+<br><i>(default = 1.e-5)</i>
+
+<h4><a name="CONOPTRTMINS">
+RTMINS</a>
+<i> (real)</i> Lower bound for scale factors computed from values and 1st derivatives.</h4><p>
+
+Scale factors used to scale variables and equations are projected
+on the range Rtmins to Rtmaxs. The limits are used to
+prevent very large or very small scale factors due to
+pathological types of constraints. The default value
+for Rtmins is 1 which means that small values are not
+scaled up. If you need to scale small value up towards
+1 then you must define a value of Rtmins < 1.
+
+<br><i>Range: [1.e-10,1]</i>
+
+<br><i>(default = 1)</i>
+
+<h4><a name="CONOPTRTMNS2">
+RTMNS2</a>
+<i> (real)</i> Lower bound for scale factors based on large 2nd derivatives.</h4><p>
+
+Scaling of the model is in most cases based on the values
+of the variables and the first derivatives. However,
+if the scaled variables and derivatives are reasonable
+but there are large values in the Hessian of the Lagrangian
+(the matrix of 2nd derivatives) then the lower bound on
+the scale factor can be made smaller than Rtmins.
+CONOPT will try to scale variables with large 2nd
+derivatives by one over the square root of the diagonal
+elements of the Hessian. However, the revised scale
+factors cannot be less than Rtmns2.
+
+<br><i>Range: [1.e-9,1]</i>
+
+<br><i>(default = 1.e-6)</i>
+
+<h4><a name="CONOPTRTMXJ2">
+RTMXJ2</a>
+<i> (real)</i> Upper bound on second order terms.</h4><p>
+
+The function and derivative debugger (see <a href="#LKDEBG">LKDEBG</a>)
+tests if derivatives computed using the modelers routine are
+sufficiently close to the values computed using finite
+differences. The term for the acceptable difference includes
+a second order term and uses RTMXJ2 as an upper bound on
+second order derivatives in the model. Larger RTMXJ2
+values will allow larger deviations between the user-defined derivatives
+and the numerically computed derivatives.
+
+<br><i>(default = 1.e4)</i>
+
+<h4><a name="CONOPTRTNWMA">
+RTNWMA</a>
+<i> (real)</i> Maximum feasibility tolerance (after scaling).</h4><p>
+
+The feasibility tolerance used by CONOPT is dynamic.
+As long as we are far from the optimal solution and make
+large steps it is not necessary to compute intermediate
+solutions very accurately. When we approach the optimum
+and make smaller steps we need more accuracy. RTNWMA
+is the upper bound on the dynamic feasibility tolerance
+and <a href="#RTNWMI">RTNWMI</a> is the lower bound.
+
+<br><i>Range: [1.e-10,1.e-3]</i>
+
+<br><i>(default = 1.e-7)</i>
+
+<h4><a name="CONOPTRTNWMI">
+RTNWMI</a>
+<i> (real)</i> Minimum feasibility tolerance (after scaling).</h4><p>
+
+See <a href="#RTNWMA">RTNWMA</a> for a discussion of
+the dynamic feasibility tolerances used by CONOPT.
+
+<br><i>Range: [4.e-11,1.e-5]</i>
+
+<br><i>(default = 4.e-10)</i>
+
+<h4><a name="CONOPTRTNWTR">
+RTNWTR</a>
+<i> (real)</i> Feasibility tolerance for triangular equations.</h4><p>
+
+Triangular equations are usually solved to an
+accuracy of <a href="#RTNWMI">RTNWMI</a>.
+However, if a variable reaches a
+bound or a constraint only has pre-determined variables
+then the feasibility tolerance can be relaxed to Rtnwtr.
+
+<br><i>Range: [3.e-13,1.e-4]</i>
+
+<br><i>(default = 2.0e-8)</i>
+
+<h4><a name="CONOPTRTOBJL">
+RTOBJL</a>
+<i> (real)</i> Limit for relative change in objective for well-behaved iterations.</h4><p>
+
+The change in objective in a well-behaved iteration
+is considered small and the iteration counts as slow progress
+if the change is less than Rtobjl * Max(1,Abs(Objective)).
+See also <a href="#LFNICR">LFNICR</a>.
+
+<br><i>Range: [3.0e-13,1.0e-5]</i>
+
+<br><i>(default = 3.0e-12)</i>
+
+<h4><a name="CONOPTRTOBJR">
+RTOBJR</a>
+<i> (real)</i> Relative accuracy of the objective function.</h4><p>
+
+It is assumed that the objective function can be computed
+to an accuracy of Rtobjr * max( 1, abs(Objective) ).
+Smaller changes in objective are considered to be
+caused by round-off errors.
+
+<br><i>Range: [3.0e-14,10.e-6]</i>
+
+<br><i>(default = 3.0e-13)</i>
+
+<h4><a name="CONOPTRTONED">
+RTONED</a>
+<i> (real)</i> Accuracy of One-dimensional search.</h4><p>
+
+The onedimensional search is stopped if the expected decrease in
+then objective estimated from a quadratic approximation
+is less than Rtoned times the decrease so far in this
+onedimensional search.
+
+<br><i>Range: [0.05,0.8]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="CONOPTRTPIVA">
+RTPIVA</a>
+<i> (real)</i> Absolute pivot tolerance.</h4><p>
+
+During LU-factorization of the basis matrix a pivot
+element is considered large enough if its
+absolute value is larger than Rtpiva. There is also a
+relative test, see <a href="#RTPIVR">RTPIVR</a>.
+
+<br><i>Range: [2.2e-16,1.e-7]</i>
+
+<br><i>(default = 1.e-10)</i>
+
+<h4><a name="CONOPTRTPIVR">
+RTPIVR</a>
+<i> (real)</i> Relative pivot tolerance during basis factorizations.</h4><p>
+
+During LU-factorization of the basis matrix a pivot
+element is considered large enough relative to
+other elements in the column if its absolute value is at
+least Rtpivr * the largest absolute value in the column.
+Small values or Rtpivr will often give a sparser basis factorization
+at the expense of the numerical accuracy. The value used
+internally is therefore adjusted dynamically between the
+users value and 0.9, based on various statistics collected
+during the solution process. Certain models derived from
+finite element approximations of partial differential
+equations can give rise to poor numerical accuracy and
+a larger user-value of Rtpivr may help.
+
+<br><i>Range: [1.e-3,0.9]</i>
+
+<br><i>(default = 0.05)</i>
+
+<h4><a name="CONOPTRTPIVT">
+RTPIVT</a>
+<i> (real)</i> Absolute pivot tolerance for nonlinear elements in pre-triangular equations.</h4><p>
+
+The smallest pivot that can be used for nonlinear or
+variable Jacobian elements during the pre-triangular
+solve. The pivot tolerance for linear or
+constant Jacobian elements is Rtpiva. The value cannot
+be less that Rtpiva.
+
+<br><i>Range: [2.2e-16,1.e-3]</i>
+
+<br><i>(default = 1.e-5)</i>
+
+<h4><a name="CONOPTRTPIVU">
+RTPIVU</a>
+<i> (real)</i> Relative pivot tolerance during basis updates.</h4><p>
+
+During basischanges CONOPT attempts to use cheap updates of
+the LU-factors of the basis. A pivot is considered large enough relative to the
+alternatives in the column if its absolute value is at
+least Rtpivu * the other element. Smaller values of Rtpivu will
+allow sparser basis updates but may cause accumulation of larger
+numerical errors.
+
+<br><i>Range: [1.e-3,0.9]</i>
+
+<br><i>(default = 0.05)</i>
+
+<h4><a name="CONOPTRTREDG">
+RTREDG</a>
+<i> (real)</i> Optimality tolerance for reduced gradient.</h4><p>
+
+The reduced gradient is considered zero and the
+solution optimal if the largest superbasic component
+of the reduced gradient is less than Rtredg.
+
+<br><i>Range: [3.e-13,1]</i>
+
+<br><i>(default = 1.e-7)</i>
+
+<h4><a name="CONOPTRVHESS">
+RVHESS</a>
+<i> (real)</i> Memory factor for Hessian generation: Skip if #Hessian elements > #Jacobian elements*Rvhess, 0 means unlimited.</h4><p>
+
+The Hessian of the Lagrangian is considered too dense
+and is not passed on to CONOPT if the number of nonzero
+elements in the Hessian of the Lagrangian is greater
+than the number of nonlinear Jacobian elements multiplied
+by Rvhess. The assumption is that a very dense Hessian is
+expensive both to compute and use.
+If Rvhess = 0.0 then there is no limit on the number of
+Hessian elements.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="CONOPTRVTIME">
+RVTIME</a>
+<i> (real)</i> Time Limit. Overwrites the GAMS Reslim option.<br>&nbsp;&nbsp;&nbsp;Synonym:
+reslim</h4><p>
+
+The upper bound on the total number of seconds that can
+be used in the execution phase. There are only tests
+for time limit once per iteration. The default value
+is 10000. Rvtime is overwritten by Reslim when called
+from GAMS. Rvtime is defined in ProbSize and/or
+UpdtSize when used as a subroutine library.
+
+<br><i>Range: [0,maxdouble]</i>
+
+<br><i>(default = GAMS ResLim)</i>
+</body></html>

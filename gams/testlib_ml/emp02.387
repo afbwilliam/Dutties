@@ -1,0 +1,107 @@
+$title Compares EMP results for a simple NLP with known results (EMP02,SEQ=387)
+
+$ontext
+
+This model compares the results from different EMP runs with the results known.
+The NLP model is taken from the GAMS Model Library
+
+Wright, M H, Numerical Methods for Nonlinearly Constraint Optimization.
+PhD thesis, Stanford University, 1976.
+
+Contributor: Jan-H. Jagla, April 2007
+$offtext
+
+Variables m, x1, x2, x3, x4, x5;
+Equations funct, eq1, eq2, eq3;
+
+funct.. m =e= sqr(x1-1)      + sqr(x1-x2)     + power(x2-x3,3)
+            + power(x3-x4,4) + power(x4-x5,4) ;
+
+eq1.. x1 + sqr(x2) + power(x3,3) =e= 3*sqrt(2) + 2 ;
+
+eq2.. x2 - sqr(x3) + x4          =e= 2*sqrt(2) - 2 ;
+
+eq3.. x1*x5 =e= 2 ;
+
+Model wright / all / ;
+
+x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+x1.lo = 1;
+
+Solve wright using nlp minimizing m;
+
+sets enames  / funct, eq1, eq2, eq3  /
+     vnames  / m, x1, x2, x3, x4, x5 /
+     evnames / set.enames,set.vnames /
+     suf / l,m /
+
+parameter rep comparison / (funct. (l 0          , m 1           )
+                            eq1.   (l 6.24264069 , m 0.06412963  )
+                            eq2.   (l 0.82842712 , m 0.35320203  )
+                            eq3.   (l 2          , m -0.02147973 )
+                            m.     (l 0.02931083                 )
+                            x1.    (l 1.11663475 , m EPS         )
+                            x2.    (l 1.22044082                 )
+                            x3.    (l 1.53778539 , m EPS         )
+                            x4.    (l 1.97277020                 )
+                            x5.    (l 1.79109597                 )).known /;
+
+$gdxout "%gams.scrdir%repgdx.%gams.scrext%"
+$unload evnames suf
+$gdxout
+
+$onechoV > "%gams.scrdir%repgms.%gams.scrext%"
+set evnames, suf;
+$gdxin "%oldscrdir%repgdx.%gams.scrext%"
+$load evnames suf
+file fx /'%oldscrdir%rep.%gams.scrext%'/; fx.lw = 0; fx.silent = 1; put fx;
+$escape =
+loop((evnames,suf),
+  put "rep('" evnames.tl "','" suf.tl "','%=nlp%=') = " evnames.tl "." suf.tl ";" /;
+);
+$offecho
+
+$call gams "%gams.scrdir%repgms.%gams.scrext%" lo=%gams.lo% --oldscrdir="%gams.scrdir%"
+
+* standard NLP solve
+solve wright us nlp min m;
+$set nlp NLP
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+option limcol=0,limrow=0;
+
+* EMP - without info file
+solve wright us emp min m;
+$set nlp NOemp
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+file fhandle /"%emp.info%"/;
+
+* EMP - use empty info file
+putclose fhandle '*empty emp info file';
+solve wright us emp min m;
+$set nlp empNLP
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+* EMP - rewrite as MCP
+putclose fhandle 'modeltype mcp';
+solve wright us emp min m;
+$set nlp empMCP
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+* EMP rewrite as MCP and keep original objective
+$echo keepObj > jams.opt
+wright.optfile=1;
+solve wright us emp min m;
+$set nlp empMCPkeep
+$include  "%gams.scrdir%rep.%gams.scrext%"
+
+
+set type / nlp, noemp, empnlp, empmcp, empmcpkeep /;
+rep('sum','diff',type) = sum((evnames,suf), abs(rep(evnames,suf,type) - rep(evnames,suf,'known')));
+
+display rep;
+
+abort$(sum(type, rep('sum','diff',type)) > 1e-4) 'we did not get the right solution';
+
+$call rm -f repgms.lst

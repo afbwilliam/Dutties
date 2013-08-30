@@ -1,0 +1,56 @@
+$title Princeton Bilevel Optimization Example 9.1.3 (FLDS913,SEQ=29)
+
+$ontext
+
+  Test problem 9.2.4 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.1.3 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Candler, W, and Townsley, R, A Linear Two-Level Programming Problem.
+Comp. Op. Res.9 (1982), 59-76.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+$offtext
+
+*Solution of problem 9.1.3 on the web
+scalar x1_l /  0   /
+       x2_l /  0.9 /
+       y1_l /  0   /
+       y2_l /  0.6 /
+       y3_l /  0.4 /
+       tol  / 1e-6 /;
+
+Variables z, z_in; Positive Variables x1, x2, y1, y2, y3;
+equations ob, ob_in, c2, c3, c4;
+
+ob..     - 8*x1 - 4*x2 + 4*y1 - 40*y2 -   4*y3 =e= z;
+
+ob_in..      x1 + 2*x2 +   y1 +    y2 +   2*y3 =e= z_in;
+c2..                   -   y1 +    y2 +     y3 =l= 1;
+c3..       2*x1        -   y1 +  2*y2 - 0.5*y3 =l= 1;
+c4..              2*x2 + 2*y1 -    y2 - 0.5*y3 =l= 1;
+
+Model bilevel / all /;
+
+$echo bilevel x1 x2 min z_in * ob_in c2 c3 c4 > "%emp.info%"
+
+*Start from reported solution
+x1.l = x1_l;
+x2.l = x2_l;
+y1.l = y1_l;
+y2.l = y2_l;
+y3.l = y3_l;
+
+solve bilevel using emp minimizing z;
+
+abort$(   (abs(x1.l - x1_l) > tol)
+       or (abs(x2.l - x2_l) > tol)
+       or (abs(y1.l - y1_l) > tol)
+       or (abs(y2.l - y2_l) > tol)
+       or (abs(y3.l - y3_l) > tol) ) 'Deviated from reported solution';

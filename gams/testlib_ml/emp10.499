@@ -1,0 +1,125 @@
+$Title Test of EMP equilibrium models and flip operator (EMP10,SEQ=499)
+
+$Ontext
+Reformulate a simple LP using EMP and the "equilibrium"
+keyword/strategy, and check that the solution is unchanged if we:
+  a) flip equations manually (i.e. f(x) =L= b becomes -f(x) =G= -b
+  b) flip equations using the -equName syntax in the info file
+  c) both a and b
+
+In addition, the resulting MCPs generated have the following property:
+flipping manually gives the same MCP as flipping with the flip
+operator, and flipping twice (both manually and with the flip
+operator) gives the same MCP as flipping not at all.  How to check for
+this though?
+
+Contributor: Steven Dirkse, September 2010
+
+$Offtext
+
+SETS
+   i   'sources' / i1 * i3 /
+   j   'sinks'   / j1 * j3 /
+   ;
+
+PARAMETERS
+   sup(i) 'supply limit at source' /
+     i1   300
+     i2   400
+     i3   500
+   /,
+   dem(j) 'demand at sink' /
+     j1   400
+     j2   350
+     j3   300
+   /
+   ;
+
+TABLE c(i,j) 'cost'
+      j1        j2      j3
+i1    2       2.8125   4.5
+i2  2.8125      2     2.8125
+i3   4.5      2.8125    2  ;
+
+POSITIVE VARIABLES   x(i,j);
+
+VARIABLE z;
+
+EQUATIONS
+   cost
+   supply(i)  'traditional orientation'
+   supplyX(i) 'flipped'
+   demand(j)  'traditional orientation'
+   demandX(j) 'flipped'
+   ;
+
+cost ..        z =E= sum {(i,j), c(i,j)*x(i,j)};
+
+supply(i) ..   sum {j, x(i,j)} =L= sup(i);
+supplyX(i)..   sup(i) =G= sum {j, x(i,j)};
+demand(j) ..   sum {i, x(i,j)} =G= dem(j);
+demandX(j)..   dem(j) =L= sum {i, x(i,j)};
+
+model m  'original orientation' / cost, supply,  demand  /;
+model mX 'flipped  orientation' / cost, supplyX, demandX /;
+
+* first solve to get the (unique?) solution loaded up
+solve m using lp min z;
+supplyX.m(i) = -supply.m(i);
+demandX.m(j) = -demand.m(j);
+
+
+file fInfo / '%emp.info%' /;
+file fOpt  / 'jams.opt' /;
+
+put fInfo 'equilibrium' /;
+putclose  'min z *  cost supply demand' /;
+
+m.iterlim  = 0;
+mX.iterlim = 0;
+m.optfile  = 1;
+mX.optfile = 1;
+
+* model with original orientation, no flip operator
+putclose fOpt 'fileName mcp__.gms';
+
+Solve m using emp;
+abort$[m.modelstat  > 2] 'bad model status', m.modelstat;
+abort$[m.solvestat <> 1] 'bad solve status', m.solvestat;
+
+put fInfo 'equilibrium' /;
+putclose  'min z *  cost -supply -demand' /;
+
+* model with original orientation, flip operator
+putclose fOpt 'fileName mcp_F.gms';
+
+Solve m using emp;
+abort$[m.modelstat  > 2] 'bad model status', m.modelstat;
+abort$[m.solvestat <> 1] 'bad solve status', m.solvestat;
+
+put fInfo 'equilibrium' /;
+putclose  'min z *  cost -supplyX -demandX' /;
+
+* model with flipped orientation, flip operator
+putclose fOpt 'fileName mcpXF.gms';
+
+Solve mX using emp;
+abort$[mX.modelstat  > 2] 'bad model status', mX.modelstat;
+abort$[mX.solvestat <> 1] 'bad solve status', mX.solvestat;
+
+put fInfo 'equilibrium' /;
+putclose  'min z *  cost supplyX demandX' /;
+
+* model with flipped orientation, no flip operator
+putclose fOpt 'fileName mcpX_.gms';
+
+Solve mX using emp;
+abort$[mX.modelstat  > 2] 'bad model status', mX.modelstat;
+abort$[mX.solvestat <> 1] 'bad solve status', mX.solvestat;
+
+* the solutions for all four models should be the same -
+* if we get to here we've successfully tested that the same point
+* solves all four
+
+* In addition, models mcp__ and mcpXF should be the same, and
+* models mcpX_ and mcp_F should be the same.

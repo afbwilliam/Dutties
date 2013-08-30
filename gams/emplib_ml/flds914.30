@@ -1,0 +1,43 @@
+$title Princeton Bilevel Optimization Example 9.1.4 (FLDS914,SEQ=30)
+
+$ontext
+
+  Test problem 9.2.5 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.1.4 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999.
+
+Contributor: Alex Meeraus and Jan-H. Jagla, December 2009
+
+$offtext
+
+*Solution of problem 9.1.2 on the web
+scalar x_l /   19 /
+       y_l /   14 /
+       tol / 1e-6 /;
+
+variables z; positive variable x, y;
+equations ob, c2, c3, c4;
+
+ob..      x - 4*y =e=   z;
+
+c2..  - 2*x +   y =l=   0;
+c3..    2*x + 5*y =l= 108;
+c4..    2*x - 3*y =l=  -4;
+
+model bilevel / all /;
+
+$echo bilevel x min y c2 c3 c4 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l;
+y.l = y_l;
+
+solve bilevel using EMP minimizing z;
+
+abort$(   (abs(x.l - x_l) > tol)
+       or (abs(y.l - y_l) > tol) ) 'Deviated from reported solution';

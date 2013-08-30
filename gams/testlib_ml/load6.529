@@ -1,0 +1,31 @@
+$Title Tests dynamic error messages during $loaddc (LOAD6,SEQ=529)
+
+$ontext
+The error makes nice gams names but the UELs may not have been
+been loaded and the error message needs to load the strings.
+
+Contributor: Alex
+$offtext
+
+$onecho > test.gms
+$onundf
+set i / u1*u23 /;
+parameter a(i) / u5*u20 undf, u21 na, u22 3 /
+          s    / undf /;
+$gdxout test.gdx
+$unload a s
+$gdxout
+$offecho
+
+$call gams test.gms lo=2
+$if errorlevel 1 $abort
+
+parameter a1,a2,s1,s2;
+$gdxin test
+$loaddc a1=a s1=s
+$if errorfree $abort we should have errors
+$clearerror
+$onundf
+$load a2=a s2=s
+$if NOT errorfree $abort we should have NO errors
+display a1,a2,s1,s2;

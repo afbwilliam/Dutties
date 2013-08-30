@@ -1,0 +1,731 @@
+$Title Investment Planning in the Oil Shale Industry (SHALE,SEQ=46)
+$Stitle set definitions
+
+$Ontext
+
+   This model analyses the syncrude potential of the Piceance basin in
+   northwest Colorado.  The basin contains roughly 600 billion barrels
+   of recoverable oil in the form of shale oil.  Stringent water and air
+   quality standards are imposed on the development of the industry.
+
+
+Melton, J W, An Investment Planning Model for an Oil Shale Industry in
+the Piceance Basin. PhD thesis, Center for Economic Research, University
+of Texas, 1982.
+
+$Offtext
+
+ Set c     commodities   /
+
+           syncrude      refined crude (mil bbls)
+           lpg           liquefied petroleum gas (million bbls)
+           ammonia       ammonia (mil tons)
+           coke          coke (mil tons)
+           sulfur        sulfur (mil tons)
+
+           shale-25      shale in place assaying 25 gallons per ton - gpt (mil tons)
+           shale-30      shale in place assaying 30 gallons per ton - gpt (mil tons)
+           shale-35      shale in place assaying 35 gallons per ton - gpt (mil tons)
+
+           sur-water     surface water (mil bbls)
+           mo-water      missouri river water (mil bbls)
+           grnd-water    ground (underground) water (mil bbls)
+
+           mined-25      mined and crushed shale - 25 gpt (mil tons)
+           mined-30      mined and crushed shale - 30 gpt (mil tons)
+           mined-35      mined and crushed shale - 35 gpt (mil tons)
+
+           water         water from all sources (mil bbls)
+           shale-oil     shale-oil needing upgrading (mil bbls)
+           spentshale    shale spoils needing disposal (mil tons)
+           part          particulate emissions (kilos)
+           so2           sulfur dioxide emissions (kilos)
+           misc-act-i    input to ancillary operations
+
+           can-space     existing canyon space (mil cubic yards)
+           mine-fill     spoils backfilled in mines (million cu yards)
+           spoil-dist    spoils taken to a distant site (million tons)
+           part-red      particulate pollutants after reduction
+           so2-red       so2 emissions after reductions /
+
+     cf(c) final products          / syncrude , lpg , ammonia , coke , sulfur /
+
+     crs(c) shale                  / shale-25 , shale-30 , shale-35 /
+
+     crr(c) renewable water supply / sur-water , mo-water /
+
+     crrs(c) surface water         / sur-water /
+
+     crrm(c) missouri river water  / mo-water /
+
+     crg(c)  non-renewable groundwater   / grnd-water /
+
+     ci(c)   intermediate products       / mined-25 , mined-30 , mined-35   , water , shale-oil , spentshale
+                                           part     , so2      , misc-act-i /
+
+     cc(c)   canyon space  / can-space /
+
+     cd(c)   spoils deposited underground or distantly (million cu yards) / mine-fill , spoil-dist /
+
+     er(c)   reduced air pollution emissions (kilos)    / part-red , so2-red /
+
+     p       processes   /
+
+             mining-25     mining - 25 gpt
+             mining-30     mining - 30 gpt
+             mining-35     mining - 35 gpt
+
+             ret-25        retorting - 25 gpt
+             ret-30        retorting - 30 gpt
+             ret-35        retorting - 35 gpt
+
+             buy-h2o-s     buying surface water
+             buy-h2o-g     buying ground water
+             buy-h2o-m     buying water from the missouri river
+
+             upgrading     upgrading of shale oil
+
+             dispose-c     disposal of spoils in canyons
+             dispose-u     disposal of spoils in mines
+             dispose-d     disposal of spoils at a distant site
+             miscell       operation of ancillaries
+
+             part-50       reduction of part emissions by fifty %
+             so2-50        reduction of so2 emissions by 50 %
+             part-90       reduction of part emissions  by ninety %
+             so2-90        reduction of so2 emissions by 90 %
+             part-95       reduction of part emissions  by ninety five %
+             so2-95        reduction of so2 emissions by 95 %
+             part-99       reduction of part emissions by ninety nine %
+             so2-99        reduction of so2 emissions by 99 %
+             part-99pt5    reduction of part emissions by 99 point 5 %
+             so2-99pt5     reduction of so2 emissions by 99 point 5 % /
+
+
+     prws(p) process of acquiring surface water         / buy-h2o-s /
+
+     prwm(p) process of acquiring missouri river water  / buy-h2o-m /
+
+     pgw(p)  process of acquiring groundwater           / buy-h2o-g /
+
+     pd(p)   disposal activities                        / dispose-c , dispose-u , dispose-d /
+
+     pdu(p)  underground disposal process               / dispose-u /
+
+     pmu(p)  mining processes which create mine space   / mining-25 , mining-30 , mining-35 /
+
+     pp(p)   pollution control processes                / part-50 , part-90 , part-95 , part-99 , part-99pt5
+                                                          so2-50  , so2-90  , so2-95  , so2-99  , so2-99pt5  /
+
+     m       productive units    /  mine-25   , mine-30   , mine-35   , retort-25 , retort-30 , retort-35
+                                    h2o-s-eq  , h2o-g-eq  , h2o-m-eq  , upgrader  , disp-c-eq , disp-u-eq
+                                    disp-d-eq , misc-eq   , part-50-eq, so2-50-eq , part-90-eq, so2-90-eq
+                                    part-95-eq, so2-95-eq , part-99-eq, so2-99-eq , p-99pt5-eq, s-99pt5-eq /
+
+     mrs(m)  productive units used for surface water          / h2o-s-eq /
+
+     mrm(m)  productive units used for missouri river water   / h2o-m-eq /
+
+     mrg(m)  productive units used for groundwater            / h2o-g-eq /
+
+     mp(m)   productive units used in particulate control     / part-50-eq , part-90-eq , part-95-eq , part-99-eq
+                                                                p-99pt5-eq /
+
+     ms(m)   productive units used in so2 control  / so2-50-eq , so2-90-eq , so2-95-eq , so2-99-eq , s-99pt5-eq /
+
+     md(m)   productive units used for disposal    / disp-c-eq , disp-u-eq , disp-d-eq /
+
+     i       index of break points for raw material purchases  / i1*i5 /
+
+     tf      expansion time periods    / 1985-89 , 1990-94 , 1995-99 , 2000-04 , 2005-09 /
+
+     t(tf)   time periods     / 1990-94 , 1995-99 , 2000-04 , 2005-09 /
+
+     t1(tf)  first two time periods  / 1990-94 , 1995-99 /
+
+ Alias (t,tp),(tf,tfp);
+
+$Stitle input-output data
+
+ Table a(c,p) input-output for processes and commodities
+
+
+              buy-h2o-s    buy-h2o-g    buy-h2o-m
+
+ sur-water      -1
+ grnd-water                  -1
+ mo-water                                 -1
+ water           1            1            1
+
+ +           mining-25     mining-30     mining-35
+
+ shale-25      -1.
+ shale-30                    -1.
+ shale-35                                  -1.
+ water          -.50          -.50          -.50
+ mined-25       1.
+ mined-30                     1.
+ mined-35                                   1.
+*mine-space      .59           .59           .59
+ part           2.66          2.66          2.66
+*           notes:
+*           emissions source: ota p 262
+*           lbs/hr*(24/66000)*.454 = kilos per ton mined
+*            mine space: density of shale = 125 lbs/cu ft.
+*            ((2000/125)/27)  = .5925 cu yd per ton mined
+
+
+ +            ret-25        ret-30        ret-35
+
+ mined-25    -1.
+ mined-30                  -1.
+ mined-35                                -1.
+ water       -1.04         -1.04         -1.04
+ shale-oil     .5952         .7143         .8333
+ spentshale    .87           .85           .82
+ part         1.85          1.80          1.75
+ so2           .0177         .0213         .0248
+
+*          notes:
+*                assume particulate emissions are proportional to spentshale
+*                other emissions are proportional to shale-oil.
+*            emissions source: ota p 262
+*            lbs/hr*(24/66000)*.454 = kilos per ton of shale
+*           shale-oil source: exxon. 47000/66000 = .7121 bbl/ton of 35 gpt shale
+*            other grades of shale are linearly proportional
+*            spent shale source% whitcombe, et al p.51
+*           35 gpt shale contains 359.3 lbs of organics
+*           30 gpt shale contains 359.3*(30/35) lbs of organics
+*           25 gpt shale contains 359.3*(25/35) lbs of organics
+
+
+ +           upgrading    miscell
+
+ shale-oil    -1.
+ water         -.20
+ syncrude       .84
+ misc-act-i     .84        -1.
+ lpg            .077
+ ammonia        .0019
+ sulfur         .0024
+ coke           .0091
+ part           .0018
+ so2           5.90
+
+*           emissions source: ota p 262
+*           syncrude source: sawyer (1979) p 55
+*            lb/hr*(24*50000)(.454*.84) = kilos per bbl of crude
+
+ +            dispose-c    dispose-u    dispose-d
+
+ spentshale    -1.          -1.          -1.
+ water         -1.18        -1.00         -.43
+*mine-space                  -.82
+ can-space       .82
+ mine-fill                    .82
+ spoil-dist                               1.
+ part            .245         .082
+
+*          note: spoils deposited in canyons and mines weighs 90 pounds
+*                per cubic foot.  spoils deposited distantly
+*                weighs 75 pounds per cubic foot
+*                source: colony eis p. ix-19
+*           emissions source: ota p 262
+*            (.8400 ton of ss/.8333 bbl oil)*50000 = 60000 ton ss per day.
+*            lbs/hr*(24/60000)*.454 = kilos per ton of spent shale
+*
+*          assume dispose-u has 1/3 the pollutants as dispose-c
+*          see cleveland cliffs (1978) p 97
+*          source: water for cispose-u - cleveland cliffs (1978) p 88
+
+ +          part-50   so2-50    part-90   so2-90   part-95   so2-95   part-99   so2-99   part-99pt5   so2-99pt5
+
+ part        -1.                  -1                 -1                 -1                   -1
+ so2                  -1.                   -1                 -1                 -1                     -1
+ part-red      .5                   .1                .05                 .01                  .005
+ so2-red                .5                    .1                 .05                .01                    .005
+
+$Stitle capacity utilization data
+
+ Table b(m,p)  productive unit capacity utilization
+
+             mining-25   mining-30   mining-35
+
+ mine-25       1
+ mine-30                    1
+ mine-35                                 1
+
+ +           ret-25       ret-30       ret-35
+
+ retort-25     1
+ retort-30                  1
+ retort-35                               1
+
+ +           buy-h2o-s    buy-h2o-g    buy-h2o-m
+
+ h2o-s-eq       1
+ h2o-g-eq                    1
+ h2o-m-eq                                 1
+
+ +           dispose-c    dispose-u    dispose-d
+
+ disp-c-eq      1
+ disp-u-eq                   1
+ disp-d-eq                                1
+
+ +          upgrading      miscell
+
+ upgrader      1
+ misc-eq                      1
+
+ +           part-50    so2-50    part-90   so2-90   part-95   so2-95   part-99   so2-99   part-99pt5   so2-99pt5
+
+ part-50-eq     1
+ part-90-eq                          1
+ part-95-eq                                             1
+ part-99-eq                                                                1
+ p-99pt5-eq                                                                                      1
+ so2-50-eq                   1
+ so2-90-eq                                     1
+ so2-95-eq                                                        1
+ so2-99-eq                                                                           1
+ s-99pt5-eq                                                                                                 1
+
+
+$Stitle data
+
+ Scalar    theta   years per time period                                 / 5      /
+           ps      royalty for lease: sawyer (1979) p. 54 ($ per barrel) /    .25 /
+           prga    cost of first unit of groundwater ($ per acre- foot)  /  25    /
+           nutot   cost of one 50000 bpd plant (billion $)               /   3    /
+           days    stream days per year                                  / 330    /
+           prg     cost of first unit of groundwater     ($ per barrel)
+
+ Parameter prm(c)    multiplier for final prices for raw materials: source: groundwater - ota p 392 /
+
+*if 1.0 is the cost of the first unit, then these are the
+*costs of the last unit.  costs are linear between these
+*points.
+                      sur-water   24 , grnd-water  120 , mo-water  2 /
+
+           rw1(c)     cost of first unit of renewable water ($ per acre-foot) / sur-water 300 , mo-water 9999999 /
+
+           rwesc(c)   annual escalation in base cost of renewable water       / sur-water   .05 /
+
+           num(m)     investment cost factors (fraction of nutot)  /
+
+                      (mine-25,mine-30,mine-35)        .2
+                      (retort-25,retort-30,retort-35)  .26
+                       h2o-s-eq                        .025
+                       h2o-g-eq                        .05
+                       h2o-m-eq                        .025
+                       upgrader                        .26
+                       disp-c-eq                       .004
+                       disp-u-eq                       .002
+                       disp-d-eq                       .008
+
+*compare c and u with cleveland cliffs (1978) pp 95,105,108,164
+
+                       misc-eq                         .254
+                       part-50-eq                      .0022
+                       so2-50-eq                       .0008
+                       part-90-eq                      .0074
+                       so2-90-eq                       .0026
+                       part-95-eq                      .0096
+                       so2-95-eq                       .0034
+                       part-99-eq                      .0148
+                       so2-99-eq                       .0052
+                       p-99pt5-eq                      .017
+                       s-99pt5-eq                      .006  /
+
+           nud(m)     size (in daily input) of productive unit in 50k bpd plant /
+
+                      (mine-25,mine-30,mine-35,retort-25,retort-30,retort-35)      71430
+                      (h2o-s-eq,h2o-g-eq,h2o-m-eq)                                251040
+                       upgrader                                                    59524
+                      (disp-c-eq,disp-u-eq,disp-d-eq)                              60000
+                       misc-eq                                                     50000
+                      (part-50-eq,part-90-eq,part-95-eq,part-99-eq,p-99pt5-eq)    329277
+                      (so2-50-eq,so2-90-eq,so2-95-eq,so2-99-eq,s-99pt5-eq)        352921 /
+
+           opc(p)     operating cost ($ per unit level ): 8% of capital cost of a $3 bil plant /
+
+                      (mining-25,mining-30,mining-35)    2.08
+*compare with lindquist et al
+
+                      (ret-25,ret-30,ret-35)             2.7
+                      (buy-h2o-s,buy-h2o-m)               .07
+                       buy-h2o-g                          .14
+                       upgrading                         3.18
+                       dispose-c                          .4
+                       dispose-u                          .21
+                       dispose-d                         1.86
+
+*compare c and u with cleveland cliffs (1978) pp 95,101,108,164
+                       miscell                           4.07
+                      (part-50,so2-50)                    .01
+                      (part-90,so2-90)                    .03
+                      (part-95,so2-95)                    .04
+                      (part-99,so2-99)                    .06
+                      (part-99pt5,so2-99pt5)              .07  /
+
+           midyear(tf)  middle year of period
+           prra(c,tf)   cost of first unit of re-water per period ($ per acre-foot)
+           prr(c,tf)    cost of renewable water                      ($ per barrel)
+           nu(m)        investment cost                       ($ per unit per year);
+
+ midyear(tf) = 1982 + theta*ord(tf);
+ prra(crr,t) = rw1(crr)*(1 + rwesc(crr))**(midyear(t)-1982);
+ prr(crr,t)  = prra(crr,t)/7762;
+ prg         = prga/7762;
+ nu(m)       = 1e9*nutot*num(m)/(nud(m)*days);
+ Display midyear,prra,prr,prg,nu;
+
+$Stitle modeling of pollutant dispersion and air quality
+
+ Scalar    boxh   box height (km)                     /   .4 /
+           boxw   box width  (km)                     / 40   /
+           boxl   box length - wind speed (km per hr) / 14.4 /
+           ebm    conversion of emissions to ambient concentration
+
+ Parameter bc(c)  background concentration  (micrograms per m3): source: colony eis p. iii-266
+
+                  / part-red      10
+                    so2-red        1 /
+
+           esa(c) 1980 standards for ambient concentration (micrograms per m3): source: ota p 266
+
+* part% annual geometric mean
+* so2 % annual arithmetic mean
+
+                  / part-red     45
+                    so2-red      80 /;
+
+
+    ebm = (1e6)/(boxh*boxw*boxl*24*330);
+
+
+*      part(kg/yr)*10**9(micro-g/kg)*10**6                (micro-g/m*3)
+*      ---------------------------------------  = part-con -------------
+*      h(m)*w(m)*l(m)*(hr/day)*(day/yr)                     (mil bbl/yr)
+
+$Stitle computations
+
+ Scalar    rfs      recoverable fraction of shale (see ota p 127 on multiple mining levels /  .6 /
+           rho      discount rate                                                          /  .15 /
+           zeta     life of productive units (years)                                      / 20    /
+
+ Parameter po(c)    1982 prices for final products  ($ per unit)
+
+                    / syncrude    34.
+                      lpg         30.00
+                      ammonia    135.
+                      coke        75.
+                      sulfur     127. /
+
+           ycf(c)   annual rate of increase in final product value     / (syncrude,lpg)   .05 /
+
+           bts(c)   total shale reserves (million tons)
+
+                    / shale-25  1820000.
+                      shale-30   119000.
+                      shale-35    40800. /
+
+           bra(c)     available renewable water (million acre-feet per year): source: ota p 385
+
+                    / sur-water    .818
+                      mo-water    1.1   /
+
+           bga(c)     groundwater available (million acre-feet) / grnd-water 20 /
+
+           bd(c)      available canyon space (million cubic yards)  / can-space  6780 /
+
+           indcap(tf) number of new plants allowed each period
+
+                      / 1990-94     4.
+                        1995-99     5.
+                        2000-04     6.
+                        2005-09     6. /
+
+           pf(c,t)    price of final products ($ per unit)
+           bs(c)      recoverable shale (million tons)
+           br(c)      available renewable water (million bbls per year)
+           bg(c)      groundwater available (million bbl)
+
+           bbr(c)      amount of renewable water between break-points (million bbl per year)
+           bbg(c)      amount of groundwater between break-points (million bbl)
+           bbrcum(c,i) amount of renewable water at each break-point (million bbl per year)
+           bbgcum(c,i) amount of groundwater at each break-point (million bbl)
+           dr(c,i,t)   area under supply curve at break-points for renewable water (mill $ per year)
+           dg(c,i)     area under supply curve at break-points for groundwater (million $ per year)
+           drd(c,i,tf) difference of dr and previous value of dr (million $ per year)
+           dgd(c,i)    difference of dg and previous value of dg (million $ per year)
+
+           newcap(t)  new capacity allowed each period (million bbl per yr)
+           ts(tf,tf)  time summation matrix
+           del(tf)    discount factor
+           sigma      capital recovery factor;
+
+ pf(cf,t) = po(cf)*(1+ycf(cf))**(midyear(t) - 1982);
+ bs(crs) = bts(crs)*rfs;
+ br(crr) = 7762*bra(crr);
+
+* 20 mil. acre feet * 7762 bbl/acre foot = 155240 mil barrels
+ bg(crg) = 7762*bga(crg);
+
+*comment: the price of raw materials is assumed to rise linearly as a function of the amount used.  the total cost
+*         of using a reserve is equal to the area under the supply curve, or price times quantity.  the area under the
+*         the linear supply curve from the origin (q=0) to a point where u units have been used is equal to u times
+*         p(initial) + 1/2 (u squared) times the slope of the supply curve.  since this is quadratic, an approximation
+*         scheme is used.
+*         let del = cumulative area under the supply curve.  the graph of del vs u is convex so it is approximated
+*         with linear segments.  i represents the set of segments.  the points are equidistant with bb being the amount
+*         between break points and bbcum the cumulative of bb.  del is computed at each value of bbcum.
+
+ bbr(crr) = br(crr)/card(i);
+ bbg(crg) = bg(crg)/card(i);
+
+ bbrcum(crr,i) = ord(i)*bbr(crr);
+ bbgcum(crg,i) = ord(i)*bbg(crg);
+
+ dr(crr,i,t) = prr(crr,t)*bbrcum(crr,i) + .5*bbrcum(crr,i)**2*(prm(crr) - 1)*prr(crr,t)/br(crr);
+ dg(crg,i)   = prg*bbgcum(crg,i) + .5*bbgcum(crg,i)**2*(prm(crg) - 1)*prg/bg(crg);
+
+ drd(crr,i,t) = dr(crr,i,t) - dr(crr,i-1,t);
+ dgd(crg,i)   = dg(crg,i) - dg(crg,i-1);
+
+ newcap(t) = 50*.33*indcap(t);
+ ts(tf,tfp)$(ord(tfp) lt ord(tf)) = 1;
+ del(tf) = (1+rho)**(1982 - midyear(tf));
+ sigma   = (1+rho)**2*rho / (1-(1+rho)**(-zeta));
+
+ Display ts,del,sigma;
+
+$Stitle model definition
+
+ Positive variables
+        z(p,tf)       process level                                (million units per yr)
+        x(c,tf)       output of final products                     (million units per yr)
+        us(c,tf)      purchases of shale                            (million tons per yr)
+        ur(c,t)       purchases of renewable water                  (million bbls per yr)
+        ug(c)         purchases of groundwater                             (million bbls)
+        h(m,tf)       investment levels                            (million units per yr)
+        uur(c,i,tf)   renewable water purchases between points       (million bbl per yr)
+        uug(c,i)      groundwater purchases between points                  (million bbl)
+
+ Variables
+        pi            discounted profit                                       (million $)
+        r(tf)         revenue from sales                               (million $ per yr)
+        phiy(tf)      shale cost                                       (million $ per yr)
+        phir(tf)      renewable water cost                             (million $ per yr)
+        phig          groundwater cost                                        (million $)
+        phik(tf)      cost of capital                                  (million $ per yr)
+        phio (tf)     operating cost other than rawmat                 (million $ per yr)
+
+ Equations
+
+        msu(c,tf)     material balance on shale usage                (million tons per yr)
+        mrw(c,tf)     material balance on renewable water purchases   (million bbl per yr)
+        mgw(c)        material balance on groundwater usage                  (million bbl)
+        mi(c,tf)      material balance on intermediate products     (million units per yr)
+        mf(c,tf)      material balance on final products            (million units per yr)
+
+        mnmr          no mine refilling in first two periods               (million units)
+        mmr3          mine refilling in third period                       (million units)
+        mmr4          mine refilling in fourth period                      (million units)
+        cdc(c)        aboveground spoils disposal in canyons           (million cubic yds)
+
+        cs(c)         limits on total shale purchases                       (million tons)
+        mrwb(c,tf)    renewable water purchases over all breaks       (million bbl per yr)
+        mgwb(c)       groundwater purchases over all breaks                  (million bbl)
+
+        cae(c,tf)     limits on air pollution                          (micrograms per m3)
+        cpu(m,tf)     capacity constraints                          (million units per yr)
+        cind(tf)      limit on new syncrude capacity by period       (million bbls per yr)
+
+        arev(tf)      revenue accounting                                       (million $)
+        aroy(tf)      royalty accounting                                       (million $)
+        arw(tf)       renewable water accounting                               (million $)
+        agw           groundwater accounting                                   (million $)
+        acap(tf)      capital costs                                            (million $)
+        aopc(tf)      operating cost accounting                                (million $)
+        aprof         profit accounting                                        (million $);
+
+
+$Eject
+
+ msu(crs,t)..  sum(p, a(crs,p)*z(p,t)) =e= -us(crs,t);
+
+ mrw(crr,t)..  sum(p, a(crr,p)*z(p,t)) =e= -ur(crr,t);
+
+ mgw(crg)..    sum((p,t), a(crg,p)*z(p,t)) =e= -ug(crg);
+
+ mi(ci,t).. sum(p, a(ci,p)*z(p,t)) =e= 0;
+
+ mf(cf,t).. sum(p, a(cf,p)*z(p,t)) =e= x(cf,t);
+
+ mnmr.. sum((pdu,t1), z(pdu,t1)) =e= 0;
+
+ mmr3("2000-04")..  sum(pdu, z(pdu,"2000-04")) =l= .413*sum(pmu, z(pmu,"1990-94"));
+
+ mmr4("2005-09")..  sum(pdu, z(pdu,"2005-09")) =l= .413*sum(pmu, z(pmu,"1990-94") + z(pmu,"1995-99"))
+                                                 - sum(pdu, z(pdu,"2000-04"));
+
+ cdc(cc).. theta*sum((p,t), a(cc,p)*z(p,t)) =l= bd(cc);
+
+ cs(crs).. theta*sum(t, us(crs,t)) =l= bs(crs);
+
+ mrwb(crr,t).. ur(crr,t) =e= sum(i, uur(crr,i,t));
+
+ mgwb(crg)..  ug(crg) =e= sum(i, uug(crg,i));
+
+ cae(er,t).. ebm*sum(p, a(er,p)*z(p,t)) + bc(er) =l= esa(er);
+
+ cpu(m,t)..  sum(p, b(m,p)*z(p,t)) =l= sum(tf$ts(t,tf), h(m,tf));
+
+ cind(t)..  x("syncrude",t) =l= x("syncrude",t-1) + newcap(t);
+
+ arev(t).. r(t) =e= sum(cf, pf(cf,t)*x(cf,t));
+
+ aroy(t)..  phiy(t) =e= ps*sum(p, a("syncrude",p)*z(p,t));
+
+
+*comment:  the approximation to the area under the supply curve equals
+*  the value on the ordinate of the curve del = f(u).  this is the
+*  amount u in excess of the last break point times the slope of that
+*  line segment minus the previous del (where the line segment
+*  commenced).
+
+ arw(t)..  phir(t) =e= sum(crr, sum(i, drd(crr,i,t)*uur(crr,i,t)) / bbr(crr) );
+
+ agw..  phig =e= sum(crg, sum(i, uug(crg,i)*dgd(crg,i)) / bbg(crg) );
+
+ acap(t)..  phik(t) =e= sigma*sum((m,tf)$ts(t,tf), nu(m)*h(m,tf));
+
+ aopc(t).. phio(t) =e= sum(p, opc(p)*z(p,t));
+
+ aprof..  pi =e= theta*sum(t, del(t)*(r(t) - phir(t) - phio(t) - phiy(t) - phik(t))) - phig;
+
+ Model synfuels /all/;
+
+ uur.up(crr,i,t) = bbr(crr);
+ uug.up(crg,i)   = bbg(crg);
+ Solve synfuels maximizing pi using lp;
+
+$Single
+$Stitle report section
+
+ Parameter
+   pilev          discounted cash flows (billion 1982 $)
+   xlev(c,tf)     production of final products (million units per stream day)
+   noplants(tf)   number of 50000 bpd plants on line
+   zlev(p,tf)     process level (million units per stream day)
+
+   rwd(c,tf)      renew water purchased this period (acre-feet per day)
+   rwy(c,tf)      renew water purchased this period (1000 acre-feet per year)
+   rwclast(c,tf)  cost of last acre foot of renewable water used ($)
+
+   gwd(c,tf)      groundwater purchased this period (acre-feet per day)
+   gwy(c,tf)      groundwater purchased this period (1000 acre-feet per year)
+   gwp(c,tf)      groundwater purchased this period (1000 acre-feet per period)
+   gwcy(c,tf)     cost of groundwter used each period (million $)
+   gwclast(c)     cost of last acre foot of ground water purchased ($)
+
+   capcp(tf)      capital investment per period (billion dollars)
+   capcpl(tf)     capital investment per plant (billion dollars)
+   capcm(tf,m)    capital cost per productive unit (million $ per 50000 bbls)
+   capcmt(tf)     capital cost per standard size plant (million $)
+
+   revy(tf)       revenue per year (billion $)
+   tcosty(tf)     expenditures per year (billion $)
+   cashfly(tf)    net cash flows per year (billion $)
+
+   revb(tf)       revenue per barrel of syncrude ($)
+   tcostb(tf)     cost per barrel of syncrude excluding groundwater ($)
+   roycb(tf)      royalty cost per barrel of syncrude ($)
+   swcb(m,tf)     surface water cost per barrel of syncrude ($)
+   mwcb(m,tf)     missouri river cost per barrel of syncrude ($)
+   gwcb(m,tf)     groundwater cost per barrel of syncrude ($)
+   capcb(tf)      capital cost per barrel of syncrude ($)
+   oprcb(tf)      operating cost per barrel of syncrude ($)
+   pccb(tf)       pollution control cost per barrel of syncrude ($)
+
+
+   elev(c,tf)     concentration of pollutants (micro-gram per m3)
+   pccpp(m,tf)    particulate control cost by equipment and period ($)
+   pccsp(m,tf)    so2 control cost by equipment and period ($)
+   capmp(tf)      capital cost of particulate control (million $ per plant)
+   capms(tf)      capital cost of so2 control (million $ per plant)
+
+   fracsy(c,tf)   percent of available shale mined per year
+   fracst(c)      total percent of available shale mined in all periods
+   fracrwy(c,tf)  percent of available renewable water purchased
+   fracgw(c,tf)   percent of available groundwater purchased
+
+   dacper(tf)      percent of disposal activity in canyons
+   dauper(tf)      percent of disposal activity underground
+   dadper (tf)     percent of disposal activity distant;
+
+ pilev   = pi.l/1000;
+ xlev(cf,t)  = x.l(cf,t)/330;
+ noplants(t) = 20*xlev("syncrude",t);
+ zlev(p,t)   = z.l(p,t)/330;
+
+ rwd(crr,t) = ur.l(crr,t)/(3.30*.7762);
+ rwy(crr,t) = .33*rwd(crr,t);
+ rwclast(crr,t)$ur.l(crr,t) = 7762*(prr(crr,t) + ur.l(crr,t)*(prm(crr)-1)*prr(crr,t)/br(crr));
+
+ gwd(crg,t) = -sum(p, a(crg,p)*z.l(p,t))/(3.3*.7762);
+ gwy(crg,t) = .33*gwd(crg,t);
+ gwp(crg,t) = theta*gwy(crg,t);
+ gwcy(crg,t) = (gwp(crg,t)*prg + .5*gwp(crg,t)**2*(prm(crg)*prg - prg)/bg(crg)
+             - sum(tp$ts(t,tp), gwp(crg,tp)*prg + .5*gwp(crg,tp)**2*(prm(crg)*prg - prg)/bg(crg)))/theta;
+ gwclast(crg)$ug.l(crg) = prga + prga*ug.l(crg)*(prm(crg)-1)/bg(crg);
+
+ capcp(tf)   = .001*sum(m, nu(m)*h.l(m,tf));
+ capcpl(tf)  = capcp(tf)/(noplants(tf+1) - noplants(tf));
+ capcm(tf,m) = nu(m)*h.l(m,tf)/(noplants(tf+1) - noplants(tf));
+ capcmt(tf)  = sum(m, capcm(tf,m));
+ revy(t)     = r.l(t)/1000;
+ tcosty(t)   = (phik.l(t) + phiy.l(t) + phir.l(t) + phio.l(t))/1000;
+ cashfly(tf) = revy(tf) - tcosty(tf);
+
+ revb(t)   = r.l(t)/x.l("syncrude",t);
+ tcostb(t) = (phiy.l(t) + phir.l(t) + phik.l(t) + phio.l(t))/x.l("syncrude",t);
+ roycb(t)  = phiy.l(t)/x.l("syncrude",t);
+
+ swcb(mrs,t) = (sigma*sum(tfp$ts(t,tfp), nu(mrs)*h.l(mrs,tfp)) + sum(prws, opc(prws)*z.l(prws,t))
+                     + sum(crrs, sum(i, drd(crrs,i,t)*uur.l(crrs,i,t))/bbr(crrs))) / x.l("syncrude",t);
+
+ mwcb(mrm,t) = (sigma*sum(tfp$ts(t,tfp), nu(mrm)*h.l(mrm,tfp)) + sum(prwm, opc(prwm)*z.l(prwm,t))
+                     + sum(crrm, sum(i, drd(crrm,i,t)*uur.l(crrm,i,t))/bbr(crrm))) / x.l("syncrude",t);
+
+ gwcb(mrg,t) = (del(t)*sum(tfp$ts(t,tfp), nu(mrg)*h.l(mrg,tfp)) + sum(pgw, opc(pgw)*z.l(pgw,t))
+               + sum(crg,gwcy(crg,t))) / x.l("syncrude",t);
+
+ capcb(t) = phik.l(t)/x.l("syncrude",t);
+ oprcb(t) = phio.l(t)/x.l("syncrude",t);
+
+ pccb(t) = (sigma*sum(tfp$ts(t,tfp), sum(mp, nu(mp)*h.l(mp,tfp)) + sum(ms, nu(ms)*h.l(ms,tfp)))
+           + sum(pp, opc(pp)*z.l(pp,t)) ) / x.l("syncrude",t);
+
+
+ elev(er,t)   = ebm*sum(p, a(er,p)*z.l(p,t)) + bc(er);
+ pccpp(mp,tf) = nu(mp)*h.l(mp,tf);
+ pccsp(ms,tf) = nu(ms)*h.l(ms,tf);
+ capmp(tf)    = sum(mp, nu(mp)*h.l(mp,tf)) / (noplants(tf+1) - noplants(tf));
+ capms(tf)    = sum(ms, nu(ms)*h.l(ms,tf)) / (noplants(tf+1) - noplants(tf));
+
+ fracsy(crs,t) = 100*us.l(crs,t)/bs(crs);
+ fracst(crs)   = theta*sum(t, fracsy(crs,t));
+ fracrwy(crr,t) = 100*rwy(crr,t)/(bra(crr)*1000);
+
+ dacper(t) = 100*z.l("dispose-c",t)/sum(pd, z.l(pd,t));
+ dauper(t) = 100*z.l("dispose-u",t)/sum(pd, z.l(pd,t));
+ dadper(t) = 100*z.l("dispose-d",t)/sum(pd, z.l(pd,t));
+ fracgw(crg,t) = 100*gwy(crg,t)/(bga(crg)*1000);
+
+ Display po, ycf, rw1, prra, prga, pf, rho, pilev, indcap, noplants, x.l, x.m, xlev, revy, tcosty, cashfly
+         revb, tcostb, roycb, swcb, mwcb, gwcb, capcb, oprcb, pccb, pccpp, pccsp, rwclast, gwclast, z.l
+         zlev, h.l, capcp, capcm, capcpl, capmp, capms, rwy, rwd, fracrwy, gwy, gwd, fracgw, fracsy, fracst, elev
+         phiy.l, r.l, phir.l, phik.l, gwp, gwcy, ur.l, ug.l, cae.m, cind.m, dacper, dauper, dadper;

@@ -1,0 +1,3208 @@
+Version = 5
+LibraryName = modlib.glb
+Columns = 7
+1 = Name
+2 = Main topic
+3 = Featured item 1
+4 = Featured item 2
+5 = Featured item 3
+6 = Featured item 4
+7 = Type
+InitialSort = 1
+*$*$*$
+Files = abort.gms
+Directory =
+1 = ABORT.GMS
+2 = Abort
+3 = Abort
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrates use of abort to shut down a job
+Note abort is like display
+*$*$*$
+Files = acronym.gms
+Directory =
+1 = ACRONYM.GMS
+2 = Acronyn
+3 = Acronym
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrates use of acronyms
+*$*$*$
+Files = ADDBAT.gms,batincadd.gms,batincadd2.gms
+Directory =
+1 = ADDBAT.GMS
+2 = Include
+3 = Batinclude
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrates use of batinclude and how functions inclluded can be dramatically
+changed
+*$*$*$
+Files = agreste.gms,gamsbas.bas,gamsbas.gms,rgamsbas.bat
+Directory =
+1 = AGRESTE.GMS
+2 = Save restart
+3 = GAMSBAS
+4 = Restart
+5 =
+6 =
+7 = .GMS
+Agreste.gms from GAMS model library
+
+Illustrate fast resolve from a GAMSBAS basis file
+
+Run agreste.gms first saving the restart file and restart as in rgamsbas.bat or
+gams agreste s=save
+gams gamsbas r=save
+*$*$*$
+Files = asmall10.gms,asmsets10.gms,asmdemand10.gms,asmfarmpro10.gms,asmproc10.gms,asmlive10.gms,asmcrop10.gms,asmcropmix10.gms,asmlivemix10.gms,asmcalsu.gms,asmerosion.gms,asmseper.gms,asmsurep.gms,asmmodel.gms,asmsolve.gms,asmrept.gms,asmloop.gms,asmfinal.gms
+Directory =
+1 = ASMALL10.GMS
+2 = ASM Model
+3 = Code seperation
+4 =
+5 = ASM sector model
+6 =
+7 = .GMS
+Unifying file for ASM model
+
+*$*$*$
+Files = asmcalrn.gms
+Directory =
+1 = ASMCALRN.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Repeated Static Calculation
+5 = ASM sector model
+6 =
+7 = .GMS
+Calculations needed to be repeated whenever model is solved
+for ASM model
+*$*$*$
+Files = asmcalsu.gms
+Directory =
+1 = ASMCALSU.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Static calculation
+5 = ASM sector model
+6 =
+7 = .GMS
+One time calculations done in setting up ASM model
+
+*$*$*$
+Files = asmcompr.gms
+Directory =
+1 = ASMCOMPR.GMS
+2 = ASM Model
+3 = Report writing
+4 = Comparative report
+5 = ASM sector model
+6 =
+7 = .GMS
+Comparative report writer for ASM model
+
+*$*$*$
+Files = asmCrop10.gms
+Directory =
+1 = ASMCROP10.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Table
+5 = ASM sector model
+6 =
+7 = .GMS
+Section of total ASM model giving crop data
+
+*$*$*$
+Files = asmCROPMIX10.gms
+Directory =
+1 = ASMCROPMIX10.GMS
+2 = ASM Model
+3 = Code seperation
+4 =
+5 = ASM sector model
+6 =
+7 = .GMS
+Crop mix data budgets for ASM model
+
+*$*$*$
+Files = asmdef.gms
+Directory =
+1 = ASMDEF.GMS
+2 = ASM Model
+3 = Code seperation
+4 =
+5 = ASM sector model
+6 =
+7 = .GMS
+Initial guess at deficiency payments for ASM model
+*$*$*$
+Files = asmDEMAND10.gms
+Directory =
+1 = ASMDEMAND10.GMS
+2 = ASM Model
+3 = Code seperation
+4 =
+5 = ASM sector model
+6 =
+7 = .GMS
+Demand and supply data for ASM model
+
+*$*$*$
+Files = asmEROSION.gms
+Directory =
+1 = ASMEROSION.GMS
+2 = ASM Model
+3 = Code seperation
+4 =
+5 = ASM sector model
+6 =
+7 = .GMS
+Erosion data for ASM model
+
+*$*$*$
+Files = asmFARMPRO10.gms
+Directory =
+1 = ASMFARMPRO10.GMS
+2 = ASM Model
+3 = Code seperation
+4 =
+5 = ASM sector model
+6 =
+7 = .GMS
+Farm program provision data for ASM model
+
+*$*$*$
+Files = asmfinal.gms
+Directory =
+1 = ASMFINAL.GMS
+2 = ASM Model
+3 = Report writing
+4 = Comparative report
+5 = ASM sector model
+6 =
+7 = .GMS
+Final comparative report writing displays for ASM model
+
+*$*$*$
+Files = asmLIVE10.gms
+Directory =
+1 = ASMLIVE10.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Table
+5 = ASM sector model
+6 =
+7 = .GMS
+Livestock budgets for ASM model
+
+*$*$*$
+Files = asmLIVEMIX10.gms
+Directory =
+1 = ASMLIVEMIX10.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Parameter
+5 = ASM sector model
+6 =
+7 = .GMS
+Livestock mixes for ASM model
+*$*$*$
+Files = asmloop.gms
+Directory =
+1 = ASMLOOP.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Comparative analysis
+5 = ASM sector model
+6 =
+7 = .GMS
+Comparative analysis file for ASM model
+*$*$*$
+Files = ASMMODEL.GMS,asmscale10.gms,asmcalrn.gms
+Directory =
+1 = ASMMODEL.GMS
+2 = ASM Model
+3 = Code seperation
+4 = .. specification
+5 = ASM sector model
+6 =
+7 = .GMS
+Defines model equations for ASM model
+*$*$*$
+Files = asmPROC10.gms
+Directory =
+1 = ASMPROC10.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Table
+5 = ASM sector model
+6 =
+7 = .GMS
+Defines processing data that will be used in ASM model
+*$*$*$
+Files = asmrept.gms
+Directory =
+1 = ASMREPT.GMS
+2 = ASM Model
+3 = Report writing
+4 = .L attribute
+5 = .M attribute
+6 = ASM sector model
+7 = .GMS
+Defines report writing setup for ASM model
+*$*$*$
+Files = asmSCALE10.gms
+Directory =
+1 = ASMSCALE10.GMS
+2 = ASM Model
+3 = Scale
+4 = Code seperation
+5 = ASM sector model
+6 =
+7 = .GMS
+Defines Scaling for ASM model
+*$*$*$
+Files = ASMSEPER.GMS
+Directory =
+1 = ASMSEPER.GMS
+2 = ASM Model
+3 = Seperable programming
+4 = Code seperation
+5 = ASM sector model
+6 =
+7 = .GMS
+Defines Seperable programming setup for ASM model
+*$*$*$
+Files = AsmSets10.gms
+Directory =
+1 = ASMSETS10.GMS
+2 = ASM Model
+3 = Set
+4 = Code seperation
+5 = ASM sector model
+6 =
+7 = .GMS
+Defines sets that will be used in ASM model
+*$*$*$
+Files = ASMSOLVE.GMS
+Directory =
+1 = ASMSOLVE.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Loop
+5 = ASM sector model
+6 =
+7 = .GMS
+Solves for farm program deficiency payment in ASM model
+*$*$*$
+Files = asmsurep.gms
+Directory =
+1 = ASMSUREP.GMS
+2 = ASM Model
+3 = Code seperation
+4 = Report writing
+5 = ASM sector model
+6 =
+7 = .GMS
+Defines parameters that will be used in ASM model
+*$*$*$
+Files = augment.gms
+Directory =
+1 = AUGMENT.GMS
+2 = Model adaptation
+3 = Adding to model
+4 = Report writing
+5 = Display formatting
+6 =
+7 = .GMS
+well formatted algebraic version of model optimize.gms
+also illustrates report writing and display formatting
+*$*$*$
+Files = badtype.gms
+Directory =
+1 = BADTYPE.GMS
+2 = Good Modeling
+3 = Typing
+4 =
+5 =
+6 =
+7 = .GMS
+Illustration of Bad model file format
+
+*$*$*$
+Files = basicif.gms,dimdisp.gms
+Directory =
+1 = BASICIF.GMS
+2 = Conditional compile
+3 = $If
+4 = Declared
+5 = $If ==
+6 = $If set
+7 = .GMS
+illustrate $if ==, declared, defined, dimension and other
+tests of control variables
+
+*$*$*$
+Files = basint.gms
+Directory =
+1 = BASINT.GMS
+2 = MIP
+3 = Integer
+4 = Optcr , Optca
+5 = Cheat
+6 = Binary
+7 = .GMS
+Base MIP example with optca, cheat, optcr and cutoff set
+
+*$*$*$
+Files = batincadd.gms,addbat.gms
+Directory =
+1 = BATINCADD.GMS
+2 = Include
+3 = Batinclude
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrates use of arguments batinclude and how functions inclluded can be dramatically
+changed
+*$*$*$
+Files = batincadd2.gms,addbat.gms
+Directory =
+1 = BATINCADD2.GMS
+2 = Include
+3 = Batinclude
+4 = Argument use
+5 =
+6 =
+7 = .GMS
+CSV file for inclusion
+*$*$*$
+Files = batincsag.gms,setargs.gms
+Directory =
+1 = BATINCSAG.GMS
+2 = Include
+3 = Batinclude
+4 = Argument use
+5 =
+6 =
+7 = .GMS
+Bat include argment example
+*$*$*$
+Files = better.gms
+Directory =
+1 = BETTER.GMS
+2 = Good modeling
+3 = Long names
+4 = Typing
+5 = Text formatting
+6 =
+7 = .GMS
+Illustration of improved model file format
+
+*$*$*$
+Files = CALCOUTP.GMS
+Directory =
+1 = CALCOUTP.GMS
+2 = Report writing
+3 = .L attribute
+4 = .M attribute
+5 = Display format
+6 = Report writing
+7 = .GMS
+Illustrate simple report writing and display formatting
+
+*$*$*$
+Files = calculate.gms
+Directory =
+1 = CALCULATE.GMS
+2 = Computations
+3 = Ord
+4 = Card
+5 = Sqrt
+6 = Yes
+7 = .GMS
+This gives examples of calculations and use of functions
+
+*$*$*$
+Files = caldata.gms
+Directory =
+1 = CALDATA.GMS
+2 = Computations
+3 = = replacement
+4 = Replacement
+5 = Assignment
+6 = Computed data
+7 = .GMS
+Illustrate computed data
+
+*$*$*$
+Files = callexecute.gms
+Directory =
+1 = CALLEXECUTE.GMS
+2 = Linking to other programs
+3 = Call
+4 = Execute
+5 = Executre load and unload
+6 =
+7 = .GMS
+illustrate timing of execution of call and execute
+
+*$*$*$
+Files = calliftypeinc.gms
+Directory =
+1 = CALLIFTYPEINC.GMS
+2 = Conditional compile
+3 = $If settype
+4 = Batinclude
+5 = $If settype
+6 = $If type
+7 = .GMS
+Uses file that employs $IF to figure out whether item is set, parameter etc
+
+*$*$*$
+Files = canput.gms
+Directory =
+1 = CANPUT.GMS
+2 = Output
+3 = GAMS2tbl
+4 = Put
+5 =
+6 =
+7 = .GMS
+Uses Rutherford canned output gams2tbl routines
+
+*$*$*$
+Files = co2mge.gms
+Directory =
+1 = CO2MGE.GMS
+2 = Dollar commands
+3 = $Title
+4 = $Stitle
+5 =
+6 =
+7 = .GMS
+Model from GAMS model library that illustrates TITLE and STITLE use
+
+
+*$*$*$
+Files = commentdol.gms
+Directory =
+1 = COMMENTDOL.GMS
+2 = Comments
+3 = Comments
+4 = $Hidden
+5 = Inline
+6 = End of line
+7 = .GMS
+A file showing how to use
+various types of comments and and comment related dollar sign commands
+
+
+
+*$*$*$
+Files = compare.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = COMPARE.GMS
+2 = Comparative analysis
+3 = Report writing
+4 = Loop
+5 =
+6 =
+7 = .GMS
+Comparative Analysis
+*$*$*$
+Files = comparemod.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = COMPAREMOD.GMS
+2 = Comparative analysis
+3 = Report writing
+4 = Conditionals
+5 = Loop
+6 = Conditional constraint
+7 = .GMS
+Comparative Analysis with a conditional constraint
+*$*$*$
+Files = comparenew.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = COMPARENEW.GMS
+2 = Comparative analysis
+3 = Report writing
+4 = Percent change
+5 = Loop
+6 = Adding scenario
+7 = .GMS
+Illustrate Full Comparative Analysis with a new scenario
+
+
+*$*$*$
+Files = compareother.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = COMPAREOTHER.GMS
+2 = Comparative analysis
+3 = Report writing
+4 = Multiple scenario items
+5 = Loop
+6 = Adding scenario
+7 = .GMS
+Illustrate Full Comparative Analysis with a new scenario
+Also add a second data item to change
+
+*$*$*$
+Files = comparewhere.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = COMPAREWHERE.GMS
+2 = Comparative analysis
+3 = Report writing
+4 = Percent change
+5 = Loop
+6 =
+7 = .GMS
+Illustrate Full Comparative Analysis
+
+
+*$*$*$
+Files = comparw.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = COMPARW.GMS
+2 = Comparative analysis
+3 = Comparative analysis
+4 = Put to screen
+5 = System.filesys
+6 = Loop
+7 = .GMS
+illustrate basic loop comparative analysis
+illustrate conditional compile sensing of operating system type
+illustrate message to screen using put
+
+
+*$*$*$
+Files = complexcond.gms
+Directory =
+1 = COMPLEXCOND.GMS
+2 = Conditionals
+3 = $ conditionals
+4 = Or Xor
+5 = And
+6 = Not
+7 = .GMS
+illustrate nested and complex conditionals
+
+*$*$*$
+Files = condcomp.gms,includ.gms
+Directory =
+1 = CONDCOMP.GMS
+2 = Conditional compile
+3 = $Set
+4 = $Show
+5 = $Setglobal
+6 = $On/Offecho
+7 = .GMS
+Illustrate control variable definition and display
+as well as scoping when defined in included file
+
+*$*$*$
+Files = conddisp.gms
+Directory =
+1 = CONDDISP.GMS
+2 = Conditionals
+3 = Display
+4 = If
+5 =
+6 =
+7 = .GMS
+illustrate displays conditional on data
+
+
+*$*$*$
+Files = conditional.gms
+Directory =
+1 = CONDITIONAL.GMS
+2 = Conditionals
+3 = $ conditionals
+4 =
+5 =
+6 =
+7 = .GMS
+illustrate $ run time conditionals
+
+*$*$*$
+Files = control.gms
+Directory =
+1 = CONTROL.GMS
+2 = Control structures
+3 = While
+4 = Loop
+5 = If
+6 = $Onend
+7 = .GMS
+illustrate contol structures for while loop If along with
+$onend and endloop, endwhile, endif
+
+*$*$*$
+Files = csv1.gms
+Directory =
+1 = CSV1.GMS
+2 = CSV
+3 = CSV
+4 = $Ondelim
+5 =
+6 =
+7 = .GMS
+demonstrate ondelim with CSV typed data
+
+
+*$*$*$
+Files = csv2.gms,csvtoinc.gms
+Directory =
+1 = CSV2.GMS
+2 = Include
+3 = CSV
+4 = $Ondelim
+5 =
+6 =
+7 = .GMS
+demonstrate ondelim with CSV file for inclusion
+
+*$*$*$
+Files = csvtoinc.gms,csv2.gms
+Directory =
+1 = CSVTOINC.GMS
+2 = Include
+3 = Batinclude
+4 =
+5 =
+6 =
+7 = .GMS
+CSV file for inclusion
+*$*$*$
+Files = diag.gms
+Directory =
+1 = DIAG.GMS
+2 = Set
+3 = Diag
+4 = Conditionals
+5 = Element equivalence
+6 =
+7 = .GMS
+Illustrate use of diag function
+*$*$*$
+Files = dimdisp.gms,basicif.gms
+Directory =
+1 = DIMDISP.GMS
+2 = Conditional compile
+3 = $If dimension
+4 = Batinclude
+5 =
+6 =
+7 = .GMS
+testing dimension of parameter passed in %1
+*$*$*$
+Files = dispnum.gms
+Directory =
+1 = DISPNUM.GMS
+2 = Output
+3 = Display
+4 = Decimals
+5 = Option:
+6 = Special values
+7 = .GMS
+illustrate numerical displays
+
+*$*$*$
+Files = Dispord.gms
+Directory =
+1 = DISPORD.GMS
+2 = Output
+3 = Display
+4 = Decimals
+5 = Option:
+6 = Special values
+7 = .GMS
+illustrate numerical displays
+
+*$*$*$
+Files = dispset.gms
+Directory =
+1 = DISPSET.GMS
+2 = Output
+3 = Display
+4 = Set
+5 = Element order
+6 =
+7 = .GMS
+illustrate set element ordering
+
+*$*$*$
+Files = dispset1.gms
+Directory =
+1 = DISPSET1.GMS
+2 = Output
+3 = Display
+4 = Set ordering
+5 = Capitalization
+6 =
+7 = .GMS
+illustrate numerical displays
+
+*$*$*$
+Files = dispset2.gms
+Directory =
+1 = DISPSET2.GMS
+2 = Output
+3 = Set
+4 = Capitalization
+5 = Set element
+6 =
+7 = .GMS
+illustrate capitalization rules
+
+*$*$*$
+Files = dispset3.gms
+Directory =
+1 = DISPSET3.GMS
+2 = Output
+3 = Display
+4 = Set elements
+5 = UEL set
+6 = Capitalization
+7 = .GMS
+illustrate ordering and capitalization and UEL set
+
+*$*$*$
+Files = dispset4.gms
+Directory =
+1 = DISPSET4.GMS
+2 = Output
+3 = Display
+4 = Ordering
+5 = Order set
+6 =
+7 = .GMS
+display ordering using order set
+
+*$*$*$
+Files = dollartime.gms
+Directory =
+1 = DOLLARTIME.GMS
+2 = Dollar commands
+3 = $
+4 = Time during GAMS runs
+5 =
+6 =
+7 = .GMS
+Timing of $ commands
+*$*$*$
+Files = dynindex.gms
+Directory =
+1 = DYNINDEX.GMS
+2 = Set
+3 = Ord
+4 = Card
+5 = Time
+6 =
+7 = .GMS
+Use of sets in dynamic setting
+
+*$*$*$
+Files = econequil.gms
+Directory =
+1 = ECONEQUIL.GMS
+2 = MCP
+3 = Model
+4 = Mcp
+5 = Complementarity
+6 =
+7 = .GMS
+*simple mcp of econ equilibrium
+
+*$*$*$
+Files = econequilalg.gms
+Directory =
+1 = ECONEQUILALG.GMS
+2 = Algebraic modeling
+3 = Model
+4 = Mcp
+5 = Complementarity
+6 = Sets
+7 = .GMS
+*Algebraic mcp of econ equilibrium
+
+*$*$*$
+Files = econequilerr.gms
+Directory =
+1 = ECONEQUILERR.GMS
+2 = Tutorial
+3 = MCP
+4 = Compiler error
+5 =
+6 =
+7 = .GMS
+compiler errors in MCP
+
+*$*$*$
+Files = egypt.gms
+Directory =
+1 = EGYPT.GMS
+2 = Good modeling
+3 = Set usage
+4 =
+5 =
+6 =
+7 = .GMS
+A model from the GAMS model library used to illustrate ineffective use of
+sets and subsets in a good modeling practice setting
+
+*$*$*$
+Files = errsemic.gms
+Directory =
+1 = ERRSEMIC.GMS
+2 = Compiler erros
+3 = Error
+4 = ;
+5 = Semicolon omission
+6 =
+7 = .GMS
+Error due to semicolon
+
+*$*$*$
+Files = escape.gms
+Directory =
+1 = ESCAPE.GMS
+2 = Dollar commands
+3 = $Escape
+4 = $
+5 = Rename $
+6 =
+7 = .GMS
+illustrate use of $escape
+
+*$*$*$
+Files = evportfo.gms
+Directory =
+1 = EVPORTFO.GMS
+2 = Output
+3 = GNUPLTXY.gms
+4 = Graphics
+5 =
+6 =
+7 = .GMS
+Use gnupltxy to graph a set of model solution generated data
+
+*$*$*$
+Files = excelincharge.gms
+Directory =
+1 = EXCELINCHARGE.GMS
+2 = Excel in charge
+3 = GAMS model
+4 = GDXXRW
+5 = Spreadsheet
+6 = GDX
+7 = .GMS
+GAMS as Slave  to Excel
+Model as set up before using GDXXRW
+
+*$*$*$
+Files = excelincharge1.gms
+Directory =
+1 = EXCELINCHARGE1.GMS
+2 = Excel in charge
+3 = GAMS model
+4 =
+5 =
+6 =
+7 = .GMS
+GAMS as Slave  to Excel
+Model as set up before using GDXXRW
+
+*$*$*$
+Files = executcl.gms
+Directory =
+1 = EXECUTCL.GMS
+2 = Execution errors
+3 = Error
+4 = Numerical problem
+5 = Execerr
+6 =
+7 = .GMS
+illustrates execution errors caused by numerical problems
+
+*$*$*$
+Files = executcl2.gms
+Directory =
+1 = EXECUTCL2.GMS
+2 = Execution errors
+3 = Error
+4 = Execerror
+5 = Numerical problems
+6 =
+7 = .GMS
+*here we illustrate numerical errors but reset the exerr function
+*allowing normal termination
+
+*$*$*$
+Files = Executmd.gms
+Directory =
+1 = EXECUTMD.GMS
+2 = Execution errors
+3 = Errors
+4 = Numerical problems
+5 =
+6 =
+7 = .GMS
+illustrate execution errors during model generation
+*$*$*$
+Files = expand.gms
+Directory =
+1 = EXPAND.GMS
+2 = Algebraic modeling
+3 = Expandability
+4 =
+5 =
+6 =
+7 = .GMS
+illustrates expandability of model
+*$*$*$
+Files = external.gms,extern.dll
+Directory =
+1 = EXTERNAL.GMS
+2 = Linking to other programs
+3 = External constraint
+4 = =x=
+5 =
+6 =
+7 = .GMS
+This is an example develped by GAMS corp illistrating how to
+use the external function (=X=) facility with GAMS.
+The model is a simple unconstrained quadratic model
+and the quadratic function is defined in an external function.
+*$*$*$
+Files = farmcomp.gms
+Directory =
+1 = FARMCOMP.GMS
+2 = Comparative analysis
+3 = Comparative analysis
+4 =
+5 =
+6 =
+7 = .GMS
+Base model for comparative analysis
+
+*$*$*$
+Files = farmrep.gms
+Directory =
+1 = FARMREP.GMS
+2 = Comparative analysis
+3 = Comparative analysis
+4 = Report writing
+5 =
+6 =
+7 = .GMS
+Report writer for comparative analysis
+
+*$*$*$
+Files = For.gms
+Directory =
+1 = FOR.GMS
+2 = Control structures
+3 = For
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate use of a for statement
+
+*$*$*$
+Files = formconditional.gms
+Directory =
+1 = FORMCONDITIONAL.GMS
+2 = Conditionals
+3 = $ conditionals
+4 = If
+5 =
+6 =
+7 = .GMS
+Illustrate alternative forms of conditionals
+*$*$*$
+Files = fromexcel.gms,xlimport.gms,myspread.xls
+Directory =
+1 = FROMEXCEL.GMS
+2 = Linking to other programs
+3 = Spreadsheet
+4 = XLDUMP.gms
+5 = XLIMPORT.gms
+6 =
+7 = .GMS
+Illustrate use of spreadsheet interfaces XLIMPORT and XLDUMP
+
+*$*$*$
+Files = fromexcel2.gms,xlimport.gms,myspread.xls
+Directory =
+1 = FROMEXCEL2.GMS
+2 = Linking to other programs
+3 = Spreadsheet
+4 = XLIMPORT.gms
+5 = XLEXPORT.gms
+6 =
+7 = .GMS
+Illustrate use of spreadsheet interfaces XLIMPORT and XLIMPORT
+
+*$*$*$
+Files = FRSTPART.GMS,seq.bat,nextpart.gms
+Directory =
+1 = FRSTPART.GMS
+2 = Save restart
+3 = Save
+4 = Restart
+5 = Putclose
+6 = Option file
+7 = .GMS
+Illustrates save and restart
+Illustrates putclose and writing of options file
+
+Run with seq.bat or
+GAMS frstpart s=f1
+GAMS nextpart r=f1
+
+*$*$*$
+Files = function.gms
+Directory =
+1 = FUNCTION.GMS
+2 = Calculations
+3 = Functions
+4 = Abs
+5 = Sqr
+6 = Exp
+7 = .GMS
+Illustrate use of assorted functions
+Abs, exp, log, log10, timeexec, ...
+
+*$*$*$
+Files = gamsbas.bas
+Directory =
+1 = GAMSBAS.BAS
+2 =
+3 =
+4 =
+5 =
+6 =
+7 = .BAS
+None
+*$*$*$
+Files = gamsbas.gms,gamsbas.bas,agreste.gms,rgamsbas.bat
+Directory =
+1 = GAMSBAS.GMS
+2 = Save restart
+3 = GAMSBAS
+4 = Restart
+5 =
+6 =
+7 = .GMS
+Illustrate fast resolve from a GAMSBAS basis file
+Run agreste.gms first saving the restart file and restart as in rgamsbas.bat or
+gams agreste s=save
+gams gamsbas r=save
+*$*$*$
+Files = GAMSfast.gms
+Directory =
+1 = GAMSFAST.GMS
+2 = Speed
+3 = Profile
+4 = Set ordering
+5 =
+6 =
+7 = .GMS
+Illustrate program timing problems and discovery
+
+*$*$*$
+Files = GAMSloop.gms
+Directory =
+1 = GAMSLOOP.GMS
+2 = Speed
+3 = Profile
+4 = Loop
+5 =
+6 =
+7 = .GMS
+Demonstate output effects of using profile of 2
+
+*$*$*$
+Files = GAMSloop2.gms
+Directory =
+1 = GAMSLOOP2.GMS
+2 = Speed
+3 = Profile
+4 = Loop
+5 =
+6 =
+7 = .GMS
+Demonstate output effects of using profile with a Loop
+
+*$*$*$
+Files = gamsparm.gms
+Directory =
+1 = GAMSPARM.GMS
+2 = Conditional compile
+3 = Command line
+4 = GAMS.xxx
+5 = $If
+6 =
+7 = .GMS
+test settings of gams parameters using $if
+*$*$*$
+Files = GAMSslow.gms
+Directory =
+1 = GAMSSLOW.GMS
+2 = Speed
+3 = Profile
+4 = Set ordering
+5 = Profiletol
+6 =
+7 = .GMS
+Illustrate program timing problems and discovery
+
+*$*$*$
+Files = gdxcontents.gms
+Directory =
+1 = GDXCONTENTS.GMS
+2 = GDX
+3 = File contents
+4 = $Load
+5 = Load
+6 =
+7 = .GMS
+Shows how $load can be used to list contents of a GDX file
+
+*$*$*$
+Files = gdxexecintrnsport.gms,tran2.gdx
+Directory =
+1 = GDXEXECINTRNSPORT.GMS
+2 = GDX
+3 = Load
+4 = Execute_Load
+5 =
+6 =
+7 = .GMS
+Illustrates execution time data loading into GDX files
+
+*$*$*$
+Files = gdxexectrnsport.gms
+Directory =
+1 = GDXEXECTRNSPORT.GMS
+2 = GDX
+3 = Unload
+4 = Execute_Unload
+5 =
+6 =
+7 = .GMS
+Illustrates execution time data unloading into GDX files
+
+*$*$*$
+Files = gdxintrnsport.gms,tran2.gdx
+Directory =
+1 = GDXINTRNSPORT.GMS
+2 = GDX
+3 = Load
+4 = Compile time
+5 =
+6 =
+7 = .GMS
+Ilustrates compile time data loading from GDX files
+Model is originally from GAMS model library
+*$*$*$
+Files = gdxtrnsport.gms
+Directory =
+1 = GDXTRNSPORT.GMS
+2 = GDX
+3 = Unload
+4 = $Unload
+5 = Gdxout
+6 =
+7 = .GMS
+this example illustrates compile time data unloading into GDX files
+*$*$*$
+Files = gdxxrwread.gms,gdxxrwss.xls
+Directory =
+1 = GDXXRWREAD.GMS
+2 = GDXXRW
+3 = Spreadsheet
+4 = GDXXRW
+5 = Load
+6 = Execute_Load
+7 = .GMS
+Illustrates GDXXRW use for loading data
+
+*$*$*$
+Files = gdxxrwread2.gms,gdxxrwss.xls
+Directory =
+1 = GDXXRWREAD2.GMS
+2 = GDXXRW
+3 = Spreadsheet
+4 = GDXXRW
+5 = Index
+6 = Load
+7 = .GMS
+Illustrates GDXXRW use for loading data with instructions placed in spreadsheet
+
+*$*$*$
+Files = gdxxrwread3.gms,gdxxrwss.xls
+Directory =
+1 = GDXXRWREAD3.GMS
+2 = GDXXRW
+3 = Spreadsheet
+4 = GDXXRW
+5 = TXT file
+6 = @
+7 = .GMS
+Illustrates GDXXRW use for loading data with instructions placed in text file
+
+*$*$*$
+Files = gdxxrwskipempty.gms,gdxxrwss.xls
+Directory =
+1 = GDXXRWSKIPEMPTY.GMS
+2 = GDXXRW
+3 = Spreadsheet
+4 = GDXXRW
+5 = Skipempty
+6 = Se
+7 = .GMS
+Illustrates use of GDXXRW skipempty
+
+*$*$*$
+Files = gdxxrwwrite.gms,gdxxrwss.xls
+Directory =
+1 = GDXXRWWRITE.GMS
+2 = GDXXRW
+3 = Spreadsheet
+4 = GDXXRW
+5 = Rdim
+6 = Cdim
+7 = .GMS
+Puts files of differnt dimensions into spreadsheet
+Varies rdim and cdim
+
+*$*$*$
+Files = gdxxrwwrite2.gms,gdxxrwss.xls
+Directory =
+1 = GDXXRWWRITE2.GMS
+2 = GDXXRW
+3 = Spreadsheet
+4 = GDXXRW
+5 = Index
+6 =
+7 = .GMS
+Illustrates GDXXRW use with instructions placed in index area in spreadsheet
+
+*$*$*$
+Files = gnupltxy.gms
+Directory =
+1 = GNUPLTXY.GMS
+2 = Output
+3 = Graphics
+4 = GNUPLTXY.gms
+5 = Conditional compile
+6 =
+7 = .GMS
+Source code for gnupltxy
+*$*$*$
+Files = good.gms,robert.gms
+Directory =
+1 = GOOD.GMS
+2 = Good Modeling
+3 = Formatting
+4 = Item names
+5 =
+6 =
+7 = .GMS
+Improved formatting and naming version of robert.gms from model library
+
+*$*$*$
+Files = goodoptalgebra.gms
+Directory =
+1 = GOODOPTALGEBRA.GMS
+2 = Good Modeling
+3 = Formatting
+4 = Display
+5 = Report writing
+6 =
+7 = .GMS
+Well formatted algebraic version of model optimize.gms
+Also illustrates report writing and display formatting
+
+*$*$*$
+Files = goto.gms
+Directory =
+1 = GOTO.GMS
+2 = Conditional compile
+3 = $Goto
+4 = $Label
+5 = Goto
+6 = Label
+7 = .GMS
+illustrate $goto and $label
+*$*$*$
+Files = graphss.gms
+Directory =
+1 = GRAPHSS.GMS
+2 = Output
+3 = Graphics
+4 = Spreadsheet
+5 = GDXXRW
+6 = Execute_Unload
+7 = .GMS
+Graphing with Excel
+*$*$*$
+Files = Ifelseitelse.gms
+Directory =
+1 = IFELSEITELSE.GMS
+2 = Control structures
+3 = If
+4 = Else
+5 = Elseif
+6 = Abort
+7 = .GMS
+Illustrate basic if with else and elseif
+
+*$*$*$
+Files = Iftype.gms,iftypeinc.gms
+Directory =
+1 = IFTYPE.GMS
+2 = Conditional compile
+3 = $If
+4 = Item type
+5 = Settype
+6 = Partype
+7 = .GMS
+Illustrate conditional compile based on item type
+*$*$*$
+Files = Iftypeinc.gms,calliftypeinc.gms
+Directory =
+1 = IFTYPEINC.GMS
+2 = Conditional compile
+3 = $If settype
+4 = Batinclude
+5 = $If settype
+6 = $If type
+7 = .GMS
+Uses $IF to figure out whether item is set, parameter etc
+*$*$*$
+Files = impeqv.gms
+Directory =
+1 = IMPEQV.GMS
+2 = Conditionals
+3 = Logical
+4 = Imp
+5 = Eqv
+6 =
+7 = .GMS
+Graphing with Excel
+*$*$*$
+Files = incerr.gms,trandata.gms,tranmodl.gms,tranrept.gms
+Directory =
+1 = INCERR.GMS
+2 = Include
+3 = Compilation errors
+4 =
+5 =
+6 =
+7 = .GMS
+Demonstrates what happens when an include file has a compilation error
+*$*$*$
+Files = includ.gms,condcomp.gms
+Directory =
+1 = INCLUD.GMS
+2 = Conditional compile
+3 = Show
+4 = Include
+5 = Setglobal
+6 = Setlocal
+7 = .GMS
+Illustrates scope when defining control variables in an include file
+this is included in condcomp.gms
+
+*$*$*$
+Files = incmyranges.gms
+Directory =
+1 = INCMYRANGES.GMS
+2 =
+3 =
+4 =
+5 =
+6 =
+7 = .GMS
+None
+*$*$*$
+Files = INTEV.gms
+Directory =
+1 = INTEV.GMS
+2 = MIP
+3 = MINLP
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate a nonlinear mixed integer minlp model
+*$*$*$
+Files = inverse2.gms,myinverse.put,invert.gms,mygdx.gdx
+Directory =
+1 = INVERSE2.GMS
+2 = Linking to other programs
+3 = GDX
+4 = GAMS to GAMS
+5 = Execute_unload
+6 =
+7 = .GMS
+Matrix inversion through passed put and loaded GDX file
+Illustrates GAMS call to GAMS
+*$*$*$
+Files = invert.gms,inverse2.gms,invert1.exe
+Directory =
+1 = INVERT.GMS
+2 = Linking to other programs
+3 = GDX
+4 = GAMS to GAMS
+5 = Execute_Load
+6 = Compiled program
+7 = .GMS
+Matrix inversion through passed put and loaded GDX file
+Illustrates GAMS call to GAMS
+*$*$*$
+Files = kormcp.gms
+Directory =
+1 = KORMCP.GMS
+2 = Model setup
+3 = MCP
+4 = All
+5 = Complementarity
+6 = Model
+7 = .GMS
+Illustrate mcp with all command
+
+This model is from the GAMS model library
+
+*$*$*$
+Files = landcal.gms
+Directory =
+1 = LANDCAL.GMS
+2 = Speed
+3 = Conditionals
+4 = $
+5 = Profile
+6 = Unnecessary cases
+7 = .GMS
+Illustrate speed consequence of dropping unnecessary cases
+
+*$*$*$
+Files = Landexam.gms
+Directory =
+1 = LANDEXAM.GMS
+2 = Speed
+3 = Conditionals
+4 = Profile
+5 = Unnecessary cases
+6 =
+7 = .GMS
+Illustrate speed consequence of considering unnecessary cases
+
+*$*$*$
+Files = leftright.gms
+Directory =
+1 = LEFTRIGHT.GMS
+2 = Conditionals
+3 = $ conditionals
+4 = Left conditional
+5 = Right conditional
+6 =
+7 = .GMS
+Illustrate left and right hand side conditionals
+*$*$*$
+Files = mancomp.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = MANCOMP.GMS
+2 = Comparative analysis
+3 = Comparative analysis
+4 = Manual
+5 = Repetitive
+6 =
+7 = .GMS
+Manual Comparative Analysis using repeated solves with
+report writing done with one piece of code which is
+incorporated multiple times using include
+
+*$*$*$
+Files = mancompb.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = MANCOMPB.GMS
+2 = Comparative analysis
+3 = Comparative analysis
+4 = Manual
+5 = Report writing
+6 = Cross scenario
+7 = .GMS
+Manual Comparative Analysis using repeated solves with
+cross scenario report writing
+
+*$*$*$
+Files = mancompc.gms,farmcomp.gms,farmrep.gms
+Directory =
+1 = MANCOMPC.GMS
+2 = Comparative analysis
+3 = Comparative analysis
+4 = Manual
+5 = Report writing
+6 = Percent change
+7 = .GMS
+Manual Comparative Analysis using repeated solves with
+cross scenario percent change report writing
+
+*$*$*$
+Files = maplink.gms
+Directory =
+1 = MAPLINK.GMS
+2 = Output via Put
+3 = CSV
+4 = Put
+5 =
+6 =
+7 = .GMS
+Illustrate put of csv file
+*$*$*$
+Files = Margin.gms
+Directory =
+1 = MARGIN.GMS
+2 = Comments
+3 = $Onmargin
+4 = $Mincol
+5 = $Maxcol
+6 =
+7 = .GMS
+Illustrate use of margin dollar commands
+
+*$*$*$
+Files = mcp.gms,qpdata.inc
+Directory =
+1 = MCP.GMS
+2 = Model setup
+3 = MCP
+4 = Model
+5 = Complementarity
+6 =
+7 = .GMS
+Illustrate mcp model
+
+This is from the GAMS model library and is a revised version of qp6
+
+*$*$*$
+Files = memdump.gms
+Directory =
+1 = MEMDUMP.GMS
+2 = Memory
+3 = Profile
+4 = Dmpsym
+5 =
+6 =
+7 = .GMS
+Illustrate generation of a memory dump through dmpsym
+*$*$*$
+Files = memory.gms
+Directory =
+1 = MEMORY.GMS
+2 = Memory
+3 = Profile
+4 = Memory detection
+5 = Clear
+6 = Kill
+7 = .GMS
+Illustrate clear and kill of memory and profile usage for memory detection
+*$*$*$
+Files = memtest.gms
+Directory =
+1 = MEMTEST.GMS
+2 = Memory
+3 = Dmpsym
+4 = Memory detection
+5 =
+6 =
+7 = .GMS
+Illustrate Option dmpsym usage for memory detection
+*$*$*$
+Files = minusminus.gms
+Directory =
+1 = MINUSMINUS.GMS
+2 = Command line
+3 = --
+4 = //
+5 = /-
+6 = -/
+7 = .GMS
+Illustrate -- and related command line parametersetc
+Call this with
+GAMS minusminus --keycity=Boston //myflag=modes /-myvalue=7.6  -/dothis="display x;"
+
+or
+
+IDE parameters box contents
+--keycity=Boston //myflag=modes /-myvalue=7.6  -/dothis="display x;"
+
+*$*$*$
+Files = mixlogical.gms
+Directory =
+1 = MIXLOGICAL.GMS
+2 = Computations
+3 = =
+4 = Logical expression
+5 = Mixed mode
+6 =
+7 = .GMS
+Illustrates mixing numbers, sets and logical expressions
+*$*$*$
+Files = mode.gms
+Directory =
+1 = MODE.GMS
+2 = Conditional compile
+3 = $Set
+4 = $Goto
+5 = $Label
+6 =
+7 = .GMS
+Illustrate conditional compile using goto and label to
+cause very different code to be compiled depending on control variables
+
+*$*$*$
+Files = model.gms
+Directory =
+1 = MODEL.GMS
+2 = Model setup
+3 = Variable
+4 = Model
+5 = Equation
+6 = Solve
+7 = .GMS
+Illustrate variable,equation and model declaration
+
+*$*$*$
+Files = mycalendar.gms
+Directory =
+1 = MYCALENDAR.GMS
+2 = Calculations
+3 = Calendar functions
+4 = Gyear
+5 = Gday
+6 = Gmonth
+7 = .GMS
+Illustrates calendar functions
+*$*$*$
+Files = namerules.gms
+Directory =
+1 = NAMERULES.GMS
+2 = Name rules
+3 = Capitalization
+4 = Ordering
+5 =
+6 =
+7 = .GMS
+Illustrate names and explanatory text
+*$*$*$
+Files = newcontext.gms,optalgebra.gms
+Directory =
+1 = NEWCONTEXT.GMS
+2 = Basic GAMS
+3 = Context change
+4 =
+5 =
+6 =
+7 = .GMS
+*Illustrates context change from model optalgebra.gms
+*$*$*$
+Files = NEXTPART.GMS,seq.bat,frstpart.gms
+Directory =
+1 = NEXTPART.GMS
+2 = Save restart
+3 = Save
+4 = Restart
+5 =
+6 =
+7 = .GMS
+Illustrates save and restart
+
+Run with seq.bat or
+GAMS frstpart s=f1
+GAMS nextpart r=f1
+
+
+*$*$*$
+Files = nlp-lp.gms
+Directory =
+1 = NLP-LP.GMS
+2 = Conditional compile
+3 = $If
+4 = $Set
+5 = $Goto
+6 = $Label
+7 = .GMS
+Illustrate conditional copile switch from lp to nlp model
+Note abort is like display
+*$*$*$
+Files = nlpscale.gms,minos.opt
+Directory =
+1 = NLPSCALE.GMS
+2 = Scaling
+3 = Scale
+4 = Scaleopt
+5 = Options file
+6 = Solver scale
+7 = .GMS
+illustrate nonlinear scaling by solver and GAMS
+*$*$*$
+Files = nondyn.gms
+Directory =
+1 = NONDYN.GMS
+2 = Calculations
+3 = Static
+4 = Dynamic
+5 =
+6 =
+7 = .GMS
+Model illustrating static, and dynamic calculation differences
+*$*$*$
+Files = nonlinsys.gms
+Directory =
+1 = NONLINSYS.GMS
+2 = Model types
+3 = NLP
+4 = System of equations
+5 =
+6 =
+7 = .GMS
+This is from the GAMS model library and illustrates nonlinear
+simultaneous equation solution
+*$*$*$
+Files = nonlinsyscns.gms
+Directory =
+1 = NONLINSYSCNS.GMS
+2 = Model types
+3 = CNS
+4 =
+5 =
+6 =
+7 = .GMS
+This is from the GAMS model library and illustrates nonlinear
+simultaneous equation solution via CNS
+
+*$*$*$
+Files = optalgebra.gms,optimize.gms
+Directory =
+1 = OPTALGEBRA.GMS
+2 = Basic GAMS
+3 = Set
+4 = Algebraic modeling
+5 =
+6 =
+7 = .GMS
+Illustrates use of sets by making algebraic version of model optimize.gms
+*$*$*$
+Files = optimize.gms
+Directory =
+1 = OPTIMIZE.GMS
+2 = Basic GAMS
+3 = Basic GAMS
+4 =
+5 =
+6 =
+7 = .GMS
+Tutorial problem on optimization
+*$*$*$
+Files = otheroptions.gms
+Directory =
+1 = OTHEROPTIONS.GMS
+2 = Options
+3 = Misc options
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate use of a bunch of options
+*$*$*$
+Files = outit.gms,putcond.gms
+Directory =
+1 = OUTIT.GMS
+2 = Output via Put
+3 = Put
+4 = $If defined
+5 = $If declared
+6 = $If settype
+7 = .GMS
+Illustrates batinclude of conditional compile routine
+that figures out item status and type then puts it
+*$*$*$
+Files = parameter.gms
+Directory =
+1 = PARAMETER.GMS
+2 = Parameters
+3 = Parameter
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate parameter entry
+*$*$*$
+Files = plotopts.gms
+Directory =
+1 = PLOTOPTS.GMS
+2 = Output
+3 = Graphics
+4 = GNUPLTXY.gms
+5 =
+6 =
+7 = .GMS
+Illustrates many of the gnupltxy options
+
+*$*$*$
+Files = presol1.gms
+Directory =
+1 = PRESOL1.GMS
+2 = Solves
+3 = Presolve
+4 = Problems
+5 =
+6 =
+7 = .GMS
+Illustrates presolve when problem is simplified out of existance
+
+*$*$*$
+Files = presol2.gms
+Directory =
+1 = PRESOL2.GMS
+2 = Solves
+3 = Presolve
+4 = Problems
+5 = MIP
+6 = Infeasible
+7 = .GMS
+Illustrates presolve when problem hs no feasible MIP solution
+
+*$*$*$
+Files = presol3.gms
+Directory =
+1 = PRESOL3.GMS
+2 = Solves
+3 = Presolve
+4 = Problems
+5 = Infeasible
+6 =
+7 = .GMS
+Illustrates presolve when problem hs no feasible solution
+
+*$*$*$
+Files = PROCESSSHIFT.GMS
+Directory =
+1 = PROCESSSHIFT.GMS
+2 = Conditional compile
+3 = $Shift
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate action of shift command
+This is batincluded by shift.gms
+
+*$*$*$
+Files = prodschx.gms
+Directory =
+1 = PRODSCHX.GMS
+2 = MIP
+3 = SOS1
+4 = SOS2
+5 =
+6 =
+7 = .GMS
+Illustrate sos1 and sos2
+*$*$*$
+Files = prolog.gms
+Directory =
+1 = PROLOG.GMS
+2 = Solve
+3 = Solves
+4 = Multiple solves
+5 =
+6 =
+7 = .GMS
+Model from the GAMS model library that illustrates multiple solves
+*$*$*$
+Files = put11.gms
+Directory =
+1 = PUT11.GMS
+2 = Output via Put
+3 = Put
+4 = Log file
+5 =
+6 =
+7 = .GMS
+Ilustrates sending put output to the log file when file name is blank
+*$*$*$
+Files = putcond.gms,outit.gms
+Directory =
+1 = PUTCOND.GMS
+2 = Output via Put
+3 = Put
+4 = Batinclude
+5 = File
+6 =
+7 = .GMS
+Illustrates batinclude of conditional compile routine outit
+that figures out item type then puts it
+*$*$*$
+Files = putex1.gms
+Directory =
+1 = PUTEX1.GMS
+2 = Output via Put
+3 = Put
+4 = File
+5 = gams.xxx
+6 =
+7 = .GMS
+Simplist put file example
+Uses gams command line parameters thorugh gams.xxx
+
+This problem is an adaptation of the GAMS model
+library and GAMS users manual problem trnsport.gms
+
+*$*$*$
+Files = putex10.gms
+Directory =
+1 = PUTEX10.GMS
+2 = Output via Put
+3 = Put
+4 = <
+5 = >
+6 = <>
+7 = .GMS
+*Illustrates local justification of elements in Put file
+*$*$*$
+Files = putex11.gms
+Directory =
+1 = PUTEX11.GMS
+2 = Output via Put
+3 = Put
+4 = .L attribute
+5 = .M attribute
+6 = Model attributes
+7 = .GMS
+Put file example illustrating model solution status and
+output of model solution .l and .m output
+
+This problem is an adaptation of the GAMS model
+library and GAMS users manual problem trnsport.gms
+*$*$*$
+Files = putex2.GMS
+Directory =
+1 = PUTEX2.GMS
+2 = Output via Put
+3 = Put
+4 = File
+5 =
+6 =
+7 = .GMS
+Illustrate put to multiple files
+*$*$*$
+Files = putex3.gms
+Directory =
+1 = PUTEX3.GMS
+2 = Output via Put
+3 = Put
+4 = Nz
+5 = Tl
+6 = Te
+7 = .GMS
+Illustrate put file set element output using .te and.tl
+Also uses a zero tolerance via .nz
+*$*$*$
+Files = putex4.gms
+Directory =
+1 = PUTEX4.GMS
+2 = Output via Put
+3 = Put
+4 = &
+5 = /
+6 = #
+7 = .GMS
+Illustrate use of &, / and # in a put context
+*$*$*$
+Files = putex5.gms
+Directory =
+1 = PUTEX5.GMS
+2 = Output via Put
+3 = Put
+4 = Puttl
+5 = Puthd
+6 = Putpage
+7 = .GMS
+Illustrate put formatting for pages
+newpage, title, header, width, length and margins
+*$*$*$
+Files = putex6.GMS
+Directory =
+1 = PUTEX6.GMS
+2 = Output via Put
+3 = Put
+4 = Nd
+5 = LW
+6 = Nw
+7 = .GMS
+Illustrate global field width and decimals in put files
+*$*$*$
+Files = putex7.gms
+Directory =
+1 = PUTEX7.GMS
+2 = Output via Put
+3 = Put
+4 = Decimals
+5 = Local
+6 = :Width:Decimals
+7 = .GMS
+Illustrate local decimal formatting with put
+
+*$*$*$
+Files = putex8.gms
+Directory =
+1 = PUTEX8.GMS
+2 = Output via Put
+3 = Put
+4 = 0 field width
+5 = :0
+6 =
+7 = .GMS
+Illustrate use of zero (exact size with no padding) field width
+for put file entries
+*$*$*$
+Files = putex9.gms
+Directory =
+1 = PUTEX9.GMS
+2 = Output via Put
+3 = Put
+4 = Nj
+5 = Lj
+6 = Tj
+7 = .GMS
+Illustrate justification of objects in put command
+
+*$*$*$
+Files = putopen.gms
+Directory =
+1 = PUTOPEN.GMS
+2 = Output via Put
+3 = Put
+4 = Conditional compile
+5 = Putopen
+6 = $If putopen
+7 = .GMS
+Illustrate the conditional compile test for open put files
+*$*$*$
+Files = putsystem.gms
+Directory =
+1 = PUTSYSTEM.GMS
+2 = Output via Put
+3 = Put
+4 = System.xxx
+5 = System attributes
+6 =
+7 = .GMS
+Illustrate put of system attributes
+*$*$*$
+Files = qpdata.inc,mcp.gms
+Directory =
+1 = QPDATA.INC
+2 = Model setup
+3 = MCP
+4 = Model
+5 = Complementarity
+6 =
+7 = .INC
+Illustrate mcp model
+
+This is from the GAMS model library and is included in mcp.gms
+
+*$*$*$
+Files = rangag.gms,gamsbas.bas,gamsbas.gms,rgamsbas.bat
+Directory =
+1 = RANGAG.GMS
+2 = Save restart
+3 = GAMSBAS
+4 = Restart
+5 =
+6 =
+7 = .GMS
+illustrate ranging analysis for selected components
+
+Base model is Agreste.gms from GAMS model library
+
+*$*$*$
+Files = rangeinc.gms
+Directory =
+1 = RANGEINC.GMS
+2 = Output
+3 = Ranging
+4 = Cost ranging
+5 = RHS ranging
+6 = Result includion
+7 = .GMS
+Illustrate generation of ranging analysis  and reincludion of results
+*$*$*$
+Files = ranging.gms
+Directory =
+1 = RANGING.GMS
+2 = Output
+3 = Ranging
+4 = Cost ranging
+5 = RHS ranging
+6 = Sensitivity
+7 = .GMS
+Illustrate generation of ranging analysis
+*$*$*$
+Files = regput.gms
+Directory =
+1 = REGPUT.GMS
+2 = Output via Put
+3 = Put
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate put to another program with fixed format
+*$*$*$
+Files = regputcsv.gms
+Directory =
+1 = REGPUTCSV.GMS
+2 = Output via Put
+3 = Put
+4 = CSV
+5 =
+6 =
+7 = .GMS
+illustrate put to another program with CSV format
+*$*$*$
+Files = reorder.gms
+Directory =
+1 = REORDER.GMS
+2 = Output
+3 = Ordering
+4 = Order set
+5 =
+6 =
+7 = .GMS
+Illustrates use of an order set for report writing order rearrangement
+*$*$*$
+Files = repeat.gms
+Directory =
+1 = REPEAT.GMS
+2 = Control structures
+3 = Repeat
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate use of a repeat command
+
+*$*$*$
+Files = repstatic.GMS
+Directory =
+1 = REPSTATIC.GMS
+2 = Calculations
+3 = Repeated static
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate repeated static calculations features
+
+*$*$*$
+Files = resource.gms
+Directory =
+1 = RESOURCE.GMS
+2 = Output
+3 = Solslack
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate solslack
+*$*$*$
+Files = risk.gms
+Directory =
+1 = RISK.GMS
+2 = Solves
+3 = Solve
+4 = Loop
+5 = GNUPLTXY.gms
+6 = Report writing
+7 = .GMS
+illustrate solve in a loop and graph with GNUPLTXY of cross scenario data
+*$*$*$
+Files = rngfile.gms
+Directory =
+1 = RNGFILE.GMS
+2 =
+3 =
+4 =
+5 =
+6 =
+7 = .GMS
+None
+*$*$*$
+Files = robert.gms,good.gms
+Directory =
+1 = ROBERT.GMS
+2 = Good Modeling
+3 = Formatting
+4 = Item names
+5 =
+6 =
+7 = .GMS
+Example from GAMS model library that uses
+relatively poor naming conventions
+
+*$*$*$
+Files = robert2.gms
+Directory =
+1 = ROBERT2.GMS
+2 = Good Modeling
+3 = Set designator
+4 = *
+5 = Universal set
+6 = Problems
+7 = .GMS
+Illustrate problem with using * as set indicator in input data
+*$*$*$
+Files = robert3.gms,robert2.gms
+Directory =
+1 = ROBERT3.GMS
+2 = Good Modeling
+3 = Set designator
+4 = *
+5 = Universal set
+6 = Problems
+7 = .GMS
+Illustrate how explicit set helps correct problem with using * as set
+indicator in input data
+*$*$*$
+Files = ruthercsv.gms
+Directory =
+1 = RUTHERCSV.GMS
+2 = Output via Put
+3 = Put
+4 = GAMS2CSV.gms
+5 =
+6 =
+7 = .GMS
+Illustrate put of CSV file with utility developed by Tom Rutherford
+*$*$*$
+Files = sameas.gms
+Directory =
+1 = SAMEAS.GMS
+2 = Set
+3 = Sameas
+4 = Conditionals
+5 = Element equivalence
+6 =
+7 = .GMS
+Illustrate use of sameas function
+*$*$*$
+Files = saverestar.gms
+Directory =
+1 = SAVERESTAR.GMS
+2 = GAMS from GAMS
+3 = Batch file
+4 = Save restart
+5 =
+6 =
+7 = .GMS
+Execute GAMS from GAMS to act like batch file and manage save and restart
+
+*$*$*$
+Files = scalar.gms
+Directory =
+1 = SCALAR.GMS
+2 = Scalar
+3 = Scalar
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate scalar definition
+*$*$*$
+Files = scale.gms
+Directory =
+1 = SCALE.GMS
+2 = Scaling
+3 = Scale
+4 = Scaleopt
+5 =
+6 =
+7 = .GMS
+Illustrate user defined scaling by GAMS
+*$*$*$
+Files = scalegck.gck
+Directory =
+1 = SCALEGCK.GCK
+2 =
+3 =
+4 =
+5 =
+6 =
+7 = .GCK
+None
+*$*$*$
+Files = Scalegck.gms,scalegck.gck
+Directory =
+1 = SCALEGCK.GMS
+2 = Scaling
+3 = GAMSCHK
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate GAMSCHK as aid to scaling
+*$*$*$
+Files = secur.gms
+Directory =
+1 = SECUR.GMS
+2 = MIP
+3 = MIP
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate mip model
+*$*$*$
+Files = setargs.gms,batincsag.gms
+Directory =
+1 = SETARGS.GMS
+2 = Include
+3 = Batinclude
+4 = Argument use
+5 =
+6 =
+7 = .GMS
+Bat include argument example
+
+
+*$*$*$
+Files = setarith.gms
+Directory =
+1 = SETARITH.GMS
+2 = Set
+3 = Set artihmetic
+4 = Union
+5 = Difference
+6 = Intersection
+7 = .GMS
+Illustrate set arithmetic
+
+*$*$*$
+Files = setconditional.gms
+Directory =
+1 = SETCONDITIONAL.GMS
+2 = Set
+3 = Set
+4 = Conditionals
+5 = Tuple
+6 = Lead lag
+7 = .GMS
+Illustrate set based conditionals and leads and lags
+
+*$*$*$
+Files = seterr.gms
+Directory =
+1 = SETERR.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors when addressing item not in domain
+
+*$*$*$
+Files = sets.gms
+Directory =
+1 = SETS.GMS
+2 = Set
+3 = Set
+4 = Features
+5 =
+6 =
+7 = .GMS
+Illustrate many features of set statements
+*$*$*$
+Files = setuniverr.gms
+Directory =
+1 = SETUNIVERR.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors when addressing undefined item in universal set
+
+*$*$*$
+Files = shift.gms,processshift.gms
+Directory =
+1 = SHIFT.GMS
+2 = Conditional compile
+3 = $Shift
+4 = Batinclude
+5 =
+6 =
+7 = .GMS
+Illustrate action of shift command
+The shift in done in processshift.gms
+*$*$*$
+Files = shorterr.gms
+Directory =
+1 = SHORTERR.GMS
+2 = Compiler error
+3 = ;
+4 = Semicolon
+5 =
+6 =
+7 = .GMS
+Illustrate compiler errors involving missing ;
+
+*$*$*$
+Files = shorterr05.gms
+Directory =
+1 = SHORTERR05.GMS
+2 = Compiler error
+3 = Parameter
+4 =
+5 =
+6 =
+7 = .GMS
+compilation error caused by misspelling of item name
+*$*$*$
+Files = shorterr06.gms
+Directory =
+1 = SHORTERR06.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler error caused by omission and misspelling of set elements
+*$*$*$
+Files = shorterr07.gms
+Directory =
+1 = SHORTERR07.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+compiler errors caused by improper index order
+or too few/ too many indices.
+
+*$*$*$
+Files = shorterr08.gms
+Directory =
+1 = SHORTERR08.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler erros when summing over controlled set
+
+*$*$*$
+Files = shorterr09.gms
+Directory =
+1 = SHORTERR09.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors when not controlling a set
+
+*$*$*$
+Files = shorterr10.gms
+Directory =
+1 = SHORTERR10.GMS
+2 = Compiler error
+3 = Parentheses
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors with mismatched parentheses
+
+*$*$*$
+Files = shorterr11.gms
+Directory =
+1 = SHORTERR11.GMS
+2 = Compiler error
+3 = .. statements
+4 =
+5 =
+6 =
+7 = .GMS
+compiler erros with equation specification mistakes
+
+*$*$*$
+Files = shorterr12.gms
+Directory =
+1 = SHORTERR12.GMS
+2 = Compiler error
+3 = .. statements
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors with missing equation specification
+
+*$*$*$
+Files = shorterr13.gms
+Directory =
+1 = SHORTERR13.GMS
+2 = Compiler error
+3 = .. statements
+4 = Endogenous term
+5 =
+6 =
+7 = .GMS
+Compiler errors with NLP terms in LP models
+
+*$*$*$
+Files = shorterr14.gms
+Directory =
+1 = SHORTERR14.GMS
+2 = Compiler error
+3 = Declaration
+4 = Definition
+5 =
+6 =
+7 = .GMS
+Compiler errors with declaration and definition omissions
+
+*$*$*$
+Files = shorterr15.gms
+Directory =
+1 = SHORTERR15.GMS
+2 = Compiler error
+3 = Declaration
+4 = Definition
+5 =
+6 =
+7 = .GMS
+Compiler errors with numerical specification omission
+
+*$*$*$
+Files = shorterr16.gms
+Directory =
+1 = SHORTERR16.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors with improper index references to set elments
+
+*$*$*$
+Files = shorterr17.gms
+Directory =
+1 = SHORTERR17.GMS
+2 = Compiler error
+3 = Declaration
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors with declaration omissions
+
+*$*$*$
+Files = shorterr18.gms
+Directory =
+1 = SHORTERR18.GMS
+2 = Compiler error
+3 = Declaration
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors with multiple declarations
+
+*$*$*$
+Files = shorterr19.gms
+Directory =
+1 = SHORTERR19.GMS
+2 = Compiler error
+3 = Set
+4 =
+5 =
+6 =
+7 = .GMS
+Compiler errors with references to wrong set
+
+*$*$*$
+Files = shortmodel.gms
+Directory =
+1 = SHORTMODEL.GMS
+2 = Output
+3 = Limrow
+4 = Limcol
+5 = Display
+6 = Solution output
+7 = .GMS
+Illustrate standard output
+*$*$*$
+Files = SIMPLE.bas
+Directory =
+1 = SIMPLE.BAS
+2 =
+3 =
+4 =
+5 =
+6 =
+7 = .BAS
+None
+*$*$*$
+Files = simple.gms
+Directory =
+1 = SIMPLE.GMS
+2 = Advanced basis
+3 = GAMSBAS
+4 = BAS file
+5 = Optfile
+6 =
+7 = .GMS
+Illustrate GAMSBAS basis generation and use of option file
+
+*$*$*$
+Files = simpleb.gms,simple.bas
+Directory =
+1 = SIMPLEB.GMS
+2 = Advanced basis
+3 = GAMSBAS
+4 = BAS file
+5 = Include
+6 =
+7 = .GMS
+Illustrate GAMSBAS basis use
+Basis is called simple.bas and was written by simple.gms
+*$*$*$
+Files = Simplegr.gms
+Directory =
+1 = SIMPLEGR.GMS
+2 = Output
+3 = Graphics
+4 = GNUPLTXY.gms
+5 =
+6 =
+7 = .GMS
+Illustrate GNUPLTXY usage
+*$*$*$
+Files = simplegr2.gms
+Directory =
+1 = SIMPLEGR2.GMS
+2 = Output
+3 = Graphics
+4 = GNUPLTXY.gms
+5 =
+6 =
+7 = .GMS
+Illustrate GNUPLTXY usage with titles and labeling
+
+*$*$*$
+Files = simpnlp.gms
+Directory =
+1 = SIMPNLP.GMS
+2 = Output
+3 = NLP
+4 = Limrow
+5 = Limcol
+6 =
+7 = .GMS
+Illustrate NLP effect on output
+*$*$*$
+Files = solvdiv.gms
+Directory =
+1 = SOLVDIV.GMS
+2 = Execution errors
+3 = Solver
+4 = Division by zero
+5 =
+6 =
+7 = .GMS
+Illustrate solver execution error when dividing by zero
+*$*$*$
+Files = solvelog.gms
+Directory =
+1 = SOLVELOG.GMS
+2 = Execution errors
+3 = Solver
+4 = Logarithm problems
+5 =
+6 =
+7 = .GMS
+Illustrate solver execution error taking log of zero
+*$*$*$
+Files = sorted.gms
+Directory =
+1 = SORTED.GMS
+2 = Output
+3 = Sorting
+4 =
+5 =
+6 =
+7 = .GMS
+Example of output sorting
+*$*$*$
+Files = specval.gms
+Directory =
+1 = SPECVAL.GMS
+2 = Calculations
+3 = Special values
+4 = Na
+5 = Inf
+6 = Eps
+7 = .GMS
+Illustrate use of special values in GAMS
+*$*$*$
+Files = spreadinteract.gms,gdxxrwss.xls
+Directory =
+1 = SPREADINTERACT.GMS
+2 = Spreadsheet
+3 = Interaction
+4 =
+5 =
+6 =
+7 = .GMS
+Iink with spreadsheet to illustrate calculation interaction
+*$*$*$
+Files = string.gms
+Directory =
+1 = STRING.GMS
+2 = Calculations
+3 = Strings
+4 = Ord
+5 = Card
+6 = Ordascii
+7 = .GMS
+Illustrate use of ORD, Ordascii, Ordepcidic and CARD to get string characteristics
+*$*$*$
+Files = syschar.gms
+Directory =
+1 = SYSCHAR.GMS
+2 = System attributes
+3 = System.xxx
+4 = System attributes
+5 =
+6 =
+7 = .GMS
+Illustrate use of system.attribute
+
+*$*$*$
+Files = tables.gms
+Directory =
+1 = TABLES.GMS
+2 = Table
+3 = Table
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate use of a Table statement
+
+*$*$*$
+Files = timeinclude.gms,toinclude.gms
+Directory =
+1 = TIMEINCLUDE.GMS
+2 = Output via Put
+3 = Put
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate timing of a $include
+*$*$*$
+Files = toinclude.gms
+Directory =
+1 = TOINCLUDE.GMS
+2 =
+3 =
+4 =
+5 =
+6 =
+7 = .GMS
+None
+*$*$*$
+Files = toobig.gms
+Directory =
+1 = TOOBIG.GMS
+2 = Memory
+3 = Profile
+4 = Memory
+5 =
+6 =
+7 = .GMS
+Illustrate memory use examination
+
+*$*$*$
+Files = trandata.gms,tranint.gms,tranrept.gms,tranmodl.gms
+Directory =
+1 = TRANDATA.GMS
+2 = Report writing
+3 = Include
+4 = Save restart
+5 =
+6 =
+7 = .GMS
+Data part of transport model
+illustrate include procedure along with tranint.gms
+Also used to illustrate save restart
+
+*$*$*$
+Files = TRANDELP.GMS,gamsrun.exe,gamsrun.zip
+Directory =
+1 = TRANDELP.GMS
+2 = Compiled program in charge
+3 = Delphi
+4 = Compiled program
+5 =
+6 =
+7 = .GMS
+GAMS as Slave
+
+This Transportation Model text is implemented in conjuction with a Delphi program
+rungams.exe
+The worksheet writes the files included below named:
+supplyset.csv
+demandset.csv
+supplydat.csv
+demanddat.csv
+distancedat.csv
+This code sends back solution in output.csv
+
+*$*$*$
+Files = trandisp.gms
+Directory =
+1 = TRANDISP.GMS
+2 = Output
+3 = Save restart
+4 = Display
+5 =
+6 =
+7 = .GMS
+Display part of transport model
+
+Used in save restart as follows
+
+GAMS trandata                  s=s1
+GAMS tranmodl        r=s1      s=s2
+GAMS tranrept        r=s2      s=s1
+GAMS trandisp        r=s1  (note reuse of name)
+
+*$*$*$
+Files = tranerr.gms
+Directory =
+1 = TRANERR.GMS
+2 = GAMSIDE
+3 = Compilation errors
+4 =
+5 =
+6 =
+7 = .GMS
+Model with compilation errors
+
+*$*$*$
+Files = tranint.gms,trandata.gms,tranmodl.gms,tranrept.gms
+Directory =
+1 = TRANINT.GMS
+2 = Include
+3 = Include
+4 =
+5 =
+6 =
+7 = .GMS
+File that includes other parts of  transport model
+
+*$*$*$
+Files = tranlrg.gms,transml.gms
+Directory =
+1 = TRANLRG.GMS
+2 = Small to large
+3 = Save restart
+4 = Small model
+5 =
+6 =
+7 = .GMS
+Illustrates of small model structure development and expandability
+in contrast with transml.gms
+
+*$*$*$
+Files = tranmodl.gms,tranint.gms,trandata.gms,tranrept.gms
+Directory =
+1 = TRANMODL.GMS
+2 = Model
+3 = Include
+4 = Save restart
+5 =
+6 =
+7 = .GMS
+Model definition part of transport model
+illustrate include procedure along with tranint.gms
+also used to illustrate save restart
+
+*$*$*$
+Files = trannest.gms,tranrept.gms,tranmodl.gms,trandata.gms,tranint.gms
+Directory =
+1 = TRANNEST.GMS
+2 = Include
+3 = Nesting
+4 =
+5 =
+6 =
+7 = .GMS
+This is a nested include
+It isincluded in tranrept.gms and ultimatly tranint.gms
+
+*$*$*$
+Files = tranport.gms
+Directory =
+1 = TRANPORT.GMS
+2 = Basic GAMS
+3 = Matching parentheses
+4 =
+5 =
+6 =
+7 = .GMS
+Used to iilustrate parentheses matching
+
+This problem is an adaptation of the GAMS model
+library and GAMS users manual problem trnsport.gms
+
+*$*$*$
+Files = tranrept.gms,trannest.gms,tranint.gms,trandata.gms,tranmodl.gms
+Directory =
+1 = TRANREPT.GMS
+2 = Report writing
+3 = .L attribute
+4 = .M attribute
+5 = Include
+6 = Save restart
+7 = .GMS
+Report writing part of transport model
+illustrate include procedure along with tranint.gms
+also used to illustrate save restart
+
+*$*$*$
+Files = transbad.gms
+Directory =
+1 = TRANSBAD.GMS
+2 = Speed
+3 = Conditionals
+4 = Equation suppression
+5 =
+6 =
+7 = .GMS
+Illustrate suppression of equations to reduce memory and time
+
+*$*$*$
+Files = transfix.gms
+Directory =
+1 = TRANSFIX.GMS
+2 = Speed
+3 = Holdfixed
+4 = Conditionals
+5 = Equation suppression
+6 =
+7 = .GMS
+Illustrate suppression of equations and holdfixed to reduce memory and time
+
+*$*$*$
+Files = transml.gms
+Directory =
+1 = TRANSML.GMS
+2 = Small to large
+3 = Save restart
+4 = Small model
+5 =
+6 =
+7 = .GMS
+Example that will be split up in save restart illustration
+Also illustrates of small model structure development
+
+*$*$*$
+Files = transtrt.gms
+Directory =
+1 = TRANSTRT.GMS
+2 = Small to large
+3 = Debugging
+4 = Subsetting
+5 =
+6 =
+7 = .GMS
+Illustrate subsetting for model size reduction in debugging
+
+
+*$*$*$
+Files = tranzer.gms
+Directory =
+1 = TRANZER.GMS
+2 = Small to large
+3 = Debugging
+4 = Zeroing
+5 =
+6 =
+7 = .GMS
+Illustrate temporary zeroing for model size reduction in debugging
+
+
+*$*$*$
+Files = trnsport.gms
+Directory =
+1 = TRNSPORT.GMS
+2 = Basic GAMS
+3 = Trnsport model
+4 =
+5 =
+6 =
+7 = .GMS
+Basic example of transport model from GAMS model library
+
+
+
+*$*$*$
+Files = trnsprt.gms
+Directory =
+1 = TRNSPRT.GMS
+2 = Set
+3 = Unknown elements
+4 = Calculate elements
+5 =
+6 =
+7 = .GMS
+Illustrate use of a While statement
+
+*$*$*$
+Files = TRNSSU.GMS
+Directory =
+1 = TRNSSU.GMS
+2 = Speed
+3 = Conditionals
+4 = Variable suppression
+5 = $
+6 =
+7 = .GMS
+Illustrate incomplete variable supression
+
+*$*$*$
+Files = tuple.gms
+Directory =
+1 = TUPLE.GMS
+2 = Set
+3 = Tuples
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate tuple use
+
+*$*$*$
+Files = twotran.gms
+Directory =
+1 = TWOTRAN.GMS
+2 = Advanced basis
+3 = Advanced basis
+4 = Two solves
+5 =
+6 =
+7 = .GMS
+Illustrate advanced basis effects
+
+*$*$*$
+Files = twotrana.gms
+Directory =
+1 = TWOTRANA.GMS
+2 = Advanced basis
+3 = Advanced basis
+4 = Two solves
+5 =
+6 =
+7 = .GMS
+Illustrate advanced basis effects
+
+*$*$*$
+Files = user.gms
+Directory =
+1 = USER.GMS
+2 = Command line
+3 = User1
+4 = User2
+5 =
+6 =
+7 = .GMS
+Illustrate user defined items
+
+*$*$*$
+Files = varmodatt.gms
+Directory =
+1 = VARMODATT.GMS
+2 = Attributes
+3 = Model
+4 = Variable
+5 = Equation
+6 =
+7 = .GMS
+Illustrate model, equation and variable attributes
+
+*$*$*$
+Files = while.gms
+Directory =
+1 = WHILE.GMS
+2 = Control structures
+3 = While
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate use of a While statement
+
+*$*$*$
+Files = xl2gmsresource.gms,resourcexl2gms.inc
+Directory =
+1 = XL2GMSRESOURCE.GMS
+2 = Links
+3 = XL2GMS
+4 =
+5 =
+6 =
+7 = .GMS
+Illustrate solving of GAMS program embedded in spreadsheet
+*$*$*$
+Files = XLIMPORT.GMS,xllink.in
+Directory =
+1 = XLIMPORT.GMS
+2 = Spreadsheet
+3 = XLIMPORT
+4 = Conditional compile
+5 = $Call
+6 =
+7 = .GMS
+GAMS version of XLIMPORT
+
+*$*$*$

@@ -1,0 +1,4 @@
+$title Incorrect asterisk list generation (DECLA1,SEQ=126)
+set n  /n151*n15151/;
+scalar cn;  cn = card(n);  display 'card(n) = ', cn;
+abort$(card(n) <> 15001) 'incorrect asterisk list generation';

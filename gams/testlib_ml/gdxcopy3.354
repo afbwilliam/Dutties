@@ -1,0 +1,51 @@
+$title 'Test GDXCOPY utility with -V7C and V7U options' (GDXCOPY3,SEQ=354)
+
+$ontext
+
+Gdxcopy should write a version 7 GDX file
+(i.e. one compatible with Distribution 22.6) if the -v7c or -v7u
+flags are used.
+
+Contributor: Steve Dirkse
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+* $ifi %system.platform% == SIS $exit No V7 GDX exists for this platform
+
+* so many timing issues with directories, use separate ones
+$set subdirC gdxcopyC.dir
+$set subdirU gdxcopyU.dir
+$set dirsep \
+$if %system.filesys% == UNIX $set dirsep /
+
+$onecho > makegdx.gms
+set I / 1 * 10 /;
+parameter c(I);
+c(I) = ord(I);
+positive variable x(I);
+x.up(I) = 2 * c(I);
+x.l(I)  = c(I);
+x.m(I) = 3 * c(I);
+$offecho
+
+$call =gams makegdx.gms lo=%GAMS.lo% gdx=tcopy.gdx
+
+$if dexist %subdirC% $call rm -r %subdirC%
+$if dexist %subdirC% $abort directory %subdirC% still exists!
+$call gdxcopy -v7c tcopy.gdx %subdirC%
+$if not dexist %subdirC%                  $abort directory %subdirC% should exist after gdxdopy call
+$if not  exist %subdirC%%dirsep%tcopy.gdx $abort file %subdirC%%dirsep%tcopy.gdx should exist after gdxdopy call
+$call gdxdiff tcopy.gdx %subdirC%%dirsep%tcopy.gdx > %NUL%
+$if errorlevel 1 $abort "Files differ: bad gdxcopy -v7c or gdxdiff"
+
+$if dexist %subdirU% $call rm -r %subdirU%
+$if dexist %subdirU% $abort directory %subdirU% still exists!
+$call gdxcopy -v7u tcopy.gdx %subdirU%
+$if not dexist %subdirU%                  $abort directory %subdirU% should exist after gdxdopy call
+$if not  exist %subdirU%%dirsep%tcopy.gdx $abort file %subdirU%%dirsep%tcopy.gdx should exist after gdxdopy call
+$call gdxdiff tcopy.gdx %subdirU%%dirsep%tcopy.gdx > %NUL%
+$if errorlevel 1 $abort "Files differ: bad gdxcopy -v7u or gdxdiff"
+
+$log All done: the test passed

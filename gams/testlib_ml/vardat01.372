@@ -1,0 +1,62 @@
+$title 'test scalar var/equ data statements' (VARDAT01,SEQ=372)
+
+$ontext
+Contributor: Alex Meeraus
+$offtext
+
+$if not gamsversion 227 $exit
+
+* unknown subtype will be frozen at free for variables
+* equation will use free but will be redefined with ..
+
+variables x / l 10, m 20, scale 3 /
+          y / fx 30 /;
+positive variable a / up 100 /;
+integer variable b ; variable b / up 1000, prior inf /;
+
+equation z / l 30, up=500, m=-9 /;
+$onmulti
+equation z / lo 0, up inf /;
+equation z /       up 100 /;
+$offmulti
+
+equation w; w.. x + y =l= 10;
+equation w / l 5, m 10 /;
+
+display x.l,x.m,x.lo,x.up,x.scale ;
+display y.l,y.m,y.lo,y.up,y.scale ;
+display a.l,a.m,a.lo,a.up,a.scale ;
+display b.l,b.m,b.lo,b.up,b.prior ;
+display z.l,z.m,z.lo,z.up,z.scale ;
+display w.l,w.m,w.lo,w.up,w.scale;
+
+abort$(x.L     <>  10.000 ) x.L
+abort$(x.M     <>  20.000 ) x.M
+abort$(x.Lo    <>    -INF ) x.Lo
+abort$(x.Up    <>    +INF ) x.Up
+abort$(x.Scale <>   3.000 ) x.Scale
+abort$(y.L     <>  30.000 ) y.L
+abort$(y.M     <>   0.000 ) y.M
+abort$(y.Lo    <>  30.000 ) y.Lo
+abort$(y.Up    <>  30.000 ) y.Up
+abort$(y.Scale <>   1.000 ) y.Scale
+abort$(a.L     <>   0.000 ) a.L
+abort$(a.M     <>   0.000 ) a.M
+abort$(a.Lo    <>   0.000 ) a.Lo
+abort$(a.Up    <> 100.000 ) a.Up
+abort$(a.Scale <>   1.000 ) a.Scale
+abort$(b.L     <>   0.000 ) b.L
+abort$(b.M     <>   0.000 ) b.M
+abort$(b.Lo    <>   0.000 ) b.Lo
+abort$(b.Up    <>1000.000 ) b.Up
+abort$(b.Prior <>    +INF ) b.Prior
+abort$(z.L     <>  30.000 ) z.L
+abort$(z.M     <>  -9.000 ) z.M
+abort$(z.Lo    <>   0.000 ) z.Lo
+abort$(z.Up    <> 100.000 ) z.Up
+abort$(z.Scale <>   1.000 ) z.Scale
+abort$(w.L     <>   5.000 ) w.L
+abort$(w.M     <>  10.000 ) w.M
+abort$(w.Lo    <>    -INF ) w.Lo
+abort$(w.Up    <>   0.000 ) w.Up
+abort$(w.Scale <>   1.000 ) w.Scale

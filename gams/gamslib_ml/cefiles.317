@@ -1,0 +1,33 @@
+$title Compressed Input Files (CEFILES,SEQ=317)
+
+$ontext
+This model demonstrates the use of compressed input files.
+Remember, if the file names contain spaces you need
+to use single or double quotes around the file names.
+$offtext
+
+* --- get model
+$ondollar
+$call gamslib -q trnsport
+
+* --- compress and run model
+$compress   trnsport.gms t1.gms
+$decompress t1.gms       t1.org
+$call       diff trnsport.gms t1.org > %system.nullfile%
+$if         errorlevel 1 $abort files trsnport and t1 are different
+
+* --- check to see if we get the same result
+$call gams trnsport gdx=trnsport lo=%gams.lo%
+$if   errorlevel 1 $abort model trnsport failed
+$call gams t1       gdx=t1       lo=%gams.lo%
+$if   errorlevel 1 $abort model t1 failed
+$call gdxdiff trnsport t1 %system.redirlog%
+$if   errorlevel 1 $abort results for trnsport and t1 are not equal
+
+* --- also works with include files
+$echo $include t1.gms > t2.gms
+$call gams t2 gdx=t2 lo=%gams.lo%
+$if   errorlevel 1 $abort model t2 failed
+$call gdxdiff trnsport t2 %system.redirlog%
+$if   errorlevel 1 $abort results for trnsport and t2 are not equal
+$terminate

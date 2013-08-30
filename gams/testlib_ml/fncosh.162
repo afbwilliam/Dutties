@@ -1,0 +1,22 @@
+$title 'Test correctness of cosh intrinsic' (FNCOSH,SEQ=162)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+$gdxin fncosh
+$load aeps reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = cosh.value (data(T,'x'));
+  data(T, 'fx')    = cosh.grad  (data(T,'x'));
+  data(T,'fxx')    = cosh.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+abort$(execerror lt 3)
+  'Should get execution errors evaluating cosh(x) for |x| large';
+execerror = 0;
+
+$include fntest_x.inc

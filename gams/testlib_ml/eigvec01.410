@@ -1,0 +1,72 @@
+$title Test eigenvector utility (EIGVEC01,SEQ=410)
+
+$ontext
+
+Eigenvector example.
+
+Contributor: Erwin Kalvelagen, October 2008.
+
+
+octave:1> a = [1 2 4 7 11; 2 3 5 8 12; 4 5 6 9 13; 7 8 9 10 14; 11 12 13 14 15]
+a =
+
+   1   2   4   7  11
+   2   3   5   8  12
+   4   5   6   9  13
+   7   8   9  10  14
+  11  12  13  14  15
+
+octave:2> eig(a)
+ans =
+
+   -8.464425
+   -1.116317
+   -0.512109
+   -0.027481
+   45.120332
+
+octave:3> [e1,e2] = eig(a)
+e1 =
+
+   0.5550905  -0.2642556   0.2892854   0.6748602   0.2879604
+   0.4820641  -0.2581518   0.2196341  -0.7349311   0.3355726
+   0.2865066   0.2159261  -0.8437897   0.0411896   0.3970041
+  -0.0992784   0.7711236   0.3943678   0.0055409   0.4898525
+  -0.6062562  -0.4714561  -0.0238286   0.0520829   0.6378888
+
+e2 =
+
+   -8.46442    0.00000    0.00000    0.00000    0.00000
+    0.00000   -1.11632    0.00000    0.00000    0.00000
+    0.00000    0.00000   -0.51211    0.00000    0.00000
+    0.00000    0.00000    0.00000   -0.02748    0.00000
+    0.00000    0.00000    0.00000    0.00000   45.12033
+
+$offtext
+
+set i /i1*i5/;
+alias (i,j);
+
+table a(i,j)
+      i1   i2   i3   i4   i5
+i1     1    2    4    7   11
+i2     2    3    5    8   12
+i3     4    5    6    9   13
+i4     7    8    9   10   14
+i5    11   12   13   14   15
+
+;
+
+scalar rc;
+parameter eval(i) 'eigenvalues';
+parameter evec(i,j) 'eigenvectors';
+
+execute_unload 'mat.gdx',i,a;
+execute 'eigenvector mat.gdx i a ev.gdx eval evec > eigenvector.log';
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero return code from eigenvector', rc;
+execute_load 'ev.gdx',eval, evec;
+rc=errorlevel;
+abort$(rc > 0) 'Error loading eigenvalues/vectors from ev.gdx', rc;
+
+display a, eval, evec;

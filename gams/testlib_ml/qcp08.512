@@ -1,0 +1,72 @@
+$title Test correctness for QCP with power(*,2) function (QCP08,SEQ=512)
+
+$ontext
+Test that we handle QCP models with the power(*,2) function.
+This is really a formulation test, not a solver test.
+
+Contributor: Steven Dirkse, February 2011
+
+$offtext
+
+variables x, y, z;
+equations f, fp, g;
+
+f..  z =E= sqr(x)     - x   + sqr(y)     + y ;
+fp.. z =E= power(x,2) - x   + power(y,2) + y ;
+g..  x + y =G= 4;
+
+model m  / f,  g /;
+model mp / fp, g /;
+* these bounds should never be active but they help the global solvers
+x.lo = 0;
+x.up = 5;
+y.lo = 0;
+y.up = 5;
+
+$if not set TESTTOL $set TESTTOL 1e-5
+scalars
+  mchecks / 0 /
+  tol / %TESTTOL% /
+  z_l / 7.5 /
+  x_l / 2.5 /
+  y_l / 1.5 /
+  f_l / 0 /
+  f_m / 1 /
+  g_l / 4 /
+  g_m / 4 /
+  ;
+$if not %QPMCHECKS% == 0 mchecks = 1;
+
+* first solve the model that uses sqr
+solve m using qcp min z;
+
+abort$[abs(z.l-z_l) > tol]  'bad z.l';
+abort$[abs(x.l-x_l) > tol]  'bad x.l';
+abort$[abs(y.l-y_l) > tol]  'bad y.l';
+abort$[abs(f.l-f_l) > tol]  'bad f.l';
+abort$[abs(g.l-g_l) > tol]  'bad g.l';
+
+if {mchecks,
+  abort$[abs(z.m)     > tol]  'bad z.m';
+  abort$[abs(x.m)     > tol]  'bad x.m';
+  abort$[abs(y.m)     > tol]  'bad y.m';
+  abort$[abs(f.m-f_m) > tol]  'bad f.m';
+  abort$[abs(g.m-g_m) > tol]  'bad g.m';
+};
+
+* now solve the model that uses the poly function
+solve mp using qcp min z;
+
+abort$[abs(z.l-z_l) > tol]  'bad z.l';
+abort$[abs(x.l-x_l) > tol]  'bad x.l';
+abort$[abs(y.l-y_l) > tol]  'bad y.l';
+abort$[abs(f.l-f_l) > tol]  'bad f.l';
+abort$[abs(g.l-g_l) > tol]  'bad g.l';
+
+if {mchecks,
+  abort$[abs(z.m)     > tol]  'bad z.m';
+  abort$[abs(x.m)     > tol]  'bad x.m';
+  abort$[abs(y.m)     > tol]  'bad y.m';
+  abort$[abs(f.m-f_m) > tol]  'bad f.m';
+  abort$[abs(g.m-g_m) > tol]  'bad g.m';
+};

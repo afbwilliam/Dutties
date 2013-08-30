@@ -1,0 +1,100 @@
+$title Execution time test for Gather-Update-Solve-Scatter (GUSS) (SCEN02, SEQ=518)
+
+$ontext
+The early implementation of GUSS had subtle side effects. Therefore,
+the GAMS compiler and runtime enforces strict rules for the use of
+GUSS. This test collects a number of these runtime tests.
+
+Contributor: Michael Bussieck
+
+$offtext
+
+
+$call gamslib -q trnsport
+$if errorlevel 1 $abort 'could not retrieve trnsport.gms'
+
+$onechoV >> trnsport.gms
+set s          /s1*s3/,
+    s1(s)
+    s2(s,s)
+    dict1      / s1.  scenario. '', c.param.cs1  /
+    dict2      / s2.  scenario. '', c.param.cs2  /
+    dict3      / s2.  scenario. '', c.param.cs2, a.param.as  /;
+
+Parameter
+    cs1(s,i,j), cs2(s,s,i,j), as(s,s,i)
+    updt1(s,*,*,i,j), updt2(s,s,*,*,i,j), updt3(s,s,*,*,*,*)
+    pdict1     / s1.  scenario. '' 1, c.param.cs1  3/
+    pdict2     / s2.  scenario. '' 2, c.param.cs2  4/
+    pdict3     / s2.  scenario. '' 2, c.param.cs2  4, a.param.as 3 /;
+
+option lp=convertd;
+alias (s,sp);
+
+s1(s) = yes;
+cs1(s1(s),i,j) = ord(s);
+Solve transport using lp minimizing z scenario dict1;
+updt1(s1,'c','param',i,j) = cs1(s1,i,j);
+execute_unload 'dict1.gdx' pdict1=dict, s1, updt1=updt;
+execute 'gdxdiff dict1.gdx "%gams.scrdir%scenario_dict1.%gams.scrext%" > %system.nullfile%'
+abort$errorlevel 'dict1.gdx and scenario_dict1.gdx should be identical';
+
+s2(s,'s1') = yes;
+cs2(s2(s,sp),i,j) = ord(sp) + card(s)*(ord(s)-1);
+Solve transport using lp minimizing z scenario dict2;
+updt2(s2,'c','param',i,j) = cs2(s2,i,j);
+execute_unload 'dict2a.gdx' pdict2=dict, s2, updt2=updt;
+execute 'gdxdiff dict2a.gdx "%gams.scrdir%scenario_dict2.%gams.scrext%" > %system.nullfile%'
+abort$errorlevel 'dict2a.gdx and scenario_dict2.gdx should be identical';
+
+option clear=s2, clear=cs2, clear=updt2;
+s2('s1',s) = yes;
+cs2(s2(s,sp),i,j) = ord(sp) + card(s)*(ord(s)-1);
+Solve transport using lp minimizing z scenario dict2;
+updt2(s2,'c','param',i,j) = cs2(s2,i,j);
+execute_unload 'dict2b.gdx' pdict2=dict, s2, updt2=updt;
+execute 'gdxdiff dict2b.gdx "%gams.scrdir%scenario_dict2.%gams.scrext%" > %system.nullfile%'
+abort$errorlevel 'dict2b.gdx and scenario_dict2.gdx should be identical';
+
+
+option clear=s2, clear=cs2;
+s2(s,sp) = yes;
+cs2(s2(s,sp),i,j) = ord(sp) + card(s)*(ord(s)-1);
+as(s,'s1',i) = ord(s) + 100*ord(i);
+Solve transport using lp minimizing z scenario dict3;
+
+updt3(s2,'c','param',i,j) = cs2(s2,i,j);
+updt3(s2,'a','param','',i) = as(s2,i);
+execute_unload 'dict3.gdx' pdict3=dict, s2, updt3=updt;
+execute 'gdxdiff dict3.gdx "%gams.scrdir%scenario_dict3.%gams.scrext%" > %system.nullfile%'
+abort$errorlevel 'dict3.gdx and scenario_dict3.gdx should be identical';
+
+* test with an empty scenario set
+option clear=s2, clear=cs2, clear=updt2;
+s2(s,s) = no;
+cs2(s2,i,j) = 1;
+Solve transport using lp minimizing z scenario dict2;
+abort$(not execerror) 'empty scenario set should trigger an execution error';
+execerror=0;
+
+* test with an empty scenario data
+option clear=s2, clear=cs2, clear=updt2;
+s2(s,s) = yes;
+cs2(s2,i,j) = 0;
+Solve transport using lp minimizing z scenario dict2;
+abort$(not execerror) 'empty update data should trigger an execution error';
+execerror=0;
+
+* Data cs2 has scenarios not in s2
+option clear=s2, clear=cs2, clear=updt2;
+s2('s1','s1') = yes;
+cs2(s,'s1',i,j) = ord(s);
+Solve transport using lp minimizing z scenario dict2;
+updt2(s2,'c','param',i,j) = cs2(s2,i,j);
+execute_unload 'dict2c.gdx' pdict2=dict, s2, updt2=updt;
+execute 'gdxdiff dict2c.gdx "%gams.scrdir%scenario_dict2.%gams.scrext%" > %system.nullfile%'
+abort$errorlevel 'dict2c.gdx and scenario_dict2.gdx should be identical';
+$offecho
+
+$call "gams trnsport lo=%gams.lo% execerr=100"
+$if errorlevel 1 $abort 'Test failed. Please inspect trnsport.lst for details'

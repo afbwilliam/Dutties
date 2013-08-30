@@ -1,0 +1,18 @@
+$title Test correctness of log10 intrinsic (FNLOG10,SEQ=154)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+$gdxin fnlog10
+$load aeps reps relToInput T data
+$gdxin
+
+loop {T,
+  data(T,  'f')    = log10.value (data(T,'x'));
+  data(T, 'fx')    = log10.grad  (data(T,'x'));
+  data(T,'fxx')    = log10.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+$include fntest_x.inc

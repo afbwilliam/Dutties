@@ -1,0 +1,150 @@
+$TITLE  Increasing returns and average cost pricing     (HARMGE,SEQ=148)
+$Ontext
+
+       MPSGE input file with an example from Kazuya Kamiya:
+       "Computation of Equilibria with Increasing Returns to Scale"
+       Discussion Paper Number 73, Faculty of Economics,
+       Osaka University, Tokyo, Japan.
+
+
+Kamiya, K, Computation of Equilibria with Increasing Returns to Scale.
+Tech. rep., Faculty of Economics, Osaka University, ?.
+
+$Offtext
+
+SET     G         GOODS /X,Y/
+        F         FACTORS /C,L/;
+
+SCALAR  A       MARKUP PARAMETER /0/,
+        MCP     FLAG FOR MARGINAL COST PRICING /1/;
+
+PARAMETER NU(G) SCALE ELASTICITY FOR IRTS SECTORS /Y  0.3/
+
+TABLE ALPHA(*,G)  PRODUCTION TECHNOLOGY
+                X       Y
+        L       0.4     0.46154
+        C       0.4     0.53846
+        K       0.2
+
+PARAMETER BETA(G)  PREFERENCE PARAMETERS /X 1, Y 1/;
+
+PARAMETER ENDOW(*)  Goods and factor endowments /
+        X       20
+        Y       20
+        C       20
+        L       20 /;
+
+PARAMETER K(G)  Specific capital stocks /
+        X       1 /;
+
+$ONTEXT
+
+$MODEL:KAMIYA
+
+$SECTORS:
+        U       ! UTILITY INDEX
+        Z(G)    ! PRODUCTION OUTPUT
+
+$COMMODITIES:
+        PU                      ! CONSUMPTION PRICE INDEX
+        P(G)                    ! OUTPUT PRICES
+        W(F)                    ! FACTOR PRICES
+        R(G)$ALPHA("K",G)       ! SPECIFIC FACTORS IN NON-IRTS SECTORS
+
+$CONSUMERS:
+        H       ! REPRESENTATIVE AGENT
+
+$AUXILIARY:
+        Q(G)$NU(G)      ! QUANTITY ADJUSTMENT FOR IRTS SECTOR.
+        T(G)$NU(G)      ! PRICING ADJUSTMENT FOR IRTS SECTOR.
+
+*
+*       Utility index (Cobb-Douglas)
+*
+$PROD:U  s:1.0
+  O:PU
+  I:P(G)        Q:BETA(G)
+*
+*       Increasing returns sector with endogenous pricing:
+*
+$PROD:Z(G)  s:1.0
+  O:P(G)        Q:1              A:H  N:T(G)$NU(G)
+  I:W(F)        Q:ALPHA(F,G)
+  I:R(G)        Q:ALPHA("K",G)
+
+*       FINAL DEMAND:
+
+$DEMAND:H
+  D:PU
+  E:P(G)        Q:ENDOW(G)
+  E:W(F)        Q:ENDOW(F)
+  E:R(G)        Q:K(G)
+  E:P(G)$NU(G)  Q:1.0   R:Q(G)
+
+*       Quantity adjustment:
+*
+
+$CONSTRAINT:Q(G)$NU(G)
+        Q(G) =E= Z(G)**(1+NU(G)) - Z(G);
+
+*       PRICING EQUATION:
+
+$CONSTRAINT:T(G)$NU(G)
+        T(G) =E= 1 - ((1+NU(G)$MCP)/(1+A)) * Z(G)**NU(G);
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset KAMIYA
+
+*       SPECIFY THAT T(G) AND Q(G) ARE FREE:
+
+Q.LO(G)$NU(G) = -INF;
+T.LO(G)$NU(G) = -INF;
+
+$INCLUDE KAMIYA.GEN
+SOLVE KAMIYA USING MCP;
+
+SCALAR          PNORM           PRICE INDEX FOR NORMALIZATION;
+PARAMETER       PRICES(*,*)     EQUILIBRIUM PRICES FOR VARIOUS PRICING RULES;
+
+PNORM = SUM(G, P.L(G)) + SUM(F, W.L(F));
+PRICES(G,"MCP") = P.L(G) / PNORM;
+PRICES(F,"MCP") = W.L(F) / PNORM;
+
+MCP = 0;
+$INCLUDE KAMIYA.GEN
+SOLVE KAMIYA USING MCP;
+PNORM = SUM(G, P.L(G)) + SUM(F, W.L(F));
+PRICES(G,"ACP") = P.L(G) / PNORM;
+PRICES(F,"ACP") = W.L(F) / PNORM;
+
+A=0.2;
+$INCLUDE KAMIYA.GEN
+SOLVE KAMIYA USING MCP;
+PNORM = SUM(G, P.L(G)) + SUM(F, W.L(F));
+PRICES(G,"A=0.2") = P.L(G) / PNORM;
+PRICES(F,"A=0.2") = W.L(F) / PNORM;
+
+A=0.5;
+$INCLUDE KAMIYA.GEN
+SOLVE KAMIYA USING MCP;
+PNORM = SUM(G, P.L(G)) + SUM(F, W.L(F));
+PRICES(G,"A=0.5") = P.L(G) / PNORM;
+PRICES(F,"A=0.5") = W.L(F) / PNORM;
+
+A=1.0;
+$INCLUDE KAMIYA.GEN
+SOLVE KAMIYA USING MCP;
+PNORM = SUM(G, P.L(G)) + SUM(F, W.L(F));
+PRICES(G,"A=1.0") = P.L(G) / PNORM;
+PRICES(F,"A=1.0") = W.L(F) / PNORM;
+
+A=5.0;
+$INCLUDE KAMIYA.GEN
+SOLVE KAMIYA USING MCP;
+PNORM = SUM(G, P.L(G)) + SUM(F, W.L(F));
+PRICES(G,"A=5.0") = P.L(G) / PNORM;
+PRICES(F,"A=5.0") = W.L(F) / PNORM;
+
+*       DISPLAY THE RESULTS:
+
+DISPLAY PRICES;

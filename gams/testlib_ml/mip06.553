@@ -1,0 +1,122 @@
+$title Cuts and solution enumeration (MIP06,SEQ=553)
+
+$ontext
+
+This model is based on the dice.176 model from model library.  To make
+it work better as an example for MIP solution enumeration it was
+cleaned up and constraints were added to make solutions and solution
+representatives unique.  Then cuts were added.  By default, it stops
+cutting/enumerating when all optimal solutions have been found.
+
+Contributor: Steve Dirkse, Jan 2012
+
+$offtext
+
+* to run without cut generation use --SKIPCUTS=1 on the command line
+* this will just solve the problem without cuts and by default will
+* only return one solution
+$if not set SKIPCUTS $set SKIPCUTS 0
+
+sets
+  f  'die faces'        / face1*face6 /
+  d  'number of dice'   / die1*die3 /
+  ;
+$eval NV card(f)*card(d)
+set
+  v 'face values'       / v1*v%NV% /
+  pp     'previous solutions' / p1*p500 /
+  p(pp)
+  ;
+alias(f,fp),(d,dp);
+
+parameters
+  vals(v)            'possible face values'
+  pMap(pp,d,f,v)     'map from previous solutions'
+  winCnt(pp)
+  M
+  ;
+vals(v) = ord(v);
+M = card(d)*card(f) - 1;
+
+variables
+  xWins
+  faceVal(d,f)      'value on die face - will be integer'
+  ;
+binary variables
+  win(d,f,fp)       'true if faceVal(d,f) beats faceVal(d++,fp)'
+  map(d,f,v)        'maps dice faces to values'
+  ;
+
+faceVal.lo(d,f) = 1;
+faceVal.up(d,f) = card(d)*card(f);
+
+faceVal.fx('die1','face1') = 1;
+
+equation
+  winBnd(d)       'bound the wins for d vs. d++'
+  winDefA(d,f,fp) 'win(d,f,fp) implies dominance of (d,f) over (d++,fp)'
+  winDefB(d,f,fp) 'not win(d,f,fp) implies dominance of (d++,fp) over (d,f)'
+  faceDef(d,f)    'define the face values'
+  ordered(d,f)    'order the face values on each die'
+  unique(v)       'each value used only once'
+  cuts(pp)        'cut off previous solutions'
+  ;
+
+winBnd(d)      .. sum{(f,fp), win(d,f,fp)} =g= xWins;
+
+winDefA(d,f,fp).. faceVal(d,f) +  M*(1-win(d,f,fp)) =g= faceVal(d++1,fp) + 1;
+
+winDefB(d,f,fp).. faceVal(d++1,fp) + M*win(d,f,fp)  =g= faceVal(d,f) + 1;
+
+faceDef(d,f)   .. faceVal(d,f) =e= sum{v, vals(v)*map(d,f,v)};
+
+ordered(d,f-1) .. faceVal(d,f-1) + 1 =l= faceVal(d,f);
+
+unique(v)      .. sum{(d,f), map(d,f,v)} =e= 1;
+
+cuts(p)        .. sum{(d,f,v), map(d,f,v) $[not pMap(p,d,f,v)] +
+                            (1-map(d,f,v))$[    pMap(p,d,f,v)]}
+                  =g= 1;
+
+model dice / all /;
+
+option optcr = 0.0;
+p(pp) = no;
+pMap(p,d,f,v) = 0;
+
+execute_unload 'diceDef', f, d, v, vals;
+
+solve dice using mip maximizing xWins;
+
+option faceVal:0; display faceVal.l;
+
+parameter rep1 Chance of winning against next;
+rep1(d,f) = 100*sum(fp, win.l(d,f,fp)) / card(f);
+rep1(d,'chance') = sum(f, rep1(d,f))/card(f);
+option rep1:0; display rep1;
+
+$if %SKIPCUTS% == 1 $exit
+
+scalar
+  cutoff
+  nSols 'number of solutions found'
+  ;
+cutoff = 20.5;
+
+option limrow=0, limcol=0, solprint=off;
+option solveLink = %SOLVELINK.loadLibrary%;
+loop{pp$(dice.solvestat=%solvestat.NormalCompletion% and
+         dice.modelstat=%modelstat.Optimal% and
+         round(xWins.l)>=cutoff),
+
+   p(pp) = yes;
+   winCnt(pp) = round(xWins.l);
+   pMap(pp,d,f,v ) = round(map.l(d,f,v));
+   solve dice maximizing xWins using mip;
+};
+nSols = card(p);
+display nSols;
+execute_unload 'diceSolsCuts', f, d, v, vals, p, pMap, winCnt;
+abort$[card(p) eq card(pp)] 'set pp too small';
+file log /''/;
+putclose log // 'Test finished OK' / '  cutoff = ', cutoff /  '  nSols = ', nSols //;

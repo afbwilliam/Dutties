@@ -1,0 +1,42 @@
+$title Poorly-scaled model - small matrix entry implies large x (LP10,SEQ=118)
+
+$ontext
+In this model we drive the scalar c down towards zero,
+making for a poorly scaled model.  For nice c vals, the model
+is unbounded.  As c decreases, x2 increases in proportion.
+Eventually, either GAMS or the solver will squeeze the constant c
+out of the matrix and the model becomes solvable.
+
+Contributor: Michael Bussieck
+$offtext
+
+$if not set MTYPE       $set MTYPE lp
+$if not set solvedasmcp $set solvedasmcp 0
+
+variable x1,x2,x99,x100,z;
+equation e1,e2;
+positive variable x99, x100;
+
+scalar c /1/;
+e1.. z =e= x1 + x99;
+e2.. x1 + c*x2 + x99 =e= x100;
+
+model m /all/;
+option limrow=0, limcol=0;
+m.modelstat = %modelstat.Unbounded%;
+scalar loopCount / 0 /;
+while {(m.modelstat = %modelstat.Unbounded%) or (m.modelstat = %modelstat.Unbounded-NoSolution%) or (m.modelstat = %modelstat.Infeasible% and %solvedasmcp%=1),
+  loopCount = loopCount + 1;
+  abort$[loopCount > 100] 'Too many trips!';
+* Initialize all variables and marginals to default
+   z.l = 0; x1.l = 0; x2.l = 0; x99.l = 0; x100.l = 0;
+   e1.m = 0; e2.m = 0;
+   c = c/10;
+   solve m min z using %MTYPE%;
+};
+abort$(c>1e-5) 'solver %system.lp% declared model optimal too early';
+$exit
+file fx / 'lp10.txt' /; fx.ap=1; fx.nz = 0; fx.nw = 15;
+put fx  '%system.lp%':10 ' number of solves: ' m.number:2:0;
+fx.nr=2;
+put ' final c: '   c;

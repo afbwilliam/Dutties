@@ -1,0 +1,14 @@
+$title Test functions in linear models (FUNCS2,SEQ=124)
+variables z, x;
+equation obj;
+
+obj.. z =e= abs(x) + exp(x) + abs(exp(max(x,1))) + sign(x) ;
+
+model m / all /;
+
+solve m min z using dnlp;
+$if NOT errorfree $abort should be OK
+solve m min z using rmip;
+$if errorfree $abort should have an error
+$clearerror
+$terminate

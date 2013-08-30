@@ -1,0 +1,106 @@
+$title Test iteration interrupt for optimal and infeasible models (LP05,SEQ=70)
+$ontext
+More elaborate checks on iteration interrupt for optimal
+and infeasible models
+$offtext
+
+  Sets
+       i   canning plants   / seattle, austin, san-diego /
+       j   markets          / new-york, madison, chicago, topeka /
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              austin      200
+              san-diego    NA  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              madison     150
+              chicago     300
+              topeka      275  / ;
+
+  Table c(i,j)  distance in thousands of miles
+                    new-york  madison     chicago      topeka
+      seattle           NA      .05         1.7          1.8
+      austin           2.3     1.2          1.0           .5
+      san-diego        3.5     3.9          2.8          1.4  ;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j));
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  Model lp05 /all/ ;
+
+option limcol=0,limrow=0,solprint=on;
+
+c('seattle','new-york') = 2.5; a('san-diego') = 600;
+Solve lp05 using lp minimizing z ;
+abort$( lp05.solvestat <> %solvestat.NormalCompletion% or lp05.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( lp05.numnopt  <> 0 ) 'bad numopt';
+abort$( lp05.numinfes <> 0 ) 'bad infes';
+
+lp05.iterlim = lp05.iterusd-1;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp05 using lp minimizing z ;
+abort$( lp05.solvestat <> %solvestat.IterationInterrupt%) 'bad return code';
+if(lp05.modelstat = %modelstat.IntermediateInfeasible%,
+   abort$( lp05.numnopt  <> 0 ) 'bad numopt';
+   abort$( lp05.numinfes =  0 ) 'bad infes';
+elseif lp05.modelstat = %modelstat.IntermediateNonoptimal%,
+   abort$( lp05.numnopt  = 0 ) 'bad numopt';
+   abort$( lp05.numinfes <> 0 ) 'bad infes';
+elseif lp05.modelstat <> %modelstat.NoSolutionReturned%,
+   abort$( lp05.numnopt  = 0 ) 'bad numopt';
+   abort$( lp05.numinfes = 0 ) 'bad infes';
+   );
+lp05.iterlim = 1;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp05 using lp minimizing z ;
+abort$(    lp05.solvestat <> %solvestat.IterationInterrupt%
+        or (lp05.modelstat <> %modelstat.IntermediateInfeasible%
+        and lp05.modelstat <> %modelstat.NoSolutionReturned%)) 'wrong status codes';
+abort$( lp05.numnopt  <> 0 ) 'bad numopt';
+abort$( lp05.numinfes =  0 ) 'bad infes';
+
+lp05.iterlim = 0;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp05 using lp minimizing z ;
+abort$(    lp05.solvestat <> %solvestat.IterationInterrupt%
+        or (lp05.modelstat <> %modelstat.IntermediateInfeasible%
+        and lp05.modelstat <> %modelstat.NoSolutionReturned% )) 'wrong status codes';
+abort$( lp05.numnopt  <> 0 ) 'bad numopt';
+abort$( lp05.numinfes =  0 ) 'bad infes';
+
+lp05.iterlim = 100000;
+c('seattle','new-york') = 2.5; a('san-diego') = 300;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp05 using lp minimizing z ;
+abort$(   lp05.solvestat <> %solvestat.NormalCompletion%
+       or (lp05.modelstat <> %modelstat.Infeasible%
+       and lp05.modelstat <> %modelstat.InfeasibleNoSolution%)) 'wrong status codes';
+abort$( lp05.numnopt  <> 0 ) 'bad numopt';
+abort$( lp05.numinfes =  0 ) 'bad infes';
+
+lp05.iterlim = lp05.iterusd-1;
+option clear=x,clear=z,clear=cost,clear=supply,clear=demand;
+Solve lp05 using lp minimizing z ;
+abort$(   lp05.solvestat <> %solvestat.IterationInterrupt%
+       or (lp05.modelstat <> %modelstat.IntermediateInfeasible%
+       and lp05.modelstat <> %modelstat.NoSolutionReturned% )) 'wrong status codes';
+abort$( lp05.numnopt  <> 0 ) 'bad numopt';
+abort$( lp05.numinfes =  0 ) 'bad infes';

@@ -1,0 +1,38 @@
+$title Bilevel model with and without explicitly defined objective equation (EMPBP04,SEQ=465)
+
+$ontext
+
+The KKT conditions generated for a inner problem with a well-defined
+objective equation (defobj) need to be the same as if the objective is not
+defined explicitly.
+
+Contributor: Jan-H. Jagla, November 2009
+
+$offtext
+
+variables x, y, obj;
+
+equations upper, lower, defobj;
+upper.. y =g= x;
+lower.. y =g= -x;
+defobj.. obj =e= y;
+model implicit /upper,lower/;
+model explicit /all/;
+
+x.lo    = 2;
+y.l     = -2;
+lower.m = 0.5;
+
+execute 'echo FileName explicit.gms > jams.opt';
+execute 'echo bilevel min obj y defobj lower > "%emp.info%"';
+explicit.optfile = 1;
+solve explicit using emp min x;
+
+execute 'echo FileName implicit.gms > jams.op2';
+execute 'echo bilevel min y lower > "%emp.info%"';
+implicit.optfile = 2;
+solve implicit using emp min x;
+
+execute 'diff -bw explicit.gms implicit.gms'
+abort$errorlevel 'explicit.gms and implicit.gms differ';
+

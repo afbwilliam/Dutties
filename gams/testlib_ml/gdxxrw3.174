@@ -1,0 +1,47 @@
+$title 'Testing gdxxrw with xls or gdx file' (GDXXRW3,SEQ=174)
+
+$if %system.platform% == WIN $goto runme
+$if %system.platform% == WEX $goto runme
+$log GDXXRW test skipped for this platform
+$exit
+
+$label runme
+$call msappavail -Excel
+$if not errorlevel 1 $goto realrunme
+$log no Excel
+$exit
+
+$label realrunme
+
+$onecho > temp.xls
+this is bad
+$offecho
+
+$onecho > temp1.gdx
+this is bad
+$offecho
+
+
+set i / i1*i10 /, i5(i) / i1*i5 /
+    j / j1*j10 /
+
+
+parameter a(i,j),err;
+
+execute 'rm -f temp1.xls';
+execute '=gdxxrw temp1.xls trace=0 par=a rng=one! rdim=1 cdim=1';
+err=errorlevel; display err;
+abort$(not err) 'this should have failed';
+
+execute '=gdxxrw temp.xls trace=0 par=a rng=one! rdim=1 cdim=1';
+err=errorlevel; display err;
+abort$(not err) 'this should have failed';
+
+execute 'rm -f temp.gdx';
+execute '=gdxxrw temp.gdx trace=0 par=a rng=one! rdim=1 cdim=1';
+err=errorlevel; display err;
+abort$(not err) 'this should have failed';
+
+execute '=gdxxrw temp1.gdx trace=0 par=a rng=one! rdim=1 cdim=1';
+err=errorlevel; display err;
+abort$(not err) 'this should have failed';

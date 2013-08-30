@@ -1,0 +1,52 @@
+$title Educational bilevel model (JOINTC2, SEQ=23)
+
+$ontext
+
+This is an example that shows that upper level joint constraints
+cannot simply be put into lower level model
+
+First model
+-----------
+The lower level problem essentially requires y = -x which implies x <= 1
+for the upper level problem. Since x has a lower bound of 1 the solution
+is x = 1, y = -1.
+
+Second model
+------------
+The upper level problem maximizes x s.t. no constraint, hence, x will be
+at its upper bound, x = 2. That implies y >= 0 for the lower level problem
+which minimzes y, hence y = 0.
+
+Contributor: Michael Ferris, November 2009
+
+$offtext
+
+variables x, y;
+
+equations upper, lower;
+upper.. y =g= x - 2;
+lower.. y =g= -x;
+model jc /all/;
+x.lo = 1;
+x.up = 2;
+y.up = 100;
+
+file fhandle /"%emp.info%"/;  
+
+*First model
+putclose fhandle 'bilevel min y lower';
+solve jc using emp max x;
+* check that solution is x = 1, y = -1
+abort$(jc.solvestat <> %SOLVESTAT.NORMAL COMPLETION%
+      or ((abs(x.l-1) > 1e-6) or (abs(y.l-(-1)) > 1e-6)) )  'Wrong solution: 1st model';
+
+*Start from known solution
+x.l = 2;
+y.l = 0;
+
+*Second model
+putclose fhandle 'bilevel min y upper lower';
+solve jc using emp max x;
+* check that solution is x = 2, y = 0
+abort$(jc.solvestat <> %SOLVESTAT.NORMAL COMPLETION%
+      or ((abs(x.l-2) > 1e-6) or (abs(y.l-0) > 1e-6)) )  'Wrong solution: 2nd model';

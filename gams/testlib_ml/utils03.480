@@ -1,0 +1,41 @@
+$title test MPS2GMS for reading the second range entry on a line (UTILS03,SEQ=480)
+
+$ontext
+In this model we:
+   1. create an MPS file with $onecho
+   2. run mps2gms on the MPS file, checking the return code
+
+Contributor: Alex Meeraus
+
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$onecho > range.mps
+NAME          Error
+ROWS
+ N  obj
+ E  goaludel
+ E  goalsmth
+ E  71015862
+ E  70545863
+ E  70545864
+COLUMNS
+    x1        obj                  1
+    x1        goaludel             1
+    x1        goalsmth             1
+    x1        71015862             1
+    x1        70545863             1
+    x1        70545864             1
+RHS
+    RHS       goaludel   8386337.24223 goalsmth   17884205.7388
+RANGES
+    RANGE     71015862   21059966.5415 70545863   26755037.3683
+    RANGE     70545864   18320048.6913 goaludel   16789.4639484
+    RANGE     goalsmth   35804.2156933
+ENDATA
+$offecho
+
+$call mps2gms range.mps > %NUL%
+$if errorlevel 1 $abort bad return code

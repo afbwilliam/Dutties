@@ -1,0 +1,139 @@
+*
+* optalphaecp.def
+*
+
+CUTdelcrit enumint 0 3 1 2 Cutting plane strategy
+ 0 1 Do not remove any valid cuts.
+ 1 1 As 0 and allow temporary cuts at semirandom points if normal cuts can not be made.
+ 2 1 Allow temporary cuts and cut reselection, and use memory to save points and cuts.
+ 3 1 As 2 and call the reselection heuristic before termination to improve the solution.
+CUTnrcuts double 0 0 0 maxdouble 1 1 Cut generation pace
+ 0 Let AlphaECP decide.
+ 0<n<1 Number of linearizations = n* the number of linearizations that is possible to generate.
+ >1 Specifies the number of linearizations to generate.
+ECPbeta double 0 1.3 1.001 maxdouble 1 2 Updating multiplier if MIP is infeasible
+ECPdumpsol enumint 0 0 1 2 Write encountered solutions to gdx files
+ 0 1 No.
+ 1 1 Solutions that the NLP solver found.
+ 2 1 Solutions that the NLP or MIP solver found.
+ECPgamma double 0 2.0 1.001 maxdouble 1 2 Updating multiplier when verifying solution
+ECPiterlim integer 0 -1 -1 maxint 1 2 Maximum number of AlphaECP iterations
+ -1 No limit.
+ >=0 Specifies an iteration limit.
+ECPloglevel enumint 0 0 1 2 Level of AlphaECP output to statusfile
+ 0 1 No additional output to statusfile.
+ 1 1 Report solutions.
+ 2 1 Report main actions at iteration level
+ 3 1 Report main actions at linearization level
+ 4 1 Full reporting.
+ECPpcostrategy enumint 0 3 1 2 Pseudo-convex objective function strategy
+ 1 1 Remove support.
+ 2 1 Replace support.
+ 3 1 Remove support and line search.
+ 4 1 Replace support and line search.
+ECPretsol enumint 0 2 1 2 Return solution (1.MIP/2.NLP/3.QUALITY/4.PERFORMANCE)
+ 1 1 Choose MIP solution if it is available.
+ 2 1 Choose NLP solution if it is available.
+ 3 1 Choose the solution with the best tolerance.
+ 4 1 Choose the solution with the best objective value.
+ECPstart enumint 0 3 1 2 User specified start-point
+ 0 1 Do not use a start-point; start the algorithm by solving the linear part (MIP) of the problem.
+ 1 1 Use the user specified startpoint, but the variable levels are adjusted with a small value.
+ 2 1 Use the exact start-point set by the user.
+ 3 1 Use the exact start-point if linearly feasible; else adjust variable levels with a small value.
+ECPstrategy enumint 0 2 1 2 AlphaECP strategy
+ 1 1 Convex strategy.
+ 2 1 Pseudo-convex constraints.
+ 3 1 Pseudo-convex objective.
+ 4 1 Pseudo-convex objective, but first complete with ECPstrategy 2.
+ 5 1 Pseudo-convex objective, but find the first solution with ECPstrategy 2.
+.equclass enumint 0 0 0 2 Equation classification
+ 0 1 General nonlinear.
+ 1 1 Convex constraint.
+ 2 1 Pseudo-convex constraint.
+ 3 1 Pseudo-convex objective function.
+MIPloglevel boolean 0 0 1 3 Level of MIP solver output
+ 0 No output.
+ 1 MIP solver log goes to GAMS log.
+MIPnrsols integer 0 50 1 maxint 1 1 Upper limit of considered MIP solutions per MIP call
+MIPoptcr double 0 1.0 0 1 1 3 Relative MIP gap in intermediate sub-problems
+MIPoptcrlim integer 0 200 1 maxint 1 3 Initial MIPoptcr interval before MIPoptcr reduction
+MIPoptfile integer 0 0 0 999 1 3 Option file for MIP sub-solver
+MIPsolstrat enumint 0 1 1 1 MIP solution collection strategy
+ 0 1 Instruct MIP solver to return only one solution.
+ 1 1 Instruct MIP solver to return any solutions encountered during MIP procedure.
+ 2 1 Instruct MIP solver to search for solutions to obtain requested number MIPnrsols solutions.
+ 3 1 As 2, but furthermore require the solutions to fulfill MIPoptcr >=0.2.
+ 4 1 Let AlphaECP decide.
+MIPsolver string 0 "GAMS default MIP solver" 1 1 MIP solver for sub-problems
+NLPcall enumint 0 5 1 4 NLP strategy
+ 0 1 No output.
+ 1 1 Call the NLP solver at end of AlphaECP algorithm.
+ 2 1 As 1 and when a better solution is found.
+ 3 1 As 2 and when the same integer solution is encountered NLPlimsameint times.
+ 4 1 Let AlphaECP decide.
+ 5 1 Let AlphaECP decide and add noise to the variable levels before call.
+NLPcalliter integer 0 0 0 maxint 1 4 NLP solver call at next (incremental) iteration
+NLPlimsameint integer 0 5 1 maxint 1 4 NLP call after a number of recurring integer solutions
+NLPloglevel boolean 0 0 1 4 Level of NLP solver output
+ 0 No output.
+ 1 NLP solver log goes to GAMS log.
+NLPreslim double 0 0 0 maxdouble 1 4 NLP time limit per call
+NLPsolver string 0 "GAMS default NLP solver" 1 1 NLP solver for sub-problems
+objreform integer 0 0 -1 0 0 2 -1 or constraint number
+reslim double 0 1000 0 maxdouble 1 1 Time limit for AlphaECP (in seconds)
+solvelink enumint 0 5 1 2 Solvelink for NLP and MIP sub-solver
+ 1 1 Call NLP and MIP solver via script.
+ 2 1 Call NLP and MIP solver via module.
+ 4 0 Call NLP and MIP solver via grid script (simulate).
+ 5 1 Call NLP and MIP solver in memory.
+statusfile string 0 "" 0 2 AlphaECP output filename, if none is set then GAMS status file is used
+TOLepsf double 0 1e-3 1e-20 1 1 2 Pseudo-convex objective function termination tolerance
+TOLepsg double 0 1e-3 1e-20 1 1 2 Constraint tolerance
+TOLepsz double 0 1e-1 1e-20 1 1 2 Distance tolerance for a new linearization
+TOLgrad double 0 1e-6 1e-20 1 1 2 Gradient tolerance
+TOLinfbnd double 0 1e10 0 maxdouble 1 2 Infinity bound (MIP variable bound)
+*
+* synonym section
+*
+delcrit synonym CUTdelcrit
+nrcuts synonym CUTnrcuts
+pcostrategy synonym ECPpcostrategy
+retsol synonym ECPretsol
+strategy synonym ECPstrategy
+optfile synonym MIPoptfile
+callnlp synonym NLPcall
+callnlpiter synonym NLPcalliter
+nlplim_sameint synonym NLPlimsameint
+epsilon_f synonym TOLepsf
+epsilon_g synonym TOLepsg
+epsilon_z synonym TOLepsz
+gradtol synonym TOLgrad
+infbnd synonym TOLinfbnd
+*
+* deprecated section
+*
+synon deprecated
+ retsol
+ callnlp
+ callnlpiter
+ delcrit
+ epsilon_f
+ epsilon_g
+ epsilon_z
+ gradtol
+ infbnd
+ nlplim_sameint
+ nrcuts
+ optfile
+ pcostrategy
+ strategy
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+basic group 1 1 Basic options
+advanced group 2 1 Algorithmic options for advanced users
+MIPoptions group 3 1 MIP Solver related options
+NLPoptions group 4 1 NLP Solver related options
+*** End of file

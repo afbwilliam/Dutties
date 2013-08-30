@@ -1,0 +1,171 @@
+$title 'quick syntax test for all $if/$ifi/$ife statements' (IFSTAT6,SEQ=326)
+
+$ontext
+Tests compile-time if tests
+
+Contributor: Alex Meeraus
+$offtext
+
+
+$ontext
+      {           }     ifs_COMPARE
+     ,{SOLVER}          ifs_ID
+     ,{EXIST}           ifs_STRING
+     ,{DEXIST}          ifs_STRING
+     ,{DECLARED}        ifs_ID
+     ,{DEFINED}         ifs_ID
+     ,{ERRORFREE}       ifs_EMPTY
+     ,{WARNINGS}        ifs_EMPTY
+     ,{PUTOPEN}         ifs_EMPTY
+     ,{DECLA_OK}        ifs_EMPTY
+     ,{GAMSVERSION}     ifs_NUMBER
+     ,{ERRORLEVEL}      ifs_NUMBER
+     ,{SET}             ifs_ID
+     ,{SETLOCAL}        ifs_ID
+     ,{SETGLOBAL}       ifs_ID
+     ,{EVAL}            ifs_ID
+     ,{EVALLOCAL}       ifs_ID
+     ,{EVALGLOBAL}      ifs_ID
+     ,{SETENV}          ifs_ID
+     ,{SETTYPE}         ifs_ID
+     ,{PARTYPE}         ifs_ID
+     ,{VARTYPE}         ifs_ID
+     ,{EQUTYPE}         ifs_ID
+     ,{MODTYPE}         ifs_ID
+     ,{XXXTYPE}         ifs_ID
+     ,{ACRTYPE}         ifs_ID
+     ,{FILTYPE}         ifs_ID
+     ,{READABLE}        ifs_ID
+     ,{FUNTYPE}         ifs_ID
+     ,{PRETYPE}         ifs_ID
+     ,{PROTYPE}         ifs_ID
+$offtext
+
+$ondollar
+
+model m
+parameter a0,a1,a2
+scalar b0; parameter b1(*),b2(*,*)
+scalar c0 / 1 /; parameter c1(*) / a 1 / ,c2(*,*) / a.a 1 / ;
+scalar d0; d0=2;
+
+
+* --- key
+$if     WARNINGS $abort line %system.line%
+$error set error for testing
+$if     ERRORFREE  $abort line %system.line%
+$clearerror
+$if NOT WARNINGS $abort line %system.line%
+$if NOT DECLA_OK $abort line %system.line%
+$if     PUTOPEN  $abort line %system.line%
+file abc; put abc;
+if(1,
+$  if   DECLA_OK $abort line %system.line%
+   displad 'x' );
+$if NOT PUTOPEN  $abort line %system.line%
+
+$if 'NOT'         * OK
+$if  NOT          $abort line %system.line%
+$if     ERRORFREE  $abort line %system.line%
+$clearerror
+
+$if NOT ''       $abort line %system.line%
+$if     'BADKEY' * OK
+$if NOT 'BADKEY' * OK
+
+* --- key string
+$if NOT DEXIST '%gams.sysdir%'        $abort line %system.line%
+$if     DEXIST '%gams.sysdir%garabge' $abort line %system.line%
+$if NOT EXIST  '%gams.i%'             $abort line %system.line%
+$if     EXIST  '%gams.i%garabge'      $abort line %system.line%
+
+* --- Key nuber
+$if     ERRORLEVEL   1  $abort line %system.line%
+$if NOT GAMSVERSION  0  $abort line %system.line%
+$set gv %system.gamsversion%
+$if NOT GAMSVERSION %gv% $abort line %system.line%
+$eval gv %gv%+1
+$if     GAMSVERSION %gv% $abort line %system.line%
+$if not errorfree $abort line %system.line%
+$clearerror
+
+* --- key id none gams
+$if     SET      ====  $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     SET      paul  $abort line %system.line%
+$if     SET      set   $abort line %system.line%
+$set             set  'this is set'
+$set             paul 'this is paul'
+$if NOT SET      set   $abort line %system.line%
+$if NOT SET      paul   $abort line %system.line%
+$if     SOLVER   xxxx   $abort line %system.line%
+$if NOT SOLVER   bdmlp  $abort line %system.line%
+
+
+* --- key id gams
+$if     DECLARED set    $abort line %system.line%
+$if NOT DECLARED a0     $abort line %system.line%
+$if NOT DECLARED b0     $abort line %system.line%
+$if     DECLARED xxxx   $abort line %system.line%
+$if     DEFINED  xxxx   $abort line %system.line%
+$if NOT errorfree       $abort line %system.line%
+$if     DEFINED  a0     $abort line %system.line%
+$if NOT DEFINED  c0     $abort line %system.line%
+$if NOT DEFINED  d0     $abort line %system.line%
+$if     SETENV   xxxx   $abort line %system.line%
+$if     PARTYPE  xxxx   $abort line %system.line%
+$if NOT PARTYPE  a0     $abort line %system.line%
+$if     PARTYPE         $abort line %system.line%
+$if NOT PARTYPE  diag   $abort line %system.line%
+
+
+* --- key number ident
+$if     DIMENSION $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION xx $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION -1 $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION xx $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION 0 ++ $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION 0 xx $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION 0 a0 $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if     DIMENSION 0 m $abort line %system.line%
+$if     errorfree $abort line %system.line%
+$clearerror
+$if NOT DIMENSION 0 b0 $abort line %system.line%
+$if NOT DIMENSION 0 c0 $abort line %system.line%
+$if     DIMENSION 0 b1 $abort line %system.line%
+$if     DIMENSION 5 c2 $abort line %system.line%
+
+$if
+$if     errorfree $abort line %system.line%
+$clearerror
+
+$garbage
+$if     errorfree $abort line %system.line%
+$clearerror
+
+
+$if NOT garabge and some more
+$if     errorfree $abort line %system.line%
+$clearerror
+
+
+$if garabge and some more
+$if     errorfree $abort line %system.line%
+$clearerror
+
+$terminate

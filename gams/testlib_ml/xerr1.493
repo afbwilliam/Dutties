@@ -1,0 +1,55 @@
+$title External Function Errors: RHS wrong (xerr1,SEQ=493)
+$Ontext
+
+This model checks if Cmex creates an error as expected when dealing with
+external equations. The errors we want to get are:
+- RHS value not integer in =X= equation
+- RHS value out of range in =X= equation
+- RHS value not unique in =X= equation
+
+Contributor: Lutz Westermann
+
+$Offtext
+
+$call gmsunzip -q xerr.zip
+$if %system.buildcode% == VS8 $call mv -f vs8.dll xerr.dll
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef;
+
+zdef.. sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 1.5;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of RHS not integer
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef;
+
+zdef.. sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 2;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of RHS out of range
+
+$onecho > err.gms
+set i / i1*i4 /
+variables x(i), z;
+equations zdef,zdef2;
+
+zdef..  sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 1;
+zdef2.. sum(i, ord(i)*x(i) )                  =X= 1;
+model xerr     'External functions'  / all /;
+solve xerr using nlp minimizing z;
+$offecho
+
+$call =gams err.gms lo=%GAMS.lo%
+$if not errorlevel 1 $abort should get error because of RHS not unique

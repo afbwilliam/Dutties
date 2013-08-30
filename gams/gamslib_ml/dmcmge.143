@@ -1,0 +1,159 @@
+$TITLE  Accounting for Economic Growth with New Inputs (DMCMGE,SEQ=143)
+$Ontext
+Accounting for Economic Growth with New Inputs
+
+
+Markusen, J R, and Feenstra, R, Accounting for Growth with New Inputs, 1993.
+
+$Offtext
+
+SET     T       TIME PERIODS   /1*12/;
+
+ALIAS (T,TP);
+
+SCALAR
+        S0              /4/
+        LS0             /2/
+        KS0             /1/
+        RS0             /1/
+        X0              /10/
+        LX0             /4/
+        KX0             /6/
+        N0              /2/
+        LN0             /.8/
+        KN0             /1.2/
+        Z0              /12/
+        XZ0             /10/
+        FZ0             /2/
+        LSK0            /1/
+        U0              /2/
+        CU0             /1/
+        CZU0            /1/
+        SIGMA   SUBSTITUTION ELASTICITY /6/,
+        BETA    SUBSTITUTION EXPONENT
+        DELTA   DEPRECIATION RATE /0.1/,
+        RHO     DISCOUNT RATE /0.25/,
+        SL0     BASE YEAR LABOR  /100/
+        GLLOW   LOWER BOUND ON LABOR GROWTH RATE  /0.02/,
+        GLHIGH  UPPER BOUND ON LABOR GROWTH RATE  /0.03/,
+        SR0     BASE YEAR RESOURCES /50/,
+        GRLOW   LOWER BOUND ON RESOURCE GROWTH / 0.01 /,
+        GRHIGH  UPPER BOUND ON RESOURCE GROWTH / 0.03 /;
+
+BETA = (SIGMA-1)/SIGMA;
+
+PARAMETER       SL(T)   LABOR SUPPLY (NOISY)
+                SR(T)   RESOURCE SUPPLY (NOISY);
+
+SL("1") = SL0;
+SR("1") = SR0;
+OPTION SEED = 1001;
+LOOP(T,
+        SL(T+1) = SL(T) * (1 + GLLOW + (GLHIGH-GLLOW)*UNIFORM(0,1));
+        SR(T+1) = SR(T) * (1 + GRLOW + (GRHIGH-GRLOW)*UNIFORM(0,1));
+);
+
+$ONTEXT
+
+$MODEL:DMC
+
+$SECTORS:
+        S(T)
+        X(T)
+        N(T)
+        Z(T)
+        SK(T)
+        UTIL(T)
+        W
+
+$COMMODITIES:
+        UTOT
+        L(T)
+        K(T)
+        R(T)
+        CX(T)
+        FC(T)
+        C(T)
+        CZ(T)
+        U(T)
+
+$CONSUMERS:
+        CONS
+
+$AUXILIARY:
+        SUB(T)
+        EXPAN(T)
+
+$PROD:S(T)  s:1
+        O:C(T)  Q:S0
+        I:L(T)  Q:LS0
+        I:K(T)  Q:KS0
+        I:R(T)  Q:RS0
+
+$PROD:X(T)  s:1
+        O:CX(T) Q:X0
+        I:L(T)  Q:LX0
+        I:K(T)  Q:KX0
+
+$PROD:N(T) t:0  s:1
+        O:FC(TP)$(ORD(TP) GE ORD(T))    Q:N0
+        I:L(T)  Q:LN0
+        I:K(T)  Q:KN0
+
+$PROD:Z(T)  s:1
+        O:CZ(T) Q:Z0    A:CONS  N:SUB(T)  M:-1
+        I:CX(T) Q:XZ0
+        I:FC(T) Q:FZ0
+
+$PROD:SK(T)
+        O:K(TP)$(ORD(TP) GE ORD(T))     Q:((1-DELTA)**(ORD(TP)-ORD(T)))
+        I:L(T)  Q:LSK0
+
+$PROD:UTIL(T)  s:1
+        O:U(T)  Q:U0
+        I:C(T)  Q:CU0
+        I:CZ(T) Q:CZU0
+
+$PROD:W         s:1.5
+        O:UTOT
+        I:U(T)  Q:((1+RHO)**(1-ORD(T)))
+
+$DEMAND:CONS
+        E:L(T)  Q:SL(T)
+        E:R(T)  Q:SR(T)
+        E:CZ(T) R:EXPAN(T)
+        D:UTOT
+
+$CONSTRAINT:EXPAN(T)
+        EXPAN(T) =G= Z0**(1/BETA) * Z(T)**(1/BETA) - Z0 * Z(T);
+
+$CONSTRAINT:SUB(T)
+        SUB(T) =G= EXPAN(T) / (Z0 * Z(T));
+
+
+$OFFTEXT
+$SYSINCLUDE mpsgeset DMC
+
+*       OMIT THE IRTS STUFF FOR THE FIRST PASS:
+
+EXPAN.FX(T) = 0;
+SUB.FX(T)   = 0;
+
+*       SPECIFY A NUMERAIRE:
+
+UTOT.FX = 1;
+
+*       GENERATE AND SOLVE THE CRTS MODEL:
+
+$INCLUDE DMC.GEN
+SOLVE DMC USING MCP;
+
+EXPAN.UP(T) = +INF;
+SUB.UP(T)   = +INF;
+EXPAN.L(T) = Z0**(1/BETA) * Z.L(T)**(1/BETA) - Z0 * Z.L(T);
+SUB.L(T)   = EXPAN.L(T) / (Z0 * Z.L(T));
+
+*       GENERATE AND SOLVE:
+
+$INCLUDE DMC.GEN
+SOLVE DMC USING MCP;

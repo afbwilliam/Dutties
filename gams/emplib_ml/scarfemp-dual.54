@@ -1,0 +1,121 @@
+$title  Scarf's Activity Analysis Example (SCARFEMP-DUAL,SEQ=54)
+
+$Ontext
+
+Scarf's Activity Analysis Example
+
+Scarf, H, and Hansen, T, The Computation of Economic Equilibria.
+Yale University Press, 1973.
+
+Rather than form the MCP explicitly (as in the GAMSLIB model scarfmcp),
+we instead use the KKT of the dual form optimization problem:
+   max_p  sum (h, i(h) * log(expend_h(p))) - p'*sum(h, endow(.,h))
+   s.t    A'p <= 0, p >= 0
+
+coupled with the income complementarity relationship.
+
+Here expend_h is the expenditure function defined by:
+   expend_h(p)  = min_c  p'*c   s.t.  u_h(c) >= 1
+
+This is detailed in Rutherford's 1992 paper entitled "Sequential Joint Maximization"
+
+Contributor: Michael Ferris, October 2010
+$Offtext
+
+$call gamslib -q scarfmcp
+$include scarfdata.inc
+
+option limrow=0, limcol=0;
+
+positive
+variables
+
+        p(c)    commodity price,
+        y(s)    production,
+        i(h)    income;
+
+equations
+        mkt(c)          commodity market,
+        profit(s)       zero profit,
+        income(h)       income index;
+
+*       distinguish ces and cobb-douglas demand functions:
+
+mkt(c)..        sum(s, a(c,s) * y(s)) + sum(h, e(c,h)) =g=
+
+                sum(h$(esub(h) ne 1),
+                (i(h)/sum(cc, alpha(cc,h) * p(cc)**(1-esub(h)))) *
+                alpha(c,h) * (1/p(c))**esub(h)) +
+
+                sum(h$(esub(h) eq 1),
+                i(h) * alpha(c,h) / p(c));
+
+profit(s)..     -sum(c, a(c,s) * p(c)) =g= 0;
+
+income(h)..     i(h) =g= sum(c, p(c) * e(c,h));
+
+model scarf / mkt.p, profit.y, income.i/;
+
+p.l(c) = 1;
+y.l(s) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+p.lo(c)  = 0.00001$(smax(h, alpha(c,h)) gt eps);
+
+*       fix the price of numeraire commodity:
+
+i.fx(h)$(ord(h) eq 1) = i.l(h);
+
+* For Cobb Douglas
+* esub(h) = 1;
+
+solve scarf using mcp;
+
+* save values for testing later
+parameter yLev(s);
+yLev(s) = y.l(s);
+
+* Now set up the equivalent model using emp
+
+variables z;
+equations objdef;
+
+* following works for Cobb Douglas functions (esub(h) = 1) and CES
+
+objdef..
+  z =e=
+  sum(h$(esub(h) ne 1), (i(h)/(1-esub(h)))*log(sum(c, alpha(c,h)*p(c)**(1-esub(h)))))
+
+  +sum(h$(esub(h) eq 1), i(h)*sum(c, alpha(c,h)*log(p(c))))
+
+  - sum(c, sum(h, e(c,h))*p(c));
+
+model scarfemp /objdef, profit, income/;
+
+* Set initial values for production (y) and other variables
+profit.m(s) = 1;
+p.l(c) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+file myinfo / '%emp.info%' /;
+put myinfo 'equilibrium';
+put      / 'max z p objdef profit';
+putclose / 'vi income i';
+
+solve scarfemp using emp;
+y.l(s) = -profit.m(s);
+abort$[smax{s, abs(yLev(s)-y.l(s))} > 1e-5] 'bad y level (equilibrium)',
+  y.l, yLev;
+
+* Now reproduce with single opt and dualEqu
+* Set initial values for production (y) and other variables
+profit.m(s) = 1;
+p.l(c) = 1;
+i.l(h) = sum(c, p.l(c) * e(c,h));
+
+putclose myinfo 'dualEqu income i';
+
+solve scarfemp using emp max z;
+y.l(s) = -profit.m(s);
+abort$[smax{s, abs(yLev(s)-y.l(s))} > 1e-5] 'bad y level (dualEqu)',
+  y.l, yLev;

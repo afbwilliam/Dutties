@@ -1,0 +1,245 @@
+*
+* optxpress.def
+*
+
+solnpool string 0 "" 1 4 solution pool file name
+advBasis boolean 0 0 1 6 use advanced basis provided by GAMS
+algorithm enumstr 0 "simplex" 1 6 choose between simplex and barrier algorithm
+ "barrier" 1 Use the barrier algorithm
+ "simplex" 1 Use the simplex algorithm
+backTrack integer -1 1 1 maxint 1 3 determines selection of next node in tree search
+barCrash integer -1 4 0 6 1 1 determines the type of crash used for the crossover from barrier
+barDualStop double -1 0 0 maxdouble 1 1 stopping tolerance for dual infeasibilities in barrier: 0=auto
+barGapStop double -1 0 0 maxdouble 1 1 stopping tolerance for relative duality gap in barrier: 0=auto
+barIndefLimit integer -1 15 1 maxint 1 1 limit consecutive indefinite barrier iterations that will be performed
+barIterLimit integer -1 0 0 maxint 1 1 maximum number of barrier iterations
+barOrder integer -1 0 0 3 1 1 controls the Cholesky factorization in barrier: 0=auto
+barOutput integer -1 1 0 1 1 1 controls the level of solution output from barrier
+barPresolveOps integer -1 0 0 2 0 1 controls the barrier-specific presolve operations
+barPrimalStop double -1 0 0 maxdouble 1 1 stopping tolerance for primal infeasibilities in barrier: 0=auto
+barStart integer -1 0 0 2 1 1 controls the computation of the barrier starting point: 0=auto
+barStepStop double -1 1e-10 0 maxdouble 1 1 stopping tolerance on the step size of the barrier search direction
+barThreads integer 0 0 0 maxint 1 1 number of threads for parallel barrier algorithm
+basisOut string -1 "" 1 6 directs optimizer to output an MPS basis file
+bigM double -1 0 0 maxdouble 1 2 infeasibility penalty used in the "big M" method
+bigMMethod boolean -1 0 1 2 controls use of "big M" method - 0=no, 1=yes
+breadthFirst integer -1 1 1 maxint 1 3 determines number of nodes to include in a breadth-first search
+coverCuts integer -1 0 0 maxint 1 3 number of rounds of lifted cover inequalities at the top node
+crash integer -1 0 0 maxint 1 6 control for basis crashing procedure
+crossover boolean -1 0 1 1 crossover control for barrier method
+cutDepth integer -1 0 -1 maxint 1 3 maximum depth in search tree at which cuts will be generated
+cutFreq integer -1 0 -1 maxint 1 3 frequency at which cuts are generated in the tree search
+cutStrategy integer -1 0 -1 2 1 3 specifies the cut strategy
+defaultAlg enumint -1 1 1 2 sets the default LP algorithm
+ 1 1 automatic
+ 2 1 dual simplex
+ 3 1 primal simplex
+ 4 1 Newton barrier
+degradeFactor double 0 0 0 maxdouble 0 3
+eigenvalueTol double -1 1e-6 0 maxdouble 1 2 zero tolerance for negative eigenvalues of quadratic matrices
+etaTol double -1 0 0 maxdouble 1 2 zero tolerance on eta elements
+extraCols integer -1 0 0 maxint 0 6
+extraElems integer -1 0 0 maxint 0 6
+extraPresolve integer -1 0 0 maxint 1 6 initial number of extra elements to allow for in the presolve
+extraRows integer -1 0 0 maxint 0 6
+feasTol double -1 1e-06 0 maxdouble 1 2 zero tolerance for RHS and bound values
+gomCuts integer -1 0 0 maxint 1 3 number of rounds of Gomery cuts at the top node
+heurThreads integer 0 0 0 maxint 1 3 number of threads for running root node heuristics
+ifCheckConvexity boolean -1 0 1 5 controls convexity check for QP models - 0=no, 1=yes
+intMax integer 0 0 0 maxint 0 3
+invertFreq integer -1 0 -1 maxint 1 2 frequency of basis re-inversion
+invertMin integer -1 0 0 maxint 1 2 minimum number of iterations between basis re-inversion
+loadMipSol boolean 0 0 1 3 loads a MIP solution (the initial point)
+lpIterLimit integer -1 0 0 maxint 1 6 set the iteration limit for simplex solves
+lpLog integer -1 0 minint maxint 1 2 print control for LP log
+matrixTol double -1 0 0 maxdouble 1 2 zero tolerance on matrix elements
+maxMipSol integer -1 0 0 maxint 1 3 maximum number of integer solutions in MIP tree search
+maxNode integer -1 0 0 maxint 1 3 maximum number of nodes to explore in MIP tree search
+mipAbsCutoff double -1 0 mindouble maxdouble 1 3 nodes with objective worse than this value are ignored
+mipAbsStop double -1 0 0 maxdouble 1 3 stopping tolerance for gap: if met XPRESS returns proven optimal
+mipAddCutoff double -1 0 mindouble maxdouble 1 3 amount to add to MIP incumbent to get the new cutoff
+mipCleanup boolean 0 1 1 3 clean up the MIP solution (round-fix-solve) to get duals
+mipLog integer -1 -100 minint 3 1 3 print control for MIP log
+mipPresolve integer -1 0 0 maxint 1 3 bitmap controlling the MIP presolve
+mipRelCutoff double -1 0 0 maxdouble 1 3 relative difference between the MIP incumbent and the new cutoff
+mipRelStop double -1 0 0 maxdouble 1 3 stopping tolerance for relative gap: if met XPRESS returns proven optimal
+mipTarget double 0 0 0 maxdouble 0 3
+mipThreads integer 0 0 0 maxint 1 3 number of threads for parallel mip algorithm
+mipTol double -1 5e-6 0 maxdouble 1 3 integrality tolerance for discrete vars
+mipTrace string 0 "" 1 3 name of MIP trace file
+mipTraceNode integer 0 100 0 maxint 1 3 node interval between MIP trace file entries
+mipTraceTime double 0 5 0 maxdouble 1 3 time interval, in seconds, between MIP trace file entries
+mpsNameLength integer -1 0 0 maxint 1 6 maximum number of integer solutions in MIP tree search
+mpsOutputFile string 0 "" 1 6 Name of MPS output file
+nodeSelection integer -1 1 1 4 1 3 sets node selection strategy
+objGoodEnough double 0 0 mindouble maxdouble 1 3 stop once an objective this good is found
+optimalityTol double -1 0 0 maxdouble 1 2 zero tolerance on reduced costs
+outputTol double -1 0 0 maxdouble 0 6
+penalty double -1 0 0 maxdouble 1 2 minimum absolute penalty variable coefficient used in the "big M" method
+pivotTol double -1 0 0 maxdouble 1 2 zero tolerance on pivot elements in simplex method
+preprobing enumint -1 -1 1 3 set per-node probing strategy for binary variables
+ -1 1 automatic
+ 0 1 disabled
+ 1 1 light probing
+ 2 1 full probing - all binaries examined
+ 3 1 full probing and repeat while effective
+presolve enumint -1 1 1 6 sets presolve strategy
+ 0 1 presolve not applied
+ 1 1 presolve applied
+ 2 1 presolve applied, but redundant bounds are not removed
+presolveOps integer -1 0 0 maxint 0 6
+pricingAlg integer -1 0 -1 1 1 2 determines the pricing method to use
+pseudoCost double -1 0 0 maxdouble 1 3 default pseudo-cost
+reform boolean 0 1 1 6 substitute out objective var and equ when possible
+relPivotTol double -1 0 0 maxdouble 1 2 minimum size of pivot element relative to largest element in column
+reRun boolean 0 0 1 6 rerun with primal simplex when not optimal/feasible
+reslim double 0 0 0 maxdouble 1 6 overrides GAMS reslim option
+scaling integer -1 0 0 maxint 1 6 bitmap control for internal scaling algorithm
+sleepOnThreadWait boolean -1 0 1 3 control behavior of waiting threads in a MIP solve
+threads integer 0 1 minint maxint 1 6 global default thread count
+trace boolean -1 0 1 6 turns on output of infeasibility diagnosis during presolve
+treeCoverCuts integer -1 0 0 maxint 1 3 number of rounds of lifted cover inequalities at tree nodes
+treeGomCuts integer -1 0 0 maxint 1 3 number of rounds of Gomery cuts at tree nodes
+secret strlist 0 0 6 pass on secret XPRESS options
+solnpoolCapacity integer 0 999999999 1 maxint 1 4 limit on number of solutions to store
+solnpoolCullDiversity integer -1 -1 -1 maxint 1 4 cull N solutions based on solution diversity
+solnpoolCullObj integer -1 -1 -1 maxint 1 4 cull N solutions based on objective values
+solnpoolCullRounds integer 0 999999999 0 maxint 1 4 terminate enumeration after N culling rounds
+solnpoolDupPolicy enumint -1 3 1 4 sets policy for detecting/storing duplicate solutions
+ 0 1 keep all
+ 1 1 compare all vars, exact matches discarded
+ 2 1 compare rounded discrete, exact continuous
+ 3 1 compare rounded discrete only
+solnpoolPop enumint 0 1 1 4 controls method used to populate the solution pool
+ 1 1 generate solutions using the normal search algorithm
+ 2 1 invoke the solution enumerator to generate solutions
+solnpoolPrefix string 0 "soln" 1 4 file name prefix for GDX solution files
+solnpoolVerbosity integer 0 0 -1 2 1 4 controls verbosity of solution pool routines
+sosRefTol double -1 0 0 maxdouble 0 3
+symmetry enumint -1 1 1 3 adjust overall effort in symmetry detection
+ 0 1 no symmetry detection
+ 1 1 conservative effort
+ 2 1 intensive symmetry search
+symSelect enumint -1 -1 1 3 adjust what is searched in symmetry detection
+ -1 1 automatic
+ 0 1 search the whole matrix (otherwise the 0, 1, and -1 coefs only)
+ 1 1 search all entities (otherwise binaries only)
+varSelection integer -1 1 1 6 1 3 determines how to use pseudo-costs
+workspace double 0 1 0 maxdouble 0 6
+writePrtSol boolean -1 0 1 6 directs optimizer to output a "printsol" file
+*
+* synonym section
+*
+ndsel2 synonym backTrack
+bmxitr synonym barIterLimit
+ifbigM synonym bigMMethod
+maxnbf synonym breadthFirst
+nitcov synonym coverCuts
+cross synonym crossover
+cutstrat synonym cutStrategy
+ialg synonym defaultAlg
+pseudo synonym degradeFactor
+zteta synonym etaTol
+ncxtra synonym extraCols
+nmxtra synonym extraElems
+nextra synonym extraPresolve
+nrxtra synonym extraRows
+ztolze synonym feasTol
+nitgom synonym gomCuts
+invfrq synonym invertFreq
+invmin synonym invertMin
+iterlim synonym lpIterLimit
+itrlog synonym lpLog
+ztolda synonym matrixTol
+maxsol synonym maxMipSol
+maxnod synonym maxNode
+cutoff synonym mipAbsCutoff
+addcut synonym mipAddCutoff
+gprint synonym mipLog
+ifintp synonym mipPresolve
+percut synonym mipRelCutoff
+objtar synonym mipTarget
+ztolis synonym mipTol
+rcnamelen synonym mpsNameLength
+output synonym mpsOutputFile
+ztcost synonym optimalityTol
+ztolpz synonym outputTol
+penlty synonym penalty
+ztolpv synonym pivotTol
+iphsf synonym pricingAlg
+rtolps synonym pseudoCost
+ztolrp synonym relPivotTol
+scale synonym scaling
+itrace synonym trace
+ntrcov synonym treeCoverCuts
+ntrgom synonym treeGomCuts
+ztolst synonym sosRefTol
+kcritm synonym varSelection
+fprint synonym writePrtSol
+*
+* indicator section
+*
+indic  indicator
+*
+* deprecated section
+*
+XPRESS_X deprecated
+ degradeFactor option ignored - accepted for backwards compat only
+ intMax not needed anymore - will be ignored
+ mipTarget option ignored - accepted for backwards compat only
+ workspace not needed anymore - will be ignored
+ ndsel2
+ bmxitr
+ ifbigM
+ maxnbf
+ nitcov
+ cross
+ cutstrat
+ pseudo
+ ialg
+ zteta What message will come out here fdor zteta??
+ ncxtra
+ nmxtra
+ nextra
+ nrxtra
+ ztolze
+ nitgom
+ invfrq
+ invmin
+ itrlog
+ ztolda
+ maxsol
+ maxnod
+ addcut What message will come out here for addcut??
+ gprint
+ ifintp
+ percut
+ objtar
+ ztolis
+ rcnamelen
+ output
+ ztcost
+ ztolpz
+ penlty
+ ztolpv
+ iphsf
+ rtolps
+ ztolrp
+ scale
+ ztolst
+ itrace
+ ntrcov
+ ntrgom
+ kcritm
+ fprint
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+barrier group 1 1 Newton-barrier Options
+LP group 2 1 LP Options
+MIP group 3 1 MIP Options
+solnpool group 4 1 MIP Solution Pool Options
+QP group 5 1 QP Options
+general group 6 1 General Options
+*** End of file

@@ -1,0 +1,160 @@
+$Title  The Five Leaper Tour Problem (FIVELEAP,SEQ=268)
+$ontext
+
+Just as the knight makes moves of length root-5 that have coordinates {1,2}, a
+fiveleaper is a type of generalized knight that makes moves of length 5 units,
+with coordinates either {0,5} or {3,4}. In either event the Euclidean distance
+traveled is five squares.
+
+A tour requires that the fiveleaper visits every square on a board once and once
+only using legal moves. The start and finish squares must be separated by a
+legal move and the fiveleaper could close the tour by making this final move.
+
+Run with parameters NROW, NCOL (size of chess board, default 8x8), and MAXCUT
+(maximum number of subtour elimination cuts, default 500). For example,
+
+gams fiveleap --NROW=10 --NCOL=10 --MAXCUT=1000
+
+More information on leapers at http://www.chlond.demon.co.uk/academic/puzzles.html/
+
+
+Chlond, M J, Daniel, R C, and Heipcke, S, Fiveleapers a-leaping.
+http://www.chlond.demon.co.uk/academic/puzzles.html
+
+Gueret, C, Prins, C, and Sevaux, M, Applications of Optimization with Xpress-MP,
+Translated and revised by Susanne Heipcke. Dash Optimization, 2002.
+
+$offtext
+
+$eolcom //
+$if not set NCOL   $set NCOL 8
+$if not set NROW   $set NROW 8
+$if not set MAXCUT $set MAXCUT 500
+
+Set r          Rows         / 1*%NCOL% /
+    c          Columns      / 1*%NROW% /
+    ss(r,c)    Start Square / '1'.'1' /
+    m(r,c,r,c) Legal Moves
+
+Alias (r,rp), (c,cp);
+
+Variable xm(r,c,r,c) Moves of a tour
+         nm(r,c)     Number of move
+         z           dummy objective variable
+Binary Variable xm
+Positive Variable nm
+
+Set nn            Subtour elimination cuts /1*%MAXCUT%/
+    t(nn,r,c,r,c) Subtour
+    n(nn)         Active cuts
+Parameter
+    l(nn)         Length of subtour
+
+Equation obj               Dummy objective
+         deffrom(r,c)      Each square precedes one other
+         defto(r,c)        Each square is preceded by one other
+         deforder(r,c,r,c) Order the moves
+         defsecut(nn)      Subtour elimination constraint;
+
+obj..          z =e= sum(m, xm(m));
+
+deffrom(r,c).. sum(m(r,c,rp,cp), xm(m)) =e= 1;
+
+defto(rp,cp).. sum(m(r,c,rp,cp), xm(m)) =e= 1;
+
+deforder(m(r,c,rp,cp))$(not ss(rp,cp))..
+               nm(r,c) - nm(rp,cp) =l= %NCOL%*%NROW%*(1-xm(m))-1;
+
+defsecut(n)..  sum(t(n,m), xm(m)) =l= l(n)-1;
+
+model leaper   closed formulation of 5 leaper  /obj, deffrom, defto, deforder/
+      leaperSE subtour elimination formulation /obj, deffrom, defto, defsecut/
+;
+
+m(r,c,rp,cp) = sqr(ord(r)-ord(rp)) + sqr(ord(c)-ord(cp)) = 25; // possible moves
+
+
+Set NoExit(r,c) Squares that don't allow any moves;
+NoExit(r,c) = sum(m(r,c,rp,cp),1) = 0; abort$card(NoExit) NoExit;
+
+Parameter leaperTour(r,c) Leaper Solution
+          SolRep Solution timing report;
+
+option solprint=off, limrow=0, limcol=0, t:0:0:1, leaperTour:0:1:1;
+
+SolRep('%NCOL%x%NROW%','#Moves')  = card(m);
+
+nm.fx(ss) = 1;      // We start the leaper tour from the start square = 1,1
+leaper.reslim  = 60; // Run the closed leaper formulation for at most 60 seconds
+solve leaper minimizing z using mip;
+
+if (leaper.modelstat=%modelstat.Optimal% or
+    leaper.modelstat=%modelstat.IntegerSolution%, // Did we find an integer solution?
+  leaperTour(r,c) = nm.l(r,c);
+  SolRep('Closed','Time') = leaper.resusd;
+  display 'Closed Formulation Tour', leaperTour
+else
+  SolRep('Closed','Time') = NA;
+  display 'No Solution for closed leaper model'
+)
+
+Set    from(r,c), to(r,c) tour searching sets
+       nl(nn)        Last Active cuts
+       visited(r,c)  Squares visited in tour search
+Scalar ntours  Number of tours in current solution
+       ttours  Total number of tours /0/;
+
+
+SolRep('SubTour','Time') = 0;
+leaperSE.solprint = %solprint.Quiet%; // Don't give any solver output
+
+* Initialize the subtour elimination data structures
+nl('1')   = yes;
+n(nn)     = no;
+t(nn,m)   = no;
+l(nn)     = 0;
+
+repeat
+  solve leaperSE minimizing z using mip;
+  abort$(leaperSE.modelstat <> %modelstat.Optimal% and
+         leaperSE.modelstat <> %modelstat.IntegerSolution% ) 'No integer solution found!', t;
+  SolRep('SubTour','Time') = SolRep('SubTour','Time') + leaperSE.resusd;
+  xm.l(m) = round(xm.l(m));
+
+  ntours = 0;
+  visited(r,c) = no;
+
+  loop((r,c)$(not visited(r,c)), // Loop through all unvisited squares
+    ntours    = ntours + 1;
+    nl(nn)    = nl(nn-1);
+    n(nl)     = yes;
+    l(nl)     = 0;
+    from(r,c) = yes;             // Start the (sub)tour
+    repeat
+      visited(from) = yes;
+      to(rp,cp)     = sum(m(from,rp,cp), xm.l(m));  // Where does the move go
+      t(nl,from,to) = yes;
+      l(nl)         = l(nl)+1;
+      from(rp,cp)   = to(rp,cp); // The destination of the move becomes the
+                                 // origin of the next move
+    until sum(visited(to),1);
+    from(r,c) = no;
+  );
+  ttours = ttours + ntours;
+  abort$(ttours > card(nn)) 'Cut set nn too small', t,n;
+until ntours = 1;
+
+SolRep('SubTour','Iterations') = leaperSE.number;
+SolRep('SubTour','#SubTours')  = ttours;
+
+* Construct the leaper tour
+Scalar nmove number of move /0/;
+from(ss) = yes;
+repeat
+  nmove     = nmove + 1;
+  to(rp,cp) = sum(m(from,rp,cp),xm.l(m));
+  leaperTour(from) = nmove;
+  from(r,c) = to(r,c);
+until to('1','1');
+
+display 'SubTour Elimination Tour', leaperTour, SolRep;

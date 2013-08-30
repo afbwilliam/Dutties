@@ -1,0 +1,24 @@
+$TITLE 'Generate test data for write4 test of gdxMrw' (GENW4,SEQ=246)
+
+set theseUnitedStates / 'delaware', 'state02' * 'state49', 'hawaii' /;
+alias (theseUnitedStates,s);
+set
+    i1(s) / delaware, hawaii /,
+    i2(s),
+    i3(s);
+parameter
+    long_ugly_nameXXXX(s),
+    v(s),
+    dat3(s,s,s);
+
+v(s) = ord(s)-1;
+long_ugly_nameXXXX(s) = ord(s)+4;
+i2(s) = i1(s);
+i3(s) = i1(s);
+dat3(i1,i2,i3) = v(i1)*10000 + v(i2)*100 + v(i3);
+execute_unload 'write4a_.gdx', long_ugly_nameXXXX, dat3;
+
+parameter statehood(s,s,s,s,s,s,s,s,s,s);
+statehood(s,s,s,s,s,s,s,s,s,s)$[sameas(s,'delaware')] = 1787;
+statehood(s,s,s,s,s,s,s,s,s,s)$[sameas(s,'hawaii')]   = 1959;
+execute_unload 'write4b_.gdx', statehood;

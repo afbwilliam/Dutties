@@ -1,0 +1,7 @@
+$title split the file name and recombine (SET7,SEQ=44)
+$ondollar
+$set path %system.fp%
+$set name %system.fn%
+$set ext  %system.fe%
+$if NOT "%system.incname%" == "%path%%name%%ext%" $error should be %system.incname%
+$show

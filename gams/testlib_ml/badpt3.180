@@ -1,0 +1,58 @@
+$title 'Test rejection of models with generation errors' (BADPT3,SEQ=180)
+
+$ontext
+In this model we check how GAMS/Base treats models
+with gradient eval errors at the initial point.  It should pass them on to
+the solver without any special prompting.
+
+Contributor: Steve Dirkse, Nov 2004
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar
+    tol     /    %TESTTOL% /;
+
+variable y, z;
+equation f, g;
+
+f..     z =e= sqrt(y);
+g..     sqr(y) =g= 1;
+
+model rootzero / f,g /;
+rootzero.optcr = 0;
+y.l = 0;
+
+scalar haveBaron / 0 /;
+$if NOT SOLVER baron $goto NO_BARON
+haveBaron = 1;
+y.lo = 0;
+y.up = 100;
+option nlp = baron, optcr = 0, optca = 0;
+$goto HAVE_SOLVER
+
+$label NO_BARON
+$if NOT SOLVER pathnlp $exit
+option nlp = pathnlp;
+* bounds will cause PATHNLP to shift the initial iterate
+* if the initial point it gets is bad
+y.lo = -INF;
+y.up = +INF;
+
+$label HAVE_SOLVER
+
+solve rootzero using nlp min z;
+if {haveBaron,
+  abort$(rootzero.solvestat <> %solvestat.NormalCompletion% or rootzero.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+  abort$(rootzero.numnopt  <> 0) '    NONOPT flags set';
+  abort$(rootzero.numinfes <> 0) 'INFEASIBLE flags set';
+  abort$(abs(y.l-1) > tol)   'bad solution: y.l ', y.l;
+  abort$(abs(y.m) > tol)     'bad solution: y.m ', y.m;
+  abort$(abs(z.l-1) > tol)   'bad solution: z.l ', z.l;
+  abort$(abs(z.m) > tol)     'bad solution: z.m ', z.m;
+  abort$(abs(f.l) > tol)     'bad solution: f.l ', f.l;
+  abort$(abs(f.m-1) > tol)   'bad solution: f.m ', f.m;
+  abort$(abs(g.l-1) > tol)   'bad solution: g.l ', g.l;
+  abort$(abs(g.m-.25) > tol) 'bad solution: g.m ', g.m;
+else
+  abort$(rootzero.solvestat <> %solvestat.SetupFailure% or rootzero.modelstat <> %modelstat.NoSolutionReturned%) 'wrong status codes';
+};

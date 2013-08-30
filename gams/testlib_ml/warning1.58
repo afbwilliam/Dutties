@@ -1,0 +1,5 @@
+$title set limit on compilation warnings with WARNING=n (WARNING1,SEQ=58)
+$ondollar
+$echo $warning > temp.gms
+$call =gams temp.gms warnings=0 lo=2
+$if not errorlevel 1 $error should have triggered and error but is %system.errorlevel%

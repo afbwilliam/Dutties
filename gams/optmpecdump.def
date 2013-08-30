@@ -1,0 +1,11 @@
+*
+* optmpecdump.def
+*
+
+matlab string 0 "" 1 1 output problem data in Matlab input format
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General options
+*** End of file

@@ -1,0 +1,77 @@
+$title Test .local in different context $on/offlocal (LOCAL01,SEQ=430)
+
+$ontext
+
+ $onlocal allows unlimited nextion  (default)
+ $offlocal limits .local on the same symbol to one in control stack
+
+Contributor: Alex
+
+$offtext
+
+
+set i /1*3/; alias (i,j,k)
+ set aa(i,j)/ 1.1, 2.2, 1.3 /;
+ parameter xxx(i,j) / 1.1 1, 2.2 2, 3.3 3, 1.3 13, 3.2 32 /,bb(i) / 1
+ 1, 2 1, 3 3 /;
+ parameter f(i),ff(i),fdif(i),g(i,i),gg(i,i),gdif(i,i);
+
+$macro gtest gdif(i,j) = g(i,j) xor gg(i,j); abort$card(gdif) gdif,gg,g
+$macro ftest fdif(i)   = f(i)   xor ff(i);   abort$card(fdif) fdif,ff,f
+
+
+option clear=gg; gg(i-1,j)      = xxx(j,j); display gg;
+option clear=g;  g(i-1,i.local) = xxx(i,i); gtest;
+
+option clear=gg; gg(i,j-1)      = xxx(j,j); display gg;
+option clear=g;  g(i,i.local-1) = xxx(i,i); gtest;
+
+option clear=gg; gg(aa(i,j-1))      = xxx(j,j); display gg;
+option clear=g;  g(aa(i,i.local-1)) = xxx(i,i); gtest;
+
+option clear=gg; gg(i,j)      = xxx(j,j); display gg;
+option clear=g;  g(i,i.local) = xxx(i,i); gtest;
+
+option clear=g; loop(i, g(i,j)       = xxx(j,j));  gtest;
+option clear=g; loop(i, g(i,i.local) = xxx(i,i));  gtest;
+
+option clear=gg;  gg(i,j)$aa(i,j)   = xxx(j,j); display gg;
+option clear=g;  g(aa(i,i.local)) = xxx(i,i);  gtest;
+
+option clear=gg; loop(i, gg(aa(j,j)) = xxx(j,j)); display gg;
+option clear=g; loop(i, g(aa(i.local,i)) = xxx(i,i));  gtest;
+
+option clear=gg;  gg(i,j)$aa(i,j)  = xxx(j,j); display gg;
+option clear=g;   g(aa(i,i.local)) = xxx(i,i); gtest;
+
+option clear=ff; ff(j) = sum(i, xxx(i,i)); display ff;
+option clear=f;  f(j)  = sum(j.local, xxx(j,j)); ftest;
+
+option clear=ff; ff(j) = sum(i$aa(i,i), xxx(i,i)); display ff;
+option clear=f;  f(j)  = sum(j.local$aa(j,j), xxx(j,j)); ftest;
+
+option clear=ff; ff(j) = sum(aa(i,i), xxx(i,i)); display ff;
+option clear=f;  f(j)  = sum(aa(j.local,j), xxx(j,j)); ftest;
+option clear=f;  f(j.local)  = sum(aa(j.local,j), xxx(j,j)); Ftest;
+
+option clear=ff; ff(j) = sum(aa(i,k), xxx(k,k)); display ff;
+option clear=f;  f(j)  = sum(aa(j.local,j.local), xxx(j,j)); ftest;
+option clear=f;  f(j)  = sum((k,j.local)$aa(k,j), xxx(j,j)); ftest;
+
+option clear=ff; ff(j) = sum((i,k)$aa(k,k), xxx(k,k)); display ff;
+option clear=f; f(j) = sum((j.local,j.local)$aa(j,j), xxx(j,j));
+ftest;
+
+option clear=ff; ff(j) = sum(aa(i,k), xxx(k,k)); display ff;
+option clear=f; f(j) = sum(aa(j.local,j.local), xxx(j,j)); ftest;
+
+abort.noerror 'leave before we have bad code';
+$if not errorfree $abort this should never happen
+gg(i,j) = xxx(i.local,j);
+$if errorfree $abort missing error message
+$clearerrors
+
+$offlocal
+f(j.local)  = sum(aa(j.local,j), xxx(j,j));
+$if errorfree $abort should have reported local nesting
+$clearerrors

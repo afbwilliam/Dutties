@@ -1,0 +1,57 @@
+$Title Simple newsboy problem, discrete (NBSIMPLE,SEQ=85)
+
+$ontext
+
+Simple newsboy problem
+Random paramters D is discrete
+
+$offtext
+
+Scalar  c       Purchase costs per unit                                 / 30 /
+        p       Penalty shortage cost per unit unsatisfied demand       /  5 /
+        h       Holding cost per unit leftover                          / 10 /
+        v       Revenue per unit sold                                   / 60 /
+*       Random parameters
+        d       Demand                                                  / 63 /;
+
+Variable Z Profit;
+Positive Variables
+         X Units bought
+         I Inventory
+         L Lost sales
+         S Units sold;
+
+Equations Row1, Row2, Profit;
+
+* demand = UnitsSold + LostSales
+Row1.. d =e= S + L;
+
+* Inventory = UnitsBought = UnitsSold
+Row2.. I =e= X - S;
+
+* Profit, to be maximized;
+Profit..  Z =e= v*S - c*X - h*I - p*L;
+
+Model nb / all /;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$onput
+randvar d normal 45 10
+stage 2 I L S d
+stage 2 Row1 Row2
+$offput
+putclose emp;
+
+Set scen        Scenarios / s1*s6 /;
+Parameter
+    s_d(scen)   Demand realization by scenario
+    s_x(scen)   Units bought by scenario
+    s_s(scen)   Units sold by scenario;
+
+Set dict / scen .scenario.''
+           d    .randvar .s_d
+           s    .level   .s_s
+           x    .level   .s_x /;
+
+solve nb max z use emp scenario dict;
+Display s_d, s_x, s_s;

@@ -1,0 +1,70 @@
+$TITLE Termination routine to ensure solvers stay with resource limit (SCHULZ,SEQ=322)
+$ontext
+Sometimes experimental solvers do not terminate in the prespecified
+time limit or at all. Running batches of models with such a solver
+(e.g. for performance testing) requires frequent attention (to
+terminate the hanging process). This little GAMS program scans the
+list of processes and checks if the CPU time exceedes the preset
+limit. If the time is exceeded 'schulz' sends a terminate signal to
+the process.
+
+gams schulz --watch ^gms --res 1010 --sleep 60
+
+--watch the process names to watch (argument is a regular expression)
+
+--res   the maximum time available to a watched process before sending a
+        termination signal. (in seconds)
+
+--sleep frequency of checking processes (in seconds)
+
+The parameters in the example call of 'schulz' represent the defaults
+for the options.
+
+Terminate 'schulz' with Ctrl-C.
+$offtext
+
+$if not set sleep   $set sleep   60
+$if not set res     $set res   1010
+$if not set watch   $set watch ^gms
+
+$set vbs  '"%gams.scrdir%runp.vbs"'
+$set ptxt '"%gams.scrdir%p.%gams.scrext%"'
+$set rgms '"%gams.scrdir%runp.%gams.scrext%"'
+$set kill taskkill /F /PID
+$if %system.filesys% == UNIX $set kill kill -9
+
+* Visual Basic Script  for Windows to list all processes
+$onecho > %vbs%
+Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
+Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_Process",,48)
+For Each Process in colItems
+    Wscript.Echo Process.Name & "," & Process.ProcessID & " " & (Process.UserModeTime/1e7)
+Next
+$offecho
+
+* GAMS Program that determines the running processes that match our watch
+$onecho > %rgms%
+$offlisting
+set p / 0*99999/, pover(p);
+$onempty
+parameter pactive(p) /
+$if not %system.filesys% == UNIX $call cscript %vbs% | grep "%watch%" | cut -d, -f2- > %ptxt%
+$if     %system.filesys% == UNIX $call ps -eofname,pid,time | grep %watch% | sed s/:/" "/g | awk '{print $2 " " ($3*3600+$4*60+$5)}' > %ptxt%
+$include %ptxt%
+/;
+$offempty
+pover(p) = pactive(p)>%res%;
+execute_unload "pover", pactive, pover;
+$offecho
+
+set p / 0*99999/, pover(p); Parameter pactive(p);
+file flog /''/, fexec;
+repeat
+  execute 'sleep %sleep% && gams %rgms% lo=0';
+  execute_load 'pover', pover, pactive;
+  putclose$card(pactive) flog / '---- Active processes:'
+  loop(p$pactive(p), putclose ' ':6 p.tl:6 ' ' pactive(p):5:0 'secs');
+  putclose$card(pover) flog / '---- Terminating processes:'
+  loop(p$pover(p), put_utility fexec 'exec' / '%kill% ' p.tl:0 );
+until errorlevel;
+execute 'rm -f %vbs%'

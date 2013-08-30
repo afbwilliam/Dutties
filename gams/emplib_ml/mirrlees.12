@@ -1,0 +1,55 @@
+$title Simple Nonconvex Bilevel Programming Example (MIRRLEES,12)
+
+$ontext
+
+This simple nonconvex example is borrowed from
+
+J. A. Mirrlees. The theory of moral hazard and unobservable bevaviour:
+part I. Review of Economic Studies, 66: 3-21, 1999.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+Equations
+   outerobj
+   innerobj;
+
+Variables
+   out
+   in;
+
+Positive Variables
+   x
+   y;
+
+Scalar coef;
+
+outerobj.. out =e= sqr(y-2) + sqr(x-1);
+
+innerobj..  in =e= -y*exp(-sqr(x+1)) - exp(-sqr(x-1));
+
+model outer / outerobj /
+      inner / innerobj /
+      emp   / outer, inner /;
+
+* Solve the model by reformulating it into a
+* Mathematical Programs with Equilibrium Constraints (MPEC)
+Equations dLdy;
+dLdy.. (1 + x)*exp(-sqr(1 + x))*y + (x - 1)*exp(-sqr(x - 1)) =N= 0;
+
+model bilevel / outer, dLdy.y /;
+solve bilevel using mpec minimizing out;
+scalar out_l,x_l,y_l;
+out_l = out.l;
+x_l   = x.l;
+y_l   = y.l;
+
+* Do this reformulation automatically using EMP
+$echo bilevel y min in * innerobj > "%emp.info%"
+solve emp using emp minimizing out;
+
+scalar tol /1e-6/;
+abort$(  abs(out_l - out.l)
+       + abs(x_l   - x.l)
+       + abs(y_l   - y.l) > tol) 'Solutions differ';

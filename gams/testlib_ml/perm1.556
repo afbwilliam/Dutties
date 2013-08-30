@@ -1,0 +1,154 @@
+$title Test for various permutations (PERM1,SEQ=556)
+
+$ontext
+Contributor: Michael Bussieck
+$offtext
+
+* part 1
+set i / i1*i3 /;
+* Set i consists of i1 i2 i3. Since sets can be reordered, we need a second index
+* to represent a permutation
+set perm1(i,i) / i1.i2, i2.i1, i3.i3 /;
+* This set represents in cycle notation: (1 2)(3)
+
+* Using the factorial we can compute the number of all possible
+* permutations of i: 3! = 3*2*1 = 6
+$eval pmax fact(card(i))
+set p permutation index /p1*p%pmax%/;
+
+* For this small set i we can write them all down
+set table pall(p,i,i)
+       i1  i2  i3
+p1.i1   1
+p1.i2       1
+p1.i3           1
+
+p2.i1   1
+p2.i2           1
+p2.i3       1
+
+p3.i1       1
+p3.i2   1
+p3.i3           1
+
+p4.i1       1
+p4.i2           1
+p4.i3   1
+
+p5.i1           1
+p5.i2   1
+p5.i3       1
+
+p6.i1           1
+p6.i2       1
+p6.i3   1
+;
+
+* There is also special GAMS syntax to produce the set pall from the set p and i
+set pall2(p,i,i); option pall2 > i;
+
+* The order of the permutation depends on how we generate them, but will still
+* compare pall and pall2
+alias (i,ii);
+set error01(p,i,i); error01(p,i,ii) = pall(p,i,ii) xor pall(p,i,ii);
+abort$card(error01) 'permutation pall and pall2 differ', error01;
+
+* This syntax is not limited to one dimensional sets i, we can do the same with
+* multidimensional sets:
+
+set j / j1*j2 /, k / k1*k5 /
+    jk(j,k) / j1.k3, j1.k5, j2.k1 /;
+
+* jk is a three element set, so we will have 3! = 3*2*1 = 6 permutations
+* so we can use the p index to represent all permutations
+set pjkall(p,j,k,j,k); option pjkall > jk;
+
+execute_unload 'jk', pjkall;
+execute_load 'jk', pjkall;
+
+* pikall will have j1.k3 -> j1.k3, j1.k5 -> j1.k5, j2.k1 -> j2.k1
+*                  j1.k3 -> j1.k3, j1.k5 -> j2.k1, j2.k1 -> j1.k5
+*                  j1.k3 -> j1.k5, j1.k5 -> j1.k3, j2.k1 -> j2.k1
+*                  ...
+
+* We can use our pall set to verify this
+set ijk(i,j,k) / #i:#jk /;
+set pjkall2(p,j,k,j,k);
+
+loop(pall(p,i,ii),
+  pjkall2(p,jk,j,k)$ijk(i,jk) = sum(ijk(ii,j,k),1));
+
+set error02(p,j,k,j,k); error02(p,jk,j,k) = pjkall(p,jk,j,k) xor pjkall2(p,jk,j,k);
+abort$card(error02) 'permutation pjkall and pjkall2 differ', error02;
+
+* We can permute set elements using a second index as seen above, but we can
+* also permute numerical data in a GAMS parameter.
+
+Parameter a(i) /i1 1, i2 2, i3 3/;
+
+* Here we do not need to have another index we can just represent the
+* permutations in the following way
+
+Table paall(p,i)
+       i1  i2  i3
+p1      1   2   3
+p2      1   3   2
+p3      2   1   3
+p4      2   3   1
+p5      3   1   2
+p6      3   2   1
+;
+
+Parameter paall2(p,i); option paall2 > a;
+
+set error03(p,i); error03(p,i) = paall(p,i) <> paall2(p,i);
+abort$card(error03) 'paall and paall2 differ', error03, paall, paall2;
+
+* Note that we can also compute the data permutation from the set permuatation
+Parameter paall3(p,i);
+paall3(p,i) = sum(pall(p,i,ii), a(ii));
+
+set error04(p,i); error04(p,i) = paall(p,i) <> paall3(p,i);
+abort$card(error04) 'paall and paall3 differ', error03, paall, paall3;
+
+* Again data permutations can be also done for multi dimensional parameters
+Parameter b(j,k) /j1.k3 1, j1.k5 2, j2.k1 3/;
+Table pball(p,j,k)
+       j1.k3 j1.k5 j2.k1
+p1      1     2     3
+p2      1     3     2
+p3      2     1     3
+p4      2     3     1
+p5      3     1     2
+p6      3     2     1
+;
+
+Parameter pball2(p,j,k); option pball2 > b;
+
+execute_unload 'jk', pball2;
+execute_load 'jk', pball2;
+
+set error05(p,j,k); error05(p,jk) = pball(p,jk) <> pball2(p,jk);
+abort$card(error05) 'pball and pball2 differ', error05, pball, pball2;
+
+* With the data permutation there is one particularity. If the data contain
+* a number twice, for example
+Parameter c(i) /i1 1, i2 1, i3 3/;
+
+* The GAMS permutation does not fold the permutations that result in the
+* same data record. So we have again 6 permutations where p1=p3, p2=p4 and p5=p6
+
+Table pcall(p,i)
+       i1  i2  i3
+p1      1   1   3
+p2      1   3   1
+p3      1   1   3
+p4      1   3   1
+p5      3   1   1
+p6      3   1   1
+;
+
+Parameter pcall2(p,i); option pcall2 > c;
+
+set error06(p,i); error06(p,i) = pcall(p,i) <> pcall2(p,i);
+abort$card(error06) 'pcall and pcall2 differ', error06, pcall, pcall2;

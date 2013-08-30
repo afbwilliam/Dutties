@@ -1,0 +1,122 @@
+$title Test model attribute TryLinear (TRYLIN01,SEQ=482)
+
+$ontext
+Run trnsport with transport.trylinear = 1 using different combinations of model
+types, solvers, and solvelink choices and make sure the final model type and
+solver used is correct
+
+Contributor: Jan-H. Jagla, April 2010
+$offtext
+
+$onecho > trnstl.gms
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka / ;
+  Parameters
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        2.5           1.8          1.4  ;
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+            c(i,j) = f * d(i,j) / 1000 ;
+  Variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+  Positive Variable x ;
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j ;
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+  Model transport /all/ ;
+  transport.trylinear = 1;
+  Solve transport using %MTYPE% minimizing z ;
+$offecho
+
+$onechoV > tlscript.gms
+$log --MTYPE=%2 %3=%4 solvelink=%5
+$call gams trnstl lo=2 --MTYPE=%2 %3=%4 solvelink=%5
+$echo %3  > shouldbe.txt
+$echo %4 >> shouldbe.txt
+$if x%1x%5x == x1x5x $echo '--- Reset Solvelink = 2' >> shouldbe.txt
+$call grep "^     TYPE    " trnstl.lst | tr -s " " | cut -d" " -f3  > is.txt
+$call grep "^     SOLVER  " trnstl.lst | tr -s " " | cut -d" " -f3 >> is.txt
+$if x%1x%5x == x1x5x $call grep "^--- Reset Solvelink" trnstl.log >> is.txt
+$call diff -bw shouldbe.txt is.txt
+$if errorlevel 1 $abort --MTYPE=%2 %3=%4 solvelink=%5 failed
+$offecho
+
+$batinclude tlscript.gms 1 QCP    LP   BDMLP  %Solvelink.ChainScript%
+$batinclude tlscript.gms 1 NLP    LP   BDMLP  %Solvelink.ChainScript%
+$batinclude tlscript.gms 1 DNLP   LP   BDMLP  %Solvelink.ChainScript%
+$batinclude tlscript.gms 1 RMIQCP RMIP BDMLP  %Solvelink.ChainScript%
+$batinclude tlscript.gms 1 RMINLP RMIP BDMLP  %Solvelink.ChainScript%
+$batinclude tlscript.gms 1 MIQCP  MIP  BDMLP  %Solvelink.ChainScript%
+$batinclude tlscript.gms 1 MINLP  MIP  BDMLP  %Solvelink.ChainScript%
+
+$batinclude tlscript.gms 1 QCP    LP   BDMLP  %Solvelink.CallScript%
+$batinclude tlscript.gms 1 NLP    LP   BDMLP  %Solvelink.CallScript%
+$batinclude tlscript.gms 1 DNLP   LP   BDMLP  %Solvelink.CallScript%
+$batinclude tlscript.gms 1 RMIQCP RMIP BDMLP  %Solvelink.CallScript%
+$batinclude tlscript.gms 1 RMINLP RMIP BDMLP  %Solvelink.CallScript%
+$batinclude tlscript.gms 1 MIQCP  MIP  BDMLP  %Solvelink.CallScript%
+$batinclude tlscript.gms 1 MINLP  MIP  BDMLP  %Solvelink.CallScript%
+
+$batinclude tlscript.gms 1 QCP    LP   BDMLP  %Solvelink.CallModule%
+$batinclude tlscript.gms 1 NLP    LP   BDMLP  %Solvelink.CallModule%
+$batinclude tlscript.gms 1 DNLP   LP   BDMLP  %Solvelink.CallModule%
+$batinclude tlscript.gms 1 RMIQCP RMIP BDMLP  %Solvelink.CallModule%
+$batinclude tlscript.gms 1 RMINLP RMIP BDMLP  %Solvelink.CallModule%
+$batinclude tlscript.gms 1 MIQCP  MIP  BDMLP  %Solvelink.CallModule%
+$batinclude tlscript.gms 1 MINLP  MIP  BDMLP  %Solvelink.CallModule%
+
+$batinclude tlscript.gms 1 QCP    LP   BDMLP  %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 1 NLP    LP   BDMLP  %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 1 DNLP   LP   BDMLP  %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 1 RMIQCP RMIP BDMLP  %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 1 RMINLP RMIP BDMLP  %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 1 MIQCP  MIP  BDMLP  %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 1 MINLP  MIP  BDMLP  %Solvelink.LoadLibrary%
+
+* Now try solvers that support in-core communication (solvelink=5)
+$batinclude tlscript.gms 2 QCP    LP   CONOPT %Solvelink.ChainScript%
+$batinclude tlscript.gms 2 NLP    LP   CONOPT %Solvelink.ChainScript%
+$batinclude tlscript.gms 2 DNLP   LP   CONOPT %Solvelink.ChainScript%
+$batinclude tlscript.gms 2 RMIQCP RMIP CONOPT %Solvelink.ChainScript%
+$batinclude tlscript.gms 2 RMINLP RMIP CONOPT %Solvelink.ChainScript%
+$batinclude tlscript.gms 2 MIQCP  MIP  CPLEXD %Solvelink.ChainScript%
+$batinclude tlscript.gms 2 MINLP  MIP  CPLEXD %Solvelink.ChainScript%
+
+$batinclude tlscript.gms 2 QCP    LP   CONOPT %Solvelink.CallScript%
+$batinclude tlscript.gms 2 NLP    LP   CONOPT %Solvelink.CallScript%
+$batinclude tlscript.gms 2 DNLP   LP   CONOPT %Solvelink.CallScript%
+$batinclude tlscript.gms 2 RMIQCP RMIP CONOPT %Solvelink.CallScript%
+$batinclude tlscript.gms 2 RMINLP RMIP CONOPT %Solvelink.CallScript%
+$batinclude tlscript.gms 2 MIQCP  MIP  CPLEXD %Solvelink.CallScript%
+$batinclude tlscript.gms 2 MINLP  MIP  CPLEXD %Solvelink.CallScript%
+
+$batinclude tlscript.gms 2 QCP    LP   CONOPT %Solvelink.CallModule%
+$batinclude tlscript.gms 2 NLP    LP   CONOPT %Solvelink.CallModule%
+$batinclude tlscript.gms 2 DNLP   LP   CONOPT %Solvelink.CallModule%
+$batinclude tlscript.gms 2 RMIQCP RMIP CONOPT %Solvelink.CallModule%
+$batinclude tlscript.gms 2 RMINLP RMIP CONOPT %Solvelink.CallModule%
+$batinclude tlscript.gms 2 MIQCP  MIP  CPLEXD %Solvelink.CallModule%
+$batinclude tlscript.gms 2 MINLP  MIP  CPLEXD %Solvelink.CallModule%
+
+$batinclude tlscript.gms 2 QCP    LP   CONOPT %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 2 NLP    LP   CONOPT %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 2 DNLP   LP   CONOPT %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 2 RMIQCP RMIP CONOPT %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 2 RMINLP RMIP CONOPT %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 2 MIQCP  MIP  CPLEXD %Solvelink.LoadLibrary%
+$batinclude tlscript.gms 2 MINLP  MIP  CPLEXD %Solvelink.LoadLibrary%

@@ -1,0 +1,36 @@
+$title 'Test merge with $onmulti and empty data statement' (ONMULTI7,SEQ=491)
+
+$ontext
+Trac #1914: An empty data statement under $onmulti removes previous data
+Found with one of Goldsteins models
+
+Contributor: Alex Meeraus
+$offtext
+
+$onmulti
+$phantom empty
+parameter a / empty 0 /;
+parameter a / one 1 /;
+parameter a / one 1.5 /;
+parameter a / empty 0 /;
+if(a('one') <> 1.5, display a; execerror=execerror+1 );
+
+variable x(*) / empty.l 0 /
+variable x(*) / four.l 4  /
+variable x(*) / six.l 6   /
+variable x(*) / empty.l 0 /
+if(x.l('four') <> 4, display x.l; execerror=execerror+1 );
+
+$onempty
+parameter b(*) /  /;
+parameter b / two 2 /;
+parameter b / two 2.5 /;
+parameter b /  /;
+if(b('two') <> 2.5, display b; execerror=execerror+1 );
+
+variable y(*) /  /
+variable y(*) / three.l 3  /
+variable y(*) / five.l 5   /
+variable y(*) / five.l 5.5 /
+variable y(*) /  /
+if(y.l('five') <> 5.5, display y.l; execerror=execerror+1 );

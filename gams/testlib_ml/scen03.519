@@ -1,0 +1,18 @@
+$title Multi-dimensional scenario solver test (SCEN03, SEQ=519)
+
+$ontext
+Contributor: Michael Bussieck
+$offtext
+
+
+$call testlib -q scensol1 
+$if errorlevel 1 $abort 'could not retrieve scensol1'
+
+$call "gams scensol1 lp=bdmlpd --dim=1 lo=%gams.lo%"
+$if errorlevel 1 $abort 'dim 1 test failed. Please inspect scensol1.lst for details'
+
+$call "gams scensol1 lp=bdmlpd --dim=2 lo=%gams.lo%"
+$if errorlevel 1 $abort 'dim 2 test failed. Please inspect scensol1.lst for details'
+
+$call "gams scensol1 lp=bdmlpd --dim=3 lo=%gams.lo%"
+$if errorlevel 1 $abort 'dim 3 test failed. Please inspect scensol1.lst for details'

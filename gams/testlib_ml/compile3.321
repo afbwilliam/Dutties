@@ -1,0 +1,19 @@
+$title 'No mixed mode is allowed in equations' (COMPILE3,SEQ=321)
+
+sets t, CityS(t);
+Variables BuyNet(t),SellNet(t);
+Equations  Bal1(t), bal2(t),bal3(t);
+
+Bal1(t)..BuyNet(t)=e=citys(t)+sellnet(t);
+$if errorfree $abort do not allow mixed mode in equs
+$clearerror
+
+Bal2(t)..BuyNet(t)=e=citys(t);
+$if errorfree $abort do not allow mixed mode in equs
+$clearerror
+
+Bal3(t)..citys(t)=e= sellnet(t);
+$if errorfree $abort do not allow mixed mode in equs
+$clearerror
+
+$terminate

@@ -1,0 +1,1626 @@
+<html>
+<head>
+<title>MOSEK Options</title>
+</head>
+<body>
+<h2>MOSEK Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/mosek.pdf">MOSEK manual</a>.
+
+<h2>Summary of MOSEK Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General and Preprocessing Options</h3></th></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CACHE_SIZE_L1">
+MSK_IPAR_CACHE_SIZE_L1</a></td>
+<td>L1 cache size used</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CACHE_SIZE_L2">
+MSK_IPAR_CACHE_SIZE_L2</a></td>
+<td>L2 cache size used</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CONCURRENT_NUM_OPTIMIZERS">
+MSK_IPAR_CONCURRENT_NUM_OPTIMIZERS</a></td>
+<td>maximum number of optimizers during concurrent run</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CONCURRENT_PRIORITY_DUAL_SIMPLEX">
+MSK_IPAR_CONCURRENT_PRIORITY_DUAL_SIMPLEX</a></td>
+<td>priority of dual simplex algorithm in concurrent run</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CONCURRENT_PRIORITY_FREE_SIMPLEX">
+MSK_IPAR_CONCURRENT_PRIORITY_FREE_SIMPLEX</a></td>
+<td>priority of free simplex algorithm in concurrent run</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CONCURRENT_PRIORITY_INTPNT">
+MSK_IPAR_CONCURRENT_PRIORITY_INTPNT</a></td>
+<td>priority of interior point algorithm in concurrent run</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CONCURRENT_PRIORITY_PRIMAL_SIMPLEX">
+MSK_IPAR_CONCURRENT_PRIORITY_PRIMAL_SIMPLEX</a></td>
+<td>priority of primal simplex algorithm in concurrent run</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CPU_TYPE">
+MSK_IPAR_CPU_TYPE</a></td>
+<td>specifies the CPU type</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INFEAS_REPORT_AUTO">
+MSK_IPAR_INFEAS_REPORT_AUTO</a></td>
+<td>switch for infeasibility report</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INFEAS_REPORT_LEVEL">
+MSK_IPAR_INFEAS_REPORT_LEVEL</a></td>
+<td>output level for infeasibility report</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_OPTIMIZER">
+MSK_IPAR_OPTIMIZER</a></td>
+<td>optimizer selection</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_OPTIMIZER_MAX_TIME">
+MSK_DPAR_OPTIMIZER_MAX_TIME</a></td>
+<td>time limit</td></tr>
+<tr><td><a href="#MOSEKMSK_SPAR_PARAM_READ_FILE_NAME">
+MSK_SPAR_PARAM_READ_FILE_NAME</a></td>
+<td>name of a secondary MOSEK option file</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_PRESOLVE_ELIMINATOR_USE">
+MSK_IPAR_PRESOLVE_ELIMINATOR_USE</a></td>
+<td>switch for free variable elimination</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_PRESOLVE_ELIM_FILL">
+MSK_IPAR_PRESOLVE_ELIM_FILL</a></td>
+<td>fill-in control during presolve</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_PRESOLVE_LINDEP_USE">
+MSK_IPAR_PRESOLVE_LINDEP_USE</a></td>
+<td>linear dependency check</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_PRESOLVE_LINDEP_WORK_LIM">
+MSK_IPAR_PRESOLVE_LINDEP_WORK_LIM</a></td>
+<td>maximum work for finding linear dependencies</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_PRESOLVE_USE">
+MSK_IPAR_PRESOLVE_USE</a></td>
+<td>switch for presolve</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Problem Data Options</h3></th></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_CHECK_CONVEXITY">
+MSK_IPAR_CHECK_CONVEXITY</a></td>
+<td>level of convexity check for quadratic problems</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_AIJ">
+MSK_DPAR_DATA_TOL_AIJ</a></td>
+<td>zero tolerance for matrix coefficients</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_AIJ_HUGE">
+MSK_DPAR_DATA_TOL_AIJ_HUGE</a></td>
+<td>error for large coefficients in matrix</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_AIJ_LARGE">
+MSK_DPAR_DATA_TOL_AIJ_LARGE</a></td>
+<td>warning for large coefficients in matrix</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_BOUND_INF">
+MSK_DPAR_DATA_TOL_BOUND_INF</a></td>
+<td>bound value for infinity</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_BOUND_WRN">
+MSK_DPAR_DATA_TOL_BOUND_WRN</a></td>
+<td>warning for large bounds</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_CJ_LARGE">
+MSK_DPAR_DATA_TOL_CJ_LARGE</a></td>
+<td>warning for large coefficients in objective</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_C_HUGE">
+MSK_DPAR_DATA_TOL_C_HUGE</a></td>
+<td>error for huge coefficients in objective</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_QIJ">
+MSK_DPAR_DATA_TOL_QIJ</a></td>
+<td>zero tolerance for Q matrix coefficients</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_DATA_TOL_X">
+MSK_DPAR_DATA_TOL_X</a></td>
+<td>tolerance for fixed variables</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_LOWER_OBJ_CUT">
+MSK_DPAR_LOWER_OBJ_CUT</a></td>
+<td>lower objective limit</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_LOWER_OBJ_CUT_FINITE_TRH">
+MSK_DPAR_LOWER_OBJ_CUT_FINITE_TRH</a></td>
+<td>upper objective limit threashold</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_UPPER_OBJ_CUT">
+MSK_DPAR_UPPER_OBJ_CUT</a></td>
+<td>upper objective limit</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_UPPER_OBJ_CUT_FINITE_TRH">
+MSK_DPAR_UPPER_OBJ_CUT_FINITE_TRH</a></td>
+<td>lower objective limit threashold</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Output Options</h3></th></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_BI">
+MSK_IPAR_LOG_BI</a></td>
+<td>output control for basis identification</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_BI_FREQ">
+MSK_IPAR_LOG_BI_FREQ</a></td>
+<td>frequency of log output of basis identification</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_INTPNT">
+MSK_IPAR_LOG_INTPNT</a></td>
+<td>output level of the interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_MIO">
+MSK_IPAR_LOG_MIO</a></td>
+<td>output level for mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_MIO_FREQ">
+MSK_IPAR_LOG_MIO_FREQ</a></td>
+<td>frequency of log output of mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_PRESOLVE">
+MSK_IPAR_LOG_PRESOLVE</a></td>
+<td>output level for presolve</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_SIM">
+MSK_IPAR_LOG_SIM</a></td>
+<td>output level for simplex</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_LOG_SIM_FREQ">
+MSK_IPAR_LOG_SIM_FREQ</a></td>
+<td>frequency of log output of simplex optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MAX_NUM_WARNINGS">
+MSK_IPAR_MAX_NUM_WARNINGS</a></td>
+<td>maximum number of warnings</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_WARNING_LEVEL">
+MSK_IPAR_WARNING_LEVEL</a></td>
+<td>warning level</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Interior Point Optimizer Options</h3></th></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_BASIS">
+MSK_IPAR_INTPNT_BASIS</a></td>
+<td>switch for basis identification</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_CO_TOL_DFEAS">
+MSK_DPAR_INTPNT_CO_TOL_DFEAS</a></td>
+<td>dual feasibility tolerance for the conic interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_CO_TOL_INFEAS">
+MSK_DPAR_INTPNT_CO_TOL_INFEAS</a></td>
+<td>infeasibility control for the conic interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_CO_TOL_MU_RED">
+MSK_DPAR_INTPNT_CO_TOL_MU_RED</a></td>
+<td>relative complementarity tolerance for the conic interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_CO_TOL_NEAR_REL">
+MSK_DPAR_INTPNT_CO_TOL_NEAR_REL</a></td>
+<td>termination tolerances for near optimal for the conic interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_CO_TOL_PFEAS">
+MSK_DPAR_INTPNT_CO_TOL_PFEAS</a></td>
+<td>primal feasibility tolerance for the conic interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_CO_TOL_REL_GAP">
+MSK_DPAR_INTPNT_CO_TOL_REL_GAP</a></td>
+<td>relative optimality tolerance for the conic interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_DIFF_STEP">
+MSK_IPAR_INTPNT_DIFF_STEP</a></td>
+<td>switch for different step sizes</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_MAX_ITERATIONS">
+MSK_IPAR_INTPNT_MAX_ITERATIONS</a></td>
+<td>iteration limit for the interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_MAX_NUM_COR">
+MSK_IPAR_INTPNT_MAX_NUM_COR</a></td>
+<td>maximum number of correctors</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_MAX_NUM_REFINEMENT_STEPS">
+MSK_IPAR_INTPNT_MAX_NUM_REFINEMENT_STEPS</a></td>
+<td>number of steps to be used by the iterative refinement</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_NL_MERIT_BAL">
+MSK_DPAR_INTPNT_NL_MERIT_BAL</a></td>
+<td>balance for complementarity and infeasibility</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_NL_TOL_DFEAS">
+MSK_DPAR_INTPNT_NL_TOL_DFEAS</a></td>
+<td>dual feasibility tolerance for nonlinear problems</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_NL_TOL_MU_RED">
+MSK_DPAR_INTPNT_NL_TOL_MU_RED</a></td>
+<td>relative complementarity tolerance for nonlinear problems</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_NL_TOL_PFEAS">
+MSK_DPAR_INTPNT_NL_TOL_PFEAS</a></td>
+<td>primal feasibility tolerance for nonlinear problems</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_NL_TOL_REL_GAP">
+MSK_DPAR_INTPNT_NL_TOL_REL_GAP</a></td>
+<td>relative optimality tolerance for nonlinear problems</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_NUM_THREADS">
+MSK_IPAR_INTPNT_NUM_THREADS</a></td>
+<td>number of threads for interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_OFF_COL_TRH">
+MSK_IPAR_INTPNT_OFF_COL_TRH</a></td>
+<td>offending column selection</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_ORDER_METHOD">
+MSK_IPAR_INTPNT_ORDER_METHOD</a></td>
+<td>ordering strategy selection</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_REGULARIZATION_USE">
+MSK_IPAR_INTPNT_REGULARIZATION_USE</a></td>
+<td>switch for regularization</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_SCALING">
+MSK_IPAR_INTPNT_SCALING</a></td>
+<td>scaling selection for interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_SOLVE_FORM">
+MSK_IPAR_INTPNT_SOLVE_FORM</a></td>
+<td>solve primal or the dual problem  with interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_INTPNT_STARTING_POINT">
+MSK_IPAR_INTPNT_STARTING_POINT</a></td>
+<td>starting point for interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_DFEAS">
+MSK_DPAR_INTPNT_TOL_DFEAS</a></td>
+<td>dual feasibility tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_DSAFE">
+MSK_DPAR_INTPNT_TOL_DSAFE</a></td>
+<td>initial dual starting control</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_INFEAS">
+MSK_DPAR_INTPNT_TOL_INFEAS</a></td>
+<td>infeasibility control</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_MU_RED">
+MSK_DPAR_INTPNT_TOL_MU_RED</a></td>
+<td>relative complementarity tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_PATH">
+MSK_DPAR_INTPNT_TOL_PATH</a></td>
+<td>central path following for interior-point optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_PFEAS">
+MSK_DPAR_INTPNT_TOL_PFEAS</a></td>
+<td>primal feasibility tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_PSAFE">
+MSK_DPAR_INTPNT_TOL_PSAFE</a></td>
+<td>initial primal starting control</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_REL_GAP">
+MSK_DPAR_INTPNT_TOL_REL_GAP</a></td>
+<td>relative optimality tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_INTPNT_TOL_REL_STEP">
+MSK_DPAR_INTPNT_TOL_REL_STEP</a></td>
+<td>relative step size to boundary</td></tr>
+<tr><td><a href="#MOSEKUSE_BASIS_EST">
+USE_BASIS_EST</a></td>
+<td>use MOSEK basis estimation in case of an interior solution</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Simplex Optimizer and Basis Identification Options</h3></th></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_BI_CLEAN_OPTIMIZER">
+MSK_IPAR_BI_CLEAN_OPTIMIZER</a></td>
+<td>simplex optimizer section after basis identification</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_BI_IGNORE_MAX_ITER">
+MSK_IPAR_BI_IGNORE_MAX_ITER</a></td>
+<td>continues BI in case of iteration limit</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_BI_IGNORE_NUM_ERROR">
+MSK_IPAR_BI_IGNORE_NUM_ERROR</a></td>
+<td>continues BI in case of numerical error</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_BI_MAX_ITERATIONS">
+MSK_IPAR_BI_MAX_ITERATIONS</a></td>
+<td>maximum number of simplex iterations after basis identification</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_DUAL_CRASH">
+MSK_IPAR_SIM_DUAL_CRASH</a></td>
+<td>dual simplex crash</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_DUAL_SELECTION">
+MSK_IPAR_SIM_DUAL_SELECTION</a></td>
+<td>dual simplex pricing selection</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_HOTSTART">
+MSK_IPAR_SIM_HOTSTART</a></td>
+<td>controls simplex hotstart</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_SIM_LU_TOL_REL_PIV">
+MSK_DPAR_SIM_LU_TOL_REL_PIV</a></td>
+<td>relative pivot tolerance for simplex and basis identification</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_MAX_ITERATIONS">
+MSK_IPAR_SIM_MAX_ITERATIONS</a></td>
+<td>simplex iteration limit</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_MAX_NUM_SETBACKS">
+MSK_IPAR_SIM_MAX_NUM_SETBACKS</a></td>
+<td>maximum number of setbacks</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_PRIMAL_CRASH">
+MSK_IPAR_SIM_PRIMAL_CRASH</a></td>
+<td>primal simplex crash</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_PRIMAL_SELECTION">
+MSK_IPAR_SIM_PRIMAL_SELECTION</a></td>
+<td>primal simplex pricing selection</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_REFACTOR_FREQ">
+MSK_IPAR_SIM_REFACTOR_FREQ</a></td>
+<td>refactorization frequency</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_REFORMULATION">
+MSK_IPAR_SIM_REFORMULATION</a></td>
+<td>controls if the simplex optimizers are allowed to reformulate</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_SCALING">
+MSK_IPAR_SIM_SCALING</a></td>
+<td>scaling selection for simplex optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_SCALING_METHOD">
+MSK_IPAR_SIM_SCALING_METHOD</a></td>
+<td>controls how the problem is scaled before a simplex optimizer is used</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_SIM_SOLVE_FORM">
+MSK_IPAR_SIM_SOLVE_FORM</a></td>
+<td>solve primal or the dual problem  with simplex optimizer</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Mixed Integer Optimizer Options</h3></th></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_BRANCH_DIR">
+MSK_IPAR_MIO_BRANCH_DIR</a></td>
+<td>control branching directions</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_CONSTRUCT_SOL">
+MSK_IPAR_MIO_CONSTRUCT_SOL</a></td>
+<td>switch for mip start</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_CUT_LEVEL_ROOT">
+MSK_IPAR_MIO_CUT_LEVEL_ROOT</a></td>
+<td>cut level control at root for mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_CUT_LEVEL_TREE">
+MSK_IPAR_MIO_CUT_LEVEL_TREE</a></td>
+<td>cut level control in tree for mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_HEURISTIC_LEVEL">
+MSK_IPAR_MIO_HEURISTIC_LEVEL</a></td>
+<td>heuristic control for mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_HEURISTIC_TIME">
+MSK_DPAR_MIO_HEURISTIC_TIME</a></td>
+<td>time limit for heuristic search</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_KEEP_BASIS">
+MSK_IPAR_MIO_KEEP_BASIS</a></td>
+<td>switch for basis saving</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_MAX_NUM_BRANCHES">
+MSK_IPAR_MIO_MAX_NUM_BRANCHES</a></td>
+<td>maximum number of branches</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_MAX_NUM_RELAXS">
+MSK_IPAR_MIO_MAX_NUM_RELAXS</a></td>
+<td>maximum number of relaxations solved</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_MAX_TIME">
+MSK_DPAR_MIO_MAX_TIME</a></td>
+<td>time limit for mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_MAX_TIME_APRX_OPT">
+MSK_DPAR_MIO_MAX_TIME_APRX_OPT</a></td>
+<td>time limit before some relaxation</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_NEAR_TOL_ABS_GAP">
+MSK_DPAR_MIO_NEAR_TOL_ABS_GAP</a></td>
+<td>termination criterion on absolute optimality tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_NEAR_TOL_REL_GAP">
+MSK_DPAR_MIO_NEAR_TOL_REL_GAP</a></td>
+<td>termination criterion on relative optimality tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_NODE_OPTIMIZER">
+MSK_IPAR_MIO_NODE_OPTIMIZER</a></td>
+<td>solver for the sub problems</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_NODE_SELECTION">
+MSK_IPAR_MIO_NODE_SELECTION</a></td>
+<td>node selection strategy</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_PRESOLVE_AGGREGATE">
+MSK_IPAR_MIO_PRESOLVE_AGGREGATE</a></td>
+<td>switch for aggregation during mixed integer presolve</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_PRESOLVE_PROBING">
+MSK_IPAR_MIO_PRESOLVE_PROBING</a></td>
+<td>switch for probing</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_PRESOLVE_USE">
+MSK_IPAR_MIO_PRESOLVE_USE</a></td>
+<td>switch for mixed integer presolve</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_REL_ADD_CUT_LIMITED">
+MSK_DPAR_MIO_REL_ADD_CUT_LIMITED</a></td>
+<td>cuts factor</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_ROOT_OPTIMIZER">
+MSK_IPAR_MIO_ROOT_OPTIMIZER</a></td>
+<td>solver for the root problem</td></tr>
+<tr><td><a href="#MOSEKMSK_IPAR_MIO_STRONG_BRANCH">
+MSK_IPAR_MIO_STRONG_BRANCH</a></td>
+<td>strong branching control</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_TOL_ABS_GAP">
+MSK_DPAR_MIO_TOL_ABS_GAP</a></td>
+<td>absolute optimality tolerance in the mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_TOL_ABS_RELAX_INT">
+MSK_DPAR_MIO_TOL_ABS_RELAX_INT</a></td>
+<td>absolute integrality tolerance</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_TOL_FEAS">
+MSK_DPAR_MIO_TOL_FEAS</a></td>
+<td>feasibility tolerance for mixed integer solver</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_TOL_REL_GAP">
+MSK_DPAR_MIO_TOL_REL_GAP</a></td>
+<td>relative optimality tolerance in the mixed integer optimizer</td></tr>
+<tr><td><a href="#MOSEKMSK_DPAR_MIO_TOL_REL_RELAX_INT">
+MSK_DPAR_MIO_TOL_REL_RELAX_INT</a></td>
+<td>relative integrality tolerance</td></tr>
+<tr><td><a href="#MOSEKMIPSTART">
+MIPSTART</a></td>
+<td>use integer solution provided by user</td></tr></table>
+<h2>Detailed Descriptions of MOSEK Options</h2>
+
+<h4><a name="MOSEKMSK_IPAR_BI_CLEAN_OPTIMIZER">
+MSK_IPAR_BI_CLEAN_OPTIMIZER</a>
+<i> (string)</i> simplex optimizer section after basis identification</h4><p>
+
+Controls which simplex optimizer that is used in the clean up
+phase.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONCURRENT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONIC</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_INTPNT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_MIXED_INT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_QCONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_BI_IGNORE_MAX_ITER">
+MSK_IPAR_BI_IGNORE_MAX_ITER</a>
+<i> (integer)</i> continues BI in case of iteration limit</h4><p>
+
+If the parameter MSK_IPAR_INTPNT_BASIS has the value 2 and the
+interior-point optimizer has terminated due to maximum number of
+iterations, then basis identification is performed if this parameter
+has the value 1.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_BI_IGNORE_NUM_ERROR">
+MSK_IPAR_BI_IGNORE_NUM_ERROR</a>
+<i> (integer)</i> continues BI in case of numerical error</h4><p>
+
+If the parameter MSK_IPAR_INTPNT_BASIS has the value 2 and the
+interior-point optimizer has terminated due to a numerical problem,
+then basis identification is performed if this parameter has the value
+1.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_BI_MAX_ITERATIONS">
+MSK_IPAR_BI_MAX_ITERATIONS</a>
+<i> (integer)</i> maximum number of simplex iterations after basis identification</h4><p>
+
+Controls the maximum number of simplex iterations allowed to
+optimize a basis after the basis identification.
+
+<br><i>(default = 1000000)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CACHE_SIZE_L1">
+MSK_IPAR_CACHE_SIZE_L1</a>
+<i> (integer)</i> L1 cache size used</h4><p>
+
+Controls the size of the L1 cache used by MOSEK.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CACHE_SIZE_L2">
+MSK_IPAR_CACHE_SIZE_L2</a>
+<i> (integer)</i> L2 cache size used</h4><p>
+
+Controls the size of the L2 cache used by MOSEK.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CHECK_CONVEXITY">
+MSK_IPAR_CHECK_CONVEXITY</a>
+<i> (string)</i> level of convexity check for quadratic problems</h4><p>
+
+Specify the level of convexity check on quadratic problems.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_CHECK_CONVEXITY_FULL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CHECK_CONVEXITY_NONE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CHECK_CONVEXITY_SIMPLE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_CONCURRENT_NUM_OPTIMIZERS">
+MSK_IPAR_CONCURRENT_NUM_OPTIMIZERS</a>
+<i> (integer)</i> maximum number of optimizers during concurrent run</h4><p>
+
+
+<br><i>(default = 2)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CONCURRENT_PRIORITY_DUAL_SIMPLEX">
+MSK_IPAR_CONCURRENT_PRIORITY_DUAL_SIMPLEX</a>
+<i> (integer)</i> priority of dual simplex algorithm in concurrent run</h4><p>
+
+
+<br><i>(default = 2)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CONCURRENT_PRIORITY_FREE_SIMPLEX">
+MSK_IPAR_CONCURRENT_PRIORITY_FREE_SIMPLEX</a>
+<i> (integer)</i> priority of free simplex algorithm in concurrent run</h4><p>
+
+
+<br><i>(default = 3)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CONCURRENT_PRIORITY_INTPNT">
+MSK_IPAR_CONCURRENT_PRIORITY_INTPNT</a>
+<i> (integer)</i> priority of interior point algorithm in concurrent run</h4><p>
+
+
+<br><i>(default = 4)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CONCURRENT_PRIORITY_PRIMAL_SIMPLEX">
+MSK_IPAR_CONCURRENT_PRIORITY_PRIMAL_SIMPLEX</a>
+<i> (integer)</i> priority of primal simplex algorithm in concurrent run</h4><p>
+
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_CPU_TYPE">
+MSK_IPAR_CPU_TYPE</a>
+<i> (string)</i> specifies the CPU type</h4><p>
+
+This option specifies the CPU type.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_CPU_AMD_ATHLON</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_AMD_OPTERON</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_GENERIC</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_INTEL_CORE2</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_INTEL_P3</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_INTEL_P4</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_INTEL_PM</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_POWERPC_G5</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_CPU_UNKNOWN</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_AIJ">
+MSK_DPAR_DATA_TOL_AIJ</a>
+<i> (real)</i> zero tolerance for matrix coefficients</h4><p>
+
+Absolute zero tolerance for coefficients in the constraint matrix.
+
+<br><i>Range: [1.0e-16,1.0e-6]</i>
+
+<br><i>(default = 1.0e-12)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_AIJ_HUGE">
+MSK_DPAR_DATA_TOL_AIJ_HUGE</a>
+<i> (real)</i> error for large coefficients in matrix</h4><p>
+
+An element in the constraint matrix which is larger than this value in
+absolute size causes an error.
+<p>
+DATA_TOL_BOUND_INF
+Any bound which in absolute value is greater than this parameter is considered
+infinite.
+
+<br><i>(default = 1.0e20)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_AIJ_LARGE">
+MSK_DPAR_DATA_TOL_AIJ_LARGE</a>
+<i> (real)</i> warning for large coefficients in matrix</h4><p>
+
+A coefficient in the constraint matrix which is larger than this value in
+absolute size causes a warning message to be printed.
+
+<br><i>(default = 1.0e10)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_BOUND_INF">
+MSK_DPAR_DATA_TOL_BOUND_INF</a>
+<i> (real)</i> bound value for infinity</h4><p>
+
+
+<br><i>(default = 1.0e16)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_BOUND_WRN">
+MSK_DPAR_DATA_TOL_BOUND_WRN</a>
+<i> (real)</i> warning for large bounds</h4><p>
+
+If a bound value is larger than this value in absolute size, then a warning
+message is issued.
+
+<br><i>(default = 1.0e8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_CJ_LARGE">
+MSK_DPAR_DATA_TOL_CJ_LARGE</a>
+<i> (real)</i> warning for large coefficients in objective</h4><p>
+
+A coefficient in the objective which is larger than this value in absolute terms
+causes a warning message to be printed.
+
+<br><i>(default = 1.0e8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_C_HUGE">
+MSK_DPAR_DATA_TOL_C_HUGE</a>
+<i> (real)</i> error for huge coefficients in objective</h4><p>
+
+A coefficient in the objective which is larger than the value of this parameter
+in absolute terms is considered to be huge and generates an error.
+
+<br><i>(default = 1.0e16)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_QIJ">
+MSK_DPAR_DATA_TOL_QIJ</a>
+<i> (real)</i> zero tolerance for Q matrix coefficients</h4><p>
+
+Absolute zero tolerance for coefficients in the Q matrices.
+
+<br><i>(default = 1.0e-16)</i>
+
+<h4><a name="MOSEKMSK_DPAR_DATA_TOL_X">
+MSK_DPAR_DATA_TOL_X</a>
+<i> (real)</i> tolerance for fixed variables</h4><p>
+
+Zero tolerance for constraints and variables i.e.  if the distance between the
+lower and upper bound is less than this value, then the lower and lower bound is
+considered identical.
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INFEAS_REPORT_AUTO">
+MSK_IPAR_INFEAS_REPORT_AUTO</a>
+<i> (integer)</i> switch for infeasibility report</h4><p>
+
+Controls whether an infeasibility report is automatically produced
+after the optimization if the problem is primal or dual infeasible.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INFEAS_REPORT_LEVEL">
+MSK_IPAR_INFEAS_REPORT_LEVEL</a>
+<i> (integer)</i> output level for infeasibility report</h4><p>
+
+Controls the amount info presented in an infeasibility report.  Higher
+values implies more information.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_BASIS">
+MSK_IPAR_INTPNT_BASIS</a>
+<i> (string)</i> switch for basis identification</h4><p>
+
+Controls whether the interior-point optimizer also computes an optimal basis.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_BI_ALWAYS</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_BI_IF_FEASIBLE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_BI_NEVER</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_BI_NO_ERROR</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_BI_OTHER</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_CO_TOL_DFEAS">
+MSK_DPAR_INTPNT_CO_TOL_DFEAS</a>
+<i> (real)</i> dual feasibility tolerance for the conic interior-point optimizer</h4><p>
+
+Dual feasibility tolerance used by the conic interior-point optimizer.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_CO_TOL_INFEAS">
+MSK_DPAR_INTPNT_CO_TOL_INFEAS</a>
+<i> (real)</i> infeasibility control for the conic interior-point optimizer</h4><p>
+
+Controls when the conic interior-point optimizer declares
+the model primal or dual infeasible. A small number means the optimizer
+gets more conservative about declaring the model infeasible.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_CO_TOL_MU_RED">
+MSK_DPAR_INTPNT_CO_TOL_MU_RED</a>
+<i> (real)</i> relative complementarity tolerance for the conic interior-point optimizer</h4><p>
+
+Relative complementarity gap tolerance feasibility tolerance used by the conic
+interior-point optimizer.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_CO_TOL_NEAR_REL">
+MSK_DPAR_INTPNT_CO_TOL_NEAR_REL</a>
+<i> (real)</i> termination tolerances for near optimal for the conic interior-point optimizer</h4><p>
+
+If MOSEK cannot compute a solution that has the prescribed accuracy, then it
+will multiply the termination tolerances with value of this parameter.  If the
+solution then satisfies the termination criteria, then the solution is denoted
+near optimal, near feasible and so forth.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_CO_TOL_PFEAS">
+MSK_DPAR_INTPNT_CO_TOL_PFEAS</a>
+<i> (real)</i> primal feasibility tolerance for the conic interior-point optimizer</h4><p>
+
+Primal feasibility tolerance used by the conic interior-point optimizer.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_CO_TOL_REL_GAP">
+MSK_DPAR_INTPNT_CO_TOL_REL_GAP</a>
+<i> (real)</i> relative optimality tolerance for the conic interior-point optimizer</h4><p>
+
+Relative gap termination tolerance used by the conic interior-point optimizer.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_DIFF_STEP">
+MSK_IPAR_INTPNT_DIFF_STEP</a>
+<i> (integer)</i> switch for different step sizes</h4><p>
+
+Controls whether different step sizes are allowed in the primal and
+dual space.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_MAX_ITERATIONS">
+MSK_IPAR_INTPNT_MAX_ITERATIONS</a>
+<i> (integer)</i> iteration limit for the interior-point optimizer</h4><p>
+
+Sets the maximum number of iterations allowed in the interior-point optimizer.
+
+<br><i>(default = 400)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_MAX_NUM_COR">
+MSK_IPAR_INTPNT_MAX_NUM_COR</a>
+<i> (integer)</i> maximum number of correctors</h4><p>
+
+Controls the maximum number of correctors allowed by the multiple
+corrector procedure. A negative value means that Mosek is making the
+choice.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_MAX_NUM_REFINEMENT_STEPS">
+MSK_IPAR_INTPNT_MAX_NUM_REFINEMENT_STEPS</a>
+<i> (integer)</i> number of steps to be used by the iterative refinement</h4><p>
+
+Maximum number of steps to be used by the iterative refinement of the
+search direction. A negative value implies that the optimizer chooses
+the maximum number of iterative refinement steps.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_NL_MERIT_BAL">
+MSK_DPAR_INTPNT_NL_MERIT_BAL</a>
+<i> (real)</i> balance for complementarity and infeasibility</h4><p>
+
+Controls if the complementarity and infeasibility is converging to zero at about
+equal rates.
+
+<br><i>Range: [0.0,0.99]</i>
+
+<br><i>(default = 1.0e-4)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_NL_TOL_DFEAS">
+MSK_DPAR_INTPNT_NL_TOL_DFEAS</a>
+<i> (real)</i> dual feasibility tolerance for nonlinear problems</h4><p>
+
+Dual feasibility tolerance used when a nonlinear model is solved.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_NL_TOL_MU_RED">
+MSK_DPAR_INTPNT_NL_TOL_MU_RED</a>
+<i> (real)</i> relative complementarity tolerance for nonlinear problems</h4><p>
+
+Relative complementarity gap tolerance used when a nonlinear model is solved..
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-12)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_NL_TOL_PFEAS">
+MSK_DPAR_INTPNT_NL_TOL_PFEAS</a>
+<i> (real)</i> primal feasibility tolerance for nonlinear problems</h4><p>
+
+Primal feasibility tolerance used when a nonlinear model is solved.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_NL_TOL_REL_GAP">
+MSK_DPAR_INTPNT_NL_TOL_REL_GAP</a>
+<i> (real)</i> relative optimality tolerance for nonlinear problems</h4><p>
+
+Relative gap termination tolerance for nonlinear problems.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_NUM_THREADS">
+MSK_IPAR_INTPNT_NUM_THREADS</a>
+<i> (integer)</i> number of threads for interior-point optimizer</h4><p>
+
+Controls the number of threads employed by the interior-point optimizer.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_OFF_COL_TRH">
+MSK_IPAR_INTPNT_OFF_COL_TRH</a>
+<i> (integer)</i> offending column selection</h4><p>
+
+Controls how many offending columns there are located in the Jacobian the
+constraint matrix. 0 means no offending columns will be detected. 1 means many
+offending columns will be detected. In general by increasing the number fewer
+offending columns will be detected.
+
+<br><i>(default = 40)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_ORDER_METHOD">
+MSK_IPAR_INTPNT_ORDER_METHOD</a>
+<i> (string)</i> ordering strategy selection</h4><p>
+
+Controls the ordering strategy used by the interior-point optimizer when
+factorizing the Newton equation system.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_ORDER_METHOD_APPMINLOC1</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_ORDER_METHOD_APPMINLOC2</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_ORDER_METHOD_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_ORDER_METHOD_GRAPHPAR1</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_ORDER_METHOD_GRAPHPAR2</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_ORDER_METHOD_NONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_REGULARIZATION_USE">
+MSK_IPAR_INTPNT_REGULARIZATION_USE</a>
+<i> (integer)</i> switch for regularization</h4><p>
+
+Controls whether regularization is allowed.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_SCALING">
+MSK_IPAR_INTPNT_SCALING</a>
+<i> (string)</i> scaling selection for interior-point optimizer</h4><p>
+
+Controls how the problem is scaled before the interior-point
+optimizer is used.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_AGGRESSIVE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_MODERATE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_NONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_SOLVE_FORM">
+MSK_IPAR_INTPNT_SOLVE_FORM</a>
+<i> (string)</i> solve primal or the dual problem  with interior-point optimizer</h4><p>
+
+Controls whether the primal or the dual problem is solved.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SOLVE_DUAL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SOLVE_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SOLVE_PRIMAL</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_INTPNT_STARTING_POINT">
+MSK_IPAR_INTPNT_STARTING_POINT</a>
+<i> (string)</i> starting point for interior-point optimizer</h4><p>
+
+Selection of starting point used by the interior-point optimizer.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_STARTING_POINT_CONSTANT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_STARTING_POINT_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_STARTING_POINT_GUESS</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_STARTING_POINT_SATISFY_BOUNDS</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_DFEAS">
+MSK_DPAR_INTPNT_TOL_DFEAS</a>
+<i> (real)</i> dual feasibility tolerance</h4><p>
+
+Dual feasibility tolerance used for linear and quadratic optimization problems.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_DSAFE">
+MSK_DPAR_INTPNT_TOL_DSAFE</a>
+<i> (real)</i> initial dual starting control</h4><p>
+
+Controls the initial dual starting point used by the interior-point
+optimizer. If the interior-point optimizer converges slowly and/or the
+constraint or variable bounds are very large, then it might be worthwhile to
+increase this value.
+
+<br><i>(default = 1.0)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_INFEAS">
+MSK_DPAR_INTPNT_TOL_INFEAS</a>
+<i> (real)</i> infeasibility control</h4><p>
+
+Controls when the optimizer declares the model primal or dual infeasible. A
+small number means the optimizer gets more conservative about declaring the
+model infeasible.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_MU_RED">
+MSK_DPAR_INTPNT_TOL_MU_RED</a>
+<i> (real)</i> relative complementarity tolerance</h4><p>
+
+Relative complementarity gap tolerance
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-16)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_PATH">
+MSK_DPAR_INTPNT_TOL_PATH</a>
+<i> (real)</i> central path following for interior-point optimizer</h4><p>
+
+Controls how close the interior-point optimizer follows the central path. A
+large value of this parameter means the central is followed very closely. On
+numerical unstable problems it might worthwhile to increase this parameter.
+
+<br><i>Range: [0.0,0.9999]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_PFEAS">
+MSK_DPAR_INTPNT_TOL_PFEAS</a>
+<i> (real)</i> primal feasibility tolerance</h4><p>
+
+Primal feasibility tolerance used for linear and quadratic optimization
+problems.
+
+<br><i>Range: [0.0,1.0]</i>
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_PSAFE">
+MSK_DPAR_INTPNT_TOL_PSAFE</a>
+<i> (real)</i> initial primal starting control</h4><p>
+
+Controls the initial primal starting point used by the interior-point
+optimizer. If the interior-point optimizer converges slowly and/or the
+constraint or variable bounds are very large, then it might be worthwhile to
+increase this value.
+
+<br><i>(default = 1.0)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_REL_GAP">
+MSK_DPAR_INTPNT_TOL_REL_GAP</a>
+<i> (real)</i> relative optimality tolerance</h4><p>
+
+Relative gap termination tolerance.
+
+<br><i>(default = 1.0e-8)</i>
+
+<h4><a name="MOSEKMSK_DPAR_INTPNT_TOL_REL_STEP">
+MSK_DPAR_INTPNT_TOL_REL_STEP</a>
+<i> (real)</i> relative step size to boundary</h4><p>
+
+Relative step size to the boundary for linear and quadratic optimization
+problems.
+
+<br><i>Range: [1.0e-4,0.999999]</i>
+
+<br><i>(default = 0.9999)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_BI">
+MSK_IPAR_LOG_BI</a>
+<i> (integer)</i> output control for basis identification</h4><p>
+
+Controls the amount of output printed by the basis identification procedure.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_BI_FREQ">
+MSK_IPAR_LOG_BI_FREQ</a>
+<i> (integer)</i> frequency of log output of basis identification<br>&nbsp;&nbsp;&nbsp;Synonym:
+MSK_IPAR_BI_LOG_FREQ</h4><p>
+
+Controls how frequent the optimizer outputs information about the
+basis identification is called.
+
+<br><i>(default = 2500)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_INTPNT">
+MSK_IPAR_LOG_INTPNT</a>
+<i> (integer)</i> output level of the interior-point optimizer</h4><p>
+
+Controls the amount of output printed by the interior-point optimizer.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_MIO">
+MSK_IPAR_LOG_MIO</a>
+<i> (integer)</i> output level for mixed integer optimizer</h4><p>
+
+Controls the print level for the mixed integer optimizer.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_MIO_FREQ">
+MSK_IPAR_LOG_MIO_FREQ</a>
+<i> (integer)</i> frequency of log output of mixed integer optimizer<br>&nbsp;&nbsp;&nbsp;Synonym:
+MSK_IPAR_MIO_PRINT_FREQ</h4><p>
+
+Controls how frequent the mixed integer optimizer prints the log line. It will
+print a line every time <tt>MSK_INTPAR_LOG_MIO_FREQ</tt> relaxations have been solved.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_PRESOLVE">
+MSK_IPAR_LOG_PRESOLVE</a>
+<i> (integer)</i> output level for presolve</h4><p>
+
+Controls amount of output printed by the presolve procedure.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_SIM">
+MSK_IPAR_LOG_SIM</a>
+<i> (integer)</i> output level for simplex</h4><p>
+
+Controls amount of output printed by the simplex optimizer.
+
+<br><i>(default = 4)</i>
+
+<h4><a name="MOSEKMSK_IPAR_LOG_SIM_FREQ">
+MSK_IPAR_LOG_SIM_FREQ</a>
+<i> (integer)</i> frequency of log output of simplex optimizer<br>&nbsp;&nbsp;&nbsp;Synonym:
+MSK_IPAR_SIM_LOG_FREQ</h4><p>
+
+Controls how frequent the simplex optimizer outputs information about the
+optimization.
+
+<br><i>(default = 500)</i>
+
+<h4><a name="MOSEKMSK_DPAR_LOWER_OBJ_CUT">
+MSK_DPAR_LOWER_OBJ_CUT</a>
+<i> (real)</i> lower objective limit</h4><p>
+
+If a feasible solution having and objective value outside, the interval
+<tt>LOWER_OBJ_CUT</tt>, <tt>UPPER_OBJ_CUT</tt>, then MOSEK is terminated.
+
+<br><i>(default = -1.0e30)</i>
+
+<h4><a name="MOSEKMSK_DPAR_LOWER_OBJ_CUT_FINITE_TRH">
+MSK_DPAR_LOWER_OBJ_CUT_FINITE_TRH</a>
+<i> (real)</i> upper objective limit threashold</h4><p>
+
+If the lower objective cut (<tt>LOWER_OBJ_CUT</tt>) is less than
+<tt>LOWER_OBJ_CUT_FINITE_TRH</tt>, then the lower objective cut
+<tt>LOWER_OBJ_CUT</tt> is treated as infinity.
+
+<br><i>(default = -0.5e30)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MAX_NUM_WARNINGS">
+MSK_IPAR_MAX_NUM_WARNINGS</a>
+<i> (integer)</i> maximum number of warnings</h4><p>
+
+Sets the maximum number of warnings.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_BRANCH_DIR">
+MSK_IPAR_MIO_BRANCH_DIR</a>
+<i> (string)</i> control branching directions</h4><p>
+
+Controls whether the mixed integer optimizer is branching up or down by default.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_BRANCH_DIR_DOWN</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_BRANCH_DIR_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_BRANCH_DIR_UP</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_CONSTRUCT_SOL">
+MSK_IPAR_MIO_CONSTRUCT_SOL</a>
+<i> (integer)</i> switch for mip start</h4><p>
+
+If set to 1 and all integer variables has been given a value for which a
+feasible MIP solution exists, then MOSEK generates an initial solution to the
+MIP by fixing all integer values and solving for the continues variables.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_CUT_LEVEL_ROOT">
+MSK_IPAR_MIO_CUT_LEVEL_ROOT</a>
+<i> (integer)</i> cut level control at root for mixed integer optimizer<br>&nbsp;&nbsp;&nbsp;Synonym:
+MSK_IPAR_MIO_CUT_LEVEL</h4><p>
+
+Controls the cut level employed by the mixed integer optimizer.  A negative
+value means a default value determined by the mixed integer optimizer is
+used. By adding the appropriate values from the following table the employed cut
+types can be controlled.
+<p>
+<pre>
+GUB cover              +2
+Flow cover             +4
+Lifting                +8
+Plant location         +16
+Disaggregation         +32
+Knapsack cover         +64
+Lattice                +128
+Gomory                 +256
+Coefficient reduction  +512
+GCD                    +1024
+Obj. integrality       +2048
+</pre>
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_CUT_LEVEL_TREE">
+MSK_IPAR_MIO_CUT_LEVEL_TREE</a>
+<i> (integer)</i> cut level control in tree for mixed integer optimizer</h4><p>
+
+Controls the cut level employed by the mixed integer optimizer at the
+tree. See MSK_IPAR_MIO_CUT_LEVEL_ROOT.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_HEURISTIC_LEVEL">
+MSK_IPAR_MIO_HEURISTIC_LEVEL</a>
+<i> (integer)</i> heuristic control for mixed integer optimizer</h4><p>
+
+Controls the heuristic employed by the mixed integer optimizer to locate an
+integer feasible solution.  A value of zero means no heuristic is used. A large
+value than 0 means a gradually more sophisticated heuristic is used which is
+computationally more expensive. A negative value implies that the optimizer
+chooses the heuristic to be used.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_HEURISTIC_TIME">
+MSK_DPAR_MIO_HEURISTIC_TIME</a>
+<i> (real)</i> time limit for heuristic search</h4><p>
+
+Maximum time allowed to be used in the heuristic search for an optimal integer
+solution.  A negative values implies that the optimizer decides the amount of
+time to be spend in the heuristic.
+
+<br><i>(default = -1.0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_KEEP_BASIS">
+MSK_IPAR_MIO_KEEP_BASIS</a>
+<i> (integer)</i> switch for basis saving</h4><p>
+
+Controls whether the integer presolve keeps bases in memory. This speeds on the
+solution process at cost of bigger memory consumption.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_MAX_NUM_BRANCHES">
+MSK_IPAR_MIO_MAX_NUM_BRANCHES</a>
+<i> (integer)</i> maximum number of branches</h4><p>
+
+Maximum number branches allowed during the branch and bound search. A negative
+value means infinite.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_MAX_NUM_RELAXS">
+MSK_IPAR_MIO_MAX_NUM_RELAXS</a>
+<i> (integer)</i> maximum number of relaxations solved<br>&nbsp;&nbsp;&nbsp;Synonym:
+nodlim</h4><p>
+
+Maximum number relaxations allowed during the branch and bound search. A
+negative value means infinite.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_MAX_TIME">
+MSK_DPAR_MIO_MAX_TIME</a>
+<i> (real)</i> time limit for mixed integer optimizer</h4><p>
+
+This parameter limits the maximum time spend by the mixed integer optimizer.  A
+negative number means infinity.
+
+<br><i>(default = -1.0)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_MAX_TIME_APRX_OPT">
+MSK_DPAR_MIO_MAX_TIME_APRX_OPT</a>
+<i> (real)</i> time limit before some relaxation</h4><p>
+
+Number of seconds spend by the mixed integer optimizer before the
+<tt>MIO_TOL_REL_RELAX_INT</tt> is applied.
+
+<br><i>(default = 60)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_NEAR_TOL_ABS_GAP">
+MSK_DPAR_MIO_NEAR_TOL_ABS_GAP</a>
+<i> (real)</i> termination criterion on absolute optimality tolerance<br>&nbsp;&nbsp;&nbsp;Synonym:
+optca</h4><p>
+
+Relaxed absolute optimality tolerance employed by the mixed integer optimizer.
+The mixed integer optimizer is terminated when this tolerance is satisfied.
+
+<br><i>(default = GAMS OptCa)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_NEAR_TOL_REL_GAP">
+MSK_DPAR_MIO_NEAR_TOL_REL_GAP</a>
+<i> (real)</i> termination criterion on relative optimality tolerance<br>&nbsp;&nbsp;&nbsp;Synonym:
+optcr</h4><p>
+
+Relaxed relative optimality tolerance employed by the mixed integer optimizer.
+The mixed integer optimizer is terminated when this tolerance is satisfied.
+
+<br><i>(default = GAMS OptCr)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_NODE_OPTIMIZER">
+MSK_IPAR_MIO_NODE_OPTIMIZER</a>
+<i> (string)</i> solver for the sub problems</h4><p>
+
+Controls which optimizer is employed at non root nodes in the mixed integer
+optimizer.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONCURRENT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONIC</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_INTPNT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_MIXED_INT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_QCONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_NODE_SELECTION">
+MSK_IPAR_MIO_NODE_SELECTION</a>
+<i> (string)</i> node selection strategy</h4><p>
+
+Controls the node selection strategy employed by the mixed integer optimizer.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_MIO_NODE_SELECTION_BEST</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_MIO_NODE_SELECTION_FIRST</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_MIO_NODE_SELECTION_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_MIO_NODE_SELECTION_HYBRID</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_MIO_NODE_SELECTION_PSEUDO</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_MIO_NODE_SELECTION_WORST</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_PRESOLVE_AGGREGATE">
+MSK_IPAR_MIO_PRESOLVE_AGGREGATE</a>
+<i> (integer)</i> switch for aggregation during mixed integer presolve</h4><p>
+
+Controls whether the presolve used by the mixed integer optimizer tries to
+aggregate the constraints.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_PRESOLVE_PROBING">
+MSK_IPAR_MIO_PRESOLVE_PROBING</a>
+<i> (integer)</i> switch for probing</h4><p>
+
+Controls whether the mixed integer presolve performs probing. Probing
+can be very time consuming.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_PRESOLVE_USE">
+MSK_IPAR_MIO_PRESOLVE_USE</a>
+<i> (integer)</i> switch for mixed integer presolve</h4><p>
+
+Controls whether presolve is performed by the mixed integer optimizer.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_REL_ADD_CUT_LIMITED">
+MSK_DPAR_MIO_REL_ADD_CUT_LIMITED</a>
+<i> (real)</i> cuts factor</h4><p>
+
+Controls how many cuts the mixed integer optimizer is allowed to add to the
+problem.  The mixed integer optimizer is allowed to
+<tt>MIO_REL_ADD_CUT_LIMITED</tt>*<i>m</i> w cuts, where <i>m</i> is the number
+constraints in the problem.
+
+<br><i>Range: [0.0,2.0]</i>
+
+<br><i>(default = 0.75)</i>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_ROOT_OPTIMIZER">
+MSK_IPAR_MIO_ROOT_OPTIMIZER</a>
+<i> (string)</i> solver for the root problem</h4><p>
+
+Controls which optimizer is employed at the root node in the mixed integer
+optimizer.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONCURRENT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONIC</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_INTPNT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_MIXED_INT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_QCONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_MIO_STRONG_BRANCH">
+MSK_IPAR_MIO_STRONG_BRANCH</a>
+<i> (integer)</i> strong branching control</h4><p>
+
+The value specifies the depth from the root in which strong branching is used.
+A negative value means the optimizer chooses a default value automatically.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_TOL_ABS_GAP">
+MSK_DPAR_MIO_TOL_ABS_GAP</a>
+<i> (real)</i> absolute optimality tolerance in the mixed integer optimizer</h4><p>
+
+Absolute optimality tolerance employed by the mixed integer optimizer.
+
+<br><i>(default = 0.0)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_TOL_ABS_RELAX_INT">
+MSK_DPAR_MIO_TOL_ABS_RELAX_INT</a>
+<i> (real)</i> absolute integrality tolerance</h4><p>
+
+Absolute relaxation tolerance of the integer constraints, i.e.  if the
+fractional part of a discrete variable is less than the tolerance, the integer
+restrictions assumed to be satisfied.
+
+<br><i>(default = 1.0e-5)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_TOL_FEAS">
+MSK_DPAR_MIO_TOL_FEAS</a>
+<i> (real)</i> feasibility tolerance for mixed integer solver</h4><p>
+
+Feasibility tolerance for mixed integer solver. Any solution with
+maximum infeasibility below this value will be considered feasible.
+
+<br><i>(default = 1.0e-7)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_TOL_REL_GAP">
+MSK_DPAR_MIO_TOL_REL_GAP</a>
+<i> (real)</i> relative optimality tolerance in the mixed integer optimizer</h4><p>
+
+Relative optimality tolerance employed by the mixed integer optimizer.
+
+<br><i>(default = 1.0e-4)</i>
+
+<h4><a name="MOSEKMSK_DPAR_MIO_TOL_REL_RELAX_INT">
+MSK_DPAR_MIO_TOL_REL_RELAX_INT</a>
+<i> (real)</i> relative integrality tolerance</h4><p>
+
+Relative relaxation tolerance of the integer constraints, i.e.
+if the fractional part of a discrete variable is less than the tolerance times
+the level of that variable, the integer restrictions assumed to be satisfied.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="MOSEKMIPSTART">
+MIPSTART</a>
+<i> (integer)</i> use integer solution provided by user</h4><p>
+
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_OPTIMIZER">
+MSK_IPAR_OPTIMIZER</a>
+<i> (string)</i> optimizer selection</h4><p>
+
+Controls which optimizer is used to optimize the task.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONCURRENT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_CONIC</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_FREE_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_INTPNT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_MIXED_INT</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_DUAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_PRIMAL_SIMPLEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_OPTIMIZER_QCONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_DPAR_OPTIMIZER_MAX_TIME">
+MSK_DPAR_OPTIMIZER_MAX_TIME</a>
+<i> (real)</i> time limit<br>&nbsp;&nbsp;&nbsp;Synonym:
+reslim</h4><p>
+
+Maximum amount of time the optimizer is allowed to spend on the optimization.  A
+negative number means infinity.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="MOSEKMSK_SPAR_PARAM_READ_FILE_NAME">
+MSK_SPAR_PARAM_READ_FILE_NAME</a>
+<i> (string)</i> name of a secondary MOSEK option file</h4><p>
+
+The name of a secondary MOSEK option file that by the MOSEK option reader.
+
+
+<h4><a name="MOSEKMSK_IPAR_PRESOLVE_ELIMINATOR_USE">
+MSK_IPAR_PRESOLVE_ELIMINATOR_USE</a>
+<i> (integer)</i> switch for free variable elimination</h4><p>
+
+Controls whether free or implied free variables are eliminated from the problem.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_PRESOLVE_ELIM_FILL">
+MSK_IPAR_PRESOLVE_ELIM_FILL</a>
+<i> (integer)</i> fill-in control during presolve</h4><p>
+
+Controls the maximum amount of fill-in that can be created during the
+eliminations phase of the presolve. This parameter times the number of variables
+plus the number of constraints denotes the amount of fill in.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_PRESOLVE_LINDEP_USE">
+MSK_IPAR_PRESOLVE_LINDEP_USE</a>
+<i> (integer)</i> linear dependency check</h4><p>
+
+Controls whether the linear constraints is checked for linear dependencies.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_PRESOLVE_LINDEP_WORK_LIM">
+MSK_IPAR_PRESOLVE_LINDEP_WORK_LIM</a>
+<i> (integer)</i> maximum work for finding linear dependencies</h4><p>
+
+Is used to limit the work that can used to locate the linear dependencies.  In
+general the higher value this parameter is given the less work can be used.
+However, a value of 0 means no limit on the amount work that can be used.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MOSEKMSK_IPAR_PRESOLVE_USE">
+MSK_IPAR_PRESOLVE_USE</a>
+<i> (string)</i> switch for presolve</h4><p>
+
+Controls whether presolve is performed.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_PRESOLVE_MODE_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_PRESOLVE_MODE_OFF</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_PRESOLVE_MODE_ON</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_DUAL_CRASH">
+MSK_IPAR_SIM_DUAL_CRASH</a>
+<i> (integer)</i> dual simplex crash</h4><p>
+
+Controls whether crashing is performed in the dual simplex optimizer.  In
+general if a basis consists of more than <tt>(100*SIM_DUAL_CRASH)</tt> percent
+fixed variables, then a crash will be performed.
+
+<br><i>(default = GAMS BRatio)</i>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_DUAL_SELECTION">
+MSK_IPAR_SIM_DUAL_SELECTION</a>
+<i> (string)</i> dual simplex pricing selection</h4><p>
+
+Controls the choice of the incoming variable known as the selection strategy in
+the dual simplex optimizer.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_ASE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_DEVEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_FULL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_PARTIAL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_SE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_HOTSTART">
+MSK_IPAR_SIM_HOTSTART</a>
+<i> (string)</i> controls simplex hotstart</h4><p>
+
+Controls whether the simplex optimizer will do hotstart if possible.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SIM_HOTSTART_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_HOTSTART_NONE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_HOTSTART_STATUS_KEYS</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_DPAR_SIM_LU_TOL_REL_PIV">
+MSK_DPAR_SIM_LU_TOL_REL_PIV</a>
+<i> (real)</i> relative pivot tolerance for simplex and basis identification</h4><p>
+
+Relative pivot tolerance employed when computing the LU factorization
+of the basis in the simplex optimizers and in the basis identification
+procedure.  A value closer to 1.0 generally improves numerical
+stability but typically also implies an increase in the computational
+work.
+
+<br><i>Range: [1.0e-6,0.999999]</i>
+
+<br><i>(default = 0.01)</i>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_MAX_ITERATIONS">
+MSK_IPAR_SIM_MAX_ITERATIONS</a>
+<i> (integer)</i> simplex iteration limit<br>&nbsp;&nbsp;&nbsp;Synonym:
+iterlim</h4><p>
+
+Maximum number of iterations that can used by a simplex optimizer.
+
+<br><i>(default = GAMS IterLim)</i>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_MAX_NUM_SETBACKS">
+MSK_IPAR_SIM_MAX_NUM_SETBACKS</a>
+<i> (integer)</i> maximum number of setbacks</h4><p>
+
+Controls how many setbacks that are allowed within a simplex optimizer. A
+setback is an event where the optimizer moves in the wrong direction. This is
+impossible in theory but may happen due to numerical problems.
+
+<br><i>(default = 250)</i>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_PRIMAL_CRASH">
+MSK_IPAR_SIM_PRIMAL_CRASH</a>
+<i> (integer)</i> primal simplex crash</h4><p>
+
+Controls whether crashing is performed in the primal simplex optimizer.  In
+general if a basis consists of more than <tt>(100*SIM_PRIMAL_CRASH)</tt> percent fixed
+variables, then a crash will be performed.
+
+<br><i>(default = GAMS BRatio)</i>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_PRIMAL_SELECTION">
+MSK_IPAR_SIM_PRIMAL_SELECTION</a>
+<i> (string)</i> primal simplex pricing selection</h4><p>
+
+Controls the choice of the incoming variable known as the selection strategy in
+the primal simplex optimizer.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_ASE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_DEVEX</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_FULL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_PARTIAL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_SELECTION_SE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_REFACTOR_FREQ">
+MSK_IPAR_SIM_REFACTOR_FREQ</a>
+<i> (integer)</i> refactorization frequency</h4><p>
+
+Controls how frequent the basis is refactorized.  The value 0 means that the
+optimizer determines when the best point of refactorization is.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_REFORMULATION">
+MSK_IPAR_SIM_REFORMULATION</a>
+<i> (string)</i> controls if the simplex optimizers are allowed to reformulate</h4><p>
+
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SIM_REFORMULATION_AGGRESSIVE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_REFORMULATION_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_REFORMULATION_OFF</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SIM_REFORMULATION_ON</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_SCALING">
+MSK_IPAR_SIM_SCALING</a>
+<i> (string)</i> scaling selection for simplex optimizer</h4><p>
+
+Controls how the problem is scaled before a simplex optimizer is used.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_AGGRESSIVE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_MODERATE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_NONE</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_SCALING_METHOD">
+MSK_IPAR_SIM_SCALING_METHOD</a>
+<i> (string)</i> controls how the problem is scaled before a simplex optimizer is used</h4><p>
+
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_METHOD_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SCALING_METHOD_POW2</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_IPAR_SIM_SOLVE_FORM">
+MSK_IPAR_SIM_SOLVE_FORM</a>
+<i> (string)</i> solve primal or the dual problem  with simplex optimizer</h4><p>
+
+Controls whether the primal or the dual problem is solved by the simplex
+optimizers.
+
+<table>
+<tr valign="top"><td width=20 align=right>MSK_SOLVE_DUAL</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SOLVE_FREE</td><td></td></tr>
+<tr valign="top"><td width=20 align=right>MSK_SOLVE_PRIMAL</td><td></td></tr>
+</table>
+
+<h4><a name="MOSEKMSK_DPAR_UPPER_OBJ_CUT">
+MSK_DPAR_UPPER_OBJ_CUT</a>
+<i> (real)</i> upper objective limit</h4><p>
+
+If a feasible solution having and objective value outside, the interval
+<tt>LOWER_OBJ_CUT</tt>, <tt>UPPER_OBJ_CUT</tt>, then MOSEK is terminated.
+
+<br><i>(default = 1.0e30)</i>
+
+<h4><a name="MOSEKMSK_DPAR_UPPER_OBJ_CUT_FINITE_TRH">
+MSK_DPAR_UPPER_OBJ_CUT_FINITE_TRH</a>
+<i> (real)</i> lower objective limit threashold</h4><p>
+
+If the upper objective cut (<tt>UPPER_OBJ_CUT</tt>) is greater than
+<tt>UPPER_OBJ_CUT_FINITE_TRH</tt>, then the upper objective cut
+<tt>UPPER_OBJ_CUT</tt> is treated as infinity.
+
+<br><i>(default = 0.5e30)</i>
+
+<h4><a name="MOSEKUSE_BASIS_EST">
+USE_BASIS_EST</a>
+<i> (integer)</i> use MOSEK basis estimation in case of an interior solution</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MOSEKMSK_IPAR_WARNING_LEVEL">
+MSK_IPAR_WARNING_LEVEL</a>
+<i> (integer)</i> warning level</h4><p>
+
+Warning level. A higher value implies more warnings.
+
+<br><i>(default = 1)</i>
+</body></html>

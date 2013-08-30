@@ -1,0 +1,129 @@
+$title tests different sameas uses (SAMEAS1,SEQ=133)
+
+sets dummy / 1*1000 /
+     i     / 10*15/
+     j     / 12*17  /;
+
+sets  x1(i,j), x2(i,j), x3(i,j), x4(i,j), x5(i,j), x6(i,j), x7(i,j), x8(i,j), x9(i,j);
+sets dx1(i,j),dx2(i,j),dx3(i,j),dx4(i,j),dx5(i,j),dx6(i,j),dx7(i,j),dx8(i,j),dx9(i,j);
+
+$onempty
+sets rx1(i,j)/ 12.12, 13.13, 14.14, 15.15 /
+     rx2(i,j)/ (10*15).12 /
+     rx3(i,j)/ 12.(12*17) /
+     rx4(i,j)/            /
+     rx5(i,j)/            /
+     rx6(i,j)/            /
+     rx7(i,j)/            /
+     rx8(i,j)/            /
+     rx9(i,j)/ (10*15).(12*17) /;
+$offempty
+
+x1(i,j)$sameas(i,j) = yes;
+x2(i,j)$sameas('12',j) = yes;
+x3(i,j)$sameas(i,'12') = yes;
+x4(i,j)$sameas('10',j) = yes;
+x5(i,j)$sameas('40',j) = yes;
+x6(i,j)$sameas(i,'17') = yes;
+x7(i,j)$sameas(i,'40') = yes;
+x8(i,j)$sameas('10','17') = yes;
+x9(i,j)$sameas('1','1') = yes;
+
+dx1(i,j) = x1(i,j) xor rx1(i,j);
+dx2(i,j) = x2(i,j) xor rx2(i,j);
+dx3(i,j) = x3(i,j) xor rx3(i,j);
+dx4(i,j) = x4(i,j) xor rx4(i,j);
+dx5(i,j) = x5(i,j) xor rx5(i,j);
+dx6(i,j) = x6(i,j) xor rx6(i,j);
+dx7(i,j) = x7(i,j) xor rx7(i,j);
+dx8(i,j) = x8(i,j) xor rx8(i,j);
+dx9(i,j) = x9(i,j) xor rx9(i,j);
+
+display dx1,dx2,dx3,dx4,dx5,dx6,dx7,dx8,dx9;
+
+
+sets  y1(i,j), y2(i,j), y3(i,j), y4(i,j), y5(i,j), y6(i,j), y7(i,j);
+sets dy1(i,j),dy2(i,j),dy3(i,j),dy4(i,j),dy5(i,j),dy6(i,j),dy7(i,j);
+$onempty
+sets ry1(i,j)/ 11.16, 12.17, 13.12, 14.13 /
+     ry2(i,j)/ (10*15).13 /
+     ry3(i,j)/ 11.(12*17) /
+     ry4(i,j)/            /
+     ry5(i,j)/ 13.17, 14.12, 15.13 /
+     ry6(i,j)/            /
+     ry7(i,j)/            / ;
+$offempty
+
+y1(i,j)$sameas(i+1,j++2) = yes;
+y2(i,j)$sameas('12',j-1) = yes;
+y3(i,j)$sameas(i--5,'12') = yes;
+y4(i,j)$sameas('10',j-2) = yes;
+y5(i,j)$sameas(i-1,j++1) = yes;
+y6(i,j)$sameas(i-1,'17') = yes;
+y7(i,j)$sameas(i+1,'40') = yes;
+
+dy1(i,j) = y1(i,j) xor ry1(i,j);
+dy2(i,j) = y2(i,j) xor ry2(i,j);
+dy3(i,j) = y3(i,j) xor ry3(i,j);
+dy4(i,j) = y4(i,j) xor ry4(i,j);
+dy5(i,j) = y5(i,j) xor ry5(i,j);
+dy6(i,j) = y6(i,j) xor ry6(i,j);
+dy7(i,j) = y7(i,j) xor ry7(i,j);
+
+display dy1,dy2,dy3,dy4,dy5,dy6,dy7;
+
+sets  u1(i,j), u2(i,j), u3(i,j), u4(i,j), u5(i,j), u6(i,j), u7(i,j), u8(i,j), u9(i,j);
+sets du1(i,j),du2(i,j),du3(i,j),du4(i,j),du5(i,j),du6(i,j),du7(i,j),du8(i,j),du9(i,j);
+
+loop(j,
+   u1(i,j)$sameas(i,j) = yes;
+   u2(i,j)$sameas('12',j) = yes;
+   u3(i,j)$sameas(i,'12') = yes;
+   u4(i,j)$sameas('10',j) = yes;
+   u5(i,j)$sameas('40',j) = yes;
+   u6(i,j)$sameas(i,'17') = yes;
+   u7(i,j)$sameas(i,'40') = yes;
+   u8(i,j)$sameas('10','17') = yes;
+   u9(i,j)$sameas('1','1') = yes;
+    );
+
+du1(i,j) = u1(i,j) xor rx1(i,j);
+du2(i,j) = u2(i,j) xor rx2(i,j);
+du3(i,j) = u3(i,j) xor rx3(i,j);
+du4(i,j) = u4(i,j) xor rx4(i,j);
+du5(i,j) = u5(i,j) xor rx5(i,j);
+du6(i,j) = u6(i,j) xor rx6(i,j);
+du7(i,j) = u7(i,j) xor rx7(i,j);
+du8(i,j) = u8(i,j) xor rx8(i,j);
+du9(i,j) = u9(i,j) xor rx9(i,j);
+
+display du1,du2,du3,du4,du5,du6,du7,du8,du9;
+
+
+sets  e1(i,j), e2(i,j), e3(i,j), e4(i,j), e5(i,j), e6(i,j), e7(i,j);
+sets de1(i,j),de2(i,j),de3(i,j),de4(i,j),de5(i,j),de6(i,j),de7(i,j);
+
+loop(j,
+   e1(i,j)$sameas(i+1,j++2) = yes;
+   e2(i,j)$sameas('12',j-1) = yes;
+   e3(i,j)$sameas(i--5,'12') = yes;
+   e4(i,j)$sameas('10',j-2) = yes;
+   e5(i,j)$sameas(i-1,j++1) = yes;
+   e6(i,j)$sameas(i-1,'17') = yes;
+   e7(i,j)$sameas(i+1,'40') = yes;
+    );
+
+de1(i,j) = e1(i,j) xor ry1(i,j);
+de2(i,j) = e2(i,j) xor ry2(i,j);
+de3(i,j) = e3(i,j) xor ry3(i,j);
+de4(i,j) = e4(i,j) xor ry4(i,j);
+de5(i,j) = e5(i,j) xor ry5(i,j);
+de6(i,j) = e6(i,j) xor ry6(i,j);
+de7(i,j) = e7(i,j) xor ry7(i,j);
+
+display de1,de2,de3,de4,de5,de6,de7;
+
+abort$(card(dx1)+card(dx2)+card(dx3)+card(dx4)+card(dx5)+card(dx6)+card(dx7)+card(dx8)+card(dx9)) 'x series wrong';
+abort$(card(du1)+card(du2)+card(du3)+card(du4)+card(du5)+card(du6)+card(du7)+card(du8)+card(du9)) 'u series wrong';
+abort$(card(dy1)+card(dy2)+card(dy3)+card(dy4)+card(dy5)+card(dy6)+card(dy7)) 'y series wrong';
+abort$(card(de1)+card(de2)+card(de3)+card(de4)+card(de5)+card(de6)+card(de7)) 'e series wrong';

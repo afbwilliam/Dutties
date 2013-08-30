@@ -1,0 +1,29 @@
+$title lagged replacements could go wrong (ASSIGN1,SEQ=3)
+$ontext
+Early cmex implementations used knock out list which was implemented
+incorrcetly GT00512
+
+Once a default value is stored at an index position, a second assignment
+to the same index position (using a lag operator) will not store the
+non-default value.
+$offtext
+
+set i /i1*i3/;
+parameter a(i) /i1=1, i2=2, i3=3/
+          aa(i)
+          b(i) /i1=0, i2=-1, i3=-2/
+          c(i) /i1=10, i2=20, i3=30/
+          cc(i) /i1=0, i2=20,i3=30 /;
+
+a(i+b(i))=c(i); display a;
+abort$(a('i1') <> c('i3')) 'lagged replacement is wrong';
+aa(i) = a(i);
+aa(i+b(i))=cc(i); display aa;
+abort$(aa('i1') <> cc('i3')) 'lagged replacement is wrong';
+
+set sa(i) /i1, i2, i3/;
+set sc(i) /i2,i3/;
+
+sa(i+b(i))=sc(i);
+display sa;
+abort$(not sa('i1')) 'lagged set is wrong';

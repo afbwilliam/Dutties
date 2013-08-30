@@ -1,0 +1,47 @@
+$title multi-line macro test (MACRO02,SEQ=446)
+
+$ontext
+Contributor: Paul
+$offtext
+
+set i / 1*8 /; parameters ref(i),a(i),b(i),c(i);
+
+$macro one(x) x('1') = 1; x('2') = 2; x('3') = 3; x('4') = 4; x('5') = 5; x('6') = 6; x('7') = 7; x('8') = 8;
+
+$macro two(x) x('1') = 1; \
+              x('2') = 2; \
+              x('3') = 3; \
+              x('4') = 4; \
+              x('5') = 5; \
+              x('6') = 6; \
+              x('7') = 7; \
+              x('8') = 8;
+
+$macro three(x) x('1') = 1; \
+                x('2') = 2; \
+*
+                x('3') = 3; \
+                x('4') = 4; \
+*
+*
+                x('5') = 5; \
+                x('6') = 6; \
+*note that we need a continuation for an empty line
+                            \
+                x('7') = 7; \
+$ontext
+stuff here
+and more
+$offtext
+                x('8') = 8;
+
+
+ref(i) = ord(i); A(i) = 0; b(i) = 0; c(i) = 0;
+
+one(a)
+two(b)
+three(c)
+
+if(sum(i, ref(i)-a(i)), display a; execerror = execerror+1);
+if(sum(i, ref(i)-b(i)), display b; execerror = execerror+1);
+if(sum(i, ref(i)-c(i)), display c; execerror = execerror+1);

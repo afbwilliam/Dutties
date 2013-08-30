@@ -1,0 +1,47 @@
+$title Princeton Bilevel Optimization Example 9.2.5 (FLDS925,SEQ=40)
+
+$ontext
+
+  Test problem 9.3.6 in Handbook of Test Problems in Local and Global Optimization
+  Test problem 9.2.5 on http://titan.princeton.edu/TestProblems/chapter9.html
+
+References:
+
+Floudas, C A, Pardalos, P M, Adjiman, C S, Esposito, W R, Gumus, Z H, Harding,
+S T, Klepeis, J L, Meyer, C A, and Schweiger, C A, Handbook of Test Problems in
+Local and Global Optimization. Kluwer Academic Publishers, 1999
+
+Clark, P A, and Westerberg, A W, Bilevel Programming for Steady-State Chemical
+Process Design-i. Fundamentals and Algorithms. Comput. Chem. Eng. 14 (1990), 87-97.
+
+Contributor: Jan-H. Jagla, January 2010
+
+$offtext
+
+*Solution of problem 9.2.5 on the web
+scalar  x_l /    1 /
+        y_l /    3 /
+        tol / 1e-6 /;
+
+variables z, z_in, y; positive variable x;
+equations ob, c0, c1, c2, c3;
+
+ob.. sqr(x-3) + sqr(y-2) =e= z;
+
+c0..            sqr(y-5) =e= z_in;
+c1..     -2*x +        y =l=    1;
+c2..        x -      2*y =l=    2;
+c3..        x +      2*y =l=   14;
+
+model bilevel / all /;
+
+$echo bilevel x min z_in * c0 c1 c2 c3 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l;
+y.l = y_l;
+
+solve bilevel using EMP minimizing z;
+
+abort$(   (abs(x.l - x_l) > tol)
+       or (abs(y.l - y_l) > tol) ) 'Deviated from reported solution';

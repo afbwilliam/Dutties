@@ -1,0 +1,78 @@
+$TITLE 'EXAMINER test suite - basic option reading test' (EXAMIN01,SEQ=284)
+$ondollar
+
+$call gamslib -q trnsport
+
+$onecho > examiner.opt
+checkdump ex1_got.txt
+examinegamspoint 1
+examineinitpoint 1
+$offecho
+
+$onecho > ex1_want.txt
+start                gamspoint
+check_pvar_status    pass
+check_pvar_err       0
+check_pvar_tol       1e-06
+check_dvar_status    pass
+check_dvar_err       0
+check_dvar_tol       1e-06
+check_pcon_status    fail
+check_pcon_err       325
+check_pcon_tol       1e-06
+check_dcon_status    pass
+check_dcon_err       0
+check_dcon_tol       1e-06
+check_pcmp_status    pass
+check_pcmp_err       0
+check_pcmp_tol       1e-07
+check_dcmp_status    fail
+check_dcmp_err       325
+check_dcmp_tol       1e-07
+checks_done          7
+checks_passed        4
+stop                 gamspoint
+
+start                initpoint
+check_pvar_status    pass
+check_pvar_err       0
+check_pvar_tol       1e-06
+check_dvar_status    pass
+check_dvar_err       0
+check_dvar_tol       1e-06
+check_pcon_status    fail
+check_pcon_err       325
+check_pcon_tol       1e-06
+check_dcon_status    fail
+check_dcon_err       1
+check_dcon_tol       1e-06
+check_pcmp_status    fail
+check_pcmp_err       1
+check_pcmp_tol       1e-07
+check_dcmp_status    fail
+check_dcmp_err       325
+check_dcmp_tol       1e-07
+checks_done          7
+checks_passed        2
+stop                 initpoint
+
+$offecho
+
+$call gams trnsport lp=examiner optfile=1 lo=%gams.lo%
+
+$if not exist ex1_got.txt $abort 'Expected file ex1_got.txt does not exist'
+
+$onecho > ex1_diff.txt
+999999
+$offecho
+
+* fix up Examiner's checkdump file: e-format may vary with compiler
+$call sed "s/1e-006/1e-06/g" ex1_got.txt > temp.txt
+$call sed "s/1e-007/1e-07/g" temp.txt > ex1_got.txt
+$call diff -bw ex1_want.txt ex1_got.txt | wc -w > ex1_diff.txt
+
+scalar diffs /
+$include ex1_diff.txt
+/;
+
+abort$diffs   'The EXAMINER output was not what we expected';

@@ -1,0 +1,70 @@
+$TITLE 'BARON test suite - test all combinations of LP/NLP solvers' (BARON03,SEQ=351)
+
+$ontext
+Test of BARON.
+This test uses the model MHW4D from gamslib, taken from:
+Wright, M H, Numerical Methods for Nonlinearly Constrained Optimization.
+PhD thesis, Stanford University, 1976. We run the model with all
+combinations of LP and NLP solvers available in BARON.
+
+Contributor: Michael Bussieck
+$offtext
+
+
+$onecho > test.gms
+Variables m, x1, x2, x3, x4, x5;
+Equations funct, eq1, eq2, eq3;
+
+funct.. m =e= sqr(x1-1)      + sqr(x1-x2)     + power(x2-x3,3)
+            + power(x3-x4,4) + power(x4-x5,4) ;
+
+eq1.. x1 + sqr(x2) + power(x3,3) =e= 3*sqrt(2) + 2 ;
+
+eq2.. x2 - sqr(x3) + x4          =e= 2*sqrt(2) - 2 ;
+
+eq3.. x1*x5 =e= 2 ;
+
+Model wright / all / ;
+
+x1.l = -1; x2.l = 2; x3.l = 1; x4.l = -2; x5.l = -2;
+
+* Additional bounds to ensure global optimality
+x2.lo=-5; x2.up=5;
+x3.lo=-5; x3.up=5;
+x4.lo=-5; x4.up=5;
+x5.lo=-5; x5.up=5;
+
+wright.optfile=1;
+option nlp=baron, optcr=0, optca=0, limrow=0, limcol=0, solprint=off;
+
+Solve wright using nlp minimizing m;
+
+abort$(wright.modelstat <> %modelstat.Optimal% and abs(m.l - wright.objest)>1e-5) 'wrong model status'
+abort$(abs(m.l - 0.0293108)>1e-5) 'wrong objective';
+$offecho
+
+set lpsol  / 3 ILOG CPLEX, 7 XPRESS-MP, 8 'COIN LP' /
+    nlpsol / 2 MINOS, 4 SNOPT, 6 'GAMS external NLP solver', 9 'COIN IPOPT with MUMPS and METIS' /
+
+file fopt / baron.opt /;
+file fwanted / solwanted.txt /;
+file fused   / solused.txt /;
+
+loop((lpsol,nlpsol),
+  putclose fopt 'lpsol ' lpsol.tl:0
+              / 'nlpsol ' nlpsol.tl:0;
+  putclose fwanted lpsol.te(lpsol)
+                 / nlpsol.te(nlpsol);
+
+  execute 'gams test.gms lo=2'
+  if(errorlevel,
+     execute 'cat baron.opt';
+     abort 'failure for solver combination';
+  );
+
+  execute 'grep "^ For " test.log | tr -s " " | cut -d" " -f4- > solused.txt'
+  execute '=diff -bw solwanted.txt solused.txt'
+  abort$errorlevel 'solvers used not the chosen ones';
+);
+
+execute 'rm -f temp.gms temp.lst temp.log solwanted.txt solused.txt';

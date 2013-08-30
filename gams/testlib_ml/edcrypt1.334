@@ -1,0 +1,31 @@
+$title 'Tests for endecrypt with and without password' (EDCRYPT1,SEQ=334)
+
+$call gamslib -q trnsport
+
+$log check compression without a password
+$call rm -f trnsport[2-5].gms
+$call cat trnsport.gms | endecrypt -W trnsport.xyz
+$call endecrypt -R trnsport.xyz > trnsport2.gms
+$call diff trnsport.gms trnsport2.gms > %system.nullfile%
+$if errorlevel 1 $abort 'trnsport.gms and trnsport2.gms not the same'
+
+$log create with password
+$echo geheim > pswd.tmp
+$call cat trnsport.gms | endecrypt -W trnsport.xyz pswd.tmp
+* password file should be gone
+$if exist pswd.tmp $abort 'password file still there'
+$call endecrypt -R trnsport.xyz > trnsport3.gms
+$if not errorlevel 1 $abort 'endecrypt without a password passed
+
+$log check wrong password
+$echo wrong > pswd.tmp
+$call endecrypt -R trnsport.xyz pswd.tmp > trnsport4.gms
+$call diff trnsport.gms trnsport4.gms  > %system.nullfile%
+$if not errorlevel 1 $abort 'trnsport.gms and trnsport4.gms are the same although wrong password;
+$if exist pswd.tmp $abort 'password file still there'
+
+$log decrypt with correct password
+$echo geheim > pswd.tmp
+$call endecrypt -R trnsport.xyz pswd.tmp > trnsport5.gms
+$call diff trnsport.gms trnsport5.gms > %system.nullfile%
+$if errorlevel 1 $abort 'trnsport.gms and trnsport5.gms not the same'

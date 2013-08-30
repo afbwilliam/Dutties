@@ -1,0 +1,86 @@
+$TITLE Test modsolstat & solution correctness - multiple QCons (QCP04,SEQ=87)
+
+$if not set DEMOSIZE      $set DEMOSIZE   0
+$if not set GLOBALSIZE    $set GLOBALSIZE 0
+$if not %DEMOSIZE% == 0   $set DEMOSIZE   1
+$if not %GLOBALSIZE% == 0 $set GLOBALSIZE 1
+
+* $if set DEMOSIZE    $set N 149
+* $if set GLOBALSIZE  $set N 6
+
+* set default N based on license and type of solver
+$if %DEMOSIZE%%GLOBALSIZE% == 00 $set NN 450
+$if %DEMOSIZE%%GLOBALSIZE% == 01 $set NN   6
+$if %DEMOSIZE%%GLOBALSIZE% == 10 $set NN 149
+$if %DEMOSIZE%%GLOBALSIZE% == 11 $set NN   2
+
+$if not set N       $set N %NN%
+$if not set MTYPE   $set MTYPE qcp
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not set QCPMCHECKS $goto qpmchecks
+$if not %QCPMCHECKS% == 0 mchecks = 1;
+$goto donemcheck
+$label qpmchecks
+$if not  %QPMCHECKS% == 0 mchecks = 1;
+$label donemcheck
+
+$eolcom //
+
+set i /1*%N%/;
+variables x(i), y(i), z;
+parameter xp(i), yp(i);
+
+xp(i) = uniform(0,1);
+yp(i) = uniform(0,1);
+* set some inactive bounds to keep the global solvers happy
+x.lo(i) = -1.1;  x.up(i) = 1.1;
+y.lo(i) = -1.1;  y.up(i) = 1.1;
+
+equation defc, defz;
+
+defc(i).. sqr(x(i)) + sqr(y(i)) =L= 1;
+defz..    z =E= sum(i,xp(i)*x(i) + yp(i)*y(i));
+
+model m /all/;
+m.limrow=0; m.limcol=0;m.solprint=%SOLPRINT.Summary%;
+solve m min z using %MTYPE%;
+
+scalars
+    vtol    /    1e-8 /,
+    tol     /    %TESTTOL% /,
+    objval;
+parameters
+    dLdx(i)  'dLangrangian/dx',
+    dLdy(i)  'dLangrangian/dy',
+    defc_l(i);
+
+* capability problems is an OK return
+if {(m.solvestat = %solvestat.CapabilityProblems%),
+  abort$(m.modelstat <> %modelstat.NoSolutionReturned%)           'wrong modelstat for capability error';
+  display 'Solver capability error: further tests suppressed';
+else
+  // should we consider checking for reslim or iterlim?
+  abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)           'wrong status codes';
+
+  objval = sum(i,xp(i)*x.l(i) + yp(i)*y.l(i));
+  dLdx(i) = xp(i) - defc.m(i) * 2 * x.l(i);
+  dLdy(i) = yp(i) - defc.m(i) * 2 * y.l(i);
+  defc_l(i) = sqr(x.l(i)) + sqr(y.l(i));
+
+  abort$(abs(z.l-objval) > tol)                       'bad z.l';
+  abort$(abs(z.m) > tol)                              'bad z.m';
+  abort$(abs(defz.l) > tol)                           'bad defz.l';
+  abort$(abs(defz.m-1) > tol)                         'bad defz.m';
+
+  abort$(smax{i,defc_l(i) - 1} > tol)                 'bad defc';
+  abort$(smax{i,abs(defc.l(i)-defc_l(i))} > tol)      'bad defc.l';
+
+  if {mchecks,
+    abort$(smax{i,defc.m(i)} > tol)                   'bad defc.m';
+    abort$(smax{i,abs(dLdx(i))} > tol)                'bad dLdx';
+    abort$(smax{i,abs(dLdy(i))} > tol)                'bad dLdy';
+  };
+
+  display 'All tests passed';
+};

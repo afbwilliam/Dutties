@@ -1,0 +1,44 @@
+$Title Test disjunctions involving the objective (EMPDISJ2,SEQ=501)
+
+$ontext
+The following checks have to be performed:
+
+1. If the objective equation is unambiguous it cannot be involved in a disjunction.
+2. If there are multiple the reader has to make sure each term of the relevant
+disjunction has to have a (potential) objective
+
+Contributor: Jan-H. Jagla, November 2010
+$offtext
+
+variable x; equation e1,e2,e3; model m  / all /;
+variable y; equation e1a,e3a ; model m2 / all /;
+                               model m3 / e1,e2,e3,e1a /;
+
+e1.. x =e= 1;
+e1a.. y =e= 1;
+e2.. x =e= 2;
+e3.. x =e= 3;
+e3a.. y =e= 3;
+
+file fhandle /"%emp.info%"/;
+
+*This is ok since every term has an obj
+putclose fhandle 'disjunction bigm * e1 elseif * e2 else e3';
+solve m us emp min x;
+abort$(m.solvestat <> 1 or m.modelstat <> 1) '1st solve should terminate with (1,1)';
+
+*This is NOT ok since the second term has no obj
+putclose fhandle 'disjunction bigm * e1 e1a elseif * e2 else e3 e3a';
+solve m2 us emp min y;
+abort$(m2.solvestat <> 12 or m2.modelstat <> 14) '2nd solve should terminate with (12,14)';
+
+*This is ok since obj is not involved a disjunction
+putclose fhandle 'disjunction bigm * e1 elseif * e2 else e3';
+solve m3 us emp min y;
+abort$(m3.solvestat <> 1 or m3.modelstat <> 1) '3rd solve should terminate with (1,1)';
+
+*This is NOT ok since the objective is unambiguous and involved
+*in a disjunction hence only one term involves and has an obj
+putclose fhandle 'disjunction bigm * e1 e1a elseif * e2 else e3';
+solve m3 us emp min y;
+abort$(m3.solvestat <> 12 or m3.modelstat <> 14) '4th solve should terminate with (12,14)';

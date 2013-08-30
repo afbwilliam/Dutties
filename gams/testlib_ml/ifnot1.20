@@ -1,0 +1,39 @@
+$title Better recognition of $if NOT == (IFNOT1,SEQ=20)
+
+* GT00459 from A drud
+*
+* $if [NOT] s1 == s2 ......
+* $if NOT == should be an error
+* $if %string% == somthing   is a problem of %string% is NOT
+*
+* new rules:
+*
+* 1.  to regonize a NOT we need a space following NOT
+* 2.  NOT == is an error
+
+scalar badresult  / 0 /
+       goodresult / 0 /;
+
+$if NOT == abc      display 'this should be an error';
+$if     errorfree $abort above is wrong
+$clearerror
+
+$if NOT == NOT      display 'one not';
+$if     errorfree $abort above is wrong
+$clearerror
+
+$if NOT == ''       display 'one not';
+$if     errorfree $abort above is wrong
+$clearerror
+
+$if NOT '' == abc   goodresult = goodresult + 1; display goodresult;
+$if NOT== abc       badresult  = badresult  + 1; display badresult;
+$if NOT== NOT       goodresult = goodresult + 1; display goodresult;
+$if NOT= ==  "NOT=" goodresult = goodresult + 1; display goodresult;
+$if NOT''== abc     badresult  = badresult  + 1; display badresult;
+$if NOT''== "NOT''" goodresult = goodresult + 1; display goodresult;
+$if NOT = == ''     goodresult = goodresult + 1; display goodresult;
+$if NOT = == =      badresult  = badresult  + 1; display badresult;
+$if     = == =      goodresult = goodresult + 1; display goodresult;
+
+abort$badresult ' something wrong';

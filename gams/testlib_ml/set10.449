@@ -1,0 +1,19 @@
+$title first entry in set/param data has wrong dimension (SET10,SEQ=449)
+
+$ontext
+
+23.1 and 23.2 have an access violation and crash, 23.3 is fixed
+
+Contributor: Alex
+
+$offtext
+
+SET       i(*,*) / c1 , c2.c3 , b /;
+parameter x(*,*) / (c,d) 2 , b.c 5 , k.k 9 /;
+$clearerrors
+$terminate
+$exit
+   1  SET       i(*,*) / c1 , c2.c3 , b /;
+****                       $148        $161
+   2  parameter x(*,*) / (c,d) 2 , b.c 5 , k.k 9 /;
+****                            $148

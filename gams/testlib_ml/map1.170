@@ -1,0 +1,16 @@
+$title 'simple mapped assignment' (MAP1,SEQ=170)
+
+Sets op / 1,2 /
+     un / a,b /
+set undiff(un,op) / a.1 /;
+
+Parameters unref(un,op)  / a.1 10 /
+           unerr1(un,op,*), unerr2(un,op,*);
+
+unerr1(un,op,'ref')$undiff(un,op) =  unref(un,op);
+display unerr1;
+abort$(unerr1('a','1','ref') <> 10) 'unerr1 is bad';
+
+unerr2(undiff,'ref') =  unref(undiff);
+display unerr2;
+abort$(unerr2('a','1','ref') <> 10) 'unerr2 is bad';

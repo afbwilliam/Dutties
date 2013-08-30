@@ -1,0 +1,13 @@
+$title Test that we cannot option clear a domain (CLEAR2,SEQ=10)
+
+set i(i) / a,b /;
+
+option clear=i;
+
+$if errorfree $goto problem
+$clearerror
+$terminate
+
+$label problem
+$error cannot clear a domain
+

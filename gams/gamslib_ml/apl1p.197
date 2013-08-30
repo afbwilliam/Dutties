@@ -1,0 +1,176 @@
+$title APL1P Stochastic Programming Example for GAMS/DECIS (APL1P,SEQ=197)
+
+$ontext
+
+ Stochastic Electric Power Expansion Planning Problem.
+ This is a two-stage stochastic linear program.
+ Facing uncertain demand, decisions about generation
+ capacity need to be made.
+
+ This model is also used as an example in the
+ GAMS/DECIS user's guide.
+
+
+Infanger, G, Planning Under Uncertainty - Solving Large-Scale
+Stochastic Linear Programs, 1988.
+
+$offtext
+
+$if not set decisalg $set decisalg decism
+
+set g generators / g1, g2/;
+set dl demand levels /h, m, l/;
+
+
+parameter alpha(g) availability / g1  0.68, g2  0.64 /;
+parameter ccmin(g) min capacity / g1  1000, g2  1000 /;
+parameter ccmax(g) max capacity / g1 10000, g2 10000 /;
+parameter c(g) investment       / g1   4.0, g2   2.5 /;
+
+table f(g,dl) operating cost
+             h    m    l
+   g1        4.3  2.0  0.5
+   g2        8.7  4.0  1.0;
+
+parameter d(dl) demand                   / h 1040, m 1040, l 1040 /;
+parameter us(dl) cost of unserved demand / h   10, m   10, l   10 /;
+
+* -----------------------------------------------
+* define the core model
+* -----------------------------------------------
+
+free variable tcost         total cost;
+positive variable x(g)      capacity of generators;
+positive variable y(g, dl)  operation level;
+positive variable s(dl)     unserved demand;
+
+equations
+cost        total cost
+cmin(g)     minimum capacity
+cmax(g)     maximum capacity
+omax(g)     maximum operating level
+demand(dl)  satisfy demand;
+
+cost .. tcost =e=     sum(g, c(g)*x(g))
+                    + sum(g, sum(dl, f(g,dl)*y(g,dl)))
+                    + sum(dl,us(dl)*s(dl));
+
+cmin(g) .. x(g) =g= ccmin(g);
+cmax(g) .. x(g) =l= ccmax(g);
+omax(g) .. sum(dl, y(g,dl)) =l= alpha(g)*x(g);
+demand(dl) .. sum(g, y(g,dl)) + s(dl) =g= d(dl);
+
+model apl1p /all/;
+
+
+* -----------------------------------------------
+* setting decision stages
+* -----------------------------------------------
+
+x.stage(g) = 1;
+y.stage(g, dl) = 2;
+s.stage(dl) = 2;
+
+cmin.stage(g) = 1;
+cmax.stage(g) = 1;
+omax.stage(g) = 2;
+demand.stage(dl) = 2;
+
+* -----------------------------------------------
+* defining independent stochastic parameters
+* -----------------------------------------------
+
+set stoch /out, pro /;
+set omega1 / o11, o12, o13, o14 /;
+set omega2 / o21, o22, o23, o24, o25 /;
+
+table v1(stoch, omega1)
+      o11   o12   o13   o14
+out  -1.0  -0.9  -0.5  -0.1
+pro   0.2   0.3   0.4   0.1
+;
+
+table v2(stoch, omega2)
+      o21   o22   o23   o24   o25
+out  -1.0  -0.9  -0.7  -0.1  -0.0
+pro   0.1   0.2   0.5   0.1   0.1
+;
+
+table v3(stoch, omega1)
+      o11   o12   o13   o14
+out   900  1000  1100  1200
+pro  0.15  0.45  0.25  0.15
+;
+
+table v4(stoch,omega1)
+      o11   o12   o13   o14
+out   900  1000  1100  1200
+pro  0.15  0.45  0.25  0.15
+;
+
+table v5(stoch,omega1)
+      o11   o12   o13   o14
+out   900  1000  1100  1200
+pro  0.15  0.45  0.25  0.15
+;
+
+* -----------------------------------------------
+* outputting stochastic file
+* -----------------------------------------------
+
+file stg / MODEL.STG /;
+put stg;
+
+put "INDEP DISCRETE" /;
+loop(omega1,
+put "x g1  omax g1   ", v1("out", omega1),
+                   " period2 ", v1("pro", omega1) /;
+);
+put "*" /;
+loop(omega2,
+put "x g2  omax g2   ", v2("out", omega2),
+                   " period2 ", v2("pro", omega2) /;
+);
+put "*" /;
+loop(omega1,
+put "RHS demand h   ", v3("out", omega1),
+                    " period2 ", v3("pro", omega1) /;
+);
+put "*" /;
+loop(omega1,
+put "RHS demand m   ", v4("out", omega1),
+                    " period2 ", v4("pro", omega1) /;
+);
+put "*" /;
+loop(omega1,
+put "RHS  ", " demand  l   ", v5("out", omega1),
+                    " period2 ", v5("pro", omega1) /;
+);
+putclose;
+
+* -----------------------------------------------
+* output a MINOS option file
+* -----------------------------------------------
+
+file mopt / MINOS.SPC /;
+put mopt;
+put "begin"/;
+put "rows 250"/;
+put "columns 250"/;
+put "elements 10000"/;
+put "end"/;
+putclose;
+
+* -----------------------------------------------
+* solve the model
+* -----------------------------------------------
+
+option lp=%decisalg%;
+solve apl1p using lp minimizing tcost;
+
+scalar ccost capital cost;
+scalar ocost operating cost;
+ccost = sum(g, c(g) * x.l(g));
+ocost = tcost.l -  ccost;
+
+display x.l, tcost.l, ccost, ocost, y.l, s.l;

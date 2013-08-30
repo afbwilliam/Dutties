@@ -1,0 +1,87 @@
+$Title  A Stochastic Transportation Problem (TRANSSP,SEQ=94)
+$Ontext
+
+This model is a stochastic extension of the TRNSPORT model from the GAMS model
+library. Here the demand at each market is uncertain. This is modeled with a
+random variable df (demand factor) which gets multiplied with the demand. It has
+a discrete distribution. A recourse variable u (unsatisfied demand) was added.
+
+Contributor: Lutz Westermann
+
+$Offtext
+
+
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka / ;
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        2.5           1.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90 /
+         p  penalty for unsatisfied demand                  / 1 /
+         bf demand factor                                   / 1 /;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+ display c;
+
+  Variables
+       x(i,j)  shipment quantities in cases
+       u(j)    unsatisfied demand (recourse variable)
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x,u ;
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j ;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) + p*sum(j,u(j));
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  bf*b(j) - u(j) ;
+
+Model transport /all/ ;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+$onput
+randvar bf discrete 0.3 0.95
+                    0.5 1.00
+                    0.2 1.05
+stage 2 bf u demand
+$offput
+putclose emp;
+
+Set scen        scenarios / l,m,h /;
+Parameter
+    s_bf(scen)    demand factor realization by scenario
+    s_u(scen,j)
+    s_x(scen,i,j) shipment per scenario
+    s_s(scen) ;
+
+Set dict / scen .scenario.''
+           bf   .randvar .s_bf
+           u    .level   .s_u
+           x    .level   .s_x /;
+
+Solve transport using emp minimizing z scenario dict;
+
+Display s_bf, s_x, s_u;

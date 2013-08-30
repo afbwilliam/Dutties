@@ -1,0 +1,103 @@
+$title Simple bilevel model, outer problem consists of objective only (EMPBP02,SEQ=421)
+
+$ontext
+
+This model compares the results obtained by EMP with the ones obtained using the
+corresponding hand-crafted model. The bilevel model is composed of an outer
+minimization problem consisting of an objective function only plus a inner
+minimization problem
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+$if not set nlpsolver $set nlpsolver conopt
+
+*-------------------------------------------------------------------------------
+*Prepare reporting
+
+Parameter rep comparison;
+sets
+   enames     / outerobj,innerobj,innereq1 /
+   vnames     / out,x,in,y1,y2  /
+   evnames    / set.enames,set.vnames /
+   suf        / l /;
+
+$gdxout "%gams.scrdir%repsets.%gams.scrext%"
+$unload evnames suf
+$gdxout
+
+$onecho > "%gams.scrdir%repmaker.%gams.scrext%"
+set evnames, suf;
+$gdxin "%gams.scrdir%repsets.%gams.scrext%"
+$load evnames suf
+
+file fx /"%gams.scrdir%report.%gams.scrext%"/; put fx;
+loop((evnames,suf),
+$escape =
+  put "rep('" evnames.te(evnames) "','" suf.te(suf) "','%=1')"
+  put " = " evnames.te(evnames) "." suf.te(suf) ";" /;
+$escape %
+);
+$offecho
+
+$call gams "%gams.scrdir%repmaker.%gams.scrext%" lo=0
+*-------------------------------------------------------------------------------
+
+Equations
+   outerobj
+   innerobj
+   innereq1;
+
+Variables
+   out
+   in;
+
+Positive Variables
+   x
+   y1
+   y2;
+
+outerobj.. out =e= sqr(x) - 4*x + sqr(y1) + sqr(y2);
+
+x.up = 2;
+
+innerobj.. in =e= sqr(y1) + 0.5*sqr(y2) + y1*y2 + (1-3*x)*y1 + (1+x)*y2;
+
+innereq1.. 2*y1 + y2 - 2*x =l= 1;
+
+model outer   / outerobj           /
+      inner   / innerobj, innereq1 /
+      bilevel / outer, inner       /;
+
+$echo bilevel x min in * innerobj innereq1 > "%emp.info%"
+
+option dnlp=%nlpsolver%;
+
+solve  bilevel using emp mininizing out;
+abort$(bilevel.solvestat <> %SOLVESTAT.NORMAL COMPLETION%) 'EMP solver status <> 1';
+$batinclude "%gams.scrdir%report.%gams.scrext%" emp
+
+*Verify solution
+
+*KKT conditions for inner minimization problem
+
+Negative Variables  u2;
+Equations  dLdy1,dLdy2;
+dLdy1.. ( - (2*y1 + y2 + 1 - 3*x))/(-1) - u2*2 =N= 0;
+dLdy2.. ( - (y2 + y1 + 1 + x))/(-1) - u2 =N= 0;
+
+Model manual / outer, innereq1.u2, dLdy1.y1, dLdy2.y2 /;
+
+solve manual using mpec minimizing out;
+abort$(manual.solvestat <> %SOLVESTAT.NORMAL COMPLETION%) 'Hand-made model solver status <> 1';
+$batinclude "%gams.scrdir%report.%gams.scrext%" manual
+
+*-------------------------------------------------------------------------------
+*Reporting Differences
+
+rep(evnames,suf,'diff') = abs(rep(evnames,suf,'emp') - rep(evnames,suf,'manual'));
+rep(evnames,suf,'diff')$(rep(evnames,suf,'diff') < 1e-5) = 0;
+display rep;
+abort$sum((evnames,suf),rep(evnames,suf,'diff')) 'Solutions differ';
+

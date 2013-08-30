@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>GDX (GDX) API Documentation</h1>
+
+<p>Generated for GAMS 24.0.2</p>
+
+<h2>Functions, Procedures and Properties</h2>
+
+<dt><a href="#gdxAcronymAdd">gdxAcronymAdd</a></dt> <dd>Add a new acronym entry. This can be used to add entries before data is written. =<0 if the entry is not added.</dd>
+<dt><a href="#gdxAcronymCount">gdxAcronymCount</a></dt> <dd>Number of entries in the acronym table.</dd>
+<dt><a href="#gdxAcronymGetInfo">gdxAcronymGetInfo</a></dt> <dd>Retrieve acronym information from the acronym table. <>0 if the index into the acronym table is valid.</dd>
+<dt><a href="#gdxAcronymGetMapping">gdxAcronymGetMapping</a></dt> <dd>Get information how acronym values are remapped. When reading gdx data, we need to map indices for acronyms used in the gdx file to indices used by the reading program. <>0 if the index into the acronym table is valid.</dd>
+<dt><a href="#gdxAcronymIndex">gdxAcronymIndex</a></dt> <dd>Get index value of an acronym. 0 if V does not represent an acronym.</dd>
+<dt><a href="#gdxAcronymName">gdxAcronymName</a></dt> <dd>Find the name of an acronym value. <>0 if a name for the acronym is defined. An unnamed acronym value will return a string of the form UnknownAcronymNNN, were NNN is the index of the acronym.</dd>
+<dt><a href="#gdxAcronymNextNr">gdxAcronymNextNr</a></dt> <dd>Returns the value of the NextAutoAcronym variable and sets the variable to NV. When we read from a gdx file and encounter an acronym that was not defined, we need to assign a new index for that acronym. That index is the variable NextAutoAcronym.</dd>
+<dt><a href="#gdxAcronymSetInfo">gdxAcronymSetInfo</a></dt> <dd>Modify acronym information in the acronym table. When reading (writing) a gdx file, this function is used to provide the acronym index (name of an acronym), the SyId (AIndx) parameter must match.</dd>
+<dt><a href="#gdxAcronymValue">gdxAcronymValue</a></dt> <dd>Create an acronym value based on the index (AIndx should be greater than 0). Returns the calculated acronym value (0 if AIndx =<0).</dd>
+<dt><a href="#gdxAddAlias">gdxAddAlias</a></dt> <dd>Add an alias for a set to the symbol table. One of the two identifiers has to be a known set, the other identifier is used as the new alias. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxAddSetText">gdxAddSetText</a></dt> <dd>Register a string to be used as text associated with a unique element. The string must follow the GAMS syntax rules for explanatory text. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxAutoConvert">gdxAutoConvert</a></dt> <dd>Returns the value of the AutoConvert variable and sets the variable to NV. If AutoConvert <>0 when closing a new gdx file we look at the GDXCOMPRESS and GDXCONVERT environment variables to determine if conversion to an older file format is desired.</dd>
+<dt><a href="#gdxClose">gdxClose</a></dt> <dd>Close a gdx file that was previously opened for reading or writing. Any pending write operations will be finished before closing</dd>
+<dt><a href="#gdxDataErrorCount">gdxDataErrorCount</a></dt> <dd>The number of error records after a write operation is finished (gdxDataWriteDone).</dd>
+<dt><a href="#gdxDataErrorRecord">gdxDataErrorRecord</a></dt> <dd>Retrieve an error record. <>0 if the record number is valid.</dd>
+<dt><a href="#gdxDataReadDone">gdxDataReadDone</a></dt> <dd>Finish reading of a symbol in any mode(raw, mapped, string). 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadFilteredStart">gdxDataReadFilteredStart</a></dt> <dd>Initialize the reading of a symbol in filtered mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadMap">gdxDataReadMap</a></dt> <dd>Read the next record in mapped mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadMapStart">gdxDataReadMapStart</a></dt> <dd>Initialize the reading of a symbol in mapped mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadRaw">gdxDataReadRaw</a></dt> <dd>Read the next record in raw mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadRawFast">gdxDataReadRawFast</a></dt> <dd>Read a symbol in Raw mode using a callback procedure. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadRawStart">gdxDataReadRawStart</a></dt> <dd>Initialize the reading of a symbol in raw mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadSlice">gdxDataReadSlice</a></dt> <dd>Read a slice of data from a data set, by fixing zero or more index positions in the data. When a data element is available, the callback procedure DP is called with the current index and the values. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadSliceStart">gdxDataReadSliceStart</a></dt> <dd>Prepare for the reading of a slice of data from a data set. The actual read of the data is done by calling gdxDataReadSlice. When finished reading, call gdxDataReadDone. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataReadStr">gdxDataReadStr</a></dt> <dd>Read the next record using strings for the unique elements. The reading should be initialized by calling DataReadStrStart. 0 if the operation is not possible or if there is no more data.</dd>
+<dt><a href="#gdxDataReadStrStart">gdxDataReadStrStart</a></dt> <dd>Initialize the reading of a symbol in string mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataSliceUELS">gdxDataSliceUELS</a></dt> <dd>Map a slice index into the corresponding unique elements. After calling DataReadSliceStart, index positions are mapped from 0 to N(d)-1. This function maps this index space back into unique elements (strings). 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteDone">gdxDataWriteDone</a></dt> <dd>Finish a write operation. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteMap">gdxDataWriteMap</a></dt> <dd>Write a data element in mapped mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteMapStart">gdxDataWriteMapStart</a></dt> <dd>Start writing a new symbol in mapped mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteRaw">gdxDataWriteRaw</a></dt> <dd>Write a data element in raw mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteRawStart">gdxDataWriteRawStart</a></dt> <dd>Start writing a new symbol in raw mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteStr">gdxDataWriteStr</a></dt> <dd>Write a data element in string mode. Each element string must follow the GAMS rules for unique elements. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxDataWriteStrStart">gdxDataWriteStrStart</a></dt> <dd>Start writing a new symbol in string mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxGetDLLVersion">gdxGetDLLVersion</a></dt> <dd>Returns a version descriptor of the library. Always nonzero</dd>
+<dt><a href="#gdxErrorCount">gdxErrorCount</a></dt> <dd>Total number of errors encountered.</dd>
+<dt><a href="#gdxErrorStr">gdxErrorStr</a></dt> <dd>Returns the text for a given error number. Always nonzero.</dd>
+<dt><a href="#gdxFileInfo">gdxFileInfo</a></dt> <dd>Returns file format number and compression level used. Always nonzero.</dd>
+<dt><a href="#gdxFileVersion">gdxFileVersion</a></dt> <dd>Return strings for file version and file producer. Always nonzero.</dd>
+<dt><a href="#gdxFilterExists">gdxFilterExists</a></dt> <dd>Check if there is a filter defined based on its number as used in gdxFilterRegisterStart. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxFilterRegister">gdxFilterRegister</a></dt> <dd>Add a unique element to the current filter definition. 0 if the index number is out of range or was never mapped into the user index space.</dd>
+<dt><a href="#gdxFilterRegisterDone">gdxFilterRegisterDone</a></dt> <dd>Finish registration of unique elements for a filter. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxFilterRegisterStart">gdxFilterRegisterStart</a></dt> <dd>Define a unique element filter. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxFindSymbol">gdxFindSymbol</a></dt> <dd>Search for a symbol by name (case insensitive). When the symbol is found, SyNr contains the symbol number and the function returns a nonzero, else it returns 0.</dd>
+<dt><a href="#gdxGetElemText">gdxGetElemText</a></dt> <dd>Retrieve the string and node number for an entry in the string table. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxGetLastError">gdxGetLastError</a></dt> <dd>Returns the last error number or 0 if there was no error. Calling this function will clear the last error stored.</dd>
+<dt><a href="#gdxGetMemoryUsed">gdxGetMemoryUsed</a></dt> <dd>Get memory in use by gdx object.</dd>
+<dt><a href="#gdxGetSpecialValues">gdxGetSpecialValues</a></dt> <dd>Retrieve the internal values for special values. Always nonzero.</dd>
+<dt><a href="#gdxGetUEL">gdxGetUEL</a></dt> <dd>Get the string for a unique element using a mapped index. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxMapValue">gdxMapValue</a></dt> <dd>Classify a value as a potential special value. Nonzero if D is a special value, 0 otherwise.</dd>
+<dt><a href="#gdxOpenAppend">gdxOpenAppend</a></dt> <dd>Open an existing gdx file for output. Nonzero if the file can be opened, 0 otherwise.</dd>
+<dt><a href="#gdxOpenRead">gdxOpenRead</a></dt> <dd>Open an existing gdx file for input. Nonzero if the file can be opened, 0 otherwise.</dd>
+<dt><a href="#gdxOpenWrite">gdxOpenWrite</a></dt> <dd>Open a new gdx file for output. Nonzero if the file can be opened, 0 otherwise.</dd>
+<dt><a href="#gdxOpenWriteEx">gdxOpenWriteEx</a></dt> <dd>Open a new gdx file for output with optional compression. Nonzero if the file can be opened, 0 otherwise.</dd>
+<dt><a href="#gdxResetSpecialValues">gdxResetSpecialValues</a></dt> <dd>Reset the internal values for special values. Always nonzero.</dd>
+<dt><a href="#gdxSetHasText">gdxSetHasText</a></dt> <dd>Test if any of the unique elements in a set has associated text. Nonzero if the Set contains at least one unique element that has associated text, 0 otherwise</dd>
+<dt><a href="#gdxSetReadSpecialValues">gdxSetReadSpecialValues</a></dt> <dd>Set internal values for special values when reading a gdx file. Before calling this function, initialize the array of special values by calling gdxGetSpecialValues first. Always nonzero</dd>
+<dt><a href="#gdxSetSpecialValues">gdxSetSpecialValues</a></dt> <dd>Set internal values for special values. Before calling this function, initialize the array of special values by calling gdxGetSpecialValues first. Note: values in AVals have to be unique. Nonzero if all values specified are unique, 0 otherwise.</dd>
+<dt><a href="#gdxSetTextNodeNr">gdxSetTextNodeNr</a></dt> <dd>Set the Node number for an entry with Index N in the string table. After registering a string with AddSetText, we can assign a node number for later retrieval. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSetTraceLevel">gdxSetTraceLevel</a></dt> <dd>Set the amount of trace (debug) information generated. Always nonzero.</dd>
+<dt><a href="#gdxSymbIndxMaxLength">gdxSymbIndxMaxLength</a></dt> <dd>Returns the length of the longest UEL used for every index position for a given symbol.</dd>
+<dt><a href="#gdxSymbMaxLength">gdxSymbMaxLength</a></dt> <dd>Returns the length of the longest symbol name.</dd>
+<dt><a href="#gdxSymbolAddComment">gdxSymbolAddComment</a></dt> <dd>Add a line of comment text for a symbol. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSymbolGetComment">gdxSymbolGetComment</a></dt> <dd>Retrieve a line of comment text for a symbol. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSymbolGetDomain">gdxSymbolGetDomain</a></dt> <dd>Retrieve the domain of a symbol. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSymbolGetDomainX">gdxSymbolGetDomainX</a></dt> <dd>Retrieve the domain of a symbol (Relaxed version). 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSymbolDim">gdxSymbolDim</a></dt> <dd>Retrieve dimension of a symbol.</dd>
+<dt><a href="#gdxSymbolInfo">gdxSymbolInfo</a></dt> <dd>Returns information about a symbol. 0 if the symbol number is out of range, nonzero otherwise.</dd>
+<dt><a href="#gdxSymbolInfoX">gdxSymbolInfoX</a></dt> <dd>Returns additional information about a symbol. 0 if the symbol number is out of range, nonzero otherwise.</dd>
+<dt><a href="#gdxSymbolSetDomain">gdxSymbolSetDomain</a></dt> <dd>Define the domain of the symbol for which a write data operation just started using DataWriteRawStart, DataWriteMapStart or DataWriteStrStart. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSymbolSetDomainX">gdxSymbolSetDomainX</a></dt> <dd>Define the domain of symbol SyNr (Relaxed version). 0 if the operation is not possible.</dd>
+<dt><a href="#gdxSystemInfo">gdxSystemInfo</a></dt> <dd>Returns the number of symbols and unique elements. Always nonzero.</dd>
+<dt><a href="#gdxUELMaxLength">gdxUELMaxLength</a></dt> <dd>Returns the length of the longest UEL name.</dd>
+<dt><a href="#gdxUELRegisterDone">gdxUELRegisterDone</a></dt> <dd>Finish registration of unique elements. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUELRegisterMap">gdxUELRegisterMap</a></dt> <dd>Register a unique element in mapped mode. A unique element must follow the GAMS rules when it contains quote characters. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUELRegisterMapStart">gdxUELRegisterMapStart</a></dt> <dd>Start registering unique elements in mapped mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUELRegisterRaw">gdxUELRegisterRaw</a></dt> <dd>Register a unique element in raw mode. This can only be used while writing to a gdx file. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUELRegisterRawStart">gdxUELRegisterRawStart</a></dt> <dd>Start registering unique elements in raw mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUELRegisterStr">gdxUELRegisterStr</a></dt> <dd>Register a unique element in string mode. A unique element must follow the GAMS rules when it contains quote characters. Nonzero if the element was registered, zero otherwise.</dd>
+<dt><a href="#gdxUELRegisterStrStart">gdxUELRegisterStrStart</a></dt> <dd>Start registering unique elements in string mode. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUMFindUEL">gdxUMFindUEL</a></dt> <dd>Search for a unique element by its string. Nonzero if the element was found, 0 otherwise.</dd>
+<dt><a href="#gdxUMUelGet">gdxUMUelGet</a></dt> <dd>Get a unique element using an unmapped index. 0 if the operation is not possible.</dd>
+<dt><a href="#gdxUMUelInfo">gdxUMUelInfo</a></dt> <dd>Returns information about the unique elements. Always nonzero.</dd>
+<dt><a href="#gdxCurrentDim">gdxCurrentDim</a></dt> <dd>Returns the dimension of the current active symbol. When reading or writing data, the dimension of the current active symbol is sometimes needed to convert arguments from strings to pchars etc.</dd>
+
+<h2>Arguments</h2>
+<dl>
+
+<dt>AIndx       </dt> <dd>Index value of the acronym</dd>
+<dt>AName       </dt> <dd>Name of the acronym</dd>
+<dt>autoIndex   </dt> <dd>Nonzero if the newIndx was generated using the value of NextAutoAcronym</dd>
+<dt>AVals       </dt> <dd>Array of special values used for Eps, +Inf, -Inf, NA and Undef</dd>
+<dt>Compr       </dt> <dd>Zero for no compression; nonzero uses compression if available</dd>
+<dt>ComprLev    </dt> <dd>Compression used; 0=no compression, 1=zlib</dd>
+<dt>D           </dt> <dd>Value to classify</dd>
+<dt>Dimen       </dt> <dd>Dimension of the symbol/index space; index space means the number of index positions that is not fixed (gdxDataReadSlice)</dd>
+<dt>DimFrst     </dt> <dd>The first index position in KeyInt that changed</dd>
+<dt>DomainIDs   </dt> <dd>Array containing the set identifiers or * of the domain for the corresponding index position</dd>
+<dt>DomainSyNrs </dt> <dd>Array containing the index numbers of the one dimensional set or alias used as the domain for corresponding index position. A value of zero represents the universe (*)</dd>
+<dt>DP          </dt> <dd>Callback procedure that will be called for each item</dd>
+<dt>ElemCounts  </dt> <dd>Array of integers, each position indicating the number of unique indices in that position</dd>
+<dt>ErrMsg      </dt> <dd>Error text</dd>
+<dt>ErrNr       </dt> <dd>Error number (gdxErrorStr)/Error code or zero if there is no error</dd>
+<dt>ExplTxt     </dt> <dd>Explanatory text for the symbol</dd>
+<dt>FileName    </dt> <dd>File name of the gdx file to be opened</dd>
+<dt>FileStr     </dt> <dd>Version string</dd>
+<dt>FileVer     </dt> <dd>File format number or zero if the file is not open</dd>
+<dt>FilterAction</dt> <dd>Array of filter actions for each index position</dd>
+<dt>FilterNr    </dt> <dd>Filter number</dd>
+<dt>HighMap     </dt> <dd>Highest user mapping index used</dd>
+<dt>Id1         </dt> <dd>Set identifier</dd>
+<dt>Id2         </dt> <dd>Set identifier</dd>
+<dt>KeyInt      </dt> <dd>Index of the record/element</dd>
+<dt>KeyStr      </dt> <dd>The index of the record or element using strings for the unique elements/Array of strings containing the unique elements (gdxDataSliceUELS)</dd>
+<dt>LengthInfo  </dt> <dd>The longest length for each index position</dd>
+<dt>N           </dt> <dd>Index number/Tracing level,  N=<0 no tracing  N>=3 maximum tracing (gdxSetTraceLevel)/Line number (gdxSymbolGetComment)</dd>
+<dt>newIndx     </dt> <dd>The Index returned when reading gdx data</dd>
+<dt>Node        </dt> <dd>Node number of the entry (gdxGetElemText)/New Node value for the entry (gdxSetTextNodeNr)</dd>
+<dt>NrRecs      </dt> <dd>The maximum number of records available for reading. The actual number of records may be less when a filter is applied to the records read.</dd>
+<dt>NV          </dt> <dd>New value</dd>
+<dt>orgIndx     </dt> <dd>The Index used in the gdx file</dd>
+<dt>Producer    </dt> <dd>Name of program that appends to/creates the gdx file</dd>
+<dt>ProduceStr  </dt> <dd>Producer string</dd>
+<dt>RecCnt      </dt> <dd>Total number of records stored (unmapped)</dd>
+<dt>RecNr       </dt> <dd>The number of the record to be retrieved, range from 1 to NrErrorRecords; this argument is ignored in gdxDataReadMap</dd>
+<dt>result      </dt> <dd>Result/Return code of function</dd>
+<dt>s           </dt> <dd>String to be included in trace output(gdxSetTraceLevel)</dd>
+<dt>SliceKeyInt </dt> <dd>The slice index to be mapped to strings</dd>
+<dt>sv          </dt> <dd>Classification</dd>
+<dt>SyCnt       </dt> <dd>Number of symbols available in the gdx file</dd>
+<dt>SyId        </dt> <dd>Name of the acronym/symbol; might be an empty string at gdxAcronymName</dd>
+<dt>SyNr        </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>Txt         </dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+<dt>TxtNr       </dt> <dd>The index number assigned to this string (gdxAddSetText)/String table index (gdxGetElemText)/Index number of the entry to be modified (gdxSetTextNodeNr)</dd>
+<dt>Typ         </dt> <dd>Type of the symbol</dd>
+<dt>Uel         </dt> <dd>String for the unique element</dd>
+<dt>UelCnt      </dt> <dd>Number of unique elements</dd>
+<dt>UelFilterStr</dt> <dd>Each index can be fixed by setting the string for the unique element. Set an index position to the empty string in order not to fix that position.</dd>
+<dt>UelMap      </dt> <dd>Unique element number in the user index space or -1 if element was never mapped</dd>
+<dt>UelNr       </dt> <dd>Internal unique element number or -1 if not found</dd>
+<dt>UMap        </dt> <dd>User index number to be assigned to the unique element, -1 if not found or the element was never mapped</dd>
+<dt>UserInfo    </dt> <dd>Any integer value/User field value (gdxSymbolInfoX)</dd>
+<dt>V           </dt> <dd>Input value, possibly representing an acronym/Version string after return (gdxGetDLLVersion)</dd>
+<dt>Values      </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+</dl>
+
+<h2>Calling Sequences</h2>
+
+<h3><a id="gdxAcronymAdd">gdxAcronymAdd</a></h3>
+<ul>
+<li>Add a new acronym entry. This can be used to add entries before data is written. =<0 if the entry is not added.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AName       : ShortString</dt> <dd>Name of the acronym</dd>
+<dt>    const Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+<dt>          AIndx       : Integer    </dt> <dd>Index value of the acronym</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymCount">gdxAcronymCount</a></h3>
+<ul>
+<li>Number of entries in the acronym table.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxAcronymGetInfo">gdxAcronymGetInfo</a></h3>
+<ul>
+<li>Retrieve acronym information from the acronym table. <>0 if the index into the acronym table is valid.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          N           : Integer    </dt> <dd>Index number/Tracing level,  N=<0 no tracing  N>=3 maximum tracing (gdxSetTraceLevel)/Line number (gdxSymbolGetComment)</dd>
+<dt>      out AName       : ShortString</dt> <dd>Name of the acronym</dd>
+<dt>      out Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+<dt>      out AIndx       : Integer    </dt> <dd>Index value of the acronym</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymGetMapping">gdxAcronymGetMapping</a></h3>
+<ul>
+<li>Get information how acronym values are remapped. When reading gdx data, we need to map indices for acronyms used in the gdx file to indices used by the reading program. <>0 if the index into the acronym table is valid.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          N           : Integer</dt> <dd>Index number/Tracing level,  N=<0 no tracing  N>=3 maximum tracing (gdxSetTraceLevel)/Line number (gdxSymbolGetComment)</dd>
+<dt>      out orgIndx     : Integer</dt> <dd>The Index used in the gdx file</dd>
+<dt>      out newIndx     : Integer</dt> <dd>The Index returned when reading gdx data</dd>
+<dt>      out autoIndex   : Integer</dt> <dd>Nonzero if the newIndx was generated using the value of NextAutoAcronym</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymIndex">gdxAcronymIndex</a></h3>
+<ul>
+<li>Get index value of an acronym. 0 if V does not represent an acronym.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          V           : Double</dt> <dd>Input value, possibly representing an acronym/Version string after return (gdxGetDLLVersion)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymName">gdxAcronymName</a></h3>
+<ul>
+<li>Find the name of an acronym value. <>0 if a name for the acronym is defined. An unnamed acronym value will return a string of the form UnknownAcronymNNN, were NNN is the index of the acronym.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          V           : Double     </dt> <dd>Input value, possibly representing an acronym/Version string after return (gdxGetDLLVersion)</dd>
+<dt>      out AName       : ShortString</dt> <dd>Name of the acronym</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymNextNr">gdxAcronymNextNr</a></h3>
+<ul>
+<li>Returns the value of the NextAutoAcronym variable and sets the variable to NV. When we read from a gdx file and encounter an acronym that was not defined, we need to assign a new index for that acronym. That index is the variable NextAutoAcronym.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          NV          : Integer</dt> <dd>New value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymSetInfo">gdxAcronymSetInfo</a></h3>
+<ul>
+<li>Modify acronym information in the acronym table. When reading (writing) a gdx file, this function is used to provide the acronym index (name of an acronym), the SyId (AIndx) parameter must match.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          N           : Integer    </dt> <dd>Index number/Tracing level,  N=<0 no tracing  N>=3 maximum tracing (gdxSetTraceLevel)/Line number (gdxSymbolGetComment)</dd>
+<dt>    const AName       : ShortString</dt> <dd>Name of the acronym</dd>
+<dt>    const Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+<dt>          AIndx       : Integer    </dt> <dd>Index value of the acronym</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAcronymValue">gdxAcronymValue</a></h3>
+<ul>
+<li>Create an acronym value based on the index (AIndx should be greater than 0). Returns the calculated acronym value (0 if AIndx =<0).</li>
+<li>Function returns Double</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          AIndx       : Integer</dt> <dd>Index value of the acronym</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAddAlias">gdxAddAlias</a></h3>
+<ul>
+<li>Add an alias for a set to the symbol table. One of the two identifiers has to be a known set, the other identifier is used as the new alias. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const Id1         : ShortString</dt> <dd>Set identifier</dd>
+<dt>    const Id2         : ShortString</dt> <dd>Set identifier</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAddSetText">gdxAddSetText</a></h3>
+<ul>
+<li>Register a string to be used as text associated with a unique element. The string must follow the GAMS syntax rules for explanatory text. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+<dt>      out TxtNr       : Integer    </dt> <dd>The index number assigned to this string (gdxAddSetText)/String table index (gdxGetElemText)/Index number of the entry to be modified (gdxSetTextNodeNr)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxAutoConvert">gdxAutoConvert</a></h3>
+<ul>
+<li>Returns the value of the AutoConvert variable and sets the variable to NV. If AutoConvert <>0 when closing a new gdx file we look at the GDXCOMPRESS and GDXCONVERT environment variables to determine if conversion to an older file format is desired.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          NV          : Integer</dt> <dd>New value</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxClose">gdxClose</a></h3>
+<ul>
+<li>Close a gdx file that was previously opened for reading or writing. Any pending write operations will be finished before closing</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxCurrentDim">gdxCurrentDim</a></h3>
+<ul>
+<li>Returns the dimension of the current active symbol. When reading or writing data, the dimension of the current active symbol is sometimes needed to convert arguments from strings to pchars etc.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxDataErrorCount">gdxDataErrorCount</a></h3>
+<ul>
+<li>The number of error records after a write operation is finished (gdxDataWriteDone).</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxDataErrorRecord">gdxDataErrorRecord</a></h3>
+<ul>
+<li>Retrieve an error record. <>0 if the record number is valid.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          RecNr       : Integer     </dt> <dd>The number of the record to be retrieved, range from 1 to NrErrorRecords; this argument is ignored in gdxDataReadMap</dd>
+<dt>      var KeyInt      : TgdxUELIndex</dt> <dd>Index of the record/element</dd>
+<dt>      var Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadDone">gdxDataReadDone</a></h3>
+<ul>
+<li>Finish reading of a symbol in any mode(raw, mapped, string). 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxDataReadFilteredStart">gdxDataReadFilteredStart</a></h3>
+<ul>
+<li>Initialize the reading of a symbol in filtered mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer     </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>    const FilterAction: TgdxUELIndex</dt> <dd>Array of filter actions for each index position</dd>
+<dt>      out NrRecs      : Integer     </dt> <dd>The maximum number of records available for reading. The actual number of records may be less when a filter is applied to the records read.</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadMap">gdxDataReadMap</a></h3>
+<ul>
+<li>Read the next record in mapped mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          RecNr       : Integer     </dt> <dd>The number of the record to be retrieved, range from 1 to NrErrorRecords; this argument is ignored in gdxDataReadMap</dd>
+<dt>      var KeyInt      : TgdxUELIndex</dt> <dd>Index of the record/element</dd>
+<dt>      var Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+<dt>      out DimFrst     : Integer     </dt> <dd>The first index position in KeyInt that changed</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadMapStart">gdxDataReadMapStart</a></h3>
+<ul>
+<li>Initialize the reading of a symbol in mapped mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer</dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      out NrRecs      : Integer</dt> <dd>The maximum number of records available for reading. The actual number of records may be less when a filter is applied to the records read.</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadRaw">gdxDataReadRaw</a></h3>
+<ul>
+<li>Read the next record in raw mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      var KeyInt      : TgdxUELIndex</dt> <dd>Index of the record/element</dd>
+<dt>      var Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+<dt>      out DimFrst     : Integer     </dt> <dd>The first index position in KeyInt that changed</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadRawFast">gdxDataReadRawFast</a></h3>
+<ul>
+<li>Read a symbol in Raw mode using a callback procedure. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer</dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>          DP          : TDataStoreProc</dt> <dd>Callback procedure that will be called for each item                          Procedure(const Indx:TgdxUELIndex, const Vals:TgdxValues)</dd>
+<dt>      out NrRecs      : Integer</dt> <dd>The maximum number of records available for reading. The actual number of records may be less when a filter is applied to the records read.</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadRawStart">gdxDataReadRawStart</a></h3>
+<ul>
+<li>Initialize the reading of a symbol in raw mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer</dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      out NrRecs      : Integer</dt> <dd>The maximum number of records available for reading. The actual number of records may be less when a filter is applied to the records read.</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadSlice">gdxDataReadSlice</a></h3>
+<ul>
+<li>Read a slice of data from a data set, by fixing zero or more index positions in the data. When a data element is available, the callback procedure DP is called with the current index and the values. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const UelFilterStr: TgdxStrIndex</dt> <dd>Each index can be fixed by setting the string for the unique element. Set an index position to the empty string in order not to fix that position.</dd>
+<dt>      out Dimen       : Integer     </dt> <dd>Dimension of the symbol/index space; index space means the number of index positions that is not fixed (gdxDataReadSlice)</dd>
+<dt>          DP          : TDataStoreProc</dt> <dd>Callback procedure that will be called for each item                          Procedure(const Indx:TgdxUELIndex, const Vals:TgdxValues)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadSliceStart">gdxDataReadSliceStart</a></h3>
+<ul>
+<li>Prepare for the reading of a slice of data from a data set. The actual read of the data is done by calling gdxDataReadSlice. When finished reading, call gdxDataReadDone. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer     </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      var ElemCounts  : TgdxUELIndex</dt> <dd>Array of integers, each position indicating the number of unique indices in that position</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadStr">gdxDataReadStr</a></h3>
+<ul>
+<li>Read the next record using strings for the unique elements. The reading should be initialized by calling DataReadStrStart. 0 if the operation is not possible or if there is no more data.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out KeyStr      : TgdxStrIndex</dt> <dd>The index of the record or element using strings for the unique elements/Array of strings containing the unique elements (gdxDataSliceUELS)</dd>
+<dt>      var Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+<dt>      out DimFrst     : Integer     </dt> <dd>The first index position in KeyInt that changed</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataReadStrStart">gdxDataReadStrStart</a></h3>
+<ul>
+<li>Initialize the reading of a symbol in string mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer</dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      out NrRecs      : Integer</dt> <dd>The maximum number of records available for reading. The actual number of records may be less when a filter is applied to the records read.</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataSliceUELS">gdxDataSliceUELS</a></h3>
+<ul>
+<li>Map a slice index into the corresponding unique elements. After calling DataReadSliceStart, index positions are mapped from 0 to N(d)-1. This function maps this index space back into unique elements (strings). 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const SliceKeyInt : TgdxUELIndex</dt> <dd>The slice index to be mapped to strings</dd>
+<dt>      out KeyStr      : TgdxStrIndex</dt> <dd>The index of the record or element using strings for the unique elements/Array of strings containing the unique elements (gdxDataSliceUELS)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataWriteDone">gdxDataWriteDone</a></h3>
+<ul>
+<li>Finish a write operation. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxDataWriteMap">gdxDataWriteMap</a></h3>
+<ul>
+<li>Write a data element in mapped mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const KeyInt      : TgdxUELIndex</dt> <dd>Index of the record/element</dd>
+<dt>    const Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataWriteMapStart">gdxDataWriteMapStart</a></h3>
+<ul>
+<li>Start writing a new symbol in mapped mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const SyId        : ShortString</dt> <dd>Name of the acronym/symbol; might be an empty string at gdxAcronymName</dd>
+<dt>    const ExplTxt     : ShortString</dt> <dd>Explanatory text for the symbol</dd>
+<dt>          Dimen       : Integer    </dt> <dd>Dimension of the symbol/index space; index space means the number of index positions that is not fixed (gdxDataReadSlice)</dd>
+<dt>          Typ         : Integer    </dt> <dd>Type of the symbol</dd>
+<dt>          UserInfo    : Integer    </dt> <dd>Any integer value/User field value (gdxSymbolInfoX)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataWriteRaw">gdxDataWriteRaw</a></h3>
+<ul>
+<li>Write a data element in raw mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const KeyInt      : TgdxUELIndex</dt> <dd>Index of the record/element</dd>
+<dt>    const Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataWriteRawStart">gdxDataWriteRawStart</a></h3>
+<ul>
+<li>Start writing a new symbol in raw mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const SyId        : ShortString</dt> <dd>Name of the acronym/symbol; might be an empty string at gdxAcronymName</dd>
+<dt>    const ExplTxt     : ShortString</dt> <dd>Explanatory text for the symbol</dd>
+<dt>          Dimen       : Integer    </dt> <dd>Dimension of the symbol/index space; index space means the number of index positions that is not fixed (gdxDataReadSlice)</dd>
+<dt>          Typ         : Integer    </dt> <dd>Type of the symbol</dd>
+<dt>          UserInfo    : Integer    </dt> <dd>Any integer value/User field value (gdxSymbolInfoX)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataWriteStr">gdxDataWriteStr</a></h3>
+<ul>
+<li>Write a data element in string mode. Each element string must follow the GAMS rules for unique elements. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const KeyStr      : TgdxStrIndex</dt> <dd>The index of the record or element using strings for the unique elements/Array of strings containing the unique elements (gdxDataSliceUELS)</dd>
+<dt>    const Values      : TgdxValues  </dt> <dd>Values of the element (gdxDataWrite...)/Data of the record (gdxDataRead..., gdxDataErrorRecord)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxDataWriteStrStart">gdxDataWriteStrStart</a></h3>
+<ul>
+<li>Start writing a new symbol in string mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const SyId        : ShortString</dt> <dd>Name of the acronym/symbol; might be an empty string at gdxAcronymName</dd>
+<dt>    const ExplTxt     : ShortString</dt> <dd>Explanatory text for the symbol</dd>
+<dt>          Dimen       : Integer    </dt> <dd>Dimension of the symbol/index space; index space means the number of index positions that is not fixed (gdxDataReadSlice)</dd>
+<dt>          Typ         : Integer    </dt> <dd>Type of the symbol</dd>
+<dt>          UserInfo    : Integer    </dt> <dd>Any integer value/User field value (gdxSymbolInfoX)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxErrorCount">gdxErrorCount</a></h3>
+<ul>
+<li>Total number of errors encountered.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxErrorStr">gdxErrorStr</a></h3>
+<ul>
+<li>Returns the text for a given error number. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          ErrNr       : Integer    </dt> <dd>Error number (gdxErrorStr)/Error code or zero if there is no error</dd>
+<dt>      out ErrMsg      : ShortString</dt> <dd>Error text</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxFileInfo">gdxFileInfo</a></h3>
+<ul>
+<li>Returns file format number and compression level used. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out FileVer     : Integer</dt> <dd>File format number or zero if the file is not open</dd>
+<dt>      out ComprLev    : Integer</dt> <dd>Compression used; 0=no compression, 1=zlib</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxFileVersion">gdxFileVersion</a></h3>
+<ul>
+<li>Return strings for file version and file producer. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out FileStr     : ShortString</dt> <dd>Version string</dd>
+<dt>      out ProduceStr  : ShortString</dt> <dd>Producer string</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxFilterExists">gdxFilterExists</a></h3>
+<ul>
+<li>Check if there is a filter defined based on its number as used in gdxFilterRegisterStart. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          FilterNr    : Integer</dt> <dd>Filter number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxFilterRegister">gdxFilterRegister</a></h3>
+<ul>
+<li>Add a unique element to the current filter definition. 0 if the index number is out of range or was never mapped into the user index space.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          UelMap      : Integer</dt> <dd>Unique element number in the user index space or -1 if element was never mapped</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxFilterRegisterDone">gdxFilterRegisterDone</a></h3>
+<ul>
+<li>Finish registration of unique elements for a filter. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxFilterRegisterStart">gdxFilterRegisterStart</a></h3>
+<ul>
+<li>Define a unique element filter. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          FilterNr    : Integer</dt> <dd>Filter number</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxFindSymbol">gdxFindSymbol</a></h3>
+<ul>
+<li>Search for a symbol by name (case insensitive). When the symbol is found, SyNr contains the symbol number and the function returns a nonzero, else it returns 0.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const SyId        : ShortString</dt> <dd>Name of the acronym/symbol; might be an empty string at gdxAcronymName</dd>
+<dt>      out SyNr        : Integer    </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxGetDLLVersion">gdxGetDLLVersion</a></h3>
+<ul>
+<li>Returns a version descriptor of the library. Always nonzero</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out V           : ShortString</dt> <dd>Input value, possibly representing an acronym/Version string after return (gdxGetDLLVersion)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxGetElemText">gdxGetElemText</a></h3>
+<ul>
+<li>Retrieve the string and node number for an entry in the string table. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          TxtNr       : Integer    </dt> <dd>The index number assigned to this string (gdxAddSetText)/String table index (gdxGetElemText)/Index number of the entry to be modified (gdxSetTextNodeNr)</dd>
+<dt>      out Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+<dt>      out Node        : Integer    </dt> <dd>Node number of the entry (gdxGetElemText)/New Node value for the entry (gdxSetTextNodeNr)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxGetLastError">gdxGetLastError</a></h3>
+<ul>
+<li>Returns the last error number or 0 if there was no error. Calling this function will clear the last error stored.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxGetMemoryUsed">gdxGetMemoryUsed</a></h3>
+<ul>
+<li>Get memory in use by gdx object.</li>
+<li>Function returns Int64</li>
+</ul>
+
+<h3><a id="gdxGetSpecialValues">gdxGetSpecialValues</a></h3>
+<ul>
+<li>Retrieve the internal values for special values. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      var AVals       : TgdxSVals</dt> <dd>Array of special values used for Eps, +Inf, -Inf, NA and Undef</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxGetUEL">gdxGetUEL</a></h3>
+<ul>
+<li>Get the string for a unique element using a mapped index. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          UelNr       : Integer    </dt> <dd>Internal unique element number or -1 if not found</dd>
+<dt>      out Uel         : ShortString</dt> <dd>String for the unique element</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxMapValue">gdxMapValue</a></h3>
+<ul>
+<li>Classify a value as a potential special value. Nonzero if D is a special value, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          D           : Double </dt> <dd>Value to classify</dd>
+<dt>      out sv          : Integer</dt> <dd>Classification</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxOpenAppend">gdxOpenAppend</a></h3>
+<ul>
+<li>Open an existing gdx file for output. Nonzero if the file can be opened, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const FileName    : ShortString</dt> <dd>File name of the gdx file to be opened</dd>
+<dt>    const Producer    : ShortString</dt> <dd>Name of program that appends to/creates the gdx file</dd>
+<dt>      out ErrNr       : Integer    </dt> <dd>Error number (gdxErrorStr)/Error code or zero if there is no error</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxOpenRead">gdxOpenRead</a></h3>
+<ul>
+<li>Open an existing gdx file for input. Nonzero if the file can be opened, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const FileName    : ShortString</dt> <dd>File name of the gdx file to be opened</dd>
+<dt>      out ErrNr       : Integer    </dt> <dd>Error number (gdxErrorStr)/Error code or zero if there is no error</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxOpenWrite">gdxOpenWrite</a></h3>
+<ul>
+<li>Open a new gdx file for output. Nonzero if the file can be opened, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const FileName    : ShortString</dt> <dd>File name of the gdx file to be opened</dd>
+<dt>    const Producer    : ShortString</dt> <dd>Name of program that appends to/creates the gdx file</dd>
+<dt>      out ErrNr       : Integer    </dt> <dd>Error number (gdxErrorStr)/Error code or zero if there is no error</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxOpenWriteEx">gdxOpenWriteEx</a></h3>
+<ul>
+<li>Open a new gdx file for output with optional compression. Nonzero if the file can be opened, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const FileName    : ShortString</dt> <dd>File name of the gdx file to be opened</dd>
+<dt>    const Producer    : ShortString</dt> <dd>Name of program that appends to/creates the gdx file</dd>
+<dt>          Compr       : Integer    </dt> <dd>Zero for no compression; nonzero uses compression if available</dd>
+<dt>      out ErrNr       : Integer    </dt> <dd>Error number (gdxErrorStr)/Error code or zero if there is no error</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxResetSpecialValues">gdxResetSpecialValues</a></h3>
+<ul>
+<li>Reset the internal values for special values. Always nonzero.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxSetHasText">gdxSetHasText</a></h3>
+<ul>
+<li>Test if any of the unique elements in a set has associated text. Nonzero if the Set contains at least one unique element that has associated text, 0 otherwise</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer</dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSetReadSpecialValues">gdxSetReadSpecialValues</a></h3>
+<ul>
+<li>Set internal values for special values when reading a gdx file. Before calling this function, initialize the array of special values by calling gdxGetSpecialValues first. Always nonzero</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AVals       : TgdxSVals</dt> <dd>Array of special values used for Eps, +Inf, -Inf, NA and Undef</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSetSpecialValues">gdxSetSpecialValues</a></h3>
+<ul>
+<li>Set internal values for special values. Before calling this function, initialize the array of special values by calling gdxGetSpecialValues first. Note: values in AVals have to be unique. Nonzero if all values specified are unique, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const AVals       : TgdxSVals</dt> <dd>Array of special values used for Eps, +Inf, -Inf, NA and Undef</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSetTextNodeNr">gdxSetTextNodeNr</a></h3>
+<ul>
+<li>Set the Node number for an entry with Index N in the string table. After registering a string with AddSetText, we can assign a node number for later retrieval. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          TxtNr       : Integer</dt> <dd>The index number assigned to this string (gdxAddSetText)/String table index (gdxGetElemText)/Index number of the entry to be modified (gdxSetTextNodeNr)</dd>
+<dt>          Node        : Integer</dt> <dd>Node number of the entry (gdxGetElemText)/New Node value for the entry (gdxSetTextNodeNr)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSetTraceLevel">gdxSetTraceLevel</a></h3>
+<ul>
+<li>Set the amount of trace (debug) information generated. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          N           : Integer    </dt> <dd>Index number/Tracing level,  N=<0 no tracing  N>=3 maximum tracing (gdxSetTraceLevel)/Line number (gdxSymbolGetComment)</dd>
+<dt>    const s           : ShortString</dt> <dd>String to be included in trace output(gdxSetTraceLevel)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbIndxMaxLength">gdxSymbIndxMaxLength</a></h3>
+<ul>
+<li>Returns the length of the longest UEL used for every index position for a given symbol.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer     </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      var LengthInfo  : TgdxUELIndex</dt> <dd>The longest length for each index position</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbMaxLength">gdxSymbMaxLength</a></h3>
+<ul>
+<li>Returns the length of the longest symbol name.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxSymbolAddComment">gdxSymbolAddComment</a></h3>
+<ul>
+<li>Add a line of comment text for a symbol. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer    </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>    const Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolDim">gdxSymbolDim</a></h3>
+<ul>
+<li>Retrieve dimension of a symbol.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer</dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolGetComment">gdxSymbolGetComment</a></h3>
+<ul>
+<li>Retrieve a line of comment text for a symbol. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer    </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>          N           : Integer    </dt> <dd>Index number/Tracing level,  N=<0 no tracing  N>=3 maximum tracing (gdxSetTraceLevel)/Line number (gdxSymbolGetComment)</dd>
+<dt>      out Txt         : ShortString</dt> <dd>Explanatory text of the acronym (gdxAcronym...)/String to be registered(gdxAddSetText)/Text found for the entry (gdxGetElemText)/String to add (gdxSymbolAddComment)/String containing requested line(gdxSymbolGetComment)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolGetDomain">gdxSymbolGetDomain</a></h3>
+<ul>
+<li>Retrieve the domain of a symbol. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer     </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      var DomainSyNrs : TgdxUELIndex</dt> <dd>Array containing the index numbers of the one dimensional set or alias used as the domain for corresponding index position. A value of zero represents the universe (*)</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolGetDomainX">gdxSymbolGetDomainX</a></h3>
+<ul>
+<li>Retrieve the domain of a symbol (Relaxed version). 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer     </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      out DomainIDs   : TgdxStrIndex</dt> <dd>Array containing the set identifiers or * of the domain for the corresponding index position</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolInfo">gdxSymbolInfo</a></h3>
+<ul>
+<li>Returns information about a symbol. 0 if the symbol number is out of range, nonzero otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer    </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      out SyId        : ShortString</dt> <dd>Name of the acronym/symbol; might be an empty string at gdxAcronymName</dd>
+<dt>      out Dimen       : Integer    </dt> <dd>Dimension of the symbol/index space; index space means the number of index positions that is not fixed (gdxDataReadSlice)</dd>
+<dt>      out Typ         : Integer    </dt> <dd>Type of the symbol</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolInfoX">gdxSymbolInfoX</a></h3>
+<ul>
+<li>Returns additional information about a symbol. 0 if the symbol number is out of range, nonzero otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer    </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>      out RecCnt      : Integer    </dt> <dd>Total number of records stored (unmapped)</dd>
+<dt>      out UserInfo    : Integer    </dt> <dd>Any integer value/User field value (gdxSymbolInfoX)</dd>
+<dt>      out ExplTxt     : ShortString</dt> <dd>Explanatory text for the symbol</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolSetDomain">gdxSymbolSetDomain</a></h3>
+<ul>
+<li>Define the domain of the symbol for which a write data operation just started using DataWriteRawStart, DataWriteMapStart or DataWriteStrStart. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const DomainIDs   : TgdxStrIndex</dt> <dd>Array containing the set identifiers or * of the domain for the corresponding index position</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSymbolSetDomainX">gdxSymbolSetDomainX</a></h3>
+<ul>
+<li>Define the domain of symbol SyNr (Relaxed version). 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          SyNr        : Integer     </dt> <dd>The index number of the symbol, range from 0 to NrSymbols; SyNr = 0 reads universe</dd>
+<dt>    const DomainIDs   : TgdxStrIndex</dt> <dd>Array containing the set identifiers or * of the domain for the corresponding index position</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxSystemInfo">gdxSystemInfo</a></h3>
+<ul>
+<li>Returns the number of symbols and unique elements. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out SyCnt       : Integer</dt> <dd>Number of symbols available in the gdx file</dd>
+<dt>      out UelCnt      : Integer</dt> <dd>Number of unique elements</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxUELMaxLength">gdxUELMaxLength</a></h3>
+<ul>
+<li>Returns the length of the longest UEL name.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxUELRegisterDone">gdxUELRegisterDone</a></h3>
+<ul>
+<li>Finish registration of unique elements. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxUELRegisterMap">gdxUELRegisterMap</a></h3>
+<ul>
+<li>Register a unique element in mapped mode. A unique element must follow the GAMS rules when it contains quote characters. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          UMap        : Integer    </dt> <dd>User index number to be assigned to the unique element, -1 if not found or the element was never mapped</dd>
+<dt>    const Uel         : ShortString</dt> <dd>String for the unique element</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxUELRegisterMapStart">gdxUELRegisterMapStart</a></h3>
+<ul>
+<li>Start registering unique elements in mapped mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxUELRegisterRaw">gdxUELRegisterRaw</a></h3>
+<ul>
+<li>Register a unique element in raw mode. This can only be used while writing to a gdx file. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const Uel         : ShortString</dt> <dd>String for the unique element</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxUELRegisterRawStart">gdxUELRegisterRawStart</a></h3>
+<ul>
+<li>Start registering unique elements in raw mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxUELRegisterStr">gdxUELRegisterStr</a></h3>
+<ul>
+<li>Register a unique element in string mode. A unique element must follow the GAMS rules when it contains quote characters. Nonzero if the element was registered, zero otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const Uel         : ShortString</dt> <dd>String for the unique element</dd>
+<dt>      out UelNr       : Integer    </dt> <dd>Internal unique element number or -1 if not found</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxUELRegisterStrStart">gdxUELRegisterStrStart</a></h3>
+<ul>
+<li>Start registering unique elements in string mode. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+</ul>
+
+<h3><a id="gdxUMFindUEL">gdxUMFindUEL</a></h3>
+<ul>
+<li>Search for a unique element by its string. Nonzero if the element was found, 0 otherwise.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>    const Uel         : ShortString</dt> <dd>String for the unique element</dd>
+<dt>      out UelNr       : Integer    </dt> <dd>Internal unique element number or -1 if not found</dd>
+<dt>      out UelMap      : Integer    </dt> <dd>Unique element number in the user index space or -1 if element was never mapped</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxUMUelGet">gdxUMUelGet</a></h3>
+<ul>
+<li>Get a unique element using an unmapped index. 0 if the operation is not possible.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>          UelNr       : Integer    </dt> <dd>Internal unique element number or -1 if not found</dd>
+<dt>      out Uel         : ShortString</dt> <dd>String for the unique element</dd>
+<dt>      out UelMap      : Integer    </dt> <dd>Unique element number in the user index space or -1 if element was never mapped</dd>
+</dl> </ul>
+</ul>
+
+<h3><a id="gdxUMUelInfo">gdxUMUelInfo</a></h3>
+<ul>
+<li>Returns information about the unique elements. Always nonzero.</li>
+<li>Function returns Integer</li>
+<li>Arguments:</li>
+<ul> <dl>
+<dt>      out UelCnt      : Integer</dt> <dd>Number of unique elements</dd>
+<dt>      out HighMap     : Integer</dt> <dd>Highest user mapping index used</dd>
+</dl> </ul>
+</ul></body>
+</html>

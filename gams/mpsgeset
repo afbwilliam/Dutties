@@ -1,0 +1,33 @@
+$hidden MPSGESET  MPSGE setup and HDR file generation
+$log --- Running the MPSGE preprocessor ...
+$if %1a == a    $goto missing
+$if declared %1 $goto badname
+$if NOT setglobal n_models $setglobal n_models 0
+$if NOT setglobal n_constr $setglobal n_constr 0
+$setlocal datetime %system.date%%system.time%
+$setglobal %1 %datetime%
+$setlocal par %gams.scrdir%gamscge.%gams.scrext%
+$setlocal hdr %gams.scrdir%gamsgeh.%gams.scrext%
+$hidden  $show      to dump symbols to listingfile
+$echo INP %system.incparent%       > %par%
+$echo SCR gamscge.%gams.scrext%   >> %par%
+$echo NMO %n_models%              >> %par%
+$echo NCO %n_constr%              >> %par%
+$echo MDL %1                      >> %par%
+$echo HDR %hdr%                   >> %par%
+$echo TIM %datetime%              >> %par%
+$call gmsge_nx "%par%"
+$include %hdr%
+$hidden option oldname taken out for 21.3 builds, no longer supported
+$exit
+$label missing
+$error missing model name argument for mpsgeset
+
+*  $sysinclude mpsgeset mymodel
+*
+$abort MPSGE further processing would be misleading
+
+$label badname
+$error model name already in use
+* more explanation comes here
+$abort MPSGE further processing would be misleading

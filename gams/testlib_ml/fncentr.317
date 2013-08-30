@@ -1,0 +1,30 @@
+$title 'Test correctness of centropy intrinsic' (FNCENTR,SEQ=317)
+
+$ontext
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+$offtext
+
+$include fnset_x.inc
+
+$gdxin fncentr
+$load relToInput aeps reps0 reps1 reps2 T data
+$gdxin
+
+aeps = 1e-15;
+reps0 = 1e-12;
+reps1 = 1e-13;
+reps2 = 1e-13;
+
+loop {T,
+  data(T,  'f') = centropy.value (data(T,'x'), data(T,'c'), data(T,'d'));
+  data(T, 'fx') = centropy.grad  (data(T,'x'), data(T,'c'), data(T,'d'));
+  data(T,'fxx') = centropy.hess  (data(T,'x'), data(T,'c'), data(T,'d'));
+  data(T, 'rc') = mathlastrc;
+  data(T, 'ec') = mathlastec;
+};
+
+* we may get evaluation errors if we have some very large
+* points in the input: this should not cause the test to fail
+execerror = 0;
+
+$include fntest_x.inc

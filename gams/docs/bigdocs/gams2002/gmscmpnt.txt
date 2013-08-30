@@ -1,0 +1,169 @@
+*************************************************
+*  GAMS Solver Capabilities File                *
+*************************************************
+
+
+BARON 100000 0 0 LP MIP RMIP NLP CNS DNLP RMINLP MINLP
+gmsba_nt.cmd
+
+BDMLP 1 0 1 LP MIP RMIP
+gmsbd_nt.cmd
+gmsbd_nx.exe
+
+CONOPT 1 0 1 LP RMIP NLP CNS DNLP RMINLP
+gmsco2nt.cmd
+gmsco2nx.exe
+
+CONOPT1 1 0 1 LP RMIP NLP DNLP RMINLP
+gmsco_nt.cmd
+gmsco_nx.exe
+
+CONOPT2 1 0 1 LP RMIP NLP CNS DNLP RMINLP
+gmsco2nt.cmd
+gmsco2nx.exe
+
+CONOPT3 1 0 1 LP RMIP NLP CNS DNLP RMINLP
+gmsco3nt.cmd
+gmsco3nx.exe
+
+CONVERT 100000 0 1 LP MIP RMIP NLP MCP CNS DNLP RMINLP MINLP MPEC
+gmscv_nt.cmd
+gmscv_nx.exe
+
+CPLEX 11 4 1 LP MIP RMIP
+gmscp_nt.cmd
+gmscp_nx.exe
+
+CPLEXPAR 11 4 1 LP MIP RMIP
+gmscppnt.cmd
+gmscppnx.exe
+
+CPLEXPSLP 11 4 1 LP MIP RMIP NLP DNLP RMINLP
+gmscplnt.cmd
+gmscplnx.exe
+
+CPLEXSLP 11 4 1 LP MIP RMIP NLP DNLP RMINLP
+gmscpsnt.cmd
+gmscpsnx.exe
+
+DECISC 2011 4 0 LP
+gmsdecnt.cmd
+
+DECISM 2011 4 0 LP
+gmsdemnt.cmd
+
+DICOPT 1 0 1 MINLP
+gmsdi_nt.cmd
+gmsdi_nx.exe
+
+GAMSBAS 1010 2 1 LP MIP RMIP NLP MCP DNLP RMINLP MINLP
+gmsbs_nt.cmd
+gmsbshnx.exe
+
+GAMSCHK 101010 4 1 LP MIP RMIP NLP MCP DNLP RMINLP MINLP
+gmsck_nt.cmd
+gmsckhnx.exe
+
+MILES 100001 4 1 MCP
+gmsmcent.cmd
+gmsmcenx.exe
+
+MILESE 100001 4 1 MCP
+gmsmcent.cmd
+gmsmcenx.exe
+
+MILESOLD 100001 2 1 MCP
+gmsmc_nt.cmd
+gmsmc_nx.exe
+
+MINOS 101 0 1 LP RMIP NLP DNLP RMINLP
+gmsmi_nt.cmd
+gmsmi_nx.exe
+
+MINOS5 1 0 1 LP RMIP NLP DNLP RMINLP
+gmsm5_nt.cmd
+gmsm5_nx.exe
+
+MPECDUMP 101111 4 1 LP RMIP NLP MCP CNS DNLP RMINLP MPEC
+gmsmd_nt.cmd
+gmsmd_nx.exe
+
+MPSGE 100001 2 1
+gmsgewnt.cmd
+gmsgewnx.exe
+
+MPSWRITE 11 3 1 LP MIP RMIP NLP DNLP RMINLP MINLP
+gmsmp_nt.cmd
+gmsmp_nx.exe
+
+OSL 1 0 1 LP MIP RMIP
+gmsos2nt.cmd
+gmsos2nx.exe
+
+OSL1 1 0 1 LP MIP RMIP
+gmsos_nt.cmd
+gmsos_nx.exe
+
+OSL2 1 0 1 LP MIP RMIP
+gmsos2nt.cmd
+gmsos2nx.exe
+
+OSL3 11 0 1 LP MIP RMIP
+gmsos3nt.cmd
+gmsos3nx.exe
+
+OSLSE 101 1 1 LP RMIP NLP
+gmsse_nt.cmd
+gmsse_nx.exe
+
+PATH 100001 4 1 MCP CNS
+gmsptcnt.cmd
+gmsptcnx.exe
+
+PATHC 100001 4 1 MCP CNS
+gmsptcnt.cmd
+gmsptcnx.exe
+
+PATHNLP 111 4 1 LP RMIP NLP RMINLP
+gmsptnnt.cmd
+gmsptnnx.exe
+
+PATHOLD 1 2 1 MCP
+gmspt_nt.cmd
+gmspt_nx.exe
+
+SBB 101 0 1 MINLP
+gmssb_nt.cmd
+gmssb_nx.exe
+
+SNOPT 101 0 1 LP RMIP NLP DNLP RMINLP
+gmssn_nt.cmd
+gmssn_nx.exe
+
+XA 1 0 1 LP MIP RMIP
+gmsxa_nt.cmd
+gmsxa_nx.exe
+
+XAPAR 1 0 1 LP MIP RMIP
+gmsxm_nt.cmd
+gmsxm_nx.exe
+
+XPRESS 1 0 1 LP MIP RMIP
+gmsxp_nt.cmd
+gmsxp_nx.exe
+
+ZOOM 1 0 1 LP MIP RMIP
+gmszo_nt.cmd
+gmszo_nx.exe
+
+
+DEFAULTS
+LP BDMLP
+MIP BDMLP
+RMIP BDMLP
+NLP CONOPT
+MCP MILES
+CNS CONOPT
+DNLP CONOPT
+RMINLP CONOPT
+MINLP DICOPT

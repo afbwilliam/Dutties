@@ -1,0 +1,44 @@
+$(document).ready(function(){
+ 
+
+    var i = $('.tb-ac tr').length +1;
+
+
+    $('#add').click(function() {
+var gen='<tr class="row_ac"><td><input type="text" autofocus="" class="fac field fieldac" value="New Activity" name="Ac';
+gen+=i.toString();
+gen+='"></td><td><center><select name="Priority';
+gen+=i.toString();
+gen+='" class=" field"><option selected="" value="50">Medium</option><option value="1">Low</option><option value="90">High</option></select></center></td><td><center><select name="Duration';
+gen+=i.toString();
+gen+='" class="field"><option selected="" value="30">30 mins</option><option value="60">1 Hour</option><option value="90">90 mins</option><option value="120">2 Hours</option><option value="150">150 mins</option><option value="180">3 Hours</option><option value="210">210 mins</option><option value="240">4 Hours</option><option value="270">270 mins</option><option value="300">5 Hours</option></select></center></td><td><center><select name="Final_Day';
+gen+=i.toString();
+gen+='" class="field"><option value="MON">MON</option><option value="TUE">TUE</option><option value="WED">WED</option><option value="THU">THU</option><option value="FRI">FRI	</option></select></center></td><td><center><select name="Final_Hour';
+gen+=i.toString();
+gen+='" class="field"><option value="7:00">7:00</option><option value="7:30">7:30</option><option value="8:00">8:00</option><option value="8:30">8:30</option><option value="9:00">9:00</option><option value="9:30">9:30</option><option value="10:00">10:00</option><option value="10:30">10:30</option><option value="11:00">11:00</option><option value="11:30">11:30</option><option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="16:00">16:00</option><option value="16:30">16:30</option><option value="17:00">17:00</option><option value="17:30">17:30</option><option value="18:00">18:00</option><option value="18:30">18:30</option></select></center></td><td><center><select name="Initial_Day';
+gen+=i.toString();
+gen+='" class="field"><option value="MON">MON</option><option value="TUE">TUE</option><option value="WED">WED</option><option value="THU">THU</option><option value="FRI">FRI</option></select></center></td><td><center><select name="Initial_Hour';
+gen+=i.toString();
+gen+='"><option value="7:00">7:00</option><option value="7:30">7:30</option><option value="8:00">8:00</option><option value="8:30">8:30</option><option value="9:00">9:00</option><option value="9:30">9:30</option><option value="10:00">10:00</option><option value="10:30">10:30</option><option value="11:00">11:00</option><option value="11:30">11:30</option><option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="16:00">16:00</option><option value="16:30">16:30</option><option value="17:00">17:00</option><option value="17:30">17:30</option><option value="18:00">18:00</option><option value="18:30">18:30</option></select></center></td></tr>';
+     
+$(gen).fadeIn('slow').appendTo('.tb-ac tbody');
+        i++;
+    });
+     
+$('#remove').click(function() {
+   if(i > 1) {
+        $('.row_ac:last').remove();
+        i--;
+    }
+    });
+$('#Bussy').click(function() {
+   alert('Put here the hours you already have scheduled. Like lunch, classes or meetings (Under Construction)');
+    
+    });
+     
+
+     
+
+     
+ 
+});

@@ -1,0 +1,37 @@
+$title check element text (DELIM1,SEQ=125)
+
+$ontext
+This came originally from M Bussieck's Hill model, 12 Apr 2004
+$offtext
+
+set u Utilities  / "ACE" /
+
+set p3 Plant Code  / "02378.00","02384.00" /
+
+set up(u,p3) Utility Plant Mapping /
+$ONDELIM
+"ACE","02378.00",  text1
+"ACE"."02384.00"   text2
+/
+$offdelim
+set upx(u,p3) Utility Plant Mapping /
+"ACE"."02378.00"   text1
+"ACE"."02384.00"   text2
+/
+parameter pup(u,p3) Utility Plant Mapping /
+$ONDELIM
+"ACE","02378.00" , 1
+"ACE","02384.00" , 2
+/
+$offdelim
+abort$(sum((u,p3), pup(u,p3)) <> 3) 'bad data statement',pup;
+
+* now we check the text
+file alx / temp.gms /; put alx;
+put '$if NOT "' up.te("ACE","02378.00") '" == "text1" $error wrong text for up'/
+put '$if NOT "' up.te("ACE","02384.00") '" == "text2" $error wrong text for up'/
+put '$if NOT "' upx.te("ACE","02378.00") '" == "text1" $error wrong text for upx' /
+put '$if NOT "' upx.te("ACE","02384.00") '" == "text2" $error wrong text for upx' /
+putclose;
+execute '=gams temp.gms lo=%GAMS.lo%';
+abort$errorlevel 'text must be wrong';

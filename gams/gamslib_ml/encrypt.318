@@ -1,0 +1,81 @@
+$Title Input file encryption demo (ENCRYPT,SEQ=318)
+
+$ontext
+Input files can be encrypted and use the save/privacy license
+file mechanism for managing the user password. Similar to
+compression, we offer an $encrypt utility to lock any file to a
+specific target license file. Once a file has been encrypted it
+can only be read by a gams program that has the matching license
+file.  There is no inverse operation possible: you cannot recover
+the original GAMS file from the encrypted version.
+
+To create an encrypted file, we need a license file which has the
+security option enabled. To allow easy testing and demonstration
+a special temporary demo license can be created internally and
+will be valid for a limited time only, usually one to two hours.
+
+In the following example we will use the GAMS option license=DEMO to
+use a demo license with secure option instead of our own license
+file. Also note that we use the same demo license file to read the
+locked file by specifying the GAMS parameter plicence=LICENSE.
+$offtext
+
+* --- get model
+$ondollar
+$call gamslib -q trnsport
+
+* --- encrypt and try to decrypt
+$call rm -f t1.gms
+$echo $encrypt trnsport.gms t1.gms > s1.gms
+$call gams s1 license=DEMO plicense=LICENSE lo=%gams.lo%
+$if   errorlevel 1     $abort encryption failed
+
+$eolcom  //
+$if NOT errorfree $abort pending errors
+$decompress t1.gms t1.org  // this has to fail
+$if      errorfree $abort decompress did not fail
+$clearerror
+
+* --- execute original and encrypted model
+$call gams trnsport gdx=trnsport lo=%gams.lo%
+$if   errorlevel 1 $abort model trnsport failed
+* Although this reads license=DEMO this license file is the one
+* specified with plicense from the s1 call
+$call gams t1 license=DEMO gdx=t1 lo=%gams.lo%
+$if   errorlevel 1 $abort model t1 failed
+$call gdxdiff trnsport t1 %system.redirlog%
+$if   errorlevel 1 $abort results for trnsport and t1 are not equal
+
+* --- use the encrypted file as an include file
+$onecho > t2.gms
+$offlisting
+* this is hidden
+option limrow=0,limcol=0,solprint=off;
+$include t1.gms
+$onlisting
+* this will show
+$offecho
+$call gams t2 license=DEMO lo=%gams.lo%
+$if   errorlevel 1 $abort model t2 failed
+
+* --- protect against viewing
+*     now we will show how to protect parts of an input
+*     file from viewing and extracting original source
+*     via the gams DUMPOPT parameter. We just need to
+*     encrypt again
+
+* --- encrypt new model
+$call rm -f t3.gms
+$echo $encrypt t2.gms t3.gms > s1.gms
+$call gams s1 license=DEMO plicense=LICENSE lo=%gams.lo%
+$if   errorlevel 1  $abort encryption failed
+$call gams t3 license=DEMO gdx=t3 dumpopt=19 lo=%gams.lo%
+$if   errorlevel 1 $abort model t3 failed
+$call gdxdiff trnsport t3 %system.redirlog%
+$if   errorlevel 1 $abort results for trnsport and t3 are not equal
+
+* --- check for hidden output
+$call   grep "this is hidden" t3.lst > %system.nullfile%
+$if not errorlevel 1 $abort did not hide in listing
+$call   grep "this is hidden" t3.dmp > %system.nullfile%
+$if not errorlevel 1 $abort did not hide in dump file

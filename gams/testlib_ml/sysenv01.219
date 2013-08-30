@@ -1,0 +1,30 @@
+$title 'Tests for path and system environment strings' (SYSENV01,SEQ=219)
+
+$ondollar
+$set pathsep :
+$if NOT %system.filesys% == UNIX $set pathsep ;
+
+*   $prefixpath c:\some\path\somewhere
+* is just a shortcut for
+*   $setenv PATH c:\some\path\somewhere;%sysenv.PATH%
+* that prevents the overflow of short strings
+* N.B. the environment variable name used in %sysenv.name% is case-sensitive
+
+* uses $prefixpath
+*      %sysenv.name%
+* %sysenv.xx% will just truncate to 255
+$set oldpath %sysenv.PATH%
+$set prefix this is a prefix
+$if NOT errorfree $exit
+
+* this may overflow and give an error
+$set newpath %prefix%%pathsep%%oldpath%
+$if NOT errorfree $clearerror
+$prefixpath %prefix%
+$set path %sysenv.PATH%
+$if NOT errorfree $exit
+
+display "path    =", "%path%";
+display "newpath =", "%newpath%";
+
+$if NOT "%path%" == "%newpath%" $error prefix path is messed up

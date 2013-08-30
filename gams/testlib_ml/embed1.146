@@ -1,0 +1,10 @@
+$title 'Test syntax: bad number field in embedded parameter' (EMBED1,SEQ=146)
+$version 139
+$if not errorfree $exit
+$onembedded
+Parameter x / x.x 1, (c 2,d 3).((a,b) 2)  ) /
+*                                         $-- wrong
+$offembedded
+display x;
+$if errorfree $abort
+$clearerror

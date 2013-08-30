@@ -1,0 +1,20 @@
+$title 'Test put utility rename feature'  (PUT6,SEQ=313)
+
+$ontext
+
+It should not matter if we have the file open or closed when
+using rename, title, exec ... we only need to open if we
+have inc gdl or htm
+
+Contributor: Alex
+$offtext
+
+file fx /'zero.txt'/; put fx;
+
+                               putclose 'zero';
+put_utility 'ren' / 'one.txt'; put 'one';
+put_utility 'ren' / 'two.txt'; putclose 'two';
+
+execute '=grep -q zero zero.txt'; abort$errorlevel 'zero not in zero.txt';
+execute '=grep -q one   one.txt'; abort$errorlevel 'one not in one.txt';
+execute '=grep -q two   two.txt'; abort$errorlevel 'two not in two.txt';

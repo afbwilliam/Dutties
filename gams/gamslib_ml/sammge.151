@@ -1,0 +1,429 @@
+$TITLE  Carbon Taxes with Exemptions for Heavy Industry  (SAMMGE,SEQ=151)
+$ONTEXT
+Sample Program Comparing GAMS/MCP and GAMS/MPSGE Formulations
+
+This program contains two presentations of an open-economy general
+equilibrium model.  The first employs MILES/MCP for a model expressed
+with equations written in standard GAMS algebra.  The second version
+of the model is expressed with MPSGE tables.  The equations for the
+MPSGE version are generated automatically.
+
+Both model formulations illustrate the manner in which Armington
+and Heckscher-Ohlin imports can be mixed in the same model.
+
+Solution values for this sample dataset are intuitive.  Exemptions
+reduce the "economic burden" of the tax, but they may also completely
+contradict the stated purpose of the energy tax (i.e., with tax
+exemptions to energy-intensive industry, energy demand may go up
+rather than down).
+
+
+Boehringer, C, and Rutherford, T R, Carbon taxes with exemptions in an
+open economy: A general equilibrium analysis of the German tax
+initiative. Journal of Environmental Economics and Management 32 (2)
+(1997), 189-203.
+
+
+----   1134 PARAMETER REPORT        SUMMARY REPORT (%)
+
+             NON-EXEMPT  NON-EXEMPT      EXEMPT      EXEMPT
+                    MCP         MGE         MCP         MGE
+WELFARE.T10        -0.2        -0.2
+WELFARE.T25        -0.3        -0.3        -0.2        -0.2
+WELFARE.T50        -0.5        -0.5        -0.5        -0.5
+ENERGY .T05       -13.2       -13.2         1.4         1.4
+ENERGY .T10       -25.6       -25.6         2.8         2.8
+ENERGY .T25       -30.7       -30.7         7.4         7.4
+ENERGY .T50       -36.9       -36.9        10.1        10.1
+
+$OFFTEXT
+
+SETS    G       COMMODITIES /X,Y,E/,
+        F       PRIMARY FACTORS /K,L,R/
+        SC      TAX SCENARIOS /T05, T10, T25, T50/,
+        NE(G)   NON-ENERGY GOODS /X,Y/,
+        ARM(G)  ARMINGTON IMPORTS;
+
+ALIAS (S,G), (FF,F);
+
+SCALAR          GAMMA           ENERGY-OTHER GOOD ELASTICITY /0.5/;
+
+PARAMETERS      ZBAR(S)         BENCHMARK OUTPUT
+                DBAR(G,S)       BENCHMARK INTERMEDIATE INPUT
+                FDBAR(F,S)      BENCHMARK FACTOR INPUT
+                MNET(G)         NET IMPORTS
+                XNET(G)         NET EXPORTS
+                MGROSS(G)       GROSS IMPORTS
+                XGROSS(G)       GROSS EXPORTS
+                CBAR(G)         BENCHMARK FINAL CONSUMPTION
+                UBAR            BENCHMARK EXPENDITURE
+                ENDOW(F)        FACTOR ENDOWMENTS
+                T(G,S)          INPUT TAX RATE
+                TC(G)           CONSUMPTION TAX
+                ESUBM(G)        ARMINGTON ELASTICITIES (+INF = HECKSCHER-OHLIN)
+                                /E +INF, X +INF, Y 4/,
+                TAXLEVEL(SC)    TAX RATES /T05 0.05,T10 0.10,T25 0.25,T50 0.5/;
+
+TABLE SAM(*,*)  BENCHMARK SOCIAL ACCOUNTS
+
+           X        Y      E    EXPORT  IMPORT  DEMAND
+X         20      -10             -4       2     -8
+Y                 105            -20      13    -98
+E         -4       -5      5               9     -5
+K        -10      -40     -1                     51
+L         -6      -50                            56
+R                         -4                      4
+FX                                24     -24       ;
+
+*       EXTRACT THE DATA:
+
+ZBAR(S)    = SAM(S,S);
+DBAR(G,S)  = MAX(0, -SAM(G,S));
+FDBAR(F,S) = -SAM(F,S);
+XGROSS(G)  = -SAM(G,"EXPORT");
+MGROSS(G)  = SAM(G,"IMPORT");
+MNET(G)    = MAX(0, MGROSS(G) - XGROSS(G));
+XNET(G)    = MAX(0, XGROSS(G) - MGROSS(G));
+CBAR(G)    = -SAM(G,"DEMAND");
+UBAR       = SUM(G, CBAR(G));
+ENDOW(F)   = SAM(F,"DEMAND");
+
+*       LOAD IDENTIFIERS FOR IMPORTED GOODS, EXPORTED GOODS AND
+*       ACTIVE PRIMARY FACTORS:
+
+ARM(G) = YES$(ESUBM(G) LT +INF);
+ABORT$(SMIN(G$ARM(G), MGROSS(G)) EQ 0)
+  " CANNOT CALIBRATE ARMINGTON DEMAND WHEN IMPORT SHARE IS ZERO!", ARM, MGROSS;
+
+POSITIVE
+VARIABLES
+        Z(S)            SECTORAL OUTPUT INDEX
+        A(G)            SUPPLY INDEX
+        M(G)            IMPORT INDEX
+        X(G)            EXPORT INDEX
+        U               UTILITY INDEX
+        PFX             PRICE OF FOREIGN EXCHANGE
+        P(G)            GOODS PRICE INDEX
+        C(G)            PRODUCTION COST INDEX
+        W(F)            FACTOR PRICE INDEX
+        PU              UTILITY PRICE
+        RA              REPRESENTATIVE AGENT INCOME
+
+EQUATIONS
+        PRF_Z(S)        ZERO PROFIT FOR DOMESTIC PRODUCTION
+        PRF_A(S)        SUPPLY PROFIT
+        PRF_M(G)        ZERO PROFIT FOR IMPORTS
+        PRF_X(G)        ZERO PROFIT FOR EXPORTS
+        PRF_U           ZERO PROFIT FOR CONSUMPTION
+        MKT_PFX         MARKET CLEARANCE IN FOREIGN EXCHANGE
+        MKT_P(G)        MARKET CLEARANCE IN GOODS SUPPLY
+        MKT_C(G)        MARKET CLEARANCE IN DOMESTIC OUTPUT
+        MKT_W(F)        MARKET CLEARANCE IN FACTORS
+        MKT_PU          MARKET CLEARANCE IN AGGREGATE DEMAND
+        DEF_RA          DEFINITION OF RA;
+
+*       DEFINE THE MODEL ASSOCIATING EQUATIONS WITH VARIABLES.
+
+MODEL ENERGY/PRF_Z.Z, PRF_M.M, PRF_X.X, PRF_U.U, MKT_PFX.PFX,
+             MKT_P.P, MKT_W.W, MKT_PU.PU, PRF_A.A, MKT_C.C, DEF_RA.RA/
+
+*       SHARE PARAMETERS REQUIRE FOR THE ALGEBRAIC FORMULATION:
+
+PARAMETER
+        ALPHA(G,S)      VALUE SHARE FOR GOOD G IN SECTOR S,
+        ALPHAF(S)       VALUE SHARE OF PRIMARY FACTORS IN SECTOR S,
+        THETA(F,S)      SHARE OF FACTOR F IN SECTOR S VALUE ADDED,
+        ALPHAN          VALUE SHARE OF NON-ENERGY INPUTS,
+        ALPHAE          VALUE SHARE OF ENERGY INPUTS,
+        BETA(G)         VALUE SHARE OF GOOD G IN NON-ENERGY INPUTS,
+        ALPHAM          IMPORT SHARE OF AGGREGATE DOMESTIC DEMAND;
+
+ALPHA(G,S) = DBAR(G,S)/ZBAR(S);
+ALPHAF(S) = SUM(F, FDBAR(F,S)) / ZBAR(S);
+THETA(F,S) = FDBAR(F,S) / SUM(FF, FDBAR(FF,S));
+ALPHAN = SUM(NE, CBAR(NE)) / UBAR;
+ALPHAE = 1 - ALPHAN;
+BETA(NE) = CBAR(NE) / SUM(G$NE(G), CBAR(G));
+ALPHAM(S) = (MGROSS(S) / (ZBAR(S) + MGROSS(S)))$ARM(S);
+
+*       THIS CONSTRAINT ESTABLISHES A BALANCE BETWEEN INPUT PRICES
+*       AND THE COST OF PRODUCTION:
+
+PRF_Z(S)..
+
+     ( SUM(G,  ALPHA(G,S) * (P(G)*(1+T(G,S)))**(1-GAMMA)) +
+     ALPHAF(S)*(PROD(F, W(F)**THETA(F,S)))**(1-GAMMA) )**(1/(1-GAMMA))
+          =G= C(S);
+
+*       THIS CONSTRAINT RELATES THE COST OF SUPPLY TO THE MARKET
+*       SALES PRICE.  WHEN IMPORTS ARE PERFECT SUBSTITUTES, COST
+*       OF PRODUCTION MUST BE NO LESS THAN SALES PRICE:
+
+PRF_A(S)..
+        C(S)$(NOT ARM(S)) +
+        ( ((1-ALPHAM(S)) * C(S)**(1-ESUBM(S)) +
+              ALPHAM(S)  * PFX **(1-ESUBM(S)) )**(1/(1-ESUBM(S))) )$ARM(S)
+                =G= P(S);
+
+*       WHEN IMPORTS ARE PERFECT SUBSTITUTES, THE DOMESTIC PRICE MUST BE
+*       NO HIGHER THAN THE IMPORT PRICE:
+
+PRF_M(G)$(NOT ARM(G))..
+
+        PFX =G= P(G);
+
+*       ARBITRAGE THROUGH EXPORTS KEEPS THE DOMESTIC PRICE ABOVE THE
+*       INTERNATIONAL PRICE:
+
+PRF_X(G)..
+
+        C(G) =G= PFX;
+
+*       THE COST OF A UNIT OF UTILITY DEPENDS ON ENERGY AND NON-
+*       ENERGY PRICES:
+
+PRF_U..
+        ( ALPHAE * (P("E")*(1+TC("E")))**(1-GAMMA) +
+          ALPHAN * (PROD(NE, P(NE)**BETA(NE)))**(1-GAMMA) )**(1/(1-GAMMA))
+         =G= PU;
+
+*       FOREIGN EXCHANGE MARKETS:
+
+MKT_PFX..
+        SUM(G,  X(G) ) =G=
+        SUM(G,  M(G)$(NOT ARM(G)) +
+        (MGROSS(G)*A(G)*(P(G)/PFX)**ESUBM(G))$ARM(G) );
+
+*       FACTOR MARKETS:
+
+MKT_W(F)..
+        ENDOW(F) =G=
+        SUM(S, Z(S) * FDBAR(F,S) *
+                (P(S)/PROD(FF, W(FF)**THETA(FF,S)))**GAMMA *
+                 PROD(FF, W(FF)**THETA(FF,S)) / W(F) );
+
+*       DOMESTIC OUTPUT IS EITHER SUPPLIED TO THE DOMESTIC MARKET
+*       OR IT IS EXPORTED.  THE DOMESTIC MARKET DEMAND IS PRICE
+*       RESPONSIVE IF (ESUBM(G) LT +INF):
+
+MKT_C(S)..
+
+        ZBAR(S) * Z(S) =G=
+        ((ZBAR(S)-XNET(S)) * A(S) + X(S))$(NOT ARM(S)) +
+        ((ZBAR(S)-XGROSS(S)) * A(S) * (P(S)/C(S))**ESUBM(S)  + X(S))$ARM(S);
+
+*       SUPPLY-DEMAND BALANCE.  THIS EQUATION INCLUDES THE IMPORT
+*       ACTIVITY WHEN IMPORTS ARE PERFECT SUBSTITUTES, OTHERWISE
+*       DOMESTIC AND IMPORTED SUPPLIES ENTER AS A COMPOSITE GOOD THE
+*       QUANTITY OF WHICH IS SCALED BY A.
+
+MKT_P(G)..
+
+        ( A(G) * (ZBAR(G) - XNET(G)) + M(G)        )$(NOT ARM(G)) +
+
+        ( A(G) * (ZBAR(G) - XGROSS(G) + MGROSS(G)) )$ARM(G) =G=
+
+        SUM(S, Z(S) * DBAR(G,S) * (P(S)/(P(G)*(1+T(G,S))))**GAMMA) +
+
+        U * CBAR(G) * ( ((PU/(P(G)*(1+TC(G))))**GAMMA)$(NOT NE(G)) +
+                        ((PU/PROD(NE, P(NE)**BETA(NE)))**GAMMA *
+                        (PROD(NE,P(NE)**BETA(NE))/P(G)))$NE(G) );
+
+*       THE VALUE OF COMPOSITE CONSUMPTION GOOD SUPPLY MUST EXHAUST
+*       INCOME:
+*
+
+MKT_PU..
+        U * UBAR =G= RA * UBAR / PU;
+
+DEF_RA..
+        RA * UBAR =E= SUM(F, W(F) * ENDOW(F)) +
+        U * P("E") * TC("E") * CBAR("E") * (PU / (P("E")*(1+TC("E"))))**GAMMA
+        + SUM(S, Z(S) * P("E") * T("E",S) * DBAR("E",S) *
+                                        (C(S) / (P("E")*(1+T("E",S))))**GAMMA);
+
+*       BENCHMARK REPLICATION FOR H_O MODEL:
+
+Z.L(S) = 1; A.L(S) = 1;  U.L = 1;
+W.L(F) = 1; PU.L = 1; PFX.L = 1; P.L(G) = 1; C.L(G) = 1;  RA.L = 1;
+T(G,S) = 0; TC(G)  = 0;
+
+M.L(G)$(NOT ARM(G)) = MNET(G);
+X.L(G)$(NOT ARM(G)) = XNET(G);
+X.L(G)$ARM(G) = XGROSS(G);
+M.FX(G)$ARM(G) = 0;
+
+*       NORMALIZE PRICES USING INCOME:
+
+RA.FX = 1;
+
+T(G,S) = 0;
+TC(G)  = 0;
+ENERGY.ITERLIM = 0;
+SOLVE ENERGY USING MCP;
+ENERGY.ITERLIM = 2000;
+
+ARM(G) = YES$(ESUBM(G) LT +INF);
+M.L(G)$(NOT ARM(G)) = MNET(G);
+X.L(G)$(NOT ARM(G)) = XNET(G);
+X.L(G)$ARM(G) = XGROSS(G);
+M.UP(G) = +INF;
+M.FX(G)$ARM(G) = 0;
+X.UP(G) = +INF;
+
+PARAMETER REPORT        SUMMARY REPORT (%);
+
+*       COMPUTE THE COUNTER-FACTUAL SCENARIOS:
+
+LOOP(SC,
+
+
+*       FIRST SOLVE FOR THE EQUILIBRIUM WITHOUT EXEMPTIONS:
+
+        T("E",S) = TAXLEVEL(SC);
+        TC("E")  = TAXLEVEL(SC);
+        SOLVE ENERGY USING MCP;
+        REPORT("WELFARE",SC,"NON-EXEMPT","MCP") = ROUND( 100 * (U.L-1), 1);
+        REPORT("ENERGY",SC,"NON-EXEMPT","MCP") = ROUND( 100 * (
+                (A.L("E")*(ZBAR("E")-XNET("E")) + M.L("E")) /
+                 (ZBAR("E") + MNET("E") - XNET("E")) - 1), 1);
+
+*       THEN, EXEMPT SECTOR X FROM THE TAX:
+
+        T("E","X") = 0;
+        SOLVE ENERGY USING MCP;
+        REPORT("WELFARE",SC,"EXEMPT","MCP") = ROUND( 100 * (U.L-1), 1);
+        REPORT("ENERGY",SC, "EXEMPT","MCP") = ROUND( 100 * (
+                (A.L("E")*(ZBAR("E")-XNET("E")) + M.L("E")) /
+                 (ZBAR("E") + MNET("E") - XNET("E")) - 1), 1);
+);
+
+*       NEXT, WE HAVE THE MPSGE FORMULATION OF THE SAME MODEL:
+
+$ONTEXT
+
+$MODEL:GEMODEL
+
+$SECTORS:
+        Z(S)            ! SECTORAL OUTPUT INDEX
+        A(S)            ! ARMINGTON SUPPLY
+        M(G)            ! IMPORT INDEX
+        X(G)            ! EXPORT INDEX
+        U               ! UTILITY INDEX
+
+$COMMODITIES:
+        PFX             ! PRICE OF FOREIGN EXCHANGE
+        P(G)            ! GOODS PRICE INDEX
+        C(G)            ! COST INDEX
+        W(F)            ! FACTOR PRICE INDEX
+        PU              ! UTILITY PRICE
+
+$CONSUMERS:
+        RA      ! REPRESENTATIVE AGENT INCOME
+
+*       DOMESTIC PRODUCTION: NESTED CES AGGREGATE OF GOODS AND PRIMARY
+*       FACTOR INPUTS:
+
+$PROD:Z(S)  s:GAMMA  a:1
+        O:C(S)  Q:ZBAR(S)
+        I:P(G)  Q:DBAR(G,S)  A:RA  T:T(G,S)
+        I:W(F)  Q:FDBAR(F,S)  a:
+
+*       ARMINGTON MODEL: IMPORTS AND DOMESTIC OUTPUT ENTER
+*       THROUGH A CES FUNCTION:
+
+$PROD:A(S)$ARM(S)  s:ESUBM(S)
+        O:P(S)  Q:(ZBAR(S) - XGROSS(S) + MGROSS(S))
+        I:C(S)  Q:(ZBAR(S) - XGROSS(S))
+        I:PFX   Q:MGROSS(S)
+
+*       HECKSCHER-OHLIN MODEL: DOMESTIC AND IMPORTED GOODS ARE
+*       PERFECT SUBSTITUTES, SUPPLIED EITHER FROM A() OR M():
+
+$PROD:A(S)$(NOT ARM(S))
+        O:P(S)  Q:(ZBAR(S) - XNET(S))
+        I:C(S)  Q:(ZBAR(S) - XNET(S))
+
+$PROD:M(G)
+        O:P(G)  Q:1
+        I:PFX   Q:1
+
+*       BOTH VERSIONS OF THIS MODEL TREAT EXPORTS AS PERFECT
+*       SUBSTITUTES FOR DOMESITIC PRODUCTS:
+
+$PROD:X(G)
+        O:PFX   Q:1
+        I:C(G)  Q:1
+
+*       UTILITY AGGREGATE NESTS NON-ENERGY GOODS IN a:
+
+$PROD:U  s:GAMMA  a:1
+        O:PU    Q:(SUM(G, CBAR(G)))
+        I:P(G)  Q:CBAR(G)  A:RA  T:TC(G)  a:$NE(G)
+
+*       THE REPRESENTATIVE AGENT HAS FACTOR ENDOWMENTS AND SPENDS
+*       MONEY ON THE AGGREGATE CONSUMPTION GOOD:
+
+$DEMAND:RA
+        D:PU    Q:(SUM(G, CBAR(G)))
+        E:W(F)  Q:ENDOW(F)
+
+$OFFTEXT
+
+*       READ THE "HEADER FILE" WHICH IS AUTOMATICALLY PRODUCED BY
+*       THE MPSGE PRE-PROCESSOR:
+
+$SYSINCLUDE mpsgeset GEMODEL
+
+*       NORMALIZE PRICES USING INCOME:
+
+RA.FX = UBAR;
+
+*       INSTALL ACTIVITY LEVELS FOR IMPORTS AND EXPORTS:
+
+ARM(G) = YES$(ESUBM(G) LT +INF);
+M.L(G)$(NOT ARM(G)) = MNET(G);
+X.L(G)$(NOT ARM(G)) = XNET(G);
+X.L(G)$ARM(G) = XGROSS(G);
+M.UP(G) = +INF;
+M.FX(G)$ARM(G) = 0;
+X.UP(G) = +INF;
+
+*       CHECK THE BENCHMARK CALIBRATION:
+
+T(G,S) = 0;
+TC(G)  = 0;
+GEMODEL.ITERLIM = 0;
+
+*       GENERATE THE MODEL BY EXECUTING THE MODEL GENERATION FILE:
+
+$INCLUDE GEMODEL.GEN
+SOLVE  GEMODEL USING MCP;
+GEMODEL.ITERLIM = 2000;
+
+LOOP(SC,
+
+*       FIRST SOLVE FOR THE EQUILIBRIUM WITHOUT EXEMPTIONS:
+
+        T("E",S) = TAXLEVEL(SC);
+        TC("E")  = TAXLEVEL(SC);
+$INCLUDE GEMODEL.GEN
+        SOLVE GEMODEL USING MCP;
+        REPORT("WELFARE",SC,"NON-EXEMPT","MGE") = ROUND( 100 * (U.L-1), 1);
+        REPORT("ENERGY",SC,"NON-EXEMPT","MGE") = ROUND( 100 * (
+                (A.L("E")*(ZBAR("E")-XNET("E")) + M.L("E")) /
+                 (ZBAR("E") + MNET("E") - XNET("E")) - 1), 1);
+
+*       THEN, EXEMPT SECTOR X FROM THE TAX:
+
+        T("E","X") = 0;
+$INCLUDE GEMODEL.GEN
+        SOLVE GEMODEL USING MCP;
+        REPORT("WELFARE",SC,"EXEMPT","MGE") = ROUND( 100 * (U.L-1), 1);
+        REPORT("ENERGY",SC, "EXEMPT","MGE") = ROUND( 100 * (
+                (A.L("E")*(ZBAR("E")-XNET("E")) + M.L("E")) /
+                 (ZBAR("E") + MNET("E") - XNET("E")) - 1), 1);
+);
+
+OPTION REPORT:1:2:2;
+DISPLAY REPORT;

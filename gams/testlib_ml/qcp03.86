@@ -1,0 +1,31 @@
+$TITLE Test case for cancellation in quadratic terms (QCP03,SEQ=86)
+
+$if not set MTYPE   $set MTYPE qcp
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar mchecks / 0 /;
+$if not %QPMCHECKS% == 0 mchecks = 1;
+
+variables z, x;
+x.lo = 1;  x.up = 2;
+equation f;
+
+f..      sqr(x+1) - sqr(x) =e= z;
+
+model m / f /;
+solve m using %MTYPE% min z;
+
+scalars
+    tol     /    %TESTTOL% /;
+
+abort$( m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)            'wrong status codes';
+
+abort$( abs(z.l-3) > tol )                  'bad z.l';
+abort$( abs(z.m) > tol )                    'bad z.m';
+
+abort$( abs(f.l) > tol)                     'bad f.l';
+abort$( abs(x.l-1) > tol)                   'bad x.l';
+
+if {mchecks,
+  abort$( abs(f.m+1) > tol)                 'bad f.m';
+  abort$( abs(x.m-2) > tol)                 'bad x.m';
+};

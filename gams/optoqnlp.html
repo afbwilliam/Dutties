@@ -1,0 +1,568 @@
+<html>
+<head>
+<title>OQNLP Options</title>
+</head>
+<body>
+<h2>OQNLP Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/oqnlp.pdf">OQNLP manual</a>.
+
+<h2>Summary of OQNLP Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#OQNLPartificial_bound">
+artificial_bound</a></td>
+<td>default upper/lower bound</td></tr>
+<tr><td><a href="#OQNLPbasin_decrease_factor">
+basin_decrease_factor</a></td>
+<td>reduction of MAXDIST</td></tr>
+<tr><td><a href="#OQNLPbasin_overlap_fix">
+basin_overlap_fix</a></td>
+<td>switch for MAXDIST logic</td></tr>
+<tr><td><a href="#OQNLPdistance_factor">
+distance_factor</a></td>
+<td>distance activation factor</td></tr>
+<tr><td><a href="#OQNLPdistance_waitcycle">
+distance_waitcycle</a></td>
+<td>iterations before distance filter threshold is increased</td></tr>
+<tr><td><a href="#OQNLPdynamic_distance_filter">
+dynamic_distance_filter</a></td>
+<td>switch for MAXDIST reduction logic</td></tr>
+<tr><td><a href="#OQNLPdynamic_merit_filter">
+dynamic_merit_filter</a></td>
+<td>switch for merit threshold increase logic</td></tr>
+<tr><td><a href="#OQNLPenable_screen_output">
+enable_screen_output</a></td>
+<td>switch for log output</td></tr>
+<tr><td><a href="#OQNLPenable_statistics_log">
+enable_statistics_log</a></td>
+<td>switch for statistics file stats.log</td></tr>
+<tr><td><a href="#OQNLPfeasibility_tolerance">
+feasibility_tolerance</a></td>
+<td>feasibility check for point returned by NLP solver</td></tr>
+<tr><td><a href="#OQNLPiteration_limit">
+iteration_limit</a></td>
+<td>total number of OQNLP iterations</td></tr>
+<tr><td><a href="#OQNLPiteration_print_frequency">
+iteration_print_frequency</a></td>
+<td>frequency of iteration print</td></tr>
+<tr><td><a href="#OQNLPlocals_file">
+locals_file</a></td>
+<td>filename for local file</td></tr>
+<tr><td><a href="#OQNLPlocals_file_format">
+locals_file_format</a></td>
+<td>file format for local file</td></tr>
+<tr><td><a href="#OQNLPmaxtime">
+maxtime</a></td>
+<td>maximum runtime in seconds</td></tr>
+<tr><td><a href="#OQNLPmax_locals">
+max_locals</a></td>
+<td>maximum number of local optima found</td></tr>
+<tr><td><a href="#OQNLPmax_solver_calls">
+max_solver_calls</a></td>
+<td>maximum number of nlp solver calls</td></tr>
+<tr><td><a href="#OQNLPmax_solver_calls_noimprovement">
+max_solver_calls_noimprovement</a></td>
+<td>maximum number non-improving solver calls</td></tr>
+<tr><td><a href="#OQNLPmerit_waitcycle">
+merit_waitcycle</a></td>
+<td>iterations before merit filter threshold is increased</td></tr>
+<tr><td><a href="#OQNLPnlpsolver">
+nlpsolver</a></td>
+<td>NLP solver to be used</td></tr>
+<tr><td><a href="#OQNLPoptquest_only">
+optquest_only</a></td>
+<td>switch for using local solvers</td></tr>
+<tr><td><a href="#OQNLPoqnlp_debug">
+oqnlp_debug</a></td>
+<td>enable debug info</td></tr>
+<tr><td><a href="#OQNLPpoint_generation">
+point_generation</a></td>
+<td>starting point generator</td></tr>
+<tr><td><a href="#OQNLPsampling_distribution">
+sampling_distribution</a></td>
+<td>distribution for smartrandom1</td></tr>
+<tr><td><a href="#OQNLPsearch_type">
+search_type</a></td>
+<td>search strategy</td></tr>
+<tr><td><a href="#OQNLPsolvelink">
+solvelink</a></td>
+<td>Solvelink for GAMS NLP solver</td></tr>
+<tr><td><a href="#OQNLPsolver_log_to_gams_log">
+solver_log_to_gams_log</a></td>
+<td>switch to copy the NLP solver log to the normal log file</td></tr>
+<tr><td><a href="#OQNLPstage1_iterations">
+stage1_iterations</a></td>
+<td>number of iterations in stage 1</td></tr>
+<tr><td><a href="#OQNLPthreshold_increase_factor">
+threshold_increase_factor</a></td>
+<td>factor to increase merit filter threshold</td></tr>
+<tr><td><a href="#OQNLPuse_distance_filter">
+use_distance_filter</a></td>
+<td>distance filter</td></tr>
+<tr><td><a href="#OQNLPuse_linear_constraints">
+use_linear_constraints</a></td>
+<td>satisfy linear constraints</td></tr>
+<tr><td><a href="#OQNLPuse_merit_filter">
+use_merit_filter</a></td>
+<td>merit filter</td></tr></table>
+<h2>Detailed Descriptions of OQNLP Options</h2>
+
+<h4><a name="OQNLPartificial_bound">
+artificial_bound</a>
+<i> (real)</i> default upper/lower bound</h4><p>
+
+This value (its negative) is given to the driver as the upper (lower) bound
+for any variable with no upper or lower bound. However, the original
+bounds are given to the local solver, so it can produce solutions not limited
+by this artificial bound. All drivers must have finite upper and lower
+bounds for each variable. If <tt>artificial_bound</tt> (or any of the user- supplied
+bounds) is much larger than any component of the optimal solution,
+the driver will be less efficient because it is searching over a region that
+is much larger than needed. Hence the user is advised to try to provide
+realistic values for all upper and lower bounds. It is even more dangerous
+to make <tt>artificial_bound</tt> smaller than some component of a globally
+optimal solution, since the driver can never generate a trial point near
+that solution. It is possible, however, for the local solver to reach a global
+solution in this case, since the artificial bounds are not imposed on it
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="OQNLPbasin_decrease_factor">
+basin_decrease_factor</a>
+<i> (real)</i> reduction of MAXDIST</h4><p>
+
+<p>
+This value must be between 0 and 1. If <a
+href="#dynamic_distance_filter"><tt>dynamic_distance_filter</tt></a> is set to 1,
+the <i>MAXDIST</i> value associated with any local solution is reduced by
+(1-<tt>basin_decrease_factor</tt>) if <a
+href="#distance_waitcycle"><tt>distance_waitcycle</tt></a> consecutive trial points
+have distance from that solution less than <i>MAXDIST</i>.
+
+<br><i>Range: [0,1]</i>
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="OQNLPbasin_overlap_fix">
+basin_overlap_fix</a>
+<i> (integer)</i> switch for MAXDIST logic</h4><p>
+
+A value of 1 turns on logic which checks the <i>MAXDIST</i> values of all pairs
+of local solutions, and reduces any pair of <i>MAXDIST</i> values if their sum
+is greater than the distance between the 2 solutions. This ensures that the
+spherical models of their basins of attracting do not overlap. A value of 0
+turns off this logic. Turning it off can reduce the number of NLP solver calls,
+but can also cause the algorithm to miss the global solution.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="OQNLPdistance_factor">
+distance_factor</a>
+<i> (real)</i> distance activation factor</h4><p>
+
+If the distance between a trial point and any local solution found previously is
+less than <tt>distance_factor</tt>*<i>MAXDIST</i>, the NLP solver is not started
+from that trial point. <i>MAXDIST</i> is the largest distance ever traveled to
+get to that local solution. Increasing distance_factor leads to fewer solver
+calls and risks finding a worse solution. Decreasing it leads to more solver
+calls and possibly a better solution.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="OQNLPdistance_waitcycle">
+distance_waitcycle</a>
+<i> (integer)</i> iterations before distance filter threshold is increased</h4><p>
+
+This value must be a positive integer. If the distance filter is used, and there
+are <tt>distance_waitcycle</tt> consecutive iterations where the distance filter logic
+causes the NLP solver not to be started, the distance filter threshold is increased
+by the factor <a
+href="#threshold_increase_factor"><tt>threshold_increase_factor</tt></a>. Increasing
+<tt>distance_waitcycle</tt> usually leads to fewer solver calls, but risks finding
+a worse solution. Decreasing it leads to more solver calls, but may find a
+better solution.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="OQNLPdynamic_distance_filter">
+dynamic_distance_filter</a>
+<i> (integer)</i> switch for MAXDIST reduction logic</h4><p>
+
+A value of 1 turns on logic which reduces the value of <i>MAXDIST</i> (described
+under the <a href="#use_distance_filter"><tt>use_distance_filter</tt></a> keyword)
+for a local solution if <a
+href="#distance_waitcycle"><tt>distance_waitcycle</tt></a> consecutive trial
+points have a their distances from that solution less than
+<i>MAXDIST</i>. <i>MAXDIST</i> is multiplied by
+(1-<tt>basin_reduction_factor</tt>). A value of 0 turns off this logic. Turning
+it off can decrease the number of NLP solver calls, but can also lead to a worse
+final solution.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="OQNLPdynamic_merit_filter">
+dynamic_merit_filter</a>
+<i> (integer)</i> switch for merit threshold increase logic</h4><p>
+
+A value of 1 turns on logic which dynamically varies the parameter which
+increases the merit filter threshold, <a
+href="#threshold_increase_factor"><tt>threshold_increase_factor</tt></a>. If <a
+href="#merit_waitcycle"><tt>merit_waitcycle</tt></a> consecutive trial points have
+been rejected by the merit filter, this value is replaced by
+<tt>max(threshold_increase_factor, val)</tt>, where <tt>val</tt> is the value of
+<tt>threshold_increase_factor</tt> which causes the merit filter to just accept
+the best of the previous <tt>merit_waitcycle</tt> trial points. A value of 0
+turns off this logic. Turning it off can reduce NLP solver calls, but may lead
+to a worse final solution.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="OQNLPenable_screen_output">
+enable_screen_output</a>
+<i> (integer)</i> switch for log output</h4><p>
+
+A value of 0 turns off the writing of the iteration log and termination
+messages to the gams log file that appears on the screen, while 1 enables
+it.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="OQNLPenable_statistics_log">
+enable_statistics_log</a>
+<i> (integer)</i> switch for statistics file stats.log</h4><p>
+
+Using a value of 1 creates a text file called <tt>stats.log</tt> in the project
+directory containing one line of problem (name, variables, constraints) and
+performance information (best objective value, total solver time, iterations,
+iterations to best solution, etc) for each problem solved.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="OQNLPfeasibility_tolerance">
+feasibility_tolerance</a>
+<i> (real)</i> feasibility check for point returned by NLP solver</h4><p>
+
+This tolerance is used to check each point returned by an NLP solver for
+feasibility. If the largest absolute infeasibility at the point is larger than
+this tolerance, the point is classified infeasible. This test is made because
+points returned by NLP solvers may occasionally be infeasible despite
+feasible status codes. Some NLP solvers use internal scaling before testing
+for feasibility. The unscaled problem may be infeasible, while the scaled
+one is feasible. If this occurs, increasing this tolerance (to 1.e-2 or larger)
+often eliminates the problem.
+
+<br><i>(default = 0.0001)</i>
+
+<h4><a name="OQNLPiteration_limit">
+iteration_limit</a>
+<i> (integer)</i> total number of OQNLP iterations</h4><p>
+
+Increasing this limit can allow OQNLP to find a better solution. Try it
+if your run using 1000 iterations does not take too long. Surprisingly, the
+best solution using, say 2000 iterations, may be found in the first 1000
+iterations, and that solution may be better than the one found with an
+iteration limit of 1000. This is because OptQuest changes its search strategy
+depending on the iteration limit. Because of this, it is also possible
+that increasing the iteration limit will yield a worse solution, but this is
+rare. Decreasing this iteration limit usually leads to a worse solution, but
+also reduces run time. OQNLP iterations can not be set using GAMS
+iterlim. The GAMS iterlim is used as the iteration limit for the NLP
+subsolves in a OQNLP run
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="OQNLPiteration_print_frequency">
+iteration_print_frequency</a>
+<i> (integer)</i> frequency of iteration print<br>&nbsp;&nbsp;&nbsp;Synonym:
+gams_itn_print_frequency</h4><p>
+
+If the OQNLP iteration log is written to the GAMS log file, one line of output is
+written every <i>k</i>th iteration, where <i>k</i> is the value given here.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="OQNLPlocals_file">
+locals_file</a>
+<i> (string)</i> filename for local file</h4><p>
+
+Specify a complete path and name for a file to which the objective value and
+values of all variables for all local solutions found will be written.  For
+example, <tt>C:\mydirectory\locals.out</tt>. There are 2 possible formats for
+this file, specified by the <a
+href="#locals_file_format"><tt>locals_file_format</tt></a> option below. If there
+is no <tt>locals_file</tt> record in the options file, the locals file will not
+be created.
+
+
+<h4><a name="OQNLPlocals_file_format">
+locals_file_format</a>
+<i> (string)</i> file format for local file</h4><p>
+
+There are 2 possible values for this option. The <tt>report</tt> entry creates
+the locals file in a format designed to be examined easily by eye, but
+processed less easily by a computer program or spreadsheet. The <tt>data1</tt>
+entry creates a file with many records, each on a single line, each line
+having the following format: [index of local optimum] [objval] [var index] [var value]
+
+<br><i>(default = report)</i>
+<table>
+<tr valign="top"><td width=20 align=right>report</td><td>Report file format</td></tr>
+<tr valign="top"><td width=20 align=right>data1</td><td>Data1 file format</td></tr>
+</table>
+
+<h4><a name="OQNLPmaxtime">
+maxtime</a>
+<i> (integer)</i> maximum runtime in seconds<br>&nbsp;&nbsp;&nbsp;Synonym:
+reslim</h4><p>
+
+When the execution time exceeds this value, the system will stop, returning
+the best solution found.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="OQNLPmax_locals">
+max_locals</a>
+<i> (integer)</i> maximum number of local optima found</h4><p>
+
+When the number of distinct local solutions found exceeds the value specified
+here, the system will stop, returning the best solution found.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="OQNLPmax_solver_calls">
+max_solver_calls</a>
+<i> (integer)</i> maximum number of nlp solver calls</h4><p>
+
+When the number of calls to the NLP solver exceeds the value specified
+here, the system will stop, returning the best solution found.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="OQNLPmax_solver_calls_noimprovement">
+max_solver_calls_noimprovement</a>
+<i> (integer)</i> maximum number non-improving solver calls</h4><p>
+
+The positive integer specified here will cause the system to stop whenever
+the number of consecutive solver calls with a fractional improvement in
+the best objective value found less than 1.e-4 exceeds that value. In other
+words, if the value specified is 50, and there are more than 50 consecutive
+solver calls where the relative change in the best objective was less than
+1.e-4 in all iterations, the system will stop.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="OQNLPmerit_waitcycle">
+merit_waitcycle</a>
+<i> (integer)</i> iterations before merit filter threshold is increased</h4><p>
+
+This value must be a positive integer. If the merit filter is used, and there
+are <tt>merit_waitcycle</tt> consecutive iterations where the merit filter logic
+causes the NLP solver not to be started, the merit filter threshold is increased
+by the factor <a
+href="#threshold_increase_factor"><tt>threshold_increase_factor</tt></a>. Increasing
+<tt>merit_waitcycle</tt> usually leads to fewer solver calls, but risks finding
+a worse solution. Decreasing it leads to more solver calls, but may find a
+better solution.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="OQNLPnlpsolver">
+nlpsolver</a>
+<i> (string)</i> NLP solver to be used</h4><p>
+
+This option is available only within GAMS. It specifies the NLP solver to be
+called. Any GAMS NLP solver for which the user has a license can be
+used. Further, one can specify an option file for the GAMS NLP solver by
+appending a <tt>.n</tt> with <i>n=1..999</i> to the solver name. For example,
+<tt>NLPSOLVER conopt.1</tt> will instruct the NLP solver CONOPT to use option
+file <tt>conopt.opt</tt>, <tt>NLPSOLVER conopt.2</tt> will make CONOPT read
+option file <tt>conopt.op2</tt> and so on.
+
+<br><i>(default = lsgrg)</i>
+
+<h4><a name="OQNLPoptquest_only">
+optquest_only</a>
+<i> (integer)</i> switch for using local solvers</h4><p>
+
+This option applies only to the OptQuest driver. If you think the NLP
+solver is taking too long and/or not working well, choosing 1 will stop
+it from being called. This may occur if the problem is of type <tt>DNLP</tt>,
+where one or more problem functions are discontinuous or have discontinuous
+derivatives. If the problem has only discrete (integer) variables,
+choose 1, as there is nothing for the NLP solver to do (since it optimizes
+over the continuous variables when the integers are fixed, and there none).
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>use local solver</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>no local solver calls</td></tr>
+</table>
+
+<h4><a name="OQNLPoqnlp_debug">
+oqnlp_debug</a>
+<i> (integer)</i> enable debug info<br>&nbsp;&nbsp;&nbsp;Synonym:
+msnlp_debug</h4><p>
+
+Values of 1 or 2 cause more information to be written to the iteration log.
+The default value of 0 suppresses all this output.
+
+<br><i>Range: [0,2]</i>
+
+<br><i>(default = 0)</i>
+
+<h4><a name="OQNLPpoint_generation">
+point_generation</a>
+<i> (string)</i> starting point generator</h4><p>
+
+Selection of point generation algorithm.
+
+<br><i>(default = optquest)</i>
+<table>
+<tr valign="top"><td width=20 align=right>random</td><td>random point generation.
+Causes trial points to be generated by sampling each variable from a uniform
+distribution defined within its bounds</td></tr>
+<tr valign="top"><td width=20 align=right>hitandrun</td><td>hit and run point generation</td></tr>
+<tr valign="top"><td width=20 align=right>smartrandom1</td><td>smart random point generation.
+Generates trial points by sampling each variable independently from either
+normal or triangular distributions, whose parameters are determined as described
+in Appendix A of the OQNLP User Guide.</td></tr>
+<tr valign="top"><td width=20 align=right>test2</td><td>test2 point generation</td></tr>
+<tr valign="top"><td width=20 align=right>test3</td><td>test3 point generation</td></tr>
+<tr valign="top"><td width=20 align=right>optquest</td><td>OptQuest generates starting point.
+Causes trial points to be generated by the OptQuest driver</td></tr>
+</table>
+
+<h4><a name="OQNLPsampling_distribution">
+sampling_distribution</a>
+<i> (integer)</i> distribution for smartrandom1</h4><p>
+
+This keyword is relevant only when <a
+href="#point_generation"><tt>point_generation</tt></a> is set to
+<tt>smartrandom1</tt>. Then a value of 0 causes normal distributions to be used
+to generate trial points, while a value of 1 causes triangular distributions to
+be used.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>normal</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>triangular</td></tr>
+</table>
+
+<h4><a name="OQNLPsearch_type">
+search_type</a>
+<i> (string)</i> search strategy</h4><p>
+
+This option applies only to the OptQuest driver, and controls the search
+strategy used by OptQuest. There are three choices that are relevant for use
+within OQNLP.
+
+<br><i>(default = boundary)</i>
+<table>
+<tr valign="top"><td width=20 align=right>aggressive</td><td>aggressive search.
+This choice controls the population update in step 7 of the OptQuest algorithm
+(see Appendix A of the User Guide). It triggers a very aggressive update,
+which keeps the best of the points generated from the current population as the
+new population. The risk in this is that all points in the new population may
+cluster in a small portion of the search volume, and regions far from this
+volume will not be explored in the next cycle.</td></tr>
+<tr valign="top"><td width=20 align=right>boundary</td><td>boundary search.
+This option affects the trial points generated by OptQuest, directing them
+toward the boundary of the region defined by the linear constraints and variable
+bounds. The value of <a href="#search_parameter"><tt>search_parameter</tt></a>
+discussed below controls the fraction of points that are directed toward the
+boundary.</td></tr>
+<tr valign="top"><td width=20 align=right>crossover</td><td>crossover search.
+This option affects how OptQuest trial points are generated from population
+points. It retains the linear combination operator discussed in Appendix A of
+the User Guide, but adds a <i>crossover</i> operator, similar to those used in
+evolutionary or genetic algorithms, to create 2 additional trial points.</td></tr>
+</table>
+
+<h4><a name="OQNLPsolvelink">
+solvelink</a>
+<i> (integer)</i> Solvelink for GAMS NLP solver</h4><p>
+
+
+<br><i>(default = 5)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Call GAMS NLP solver via script</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Call GAMS NLP solver via module</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Call GAMS NLP solver in memory</td></tr>
+</table>
+
+<h4><a name="OQNLPsolver_log_to_gams_log">
+solver_log_to_gams_log</a>
+<i> (integer)</i> switch to copy the NLP solver log to the normal log file</h4><p>
+
+Setting the parameter to 1 instructs OQNLP to copy the log from the
+NLP subsolver to the OQNLP log. It can be very helpful to inspect the
+NLP subsolver log especially if the solver termination code is <tt>???</tt>.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="OQNLPstage1_iterations">
+stage1_iterations</a>
+<i> (integer)</i> number of iterations in stage 1</h4><p>
+
+Specifies the total number of iterations in stage 1 of the algorithm, where
+no NLP solver calls are made. Increasing this sometimes leads to a better
+starting point for the first local solver call in stage 2, at the cost of delaying
+that call. Decreasing it can lead to more solver calls, but the first call
+occurs sooner.
+
+<br><i>(default = 200)</i>
+
+<h4><a name="OQNLPthreshold_increase_factor">
+threshold_increase_factor</a>
+<i> (real)</i> factor to increase merit filter threshold</h4><p>
+
+This value must be nonnegative. If there are <a
+href="#merit_waitcycle"><tt>merit_waitcycle</tt></a> consecutive OQNLP
+iterations where the merit filter logic causes the NLP solver not to be called,
+the merit threshold is increased by multiplying it by
+(1+<tt>threshold_increase_factor</tt>). The same applies to the <a
+href="#distance_waitcycle"><tt>distance_waitcycle</tt></a>.
+
+<br><i>(default = 0.2)</i>
+
+<h4><a name="OQNLPuse_distance_filter">
+use_distance_filter</a>
+<i> (integer)</i> distance filter</h4><p>
+
+Use 0 to turn off the distance filter, the logic which starts the NLP solver at
+a trial point only if the (Euclidean) distance from that point to any local
+solution found thus far is greater than the distance threshold. Turning
+off the distance filter leads to more solver calls and more run time, and
+increases the chances of finding a global solution. Turn off both distance
+and merit filters to find (almost) all local solutions.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="OQNLPuse_linear_constraints">
+use_linear_constraints</a>
+<i> (integer)</i> satisfy linear constraints</h4><p>
+
+This option applies only to the OptQuest driver, and to problems that have
+linear constraints other than simple bounds on the variables. Using 1 (all
+OptQuest trial points satisfy the linear constraints) often leads to fewer
+iterations and solver calls, but OptQuest has to solve an LP to project
+each trial point onto the linear constraints. For large problems (more than
+100 variables), this can greatly increase run time, so the default value is
+off (0).
+
+<br><i>(default = 0)</i>
+
+<h4><a name="OQNLPuse_merit_filter">
+use_merit_filter</a>
+<i> (integer)</i> merit filter</h4><p>
+
+Use 0 to turn off the merit filter, the logic which starts the NLP solver
+at a trial point only if the penalty function value at that point is below
+the merit threshold. This will lead to more solver calls, but increases the
+chances of finding a global solution. Turn off both filters if you want to
+find (almost) all local solutions. This will cause the solver to be called at
+each stage 2 iteration.
+
+<br><i>(default = 1)</i>
+</body></html>

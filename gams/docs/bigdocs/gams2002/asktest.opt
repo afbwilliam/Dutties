@@ -1,0 +1,6 @@
+T=checklistbox
+M=Choose multiple options
+D=option 1|option 2|option 3|option 4|option 5
+E=1|2|3|4|5
+R=%s checked list box choice
+O=k2.inc

@@ -1,0 +1,30 @@
+$title CNS model with globally unique solution (cns06,SEQ=96)
+
+$ontext
+  The following model has a globally unique solution even though it
+  is nonlinear.
+  Not all solvers will recognize that the solution is globally unique.
+  Equation e1 can be solved uniquely w.r.t. x1 because the function
+  exp is monotone.
+  Equation e2 can then be solved uniquely w.r.t. x2 even though it
+    is nonlinear in x1 since x1 has a unique nonzero value.
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+
+variable x1, x2;
+equation e1, e2;
+
+e1 .. exp(x1) =e= exp(1);
+e2 .. x1 * x2 =e= 9;
+
+model cns06 / all /;
+option limrow = 0, limcol = 0;
+solve cns06 using cns;
+abort$(cns06.solvestat <> %solvestat.NormalCompletion%
+    or (cns06.modelstat <> %modelstat.SolvedUnique%) and (cns06.modelstat <> %modelstat.Solved%))  'bad return codes';
+abort$(abs(x1.l-1) > tol)       'bad x1.l';
+abort$(abs(x2.l-9) > tol)       'bad x2.l';
+abort$(abs(e1.l-exp(1)) > tol)  'bad e1.l';
+abort$(abs(e2.l-9) > tol)       'bad e2.l';

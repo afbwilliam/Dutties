@@ -1,0 +1,60 @@
+$title 'Test database access with MDB2GMS' (MDB2GMS1,SEQ=342)
+
+$ontext
+
+Test database access with MDB2GMS
+Make multiple queries in one call, store in GDX file
+
+$offtext
+
+$if %system.filesys% == UNIX $log MDB2GMS test skipped for UNIX
+$if %system.filesys% == UNIX $exit
+
+$call msappavail -Access
+$if not errorlevel 1 $goto realrunme
+$log no Access
+$exit
+
+$label realrunme
+
+$onecho > cmd.txt
+I=querytest.mdb
+X=mdboutput.gdx
+
+Q1=select distinct(year) from data
+s1=year
+
+Q2=select distinct(loc) from data
+s2=loc
+
+Q3=select distinct(prod) from data
+s3=prd
+
+Q4=select prod,loc,year,sales from data
+p4=sales
+
+Q5=select prod,loc,year,profit from data
+p5=profit
+$offecho
+
+$call mdb2gms @cmd.txt > %system.nullfile%
+$if errorlevel 1 $exit Could not start Access
+
+Scalar rc;
+execute 'gdxdiff querytest.gdx mdboutput.gdx > %system.nullfile%';
+rc=errorlevel;
+display rc;
+abort$(rc <> 0) 'generated gdx file is different';
+
+set y 'years';
+set loc 'locations';
+set prd 'products';
+parameter sales(prd,loc,y);
+parameter profit(prd,loc,y);
+
+$gdxin 'mdboutput.gdx'
+$load y=year loc prd sales profit
+
+
+display sales;
+display profit;

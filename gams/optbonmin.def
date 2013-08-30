@@ -1,0 +1,209 @@
+*
+* optbonmin.def
+*
+
+algorithm enumstr 0 "B-BB" 1 1 Choice of the algorithm.
+ "B-BB" 1 simple branch-and-bound algorithm,
+ "B-Ecp" 1 ecp cuts based branch-and-cut a la FilMINT.
+ "B-Hyb" 1 hybrid outer approximation based branch-and-cut,
+ "B-OA" 1 OA Decomposition algorithm,
+ "B-QG" 1 Quesada and Grossmann branch-and-cut algorithm,
+ "B-iFP" 1 Iterated Feasibility Pump for MINLP.
+allowable_fraction_gap double 0 0.1 mindouble maxdouble 1 2 Specify the value of relative gap under which the algorithm stops.
+allowable_gap double 0 0 mindouble maxdouble 1 2 Specify the value of absolute gap under which the algorithm stops.
+cutoff double 0 1e+100 -1e+100 1e+100 1 2 Specify cutoff value.
+cutoff_decr double 0 1e-05 -1e+10 1e+10 1 2 Specify cutoff decrement.
+enable_dynamic_nlp enumstr 0 "no" 1 2 Enable dynamic linear and quadratic rows addition in nlp
+ "no" 1
+ "yes" 1
+integer_tolerance double 0 1e-06 0 maxdouble 1 2 Set integer tolerance.
+iteration_limit integer 0 maxint 0 maxint 1 2 Set the cumulated maximum number of iteration in the algorithm used to process nodes continuous relaxations in the branch-and-bound.
+nlp_failure_behavior enumstr 0 "stop" 1 2 Set the behavior when an NLP or a series of NLP are unsolved by Ipopt (we call unsolved an NLP for which Ipopt is not able to guarantee optimality within the specified tolerances).
+ "fathom" 1 Continue when failure happens.
+ "stop" 1 Stop when failure happens.
+node_comparison enumstr 0 "best-bound" 1 2 Choose the node selection strategy.
+ "best-bound" 1 choose node with the smallest bound,
+ "best-guess" 1 choose node with smallest guessed integer solution
+ "breadth-first" 1 Perform breadth first search,
+ "depth-first" 1 Perform depth first search,
+ "dynamic" 1 Cbc dynamic strategy (starts with a depth first search and turn to best bound after 3 integer feasible solutions have been found).
+node_limit integer 0 maxint 0 maxint 1 2 Set the maximum number of nodes explored in the branch-and-bound search.
+num_cut_passes integer 0 1 0 maxint 1 2 Set the maximum number of cut passes at regular nodes of the branch-and-cut.
+num_cut_passes_at_root integer 0 20 0 maxint 1 2 Set the maximum number of cut passes at regular nodes of the branch-and-cut.
+number_before_trust integer 0 8 0 maxint 1 2 Set the number of branches on a variable before its pseudo costs are to be believed in dynamic strong branching.
+number_strong_branch integer 0 20 0 maxint 1 2 Choose the maximum number of variables considered for strong branching.
+random_generator_seed integer 0 42 -1 maxint 1 2 Set seed for random number generator (a value of -1 sets seeds to time since Epoch).
+read_solution_file enumstr 0 "no" 1 2 Read a file with the optimal solution to test if algorithms cuts it.
+ "no" 1
+ "yes" 1
+solution_limit integer 0 maxint 0 maxint 1 2 Abort after that much integer feasible solution have been found by algorithm
+time_limit double 0 1000 0 maxdouble 1 2 Set the global maximum computation time (in secs) for the algorithm.
+tree_search_strategy enumstr 0 "probed-dive" 1 2 Pick a strategy for traversing the tree
+ "dfs-dive" 1 Dive in the tree if possible doing a depth first search. Backtrack on leaves or when a prescribed depth is attained or when estimate of best possible integer feasible solution in subtree is worst than cutoff.
+ "dfs-dive-dynamic" 1 Same as dfs-dive but once enough solution are found switch to best-bound and if too many nodes switch to depth-first.
+ "dive" 1 Dive in the tree if possible, otherwise pick top node as sorted by the tree comparison function.
+ "probed-dive" 1 Dive in the tree exploring two childs before continuing the dive at each level.
+ "top-node" 1  Always pick the top node as sorted by the node comparison function
+variable_selection enumstr 0 "strong-branching" 1 2 Chooses variable selection strategy
+ "lp-strong-branching" 1 Perform strong branching with LP approximation
+ "most-fractional" 1 Choose most fractional variable
+ "nlp-strong-branching" 1 Perform strong branching with NLP approximation
+ "osi-simple" 1 Osi method to do simple branching
+ "osi-strong" 1 Osi method to do strong branching
+ "qp-strong-branching" 1 Perform strong branching with QP approximation
+ "random" 1 Method to choose branching variable randomly
+ "reliability-branching" 1 Use reliability branching
+ "strong-branching" 1 Perform strong branching
+ecp_abs_tol double 0 1e-06 0 maxdouble 1 3 Set the absolute termination tolerance for ECP rounds.
+ecp_max_rounds integer 0 5 0 maxint 1 3 Set the maximal number of rounds of ECP cuts.
+ecp_probability_factor double 0 10 mindouble maxdouble 1 3 Factor appearing in formula for skipping ECP cuts.
+ecp_rel_tol double 0 0 0 maxdouble 1 3 Set the relative termination tolerance for ECP rounds.
+filmint_ecp_cuts integer 0 0 0 maxint 1 3 Specify the frequency (in terms of nodes) at which some a la filmint ecp cuts are generated.
+feas_check_cut_types enumstr 0 "outer-approx" 1 4 Choose the type of cuts generated when an integer feasible solution is found
+ "Benders" 1 Generate a single Benders cut.
+ "outer-approx" 1 Generate a set of Outer Approximations cuts.
+feas_check_discard_policy enumstr 0 "detect-cycles" 1 4 How cuts from feasibility checker are discarded
+ "detect-cycles" 1 Detect if a cycle occurs and only in this case force not to discard.
+ "keep-all" 1 Force cuts from feasibility checker not to be discarded (memory hungry but sometimes better).
+ "treated-as-normal" 1 Cuts from memory checker can be discarded as any other cuts (code may cycle then)
+generate_benders_after_so_many_oa integer 0 5000 0 maxint 1 4 Specify that after so many oa cuts have been generated Benders cuts should be generated instead.
+cpx_parallel_strategy integer 0 0 -1 1 1 5 Strategy of parallel search mode in CPLEX.
+milp_solver enumstr 0 "Cbc_D" 1 5 Choose the subsolver to solve MILP sub-problems in OA decompositions.
+ "Cbc_D" 1 Coin Branch and Cut with its default
+ "Cbc_Par" 1 Coin Branch and Cut with passed parameters
+ "Cplex" 1 IBM Cplex
+milp_strategy enumstr 0 "solve_to_optimality" 1 5 Choose a strategy for MILPs.
+ "find_good_sol" 1 Stop sub milps when a solution improving the incumbent is found
+ "solve_to_optimality" 1 Solve MILPs to optimality
+number_cpx_threads integer 0 0 0 maxint 1 5 Set number of threads to use with cplex.
+2mir_cuts integer 0 0 -100 maxint 1 6 Frequency (in terms of nodes) for generating 2-MIR cuts in branch-and-cut
+Gomory_cuts integer 0 -5 -100 maxint 1 6 Frequency (in terms of nodes) for generating Gomory cuts in branch-and-cut.
+clique_cuts integer 0 -5 -100 maxint 1 6 Frequency (in terms of nodes) for generating clique cuts in branch-and-cut
+cover_cuts integer 0 0 -100 maxint 1 6 Frequency (in terms of nodes) for generating cover cuts in branch-and-cut
+flow_cover_cuts integer 0 -5 -100 maxint 1 6 Frequency (in terms of nodes) for generating flow cover cuts in branch-and-cut
+lift_and_project_cuts integer 0 0 -100 maxint 1 6 Frequency (in terms of nodes) for generating lift-and-project cuts in branch-and-cut
+mir_cuts integer 0 -5 -100 maxint 1 6 Frequency (in terms of nodes) for generating MIR cuts in branch-and-cut
+reduce_and_split_cuts integer 0 0 -100 maxint 1 6 Frequency (in terms of nodes) for generating reduce-and-split cuts in branch-and-cut
+feasibility_pump_objective_norm integer 0 1 1 2 1 7 Norm of feasibility pump objective function
+fp_pass_infeasible enumstr 0 "no" 1 7 Say whether feasibility pump should claim to converge or not
+ "no" 1 When master MILP is infeasible just bail out (don't stop all algorithm). This is the option for using in B-Hyb.
+ "yes" 1 Claim convergence, numerically dangerous.
+heuristic_RINS enumstr 0 "no" 1 7 if yes runs the RINS heuristic
+ "no" 1
+ "yes" 1
+heuristic_dive_MIP_fractional enumstr 0 "no" 1 7 if yes runs the Dive MIP Fractional heuristic
+ "no" 1
+ "yes" 1
+heuristic_dive_MIP_vectorLength enumstr 0 "no" 1 7 if yes runs the Dive MIP VectorLength heuristic
+ "no" 1
+ "yes" 1
+heuristic_dive_fractional enumstr 0 "no" 1 7 if yes runs the Dive Fractional heuristic
+ "no" 1
+ "yes" 1
+heuristic_dive_vectorLength enumstr 0 "no" 1 7 if yes runs the Dive VectorLength heuristic
+ "no" 1
+ "yes" 1
+heuristic_feasibility_pump enumstr 0 "no" 1 7 whether the heuristic feasibility pump should be used
+ "no" 1
+ "yes" 1
+pump_for_minlp enumstr 0 "no" 1 7 if yes runs FP for MINLP
+ "no" 1
+ "yes" 1
+solvefinal enumstr 0 "yes" 1 8 Switch to disable solving MINLP with discrete variables fixed to solution values after solve.
+ "no" 1
+ "yes" 1
+warm_start enumstr 0 "none" 1 8 Select the warm start method
+ "fake_basis" 1 builds fake basis, useful for cut management in Cbc (warm start is the same as in none)
+ "interior_point" 1 Warm start with an interior point of direct parent
+ "none" 1 No warm start, just start NLPs from optimal solution of the root relaxation
+ "optimum" 1 Warm start with direct parent optimum
+max_consecutive_failures integer 0 10 0 maxint 1 9 (temporarily removed) Number $n$ of consecutive unsolved problems before aborting a branch of the tree.
+max_random_point_radius double 0 100000 0 maxdouble 1 9 Set max value r for coordinate of a random point.
+num_iterations_suspect integer 0 -1 -1 maxint 1 9 Number of iterations over which a node is considered 'suspect' (for debugging purposes only, see detailed documentation).
+num_retry_unsolved_random_point integer 0 0 0 maxint 1 9 Number $k$ of times that the algorithm will try to resolve an unsolved NLP with a random starting point (we call unsolved an NLP for which Ipopt is not able to guarantee optimality within t****
+random_point_perturbation_interval double 0 1 0 maxdouble 1 9 Amount by which starting point is perturbed when choosing to pick random point by perturbating starting point
+random_point_type enumstr 0 "Jon" 1 9 method to choose a random starting point
+ "Andreas" 1 perturb the starting point of the problem within a prescribed interval
+ "Claudia" 1 perturb the starting point using the perturbation radius suffix information
+ "Jon" 1 Choose random point uniformly between the bounds
+resolve_on_small_infeasibility double 0 0 0 maxdouble 1 9 If a locally infeasible problem is infeasible by less than this, resolve it with initial starting point.
+nlp_solve_frequency integer 0 10 0 maxint 1 10 Specify the frequency (in terms of nodes) at which NLP relaxations are solved in B-Hyb.
+nlp_solve_max_depth integer 0 10 0 maxint 1 10 Set maximum depth in the tree at which NLP relaxations are solved in B-Hyb.
+nlp_solves_per_depth double 0 1e+100 0 maxdouble 1 10 Set average number of nodes in the tree at which NLP relaxations are solved in B-Hyb for each depth.
+coeff_var_threshold double 0 0.1 0 maxdouble 1 11 Coefficient of variation threshold (for dynamic definition of cutoff_decr).
+dynamic_def_cutoff_decr enumstr 0 "no" 1 11 Do you want to define the parameter cutoff_decr dynamically?
+ "no" 1
+ "yes" 1
+first_perc_for_cutoff_decr double 0 -0.02 mindouble maxdouble 1 11 The percentage used when, the coeff of variance is smaller than the threshold, to compute the cutoff_decr dynamically.
+max_consecutive_infeasible integer 0 0 0 maxint 1 11 Number of consecutive infeasible subproblems before aborting a branch.
+num_resolve_at_infeasibles integer 0 0 0 maxint 1 11 Number $k$ of tries to resolve an infeasible node (other than the root) of the tree with different starting point.
+num_resolve_at_node integer 0 0 0 maxint 1 11 Number $k$ of tries to resolve a node (other than the root) of the tree with different starting point.
+num_resolve_at_root integer 0 0 0 maxint 1 11 Number $k$ of tries to resolve the root node with different starting points.
+second_perc_for_cutoff_decr double 0 -0.05 mindouble maxdouble 1 11 The percentage used when, the coeff of variance is greater than the threshold, to compute the cutoff_decr dynamically.
+oa_decomposition enumstr 0 "no" 1 12 If yes do initial OA decomposition
+ "no" 1
+ "yes" 1
+add_only_violated_oa enumstr 0 "no" 1 13 Do we add all OA cuts or only the ones violated by current point?
+ "no" 1 Add all cuts
+ "yes" 1 Add only violated Cuts
+oa_cuts_scope enumstr 0 "global" 1 13 Specify if OA cuts added are to be set globally or locally valid
+ "global" 1 Cuts are treated as globally valid
+ "local" 1 Cuts are treated as locally valid
+oa_rhs_relax double 0 1e-08 -0 maxdouble 1 13 Value by which to relax OA cut
+tiny_element double 0 1e-08 -0 maxdouble 1 13 Value for tiny element in OA cut
+very_tiny_element double 0 1e-17 -0 maxdouble 1 13 Value for very tiny element in OA cut
+bb_log_interval integer 0 100 0 maxint 1 14 Interval at which node level output is printed.
+bb_log_level integer 0 1 0 5 1 14 specify main branch-and-bound log level.
+fp_log_frequency double 0 100 0 maxdouble 1 14 display an update on lower and upper bounds in FP every n seconds
+fp_log_level integer 0 1 0 2 1 14 specify FP iterations log level.
+lp_log_level integer 0 0 0 4 1 14 specify LP log level.
+milp_log_level integer 0 0 0 4 1 14 specify MILP solver log level.
+nlp_log_at_root integer 0 5 0 12 1 14  Specify a different log level for root relaxtion.
+nlp_log_level integer 0 1 0 2 1 14 specify NLP solver interface log level (independent from ipopt print_level).
+oa_cuts_log_level integer 0 0 0 maxint 1 14 level of log when generating OA cuts.
+oa_log_frequency double 0 100 0 maxdouble 1 14 display an update on lower and upper bounds in OA every n seconds
+oa_log_level integer 0 1 0 2 1 14 specify OA iterations log level.
+print_funceval_statistics enumstr 0 "no" 1 14 Switch to enable printing statistics on number of evaluations of GAMS functions/gradients/Hessian.
+ "no" 1
+ "yes" 1
+solvetrace string 0 "" 1 14 Name of file for writing solving progress information.
+solvetracenodefreq integer 0 100 0 maxint 1 14 Frequency in number of nodes for writing solving progress information.
+solvetracetimefreq double 0 5 0 maxdouble 1 14 Frequency in seconds for writing solving progress information.
+candidate_sort_criterion enumstr 0 "best-ps-cost" 1 15 Choice of the criterion to choose candidates in strong-branching
+ "best-ps-cost" 1 Sort by decreasing pseudo-cost
+ "least-fractional" 1 Sort by increasing integer infeasibility
+ "most-fractional" 1 Sort by decreasing integer infeasibility
+ "worst-ps-cost" 1 Sort by increasing pseudo-cost
+maxmin_crit_have_sol double 0 0.1 0 1 1 15 Weight towards minimum in of lower and upper branching estimates when a solution has been found.
+maxmin_crit_no_sol double 0 0.7 0 1 1 15 Weight towards minimum in of lower and upper branching estimates when no solution has been found yet.
+min_number_strong_branch integer 0 0 0 maxint 1 15 Sets minimum number of variables for strong branching (overriding trust)
+number_before_trust_list integer 0 0 -1 maxint 1 15 Set the number of branches on a variable before its pseudo costs are to be believed during setup of strong branching candidate list.
+number_look_ahead integer 0 0 0 maxint 1 15 Sets limit of look-ahead strong-branching trials
+number_strong_branch_root integer 0 maxint 0 maxint 1 15 Maximum number of variables considered for strong branching in root node.
+setup_pseudo_frac double 0 0.5 0 1 1 15 Proportion of strong branching list that has to be taken from most-integer-infeasible list.
+trust_strong_branching_for_pseudo_cost enumstr 0 "yes" 1 15 Whether or not to trust strong branching results for updating pseudo costs.
+ "no" 1
+ "yes" 1
+*
+* indicator section
+*
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+gr_Algorithm_choice group 1 1 Algorithm choice
+gr_Branch_and_bound_options group 2 1 Branch-and-bound options
+gr_ECP_cuts_generation group 3 1 ECP cuts generation
+gr_Feasibility_checker_using_OA_cuts group 4 1 Feasibility checker using OA cuts
+gr_MILP_Solver group 5 1 MILP Solver
+gr_MILP_cutting_planes_in_hybrid_algorithm__B_Hyb_ group 6 1 MILP cutting planes in hybrid algorithm (B-Hyb)
+gr_MINLP_Heuristics group 7 1 MINLP Heuristics
+gr_NLP_interface group 8 1 NLP interface
+gr_NLP_solution_robustness group 9 1 NLP solution robustness
+gr_NLP_solves_in_hybrid_algorithm__B_Hyb_ group 10 1 NLP solves in hybrid algorithm (B-Hyb)
+gr_Nonconvex_problems group 11 1 Nonconvex problems
+gr_Outer_Approximation_Decomposition__B_OA_ group 12 1 Outer Approximation Decomposition (B-OA)
+gr_Outer_Approximation_cuts_generation group 13 1 Outer Approximation cuts generation
+gr_Output group 14 1 Output
+gr_Strong_branching_setup group 15 1 Strong branching setup
+*** End of file

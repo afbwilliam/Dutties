@@ -1,0 +1,272 @@
+$title Test for EMP-Embedded Complementarity System (EMPECS02,SEQ=428)
+
+$ontext
+
+This model is a variant of T. Rutherford's model 'State Variable Targetting in
+an NLP Framework'.
+
+http://www.mpsge.org/nlptarget/
+
+*        This program illustrates how to use recursive NLP methods
+*        for solving an infinite-horizon optimization model with minimal
+*        terminal effects.
+
+*        Thomas F. Rutherford
+*        December 1, 2005
+
+It makes use of EMP's embedded complemenatrity system framework.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+set     t                Time periods      /2005*2010/
+        tlast(t)         Last time period  /2010/
+        tfirst(t)        First time period /2005/;
+
+parameter
+        kvs              Capital value share       / 0.3  /
+        delta            Capital depreciation rate / 0.07 /
+        r                Baseline interest rate    / 0.05 /
+        g                Growth rate               / 0.02 /
+        phi              Production scale faster
+        L(t)             Labor supply
+        kinit            Initial capital stock
+        kterm            Terminal capital stock
+        dfactor          Discount factor;
+
+L(t) = power(1+g, ord(t)-1);
+kinit = 0.5 * kvs / (r + delta);
+dfactor(t) = power(1/(1+r), ord(t)-1);
+phi = 1 / kinit**kvs;
+
+VARIABLES
+        C(t)            Consumption trillion US dollars,
+        K(t)            Capital stock trillion US dollars,
+        I(t)            Investment trillion US dollars,
+        Y(t)            Output net abatement and damage costs,
+        UTILITY         Maximand;
+
+POSITIVE VARIABLES Y, C, K, I;
+
+EQUATIONS
+        UTIL            Objective function
+        CC(t)           Consumption
+        YY(t)           Output
+        KK(t)           Capital balance
+        TERMCAP         Terminal capital stock constraint with terminal capital stock parameter;
+
+UTIL..              UTILITY =E= SUM(t, 10 * dfactor(t) * L(t) * LOG(C(t)/L(t)));
+CC(t)..                C(t) =E= Y(t) - I(t);
+YY(t)..                Y(t) =E= phi * L(t)**(1-kvs) * K(t)**kvs;
+KK(t)..                K(t) =L= (1-delta)**10 * K(t-1) + 10 * I(t-1) + kinit$tfirst(t);
+TERMCAP..             kterm =E= sum(tlast, (1-delta)**10 * K(tlast) + 10 * I(tlast));
+
+model ramsey NLP Model using parameter kterm /all/;
+
+C.L(t) = 1;        C.LO(t) = 0.01;
+K.L(t) = 1;        K.LO(t) = 0.01;
+I.L(t) = 1;
+Y.L(t) = 1;
+
+Variables
+         KTERMV          Terminal capital stock;
+
+Equations
+         TERMCAPV        Terminal capital stock constraint with terminal capital stock variable
+         SSTERM          First-order-condition for terminal capital stock variable;
+
+*Substitute the constraint TERMCAP of the NLP by TERMCAPV
+*using a variable KTERMV instead of a parameter kterm
+TERMCAPV..  KTERMV =E= sum(tlast, (1-delta)**10 * K(tlast) + 10 * I(tlast));
+
+*First-order-condition for terminal capital stock variable
+SSTERM.. sum(tlast(t),I(t)/I(t-1) - Y(t)/Y(t-1)) =E= 0;
+
+*Setup EMP model
+model new /UTIL,CC,YY,KK,TERMCAPV,SSTERM/;
+
+$onecho > "%emp.info%"
+dualequ SSTERM KTERMV
+$offecho
+
+solve new maximizing UTILITY using emp;
+
+*Diff generated files with reference files
+execute 'sed "2d" "%gams.scrdir%emp.%gams.scrext%" > "%gams.scrdir%empmod.%gams.scrext%"';
+execute 'diff -bw "%gams.scrdir%empmod.%gams.scrext%" "%gams.scrdir%ref.%gams.scrext%"'
+abort$errorlevel 'empmod and ref differ';
+
+$onecho > "%gams.scrdir%ref.%gams.scrext%"
+***********************************************
+* for more information use JAMS option "Dict"
+***********************************************
+
+Variables  x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19
+          ,x20,x21,x22,x23,x24,x26,u2,u3,u4,u5,u6,u7,u8,u9,u10,u11,u12,u13,u14
+          ,u15,u16,u17,u18,u19,u20;
+
+Positive Variables  x13,x14,x15,x16,x17,x18,x19,x20,x21,x22,x23,x24;
+
+Positive Variables  u14,u15,u16,u17,u18,u19;
+
+Equations  e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17,e18,e19,e20
+          ,e21,dL_dx1,dL_dx2,dL_dx3,dL_dx4,dL_dx5,dL_dx6,dL_dx7,dL_dx8,dL_dx9
+          ,dL_dx10,dL_dx11,dL_dx12,dL_dx13,dL_dx14,dL_dx15,dL_dx16,dL_dx17
+          ,dL_dx18,dL_dx19,dL_dx20,dL_dx21,dL_dx22,dL_dx23,dL_dx24;
+
+
+e2.. 0 =E=    x1 + x13 - x19;
+
+e3.. 0 =E=    x2 + x14 - x20;
+
+e4.. 0 =E=    x3 + x15 - x21;
+
+e5.. 0 =E=    x4 + x16 - x22;
+
+e6.. 0 =E=    x5 + x17 - x23;
+
+e7.. 0 =E=    x6 + x18 - x24;
+
+e8.. 0 =E= -0.935248447822622*x7**0.3 + x19;
+
+e9.. 0 =E= -0.948302982223762*x8**0.3 + x20;
+
+e10.. 0 =E= -0.96153973651399*x9**0.3 + x21;
+
+e11.. 0 =E= -0.974961254184091*x10**0.3 + x22;
+
+e12.. 0 =E= -0.988570114227812*x11**0.3 + x23;
+
+e13.. 0 =E= -1.00236893163742*x12**0.3 + x24;
+
+e14.. 1.25 =G=    x7;
+
+e15.. 0 =G=  - 0.483982307179293*x7 + x8 - 10*x13;
+
+e16.. 0 =G=  - 0.483982307179293*x8 + x9 - 10*x14;
+
+e17.. 0 =G=  - 0.483982307179293*x9 + x10 - 10*x15;
+
+e18.. 0 =G=  - 0.483982307179293*x10 + x11 - 10*x16;
+
+e19.. 0 =G=  - 0.483982307179293*x11 + x12 - 10*x17;
+
+e20.. 0 =E=  - 0.483982307179293*x12 - 10*x18 + x26;
+
+e21.. x18/x17 - x24/x23 =E= 0;
+
+dL_dx1.. -10/x1 + u2 =G= 0;
+
+dL_dx2.. -9.71428571428571/x2 + u3 =G= 0;
+
+dL_dx3.. -9.43673469387755/x3 + u4 =G= 0;
+
+dL_dx4.. -9.1671137026239/x4 + u5 =G= 0;
+
+dL_dx5.. -8.90519616826322/x5 + u6 =G= 0;
+
+dL_dx6.. -8.65076199202713/x6 + u7 =G= 0;
+
+dL_dx7..  + (-0.280574534346786*x7**(-0.7))*u8 + u14 - 0.483982307179293*u15
+    =G= 0;
+
+dL_dx8..  + (-0.284490894667129*x8**(-0.7))*u9 + u15 - 0.483982307179293*u16
+    =G= 0;
+
+dL_dx9..  + (-0.288461920954197*x9**(-0.7))*u10 + u16 - 0.483982307179293*u17
+    =G= 0;
+
+dL_dx10..  + (-0.292488376255227*x10**(-0.7))*u11 + u17 - 0.483982307179293*u18
+    =G= 0;
+
+dL_dx11..  + (-0.296571034268344*x11**(-0.7))*u12 + u18 - 0.483982307179293*u19
+    =G= 0;
+
+dL_dx12..  + (-0.300710679491227*x12**(-0.7))*u13 + u19 - 0.483982307179293*u20
+    =G= 0;
+
+dL_dx13.. u2 - 10*u15 + eps*x13 =G= 0;
+
+dL_dx14.. u3 - 10*u16 + eps*x14 =G= 0;
+
+dL_dx15.. u4 - 10*u17 + eps*x15 =G= 0;
+
+dL_dx16.. u5 - 10*u18 + eps*x16 =G= 0;
+
+dL_dx17.. u6 - 10*u19 + eps*x17 =G= 0;
+
+dL_dx18.. u7 - 10*u20 + eps*x18 =G= 0;
+
+dL_dx19..  - u2 + u8 + eps*x19 =G= 0;
+
+dL_dx20..  - u3 + u9 + eps*x20 =G= 0;
+
+dL_dx21..  - u4 + u10 + eps*x21 =G= 0;
+
+dL_dx22..  - u5 + u11 + eps*x22 =G= 0;
+
+dL_dx23..  - u6 + u12 + eps*x23 =G= 0;
+
+dL_dx24..  - u7 + u13 + eps*x24 =G= 0;
+
+* set non default bounds
+
+x1.lo = 0.01;
+x2.lo = 0.01;
+x3.lo = 0.01;
+x4.lo = 0.01;
+x5.lo = 0.01;
+x6.lo = 0.01;
+x7.lo = 0.01;
+x8.lo = 0.01;
+x9.lo = 0.01;
+x10.lo = 0.01;
+x11.lo = 0.01;
+x12.lo = 0.01;
+
+* set non default dual bounds
+
+
+* set non default levels
+
+x1.l = 1;
+x2.l = 1;
+x3.l = 1;
+x4.l = 1;
+x5.l = 1;
+x6.l = 1;
+x7.l = 1;
+x8.l = 1;
+x9.l = 1;
+x10.l = 1;
+x11.l = 1;
+x12.l = 1;
+x13.l = 1;
+x14.l = 1;
+x15.l = 1;
+x16.l = 1;
+x17.l = 1;
+x18.l = 1;
+x19.l = 1;
+x20.l = 1;
+x21.l = 1;
+x22.l = 1;
+x23.l = 1;
+x24.l = 1;
+
+* set non default marginals
+
+
+Model m / e2.u2,e3.u3,e4.u4,e5.u5,e6.u6,e7.u7,e8.u8,e9.u9,e10.u10,e11.u11
+         ,e12.u12,e13.u13,e14.u14,e15.u15,e16.u16,e17.u17,e18.u18,e19.u19
+         ,e20.u20,e21.x26,dL_dx1.x1,dL_dx2.x2,dL_dx3.x3,dL_dx4.x4,dL_dx5.x5
+         ,dL_dx6.x6,dL_dx7.x7,dL_dx8.x8,dL_dx9.x9,dL_dx10.x10,dL_dx11.x11
+         ,dL_dx12.x12,dL_dx13.x13,dL_dx14.x14,dL_dx15.x15,dL_dx16.x16
+         ,dL_dx17.x17,dL_dx18.x18,dL_dx19.x19,dL_dx20.x20,dL_dx21.x21
+         ,dL_dx22.x22,dL_dx23.x23,dL_dx24.x24 /;
+
+m.limrow=0; m.limcol=0;
+
+Solve m using MCP;
+$offecho

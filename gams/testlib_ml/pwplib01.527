@@ -1,0 +1,87 @@
+$Title Test piecewise polynomials in pwpcclib (PWPLIB01,SEQ=527)
+
+$ontext
+This test makes sure that the extrinsic piecewise polynomials implemented in a
+C library work in the same way as modeling it "by hand".
+
+Contributor: L. Westermann
+$offtext
+
+set idummy 'maximum of functions, segments, degrees' /0*3/;
+
+* Define two piecewise polynomial functions
+Table pwpdata(*,*,*) '1st index: function number, 2nd index: segment number, 3rd index: degree'
+                 leftBound       0          1         2
+       1.1       1               2.4       -2.7       0.3
+       1.2       4               5.6       -4.3       0.5
+       2.1       0               0         -6.3333    0
+       2.2       0.3333          1.0370   -12.5554    9.3333
+       2.3       0.6667          9.7792   -38.7791   29
+;
+* Write pwp data to gdx file read by external library
+$gdxout pwp.gdx
+$unload pwpdata
+$gdxout
+
+* Load extrinsic function
+$funclibin pwplib pwpcclib
+function pwp /pwplib.pwpfunc/;
+
+
+* Formulate and solve model using by-hand formulation
+set xi / 1,2 /, yi / 1,2,3 /;
+Variables x, y, xp, yp, objvar;
+positive variable xps(xi), xms(xi), yps(yi), yms(yi);
+binary variables bx(xi), by(yi);
+
+Equations e1, defxp, defyp, defsumbx, defsumby, defxs, defys;
+
+e1..     objvar =E= cos(x) - sin(0.1*x) - 2*y + 10*y**2 - 3*y**3 - 5*y**4 + xp + yp;
+
+defxp(xi).. xp =e= pwpdata('1',xi,'0') +  pwpdata('1',xi,'1')*x + pwpdata('1',xi,'2')*sqr(x) + xps(xi) - xms(xi);
+defyp(yi).. yp =e= pwpdata('2',yi,'0') +  pwpdata('2',yi,'1')*y + pwpdata('2',yi,'2')*sqr(y) + yps(yi) - yms(yi);
+
+defsumbx.. sum(xi, bx(xi)) =e= 1;
+defsumby.. sum(yi, by(yi)) =e= 1;
+
+defxs(xi).. xps(xi) + xms(xi) =l= 100*(1-bx(xi));
+defys(yi).. yps(yi) + yms(yi) =l= 100*(1-by(yi));
+
+equation deflox1, defupx1; deflox1.. pwpdata('1','1','leftbound') =l= x + x.up*(1-bx('1')); defupx1.. x - x.up*(1-bx('1')) =l= pwpdata('1','2','leftbound');
+equation deflox2, defupx2; deflox2.. pwpdata('1','2','leftbound') =l= x + x.up*(1-bx('2')); defupx2.. x - x.up*(1-bx('2')) =l= x.up;
+
+equation defloy1, defupy1; defloy1.. pwpdata('2','1','leftbound') =l= y + y.up*(1-by('1')); defupy1.. y - y.up*(1-by('1')) =l= pwpdata('2','2','leftbound');
+equation defloy2, defupy2; defloy2.. pwpdata('2','2','leftbound') =l= y + y.up*(1-by('2')); defupy2.. y - y.up*(1-by('2')) =l= pwpdata('2','3','leftbound');
+equation defloy3, defupy3; defloy3.. pwpdata('2','3','leftbound') =l= y + y.up*(1-by('3')); defupy3.. y - y.up*(1-by('3')) =l= y.up;
+
+* set non default bounds
+
+x.lo = 1; x.up = 7;
+y.lo = 0; y.up = 1;
+
+Model m / all /;
+Solve m using MINLP minimizing objvar;
+
+
+
+
+* Formulate and solve model using extrinsic function
+Variables objpwp, xpwp, ypwp;
+
+Equation extr Use extrinsic function pwp;
+
+extr..     objpwp =E= cos(xpwp) - sin(0.1*xpwp) - 2*ypwp + 10*ypwp**2 - 3*ypwp**3 - 5*ypwp**4 + PWP(1,xpwp) + PWP(2,ypwp);
+
+Model ext / extr /;
+
+* set non default bounds
+xpwp.lo = 1; xpwp.up = 7;
+ypwp.lo = 0; ypwp.up = 1;
+
+Solve ext using DNLP minimizing objpwp;
+
+
+
+abort$(abs(objvar.l-objpwp.l)>1e-6) 'Objective value differs', objvar.l, objpwp.l;
+abort$(abs(x.l-xpwp.l)>1e-6)        'X value differs', x.l, xpwp.l;
+abort$(abs(y.l-ypwp.l)>1e-6)        'Y value differs', x.l, xpwp.l;

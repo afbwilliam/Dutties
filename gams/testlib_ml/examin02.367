@@ -1,0 +1,16 @@
+$TITLE 'EXAMINER test suite - runs examiner with selected subsolver' (EXAMIN02,SEQ=367)
+
+$Ontext
+Contributor: Lutz Westermann
+$Offtext
+
+$call gamslib -q trnsport
+
+$onecho > examiner.opt
+subsolver bdmlp
+$offecho
+
+$echo "  abort$(transport.solvestat <> %solvestat.NormalCompletion% or transport.modelstat <> %modelstat.Optimal%) 'wrong status codes';" >> trnsport.gms
+
+$call gams trnsport lp=examiner optfile=1 lo=%gams.lo%
+$if errorlevel 1 $abort problems running examiner (see trnsport.lst)

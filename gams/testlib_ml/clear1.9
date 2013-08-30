@@ -1,0 +1,13 @@
+$title Test that option clear works like an assign (CLEAR1,SEQ=9)
+
+set i / a,b /; alias(j,i) ;
+
+abort$(not card(i)) 'this is wrong',i;
+abort$(not card(j)) 'this is wrong',j;
+
+option clear=j;
+
+abort$card(i) 'this is also wrong',i;
+abort$card(j) 'this is also wrong',j;
+
+

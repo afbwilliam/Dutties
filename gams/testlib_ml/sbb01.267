@@ -1,0 +1,9 @@
+$TITLE 'SBB test suite - basic option reading test' (SBB01,SEQ=267)
+
+$call gamslib -q fuel
+
+$echo "abort$(ucom.nodusd<>0) 'problems with SBB option';" >> fuel.gms
+
+$echo "epint 0.5" > sbb.op2
+$call =gams fuel lo=0 optfile=2 minlp=sbb
+$if errorlevel 1 $abort 'problems with SBB options'

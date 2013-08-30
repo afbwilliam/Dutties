@@ -1,0 +1,85 @@
+$TITLE 'Test correctness of arctan2 intrinsic eXceptions' (FNATAN2X,SEQ=276)
+
+$ontext
+
+arctan2(y,x) = arctan(y/x), but adjusted for the correct quadrant
+so we return the angle the vector (x,y) makes with (1,0).
+
+ENUM            VAL
+----            ---
+rcOK            0
+rcFUNC          1
+rcGRAD          2
+rcHESS          3
+rcSYSTEM        4
+
+ecOK            0
+ecDOMAIN        1
+ecSINGULAR      2
+ecOVERFLOW      3
+
+$offtext
+
+$include fnset_xy.inc
+
+reps = 2e-13;
+relToInput = 0;
+set T / t1 * t23, t31 * t34 /;
+
+$set OFLO  1.e299
+
+table data(T,V)
+        y       x       f_              fy_     fx_     fyy_    fyx_    fxx_    rc_     ec_
+t1      0       0                                                                1       2
+t2     -2       0  -1.5707963267949      0       0.5     0      0.25     0
+t3      0       4    0                  0.25     0       0     -0.0625   0
+t4    1e-160    0   1.5707963267949      0     -1e160    0     %OFLO%    0       3       2
+t5    1e40      1   1.5707963267949    1e-80   -1e-40  -2e-120 1e-80   2e-120
+t6    1e-200 1e-220 1.5707963267949    1e180   -1e200  -%OFLO% %OFLO%  %OFLO%    3       2
+t7    1e-160 1e-200 1.5707963267949    1e120   -1e160  -2e280  %OFLO%  2e280     3       2
+t8    1e-180 1e-192 1.5707963267939    1e168   -1e180  -%OFLO% %OFLO%  %OFLO%    3       2
+t9    1e-148 1e-140 1e-8               1e140   -1e132  -2e272  -1e280  2e272
+t10   1e-149 1e-140 1e-9               1e140   -1e131  -2e271  -1e280  2e271
+t11   1e-152 1e-140 1e-12              1e140   -1e128  -2e268  -1e280  2e268
+t12   1e-170 1e-160 1e-10              1e160   -1e150  -%OFLO% -%OFLO% %OFLO%    3       2
+t13   1e-165 1e-155 1e-10              1e155   -1e145  -%OFLO% -%OFLO% %OFLO%    3       2
+t14   1e-160 1e-150 1e-10              1e150   -1e140  -2e290  -%OFLO% 2e290     3       2
+t15   1e-155 1e-145 1e-10              1e145   -1e135  -2e280  -1e290  2e280
+
+t16   1e-149 1e-149  .7853981633974    5e148   -5e148  -5e297     0    5e297
+t17   1e-150 1e-150  .7853981633974    5e149   -5e149  -%OFLO%    0    %OFLO%    3       2
+t18   1e-155 1e-155  .7853981633974    5e154   -5e154  -%OFLO%    0    %OFLO%    3       2
+t19   1e-160 1e-160  .7853981633974    5e159   -5e159  -%OFLO%    0    %OFLO%    3       2
+
+t20   1e-200 1e+200  0                 1e-200    0       0        0      0
+t21   1e+200 1e-200 1.5707963267949      0     -1e-200   0        0      0
+t22     2       0   1.5707963267949      0      -0.5     0       0.25    0
+t23     0       -4  3.1415926535898    -0.25     0       0     -.0625    0
+
+*       y       x       f_              fy_     fx_     fyy_    fyx_    fxx_
+t31     1       1   .7853981633974483   0.5    -0.5     -0.5      0      0.5
+t32    -1       1  -.7853981633974483   0.5     0.5      0.5      0     -0.5
+t33     1      -1   2.356194490192345  -0.5    -0.5      0.5      0     -0.5
+t34    -1      -1  -2.356194490192345  -0.5     0.5     -0.5      0      0.5
+;
+
+
+data(T,'fxy_') = data(T,'fyx_');
+
+loop {T,
+  data(T,  'f')  = arctan2.value(   data(T,'y'),data(T,'x'));
+  data(T, 'fy')  = arctan2.grad(1:  data(T,'y'),data(T,'x'));
+  data(T, 'fx')  = arctan2.grad(2:  data(T,'y'),data(T,'x'));
+  data(T,'fyy')  = arctan2.hess(1:1:data(T,'y'),data(T,'x'));
+  data(T,'fyx')  = arctan2.hess(1:2:data(T,'y'),data(T,'x'));
+  data(T,'fxy')  = arctan2.hess(2:1:data(T,'y'),data(T,'x'));
+  data(T,'fxx')  = arctan2.hess(2:2:data(T,'y'),data(T,'x'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+abort$(execerror lt 10)
+ 'Should get execution errors getting func/grad/hess of arctan2(y,x)';
+execerror = 0;
+
+$include fntest_xy.inc

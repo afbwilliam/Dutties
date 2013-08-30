@@ -1,0 +1,208 @@
+$Title Outer Approximation for Convex Minimization Problem with Binary Variables (OA,SEQ=95)
+
+$ontext
+This model demonstrates how to implement a generic simple outer approximation algorithm
+for convex mixed-binary non-linear programs.
+
+This model uses two represenations of the model instance: the index
+model instance (with original names) and a vector/scalar model
+instance. The latter allows to deal with the Jacobian and similar
+objects in a generic n by m matrix fashion. 
+
+The modifications (OA cuts, solution elemination cuts, fixing of
+variables, etc) for the subproblems are done by GAMS source rewriting
+in the scalar model instance space.
+
+The only custom part that needs to be done by the user is to identify
+the non-linear constraints and the binary variables in the original
+indexed model.
+
+Contributor: Michael Bussieck, November 2012
+$offtext
+
+* START Problem specific part
+$if not set model $set model fuel
+$call gamslib -q %model%
+$goto %model%
+
+$label fuel
+$set binvar  status_vm
+$set nlequ   costfn_em, oileq_em
+$set binvarc binvar(j) = sum(status_vm(j,u1),1);
+$set nlequc  nlequ(i) = 1$costfn_em(i) + sum(oileq_em(i,u1),1);
+$set solve   ucom min cost
+$goto cont
+
+$label procsel
+$set binvar  y1_vm, y2_vm, y3_vm
+$set nlequ   inout2_em, inout3_em
+$set binvarc binvar(j) = 1$y1_vm(j) + 1$y2_vm(j) + 1$y3_vm(j);
+$set nlequc  nlequ(i) = 1$inout2_em(i) + 1$inout3_em(i);
+$set solve   process min pr
+$goto cont
+
+$label batchdes
+$set binvar  y_vm
+$set nlequ   time_em, obj_em
+$set binvarc binvar(j) = sum(y_vm(j,u1,u2), 1);
+$set nlequc  nlequ(i) = 1$time_em(i) + 1$obj_em(i);
+$set solve   batch min cost
+$goto cont
+* STOP Problem specific part
+
+* Generic OA algorithm
+$label cont
+
+$onecho > convertd.op2
+jacobian
+objvar
+$offecho
+$onecho > convertd.opt
+gams
+gmsinsert
+objvar
+dictmap
+$offecho
+* Assume last solve statement is the MINLP to be solved
+$call gams %model% minlp=convertd optfile=1 lo=%gams.lo%
+$if errorlevel 1 $abort problems running %model%
+
+Set i         scalar equations
+    j         scalar variables
+    nlequ(i)  scalar non-linear equations
+    binvar(j) scalar binary variables;
+
+* Original binary variables and non-linear equation maps
+Set %binvar%, %nlequ%;
+
+$gdxin dictmap
+$load i j %binvar% %nlequ%
+Alias (*,u1,u2,u3);
+%binvarc%;
+%nlequc%;
+
+Scalar
+    sstat solve status
+    mstat model status
+    obj   objective function;
+Variables
+    x(j)  scalar variables;
+Equations
+    e(i)  scalar equations;
+
+file fx /'insert.gms'/;
+
+put fx 'solve m using rminlp min objvar'
+     / 'scalar mstat,sstat,obj;'
+     / 'mstat=m.modelstat; sstat=m.solvestat; obj=m.objval;'
+     / 'execute_unload "rminlp", mstat, sstat, obj;'
+     / 'option minlp=convertd; m.optfile=2; solve m using minlp min objvar'
+     / '$stop';
+putclose;
+execute 'gams gams lo=%gams.lo% u1=insert';
+abort$errorlevel 'problems solving rminlp';
+execute_load 'rminlp', mstat, sstat, obj;
+if (not (mstat=%ModelStat.Optimal% or mstat=%ModelStat.Locally Optimal%),
+  abort 'rminlp not solved to (local) optimality';
+);
+
+* Check if integer feasible
+execute_load 'jacobian', x;
+if (sum(binvar(j), abs(x.l(j)-round(x.l(j))))<1e-6,
+   abort.noerror 'rminlp integer feasible';
+);
+
+Set iter                OA iterations / i1*i10 /
+    oacutpmarg(iter,i)  OA cut psotive marginal indicator
+    oacut(iter,i)       OA cut
+    mipcut(iter)        MIP cut
+    mipcut1(iter,j)     MIP cut binary variables with level 1 in cut;
+Parameter
+    lb                  lower bound
+    ub                  upper bound
+    A(i,j)              Jacobian
+    oacutcoef(iter,i,j) OA cut coefficients
+    oacutrhs(iter,i)    OA cut rhs;
+
+lb = obj;
+ub = inf;
+mipcut(iter) = no; mipcut1(iter,j) = no;
+alias(iter,it);
+
+$set fmt 18:15
+loop(iter,
+  execute_load 'jacobian', A, e, x;
+* Build outer approximation cut:
+  loop(nlequ(i)$e.m(i),
+    oacutcoef(iter,i,j)$A(i,j) = A(i,j);
+    oacutrhs(iter,i) = sum(j$A(i,j), A(i,j)*x.l(j)) - e.l(i);
+    oacut(iter,i) = yes;
+    oacutpmarg(iter,i) = e.m(i)>0;
+  );
+* Solve MIP
+  put fx;
+  loop(oacut(it,i),
+    put / 'equation oa_', it.tl:0 '_' i.tl:0 '; '
+          'variable boa_', it.tl:0 '_' i.tl:0 ' / lo ' e.lo(i) ', up ' e.up(i) ' /;'
+        / 'oa_' it.tl:0 '_' i.tl:0 '.. ';
+    loop(j$oacutcoef(it,i,j), put$(oacutcoef(it,i,j)>0) '+';
+      put oacutcoef(it,i,j):%fmt% '*' j.tl:0);
+    if(oacutpmarg(it,i), put ' =g= '; else put ' =l= ');
+    put oacutrhs(it,i):%fmt% ' + boa_', it.tl:0 '_' i.tl:0 ';';
+  );
+  loop(mipcut(it),
+    put / 'equation mc_', it.tl:0 ';'
+        / 'mc_' it.tl:0 '.. ';
+    loop(binvar(j), if (mipcut1(it,j), put '+' j.tl:0; else put '-' j.tl:0));
+    put ' =l= ' (sum(mipcut1(it,binvar),1)-1):0:0 ';';
+  );
+  put    'model mp / all';
+  loop(nlequ(i), put '-' i.tl:0); put '/;'
+       / 'solve mp using mip min objvar;'
+       / 'scalar mstat,sstat,obj;'
+       / 'mstat=mp.modelstat; sstat=mp.solvestat; obj=mp.objval;'
+       / 'Parameter binX(*);'
+  loop(binvar(j), put / 'binX("' j.tl:0 '") = ' j.tl:0 '.l;');
+  put  / 'execute_unload "mip", mstat, sstat, obj, binX;'
+       / '$stop';
+  putclose;
+  execute 'gams gams optcr=0 lo=%gams.lo% u1=insert';
+  abort$errorlevel 'problems solving mip';
+  execute_load 'mip', mstat, sstat, obj, x.l=binX;
+  if (not (mstat=%ModelStat.Optimal% or mstat=%ModelStat.Integer Solution%),
+    if (mstat=%ModelStat.Infeasible%         or
+        mstat=%ModelStat.Integer Infeasible% or
+        mstat=%ModelStat.Infeasible No Solution%,
+      abort.noerror 'MIP infeasible', lb, ub;
+    else
+      abort 'mip not solved to optimality or infeasibility');
+  );
+
+* lower bound update
+  lb = obj;
+  abort.noerror$(lb>ub) 'crossover', lb, ub;
+
+* Add MIP cut
+  mipcut(iter) = yes;
+  mipcut1(iter,binvar(j)) = x.l(j)>0.5;
+
+* Solve fixed NLP
+  loop(binvar(j), put fx / j.tl:0 '.fx = ' round(x.l(j)):0:0 ';');
+  put  / 'solve m using rminlp min objvar'
+       / 'scalar mstat,sstat,obj;'
+       / 'mstat=m.modelstat; sstat=m.solvestat; obj=m.objval;'
+       / 'execute_unload "rminlp", mstat, sstat, obj;'
+       / 'option minlp=convertd; m.optfile=2; solve m using minlp min objvar'
+       / '$stop';
+  putclose;
+  execute 'gams gams lo=%gams.lo% u1=insert';
+  abort$errorlevel 'problems solving rminlp';
+  execute_load 'rminlp', mstat, sstat, obj;
+  if (mstat=%ModelStat.Optimal% or mstat=%ModelStat.Locally Optimal%,
+    ub = min(ub, obj);
+  );
+
+* Convergence
+  abort.noerror$((ub - lb) < 1e-4) 'converged', lb, ub;
+);
+display 'out of iterations', lb, ub;

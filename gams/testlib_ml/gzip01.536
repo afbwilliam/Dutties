@@ -1,0 +1,25 @@
+$Title Test gzipped input files (GZIP01,SEQ=536)
+
+$Ontext
+Contributor: Paul van der Eijk
+$Offtext
+
+
+$onechoV > difftest.gms
+$call gamslib -q %1
+$call gzip -c %1.gms > %1.gms.gz
+$call gams %1.gms    a=c dumpopt=11 lo=%gams.lo%
+$call gams %1.gms.gz a=c dumpopt=11 lo=%gams.lo%
+$call sed "1,7 d" < %1.dmp     > %1_f1.dmp
+$call sed "1,7 d" < %1.gms.dmp > %1_f2.dmp
+$call diff -bw %1_f1.dmp %1_f2.dmp
+$if errorlevel 1 $abort Dump files of model %1 differ
+$call rm -f %1*.*
+$offecho
+
+$batinclude difftest indus89
+$batinclude difftest circle
+$batinclude difftest alan
+$batinclude difftest hansmcp
+
+$call rm -f difftest.gms

@@ -1,0 +1,22 @@
+$title 'tests for $IF declared and defined' (IFSTAT7,SEQ=331)
+
+$ontext
+This test for a stupid mistake by AM to require
+the symbol to exist before we test for defined
+
+Contributor: Alex Meeraus
+$offtext
+
+
+scalar yyy, zzz / 123 /, www; www=1;
+
+$ondollar
+$IF     declared xxx $abort symbol is not declared
+$IF NOT declared yyy $abort symbol is declared
+$IF NOT declared zzz $abort symbol is declared
+$IF NOT declared www $abort symbol is declared
+
+$if     defined xxx $abort symbol not defined
+$if     defined yyy $abort symbol not defined
+$if NOT defined zzz $abort symbol is defined
+$if NOT defined www $abort symbol is defined

@@ -1,0 +1,169 @@
+$Title Basic GUSS Test (SCENSOL1,SEQ=407)
+
+$Ontext
+Contributor: Michael Bussieck
+$Offtext
+
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.5           1.7          1.8
+    san-diego        2.5                        1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+         c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars ;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j),  f * d(i,j) / 1000 *x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+Equation e dummy n row;  e.. sum((i,j), x(i,j)) =n= 3;
+
+Model transport /all/ ;
+
+* The DICT set has three dimensions
+* 1 Model symbol
+* 2 Action type
+* 3 Update parameter
+* DICT needs to be specified by a data statement
+
+set dict   / s.scenario   . ''
+             o.   opt     .srep
+             d.   param   .ds
+             a.   param   .as
+             x.   upper   .xup
+             f.   param   .fs
+             cost.marginal.xcost
+             x.   level   .xx /
+
+* Problems:
+*   1 QCP will not work, nor MCP, MPECS.
+
+set sX /s1*s10/;
+$if not set dim $set dim 1
+$ife (%dim%>3)or(%dim%<1) $abort dim must be 1 to 3
+
+$if %dim%==1 $set s "sX"       set sx #SX          
+$if %dim%==2 $set s "sX,sX"    set sx #SX:#SX
+$if %dim%==3 $set s "sX,sX,sX" set sx #SX:#SX:#SX
+
+Set s(%s%) /%sx%/;
+
+Parameter 
+    ds(%s%,i,j)  updater for d
+    as(%s%,i)    updater for a
+    xup(%s%,i,j) updater for x.up
+    fs(%s%)      updater for f
+    xcost(%s%)   collector for marginal of cost
+    xx(%s%,i,j)  collector for level of x
+
+$eolcom //
+Parameter
+    o(*)         GUSS options 
+       / OptfileInit  0   // Read solver options for initial solve
+         Optfile      0   // Read solver options for successive solves
+         LogOption    0   // 0 - Moderate log (default)
+                          // 1 - Minimal log
+                          // 2 - Detailed log
+         SkipBaseCase 0   // Switch for solving the base case
+         UpdateType   0   // Scenario update mechanism:
+                          // 0 - set everything to 0 and apply changes          
+                          // 1 - reestablish base case and apply changes        
+                          // 2 - build on top of last scenario and apply changes
+       /
+    srep(%s%,*)  Solution attributes / #s.(ModelStat na, SolveStat na, ObjVal na) /;
+
+ds(s,i,j)  = max(0,uniform(-5,2)) + eps;
+as(s,i)    = a(i)*(1+normal(0.05,0.1));
+xup(s,i,j) = uniform(120,300);
+fs(s)      = uniform(80,100);
+
+$if set goto $goto %goto%
+
+* Run GUSS
+$label scensl1
+Solve transport using lp minimizing z scenario dict;
+
+* If we get a license error (global solver) just terminate
+if (transport.modelstat=%modelstat.LicensingProblem%, 
+    abort.noerror 'too big for global solvers');
+
+display xx, xcost;
+$if set goto $exit
+
+alias (*,u);
+parameter repsl1(%s%,*); repsl1(s,u)$srep(s,u) = srep(s,u);
+repsl1(s,'objval')$(repsl1(s,'modelstat')<>1) = 0;
+
+* Check if calculated obj coincides with objval.
+Parameter xdiff(%s%);
+xdiff(s)$repsl1(s,'objval') = round(repsl1(s,'objval') - sum((i,j),  fs(s) * ds(s,i,j) / 1000 *xx(s,i,j)),4);
+abort$card(xdiff) xdiff, repsl1, fs, ds, xx;
+
+* Now run GUSS with solvelink %SOLVELINK.LoadLibrary%
+$label scensl5
+option solvelink=%SOLVELINK.LoadLibrary%;
+Solve transport using lp minimizing z scenario dict;
+$if set goto $exit
+parameter repsl5(%s%,*); repsl5(s,u)$srep(s,u) = srep(s,u);
+repsl5(s,'objval')$(repsl5(s,'modelstat')<>1) = 0;
+
+* Check if calculated obj coincides with objval.
+xdiff(s)$repsl5(s,'objval') = round(repsl5(s,'objval') - sum((i,j),  fs(s) * ds(s,i,j) / 1000 *xx(s,i,j)),4);
+abort$card(xdiff) xdiff, repsl5, fs, ds, xx;
+
+* Run this in the traditional way:
+$label gams
+option limrow=0, limcol=0, solprint=silent;
+parameter repiter;
+loop(s,
+   d(i,j)    = ds(s,i,j);
+   a(i)      = as(s,i);
+   x.up(i,j) = xup(s,i,j);
+   f         = fs(s);
+   Solve transport using lp minimizing z;
+   repiter(s,'modelstat') = transport.modelstat;
+   repiter(s,'solvestat') = transport.solvestat;
+   if (transport.modelstat = %modelstat.Optimal%,
+      repiter(s,'objval') = transport.objval));
+
+$if set goto $exit
+
+parameter repdiff; alias(*,u);
+
+repdiff(s,u) = round(repiter(s,u) - repsl1(s,u),5);
+abort$card(repdiff) 'iter and sl1 differ', repdiff, repiter, repsl1;
+
+repdiff(s,u) = round(repiter(s,u) - repsl5(s,u),5);
+abort$card(repdiff) 'iter and sl5 differ', repdiff, repiter, repsl5;

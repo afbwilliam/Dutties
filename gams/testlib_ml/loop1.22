@@ -1,0 +1,19 @@
+$title Empty loops with and without control  GT00532 (LOOP1,SEQ=22)
+
+set i /i1*i5/, i1(i) /i1/;
+
+scalar cnt1,cnt2,cnt3;
+
+cnt1:= 0; cnt2:= 0; cnt3:= 0;
+
+loop(i, cnt1 := cnt1 + 1; loop(i1(i), cnt1 := cnt1 + 1));
+
+loop(i, cnt2 := cnt2 + 1; loop(i1(i), ));
+
+loop(i, cnt3 := cnt3 + 1; loop(i1,));
+
+display cnt1,cnt2,cnt3;
+
+abort$(cnt1<>(card(i)+card(i1))) cnt1, 'should be: card(i)+card(i1)';
+abort$(cnt2<> card(i))           cnt2, 'should be: card(i)';
+abort$(cnt3<> card(i))           cnt3, 'should be: card(i)';

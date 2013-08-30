@@ -1,0 +1,81 @@
+$title Secure Work Files - Example 2 (SECURE,SEQ=342)
+
+$ontext
+
+This is example 2 of the Secure Work file document. Secure work files
+allow us to hide selected data and formulation section of a GAMS
+application.  The following program runs the models described in Annex
+G of the GAMS User's Guide.
+
+Note the use of 'license=demo'. This creates a secure demo license valid for
+a few hours only and allows us to experiment without having a license that
+allows the creation of secure work files.
+
+
+GAMS Development Corporation, Modeling Tool Box.
+
+$offtext
+
+$set env ide=%gams.ide% lo=%gams.lo%
+
+execute 'gams p1 s=p1 %env%'
+execute 'gams u1 r=p1 %env%'
+execute 'gams s1 r=p1 s=s1 license=demo plicense=license %env%'
+execute 'gams u1 s=s1 %env%'
+
+$onecho > p1.gms
+$call gamslib -q trnsport
+$include trnsport.gms
+
+* calculate input data -- model getc
+
+variable newc(i,j)    new transport cost;
+equation defnewc(i,j) definition of new transport cost;
+model getc            compute new transport data / defnewc /;
+defnewc(i,j).. newc(i,j) =e= f*d(i,j)/1000;
+solve getc using cns;
+
+* change objective function and save base value of x -- model newtrans
+
+scalar   beta    scale coeffisinet / 1.1 /;
+equation newcost definition of new objective function;
+model newtrans / newcost,supply,demand /;
+newcost.. z =e= sum((i,j), newc.l(i,j)*x(i,j)**beta);
+solve newtrans using nlp minimizing z;
+parameter basex(i,j) base value of x;
+basex(i,j) = x.l(i,j);
+
+* transform results to percentage change -- model rep
+
+variable delta(i,j) percentage chnage from base value
+equation defdelta(i,j) define delta;
+model rep / defdelta /;
+defdelta(i,j)$basex(i,j).. delta(i,j) =e= 100*(x.l(i,j)-basex(i,j))/basex(i,j);
+solve rep using cns;
+$offecho
+
+$onecho > u1.gms
+set s / one, two, three /;
+parameters sbeta(s) / one 1.25, two 1.5, three 2.0 /
+           sf(s)    / one 85,   two 75,  three 50 /;
+
+parameter report summary report;
+loop(s,
+   beta = sbeta(s);
+   f    = sf(s);
+   solve getc using cns;
+   solve newtrans using nlp minmizing z;
+   solve rep using cns;
+   report(i,j,s)       = delta.l(i,j);
+   report('','beta',s) = beta;
+   report('','f',s)    = f;
+   report('obj','z',s) = z.l );
+display report;
+$offecho
+
+$onecho > s1.gms
+$hide all
+$expose getc newtrans rep
+$expose i j z delta
+$expose f beta a b
+$offecho

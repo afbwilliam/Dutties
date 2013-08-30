@@ -1,0 +1,35 @@
+$title Practical Bilevel Optimization Example 5.1.1 (BARD511,SEQ=4)
+
+$ontext
+
+Example from Chapter 5, example 5.1.1, page 197
+
+John F. Bard, Practical Bilevel Optimization: Algorithms and Applications,
+Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, January 2009
+
+$offtext
+
+positive variables x,y; variables objout,objin;
+equations defout,defin,e1,e2,e3,e4;
+
+defout.. objout =e= x - 4*y;
+defin..  objin  =e= y;
+
+e1..    - x -   y =l= -3;
+e2..   -2*x +   y =l=  0;
+e3..    2*x +   y =l= 12;
+e4..    3*x - 2*y =l=  4;
+
+model bard / all /;
+
+$echo bilevel x min objin * defin e1 e2 e3 e4 > "%emp.info%"
+
+solve bard us emp min objout;
+
+*Note: The subsolver used by EMP might not find the global solution
+parameter solution(*,*);
+solution('x','book') = 4;  solution('x','model') = x.l;
+solution('y','book') = 4;  solution('y','model') = y.l;
+display solution;

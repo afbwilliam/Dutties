@@ -1,0 +1,6 @@
+$title 'Bug test: bad message on max dimensions' (DATA1,SEQ=348)
+
+set i(*,*,*,*,*,*,*,*,*,*) 10 dimensions / one.a.b.c.d.e.f.g.h.i first line  /;
+option i:0:0:1;display i;
+parameter a(*,*,*,*,*,*,*,*,*,*) 10 dimensions / one.a.b.c.d.e.f.g.h.i  123  /;
+option a:0:0:1;display a;

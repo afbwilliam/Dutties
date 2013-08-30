@@ -1,0 +1,71 @@
+$Title Test EMP Disjunction - Minimize the makespan (EMPDISJ1,SEQ=429)
+
+$ontext
+This model is a variant of
+Raman & Grossmann, Computers and Chemical Engineering 18, 7, p.563-578, 1994.
+
+Contributor: Jan-H. Jagla and Alex Meeraus, January 2009
+$offtext
+
+sets j jobs
+     s stages
+     lt(j,j) upper triangle
+
+alias (j,jj),(s,ss);
+
+parameters w(j,jj) maximum pairwise waiting time
+           pt(j)   total processing time;
+
+variables t       completion time
+          x(j)    job starting time
+
+positive variable x; binary variable y;
+
+equations comp(j)   job completion time
+          seq(j,jj) job sequencing j beore jj ;
+
+comp(j).. t =g= x(j) + pt(j);
+
+seq(j,jj)$(not sameas(j,jj))..  x(j) + w(j,jj) =l= x(jj);
+
+model m / all /;
+
+* data for example 1 - 3 jobs and 3 stages
+
+sets j jobs / A, B, C /, s stages / 1*3 /
+table p(j,s) processing time
+    1   2   3
+ A  5       3
+ B      3   2
+ C  2   4
+
+scalar optval / 11 /;
+
+* complete data preparation
+parameter c(j,s)  stage completion time;
+
+lt(j,jj) = ord(j) < ord(jj);
+c(j,s)   = sum(ss$(ord(ss)<=ord(s)), p(j,ss));
+w(j,jj)  = smax(s, c(j,s) - c(jj,s-1));
+pt(j)    = sum(s, p(j,s));
+
+file emp / "%emp.info%" /; put emp '* problem %gams.i%';
+loop(lt(j,jj),
+   put / 'disjunction *' seq(j,jj) 'else' seq(jj,j));
+putclose;
+
+option limcol=0,limrow=0,optcr=0;
+
+solve m using EMP minimizing t;
+abort$(abs(m.objval-optval) > 1e-6) 'we did not get the correct solution';
+
+*Same test again but using keyword disjunction only once
+put emp '* problem %gams.i%' / 'disjunction ';
+loop(lt(j,jj),
+   put / ' *' seq(j,jj) 'else' seq(jj,j));
+putclose;
+
+option limcol=0,limrow=0,optcr=0;
+
+solve m using EMP minimizing t;
+abort$(abs(m.objval-optval) > 1e-6) 'we did not get the correct solution';

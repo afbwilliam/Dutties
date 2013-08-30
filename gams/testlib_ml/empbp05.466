@@ -1,0 +1,60 @@
+$title Bilevel model with MIN follower vs. VI follower (EMPBP05,SEQ=466)
+
+$ontext
+This is a version of the model bard871 from the GAMS EMP Library
+
+   Example from Chapter 8, example 8.7.1, page 358
+
+   John F. Bard, Practical Bilevel Optimization: Algorithms and Applications,
+   Kluwer Academic Publishers, Dordrecht, 1998.
+
+Contributor: Jan-H. Jagla, December 2009
+
+$offtext
+
+*The reported solution is
+scalar x_l /11.25/
+       y_l /    5/
+       tol / 1e-3/;
+
+positive variables x,y; variables objout,objin;
+equations defout,defin,e1,e2;
+
+defout.. objout =e= 16*sqr(x) + 9*sqr(y);
+defin..  objin  =e= power(x+y-20,4);
+
+e1.. -4*x + y =l= 0;
+e2..  4*x + y =l= 50;
+
+model bard / all /;
+
+$echo bilevel x min objin * defin e2 > "%emp.info%"
+
+*Start from reported solution
+x.l = x_l ;
+y.l = y_l;
+
+solve bard us emp min objout;
+
+abort$(  (abs(x.l - x_l ) > tol)
+      or (abs(y.l - y_l ) > tol) ) 'Bard: Global solution not found';
+abort$((bard.solvestat <> %SOLVESTAT.NORMAL COMPLETION%) or
+       (bard.modelstat <> %MODELSTAT.LOCALLY OPTIMAL%  )) 'Bard: Wrong status codes';
+
+*Now solve with follower formulated as VI
+equations viin; viin.. 4*power(x+y-20,3) =N= 0;
+
+model bard_vi / defout,e1,e2,viin /;
+
+execute 'echo bilevel x vi viin y e2 > "%emp.info%"';
+
+*Verify
+bard_vi.iterlim=0;
+solve bard_vi us emp min objout;
+
+abort$(  (abs(x.l - x_l ) > tol)
+      or (abs(y.l - y_l ) > tol) ) 'Bard_VI: Global solution not found';
+abort$((bard.solvestat <> %SOLVESTAT.NORMAL COMPLETION%) or
+       (bard.modelstat <> %MODELSTAT.LOCALLY OPTIMAL%  )) 'Bard_VI: Wrong status codes';
+
+

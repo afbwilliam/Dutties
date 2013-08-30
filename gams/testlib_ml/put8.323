@@ -1,0 +1,13 @@
+$title 'Test put utility exec feature'  (PUT8,SEQ=323)
+
+$ontext
+
+We should get an execerror if we exec a file that does not exist
+
+Contributor: Alex Meeraus
+$offtext
+
+file fx;
+put_utility fx 'exec' / 'this_program_does_not_exist';
+abort$(execerror=0) 'this should have failed';
+execerror = 0;

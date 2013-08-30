@@ -1,0 +1,182 @@
+$TITLE Pure exchange model solved with EMP, SJM, and CGE (NEGISHI, SEQ=21)
+
+$ontext
+We consider a pure exchange model in which a set of
+agents (i.e. consumers) are each endowed with a fixed quantity of goods.
+The agents can trade to maximize their utility.  The solution consists of
+a consumption vector for each agent and a set of prices for each good
+such that:
+   each agent maximizes her utility at this consumption level
+   s.t. the budget constraint imposed by her endowment and the prices
+
+Utility is given by a Cobb-Douglas function of the form
+
+      U(agent) = prod(good, C(good,agent)**alpha(good,agent))
+
+This utility function implies that the income level is the Negishi weight.
+
+This cannot be solved as a single NLP model (see reference below) but
+there are a number of ways to solve this model:
+  1. Via EMP and a complementarity model, finding the weights directly
+  2. Via the SJM approach of Rutherford
+  3. Via a CGE approach (using the implicit demand functions)
+
+Negishi, T, Welfare Economics and the Existence of an Equilibrium for
+a Competitive Economy.  Metroeconomics, Vol 12 (1960), 92-97.
+
+Editor: Steve Dirkse, August 2009
+        With contributions from Sherman Robinson and Michael Ferris
+$offtext
+
+sets
+  g goods                      / g1 * g3 /
+  a utility-maximizing agents  / a1 * a3 /
+
+table alpha(g,a) Cobb-Douglas elasticities sum to 1 for each agent
+
+         a1      a2      a3
+g1       .7      .4      .2
+g2       .2      .3      .4
+g3       .1      .3      .4
+
+table endow(g,a) endowment
+
+         a1      a2      a3
+g1       10
+g2                8
+g3                        3
+
+Parameters RepY(a,*)   income report
+           RepP(g,*)   price report
+           RepC(g,a,*) consumption report;
+$macro rep(style) RepY(a,'style') = Y.l(a); RepP(g,'style') = P.l(g); RepC(g,a,'style') = C.l(g,a);
+
+
+variables
+  utility   utility function
+  C(g,a)    consumption
+  Y(a)      income
+
+positive variables
+  P(g)     prices
+
+equations
+  DefUtility    utility definition
+  balance(g)     material balance: consumption <= endowment
+  budget(a)      budget constraint;
+
+defutility.. utility =E= sum{a, Y(a)*sum{g, alpha(g,a)*log(C(g,a))}};
+
+balance(g).. sum{a, C(g,a)} =L= sum{a, endow(g,a)};
+
+budget(a).. Y(a) =E= sum{g, endow(g,a)*P(g)};
+
+C.lo(g,a) = 1e-6;
+C.l (g,a) = 5;
+model negishi / defutility, balance, budget /;
+
+* fix a numeraire
+y.l(a)     = 1;
+y.fx('a1') = 1;
+
+*******************************************************************************
+*** 0. This cannot be solved as a single NLP model
+******************************************************************************
+
+solve negishi maximizing utility using nlp;
+rep(WRONG)
+
+*******************************************************************************
+*** 1. Via EMP and a complementarity model, finding the weights directly
+******************************************************************************
+
+file myinfo / '%emp.info%' /;
+put myinfo '* negishi model';
+put      / 'dualVar P balance';
+putclose / 'dualEqu budget Y';
+
+solve negishi maximizing utility using emp;
+rep(EMP)
+
+*******************************************************************************
+*** 2. Via the SJM approach of Rutherford
+***
+*** In the SJM (Sequential Joint Maximization) approach, we start with estimates
+*** for the Negishi weights and iterate:
+*** Repeat
+***  1. Solve the NLP using the current weights
+***  2. Update the weights based on the new prices,
+***     i.e. the marginals from the NLP solve
+***  3. compute the error, i.e. | old weights - updated weights |
+*** until the error is small
+***
+*** As the weights converge, the agents will move toward balanced budgets, where
+*** their incomes equal their expenditures.
+*******************************************************************************
+
+model negishiA / defutility, balance /;
+
+set iters / iter1 * iter30 /;
+parameters
+  err sum of changes from previous iterate / 1 /
+  m damping factor / 0.9 /
+  oldy(a) previous values of Y;
+
+y.fx(a) = 1;
+loop{iters$[err > 1e-5],
+  oldy(a) = y.l(a);
+  solve negishiA using nlp maximizing utility;
+  negishiA.solprint=2;
+  y.fx(a) = (1-m)*y.l(a) + m*sum{g, endow(g,a)*balance.m(g)};
+  err    = sum{a, abs(y.l(a) - oldy(a))}
+};
+
+y.fx(a) = y.l(a)/y.l('a1');
+
+rep(SJM)
+
+*******************************************************************************
+***  3. Via a CGE approach (using the implicit demand functions)
+*******************************************************************************
+
+Equation
+  negbalance(g) reorient balance equation to maintain convexity of MCP model,
+  demand(g,a)   implicit demand function ;
+
+negbalance(g)..  sum{a, endow(g,a)} =G= sum{a, C(g,a)} ;
+
+demand(g,a).. p(g)*c(g,a) =E= alpha(g,a)*Y(a) ;
+
+model CGE / negbalance.p, demand.c, budget.Y /  ;
+
+Y.lo(a) = -inf; Y.up(a) = inf;
+Y.fx("a1") = 1 ;
+
+cge.iterlim = 0;
+solve cge using mcp ;
+
+rep(CGE);
+
+*******************************************************************************
+*** Now check for the same solutions
+*******************************************************************************
+
+display RepY,RepP,RepC;
+
+Parameters
+  DiffY(a)
+  DiffP(g)
+  DiffC(g,a);
+
+DiffY(a) =
+   abs(RepY(a,'CGE')-RepY(a,'SJM'))
+ + abs(RepY(a,'CGE')-RepY(a,'EMP'));
+abort$[smax{a, DiffY(a)} > 1e-4] 'Incomes differ';
+DiffP(g) =
+   abs(RepP(g,'CGE')-RepP(g,'SJM'))
+ + abs(RepP(g,'CGE')-RepP(g,'EMP'));
+abort$[smax{g, DiffP(g)} > 1e-4] 'Prices differ';
+DiffC(g,a) =
+   abs(RepC(g,a,'CGE')-RepC(g,a,'SJM'))
+ + abs(RepC(g,a,'CGE')-RepC(g,a,'EMP'));
+abort$[smax{(g,a), DiffC(g,a)} > 1e-4] 'Consumptions differ';

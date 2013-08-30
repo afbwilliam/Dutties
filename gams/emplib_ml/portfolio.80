@@ -1,0 +1,132 @@
+$Title Stochastic portfolio model (PORTFOLIO,SEQ=80)
+
+$ontext
+
+This is a GAMS version of a LINGO model
+
+Conditional Value at Risk model(PORTCVAR)
+We specify a probability, theta, e.g., 0.1, and
+then we want the model to choose a) a target return,
+and b) a portfolio composition, so as to
+ Max theta*target - (expected shortfall below target).
+It is easy to see that if all scenarios are equally likely,
+then it is worthwhile increasing the target as long as
+less than theta of the scenarios fall short of the target.
+So at an optimum, the probability of missing the target
+is about theta.;
+
+Key words: Conditional Value at Risk, CVAR, Value at Risk,
+           Downside risk, Scenario method, Portfolio;
+
+$offtext
+
+Set j assets    / ATT, GMC, USX /
+    s scenarios / s1*s12 /
+
+Table vs(s,j) scenario returns from assets
+     att     gmc     usx
+ s1  1.300   1.225   1.149
+ s2  1.103   1.290   1.260
+ s3  1.216   1.216   1.419
+ s4  0.954   0.728   0.922
+ s5  0.929   1.144   1.169
+ s6  1.056   1.107   0.965
+ s7  1.038   1.321   1.133
+ s8  1.089   1.305   1.732
+ s9  1.090   1.195   1.021
+s10  1.083   1.390   1.131
+s11  1.035   0.928   1.006
+s12  1.176   1.715   1.908;
+
+Alias (j,jj);
+Parameter
+    mean(j)      mean return
+    dev(s,j)     deviations
+    covar(j,jj)  covariance matrix of returns
+    totmean      total mean return;
+
+mean(j)     = sum(s, vs(s,j))/card(s);
+dev(s,j)    = vs(s,j) - mean(j);
+covar(j,jj) = sum(s, dev(s,j)*dev(s,jj))/(card(s)-1);
+totmean     = sum(j, mean(j))/card(j);
+
+display mean, dev, covar, totmean;
+
+Parameter
+    p(s)   probability / #s [1/card(s)] /
+    v(j)   return from assets; v(j) = mean(j);
+Scalar
+    theta  relative volume / [1-0.9] /
+    lambda weight EV versus CVaR / 0.2 /;
+
+Variables
+    r      value of portfolio under each scenario
+    w(j)   portfolio selection;
+
+Positive variables w;
+
+Equations
+    defr     return of portfolio
+    budget   budget constraint;
+
+defr..     r =e= sum(j, v(j)*w(j));
+
+budget..   sum(j, w(j)) =e= 1;
+
+model portfolio / all /;
+
+file emp / '%emp.info%' /; emp.nd=4;
+put emp '* problem %gams.i%'
+      / 'stage 2 r defr v'
+      / "jrandvar v('att') v('gmc') v('usx')"
+loop(s,
+  put / p(s) vs(s,"att") vs(s,"gmc") vs(s,"usx"));
+putclose emp;
+
+Parameter
+    s_v(s,j)     return from assets by scenario /s1.att 1/
+    s_r(s)       return from portfolio by scenario;
+
+Set dict / s     .scenario.''
+           v     .randvar. s_v
+           r     .level.   s_r /;
+
+solve portfolio using emp max r scenario dict;
+
+display s_r;
+
+put emp '* problem %gams.i%'
+      / 'cvarlo ' theta
+      / 'stage 2 r defr v'
+      / "jrandvar v('att') v('gmc') v('usx')"
+loop(s,
+  put / p(s) vs(s,"att") vs(s,"gmc") vs(s,"usx"));
+putclose emp;
+
+solve portfolio using emp max r scenario dict;
+display s_r;
+
+* Extended model with convex combination for EV(r) and CVaR(r)
+Variables
+    CVaR_r    conditional value at risk of r
+    EV_r      expected value of r
+    obj       objective variable;
+Equations
+    defobj    convex combination for both risk measures;
+
+defobj..   obj =e= lambda*EV_r + (1-lambda)*CVaR_r;
+
+model portfolio_ext / all /;
+
+put emp '* problem %gams.i%'
+      / 'ExpectedValue r EV_r'
+      / 'cvarlo r CVaR_r ' theta
+      / 'stage 2 r defr v'
+      / 'stage 1 defobj obj'
+      / "jrandvar v('att') v('gmc') v('usx')"
+loop(s,
+  put / p(s) vs(s,"att") vs(s,"gmc") vs(s,"usx"));
+putclose emp;
+
+solve portfolio_ext using emp max obj scenario dict;
+display s_r;

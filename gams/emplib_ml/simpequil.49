@@ -1,0 +1,52 @@
+$Title Simple Equilibrium (SIMPEQUIL,SEQ=49)
+
+$ontext
+This is a simple equilibrium problem that shows that the existence of solutions
+to the individual optimization problems does not guarantee the existence of
+an equilibrium solution.
+
+Individual agents problems are solvable LP's.
+Overall problem does not have a solution.
+
+Forcing the variable x2 to be strictly positive enables an equilibrium solution.
+
+Contributor: Michael Ferris, March 2010
+
+$offtext
+
+option limrow=0, limcol = 0;
+
+variables z1, z2;
+positive variables x1, x2;
+equations obj1, obj2, cons1, cons2;
+
+obj1.. z1 =e= x1 + x2;
+cons1.. x1*x2 =g= 1;
+
+obj2.. z2 =e= x2;
+cons2.. x1 + x2 =g= 1;
+
+model comp /
+  obj1, obj2,
+  cons1,cons2
+      /;
+
+x1.l = 1; x2.l = 1;
+
+file info / '%emp.info%' /;
+put info / 'equilibrium';
+put      / 'min z1 x1 obj1 cons1';
+putclose / 'min z2 x2 obj2 cons2';
+
+solve comp using emp;
+* check that it is indeed infeasible
+abort$(comp.solvestat <> %SOLVESTAT.NORMAL COMPLETION%
+       or ((comp.modelstat <> %MODELSTAT.INFEASIBLE%)
+           and (comp.modelstat <> %MODELSTAT.LOCALLY INFEASIBLE%)) ) '1st model not infeasible';
+
+* Adding a positive lower bound on x2 fixes the problem
+x2.lo = 0.5;
+
+solve comp using emp;
+abort$(comp.solvestat <> %SOLVESTAT.NORMAL COMPLETION%
+       or comp.modelstat <> %MODELSTAT.LOCALLY OPTIMAL%)  '2nd model not locally optimal';

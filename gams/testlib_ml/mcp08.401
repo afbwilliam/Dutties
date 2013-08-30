@@ -1,0 +1,58 @@
+$title Test MCP that turfs up PATH proprocessing error (MCP08,SEQ=401)
+
+$ontext
+
+This model turfed up a bug in the PATH preprocessor.  The bug is known
+to exist in the 4.7.00 libraries - tested with GAMS Distrib 22.8.1
+(Aug 2008).
+
+Contributor: Steve Dirkse, Aug 2008.
+Original problem report and model sent by:
+Stefan Boeters
+CPB Netherlands Bureau for Economic Policy Analysis
+Sector International Economics
+$offtext
+
+$stitle small recursive model formulated as MCP
+
+scalars
+        q       probability of perfect task performance         /0.5/
+        n       number of persons                               /2/
+        p       product price                                   /1/
+        alpha   production elasticity                           /0.3/
+        r       interest rate                                   /0.05/;
+
+variables
+        w       wage
+        k       capital
+        pi      expected profit
+        rev     revenue;
+
+equations
+        profit
+        revenue
+        capital
+        wages;
+
+capital..    k =e= ((alpha*q**n)/r)**(1/(1-alpha))*n**((2-alpha)/(1-alpha));
+
+wages..      w =e= (1-alpha)*(alpha/r)**(alpha/(1-alpha))*n**(1/(1-alpha))*q**(n/(1-alpha));
+
+revenue..    rev =e= p * k**alpha * n**(2-alpha) * q**n;
+
+profit..     pi =e= rev - n*w - r*k;
+
+model teams1 /capital.k, wages.w, revenue.rev, profit.pi/ ;
+
+k.l = 1;
+w.l = 1;
+rev.l = 1;
+pi.l = 1;
+
+solve teams1 using mcp;
+
+abort$(teams1.solvestat <> %solvestat.NormalCompletion% or teams1.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$[abs(  w.l - 0.560465109945 ) > 1e-6] 'bad solution for w';
+abort$[abs(  k.l - 9.607973313346 ) > 1e-6] 'bad solution for k';
+abort$[abs(rev.l - 1.6013288855577) > 1e-6] 'bad solution for rev';
+

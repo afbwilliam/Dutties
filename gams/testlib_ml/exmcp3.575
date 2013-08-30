@@ -1,0 +1,84 @@
+$Title External Function - Example MCP 3 (EXMCP3,SEQ=575)
+
+$ontext
+  DLL Test Problem Number MCP3 -- dense nonlinear system 
+$offtext
+
+
+set     i       /i1*i30/;
+alias (i,j);
+
+positive
+variable        z(j)            Complementarity problem unknown;
+
+equations       equ(j)          System of inequalities,
+                equx(j)        	External system of inequalities;
+
+parameter       m(i,j)          Constant coefficient matrix,
+                q(j)            Constant RHS vector,
+                z0(j)           Common starting point;
+
+m(i,j)$(uniform(0,1) gt 0.5) = uniform(0,1);
+q(j) = uniform(0,1);
+z0(j) = uniform(0,1);
+
+equ(i)..        sqr(z(i)) + sum(j, m(i,j) * z(j)) =g= q(i);
+
+equx(i)..       sum(j, (ord(j)*z(j))$(m(i,j) or sameas(i,j))) =x=  ord(i);
+
+
+model exmcp3     'GAMS implementation'                        /equ.z/;
+model exmcp3c_cb 'External functions in C, with callbacks'    /equx.z/;
+model exmcp3f_cb 'External functions in F77, with callbacks'  /equx.z/;
+
+scalar totdist /0/;
+parameter solution(J,*);
+
+abort$(card(i) gt 50) " Too many dimensions -- the limit is 50!";
+
+* write data file to the GAMS scratch dir,
+* with a .dat extension so it is deleted automagically
+* when the GAMS run completes
+file kdat / '%gams.scrdir%exmcp3.%gams.scrext%' /;
+put kdat;
+put kdat, card(i):0:0/;
+file.nr=2; file.nw=22; file.nd=13;
+loop(i, put q(i)/;);
+loop(j, loop(i, put m(i,j)/;); );
+putclose;
+
+$onechoV > runme.gms
+z.l(j) = z0(j);
+solve %1 using mcp;
+solution(j,"%1") = z.l(j);
+totdist = totdist + sum {J, abs(z.l(J)-solution(J,'exmcp3'))};
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=exmcp3c_cb.c                                     --libname=exmcp3c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 exmcp3f_cb.f90"%eq% --libname=exmcp3f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme exmcp3
+$if set runC_cb $batinclude runme exmcp3c_cb
+$if set runF_cb $batinclude runme exmcp3f_cb
+
+display solution;
+
+if {(totdist < 1.0E-6),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect exmcp3.lst for details.";
+};

@@ -1,0 +1,63 @@
+$title 'tests that we can execute gdx2veda' (VEDA1,SEQ=330)
+$ondollar
+$call gamslib trnsport
+$call rm -f t1.gdx
+$call gams trnsport gdx=t1.gdx lo 2
+$if not exist t1.gdx   $abort 'missing t1.gdx'
+$onecho > t1.vdd
+* Transport model
+[DataBaseName]
+myveda
+[Dimensions]
+* tab-name indices
+Attribute attr
+Plants     i
+Warehouses j
+Links      ii jj
+[Options]
+not-0 Shipments
+[DataEntries]
+* veda_attribute gams_name tab1 tab2 ... for gams index 1, 2, ...
+"x(i,j) duals" x.m      i  Warehouses
+Shipments      x.l      i  j
+SupplyPrice    supply.m i
+DemandPrice    demand.m j
+TransportCost  c        i  j
+Distance       d        ii jj
+Supply         a        i
+Demand         b        j
+TotalCost      z.l
+SupplyNodes    i        i
+DemandNodes    j        j
+Rate           f
+
+[DimensionText]
+* gams_set tab
+i  i
+
+[DimensionTextAll]
+* gams_set tab
+j  j
+
+[SubSets]
+* sub_name gams_name tab
+i1 i  Plants
+i1 i  i
+$offecho
+
+$call rm -f t1.vd
+$call gdx2veda t1 t1.vdd t1
+
+alias(*,Attribute,Plants,Warehouses,Links)
+parameter vd(Attribute,Plants,Warehouses,Links) /
+$ondelim
+$include t1.vd
+$offdelim
+ /;
+option vd:3:0:1; display vd;
+
+parameter a(*),b(*);
+execute_load 't1',a,b; display a,b;
+
+abort$sum(plants, vd('supply',plants,'-','-') <> a(plants)) 'trouble with supply';
+abort$sum(warehouses, vd('demand','-',warehouses,'-') <> b(warehouses)) 'trouble with demand';

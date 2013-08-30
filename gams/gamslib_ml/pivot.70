@@ -1,0 +1,36 @@
+$Title Simple Gaussian Elimination Steps  (PIVOT,SEQ=70)
+
+$Ontext
+
+   Simple Gaussian Elimination steps are performed on a matrix with
+   identically labeled rows and columns. The implied pivot sequence
+   is 1.1, 2.2, etc.
+
+
+GAMS Development Corporation, Formulation and Language Example.
+
+$Offtext
+
+Sets  i     matrix labels     / 1*6 /
+      r(i)  pivot sequence
+      k(i)  non pivot rows
+      l(i)  non pivot columns ;     alias (i,j) ;
+
+Parameters a(i,j) original matrix, b(i,j) inverse of a, piv, det;
+
+a(i,j) = uniform(-.3,0); a(i,i) = 1;
+r(i) = yes; k(i) = yes; l(j) = yes; b(i,j) = a(i,j); det = 1;
+
+Loop(r,      k(r)=no; l(r)=no;
+             piv=1/b(r,r); det=det/piv;
+
+   b(r,l) =  b(r,l)*piv;
+   b(k,l) =  b(k,l) - b(r,l)*b(k,r);
+   b(k,r) = -b(k,r)*piv;
+   b(r,r) =  piv;
+
+             k(r)=yes; l(r)=yes ) ;
+
+Display det,a,b;
+Parameter check(i,j); check(i,j)=sum(k, a(i,k)*b(k,j)); Display check;
+

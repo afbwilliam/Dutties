@@ -1,0 +1,1047 @@
+$title 'Basic test of convert output' (CONVERT2,SEQ=212)
+
+* This tests the basic convert file formats using the
+* good old trnsport model and the 'all' (most) files option.
+
+$set ide ide=%gams.ide% lo=%gams.lo%
+
+$call gamslib -q trnsport
+$onecho > convert.opt
+all
+filelist
+memo
+$offecho
+
+$call gams trnsport.gms optfile=1 lp=convert %ide%
+
+$onecho > ampl_mod
+#  LP written by GAMS Convert at 01/24/05 16:54:09
+#
+#  Equation counts
+#      Total        E        G        L        N        X        C        B
+#          6        1        3        2        0        0        0        0
+#
+#  Variable counts
+#                   x        b        i      s1s      s2s       sc       si
+#      Total     cont   binary  integer     sos1     sos2    scont     sint
+#          7        7        0        0        0        0        0        0
+#  FX      0        0        0        0        0        0        0        0
+#
+#  Nonzero counts
+#      Total    const       NL      DLL
+#         19       19        0        0
+#
+#  Reformulation has removed 1 variable and 1 equation
+
+
+var x1 >= 0;
+var x2 >= 0;
+var x3 >= 0;
+var x4 >= 0;
+var x5 >= 0;
+var x6 >= 0;
+
+minimize obj:    0.225*x1 + 0.153*x2 + 0.162*x3 + 0.225*x4 + 0.162*x5
+     + 0.126*x6;
+
+subject to
+
+e2:    x1 + x2 + x3 <= 350;
+
+e3:    x4 + x5 + x6 <= 600;
+
+e4:    x1 + x4 >= 325;
+
+e5:    x2 + x5 >= 300;
+
+e6:    x3 + x6 >= 275;
+$offecho
+* $call =diff -b -I "LP written by GAMS" ampl_mod ampl.mod
+$call grep -v "LP written by GAMS" ampl_mod > ampl.mod.want
+$call grep -v "LP written by GAMS" ampl.mod > ampl.mod.got
+$call =diff -b ampl.mod.want ampl.mod.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > gams_bar
+//  LP written by GAMS Convert at 01/24/05 16:58:24
+//
+//  Equation counts
+//      Total        E        G        L        N        X        C        B
+//          6        1        3        2        0        0        0        0
+//
+//  Variable counts
+//                   x        b        i      s1s      s2s       sc       si
+//      Total     cont   binary  integer     sos1     sos2    scont     sint
+//          7        7        0        0        0        0        0        0
+//  FX      0        0        0        0        0        0        0        0
+//
+//  Nonzero counts
+//      Total    const       NL      DLL
+//         19       19        0        0
+//
+// Reformulation has removed 1 variable and 1 equation
+//
+
+MODULE: NLP;
+
+VARIABLES  x1,x2,x3,x4,x5,x6;
+
+POSITIVE_VARIABLES  x1,x2,x3,x4,x5,x6;
+
+EQUATIONS  e2,e3,e4,e5,e6;
+
+
+e2:    x1 + x2 + x3 <= 350;
+
+e3:    x4 + x5 + x6 <= 600;
+
+e4:    x1 + x4 >= 325;
+
+e5:    x2 + x5 >= 300;
+
+e6:    x3 + x6 >= 275;
+
+OBJ: minimize    0.225*x1 + 0.153*x2 + 0.162*x3 + 0.225*x4 + 0.162*x5
+               + 0.126*x6;
+$offecho
+$call grep -v "LP written by GAMS" gams_bar > gams.bar.want
+$call grep -v "LP written by GAMS" gams.bar > gams.bar.got
+$call =diff -b gams.bar.want gams.bar.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > cplex_lp
+\  LP written by GAMS Convert at 01/24/05 17:07:37
+\
+\  Equation counts
+\      Total        E        G        L        N        X        C        B
+\          6        1        3        2        0        0        0        0
+\
+\  Variable counts
+\                   x        b        i      s1s      s2s       sc       si
+\      Total     cont   binary  integer     sos1     sos2    scont     sint
+\          7        7        0        0        0        0        0        0
+\  FX      0        0        0        0        0        0        0        0
+\
+\  Nonzero counts
+\      Total    const       NL      DLL
+\         19       19        0        0
+
+Minimize
+ obj: x7
+
+Subject To
+ c1: - 0.225 x1 - 0.153 x2 - 0.162 x3 - 0.225 x4 - 0.162 x5 - 0.126 x6 + x7 = 0
+ c2:   x1 + x2 + x3 <= 350
+ c3:   x4 + x5 + x6 <= 600
+ c4:   x1 + x4 >= 325
+ c5:   x2 + x5 >= 300
+ c6:   x3 + x6 >= 275
+
+Bounds
+ x7 Free
+
+End
+$offecho
+$call grep -v "LP written by GAMS" cplex_lp > cplex.lp.want
+$call grep -v "LP written by GAMS" cplex.lp > cplex.lp.got
+$call =diff -b cplex.lp.want cplex.lp.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > cplex_mps
+*  LP written by GAMS Convert at 01/24/05 17:07:37
+*
+*  Equation counts
+*      Total        E        G        L        N        X        C        B
+*          6        1        3        2        0        0        0        0
+*
+*  Variable counts
+*                   x        b        i      s1s      s2s       sc       si
+*      Total     cont   binary  integer     sos1     sos2    scont     sint
+*          7        7        0        0        0        0        0        0
+*  FX      0        0        0        0        0        0        0        0
+*
+*  Nonzero counts
+*      Total    const       NL      DLL
+*         19       19        0        0
+*
+NAME Convert
+OBJSENSE
+ MIN
+OBJNAME
+ obj
+ROWS
+ N obj
+ E c1
+ L c2
+ L c3
+ G c4
+ G c5
+ G c6
+COLUMNS
+ x1 c1 -0.225
+ x1 c2 1
+ x1 c4 1
+ x2 c1 -0.153
+ x2 c2 1
+ x2 c5 1
+ x3 c1 -0.162
+ x3 c2 1
+ x3 c6 1
+ x4 c1 -0.225
+ x4 c3 1
+ x4 c4 1
+ x5 c1 -0.162
+ x5 c3 1
+ x5 c5 1
+ x6 c1 -0.126
+ x6 c3 1
+ x6 c6 1
+ x7 obj 1
+ x7 c1 1
+RHS
+ rhs c2 350
+ rhs c3 600
+ rhs c4 325
+ rhs c5 300
+ rhs c6 275
+BOUNDS
+ FR bnd x7
+ENDATA
+$offecho
+$call grep -v "LP written by GAMS" cplex_mps > cplex.mps.want
+$call grep -v "LP written by GAMS" cplex.mps > cplex.mps.got
+$call =diff -b cplex.mps.want cplex.mps.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > fixed_mps
+*  LP written by GAMS Convert at 01/24/05 17:07:37
+*
+*  Equation counts
+*      Total        E        G        L        N        X        C        B
+*          6        1        3        2        0        0        0        0
+*
+*  Variable counts
+*                   x        b        i      s1s      s2s       sc       si
+*      Total     cont   binary  integer     sos1     sos2    scont     sint
+*          7        7        0        0        0        0        0        0
+*  FX      0        0        0        0        0        0        0        0
+*
+*  Nonzero counts
+*      Total    const       NL      DLL
+*         19       19        0        0
+*
+NAME          Convert
+*
+* original model was minimizing
+*
+ROWS
+ N  obj
+ E  c1
+ L  c2
+ L  c3
+ G  c4
+ G  c5
+ G  c6
+COLUMNS
+    x1        c1              -0.225
+    x1        c2                   1
+    x1        c4                   1
+    x2        c1              -0.153
+    x2        c2                   1
+    x2        c5                   1
+    x3        c1              -0.162
+    x3        c2                   1
+    x3        c6                   1
+    x4        c1              -0.225
+    x4        c3                   1
+    x4        c4                   1
+    x5        c1              -0.162
+    x5        c3                   1
+    x5        c5                   1
+    x6        c1              -0.126
+    x6        c3                   1
+    x6        c6                   1
+    x7        obj                  1
+    x7        c1                   1
+RHS
+    rhs       c2                 350
+    rhs       c3                 600
+    rhs       c4                 325
+    rhs       c5                 300
+    rhs       c6                 275
+BOUNDS
+ FR bnd       x7
+ENDATA
+$offecho
+$call grep -v "LP written by GAMS" fixed_mps > fixed.mps.want
+$call grep -v "LP written by GAMS" fixed.mps > fixed.mps.got
+$call =diff -b fixed.mps.want fixed.mps.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > gams_gms
+*  LP written by GAMS Convert at 01/24/05 17:07:37
+*
+*  Equation counts
+*      Total        E        G        L        N        X        C        B
+*          6        1        3        2        0        0        0        0
+*
+*  Variable counts
+*                   x        b        i      s1s      s2s       sc       si
+*      Total     cont   binary  integer     sos1     sos2    scont     sint
+*          7        7        0        0        0        0        0        0
+*  FX      0        0        0        0        0        0        0        0
+*
+*  Nonzero counts
+*      Total    const       NL      DLL
+*         19       19        0        0
+*
+*  Solve m using LP minimizing x7;
+
+
+Variables  x1,x2,x3,x4,x5,x6,x7;
+
+Positive Variables  x1,x2,x3,x4,x5,x6;
+
+Equations  e1,e2,e3,e4,e5,e6;
+
+
+e1..  - 0.225*x1 - 0.153*x2 - 0.162*x3 - 0.225*x4 - 0.162*x5 - 0.126*x6 + x7
+      =E= 0;
+
+e2..    x1 + x2 + x3 =L= 350;
+
+e3..    x4 + x5 + x6 =L= 600;
+
+e4..    x1 + x4 =G= 325;
+
+e5..    x2 + x5 =G= 300;
+
+e6..    x3 + x6 =G= 275;
+
+* set non default bounds
+
+
+* set non default levels
+
+
+* set non default marginals
+
+
+Model m / all /;
+
+m.limrow=0; m.limcol=0;
+
+Solve m using LP minimizing x7;
+$offecho
+$call grep -v "LP written by GAMS" gams_gms > gams.gms.want
+$call grep -v "LP written by GAMS" gams.gms > gams.gms.got
+$call =diff -b gams.gms.want gams.gms.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > lago_gms
+*  LP written by GAMS Convert at 01/24/05 17:07:37
+*
+*  Equation counts
+*      Total        E        G        L        N        X        C        B
+*          6        1        3        2        0        0        0        0
+*
+*  Variable counts
+*                   x        b        i      s1s      s2s       sc       si
+*      Total     cont   binary  integer     sos1     sos2    scont     sint
+*          7        7        0        0        0        0        0        0
+*  FX      0        0        0        0        0        0        0        0
+*
+*  Nonzero counts
+*      Total    const       NL      DLL
+*         19       19        0        0
+*
+*  Solve m using LP minimizing x7;
+
+
+Variables  x1,x2,x3,x4,x5,x6,x7;
+
+Positive Variables  x1,x2,x3,x4,x5,x6;
+
+Equations  e1,e2,e3,e4,e5,e6;
+
+
+e1..  - 0.225*x1 - 0.153*x2 - 0.162*x3 - 0.225*x4 - 0.162*x5 - 0.126*x6 + x7
+      =E= 0;
+
+e2..    x1 + x2 + x3 =L= 350;
+
+e3..    x4 + x5 + x6 =L= 600;
+
+e4..    x1 + x4 =G= 325;
+
+e5..    x2 + x5 =G= 300;
+
+e6..    x3 + x6 =G= 275;
+
+* set non default bounds
+
+
+* set non default levels
+
+
+* set non default marginals
+
+
+Model m / all /;
+
+m.limrow=0; m.limcol=0;
+
+Solve m using LP minimizing x7;
+$offecho
+$call grep -v "LP written by GAMS" lago_gms > lago.gms.want
+$call grep -v "LP written by GAMS" lago.gms > lago.gms.got
+$call =diff -b lago.gms.want lago.gms.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > lingo_lng
+!  LP written by GAMS Convert at 01/24/05 17:07:37
+!
+!  Equation counts
+!      Total        E        G        L        N        X        C        B
+!          6        1        3        2        0        0        0        0
+!
+!  Variable counts
+!                   x        b        i      s1s      s2s       sc       si
+!      Total     cont   binary  integer     sos1     sos2    scont     sint
+!          7        7        0        0        0        0        0        0
+!  FX      0        0        0        0        0        0        0        0
+!
+!  Nonzero counts
+!      Total    const       NL      DLL
+!         19       19        0        0
+!
+!  Reformulation has removed 1 variable and 1 equation
+! ;
+
+MODEL:
+
+[Obj] MIN =    0.225*x1 + 0.153*x2 + 0.162*x3 + 0.225*x4 + 0.162*x5 + 0.126*x6;
+
+[e2]    x1 + x2 + x3 <= 350;
+
+[e3]    x4 + x5 + x6 <= 600;
+
+[e4]    x1 + x4 >= 325;
+
+[e5]    x2 + x5 >= 300;
+
+[e6]    x3 + x6 >= 275;
+
+
+End
+$offecho
+$call grep -v "LP written by GAMS" lingo_lng > lingo.lng.want
+$call grep -v "LP written by GAMS" lingo.lng > lingo.lng.got
+$call =diff -b lingo.lng.want lingo.lng.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$if %system.filesys% == UNIX $goto minopt
+$onecho > alpha_ecp
+\* LP written by GAMS Convert at 01/24/05 17:27:53
+\*
+\* Equation counts
+\*     Total        E        G        L        N        X        C        B
+\*         6        1        3        2        0        0        0        0
+\*
+\* Variable counts
+\*                  x        b        i      s1s      s2s       sc       si
+\*     Total     cont   binary  integer     sos1     sos2    scont     sint
+\*         7        7        0        0        0        0        0        0
+\* FX      0        0        0        0        0        0        0        0
+\*
+\* Nonzero counts
+\*     Total    const       NL      DLL
+\*        19       19        0        0
+
+Minimize x7
+
+Subject To
+
+e1: - 0.225*x1 - 0.153*x2 - 0.162*x3 - 0.225*x4 - 0.162*x5 - 0.126*x6 + x7 = 0
+
+e2:   x1 + x2 + x3 <= 350
+
+e3:   x4 + x5 + x6 <= 600
+
+e4:   x1 + x4 >= 325
+
+e5:   x2 + x5 >= 300
+
+e6:   x3 + x6 >= 275
+
+
+
+Bounds
+
+0 <= x1 <= 10000000000
+0 <= x2 <= 10000000000
+0 <= x3 <= 10000000000
+0 <= x4 <= 10000000000
+0 <= x5 <= 10000000000
+0 <= x6 <= 10000000000
+-10000000000 <= x7 <= 10000000000
+
+End
+$offecho
+$call grep -v "LP written by GAMS" alpha_ecp > alpha.ecp.want
+$call grep -v "LP written by GAMS" alpha.ecp > alpha.ecp.got
+$call =diff -b alpha.ecp.want alpha.ecp.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$label minopt
+$onecho > minopt_dat
+#  LP written by GAMS Convert at 01/24/05 17:07:37
+#
+#  Equation counts
+#      Total        E        G        L        N        X        C        B
+#          6        1        3        2        0        0        0        0
+#
+#  Variable counts
+#                   x        b        i      s1s      s2s       sc       si
+#      Total     cont   binary  integer     sos1     sos2    scont     sint
+#          7        7        0        0        0        0        0        0
+#  FX      0        0        0        0        0        0        0        0
+#
+#  Nonzero counts
+#      Total    const       NL      DLL
+#         19       19        0        0
+#
+
+VARIABLES{{
+
+XVARIABLES{ x1,x2,x3,x4,x5,x6,x7};
+
+POSITIVE{ x1,x2,x3,x4,x5,x6};
+
+# Lower bounds
+
+# Upper bounds
+
+# Starting points
+STP x1 = 0;
+STP x2 = 0;
+STP x3 = 0;
+STP x4 = 0;
+STP x5 = 0;
+STP x6 = 0;
+STP x7 = 0;
+}}
+
+CONSTRAINTS{{
+
+MIN: x7;
+
+
+e1:  - 0.225*x1 - 0.153*x2 - 0.162*x3 - 0.225*x4 - 0.162*x5 - 0.126*x6 + x7
+     =e= 0;
+
+e2:    x1 + x2 + x3 =l= 350;
+
+e3:    x4 + x5 + x6 =l= 600;
+
+e4:    x1 + x4 =g= 325;
+
+e5:    x2 + x5 =g= 300;
+
+e6:    x3 + x6 =g= 275;
+
+}}
+$offecho
+$call grep -v "LP written by GAMS" minopt_dat > minopt.dat.want
+$call grep -v "LP written by GAMS" minopt.dat > minopt.dat.got
+$call =diff -b minopt.dat.want minopt.dat.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > vienna_dag
+<N> V 7
+<0> b [0,I]: V 0
+<1> b [0,I]: V 1
+<2> b [0,I]: V 2
+<3> b [0,I]: V 3
+<4> b [0,I]: V 4
+<5> b [0,I]: V 5
+<6> b [-I,I]: V 6
+<7> b [0,0]: +
+<N> c 0 7
+<8> b [-I,350]: +
+<N> c 1 8
+<9> b [-I,600]: +
+<N> c 2 9
+<10> b [325,I]: +
+<N> c 3 10
+<11> b [300,I]: +
+<N> c 4 11
+<12> b [275,I]: +
+<N> c 5 12
+<E> 7 0 -0.225
+<E> 7 1 -0.153
+<E> 7 2 -0.162
+<E> 7 3 -0.225
+<E> 7 4 -0.162
+<E> 7 5 -0.126
+<E> 7 6 1
+<E> 8 0 1
+<E> 8 1 1
+<E> 8 2 1
+<E> 9 3 1
+<E> 9 4 1
+<E> 9 5 1
+<E> 10 0 1
+<E> 10 3 1
+<E> 11 1 1
+<E> 11 4 1
+<E> 12 2 1
+<E> 12 5 1
+<13> +
+<N> c 6 13
+<E> 13 6 1
+<N> M 13 min
+$offecho
+$call grep -v "LP written by GAMS" vienna_dag > vienna.dag.want
+$call grep -v "LP written by GAMS" vienna.dag > vienna.dag.got
+$call =diff -b vienna.dag.want vienna.dag.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > dict_txt
+LP written by GAMS Convert at 01/24/05 17:07:37
+
+Equation counts
+    Total        E        G        L        N        X        C        B
+        6        1        3        2        0        0        0        0
+
+Variable counts
+                 x        b        i      s1s      s2s       sc       si
+    Total     cont   binary  integer     sos1     sos2    scont     sint
+        7        7        0        0        0        0        0        0
+FX      0        0        0        0        0        0        0        0
+
+Nonzero counts
+    Total    const       NL      DLL
+       19       19        0        0
+
+Equations 1 to 6
+  e1  cost
+  e2  supply(seattle)
+  e3  supply(san-diego)
+  e4  demand(new-york)
+  e5  demand(chicago)
+  e6  demand(topeka)
+
+Variables 1 to 7
+  x1  x(seattle,new-york)
+  x2  x(seattle,chicago)
+  x3  x(seattle,topeka)
+  x4  x(san-diego,new-york)
+  x5  x(san-diego,chicago)
+  x6  x(san-diego,topeka)
+  x7  z
+$offecho
+$call grep -v "LP written by GAMS" dict_txt > dict.txt.want
+$call grep -v "LP written by GAMS" dict.txt > dict.txt.got
+$call =diff -b dict.txt.want dict.txt.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$if %system.buildcode% == AIX $goto sfsoml
+$onecho > lgomain_for
+C   LP written by GAMS Convert at 01/24/05 17:07:37
+C
+C   Equation counts
+C       Total        E        G        L        N        X        C        B
+C           6        1        3        2        0        0        0        0
+C
+C   Variable counts
+C                    x        b        i      s1s      s2s       sc       si
+C       Total     cont   binary  integer     sos1     sos2    scont     sint
+C           7        7        0        0        0        0        0        0
+C   FX      0        0        0        0        0        0        0        0
+C
+C   Nonzero counts
+C       Total    const       NL      DLL
+C          19       19        0        0
+C
+C   Variables and equations removed:
+C          1 variables defined
+C          0 variables fixed
+C          0 equations free
+C
+C   5 LGO equations and 6 LGO variables
+C
+      subroutine user_fct(xx,obj,gg)
+
+      implicit real*8 (a-h,o-z)
+      dimension xx(6),gg(5)
+
+      common /gamslgo/ NumEval,GamsX(7),GamsG(6)
+
+      numeval = numeval + 1
+
+C  map LGO variables to GAMS variables
+
+      GamsX(1) = xx(1)
+      GamsX(2) = xx(2)
+      GamsX(3) = xx(3)
+      GamsX(4) = xx(4)
+      GamsX(5) = xx(5)
+      GamsX(6) = xx(6)
+
+C  compute defined variables
+
+      GamsX(7) = -( - 0.225D0*GamsX(1) - 0.153D0*GamsX(2)
+     . - 0.162D0*GamsX(3) - 0.225D0*GamsX(4) - 0.162D0*GamsX(5)
+     . - 0.126D0*GamsX(6) - 0D0)
+
+C  evaluate LGO equations
+
+      GamsG(2) =    GamsX(1) + GamsX(2) + GamsX(3)
+      gg(1) = GamsG(2) - 350D0
+
+      GamsG(3) =    GamsX(4) + GamsX(5) + GamsX(6)
+      gg(2) = GamsG(3) - 600D0
+
+      GamsG(4) =    GamsX(1) + GamsX(4)
+      gg(3) = - (GamsG(4) - 325D0)
+
+      GamsG(5) =    GamsX(2) + GamsX(5)
+      gg(4) = - (GamsG(5) - 300D0)
+
+      GamsG(6) =    GamsX(3) + GamsX(6)
+      gg(5) = - (GamsG(6) - 275D0)
+
+C  return objective value in terms of LGO minimization
+
+      obj = GamsX(7)
+
+      return
+      end
+
+      implicit real*8 (a-h,o-z)
+      common /gamslgo/ NumEval,GamsX(7),GamsG(6)
+      character*20 modname,objname,varname(6),conname(5)
+      integer ctype(5)
+      dimension varnom(6),varlb(6),varub(6),varopt(6)
+      dimension conopt(5)
+      integer opmode,g_maxfct,tlimit,sstat,mstat
+      real*8 kt_tol
+
+      numeval = 0
+
+C  set equation types
+
+      ctype(1) =  -1
+      ctype(2) =  -1
+      ctype(3) =  -1
+      ctype(4) =  -1
+      ctype(5) =  -1
+
+C  set bounds and nominal values
+
+      varnom(1) = 0D0
+      varlb (1) = 0D0
+      varub (1) = 1000000D0
+      varnom(2) = 0D0
+      varlb (2) = 0D0
+      varub (2) = 1000000D0
+      varnom(3) = 0D0
+      varlb (3) = 0D0
+      varub (3) = 1000000D0
+      varnom(4) = 0D0
+      varlb (4) = 0D0
+      varub (4) = 1000000D0
+      varnom(5) = 0D0
+      varlb (5) = 0D0
+      varub (5) = 1000000D0
+      varnom(6) = 0D0
+      varlb (6) = 0D0
+      varub (6) = 1000000D0
+
+C  LGO names strings
+
+      modname    = 'GamsModel'
+      objname    = 'GamsX7'
+
+      varname(1) = 'GamsX1'
+      varname(2) = 'GamsX2'
+      varname(3) = 'GamsX3'
+      varname(4) = 'GamsX4'
+      varname(5) = 'GamsX5'
+      varname(6) = 'GamsX6'
+
+      conname(1) = 'GamsG2'
+      conname(2) = 'GamsG3'
+      conname(3) = 'GamsG4'
+      conname(4) = 'GamsG5'
+      conname(5) = 'GamsG6'
+
+C  set fixed variables
+
+
+C  set defined equation levels
+
+      GamsG(1) = 0D0
+
+C  assign option values
+
+      opmode    = 3
+      g_maxfct  = 5500
+      max_nosuc = 5500
+      penmult_in= 100D0
+      acc_tr    = -10000000000D0
+      fct_trg   = -10000000000D0
+      fi_tol    = 1D-6
+      con_tol   = 1D-6
+      kt_tol    = 1D-6
+      irngs     = 0
+      tlimit    = 1000
+
+      nvars     = 6
+      ncons     = 5
+
+      open(9,file='lgosum.txt',status='unknown')
+
+      call lgo_run(modname,nvars,ncons,varname,objname,
+     .             conname,ctype,varlb,varnom,varub,
+     .             opmode,g_maxfct,max_nosuc,penmult_in,acc_tr,
+     .             fct_trg,fi_tol,con_tol,kt_tol,irngs,tlimit,
+     .             varopt,conopt,objopt,nevals,resmax,runtime,
+     .             sstat,mstat)
+
+      close(9)
+
+      call user_fct(varopt,obj,conopt)
+
+C  evaluate free equations
+
+      write(*,*) 'sstat=',sstat,'mostat=',mstat
+      write(*,*) 'nevals=',nevals,'resmax=',resmax,'runtime=',runtime
+      write(*,*) 'obj=',obj,'objopt=',objopt
+      do 2 i = 1,7
+  2   write(*,*) i,gamsx(i)
+      do 3 i = 1,6
+  3   write(*,*) i,gamsg(i)
+
+      end
+$offecho
+$call grep -v "LP written by GAMS" lgomain_for > lgomain.for.want
+$call grep -v "LP written by GAMS" lgomain.for > lgomain.for.got
+$call =diff -b lgomain.for.want lgomain.for.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$label sfsoml
+$onecho > sfs_oml
+//  LP written by GAMS Convert at 12/19/08 16:13:09
+//
+//  Equation counts
+//      Total        E        G        L        N        X        C        B
+//          6        1        3        2        0        0        0        0
+//
+//  Variable counts
+//                   x        b        i      s1s      s2s       sc       si
+//      Total     cont   binary  integer     sos1     sos2    scont     sint
+//          7        7        0        0        0        0        0        0
+//  FX      0        0        0        0        0        0        0        0
+//
+//  Nonzero counts
+//      Total    const       NL      DLL
+//         19       19        0        0
+//
+//  Reformulation has removed 1 variable and 1 equation
+
+
+Model[
+  Decisions[Reals[0, Infinity],x1],
+  Decisions[Reals[0, Infinity],x2],
+  Decisions[Reals[0, Infinity],x3],
+  Decisions[Reals[0, Infinity],x4],
+  Decisions[Reals[0, Infinity],x5],
+  Decisions[Reals[0, Infinity],x6],
+
+Goals[ Minimize[    0.225*x1 + 0.153*x2 + 0.162*x3 + 0.225*x4 + 0.162*x5 + 0.126*x6 ]],
+
+Constraints[
+
+e2 ->   x1 + x2 + x3 <= 350,
+
+e3 ->   x4 + x5 + x6 <= 600,
+
+e4 ->   x1 + x4 >= 325,
+
+e5 ->   x2 + x5 >= 300,
+
+e6 ->   x3 + x6 >= 275 ]]
+$offecho
+$call grep -v "LP written by GAMS" sfs_oml > sfs.oml.want
+$call grep -v "LP written by GAMS" sfs.oml > sfs.oml.got
+$call =diff -b sfs.oml.want sfs.oml.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > cppadFunc_cpps
+// LP written by GAMS Convert at 12/19/08 16:32:26
+//
+// Equation counts
+//     Total        E        G        L        N        X        C        B
+//         6        1        3        2        0        0        0        0
+//
+// Variable counts
+//                  x        b        i      s1s      s2s       sc       si
+//     Total     cont   binary  integer     sos1     sos2    scont     sint
+//         7        7        0        0        0        0        0        0
+// FX      0        0        0        0        0        0        0        0
+//
+// Nonzero counts
+//     Total    const       NL      DLL
+//        19       19        0        0
+//
+//  Reformulation has removed 1 variable and 1 equation
+
+#include "cppadFunc.hpp"
+
+ADVector FG_info::eval_r (size_t k, const ADVector&  x)
+{
+  ADVector fg(1 + MODEL_info::m);
+
+  fg[0] = 0.225*x[1] + 0.153*x[2] + 0.162*x[3] + 0.225*x[4] + 0.162*x[5]
+     + 0.126*x[6];
+  fg[1] = x[1] + x[2] + x[3];
+  fg[2] = x[4] + x[5] + x[6];
+  fg[3] = x[1] + x[4];
+  fg[4] = x[2] + x[5];
+  fg[5] = x[3] + x[6];
+  return fg;
+} // eval_r
+
+void MODEL_info::init ()
+{
+  x_l[0] = 0;  x_i[0] = 0;  x_u[0] = pinf;
+  x_l[1] = 0;  x_i[1] = 0;  x_u[1] = pinf;
+  x_l[2] = 0;  x_i[2] = 0;  x_u[2] = pinf;
+  x_l[3] = 0;  x_i[3] = 0;  x_u[3] = pinf;
+  x_l[4] = 0;  x_i[4] = 0;  x_u[4] = pinf;
+  x_l[5] = 0;  x_i[5] = 0;  x_u[5] = pinf;
+
+  g_l[0] = minf;  g_u[0] = 350;
+  g_l[1] = minf;  g_u[1] = 600;
+  g_l[2] = 325;  g_u[2] = pinf;
+  g_l[3] = 300;  g_u[3] = pinf;
+  g_l[4] = 275;  g_u[4] = pinf;
+
+  return;
+} // MODEL_info::init
+
+const int MODEL_info::m = 5;
+const int MODEL_info::n = 6;
+const double MODEL_info::minf = -1e19;
+const double MODEL_info::pinf =  1e19;
+NumberVector MODEL_info::x_i = NumberVector(MODEL_info::n);
+NumberVector MODEL_info::x_l = NumberVector(MODEL_info::n);
+NumberVector MODEL_info::x_u = NumberVector(MODEL_info::n);
+NumberVector MODEL_info::g_l = NumberVector(MODEL_info::m);
+NumberVector MODEL_info::g_u = NumberVector(MODEL_info::m);
+$offecho
+$call grep -v "LP written by GAMS" cppadFunc_cpps > cppadFunc.cpps.want
+$call grep -v "LP written by GAMS" cppadFunc.cpps > cppadFunc.cpps.got
+$call =diff -b cppadFunc.cpps.want cppadFunc.cpps.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > memo_txt
+LP written by GAMS Convert at 01/24/05 17:34:11
+
+Equation counts
+    Total        E        G        L        N        X        C        B
+        6        1        3        2        0        0        0        0
+
+Variable counts
+                 x        b        i      s1s      s2s       sc       si
+    Total     cont   binary  integer     sos1     sos2    scont     sint
+        7        7        0        0        0        0        0        0
+FX      0        0        0        0        0        0        0        0
+
+Nonzero counts
+    Total    const       NL      DLL
+       19       19        0        0
+
+AlphaECP  : alpha.ecp
+Ampl      : ampl.mod
+AmplNLC   : amplnlc.c
+AmplNLC   : gmsfunc.h
+AmplNLC   : gmsfunc.c
+Baron     : gams.bar
+CplexLP   : cplex.lp
+CplexMPS  : cplex.mps
+CppAD     : cppadFunc.cpps
+Dict      : dict.txt
+FixedMPS  : fixed.mps
+Gams      : gams.gms
+Jacobian  : jacobian.gdx
+Lago      : lago.gms
+LindoMPI  : lindo.mpi
+Lingo     : lingo.lng
+Minopt    : minopt.dat
+NLP2MCP   : gamsmcp.gms
+OSiL      : osil.xml
+SFS       : sfs.oml
+ViennaDag : vienna.dag
+Lgo       : lgomain.for
+FileList  : files.txt
+$offecho
+$if not %system.filesys%   == UNIX $call grep -v "LP written by GAMS" memo_txt > memo.txt.want
+$if     %system.filesys%   == UNIX $call grep -v "LP written by GAMS" memo_txt | grep -v AlphaECP > memo.txt.want
+$if     %system.buildcode% ==  AIX $call grep -v Lgo memo.txt.want > memo.txt.tmp && mv -f memo.txt.tmp memo.txt.want
+$call grep -v "LP written by GAMS" memo.txt > memo.txt.got
+$call =diff -b memo.txt.want memo.txt.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%
+
+$onecho > files_txt
+memo.txt
+alpha.ecp
+ampl.mod
+amplnlc.c
+gmsfunc.h
+gmsfunc.c
+gams.bar
+cplex.lp
+cplex.mps
+cppadFunc.cpps
+dict.txt
+fixed.mps
+gams.gms
+jacobian.gdx
+lago.gms
+lindo.mpi
+lingo.lng
+minopt.dat
+gamsmcp.gms
+osil.xml
+sfs.oml
+vienna.dag
+lgomain.for
+files.txt
+$offecho
+
+$if not %system.filesys%   == UNIX $call grep -v "LP written by GAMS" files_txt > files.txt.want
+$if     %system.filesys%   == UNIX $call grep -v "LP written by GAMS" files_txt | grep -v alpha > files.txt.want
+$if     %system.buildcode% ==  AIX $call grep -v lgo files.txt.want > files.txt.tmp && mv -f files.txt.tmp files.txt.want
+$call grep -v "LP written by GAMS" files.txt > files.txt.got
+$call =diff -b files.txt.want files.txt.got
+$if NOT errorlevel 0 $error errorlevel not 0 but is %system.errorlevel%
+$if     errorlevel 1 $error errorlevel not 0 but is %system.errorlevel%

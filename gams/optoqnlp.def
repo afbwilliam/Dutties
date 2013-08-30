@@ -1,0 +1,120 @@
+*
+* optoqnlp.def
+*
+
+iterlim integer 0 10000 0 maxint 0 1 iteration limit for the local solver
+artificial_bound double 0 10000 0 maxdouble 1 1 default upper/lower bound
+basin_decrease_factor double 0 0.2 0 1 1 1 reduction of MAXDIST
+basin_overlap_fix boolean 0 1 1 1 switch for MAXDIST logic
+discretes_only_optquest integer 0 0 0 maxint 0 1
+distance_factor double 0 1 0 maxdouble 1 1 distance activation factor
+distance_waitcycle integer 0 20 0 maxint 1 1 iterations before distance filter threshold is increased
+dynamic_distance_filter boolean 0 1 1 1 switch for MAXDIST reduction logic
+dynamic_merit_filter integer 0 1 0 maxint 1 1 switch for merit threshold increase logic
+enable_screen_output boolean 0 0 1 1 switch for log output
+enable_statistics_log boolean 0 0 1 1 switch for statistics file stats.log
+feasibility_mode boolean 0 0 0 1
+feasibility_tolerance double 0 0.0001 0 maxdouble 1 1 feasibility check for point returned by NLP solver
+grg_disable_error_msgs boolean 0 0 0 1
+grg_epfeas double 0 0.0001 0 maxdouble 0 1
+grg_epstop double 0 0.0001 0 maxdouble 0 1
+grg_inprnt integer 0 0 0 maxint 0 1
+grg_isclag integer 0 0 0 maxint 0 1
+grg_nstop integer 0 10 0 maxint 0 1
+grg_otprnt integer 0 0 0 maxint 0 1
+grg_printlevel integer 0 0 0 maxint 0 1
+grg_scaling_on boolean 0 0 0 1
+grg_use_phase0 boolean 0 0 0 1
+inf_nbrhd_factor double 0 0.1 0 maxdouble 0 1
+init_cycle integer 0 0 0 maxint 0 1
+init_local_into_pop integer 0 0 0 maxint 0 1
+iteration_limit integer 0 1000 0 maxint 1 1 total number of OQNLP iterations
+iteration_print_frequency integer 0 20 0 maxint 1 1 frequency of iteration print
+local_return integer 0 0 0 maxint 0 1
+locals_file string 0 "" 1 1 filename for local file
+locals_file_format enumstr 0 "report" 1 1 file format for local file
+ "report" 1 Report file format
+ "data1" 1 Data1 file format
+logfile_itn_print_frequency integer 0 20 0 maxint 0 1
+max_locals integer 0 1000 0 maxint 1 1 maximum number of local optima found
+max_solver_calls integer 0 1000 0 maxint 1 1 maximum number of nlp solver calls
+max_solver_calls_noimprovement integer 0 0 0 maxint 1 1 maximum number non-improving solver calls
+maxtime integer 0 1000 0 maxint 1 1 maximum runtime in seconds
+merit_waitcycle integer 0 20 0 maxint 1 1 iterations before merit filter threshold is increased
+nlpsolver string 0 "lsgrg" 1 1 NLP solver to be used
+solvelink enumint 0 5 1 1 Solvelink for GAMS NLP solver
+ 1 1 Call GAMS NLP solver via script
+ 2 1 Call GAMS NLP solver via module
+ 4 0 Call NLP and MIP solver via grid script (simulate)
+ 5 1 Call GAMS NLP solver in memory
+nobounds immediate nobounds 0 1 ignores bounds on options
+norm_dist integer 0 0 0 maxint 0 1
+optquest_only boolean 0 0 1 1 switch for using local solvers
+ 0 use local solver
+ 1 no local solver calls
+oq_all_discrete integer 0 0 0 maxint 0 1 filter logic for problems with discrete variables
+oq_database integer 0 1 0 maxint 0 1
+oq_discrete_step double 0 1 0 maxdouble 0 1
+oq_obj_precision integer 0 4 0 maxint 0 1
+oq_popsize integer 0 10 0 maxint 0 1
+oq_var_precision integer 0 4 0 maxint 0 1
+oqms_epstop double 0 0.0001 0 maxdouble 0 1
+oqms_nstop integer 0 5 0 maxint 0 1
+oqnlp_debug integer 0 0 0 2 1 1 enable debug info
+oqnlp_print_level integer 0 0 0 maxint 0 1
+parsh enumint 0 0 0 1 partial differential method
+ 0 1 Partial Derivatives from GAMS
+ 1 1 Forward Finite Differences
+ 2 1 Central Finite Differences
+penalty_function boolean 0 0 0 1 switch for penalty function
+ 0 Use OptQuest penalty function
+ 1 Use exact penalty function
+penalty_factor double 0 2 0 maxdouble 0 1
+point_generation enumstr 0 "optquest" 1 1 starting point generator
+ "random" 1 random point generation
+ "hitandrun" 1 hit and run point generation
+ "smartrandom1" 1 smart random point generation
+ "test2" 1 test2 point generation
+ "test3" 1 test3 point generation
+ "optquest" 1 OptQuest generates starting point
+print_population integer 0 0 0 maxint 0 1
+print_trial_points integer 0 0 0 maxint 0 1
+quiet_file_output boolean 0 0 0 1
+quiet_gams_output boolean 0 0 0 1
+random_initial_pts integer 0 0 0 maxint 0 1
+random_seed enumint 0 0 0 1
+ 0 1 normal
+ 1 1 random
+randomseed integer 0 1 0 maxint 0 1
+readfile immediate readfile 0 1 read secondary option file
+sampling_distribution enumint 0 0 1 1 distribution for smartrandom1
+ 0 1 normal
+ 1 1 triangular
+search_parameter double 0 0.5 0 maxdouble 0 1 search Strategy Parameter
+search_type enumstr 0 "boundary" 1 1 search strategy
+ "aggressive" 1 aggressive search
+ "boundary" 1 boundary search
+ "crossover" 1 crossover search
+solver_log_to_gams_log boolean 0 0 1 1 switch to copy the NLP solver log to the normal log file
+stage1_iterations integer 0 200 0 maxint 1 1 number of iterations in stage 1
+start_with_nlpsolver boolean 0 1 0 1 check user supplied point first
+starting_multiplier double 0 10 0 maxdouble 0 1 starting value for Lagrange multipliers
+threshold_increase_factor double 0 0.2 0 maxdouble 1 1 factor to increase merit filter threshold
+tolerance double 0 0.0001 0 maxdouble 0 1
+use_distance_filter boolean 0 1 1 1 distance filter
+use_linear_constraints boolean 0 0 1 1 satisfy linear constraints
+use_merit_filter boolean 0 1 1 1 merit filter
+*
+* synonym section
+*
+gams_itn_print_frequency synonym iteration_print_frequency
+msnlp_debug synonym oqnlp_debug
+start_with_grg synonym start_with_nlpsolver
+reslim synonym maxtime
+myeolchar EOLCOMM #
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General Options
+*** End of file

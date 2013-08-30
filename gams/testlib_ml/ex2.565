@@ -1,0 +1,170 @@
+$Title  External Function - Example 2 (EX2,SEQ=565)
+
+$offsymlist offsymxref
+$ontext
+
+ This is the second in a sequence of examples that show how to
+ use the external equations (=X=) facility with GAMS/CONOPT.
+ The second model is also simple unconstrained quadratic model
+ and the quadratic function is defined in an external function.
+
+ But this time we communicate the data from GAMS via a put file
+ including information on the size of the model. We can now change
+ the data in GAMS without reprogramming the Fortran or C routine.
+
+ The model is slightly convoluted. We want to be able to solve
+ it for different subsets I of the Domain D.
+
+$offtext
+
+
+set D	 Domain for the variables / i1*i14 /;
+set I(D) Subset for actual optimization;
+alias (D,E), (i,j);
+
+Parameter Q(D,D) Covariance Matrix
+	  X0(D)  Targets;
+Q(D,E) = power(0.5, abs(ord(D)-ord(E)) );
+X0(D)  = ord(D) / card(D);
+display Q, x0;
+
+variable x(D), z;
+equation zdef, zdefX;
+
+*  Define I for the first solve to hold 7 elements
+
+I(D) = yes$(ord(D) le 7);
+
+*  The desired equation, implemented in GAMS, is
+
+zdef..	sum {(i,j),
+	     (x(i)-x0(i)) * Q(i,j) * (x(j)-x0(j)) }
+        =e= z;
+
+*   It is implemented as an external equation as:
+
+zdefX..	sum {D$I(D), ord(D)*x(D) } + (card(I)+1)* z =X= 1;
+
+$ontext
+ See the comments in ex1.gms for further details.
+ We use D instead of I in the equation since I is now a dynamic
+ set and we cannot use ord(I).
+
+ The size of the set I and the model data is now written to
+ the file ex2.put using PUT statements.  Note that we end with
+ a putclose statement so the file is closed when we read it
+ in the external module.
+$offtext
+
+file f / ex2.put /; f.nw = 0; f.nd = 13;
+
+f.nr = 0; put f card(i):0:0 /; f.nr = 2;
+loop {i,
+   put x0(i) /;
+   loop {j,
+      put q(i,j) /;
+   };
+};
+putclose f;
+
+model ex2	'GAMS implementation'				/ zdef /;
+model ex2c_cb   'External functions in C, with callbacks'	/ zdefX /;
+model ex2f_cb   'External functions in F77, with callbacks'	/ zdefX /;
+model ex2d_cb   'External functions in Delpi with callbacks'	/ zdefX /;
+
+option limcol = 0;
+$ontext
+ Create a summary table where we compare the expected results,
+ x0 with the actual results, x.l, to ensure that data have been
+ communicated correctly to the external function.
+$offtext
+
+parameter report(*,*,*) 'Solution Summary';
+option report:5;
+scalar totdist /0/;
+
+*  reuse the same code several times
+$onechoV > runme.gms
+z.l = 0;
+z.m = 0;
+x.l(i) = 0;
+x.m(i) = 0;
+zdef.l = 0;
+zdef.m = 0;
+solve %1 using nlp minimizing z;
+abort$(%1.solvestat %2) 'problems running model %1';
+execerror = 0;
+report('Solve ','Stat',  '%1') = %1.solvestat;
+report('Model ','Stat',  '%1') = %1.modelstat;
+report(i,'Target',  '%1') = x0(i);
+report(i,'Value',   '%1') = x.l(i);
+report(i,'Distance','%1') = abs(x.l(i) - x0(i));
+totdist = totdist + sum(i,abs(x.l(i) - x0(i)));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC_cb '1' set runD_cb '1' set runF_cb '1'
+
+$ifthen not set nocomp
+$  ifi set runC_cb $call gams complink lo=%gams.lo% --lang=c         --files=ex2c_cb.c                                     --libname=ex2c_cb%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runD_cb $call gams complink lo=%gams.lo% --lang=Delphi    --files=ex2d_cb.dpr
+$  if errorlevel 1 $abort Error compiling Delphi Library
+$  ifi set runF_cb $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 msg2_f.f90 ex2f_cb.f90"%eq% --libname=ex2f_cb%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$                batinclude runme ex2     '<> 1'
+$if set runC_cb $batinclude runme ex2c_cb '<> 1'
+$if set runD_cb $batinclude runme ex2d_cb '<> 1'
+$if set runF_cb $batinclude runme ex2f_cb '<> 1'
+
+display report;
+
+if ((totdist < 1.0E-6),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect ex2.lst for details.";
+);
+
+$ontext
+ Now define I to hold all 14 elements. This should give rise to an
+ error since we have only allocated space for 10 elements in the
+ Fortran and Delphi routine.
+ The C-version allocates memory dynamically and will work correctly.
+$offtext
+
+I(D) = yes;
+
+$ontext
+ When we open the PUT file again for writing it will by default
+ be overwritten, which is what we need:
+$offtext
+
+* start over with new data and empty report
+
+f.nr = 0; put f card(i):0:0 /; f.nr = 2;
+loop {i,
+   put x0(i) /;
+   loop {j,
+      put q(i,j) /;
+   };
+};
+putclose f;
+
+option clear = report;
+totdist = 0;
+
+$                batinclude runme ex2     '<> 1'
+$if set runC_cb $batinclude runme ex2c_cb '<> 1'
+$if set runD_cb $batinclude runme ex2d_cb ' = 1'
+$if set runF_cb $batinclude runme ex2f_cb ' = 1'
+
+display report;

@@ -1,0 +1,31 @@
+$title 'Test correctness of fact intrinsic' (FNFACT,SEQ=164)
+
+* define some sets, etc.
+$include fnset_x.inc
+
+aeps = 0;
+reps = 3e-16;
+relToInput = 0;
+set T / t0 * t166 /;
+data('t0','x') = 0;
+data('t0','f_') = 1;
+
+scalar f;
+f = 1;
+loop {T$[ord(T) > 1],
+  f = f * (ord(T)-1);
+  data(T,'x')    = ord(T)-1;
+  data(T,'f_') = f;
+};
+
+loop {T,
+  data(T,  'f')    = fact.value (data(T,'x'));
+* data(T, 'fx')    = fact.grad  (data(T,'x'));
+* data(T,'fxx')    = fact.hess  (data(T,'x'));
+  data(T, 'rc')    = mathlastrc;
+  data(T, 'ec')    = mathlastec;
+};
+
+display data;
+
+$include fntest_x.inc

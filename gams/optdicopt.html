@@ -1,0 +1,526 @@
+<html>
+<head>
+<title>DICOPT Options</title>
+</head>
+<body>
+<h2>DICOPT Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/dicopt.pdf">DICOPT manual</a>.
+
+<h2>Summary of DICOPT Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Dicopt algorithmic options</h3></th></tr>
+<tr><td><a href="#DICOPTcontinue">
+continue</a></td>
+<td>How to proceed in case of NLP errors</td></tr>
+<tr><td><a href="#DICOPTinfeasder">
+infeasder</a></td>
+<td>Use derivatives of infeasible nonlinear subproblems</td></tr>
+<tr><td><a href="#DICOPTmaxcycles">
+maxcycles</a></td>
+<td>Maximum number of cycles</td></tr>
+<tr><td><a href="#DICOPTrelaxed">
+relaxed</a></td>
+<td>How to start DICOPT</td></tr>
+<tr><td><a href="#DICOPTsolvelink">
+solvelink</a></td>
+<td>Solvelink for NLP and MIP subsolver</td></tr>
+<tr><td><a href="#DICOPTstop">
+stop</a></td>
+<td>Stopping criterion</td></tr>
+<tr><td><a href="#DICOPTweight">
+weight</a></td>
+<td>Penalty parameter</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Tolerances</h3></th></tr>
+<tr><td><a href="#DICOPTepsmip">
+epsmip</a></td>
+<td>Tolerance on test on monotonic improvement of MIP master problem</td></tr>
+<tr><td><a href="#DICOPTepsx">
+epsx</a></td>
+<td>Tolerance for integer values when loading relaxed solution</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP masterproblem options</h3></th></tr>
+<tr><td><a href="#DICOPTmipiterlim">
+mipiterlim</a></td>
+<td>List of iteration limits</td></tr>
+<tr><td><a href="#DICOPTmipoptfile">
+mipoptfile</a></td>
+<td>List of option files for MIP solver</td></tr>
+<tr><td><a href="#DICOPTmipreslim">
+mipreslim</a></td>
+<td>List of resource limits</td></tr>
+<tr><td><a href="#DICOPTmipsolver">
+mipsolver</a></td>
+<td>List of MIP solvers</td></tr>
+<tr><td><a href="#DICOPToptca">
+optca</a></td>
+<td>List of OPTCA values</td></tr>
+<tr><td><a href="#DICOPToptcr">
+optcr</a></td>
+<td>List of OPTCR values</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>NLP subproblem options</h3></th></tr>
+<tr><td><a href="#DICOPTdomlim">
+domlim</a></td>
+<td>List of allowed number of domain errors</td></tr>
+<tr><td><a href="#DICOPTnlpiterlim">
+nlpiterlim</a></td>
+<td>List of iteration limits</td></tr>
+<tr><td><a href="#DICOPTnlpoptfile">
+nlpoptfile</a></td>
+<td>List of option files for NLP solver</td></tr>
+<tr><td><a href="#DICOPTnlpreslim">
+nlpreslim</a></td>
+<td>List of resource limits</td></tr>
+<tr><td><a href="#DICOPTnlpsolver">
+nlpsolver</a></td>
+<td>List of NLP solvers</td></tr>
+<tr><td><a href="#DICOPTnlptracefile">
+nlptracefile</a></td>
+<td>Base name of trace files</td></tr>
+<tr><td><a href="#DICOPTnlptracelevel">
+nlptracelevel</a></td>
+<td>Trace level</td></tr></table>
+<h2>Detailed Descriptions of DICOPT Options</h2>
+
+<h4><a name="DICOPTcontinue">
+continue</a>
+<i> (integer)</i> How to proceed in case of NLP errors</h4><p>
+
+This option can be used to let DICOPT continue in case of NLP solver failures. The preferred approach
+is to fix the model, such that NLP subproblems solve without problems. However, in some cases we can
+ignore (partial) failures of an NLP solver in solving the NLP subproblems as DICOPT may recover later on.
+During model debugging, you may therefore add the option continue 0, in order for DICOPT to function
+in a more finicky way.
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Stop on solver failure.
+Stop on solver failure. DICOPT will terminate when an NLP subproblem can not be solved to optimality.
+Some NLP solvers terminate with a status other than optimal if not all of the termination criteria
+are met. For instance, the change in the objective function is negligable (indicating convergence) but
+the reduced gradients are not within the required tolerance. Such a solution may or may not be close
+the (local) optimum. Using <tt>continue 0</tt> will cause DICOPT not to accept such a solution.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Accept non-optimal feasible solutions.
+NLP subproblem failures resulting in a non-optimal but feasible solutions are accepted. Sometimes
+an NLP solver can not make further progress towards meeting all optimality conditions, although the
+current solution is feasible. Such a solution can be accepted by this option.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Ignore infeasible solutions.
+NLP subproblem failures resulting in a non-optimal but feasible solution are accepted (as in option
+<tt>continue 1</tt>). NLP subproblem failures resulting in an infeasible solution are ignored. The corresponding
+configuration of discrete variables is forbidden to be used again. An integer cut to accomplish this,
+is added to subsequent MIP master problems. Note that the relaxed NLP solution should be feasible.
+This setting is the default.</td></tr>
+</table>
+
+<h4><a name="DICOPTdomlim">
+domlim</a>
+<i> (string)</i> List of allowed number of domain errors</h4><p>
+
+Sets a limit of the number of function and derivative evaluation errors for a particular cycle. A number of
+-1 means that the global GAMS option <tt>domlim</tt> is used. The last number <i>i<sub>n</sub></i> sets a domain error limit for
+all cycles <i>n</i>, <i>n+1</i>, ....
+<blockquote>
+Example: <tt>domlim 0 100 0</tt><br>
+The NLP solver in the second cycle is allowed to make up to 100 evaluation errors, while all other
+cycles must be solved without evaluation errors.
+</blockquote>
+The default is to use the global GAMS <tt>domlim</tt> option.
+
+
+<h4><a name="DICOPTepsmip">
+epsmip</a>
+<i> (real)</i> Tolerance on test on monotonic improvement of MIP master problem</h4><p>
+
+This option can be used to relax the test on MIP objective functions. The objective function values of the
+MIP master problems should form a monotonic worsening curve. This is not the case if the MIP master
+problems are not solved to optimality. Thus, if the options <tt>OPTCR</tt> or <tt>OPTCA</tt> are set to a nonzero value, this
+test is bypassed. If the test fails, DICOPT will fail with a message:
+<blockquote><pre>
+The MIP solution became better after adding integer cuts.
+Something is wrong. Please check if your model is properly
+scaled. Also check your big M formulations -- the value
+of M should be relatively small.
+This error can also occur if you used a MIP solver option
+file with a nonzero OPTCR or OPTCA setting. In that case
+you may want to increase the EPSMIP setting using a
+DICOPT option file.
+</pre></blockquote>
+The value of
+<blockquote>
+<i>(PreviousObj - CurrentObj) / (1 + |PreviousObj|)</i>
+</blockquote>
+is compared against <tt>epsmip</tt>. In case the test fails, but you want DICOPT to continue anyway, you may want
+to increase the value of <tt>epsmip</tt>. The current values used in the test (previous and current MIP objective,
+<tt>epsmip</tt>) are printed along with the message above, so you will have information about how much you
+should increase <tt>epsmip</tt> to pass the test. Normally, you should not have to change this value. The default
+is <i>x = 1.0e-6</i>.
+
+<br><i>(default = 1.0e-6)</i>
+
+<h4><a name="DICOPTepsx">
+epsx</a>
+<i> (real)</i> Tolerance for integer values when loading relaxed solution</h4><p>
+
+This tolerance is used to distinguish integer variables that are set to an integer value by the user, or integer
+variables that are fractional. See the option <tt>relaxed</tt>. Default: <i>x = 1.0e-3</i>.
+
+<br><i>(default = 1.0e-3)</i>
+
+<h4><a name="DICOPTinfeasder">
+infeasder</a>
+<i> (integer)</i> Use derivatives of infeasible nonlinear subproblems</h4><p>
+
+This option is to determine whether linearizations of infeasible NLP subproblems are added or not to the
+MIP master problem.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No linearizations of infeasible NLP subproblems.
+This is the default option in which no linearizations are added in the infeasible NLP subproblems. In
+this case a simple integer cut is added to remove from consideration the 0-1 vector that gave rise to
+the infeasible NLP. Since this may slow the convergence, it is recommended to reformulate the MINLP
+with "elastic" constraints (i.e. adding slacks to infeasible constraints and adding a penalty for them in
+the objective) so as to ensure that the NLP subproblems are mathematically feasible.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Add linearization for infeasible NLP subproblems.
+This will add linearizations derived from the infeasible NLP subproblem to the master problem. This
+option is recommended to speed up convergence when the MINLP is known to be convex (i.e. its
+continuous relaxation is convex). If used for a nonconvex MINLP possibility of cutting-off the global
+optimum is increased.</td></tr>
+</table>
+
+<h4><a name="DICOPTmaxcycles">
+maxcycles</a>
+<i> (integer)</i> Maximum number of cycles</h4><p>
+
+The maximum number of cycles or major iterations performed by DICOPT.
+
+<br><i>(default = 20)</i>
+
+<h4><a name="DICOPTmipiterlim">
+mipiterlim</a>
+<i> (string)</i> List of iteration limits</h4><p>
+
+Sets an iteration limit on individual MIP master problems. The last number <i>i<sub>n</sub></i> is valid for all subsequent
+cycles <i>n</i>, <i>n+1</i>, .... A number of -1 indicates that there is no (individual) limit on the corresponding MIP
+master problem. A global iteration limit is maintained through the GAMS option <tt>iterlim</tt>.
+<blockquote>
+Example: <tt>mipiterlim 10000 -1</tt><br>
+The first MIP master problem can not use more than 10000 iterations, while subsequent MIP master
+problems are not individually restricted.
+</blockquote>
+<blockquote>
+Example: <tt>mipiterlim 10000</tt><br>
+Sets an iteration limit of 10000 on all MIP master problems.
+</blockquote>
+The default for
+this option is not to restrict iteration counts on individual solves of MIP master problems.
+
+
+<h4><a name="DICOPTmipoptfile">
+mipoptfile</a>
+<i> (string)</i> List of option files for MIP solver</h4><p>
+
+Specifies the option file to be used for the MIP master problems. Several option files can be specified,
+separated by a blank. If a digit 1 is entered, the default option file for the MIP solver in question is being
+used. The digit 0 indicates: no option file is to be used. The last option file is also used for subsequent MIP
+master problems.
+<blockquote>
+Example: <tt>mipoptfile mip.opt mip2.opt 0</tt><br>
+This option will cause the first MIP master problem solver to read the option file <tt>mip.opt</tt>, the second
+one to read the option file <tt>mip2.opt</tt> and subsequent MIP master problem solvers will not use any
+option file.
+</blockquote>
+<blockquote>
+Example: <tt>mipoptfile 1</tt><br>
+This will cause the MIP solver for all MIP subproblems to read a default option file (e.g. <tt>cplex.opt</tt>,
+<tt>xpress.opt</tt>, <tt>osl2.opt</tt> etc.).
+</blockquote>
+Option files are located in the current directory (or the project directory when using the IDE). The default
+is not to use an option file.
+
+
+<h4><a name="DICOPTmipreslim">
+mipreslim</a>
+<i> (string)</i> List of resource limits</h4><p>
+
+Sets a resource (time) limit on individual MIP master problems. The last number <i>x<sub>n</sub></i> is valid for all
+subsequent cycles <i>n</i>, <i>n+1</i>, .... A number -1.0 means that the corresponding MIP master problem is not
+individually time restricted. A global time limit is maintained through the GAMS option reslim.
+<blockquote>
+Example: <tt>mipreslim -1 10000 -1</tt><br>
+The MIP master problem in cycle 2 can not use more than 100 seconds, while subsequent MIP master
+problems are not individually restricted.
+</blockquote>
+<blockquote>
+Example: <tt>mipreslim 1000</tt><br>
+Sets a time limit on all MIP master problems of 1000 seconds.
+</blockquote>
+The default for
+this option is not to restrict individually the time a solver can spent on the MIP master problem.
+
+
+<h4><a name="DICOPTmipsolver">
+mipsolver</a>
+<i> (string)</i> List of MIP solvers</h4><p>
+
+This option specifies with MIP solver to use for the MIP master problems.
+<blockquote>
+Example: <tt>mipsolver cplex osl2</tt>
+This instructs DICOPT to use Cplex for the first MIP and OSL2 for the second and subsequent MIP
+problems. The last entry may be used for more than one problem.
+</blockquote>
+The names to be used for the solvers are the same as one uses in the GAMS statement <tt>OPTION MIP=....;</tt>.
+The default is to use the default MIP solver.
+Note that changing from one MIP solver to another can lead to different results, and may cause DICOPT
+to follow a different path.
+
+
+<h4><a name="DICOPTnlpiterlim">
+nlpiterlim</a>
+<i> (string)</i> List of iteration limits</h4><p>
+
+Sets an iteration limit on individual NLP subproblems. The last number <i>i<sub>n</sub></i> is valid for all subsequent
+cycles <i>n</i>, <i>n+1</i>, .... A number of -1 indicates that there is no (individual) limit on the corresponding NLP
+subproblem. A global iteration limit is maintained through the GAMS option iterlim.
+<blockquote>
+Example: <tt>nlpiterlim 1000 -1</tt><br>
+The first (relaxed) NLP subproblem can not use more than 1000 iterations, while subsequent NLP
+subproblems are not individually restricted.
+</blockquote>
+<blockquote>
+Example: <tt>nlpiterlim 1000</tt><br>
+Sets an iteration limit of 1000 on all NLP subproblems.
+</blockquote>
+When this option is used it is advised to have the option continue set to its default of 2. The default is
+not to restrict the amount of iterations an NLP solver can spend on an NLP subproblem, other than the
+global iteration limit.
+
+
+<h4><a name="DICOPTnlpoptfile">
+nlpoptfile</a>
+<i> (string)</i> List of option files for NLP solver</h4><p>
+
+Specifies the option file to be used for the NLP subproblems. Several option files can be specified, separated
+by a blank. If a digit 1 is entered, the default option file for the NLP solver in question is being used.
+The digit 0 indicates: no option file is to be used. The last option file is also used for subsequent NLP
+subproblems.
+<blockquote>
+Example: <tt>nlpoptfile nlp.opt nlp2.opt 0</tt><br>
+This option will cause the first NLP subproblem solver to read the option file <tt>nlp.opt</tt>, the second one
+to read the option file <tt>nlp2.opt</tt> and subsequent NLP subproblem solvers will not use any option file.
+</blockquote>
+<blockquote>
+Example: <tt>nlpoptfile 1</tt><br>
+This will cause the NLP solver for all NLP subproblems to read a default option file (e.g. <tt>conopt.opt</tt>,
+<tt>minos.opt</tt>, <tt>snopt.opt</tt> etc.).
+</blockquote>
+Option files are located in the current directory (or the project directory when using the IDE). The default
+is not to use an option file.
+
+
+<h4><a name="DICOPTnlpreslim">
+nlpreslim</a>
+<i> (string)</i> List of resource limits</h4><p>
+
+Sets a resource (time) limit on individual NLP subproblems. The last number <i>x<sub>n</sub></i> is valid for all subsequent
+cycles <i>n</i>, <i>n+1</i>, .... A number -1.0 means that the corresponding NLP subproblem is not individually time
+restricted. A global time limit is maintained through the GAMS option reslim.
+<blockquote>
+Example: <tt>nlpreslim 100 -1</tt><br>
+The first (relaxed) NLP subproblem can not use more than 100 seconds, while subsequent NLP subproblems
+are not individually restricted.
+</blockquote>
+<blockquote>
+Example: <tt>nlpreslim 1000</tt><br>
+Sets a time limit of 1000 seconds on all NLP subproblems.
+</blockquote>
+When this option is used it is advised to have the option continue set to its default of 2. The default for
+this option is not to restrict individually the time an NLP solver can spend on an NLP subproblem (other
+than the global resource limit).
+
+
+<h4><a name="DICOPTnlpsolver">
+nlpsolver</a>
+<i> (string)</i> List of NLP solvers</h4><p>
+
+This option specifies which NLP solver to use for the NLP subproblems.
+<blockquote>
+Example: <tt>nlpsolver conopt minos snopt</tt><br>
+tells DICOPT to use CONOPT for the relaxed NLP, MINOS for the second NLP subproblem and
+SNOPT for the third and subsequent ones. The last entry is used for more than one subproblem: for
+all subsequent ones DICOPT will use the last specified solver.
+</blockquote>
+The names to be used for the solvers are the same as one uses in the GAMS statement <tt>OPTION NLP=....;</tt>.
+The default is to use the default NLP solver. Note that changing from one NLP solver to another can lead
+to different results, and may cause DICOPT to follow a different path.
+
+
+<h4><a name="DICOPTnlptracefile">
+nlptracefile</a>
+<i> (string)</i> Base name of trace files</h4><p>
+
+Name of the files written if the option <tt>nlptracelevel</tt> is set. Only the stem is needed: if the name is specified
+as <tt>nlptracefile nlptrace</tt>, then files of the form <tt>nlptrace.001</tt>, <tt>nlptrace.002</tt>, etc. are written. These
+files contain the settings of the integer variables so that NLP subproblems can be investigated independently
+of DICOPT.
+
+<br><i>(default = nlptrace)</i>
+
+<h4><a name="DICOPTnlptracelevel">
+nlptracelevel</a>
+<i> (integer)</i> Trace level</h4><p>
+
+This sets the level for NLP tracing, which writes a file for each NLP sub-problem, so that NLP sub-problems
+can be investigated outside the DICOPT environment. See also the option <tt>nlptracefile</tt>.
+By including a trace file to your original problem, and changing it into an MINLP problem, the subproblem
+will be solved directly by an NLP solver. This option only works if the names in the model (names of
+variables and equations) are exported by GAMS. This can be accomplished by using the <tt>m.dictfile</tt> model
+suffix, as in <tt>m.dictfile=1;</tt>. In general it is more convenient to use the CONVERT solver to generate isolated
+NLP models.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No trace info is written.
+No trace files are written. This is the default.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>GAMS file with fixed integer variables.
+A GAMS file for each NLP subproblem is written which fixes the discrete variables.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Include levels of continuous variables.
+As <tt>nlptracelevel 1</tt>, but in addition level values of the continuous variables are written.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Include all levels and marginals.
+As <tt>nlptracelevel 2</tt>, but in addition marginal values for the equations and variables are written.</td></tr>
+</table>
+
+<h4><a name="DICOPToptca">
+optca</a>
+<i> (string)</i> List of OPTCA values</h4><p>
+
+The absolute optimality criterion for the MIP master problems. The GAMS option <tt>optca</tt> is ignored, as by
+default DICOPT wants to solve MIP master problems to optimality. To allow to solve large problem, it is
+possible to stop the MIP solver earlier, by specifying a value for <tt>optca</tt> or <tt>optcr</tt> in a DICOPT option file.
+With setting a value for <tt>optca</tt>, the MIP solver is instructed to stop as soon as the gap between the best
+possible integer solution and the best found integer solution is less than <i>x</i>, i.e. stop as soon as
+<blockquote><i>
+  |BestFound - BestPossible|  <= x
+</i></blockquote>
+It is possible to specify a different <tt>optca</tt> value for each cycle. The last number <i>x<sub>n</sub></i> is valid for all subsequent
+cycles <i>n</i>, <i>n+1</i>, ....
+<blockquote>
+Example: <tt>optca 10</tt><br>
+Stop the search in all MIP problems as soon as the absolute gap is less than 10.
+</blockquote>
+<blockquote>
+Example: <tt>optca 0 10 0</tt><br>
+Sets a nonzero optca value of 10 for cycle 2, while all other MIP master problems are solved to
+optimality.
+</blockquote>
+
+
+<h4><a name="DICOPToptcr">
+optcr</a>
+<i> (string)</i> List of OPTCR values</h4><p>
+
+The relative optimality criterion for the MIP master problems. The GAMS option <tt>optca</tt> is ignored, as by
+default DICOPT wants to solve MIP master problems to optimality. To allow to solve large problem, it is
+possible to stop the MIP solver earlier, by specifying a value for <tt>optca</tt> or <tt>optcr</tt> in a DICOPT option file.
+With setting a value for <tt>optcr</tt>, the MIP solver is instructed to stop as soon as the relative gap between the
+best possible integer solution and the best found integer solution is less than <i>x</i>, i.e. stop as soon as
+<blockquote><i>
+|BestFound - BestPossible|/|BestPossible| <= x
+</i></blockquote>
+Note that the relative gap can not be evaluated if the best possible integer solution is zero. In those cases
+the absolute optimality criterion <tt>optca</tt> can be used. It is possible to specify a different <tt>optcr</tt> value for each
+cycle. The last number <i>x<sub>n</sub></i> is valid for all subsequent cycles <i>n</i>, <i>n+1</i>, ....
+<blockquote>
+Example: <tt>optcr 0.1</tt><br>
+Stop the search in all the MIP problems as soon as the relative gap is smaller than 10%.
+</blockquote>
+<blockquote>
+Example: <tt>optcr 0 0.01 0</tt><br>
+Sets a nonzero <tt>optcr</tt> value of 1% for cycle 2, while all other MIP master problems are solved to
+optimality.
+</blockquote>
+
+
+<h4><a name="DICOPTrelaxed">
+relaxed</a>
+<i> (integer)</i> How to start DICOPT</h4><p>
+
+In some cases it may be possible to use a known configuration of the discrete variables. Some users have
+very difficult problems, where the relaxed problem can not be solved, but where NLP sub-problems with
+the integer variables fixed are much easier. In such a case, if a reasonable integer configuration is known in
+advance, we can bypass the relaxed NLP and tell DICOPT to directly start with this integer configuration.
+The integer variables need to be specified by the user before the solve statement by assigning values to the
+levels, as in <tt>Y.L(I) = INITVAL(I);</tt>.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Start with all integers fixed to the starting value.
+The first NLP sub-problem will be executed with all integer variables fixed to the values specified by
+the user. If you don&#146;t assign a value to an integer variable, it will retain it&#146;s current value, which is
+zero by default.</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Start with relaxed NLP.
+The first NLP problem is the relaxed NLP problem: all integer variables are relaxed between their
+bounds. This is the default.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Start with mixture of fixed and relaxed integers.
+The first NLP subproblem will be executed with some variables fixed and some relaxed. The program
+distinguishes the fixed from the relaxed variables by comparing the initial values against the bounds
+and the tolerance allowed <tt>EPSX</tt>. <tt>EPSX</tt> has a default value of <i>1.e-3</i>. This can be changed in through the
+option file.</td></tr>
+</table>
+
+<h4><a name="DICOPTsolvelink">
+solvelink</a>
+<i> (integer)</i> Solvelink for NLP and MIP subsolver</h4><p>
+
+
+<br><i>(default = 5)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Call NLP and MIP solver via script</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Call NLP and MIP solver via module</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Call NLP and MIP solver in memory</td></tr>
+</table>
+
+<h4><a name="DICOPTstop">
+stop</a>
+<i> (integer)</i> Stopping criterion</h4><p>
+
+This option defines the stopping criterion to be used. The search is always stopped when the (minor)
+iteration limit (the iterlim option), the resource limit (the reslim option), or the major iteration limit
+(see <tt>maxcycles</tt>) is hit or when the MIP master problem becomes infeasible.
+Note: In general a higher number stops earlier, although in some cases stopping rule 2 may terminate the
+search earlier than rule 1.
+<p>
+stop.0
+Do not stop unless an iteration limit, resource limit, or major iteration limit is hit or an infeasible MIP
+master problem becomes infeasible. This option can be used to verify that DICOPT does not stop too
+early when using one of the other stopping rules. In general it should not be used on production runs,
+as in general DICOPT will find often the optimal solution using one of the more optimistic stopping
+rules.
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Stop on maxcycles</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Stop on crossover.
+Stop as soon as the bound defined by the objective of the last MIP master problem is worse than the
+best NLP solution found (a &#147;crossover&#148; occurred). For convex problems this gives a global solution,
+provided the weights are large enough. This stopping criterion should only be used if it is known or it
+is very likely that the nonlinear functions are convex. In the case of non-convex problems the bounds
+of the MIP master problem are not rigorous. Therefore, the global optimum can be cut-off with the
+setting stop 1.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Stop on worsening.
+Stop as soon as the NLP subproblems stop to improve. This &#147;worsening&#148; criterion is a heuristic. For
+non-convex problems in which valid bounds can not be obtained the heuristic works often very well.
+Even on convex problems, in many cases it terminates the search very early while providing an optimal
+or a very good integer solution. The criterion is not checked before major iteration three.</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Stop on crossover or worsening.
+Stop as soon as a crossover occurs or when the NLP subproblems start to worsen. (This is a combination
+of 1 and 2).</td></tr>
+</table>
+
+<h4><a name="DICOPTweight">
+weight</a>
+<i> (real)</i> Penalty parameter</h4><p>
+
+The value of the penalty coefficients.
+
+<br><i>(default = 1000)</i>
+</body></html>

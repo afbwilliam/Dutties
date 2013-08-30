@@ -1,0 +1,229 @@
+$title Test private workfile behavior (PRIVAT01,SEQ=432)
+
+$ontext
+
+Test that the private workfiles work as expected.  To do this,
+we create a normal save file, restart from that and save a private
+save file.  We then try lots of different things starting from the
+private save file to verify expected operation, using separate models
+to isolate the tests.
+
+We use the demo license as the local/active license file, and point
+to this local/active license file as the target license as well.
+
+Contributor: Steve
+
+$offtext
+
+$call gamslib -q trnsport
+
+$call gams trnsport s=exposed lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run trnsport model'
+
+$onecho > tmp1.gms
+$hide     all
+$expose   transport c z demand
+$offecho
+
+$call gams tmp1 r=exposed s=secured license=demo plicense=license lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run tmp1 model'
+
+
+** ------------------ TEST ALLOWED OPERATIONS-----------------------
+
+$onecho > t1.gms
+display c, z.l, z.m, transport.iterlim, transport.objval, demand.m;
+$offecho
+$call gams t1 r=secured license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t1 test'
+
+$call rm -f t2.gdx
+$onecho > t2.gms
+$gdxout t2.gdx
+$unload c z demand
+$gdxout
+$offecho
+$call gams t2 r=secured license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t2 test'
+$if not exist t2.gdx   $abort 'missing t2.gdx'
+
+$call rm -f t3.gdx
+$onecho > t3.gms
+execute_unload 't3', c, z, demand;
+$offecho
+$call gams t3 r=secured license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t3 test'
+$if not exist t3.gdx   $abort 'missing t3.gdx'
+
+$call rm -f t4.gdx
+$onecho > t4.gms
+scalar xx;
+xx =  card(c) + z.l + demand.m('topeka') + transport.objval;
+execute_unload 't4', xx;
+$offecho
+$call gams t4 r=secured license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t4 test'
+$if not exist t4.gdx   $abort 'missing t4.gdx'
+
+
+** ------------------ TEST BANNED OPERATIONS-----------------------
+
+* tests that should fail
+*  make new parameter/set, assign from a, i, x, supply
+
+$onecho > t21.gms
+display a;
+$offecho
+$call gams t21 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t21 test'
+$log Test t21 behaved as expected: don't panic
+
+$onecho > t22.gms
+display i;
+$offecho
+$call gams t22 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t22 test'
+$call gams t22 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t22 test'
+$log Test t22 behaved as expected: don't panic
+
+$onecho > t23.gms
+display x.l;
+$offecho
+$call gams t23 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t23 test'
+$call gams t23 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t23 test'
+$log Test t23 behaved as expected: don't panic
+
+$onecho > t24.gms
+display supply.m;
+$offecho
+$call gams t24 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t24 test'
+$call gams t24 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t24 test'
+$log Test t24 behaved as expected: don't panic
+
+
+$onecho > t25.gms
+$gdxout tt.gdx
+$unload a
+$gdxout
+$offecho
+$call gams t25 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t25 test'
+$call gams t25 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t25 test'
+$log Test t25 behaved as expected: don't panic
+
+$onecho > t26.gms
+$gdxout tt.gdx
+$unload i
+$gdxout
+$offecho
+$call gams t26 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t26 test'
+$call gams t26 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t26 test'
+$log Test t26 behaved as expected: don't panic
+
+$onecho > t27.gms
+$gdxout tt.gdx
+$unload x
+$gdxout
+$offecho
+$call gams t27 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t27 test'
+$call gams t27 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t27 test'
+$log Test t27 behaved as expected: don't panic
+
+$onecho > t28.gms
+$gdxout tt.gdx
+$unload supply
+$gdxout
+$offecho
+$call gams t28 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t28 test'
+$call gams t28 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t28 test'
+$log Test t28 behaved as expected: don't panic
+
+
+$onecho > t29.gms
+execute_unload 'tt', a;
+$offecho
+$call gams t29 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t29 test'
+$call gams t29 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t29 test'
+$log Test t29 behaved as expected: don't panic
+
+$onecho > t30.gms
+execute_unload 'tt', i;
+$offecho
+$call gams t30 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t30 test'
+$call gams t30 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t30 test'
+$log Test t30 behaved as expected: don't panic
+
+$onecho > t31.gms
+execute_unload 'tt', x;
+$offecho
+$call gams t31 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t31 test'
+$call gams t31 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t31 test'
+$log Test t31 behaved as expected: don't panic
+
+$onecho > t32.gms
+execute_unload 'tt', supply;
+$offecho
+$call gams t32 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t32 test'
+$call gams t32 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t32 test'
+$log Test t32 behaved as expected: don't panic
+
+
+$onecho > t33.gms
+scalar xx;
+xx = a('seattle');
+$offecho
+$call gams t33 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t33 test'
+$call gams t33 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t33 test'
+$log Test t33 behaved as expected: don't panic
+
+$onecho > t34.gms
+scalar xx;
+xx = sum{i,1};
+$offecho
+$call gams t34 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t34 test'
+$call gams t34 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t34 test'
+$log Test t34 behaved as expected: don't panic
+
+$onecho > t35.gms
+scalar xx;
+xx = x.m('seattle','topeka');
+$offecho
+$call gams t35 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t35 test'
+$call gams t35 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t35 test'
+$log Test t35 behaved as expected: don't panic
+
+$onecho > t36.gms
+scalar xx;
+xx = supply.m('seattle');
+$offecho
+$call gams t36 r=exposed license=demo lo=%GAMS.lo%
+$if errorlevel 1 $abort 'Cannot run t36 test'
+$call gams t36 r=secured license=demo lo=%GAMS.lo%
+$if NOT errorlevel 1 $abort 'Bad outcome running t36 test'
+$log Test t36 behaved as expected: don't panic

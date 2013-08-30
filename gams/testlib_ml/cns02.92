@@ -1,0 +1,62 @@
+$title Test how bounds change a 2-variable CNS model (cns02,SEQ=92)
+
+$ontext
+  This is a simple two by two CNS model solved with varying bounds.
+
+$offtext
+
+maxexecerror = 1;
+$if not set TESTTOL $set TESTTOL 1e-6
+scalar tol / %TESTTOL% /;
+
+variable x, y;
+equation f, g;
+model cns02 / f, g /;
+
+f .. x*x + .001*y =e= 4;
+g .. x + y        =e= 8;
+
+option limrow = 0, limcol = 0, decimals=8;
+scalar x1, y1, x2, y2, det;
+* 1000*f - g yields 1000x^2 - x - 3992 = 0
+det = sqrt(1 + 4 * 1000 * 3992);
+x1 = (1 + det)/ 2000;
+x2 = (1 - det)/ 2000;
+y1 = 8 - x1;
+y2 = 8 - x2;
+display x1, x2, y1, y2;
+
+*  Case 1: No bounds on the variables. The model should solve fine.
+x.lo = -INF; x.up = INF; x.l = 8; solve cns02 using cns;
+abort$(cns02.solvestat <> %solvestat.NormalCompletion% or cns02.modelstat <> %modelstat.Solved%)  'bad return codes';
+abort$((abs(x.l-x1) <= tol and abs(y.l-y1) <= tol)
+   eqv (abs(x.l-x2) <= tol and abs(y.l-y2) <= tol)) 'x or y is wrong',x.l,y.l;
+
+*  Case 2: No bounds on the variables. The model should again solve
+*          fine, but the solution can be different because the initial
+*          value of x is different.
+x.lo = -INF; x.up = INF; x.l = -8; solve cns02 using cns;
+abort$(cns02.solvestat <> %solvestat.NormalCompletion% or cns02.modelstat <> %modelstat.Solved%)  'bad return codes';
+abort$((abs(x.l-x1) <= tol and abs(y.l-y1) <= tol)
+   eqv (abs(x.l-x2) <= tol and abs(y.l-y2) <= tol)) 'x or y is wrong',x.l,y.l;
+
+*  Case 3: The bound on x will make solution unique (feasible).
+x.lo = 1; x.up = 3; x.l = 8; solve cns02 using cns;
+abort$(cns02.solvestat <> %solvestat.NormalCompletion% or cns02.modelstat <> %modelstat.Solved%)  'bad return codes';
+abort$(abs(x.l-x1) > tol or abs(y.l-y1) > tol) 'x or y is wrong',x.l,y.l;
+
+*  Case 4: The bound on x will make the model infeasible.
+x.lo = 2; x.up = 3; x.l = 8; solve cns02 using cns;
+abort$(cns02.solvestat <> %solvestat.NormalCompletion% or cns02.modelstat <> %modelstat.LocallyInfeasible%)  'bad return codes';
+abort$(cns02.numinfes < 1)                            'wrong .numinfes';
+
+*  Case 5 and 6: X is fixed and the model is not square any more.
+cns02.holdfixed = 0; x.lo = 2; x.up = 2; x.l = 8; solve cns02 using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(cns02.solvestat <> %solvestat.SolveProcessingSkipped% or cns02.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;
+
+cns02.holdfixed = 1; x.lo = 2; x.up = 2; x.l = 8; solve cns02 using cns;
+abort$(execerror=0) 'previous solve should have given exec errors';
+abort$(cns02.solvestat <> %solvestat.SolveProcessingSkipped% or cns02.modelstat <> %modelstat.NoSolutionReturned%)  'bad return codes';
+execerror = 0;

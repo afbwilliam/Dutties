@@ -1,0 +1,65 @@
+$title 'Test correctness of vcpower intrinsic' (FNVCPOW2,SEQ=182)
+
+* vcpower(x,c) = x**c, c a constant
+$include fnset_xy.inc
+
+reps = 8e-16;
+* reps must be set so large because GAMS/Base cannot read 1e299 with
+* full precision
+relToInput = 0;
+set T / t1 * t8, t10*t17, t20*t27 /;
+
+table data(T,V)
+        x       y       f_      fx_     fxx_    rc_     ec_
+t1      -.5     -1                              1       1
+t2      -.5     -.5                             1       1
+t3      -.5     0                               1       1
+t4      -.5     .5                              1       1
+t5      -.5     1                               1       1
+t6      -.5     1.5                             1       1
+t7      -.5     2                               1       1
+t8      -.5     2.5                             1       1
+
+*       x       y       f_      fx_     fxx_    rc_     ec_
+t10     0       -1      0       0       0       1       1
+t11     0       -.5     0       0       0       1       1
+t12     0       0       1       0       0
+t13     0       .5      0       1e10   -1e299   2       2
+t14     0       1       0       1       0       3       2
+t15     0       1.5     0       0       1e299   3       2
+t16     0       2       0       0       2
+t17     0       2.5     0       0       0
+
+*       x       y       f_      fx_     fxx_    rc_     ec_
+t20     2       -1      .5      -.25    .25
+t21     4       -.5     .5    -.0625  .0234375
+t22     4       0       1       0       0
+t23     4       .5      2       .25   -.03125
+t24     4       1       4       1       0
+t25     4       1.5     8       3       .375
+t26     4       2       16      8       2
+t27     4       2.5     32      20      7.5
+;
+
+
+loop {T,
+  data(T,'fyx_') = data(T,'fxy_');
+
+  data(T,  'f')  = vcpower.value(   data(T,'x'),data(T,'y'));
+  data(T, 'fx')  = vcpower.grad(1:  data(T,'x'),data(T,'y'));
+  data(T, 'fy')  = vcpower.grad(2:  data(T,'x'),data(T,'y'));
+  data(T,'fxx')  = vcpower.hess(1:1:data(T,'x'),data(T,'y'));
+  data(T,'fxy')  = vcpower.hess(1:2:data(T,'x'),data(T,'y'));
+  data(T,'fyx')  = vcpower.hess(2:1:data(T,'x'),data(T,'y'));
+  data(T,'fyy')  = vcpower.hess(2:2:data(T,'x'),data(T,'y'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+display data;
+
+abort$(execerror ne 10)
+  'Should get execution errors getting grad/hess of x**c, x < 0)';
+execerror = 0;
+
+$include fntest_xy.inc

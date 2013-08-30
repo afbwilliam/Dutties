@@ -1,0 +1,91 @@
+*
+* optglomiqo.def
+*
+
+nobounds immediate nobounds 0 1 ignores bounds on options
+readfile immediate readfile 0 1 read secondary option file
+abs_opt_tol double 0 0 0 maxdouble 1 1 absolute stopping tolerance
+adaptive_add_rlt boolean 0 1 1 7 use the dynamic approach to adaptively determine deep RLT cuts?
+adaptive_add_rlt_tree_depth integer 0 3 1 100 1 7 tree depth for heuristic that adaptively determines deep RLT cuts
+add_bilinear_terms boolean 0 1 1 7 allow addition of nonconvex bilinear terms to generate deep RLT cuts
+branching_bounds_push_away double 0 0.1 0 0.5 1 4 branch a minimum fraction away from the variable bounds
+branching_weight double 0 0.25 0 1 1 4 branch on a convex combination of midpoint and solution
+convexity_cuts boolean 0 1 1 7 derive convexity-based separating cuts for multivariable terms?
+cplex_optfile string 0 "" 1 2 read a secondary GAMS/CPLEX options file that will be applied to every LP and MILP subsolve
+cut_generation_epsilon double 0 1e-4 1e-7 10 1 2 absolute violation threshold for separating hyperplanes
+dominant_ec_only boolean 0 1 1 7 add only the low-dimension edge-concave aggregations introducing dominant cuts into relaxations?
+dumpsolutions string 0 "" 1 1 name of solutions index gdx file for writing alternate solutions
+eigenvector_projection_partitioning boolean 0 1 1 7 allow partitioning on eigenvector projections?
+eigenvector_projections boolean 0 1 1 7 use eigenvector projections as additional cuts?
+fbbt_improvement_bound double 0 0.999 0 1 1 5 bounds reduction improvement threshold needed to exit FBBT loop
+fbbt_no_division_epsilon double 0 1e-8 1e-10 0.01 0 1 don't create bound-dependent facets for variables within this tolerance
+feas_soln_time_limit double 0 30 1 maxdouble 1 3 time limit (s) for an NLP solve
+feas_tolerance double 0 1e-6 0 maxdouble 1 3 absolute feasibility tolerance
+logging_freq double 0 5 1 maxdouble 1 6 how often should we log progress to the console?
+logging_level enumint 0 -1 1 6 logging information level
+ -1 1 minimal plus warnings
+ 0 1 minimal
+ 1 1 entering info
+ 2 1 updating info
+ 3 1 includes Cplex updates
+low_dim_edge_concave_agg boolean 0 1 1 7 use low-dimension edge-concave aggregations?
+max_fbbt_iterations integer 0 50 1 100 1 5 maximum number of FBBT iterations
+max_number_nodes integer 0 maxint 0 maxint 1 1 node limit
+max_obbt_iterations integer 0 30 1 100 1 5 maximum number of OBBT iterations
+max_partitioned_quantities integer 0 0 0 50 1 7 number of partitioned quantities
+max_rlt_cuts integer 0 100 1 1000 1 7 maximum number of violated RLT cuts to add before resolving the relaxation?
+max_time double 0 1000 0 maxdouble 1 1 resource limit
+max_time_each_obbt double 0 10 1 100 1 5 time limit (s) for each OBBT LP
+naive_add_ec boolean 0 0 1 7 naively integrate all low-dimension edge-concave aggregations into relaxations?
+naive_add_rlt boolean 0 0 1 7 naively add all RLT cuts to the relaxations?
+nlp_solver enumstr 0 "conopt" 1 3 use CONOPT or SNOPT to find feasible solutions
+ "conopt" 1 Conopt
+ "snopt" 1 Snopt
+nominal_time_limit double 0 100 0.1 1000 1 2 nominal time limit for solving MILP subproblems
+num_reliability_tests integer 0 8 1 100 1 4 number of strong branching initialization tests
+number_of_partitions integer 0 1 0 16 1 7 how many partitions per variable?
+obbt_improvement_bound double 0 0.95 0 1 1 5 bounds reduction improvement threshold
+partitioning_scheme enumstr 0 "linear" 1 7 Partitioning scheme can be linear or logarithmic
+ "linear" 1 Linear partitioning
+ "logarithmic" 1 Logarithmic partitioning
+piecewise_linear_partitions boolean 0 0 1 7 use piecewise-linear partitioning?
+populate_solution_pool integer 0 3 0 4 1 2 emphasis on generating starting points
+print_options boolean 0 1 1 6 print the option parameter choices used in a single run?
+qap_specialize boolean 0 1 0 1 find and specialize the algorithm for quadratic assignment problems?
+qap_partitionb boolean 0 1 0 1 partition the B QAP matrix? false partitions the A matrix
+readparams string 0 "" 1 1 read secondary option file in GloMIQO syntax
+recognize_convexity boolean 0 1 0 1 recognize convexity / concavity?
+rel_opt_tol double 0 0.1 0 maxdouble 1 1 relative stopping tolerance
+reliability_branching enumstr 0 "error" 1 4 heuristic choice for building reliable pseudocosts
+ "error" 1 Max Error Branching
+ "forward" 1 Forward branching
+ "reverse" 1 Reverse branching
+reliability_branching_mu double 0 0.15 0 1 1 4 score parameter for building reliability
+rlt boolean 0 1 1 7 find RLT variable/equation and equation/equation pairs?
+solvetrace string 0 "" 0 1 name of trace file for solving information
+solvetracenodefreq integer 0 100 0 maxint 0 1 frequency in number of nodes for writing to solve trace file
+solvetracetimefreq double 0 5 0 maxdouble 0 1 frequency in seconds for writing to solve trace file
+strong_branching_max_simplex_iterations integer 0 1000 0 maxint 0 1 maximum permitted simplex iterations in strong branching
+trydual double 0 5 0 maxdouble 1 1 call CONOPT or SNOPT to produce duals
+use_alpha_bb boolean 0 1 1 7 apply globally-valid alphaBB cuts to tighten a node relaxation
+use_convexity_based_bounds_tightening boolean 0 1 0 1 tighten bounds based on convexit/concavity recognition?
+use_edge_concave_dynamic boolean 0 1 1 7 apply locally-valid edge-concave cuts to tighten a node relaxation
+use_factoring_bounds_tightening boolean 0 1 0 1 tighten bounds based on factoring a connected multivariable term?
+use_fbbt boolean 0 1 0 1 use feasibility-based bounds tightening?
+use_low_dim_ec_bounds_tightening boolean 0 1 0 1 use bounds tightening based on low-dimensional edge-concave facets?
+use_obbt boolean 0 1 1 5 use optimality-based bounds tightening?
+use_reduced_cost_bounds_tightening boolean 0 1 0 1 tighten bounds based on reduced costs?
+use_reliability_branching boolean 0 1 1 4 use reliability branching?
+use_rlt_bounds_tightening boolean 0 1 0 1 use RLT-based bounds tightening?
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+general group 1 1 General Options
+relaxations group 2 1 Options for Solving the MILP Relaxations
+nlplocal group 3 1 Options for Finding Feasible Solutions
+branching group 4 1 Options for Branching
+bounding group 5 1 Options for Bounding
+logging group 6 1 Options for Logging to the Console
+specstruct group 7 1 Options for Addressing Special Structure
+*** End of file

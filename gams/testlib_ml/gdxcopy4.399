@@ -1,0 +1,42 @@
+$title Test internal gdxcopy call and its controls (GDXCOPY4,SEQ=399)
+
+$ontext
+The environment variables GDXCOMPRESS and GDXCONVERT can be set to control
+the GDX files produced - here these settings are tested.  The gdxdump
+output contains information about both the data and the internal version &
+file format information of the GDX files produced.  The dump output
+should be the same no matter what solvelink setting is used.  Note
+that the environment vars must be upper case to work on non-Windows
+systems.
+
+Contributor: Wolfgang Britz
+$offtext
+
+
+$ifi %system.platform% == AIX $exit No V6 GDX exists for this platform
+$ifi %system.platform% == BGP $exit No V6 GDX exists for this platform
+$ifi %system.platform% == DEX $exit No V6 GDX exists for this platform
+$ifi %system.platform% == DII $exit No V6 GDX exists for this platform
+$ifi %system.platform% == SOX $exit No V6 GDX exists for this platform
+
+$SETENV GDXCOMPRESS 1
+$SETENV GDXCONVERT  V6
+
+scalar HALLO / 123 /;
+
+EQUATION XDUMMX_; XDUMMX_ .. 10 =E= 10; MODEL XDUMMX / XDUMMX_ /;
+
+execute 'rm -f test1.gdx test2.gdx test3.gdx dump1 dump2 dump3';
+
+execute_unload "test1.gdx" HALLO;
+XDUMMX.Solvelink = %SOLVELINK.ChainScript%; solve XDUMMX using CNS;
+execute_unload "test2.gdx" HALLO;
+XDUMMX.Solvelink = %SOLVELINK.CallModule%; solve XDUMMX using CNS;
+execute_unload "test3.gdx" HALLO;
+
+execute 'gdxdump test1 | sed -e "s/test1\.gdx/test\.gdx/" > dump1'
+         'gdxdump test2 | sed -e "s/test2\.gdx/test\.gdx/" > dump2'
+         'gdxdump test3 | sed -e "s/test3\.gdx/test\.gdx/" > dump3';
+
+execute 'diff dump1 dump2'; abort$errorlevel 'dump1 <> dump2';
+execute 'diff dump2 dump3'; abort$errorlevel 'dump1 <> dump3';

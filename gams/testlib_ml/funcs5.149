@@ -1,0 +1,97 @@
+$title test correctness of intrinsic functions (FUNCS5,SEQ=149)
+
+set fn 'intrinsic functions with tests that pass' /
+  sqr
+  exp
+  log
+  log2
+  log10
+  sqrt
+  cos
+  sin
+  atan       'arctan'
+  errf
+  errf2      'errf'
+  power
+  fact
+  pi
+  ncpf
+  ncpf2      'ncpf'
+  ncpcm
+  ncpcm2     'ncpcm'
+  entro      'entropy'
+  entro2     'entropy'
+  sigmo      'sigmoid'
+  sigmo2     'sigmoid'
+  rpow       'rpower'
+  rpow2      'rpower'
+  rpow3      'rpower'
+* edist       not yet implemented
+* sllog10     not yet implemented
+* sqlog10     not yet implemented
+* slexp       not yet implemented
+* sqexp       not yet implemented
+* slrec       not yet implemented
+* sqrec       not yet implemented
+* cvpower     not yet implemented
+  vcpow      'vcpower'
+  vcpow2     'vcpower'
+*  centr      'centropy, large x'
+*  centr2     'centropy, small x'
+  centr3     'centropy, typical inputs'
+  centr4     'centropy, typical inputs'
+  centr5     'centropy, nice inputs'
+  centr6     'centropy, very small inputs'
+*  centrx     'centropy eXceptions'
+  centry     'centropy exceptions'
+* gamma       DOES NOT PASS THE TEST
+* gamma2      DOES NOT PASS THE TEST
+* loggamma    not yet implemented
+* beta        not yet implemented
+* logbeta     not yet implemented
+* gammareg    not yet implemented
+* betareg     not yet implemented
+  sinh
+  cosh
+  tanh
+  spowx      'signpower'
+  spown      'signpower'
+  ncpvus     'NcpVUsin'
+  ncpvup     'NcpVUpow'
+  ncpvux     'NcpVUsin and NcpVUpow'
+* binomial    not yet implemented
+  tan
+  acos       'arccos'
+  acosx      'arccos eXceptions'
+  asin       'arcsin'
+  asinx      'arcsin eXceptions'
+  atan2      'arctan2'
+  atan2n     'arctan2 compared to numerical derivs'
+  atan2x     'arctan2 eXceptions'
+/;
+SET tfn(fn)    'functions to test';
+
+$if not set FN $goto allfuncs
+SET tfn(fn) / %FN% /;
+$goto have_tfn
+
+$label allfuncs
+tfn(fn) = yes;
+
+$label have_tfn
+
+file fp /'fnscript.gms'/;
+put fp '$ondollar' /;
+
+loop {fn(tfn),
+  put '$call =testlib -q fn' fn.tl:0 /;
+  put '$if errorlevel 1 $abort Could not retrieve test fn' fn.tl:0 /;
+  put '$call =gams fn' fn.tl:0 ' lo=2 ZeroRes=2e-299' /;
+  put '$if errorlevel 1 $abort Error running test fn' fn.tl:0 /;
+};
+putclose fp;
+
+scalar rc;
+execute '=gams fnscript lo=2';
+rc=errorlevel;
+abort$rc 'intrinsic function test failed';

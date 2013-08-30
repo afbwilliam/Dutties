@@ -1,0 +1,21 @@
+$title 'Test correctness of centropy intrinsic' (FNCENTR3,SEQ=319)
+
+$ontext
+centropy(p,q,delta) = p * log((p+delta)/(q+delta))
+$offtext
+
+$include fnset_x.inc
+
+$gdxin fncentr3
+$load relToInput aeps0 aeps1 aeps2 reps0 reps1 reps2 T data
+$gdxin
+
+loop {T,
+  data(T,  'f') = centropy.value (data(T,'x'), data(T,'c'), data(T,'d'));
+  data(T, 'fx') = centropy.grad  (data(T,'x'), data(T,'c'), data(T,'d'));
+  data(T,'fxx') = centropy.hess  (data(T,'x'), data(T,'c'), data(T,'d'));
+  data(T, 'rc') = mathlastrc;
+  data(T, 'ec') = mathlastec;
+};
+
+$include fntest_x.inc

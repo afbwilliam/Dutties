@@ -1,0 +1,56 @@
+$title complex search structures- tremove2 problem (LOOP4,SEQ=137)
+
+sets frpa      / pa, fr /
+     tservice  / tpmetrop, tflongd, tfshortd /
+     period    / peak, offpeak /
+     t         / 1995*1997 /
+     run       / bc, sim  /
+     tveh      / pcardie, flocodie /
+
+alias(tveh,ttveh);
+
+
+sets linkfrpatservice(frpa,tservice) / pa.(tpmetrop)
+                                       fr.(tflongd) /
+
+     tfrpalink(frpa,tveh)  / pa.(pcardie  )
+                             fr.(flocodie ) /
+
+table tdemspveh(tveh,tservice,period,t,run)
+                                        bc
+
+pcardie .tpmetrop.peak   .1995       0.149
+flocodie.tfshortd.peak   .1995       4.293
+flocodie.tfshortd.offpeak.1995      12.880
+
+parameter alex;
+
+loop(run$(ord(run) = 1),
+   loop(t$((ord(t) > 1) and (ord(t) <= 2)),
+      loop(frpa,
+         alex(frpa,tservice,period)$linkfrpatservice(frpa,tservice) =
+            sum(ttveh$tfrpalink(frpa,ttveh), tdemspveh(ttveh,tservice,period,t-1,run));
+         display alex;
+         abort$(card(alex)=0) 'alex cannot be empty'; )));
+
+parameter final / pa.tpmetrop.peak  0.149 /;
+
+abort$(sum((frpa,tservice,period),
+         abs(alex(frpa,tservice,period)
+            -final(frpa,tservice,period))) > 1e-10) 'final result is wrong';
+
+$exit
+
+
+----     33 PARAMETER alex
+
+                   peak
+
+pa.tpmetrop       0.149
+
+
+----     33 PARAMETER alex
+
+                   peak
+
+pa.tpmetrop       0.149

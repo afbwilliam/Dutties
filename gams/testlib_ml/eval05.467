@@ -1,0 +1,31 @@
+$title constant expression test for ceil,floor,trunc,frac (EVAL05,SEQ=467)
+
+$ontext
+Contributor: Alex
+$offtext
+
+set a / a1*a6 /, f / arg,ceil,floor,trunc,frac /; parameter av(a,f);
+av('a1','arg')   = -0.9       ; av('a2','arg')   = -0.3       ; av('a3','arg')   = 0       ; av('a4','arg')   = 0.3       ; av('a5','arg')   = 0.9;
+av('a1','ceil')  = ceil(-0.9) ; av('a2','ceil')  = ceil(-0.3) ; av('a3','ceil')  = ceil(0) ; av('a4','ceil')  = ceil(0.3) ; av('a5','ceil')  = ceil(0.9);
+av('a1','floor') = floor(-0.9); av('a2','floor') = floor(-0.3); av('a3','floor') = floor(0); av('a4','floor') = floor(0.3); av('a5','floor') = floor(0.9);
+av('a1','trunc') = trunc(-0.9); av('a2','trunc') = trunc(-0.3); av('a3','trunc') = trunc(0); av('a4','trunc') = trunc(0.3); av('a5','trunc') = trunc(0.9);
+av('a1','frac')  = frac(-0.9) ; av('a2','frac')  = frac(-0.3) ; av('a3','frac')  = frac(0) ; av('a4','frac')  = frac(0.3) ; av('a5','frac')  = frac(0.9);
+display av;
+
+parameter bv(a,f) /
+a1.arg   = [-0.9       ], a2.arg   = [-0.3       ], a3.arg   = [0       ], a4.arg   = [0.3       ], a5.arg   = [0.9],
+a1.ceil  = [ceil(-0.9) ], a2.ceil  = [ceil(-0.3) ], a3.ceil  = [ceil(0) ], a4.ceil  = [ceil(0.3) ], a5.ceil  = [ceil(0.9)],
+a1.floor = [floor(-0.9)], a2.floor = [floor(-0.3)], a3.floor = [floor(0)], a4.floor = [floor(0.3)], a5.floor = [floor(0.9)],
+a1.trunc = [trunc(-0.9)], a2.trunc = [trunc(-0.3)], a3.trunc = [trunc(0)], a4.trunc = [trunc(0.3)], a5.trunc = [trunc(0.9)],
+a1.frac  = [frac(-0.9) ], a2.frac  = [frac(-0.3) ], a3.frac  = [frac(0) ], a4.frac  = [frac(0.3) ], a5.frac  = [frac(0.9)] /;
+display bv;
+
+parameter diff(a,f); diff(a,f) = av(a,f) - bv(a,f); display diff;
+abort$card(diff) 'function values are different - something wrong';
+
+$eval av_a1_arg   '-0.9'        $eval av_a2_arg   '-0.3'        $eval av_a3_arg   '0'        $eval av_a4_arg   '0.3'        $eval av_a5_arg   '0.9'
+$eval av_a1_ceil  'ceil(-0.9)'  $eval av_a2_ceil  'ceil(-0.3)'  $eval av_a3_ceil  'ceil(0)'  $eval av_a4_ceil  'ceil(0.3)'  $eval av_a5_ceil  'ceil(0.9)'
+$eval av_a1_floor 'floor(-0.9)' $eval av_a2_floor 'floor(-0.3)' $eval av_a3_floor 'floor(0)' $eval av_a4_floor 'floor(0.3)' $eval av_a5_floor 'floor(0.9)'
+$eval av_a1_trunc 'trunc(-0.9)' $eval av_a2_trunc 'trunc(-0.3)' $eval av_a3_trunc 'trunc(0)' $eval av_a4_trunc 'trunc(0.3)' $eval av_a5_trunc 'trunc(0.9)'
+$eval av_a1_frac  'frac(-0.9)'  $eval av_a2_frac  'frac(-0.3)'  $eval av_a3_frac  'frac(0)'  $eval av_a4_frac  'frac(0.3)'  $eval av_a5_frac  'frac(0.9)'
+$show

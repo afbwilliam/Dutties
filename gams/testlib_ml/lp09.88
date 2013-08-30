@@ -1,0 +1,69 @@
+$title Many free variables and restart (LP09,SEQ=88)
+
+$ontext
+In this test we check how a solver behaves when there are many
+free variables and if it restarts from this optimal basis.
+$offtext
+
+  Sets
+       i   canning plants   / seattle, san-diego /
+       j   markets          / new-york, chicago, topeka /
+       k                    / 1*20 /
+
+  Parameters
+
+       a(i)  capacity of plant i in cases
+         /    seattle     350
+              san-diego   600  /
+
+       b(j)  demand at market j in cases
+         /    new-york    325
+              chicago     300
+              topeka      275  / ;
+
+  Table d(i,j)  distance in thousands of miles
+                    new-york       chicago      topeka
+      seattle          2.5           1.7          1.8
+      san-diego        3.5           2.8          1.4  ;
+
+  Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+  Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+            c(i,j) = f * d(i,j) / 1000 ;
+
+  Variables
+       xx(k)   free variables
+       x(i,j)  shipment quantities in cases
+       z       total transportation costs in thousands of dollars ;
+
+  Positive Variable x ;
+
+
+  Equations
+       cost        define objective function
+       supply(i)   observe supply limit at plant i
+       demand(j)   satisfy demand at market j
+       stuff       silly equation;
+
+  cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j));
+
+  supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+  demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+  stuff.. sum(k, xx(k)) =e= 0;
+
+  Model lp09 /all/ ;
+
+option limcol=0,limrow=0;
+
+Solve lp09 using lp minimizing z ;
+abort$( lp09.solvestat <> %solvestat.NormalCompletion% or lp09.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( sum(k, mapval(xx.m(k))=mapval(eps)) <> (card(k)-1)) 'wrong EPS';
+
+
+Solve lp09 using lp minimizing z ;
+abort$( lp09.solvestat <> %solvestat.NormalCompletion% or lp09.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+abort$( sum(k, mapval(xx.m(k))=mapval(eps)) <> (card(k)-1)) 'wrong EPS';
+abort$( lp09.iterusd > 0) 'too many iters';

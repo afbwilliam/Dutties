@@ -1,0 +1,124 @@
+$Title Relational Data Base Example  (ZLOOF,SEQ=29)
+$Ontext
+
+This classical data base example uses a small department store to
+demonstrate the power of the relational data model.
+
+
+Zloof, M M, Query-by-Example: A Data Base Language. IBM Systems
+Journal 16, 4 (1977), 324-343.
+
+$Offtext
+
+Sets
+
+name    names of employees / anderson ,henry    ,hoffman  ,jones
+                             lee      ,lewis    ,long     ,morgan
+                             murphy   ,nelson   ,smith /
+
+dep     departments / cosmetics, hardware, houshold, stationary, toy /
+
+sup     supplier    / bic , dupont , parker , revlon /
+
+item    sales items / dish, ink, lipstick, pen, pencil, perfume /
+
+color   all colors  / white, red, green, blue /
+
+size    / small, medium, large /
+
+sales(dep,item)   departments and items sold  /
+
+                cosmetics.  (lipstick,perfume)
+                hardware.    ink
+                houshold.   (dish,pen)
+                stationary. (dish,ink,pen,pencil)
+                toy.        (ink,pen,pencil)         /
+
+supply(item,sup)  items and suppliers   /
+
+      dish.(bic,dupont)   , ink.(bic,parker)    , lipstick.revlon
+      pen.(parker,revlon) , pencil.(bic,parker) , perfume.revlon /
+
+type(item,color,size)  items color and size   /
+
+                dish.     white.    medium
+                ink.     (green.    large
+                          blue.     small)
+                lipstick. red.      large
+                pen.      green.    small
+                pencil. ((red,blue).large
+                          green.    small)
+                perfume.  white.    large        /
+
+Alias (name,namep)
+
+Parameter emp(name,namep,dep)  employees their managers and salaries  /
+
+               anderson.murphy .toy             6000
+               henry   .smith  .toy             9000
+               hoffman .morgan .cosmetics      16000
+               jones   .smith  .hardware        8000
+               lewis   .long   .stationary     12000
+               long    .morgan .cosmetics       7000
+               morgan  .lee    .cosmetics      10000
+               murphy  .smith  .houshold        8000
+               nelson  .murphy .toy             6000
+               smith   .hoffman.stationary      1200         /
+
+Sets g01(item)   red items
+     g02(color)  colors of ink
+     g03(dep)    departments selling items supplied by parker
+     g04(sup)    suppliers selling items to the toy department;
+
+g01(item)   = sum(size, type(item ,"red",size));
+g02(color)  = sum(size, type("ink",color,size));
+g03(dep)    = sum(supply(item,"parker"), sales(dep,item));
+g04(sup)    = sum(sales("toy",item),     supply(item,sup));
+
+Parameters g05(name,namep)  salaries of toy dep employees and managers
+           sal(name,dep)    salaries by department
+           money(name)      employees salary
+
+Set list(name,dep)   employment list;
+
+  g05(name,namep) = emp(name,namep,"toy");
+  list(name,dep)  = yes$sum(namep, emp(name,namep,dep) or emp(namep,name,dep) );
+  sal(name,dep)   = sum(namep, emp(name,namep,dep));
+  money(name)     = sum(dep, sal(name,dep));
+  Options sal:0, money:0;  Display list, sal, money;
+
+
+Sets g06(dep,item,sup)  departments sales items and suppliers
+     g07(name)          employees who earn more than their supervisors
+     g08(dep)           departments selling pens or pencils
+     g09(dep)           departments selling pens and pencils
+     g10(dep)           departments selling all items supplied by parker
+     g11(dep)           departments only selling items supplied by parker
+     g12(dep)           deps selling only all items supplied by parker;
+
+g06(dep,item,sup) = sales(dep,item)*supply(item,sup);
+g07(name) = sum((namep,dep)$(emp(name,namep,dep) and
+                             money(name) > money(namep)), yes);
+g08(dep) = sales(dep,"pen") + sales(dep,"pencil");
+g09(dep) = sales(dep,"pen") * sales(dep,"pencil");
+g10(dep) = prod(supply(item,"parker"), sales(dep,item));
+g11(dep) = prod(sales(dep,item),       supply(item,"parker"));
+g12(dep) = g10(dep)*g11(dep);
+
+Scalar g13  total salary of employees in toy department
+       g14  different colors of pencils;
+
+g13 = sum((name,namep), emp(name,namep,"toy"));
+g14 = sum(color$sum(size,type("pencil",color,size)), 1);
+
+Sets g15(dep)   departments with total salaries gt 22k selling pens
+     g16(item)  items in colors other than green
+     g17(item)  all items except green ones;
+
+g15(dep)  = sales(dep,"pen")$(sum((name,namep), emp(name,namep,dep)) > 22);
+g16(item) = sum((size,color), type(item,color,size) - type(item,"green",size) );
+g17(item) = yes - sum(size, type(item,"green",size));
+
+Options g05:0:0:1,g13:0,g14:0;
+Display g01,g02,g03,g04,g05,g06,g07,g08,g09,g10
+        g11,g12,g13,g14,g15,g16,g17;

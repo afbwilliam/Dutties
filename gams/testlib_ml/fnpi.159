@@ -1,0 +1,9 @@
+$title 'Test correctness of pi intrinsic' (FNPI,SEQ=159)
+
+scalar pibar;
+
+$gdxin fnpi
+$load pibar
+$gdxin
+
+abort$(pi <> pibar) 'There were errors';

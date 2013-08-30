@@ -1,0 +1,15 @@
+$title Julian time test (DATTIM3,SEQ=119)
+
+scalar now,start,year,month,day,hour,minute,second,dow;
+
+start = FLOOR(jnow) -1 + 8/24.0;
+
+now = start+320/(24.0*60);
+year = gyear(now); month  = gmonth (now); day    = gday   (now);
+hour = ghour(now); minute = gminute(now); second = gsecond(now);
+
+display start,year,month,day,hour,minute,second;
+
+abort$(hour <> 13)  'hour should be 13';
+abort$(minute<> 20) 'minute should be 20';
+abort$(second<> 0)  'second should be 0';

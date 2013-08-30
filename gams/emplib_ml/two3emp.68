@@ -1,0 +1,162 @@
+$title EMP Formulation of Simple 2 x 2 x 2 General Equilibrium Model (TWO3EMP,SEQ=68)
+
+$ontext
+This is the TWO3MCP model formulated using GAMS/EMP.
+
+Reference:  Shoven and Whalley: "Applied G.E. Models"
+            Journal of Economic Literature, XXII (1984)
+$offtext
+
+sets
+        f  factors    /labor, capital/
+        s  sectors    /mfrs,  nonmfrs/
+        h  households /rich,  poor/;
+
+*
+*       demand function parameters.
+*
+parameter sigmac(h)
+       / rich    1.5 ,  poor    0.75/;
+
+parameter rhoc(h)       primal elasticity parameter;
+rhoc(h) = (sigmac(h)-1)/sigmac(h);
+
+table alpha(s,h)
+                rich    poor
+        mfrs    0.5     0.3
+        nonmfrs 0.5     0.7;
+
+table e(f,h)
+                rich    poor
+        labor             60
+        capital   25
+*
+*       production function parameters.
+*
+parameter phi(s)
+        / mfrs 1.5,  nonmfrs 2.0 /;
+
+table delta(f,s)        factor share coefficients
+                        mfrs    nonmfrs
+        labor           0.6     0.7
+        capital         0.4     0.3;
+
+parameter sigma(s)      elasticities of factor substitution
+      /  mfrs 2.0,   nonmfrs 0.5/;
+
+parameter       tshr(h) share of tax revenue,
+                t(f,s)  ad-valorem tax rates;
+
+tshr(h) = 0;
+t(f,s) = 0;
+
+parameter rho(s)        primal form elasticity parameter;
+rho(s) = (sigma(s)-1)/sigma(s);
+
+positive
+variables
+        W(f)    factor price,
+        P(s)    commodity price,
+        Y(s)    production level,
+        C(s)    Marginal cost of production,
+        X(f,s)  Conditional factor demands,
+        D(s,h)  Final demands for goods
+variables
+        I(h)    income;
+
+equations
+        fmkt(f)         factor market,
+        cmkt(s)         commodity market,
+        profit(s)       zero profit,
+        income(h)       income equation;
+
+*       Factor supply (endowments) equals factor demand:
+
+fmkt(f)..       sum(h, e(f,h)) =g= sum(s, Y(s) * X(f,s));
+
+*       Commodity output equals commodity demand:
+
+cmkt(s)..       Y(s) =g= sum(h, D(s,h));
+
+*       Unit cost equals market price:
+
+profit(s)..     C(s) =g= P(s);
+
+*       Income equals factor earnings plus redistributed tax revenue:
+
+income(h)..     I(h) =e= sum(f, E(f,h)*w(f)) + TSHR(h)*sum((s,f), t(f,s) * W(f) * Y(s) * X(f,s));
+
+
+*       The following define conditional factor demands and final demand
+*       based on a primal representation of individual optimization problems:
+
+equations       DEFCOST(s)      Defines unit cost of production,
+                DEFUTIL(h)      Defines household utility
+                ISOQUANT(s)     Requires that factor demands are feasible
+                BUDGET(h)       Defines budgetary consistency;
+
+variables       COST(s)         Unit cost function
+                UTILITY(h)      Household utility;
+
+defcost(s)..    COST(s) =e= sum(f, (1 + t(f,s)) * W(f) * X(f,s));
+
+defutil(h)..    UTILITY(h) =e= sum(s, alpha(s,h)**(1/sigmac(h)) * D(s,h)**rhoc(h))**(1/rhoc(h));
+
+isoquant(s)..   phi(s) * sum(f, delta(f,s) * X(f,s)**rho(s))**(1/rho(s)) =g= 1;
+
+budget(h)..     sum(s, P(s) * D(s,h)) =l= I(h);
+
+model jel / defcost, defutil, isoquant, budget, fmkt, cmkt, profit, income/;
+
+*       compute solution for this dimension problem:
+
+W.lo(f) = 0.0001;
+P.lo(s) = 0.0001;
+X.lo(f,s) = 0.0001;
+D.lo(s,h) = 0.0001;
+
+W.l(f) = 1;
+P.l(s) = 1;
+Y.l(s) = 10;
+I.l(h) = sum(f, W.L(f) * e(f,h));
+X.l(f,s) = 1;
+D.l(s,h) = 1;
+
+*       Fix a numeraire - we really need this to solve
+
+W.fx("labor") = 1;
+
+file myinfo / '%emp.info%' /;
+put myinfo '* Shoven & Whalley 1984';
+put / 'equilibrium' /;
+loop(s,
+  put 'min' COST(s) /;
+  loop(f, put X(f,s));
+  put / DEFCOST(s) ISOQUANT(s) /;
+);
+loop(h,
+  put 'max' UTILITY(h) /;
+  loop(s, put D(s,h));
+  put / DEFUTIL(h) BUDGET(h) /;
+);
+put / 'vi INCOME I'/;
+put 'vi CMKT P'/;
+put 'vi PROFIT Y'/;
+put 'vi FMKT W'/;
+put 'dualvar C ISOQUANT'/;
+putclose;
+
+* Find a good starting point by fixing incomes
+I.fx(h) = sum(f, E(f,h)*w.l(f));
+solve jel using emp;
+
+* Now solve real problem
+I.lo(h) = -inf; I.up(h) = inf;
+solve jel using emp;
+
+*       apply tax in test problem:
+tshr("rich") = 0.4;
+tshr("poor") = 1 - tshr("rich");
+t("capital","mfrs") = 0.5;
+solve jel using emp;
+

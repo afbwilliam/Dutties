@@ -1,0 +1,40 @@
+$Title Simple Nonlinear Variational Inequality (SIMPLEVI2,SEQ=47)
+
+$ontext
+This model shows how to solve a simple nonlinear VI using EMP
+
+VI is to find x in X:
+F(x) (y - x) >= 0, for all y in X
+X is a closed convex set, e.g. X = { x >= 0 | g(x) >= 0 }
+
+Since the variational inequality is integrable w.r.t y this model can also be
+expressed as NLP as done in the model 'nlpmod'.
+
+Contributor: Michael Ferris, February 2010
+$offtext
+
+variables y;
+equations F, g;
+
+F..  sqr(y) - 1 =n= 0;
+g..           y =g= 0;
+
+model vimod /F, g/;
+
+file fx / '%emp.info%' /;
+putclose fx 'vi F y';
+
+solve vimod using emp;
+
+* Now solve the equivalent NLP model and compare the results
+scalar g_l, y_l;
+g_l = g.l; y_l = y.l;
+
+variables obj;
+equations defobj;
+defobj.. obj =e= power(y,3)/3 - y;
+
+model nlpmod /defobj, g/;
+solve nlpmod using nlp min obj;
+abort$(abs(g_l-g.l) > 1e-9) 'bad g level', g_l, g.l;
+abort$(abs(y_l-y.l) > 1e-9) 'bad y level', y_l, y.l;

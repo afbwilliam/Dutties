@@ -1,0 +1,6 @@
+o="myspread.xls"
+nc=1
+epsout=0
+zeroout=''
+var=transport.l
+rng=output4!a1..D4

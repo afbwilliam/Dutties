@@ -1,0 +1,23 @@
+$title 'GDX Test - Unsorted full domains' (GDX6,SEQ=396)
+
+$ontext
+Test GDX Bug AB01548.
+Loading data sorted did not set the first dimension that changed correctly.
+This in turn caused GAMS to write the data to the gdx unsorted.
+
+Contributor: Jan-Henrik Jagla, July 2008
+$offtext
+
+Set        y / 1*100 /
+           a
+           b
+           c;
+Parameter test(a,b,c);
+Scalar rc /0/;
+
+$gdxin gdx6.gdx
+$load a b c test
+
+execute_unload 'test' test;
+rc=errorlevel;
+abort$(rc > 0) 'Nonzero from execute_unload', rc;

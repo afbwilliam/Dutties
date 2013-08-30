@@ -1,0 +1,37 @@
+$title time decoding test (DATTIM6,SEQ=122)
+set i / 1*7 /
+
+table tvals(i,*) test data
+     x
+1  1.0
+2  2.0
+3  0.99999999
+4  0.5
+5  0.75
+6  0.25
+7  0.00000001  ;
+
+tvals(i,'hour') = ghour    (tvals(i,'x'));
+tvals(i,'min ') = gminute  (tvals(i,'x'));
+tvals(i,'sec ') = gsecond  (tvals(i,'x'));
+
+display tvals;
+
+set j /1*1000/;
+
+parameter t(j,*),delta(j,*);;
+t(j,'h') = uniformint(0,23);
+t(j,'m') = uniformint(0,59);
+t(j,'s') = uniformint(0,59);
+t(j,'time') = jtime(t(j,'h'),t(j,'m'),t(j,'s'));
+t(j,'hh') = ghour  (t(j,'time'));
+t(j,'mm') = gminute(t(j,'time'));
+t(j,'ss') = gsecond(t(j,'time'));
+
+delta(j,'h') = t(j,'h') - t(j,'hh');
+delta(j,'m') = t(j,'m') - t(j,'mm');
+delta(j,'s') = t(j,'s') - t(j,'ss');
+
+display delta;
+
+abort$card(delta) 'time routines have an error';

@@ -1,0 +1,113 @@
+$Title  External Function - Example 5 (EX5,SEQ=569)
+
+$ontext
+
+  The example is functionally identical to Example 1.
+  The new aspect is, that the size of the set I is written to
+  a file in the GAMS Scratch directory.
+  The external function requests the name of the GAMS Scratch
+  directory during initialization and reads the size and
+  compares it with the expected size.
+
+$offtext
+
+
+set i / i1*i4 /
+alias (i,j);
+
+parameter Q(i,j) Covariance Matrix
+          X0(i)  Targets;
+Q(i,j) = power(0.5, abs(ord(i)-ord(j)) );
+X0(i)  = ord(i);
+display Q, X0;
+
+variables x(i), z;
+equations zdef, zdefX;
+
+$ontext
+  The desired equation, implemented in GAMS, is
+$offtext
+
+  zdef .. sum( (i,j), (x(i)-x0(i)) * Q(i,j) * (x(j)-x0(j) ) ) =e= z;
+
+$ontext
+  It is implemented as an external equation as:
+$offtext
+
+  zdefX .. sum(i, ord(i)*x(i) ) + (card(i)+1)* z =X= 1;
+
+$ontext
+  The coefficients in the equation show that the X-variables are
+  numbered from 1 to card(i) and Z has number card(i)+1 in the
+  External Function code.
+  There is only one external equation and it has number 1, the value
+  of the right hand side.
+  Note that all variables in the equations must be assigned a variable
+  number and that they all must appear in the external function. You
+  cannot as yet tell the solver that some of the terms are linear
+  -- all terms are nonlinear from the solver's point of view.
+$offtext
+
+model ex5   'GAMS implementation'                             / zdef /;
+model ex5c  'C External function with file names communcated' / zdefX /;
+model ex5f  'F External function with file names communcated' / zdefX /;
+
+option limcol = 0;
+$ontext
+   Check the solution against the targets:
+$offtext
+parameter report(i,*,*) Solution Summary;
+scalar totdist /0/;
+
+$ontext
+  The size of the model is written to a file named abc.dat in
+  the GAMS scratch directory. The extension is chosen as %scrext%
+  so the file will be removed automatically by GAMS during its
+  usual cleanup process.
+$offtext
+File f / '%gams.scrdir%abc.%gams.scrext%' /;
+putclose f card(i):5:0;
+
+$onechoV > runme.gms
+z.l = 0;
+z.m = 0;
+x.l(i) = 0;
+x.m(i) = 0;
+zdefX.l = 0;
+zdefX.m = 0;
+solve %1 using nlp minimizing z;
+abort$(%1.solvestat <> 1) 'problems running model %1';
+report(i,'Target',  '%1') = x0(i);
+report(i,'Value',   '%1') = x.l(i);
+report(i,'Distance','%1') = abs(x.l(i) - x0(i));
+totdist = totdist + sum(i,abs(x.l(i) - x0(i)));
+$offecho
+
+$                             set ext '.dll'
+$ifi %system.filesys%==unix  $set ext '.so'
+$ifi %system.buildcode%==dig $set ext '.dylib'
+$ifi %system.buildcode%==deg $set ext '.dylib'
+
+$                             set eq
+$ifi %system.filesys%==unix  $set eq "'"
+
+$if set runall  $set runC '1' set runF '1'
+
+$ifthen not set nocomp
+$  ifi set runC    $call gams complink lo=%gams.lo% --lang=c         --files=ex5c.c                          --libname=ex5c%ext%
+$  if errorlevel 1 $abort Error compiling C Library
+$  ifi set runF    $call gams complink lo=%gams.lo% --lang=fortran90 --files=%eq%"gehelper.f90 ex5f.f90"%eq% --libname=ex5f%ext%
+$  if errorlevel 1 $abort Error compiling Fortran90 Library
+$endif
+
+$             batinclude runme ex5
+$if set runC $batinclude runme ex5c
+$if set runF $batinclude runme ex5f
+
+display report;
+
+if ((totdist < 1.0E-6),
+  display "@@@@ #Test passed.";
+else
+  abort totdist, "@@@@ #Test not passed. Inspect Filcom.lst for details.";
+);

@@ -1,0 +1,40 @@
+$title 'Test for some scalar read problems' (GDXXRW4,SEQ=175)
+
+$if %system.platform% == WIN $goto runme
+$if %system.platform% == WEX $goto runme
+$log GDXXRW test skipped for this platform
+$exit
+
+$label runme
+$call msappavail -Excel
+$if not errorlevel 1 $goto realrunme
+$log no Excel
+$exit
+
+$label realrunme
+
+* this problem resulted from trying to read a scalar value from xls
+
+* 1. create the sheet
+execute 'rm -f temp.gdx temp.xls';
+scalar s target / 725 /;
+execute_unload 'temp.gdx',s;
+* stick a scalar in b2
+execute '=gdxxrw temp.gdx output=temp.xls par=s rng=b2 cdim=0 rdim=0 trace=0';
+
+* 2. the two blank labels result in an empty table
+execute 'rm -f temp.gdx';
+* this should result in an empty birthday
+execute '=gdxxrw input=temp.xls output=temp.gdx par=birthday rng=A1:B2 cdim=1 rdim=1 trace=0';
+parameter a(*,*); a('1','1') = 100;
+execute_load 'temp.gdx', a=birthday;
+display a;
+
+* 3. now we read the scalar value
+execute '=gdxxrw input=temp.xls output=temp.gdx par=birthday rng=B2 cdim=0 rdim=0 trace=0';
+scalar b rewritten / 100 /;
+execute_load 'temp.gdx', b=birthday;
+display b;
+
+abort$card(a) 'bad value for a - should be empty',a;
+abort$(b <> s) ' bad value for b',s,b;

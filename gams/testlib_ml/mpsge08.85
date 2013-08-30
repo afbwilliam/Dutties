@@ -1,0 +1,6 @@
+$title MPSGE naming test: labels cannot contain a : (MPSGE08,SEQ=85)
+
+$set ILABEL    "no:allowed"
+$set SETUPFAIL  1
+
+$include exchange.inc

@@ -1,0 +1,34 @@
+$title Kestrel test for mcp solvers (KESTREL2,SEQ=544)
+
+$ontext
+Simple scarfmcp test for mcp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+$offtext
+
+$if not set neos_server $set neos_server "www.neos-server.org"
+
+$call gamslib -q scarfmcp
+
+set kestrel_solver /path, miles, nlpec/;
+
+$onecho > scarfmcp_test.gms
+
+$include scarfmcp.gms
+
+scarf.optfile=1;
+option mcp=kestrel;
+solve scarf using mcp;
+abort$(scarf.solvestat <> %solvestat.NormalCompletion% or scarf.modelstat <> %modelstat.Optimal%) 'wrong status codes';
+
+$offecho
+
+file fx;
+file optfile /kestrel.opt/;
+loop(kestrel_solver,
+  put optfile 'kestrel_solver ' kestrel_solver.tl:0/;
+  put 'neos_server %neos_server%'/;
+  putclose 'socket_timeout 10'/;
+  put_utility fx 'shell' / 'gams scarfmcp_test lo=%GAMS.lo% mcp=' kestrel_solver.tl:0;
+  abort$ERRORLEVEL "error in scarfmcp_test";
+)

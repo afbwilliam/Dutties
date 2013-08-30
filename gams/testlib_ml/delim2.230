@@ -1,0 +1,18 @@
+$title 'Test domain checking on columns under $ondelim' (DELIM2,SEQ=230)
+
+$ontext
+AB00834:cmex::ondelim problem
+The following program does not compile with 22.0alpha16Jun,
+but does with 21.7
+
+Contributor: Michael Bussieck
+$offtext
+
+set i /1*10/; set l /a,b/; alias (i,j,k);
+$ondelim
+set  xyz(i,j) / 1,2 /
+display xyz
+Table abc(i,k,l)
+i,seq,a,b
+1,2,15,16
+;

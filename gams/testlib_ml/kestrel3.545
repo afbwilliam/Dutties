@@ -1,0 +1,39 @@
+$title Kestrel test for nlp solvers (KESTREL3,SEQ=545)
+
+$ontext
+Simple mhw4d test for nlp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+$offtext
+
+$if not set neos_server $set neos_server "www.neos-server.org"
+
+$call gamslib -q mhw4d
+
+set kestrel_solver /conopt, pathnlp, snopt, baron, couenne/;
+
+$onecho > mhw4d_test.gms
+Parameter loc_m;
+Parameter tolerance /1e-5/;
+
+$include mhw4d.gms
+
+loc_m = m.l;
+wright.optfile=1;
+option nlp=kestrel;
+Solve wright using nlp minimizing m;
+
+abort$(wright.solvestat <> %solvestat.NormalCompletion%
+       or (wright.modelstat <> %modelstat.Optimal% and wright.modelstat <> %modelstat.LocallyOptimal%)) 'wrong status codes';
+abort$(abs(loc_m - m.l) > tolerance) 'obj different from local obj';
+$offecho
+
+file fx;
+file optfile /kestrel.opt/;
+loop(kestrel_solver,
+  put optfile 'kestrel_solver ' kestrel_solver.tl:0/;
+  put 'neos_server %neos_server%'/;
+  putclose 'socket_timeout 10'/;
+  put_utility fx 'shell' / 'gams mhw4d_test lo=%GAMS.lo% nlp=' kestrel_solver.tl:0;
+  abort$ERRORLEVEL "error in mhw4d_test";
+)

@@ -1,0 +1,104 @@
+$TITLE Scenred2 test - tree reduction and zero values (SCNRED02,SEQ=434)
+
+$Ontext
+Simple check of tree reduction in SCENRED-2
+
+We first check that the obvious reduction is taken, first when
+the node to be removed has nonzero random values and then all the cases where
+one of the values is zero.
+
+Contributor: Steve Dirkse
+$Offtext
+
+sets
+  g  'goods' / g1, g2 /,
+  n  'nodes' /
+     n0     'root - stage 1',
+    (n1*n5) 'stage 2'
+  /
+  stage2(n) / (n1*n5) /,
+  ancestor(n,n)  'input to scenred, in (child,parent) order'
+  newAncestor(n,n)  'output from scenred'
+  wantAnc(n,n) 'expected new tree' /
+    (n1*n4).n0
+  /
+  ancDiff(n,n)
+  ;
+alias (n,n2);
+parameters
+  prob(n)   node probabilities /
+    n0       1
+    (n1*n4)  0.24
+    n5       0.04
+  /
+  newProb(n)  'node probabilities output from scenred'
+  pErr(n)     'probability wanted - got'
+  rData(g,n)  'random data' /
+    g1.(n1,n2) .1
+    g1.(n3,n4) 5
+    g2.(n1,n3) .1
+    g2.(n2,n4) 5
+    g1.n5      0
+    g2.n5      5
+  /
+  ;
+
+ancestor(stage2(n),'n0') = yes;
+
+* LOAD SCENRED SYMBOLS *
+$set sr2prefix scnred02
+$libinclude scenred2
+
+* SCENRED2 METHOD CHOICE *
+scenRedParms('reduction_method') = 1;
+scenRedParms('red_num_leaves')   = 4;
+
+scalar tiny / 1e-3 /;
+
+* test one: add node with parms [tiny,5], should merge with node n2
+rData('g1','n5') = tiny;
+rData('g2','n5') = 5;
+
+$libinclude runscenred2 %sr2prefix% tree_con n ancestor prob newancestor newprob rData
+
+ancDiff(n,n2) = wantAnc(n,n2) - newAncestor(n,n2);
+abort$[card(ancDiff) or (card(wantAnc)-card(newAncestor))] 'bad newAncestor';
+pErr(n) = prob(n);  pErr('n5') = 0;  pErr('n2') = .28;
+pErr(n) = abs(pErr(n)-newProb(n));
+abort$[smax{n, pErr(n)} > 1e-7] 'bad newProb';
+
+* test two: add node with parms [5,tiny], should merge with node n3
+rData('g1','n5') = 5;
+rData('g2','n5') = tiny;
+
+$libinclude runscenred2 %sr2prefix% tree_con n ancestor prob newancestor newprob rData
+
+ancDiff(n,n2) = wantAnc(n,n2) - newAncestor(n,n2);
+abort$[card(ancDiff) or (card(wantAnc)-card(newAncestor))] 'bad newAncestor';
+pErr(n) = prob(n);  pErr('n5') = 0;  pErr('n3') = .28;
+pErr(n) = abs(pErr(n)-newProb(n));
+abort$[smax{n, pErr(n)} > 1e-7] 'bad newProb';
+
+* test three: add node with parms [0,5], should merge with node n2
+rData('g1','n5') = 0;
+rData('g2','n5') = 5;
+
+$libinclude runscenred2 %sr2prefix% tree_con n ancestor prob newancestor newprob rData
+
+ancDiff(n,n2) = wantAnc(n,n2) - newAncestor(n,n2);
+abort$[card(ancDiff) or (card(wantAnc)-card(newAncestor))] 'bad newAncestor';
+pErr(n) = prob(n);  pErr('n5') = 0;  pErr('n2') = .28;
+pErr(n) = abs(pErr(n)-newProb(n));
+abort$[smax{n, pErr(n)} > 1e-7] 'bad newProb';
+
+* test four: add node with parms [5,0], should merge with node n3
+rData('g1','n5') = 5;
+rData('g2','n5') = 0;
+
+$libinclude runscenred2 %sr2prefix% tree_con n ancestor prob newancestor newprob rData
+
+ancDiff(n,n2) = wantAnc(n,n2) - newAncestor(n,n2);
+abort$[card(ancDiff) or (card(wantAnc)-card(newAncestor))] 'bad newAncestor';
+pErr(n) = prob(n);  pErr('n5') = 0;  pErr('n3') = .28;
+pErr(n) = abs(pErr(n)-newProb(n));
+abort$[smax{n, pErr(n)} > 1e-7] 'bad newProb';

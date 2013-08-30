@@ -1,0 +1,27 @@
+$TITLE 'Test correctness of arctan2 intrinsic' (FNATAN2,SEQ=274)
+
+$include fnset_xy.inc
+
+$gdxin fnatan2
+$load aeps reps T data
+$gdxin
+
+data(T,'fyx_') = data(T,'fxy_');
+
+loop {T,
+  data(T,  'f')  = arctan2.value(   data(T,'y'),data(T,'x'));
+  data(T, 'fy')  = arctan2.grad(1:  data(T,'y'),data(T,'x'));
+  data(T, 'fx')  = arctan2.grad(2:  data(T,'y'),data(T,'x'));
+  data(T,'fyy')  = arctan2.hess(1:1:data(T,'y'),data(T,'x'));
+  data(T,'fyx')  = arctan2.hess(1:2:data(T,'y'),data(T,'x'));
+  data(T,'fxy')  = arctan2.hess(2:1:data(T,'y'),data(T,'x'));
+  data(T,'fxx')  = arctan2.hess(2:2:data(T,'y'),data(T,'x'));
+  data(T, 'rc')  = mathlastrc;
+  data(T, 'ec')  = mathlastec;
+};
+
+* we may get evaluation errors if we have some (nearly) singular
+* points in the input: this should not cause the test to fail
+execerror = 0;
+
+$include fntest_xy.inc

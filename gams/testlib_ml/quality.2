@@ -1,0 +1,875 @@
+$TITLE 'Driver for quality tests of all sorts' (QUALITY,SEQ=2)
+
+
+$version 141
+
+$eolcom //
+$if not set TRACE    $set TRACE    testlib.trc    // gtrace file trace=%TRACE%
+$if not set TRACEREP $set TRACEREP testlib.rep    // Gtrace report file
+$set TL       6
+$if NOT %gams.tl%==0 $set TL %gams.tl%
+// the default TL of 6 is just for starters - just trying it on for size
+
+$set SLASH     \
+$if %system.filesys% == UNIX $set SLASH /
+$if not set PREFIX $set PREFIX %system.buildcode%
+
+$if not set FAIL $set ALL alltests.gms
+$if     set FAIL $set ALL alltests.tmp
+$if not set FAIL $set FAIL failures_qa.gms
+
+$include testmod.inc
+
+SET mdl(m);
+SET ignore(m) models which are not supposed to be tested here /
+  BADPT4                   'is that test correct?'
+  BADPT5                   'is that test correct?'
+  CTRLCMIP                 'interactive test'
+  CONVERT1                 'tests convert option coinfml, which does not exist (anymore), can be deleted?'
+ (fnacos,fnacosx,fnasin,fnasinx,fnatan,fnatan2,fnatan2n,fnatan2x,fncentr
+  fncentr2*fncentr6,fncentrx,fncentry,fncos,fncosh,fnedist,fnentro,fnentro2
+  fnerrf,fnerrf2,fnexp,fnfact,fngamma,fngamma2,fnlog,fnlog10,fnlog2,fnncpcm
+  fnncpcm2,fnncpf,fnncpf2,fnncpvup,fnncpvus,fnncpvux,fnpi,fnpower,fnrpow
+  fnrpow2,fnrpow3,fnsigmo,fnsigmo2,fnsin,fnsinh,fnsqr,fnsqrt,fntan,fntanh
+  fnvcpow,fnvcpow2,fnspowx,fnspown)               '(supposed to be) tested in funcs5'
+ (COMPLINK
+  EX1,    EX1X,   EX2, EX3, EX4, EX4X, EX5
+  ER1,    ER2,    ER3
+  EXMCP1, EXMCP2, EXMCP3, EXMCP4, EXMCP5) 'used by testexeq'
+  FNCVPOW
+  FNCVPOW2
+  FNCVPOW3
+  FNEDIST2
+  FNEDIST3
+  (kestrel1*kestrel4)      'these tend to fail with timeout'
+  gamsbas1                 'gamsbas no longer shipped'
+ (gdxmrw01 * gdxmrw05)     'Matlab required to test GDXMRW'
+ (genw2,genw3,genw4)       'part of gdxmrw01'
+ (genr2,genr3,genr4,genr5) 'part of gdxmrw02'
+ (gen_r1,gen_r2,gen_rbig)  'part of gdxmrw03'
+ ('testinst', 'gversion')  'part of gdxmrw05'
+ (lp05*lp07)               'depends on reported iterations which does not work reliably for a lot of solvers'
+  lp09                     'same as lp03'
+  math1                    'an example, not a test'
+  mcp07                    'an example, not a test'
+  mcp09                    'Trac #1809 - outstanding'
+  MPSWRIT1                 'mpswrite is gone'
+  pgams01                  'part of pgams02'
+  quality                  'obvious'
+  (rest2,save2)            'part of restart2'
+  testhtm                  'obvious'
+  testutil                 'obvious'
+  tramp01                  'tramp is gone'
+  mip06                    'longer-running test'
+/;
+
+mdl(m) = not (letters(m) or ignore(m));
+
+SET suite /
+  baron, bench, cmex01, cmex02, cmex03, conopt, convert, cplex,
+  emp, examiner, gamschk, guss,
+  kestrel, knitro, lgo, lindoglobal, lp, mip, miqcp, nlp, miles, minos, mosek, mpsge, cns,
+  mpec, mpecdump, qcp, mcp, oqnlp, nlpec, path, pathnlp, sbb, tramp
+  xa, xpress
+/;
+SET type       model types /
+  CNS, DNLP, DECIS, EMP, GAMS, LP, MCP, MIP, MINLP, MIQCP
+  MPEC, MPSGE, NLP, OSLSE, QCP, RMINLP, RMIP, RMIQCP
+/;
+SET solver 'master set of solvers' / system.solverNames /;
+SET solverPlatformMap(solver,*) / system.SolverPlatformMap /;
+SET avail(solver)  'Solvers available for this platform';
+avail(solver) = sum(solverPlatformMap(solver,'%system.platform%'),1)
+   and solvers(solver);
+
+SET filter(solver) 'solvers to filter out' /      //can be overwritten by '--solver' flag, but GAMSCHK and some additional solvers are totally switched off later in the SKIP set
+* this first bunch includes the more obvious choices
+  AMPL,
+  BARON2,
+  BENCH,        CONVERT,      CONVERTD,
+  DE,           DECIS,        DECISC,       DECISM,
+  EXAMINER,     GAMSCHK,      KESTREL
+  LINGO,        LS,
+  MPECDUMP,     SCENSOLVER,
+* these are not so obvious
+  DICOPTD
+  OS                              'only works with option service'
+/;
+
+alias (solver,solvera);
+
+SET ASM(solvera,solver) 'Alias Solver Map' /
+  CONOPT.     CONOPTD
+  CONOPT3.    CONOPTD
+  COINBONMIN. BONMIN
+  COINCBC.    CBC
+  COINCOUENNE.COUENNE
+  COINIPOPT.  IPOPT
+  COINOS.     OS
+  COINSCIP.   SCIP
+  LGO.        LGOD
+  LOGMIP.     JAMS
+  MILESE.     MILES
+  MINOS.      MINOS55
+  MINOS5.     MINOS55
+  OSL.        OSL3
+  OSLSE.      OSL3
+  PATH.       PATHC
+  SOPLEX.     OSISOPLEX
+/;
+
+SET solverAlias(solvera) 'Aliases of Solvers';
+option solverAlias < ASM;
+
+$set GAMSlo %GAMS.lo%
+$if %GAMS.ide% == 1 $set GAMSlo 2
+
+$set FLAGS lo=%GAMSlo%
+$if %DEMOSIZE% == 1 $set FLAGS --DEMOSIZE=1 %FLAGS%
+SET modelFlags(m) /
+  assign1  'pw=79'
+/;
+* set --QCPMCHECKS=0 if marginals are OK  for QP and bad for QCP in general
+* set  --QPMCHECKS=0 if marginals are bad for QP and bad for QCP in general
+SET solverFlags(solver) /
+  alphaecp '--QPMCHECKS=0'
+  baron    '--GLOBALSIZE=1'
+  bonmin   '--QPMCHECKS=0'
+  bonminH  '--QPMCHECKS=0'
+  cplex    '--QCPMCHECKS=0 --TESTTOL=2e-6'  // hack since it does not get marginals for QCP
+  glomiqo  '--GLOBALSIZE=1 --TESTTOL=1e-4'  // calls snopt at the end, marginals are not so accurate
+  knitro   '--TESTTOL=3e-4'  // temporary?
+  lgo      '--GLOBALSIZE=1'
+* actually lindo and lindoglobal behave the same with respect to globalsize, but by setting
+* the flag for one but not the other we test both, the global and the local solver in demo mode
+  lindo    '--TESTTOL=1e-5'
+  lindoglobal '--GLOBALSIZE=1 --TESTTOL=1e-5'
+  mosek    'workfactor=2'
+  msnlp    '--GLOBALSIZE=1 --TESTTOL=1.9e-3'  // marginals are not so accurate
+  oqnlp    '--GLOBALSIZE=1 --TESTTOL=1.9e-3'  // marginals are not so accurate
+  snopt    '--TESTTOL=1e-4'  // marginals are not so accurate
+  nlpec    '--MCPMCHECKS=0 --NONSTRICT=0'   // hack for bad marginals for MCP
+  couenne  '--TESTTOL=1e-2 --MCHECKS=0 --QPMCHECKS=0' //Couenne knows about primal solution only
+  scip     '--MIPMCHECKS=0 --QPMCHECKS=0 --TESTTOL=1e-3 optcr=0'
+  xpress   '--TESTTOL=2e-5'
+/;
+SET modelSolverFlags(m,solver) /
+  (lp03,sl4lp03).(snopt,conoptd,conopt4,minos55)          '--SKIPITER=1'
+$if %system.buildcode% == AIX  sl4lp03.cplexd             '--SKIPITER=1'
+  (lp12).knitro                                           'optdir=.. optfile=500'
+  (lp01,sl4lp01).knitro                                   'optdir=.. optfile=500 --SKIPUNBND=1'
+  (lp04,lp11,sl4lp11,lp14).knitro                         '--SKIPUNBND=1'
+   mip02 .(OsiCplex,OsiGurobi,OsiMosek,OsiXpress)         'integer1=1' //OSI links do not return marginals for MIPs otherwise
+   mip03 . bdmlp                                          'nodlim=1e9' //BDMLP does not converge fast enough
+  (qcp05).knitro                                          'optdir=.. optfile=501'
+  (qcp01,nlpqcp01,sl4qcp01).scip                          '--TESTTOL=1e-2'
+  (qcp02,sl4qcp02).xpress                                 '--TESTTOL=5e-3'
+   qcp04.xpress                                           'optdir=.. optfile=500'
+   qcp09.(cplex,cplexd,lindo,lindoglobal)                 '--TESTTOL=1e-4'
+  (qcp02,sl4qcp02).cplexd                                 '--TESTTOL=1e-2'
+   qcp04.cplexd                                           '--TESTTOL=1e-4'
+  (qcp02,sl4qcp02).gurobi                                 '--TESTTOL=1e-2'
+   qcp04.gurobi                                           '--TESTTOL=1e-3'
+   qcp09.gurobi                                           '--TESTTOL=1e-2'
+   qcp09.xpress                                           'optdir=.. optfile=500'
+   semicon1.gurobi                                        '--MIPMCHECKS=0'
+  (miqcp01).(mosek,oqnlp)                                 '--QPMCHECKS=0'
+  (qcp01,qcp02,qcp04,qcp10,nlpqcp01,nlpqcp02,
+   sl4qcp01,sl4qcp02,miqcp01).baron                       '--TESTTOL=1e-5'
+/;
+SET ms(m,suite) /
+
+  (
+  baron01 * baron03
+  ).baron
+  (
+  bench01,bench02,bench03,bench04
+  ).bench
+  (
+  conopt01,condtwin
+  ).conopt
+  (
+  convert2*convert7
+  ).convert
+  (
+  cplex01*cplex03
+  ).cplex
+  (
+  emp01*emp11
+  empadj01
+  empbp01*empbp05
+  empdisj1*empdisj7
+  empecs01*empecs02
+  emplog1*emplog2
+  emplp01*emplp03, emplp10*emplp13
+  empvi01*empvi05
+  ).emp
+  (
+  examin01*examin04
+  ).examiner
+  (
+  gamschk1
+  ).gamschk
+  (
+  kestrel1*kestrel4
+  ).kestrel
+  (
+  knitro01
+  ).knitro
+  (
+  lgo01
+  ).lgo
+  (
+  lindgl01,lindgl02,lindorng,lindorg2
+  ).lindoglobal
+  (
+  lolp,lp01*lp04,lp08,lp10*lp14,sl4lp01,sl4lp02,sl4lp03,sl4lp10,sl4lp11
+  ).lp
+  (
+  mip01*mip06,sos1a,sos2a,semicon1,semiint1,sl4mip01,sl4sos1a,sl4scon1,indic01*indic03,dumpsol
+  ).mip
+  (
+  miles01
+  ).miles
+  (
+  minos01
+  ).minos
+  (
+  mosek01
+  ).mosek
+  (
+  circlen,lonlp,nlp01,nlplp02,nlpqcp01,nlpqcp02
+  ).nlp
+  (
+  mpsge01*mpsge12
+  ).mpsge
+  (
+  cns01*cns13,sl4cns01*sl4cns13
+  ).cns
+  (
+  mpec01,mpec03
+  ).mpec
+  (
+  mpecdu01
+  ).mpecdump
+  (
+  lomcp,mcp01*mcp06,mcp08,sl4mcp01*sl4mcp04,sl4mcp06
+  ).mcp
+  (
+  miqcp01,miqcp02
+  ).miqcp
+  (
+  qcp01*qcp10,sl4qcp01*sl4qcp03
+  ).qcp
+  (
+  assign1 * assign2, asynexec, asynntrp
+  binary1 * binary3,  blank
+  call1   * call4
+  card01
+  choles01 * choles02
+  clear1,   clear2,   clear3,   clear4,   clear5
+  clear6,   clear7
+  compile1 * compile8
+  data1
+  dattim1 * dattim6
+  ddlist1
+  decis01 * decis03,  decla1,   decla2,   delim1,   delim2,   delim3,   delim4,
+  dump01,
+  echo1,    edcrypt1,
+  eigval01, eigvec01 *eigvec02
+  embed1  * embed3
+  eval01  * eval07
+  fitlib01, funcs3,   funcs4,   funcs5,   funcback
+  gdx1    * gdx9
+  gdxcomp1* gdxcomp2
+  gdxconv1
+  gdxcopy1* gdxcopy5
+  gdxdiff1, gdxdump1, gdxmerg1 *gdxmerg2, gdxrank1
+  gdxxrw1 * gdxxrw6
+  gzip01
+  har1
+  ifnot1,   ifstat1 * ifstat7
+  ifthen1 * ifthen6
+  interval
+  invert01 *invert02
+  lagd1,    lags1,
+  load1   * load6
+  local01
+  loop1,    loop2,     loop3 *  loop9
+  ls01    * ls04
+  macro01 * macro02,   map1,    match01,
+  mdb2gms1, nonneg
+  onelab1,  onelab2
+  onmulti1 * onmulti7
+  pfmaptst
+  pgams02
+  phantom1, phantom2,
+  pipe1,    pipe2,    pipe3,    pipe4,    pipe5,    pipe6,    pipe7,    pipe8
+  pipe9,    pipe10
+  point1,   point2
+  power1,   power2
+  privat01
+  pwplib01
+  put1    * put10
+  restart1, restart2, sameas1
+  scnred01 *scnred02
+  set1    * set11
+  sort1
+  sql2gms1
+  stolib01
+  suffix01
+  symxref1, syschk1,  sysenv01, sysenv02
+  tabsubst, tester,   title1
+  trilib01* trilib04
+  trylin01
+  unary1,   unary2,   undf1,    univ1
+  unload1 * unload9
+  utils01 * utils03
+  warning1* warning2
+  ).cmex01
+  (
+  empty1,   eps1,     dict1,
+  forceerr
+  funcs1,   funcs2,   gbin1,
+  handle01, handle02
+  nest1,    nest2
+  nlcode1 * nlcode6,  perm1, savep1
+  traceuc
+  vardat01 *vardat05
+  veda1
+  ).cmex02
+  (
+  badpt1,   badpt2,   badpt3
+  cerr1,    maxima,   merr1,    testexeq,   xerr1,    xerr2
+  ).cmex03
+  (
+  msnlp01,  oqnlp01
+  ).oqnlp
+  (mpec01,mpec02,nlpec01,nlpec02).nlpec
+  (
+  path01
+  ).path
+  (
+  pathnlp1, pathnlp2
+  ).pathnlp
+  (
+  sbb01, sbb02
+  ).sbb
+  (
+  scen01 * scen03
+  scensol1* scensol3
+  ).guss
+  (
+  tramp01
+  ).tramp
+  (
+  xa01
+  ).xa
+  (
+  xpress01 * xpress05
+  ).xpress
+/;
+SET st(suite,type) 'default type of models unless set below' /
+  baron.GAMS
+  bench.GAMS
+  cmex01.GAMS
+  cmex02.GAMS
+  cmex03.GAMS
+  conopt.NLP
+  convert.GAMS
+  cplex.LP
+  emp.EMP
+  examiner.GAMS
+  gamschk.GAMS
+  guss.LP
+  kestrel.GAMS
+  knitro.GAMS
+  lgo.GAMS
+  lindoglobal.GAMS
+  lp.LP
+  mip.MIP
+  miles.GAMS
+  minos.GAMS
+  mosek.GAMS
+  nlp.NLP
+  mpsge.MCP
+  cns.CNS
+  mpec.MPEC
+  mpecdump.GAMS
+  miqcp.MIQCP
+  qcp.QCP
+  mcp.MCP
+  oqnlp.NLP
+  nlpec.MPEC
+  path.GAMS
+  pathnlp.GAMS
+  sbb.GAMS
+  tramp.GAMS
+  xa.GAMS
+  xpress.GAMS
+/;
+* mt can be computed based on suite for now - if we have other models that
+* don't have a suite membership, we can bang them in.
+SET mt(m,type);
+mt(mdl,type) = sum{ms(mdl,suite), st(suite,type)};
+
+parameter typecount(m);
+typecount(mdl) = sum{mt(mdl,type),1} - 1;
+abort$[smax{mdl,abs(typecount(mdl))} ne 0] typecount;
+
+$onempty
+SET notQuick(m) / nlpec01 /;
+SET gskip(m) 'CMEX tests we know will fail' /
+$if %system.buildcode% == AIX cerr1     'we do not have Mosek here'
+$if %system.buildcode% == AIX decis01   'we do not have DECIS here'
+$if %system.buildcode% == BGP decis01   'we do not have DECIS here'
+$if %system.buildcode% == DEG decis01   'we do not have DECIS here'
+$if %system.buildcode% == DII decis01   'we do not have DECIS here'
+$if %system.buildcode% == DIG decis01   'we do not have DECIS here'
+$if %system.buildcode% == SIG decis01   'we do not have DECIS here'
+$if %system.buildcode% == BGP decis02   'we do not have DECIS here'
+$if %system.buildcode% == DII decis02   'we do not have DECIS here'
+$if %system.buildcode% == BGP decis03   'we do not have DECIS here'
+$if %system.buildcode% == DII decis03   'we do not have DECIS here'
+  minos01                               'Minos cycling problem, it is just luck if this test does not fail, Trac #1700'
+$if %system.buildcode% == BGP pfmaptst  'we do not have the gmspfmap.gdx on idle platforms'
+$if %system.buildcode% == AIX scnred01  'we do not have scenred2 here'
+$if %system.buildcode% == AIX scnred02  'we do not have scenred2 here'
+$if not %system.buildcode% == VS8 xerr1 'work in progress'
+$if not %system.buildcode% == VS8 xerr2 'work in progress'
+$if %DEMOSIZE% == 1           lindgl02  'Model exceeds global demo limit'
+  /;
+$if set NOSKIP gskip(mdl) = no;
+$if set QUICK  gskip(mdl)$notquick(mdl) = yes;
+
+SET suiteskip(solver,m) 'skips for tests in solver-specific suites' /
+$if %system.buildcode% == BGP bench.bench02     'expects CPLEX to exist'
+$if %system.buildcode% == BGP bench.bench03     'expects CPLEX to exist'
+$if %system.buildcode% == DAR bench.bench02     'expects CPLEX to exist'
+$if %system.buildcode% == DAR bench.bench03     'expects CPLEX to exist'
+$if %system.buildcode% == LNX jams .empecs02    'diff fails since rounding on LNX is different than on other platforms'
+/;
+SET skip(solver,m) 'we know these will fail' /
+* put permanent skips first
+ baron.(sl4lp10,lp10)                              'baron does not handle unbounded models well'
+ (knitro,pathnlp).(lp03,sl4lp03)                   'issue with nonbasic free vars : simplex-only test'
+ miles.(mcp01*mcp04,sl4mcp01*sl4mcp04)             'cannot solve models with all variables fixed'
+ mosek.(lonlp,circlen)                             'Model is nonconvex'
+ (Bonmin,bonminH,CBC,osisoplex).(lp03,sl4lp03)     'Doubt if the test is correct'
+ (Ipopt,IpoptH).(lp03,sl4lp03)                     'Ipopt does not compute a basis'
+ lgo.(lp01,lp10,lp11,lp14,sl4lp01,sl4lp10,sl4lp11) 'declares solution as local optimal'
+ gurobi.lp04                                       'Gurobi does not set inf/unb marker with (dual) infeasible models (uses Farkas certificate)'
+ lgo.lp04                                          'this will go way when gmosetsolutionfixer is implicit'
+ mosek.lp04                                        'mosek does not do infeasibilities right'
+$if %DEMOSIZE% == 1 (baron,glomiqo,lgo,msnlp,oqnlp).(dumpsol,lp05,lp06,lp07,lp09,mip02,mip05,qcp05,miqcp02) 'Models exceed global demo limit'
+ scip.mip02                                        'scip does not return marginals for mips'
+ scip.nlplp02                                      'scip does not return marginals for nlps'
+ lindo.(qcp02,nlpqcp02,sl4qcp02)                   'precission issue'
+ msnlp.(qcp01,sl4qcp01,nlpqcp01)                   'exceeds reslim from time to time'
+
+* put temporary skips here
+ baron.(lp03,sl4lp03)     'fix is in progress'
+ knitro.(lp10,sl4lp10)    'scaling or unboundedness issue : being investigated'
+ mosek.mip03              'mosek does not return objest, #1978'
+ msnlp.(qcp03,sl4qcp03)   'bad marginals - under investigation'
+ oqnlp.(qcp03,sl4qcp03)   'bad marginals - under investigation'
+ oqnlp.qcp04              'system failure - under investigation'
+ snopt.(qcp02,nlpqcp02,sl4qcp02) 'reports optimal in log, but NONOPTs in listing - modelstat=2 in lst'
+ xa.(lp03,sl4lp03)        'under investigation'
+ (IpoptH,Ipopt).(lp10,sl4lp10) 'classification required'
+* cplexd.cplex02           'cplexd cannot handle tuning yet - normal completion'
+ cplexd.cplex03           'cplexd cannot handle tuning and indicators yet'
+ couenne.(qcp02,nlpqcp02,sl4qcp02) 'exceeds reslim'
+ scip.(qcp02,sl4qcp02)    'does not find solution in time'
+ couenne.qcp05            'hangs without progress, #2170'
+ nlpec.nlpec01            'does not terminate (on lx3)'
+ (baron,lindoglobal,lindo).(qcp07) 'BARON and Lindo do not handle poly function'
+ cplexd.mip04             'cplexd will not be fixed anymore'
+$if %system.buildcode% == AIX gurobi.(qcp02,sl4qcp02)  'AIX system on tester machine too old (aborts with sh: cannot fork: too many processes)'
+/;
+*                                                                      if a model is skipped for a solver alias it is autoamtically skipped for the solver itself
+skip(solver,'indic01')$[(not sameas(solver,'cplex')) and (not sameas(solver,'xpress')) and (not sameas(solver,'scip')) and (not sameas(solver,'coinscip'))] = yes;
+skip(solver,'indic02')$[(not sameas(solver,'cplex')) and (not sameas(solver,'xpress')) and (not sameas(solver,'scip')) and (not sameas(solver,'coinscip'))] = yes;
+skip(solver,'indic03')$[(not sameas(solver,'cplex')) and (not sameas(solver,'xpress')) and (not sameas(solver,'scip')) and (not sameas(solver,'coinscip'))] = yes;
+
+skip('nlpec',mdl)$[sum{ms(mdl,'mpsge'),1}] = yes;
+
+* Models exceed global demo limit
+$if %DEMOSIZE% == 1 skip(solver,'indic01') = yes;
+
+$if set NOSKIP skip(solver,mdl) = no;
+
+set mdlstdoutskip(m) 'skips for stdout check' /
+$if not %system.filesys% == UNIX asynexec 'when killing a process, taskkill writes to stdout'
+   call1,call2   'tests handling of wrong parameters, error is written to stdout'
+   call3         'tests output conflicts, so we know it writes to sterr and stdout'
+   decis01*decis03 'decis writes to stdout'
+   maxima        'creates a wanted Cmex error writing to stdout'
+   pgams02       'writes message when deleting directory below 225'
+   testexeq      'compiler write to both stderr and stdout by default'
+   veda1         'tests gdx2veda which writes to stdout'
+/;
+set mdlstderrskip(m) 'skips for stderr check' /
+   call3         'tests output conflicts, so we know it writes to sterr and stdout'
+   decis01*decis03 'decis writes to stderr'
+   testexeq      'compiler write to both stderr and stdout by default'
+/;
+
+set slvstdoutskip(solver) 'solvers which are skipped for stdout check' /
+   OS
+/;
+set slvstderrskip(solver) 'solvers which are skipped for stderr check' /
+/;
+set stdoutskip(solver,m) 'model - solver combinations which are skipped for stdout check' /
+/;
+set stderrskip(solver,m) 'model - solver combinations which are skipped for stderr check' /
+/;
+$offempty
+
+stdoutskip(slvstdoutskip,mdl)$(not mt(mdl,'GAMS'))              = yes;
+stdoutskip(solver,mdlstdoutskip)$(not mt(mdlstdoutskip,'GAMS')) = yes;
+stderrskip(slvstderrskip,mdl)$(not mt(mdl,'GAMS'))              = yes;
+stderrskip(solver,mdlstderrskip)$(not mt(mdlstderrskip,'GAMS')) = yes;
+
+$onempty
+set mdltraceskip(m) 'skips for trace file check' /
+    badpt2,badpt3  '9/14 is expected outcome of this test'
+    qcp06          '2nd solve is supposed to fail'
+    scensol3       '%solvestat.TerminatedBySolver% is expected'
+/;
+
+set slvtraceskip(solver) 'solvers which are skipped for trace file check' /
+/;
+
+set traceskip(solver,m) 'model - solver combinations which are skipped for trace file check' /
+/;
+$offempty
+
+traceskip(slvtraceskip,mdl)$(not mt(mdl,'GAMS'))             = yes;
+traceskip(solver,mdltraceskip)$(not mt(mdltraceskip,'GAMS')) = yes;
+
+* Solver test suites
+set slvtest(solver,suite) /
+   (oqnlp,msnlp).oqnlp
+   baron.baron
+   bench.bench
+   (conoptd,conopt4).conopt
+   convert.convert
+   (cplex,cplexd).cplex
+   jams.emp
+   examiner.examiner
+   gamschk.gamschk
+   knitro.knitro
+   lgo.lgo
+   (lindo,lindoglobal).lindoglobal
+   miles.miles
+   minos.minos
+   mosek.mosek
+   nlpec.nlpec
+   path.path
+   pathnlp.pathnlp
+   sbb.sbb
+   (bdmlpd,cbc,conopt4,conoptd,couenne,cplex,cplexd,gurobi,sulum,ipopt,ipopth,lgo,lindo,lindoglobal,minos,mosek,osicplex,osigurobi,osimosek,osisoplex,osixpress,pathc,scip,snopt,xpress).guss
+   xa.xa
+   xpress.xpress
+/;
+
+loop(ASM(solverAlias,solver),
+  slvtest(solver,suite) $= slvtest(solverAlias,suite);
+  slvtest(solverAlias,suite) $= slvtest(solver,suite);
+);
+
+alias(solver,solverp);
+set slvsuite(suite); option slvsuite < slvtest;
+SET moreskip(solver,m) 'more skips, based on solver suites to use';
+
+* start by skipping all models in the solver suites
+moreskip(solver,mdl)$sum(ms(mdl,slvsuite),1) = yes;
+* but include the models in solver suites chosen to run,
+* if the solver is available
+moreskip(solver,mdl)$sum((slvtest(avail(solver),slvsuite),ms(mdl,slvsuite)),1)
+= no;
+* display moreskip;
+skip(moreskip(solver,mdl)) = yes;
+skip(suiteskip(solver,mdl)) = yes;
+
+gskip(mdl)$[sum{suiteskip(solver,mdl),1}] = yes;
+gskip(mdl)$[sum((slvtest(solver,slvsuite),ms(mdl,slvsuite)),
+                not avail(solver)) ] = yes;
+
+$if set QUICK  skip(solver,mdl)$notquick(mdl) = yes;
+* display gskip, skip;
+
+file log /''/;
+
+$if not set HELP $goto nohelp
+put log
+ / 'This model is used to run the quality tests and report on the results'
+ / 'You can run all tests for all solvers by running the model with no parameters:'
+ / ' '
+ / '  gams quality'
+ / ' '
+ / 'You can choose specific tests by using the --TEST parameter:'
+ / ' '
+ / '  gams quality --TEST "binary1,binary2"'
+ / ' '
+ / 'Instead of choosing specific tests, you can choose'
+ / 'specific test suites by using the --SUITE parameter:'
+ / ' '
+ / '  gams quality --SUITE "cmex01,lp"'
+ / ' '
+ / 'Independently from the parameters above, you can make'
+ / 'a choice of solvers using the --SOLVER parameter:'
+ / ' '
+ / '  gams quality --SUITE lp --SOLVER "bdmlp,xa"'
+ / ' '
+ / 'By default, a skip list is used to skip tests that are known to fail.'
+ / 'To turn off the skip list and really run all the tests,'
+ / 'set the --NOSKIP parameter to anything:'
+ / ' '
+ / '  gams quality --NOSKIP=1'
+ / ' '
+ / 'By default, a solver with one or more aliases is only tested once. To run the'
+ / 'tests with the aliased names as well set the --RUNALIAS parameter to anything:'
+ / ' '
+ / '  gams quality --RUNALIAS=1'
+ / ' '
+ / 'You can knock out the slower tests (see the set notQuick)'
+ / 'using the --QUICK parameter:'
+ / ' '
+ / '  gams quality --QUICK=1'
+ / ' '
+ / 'To run only those tests that fit within the demo size limits, do:'
+ / ' '
+ / '  gams quality --DEMOSIZE=1'
+ / ' ';
+$exit
+
+$label nohelp
+
+SET tmdl(m)          'set of tests to run';
+SET tsuite(suite)    'set of suites to run';
+SET tsolver(solver)  'set of solvers to test';
+
+$if not errorfree $abort Compilation errors before processing -- options
+
+$if not set TEST $goto checksuite
+SET tmdl(m) / %TEST% /;
+$if errorfree $goto TEST_OK
+$clearerror
+$log The test model(s) specified (--TEST=%TEST%) are not all valid
+$abort
+$label TEST_OK
+$goto havetestlist
+
+$label checksuite
+$if not set SUITE $goto alltests
+SET tsuite(suite) / %SUITE% /;
+$if errorfree $goto SUITE_OK
+$clearerror
+$log The suite(s) specified (--SUITE=%SUITE%) are not all valid
+$abort
+$label SUITE_OK
+
+tmdl(mdl) = sum{ms(mdl,tsuite),yes};
+$goto havetestlist
+
+$label alltests
+tmdl(mdl) = yes;
+
+$label havetestlist
+display tmdl;
+
+$if not set SOLVER $goto allsolvers
+SET tsolver(solver) / %SOLVER% /;
+gskip(mdl) = yes;
+gskip(mdl)$[sum((slvtest(tsolver,slvsuite),ms(mdl,slvsuite)),avail(tsolver)) ] = no;
+$if errorfree $goto SOLVER_OK
+$clearerror
+$log The solver(s) specified (--SOLVER=%SOLVER%) are not all valid
+$abort
+$label SOLVER_OK
+$goto havesolvers
+$label allsolvers
+tsolver(solver) = yes;
+tsolver(filter(solver)) = no;
+$if set RUNALIAS $goto havesolvers
+tsolver(solverAlias(solver)) = no;
+
+$label havesolvers
+
+loop(ASM(solverAlias,solver),
+  solverFlags(solver)               $= solverFlags(solverAlias);
+  modelSolverFlags(mdl,solver)      $= modelSolverFlags(mdl,solverAlias);
+  stdoutskip(solver,mdl)            $= stdoutskip(solverAlias,mdl);
+  stderrskip(solver,mdl)            $= stderrskip(solverAlias,mdl);
+  skip(solver,mdl)                  $= skip(solverAlias,mdl);
+  solverFlags(solverAlias)          $= solverFlags(solver);
+  modelSolverFlags(mdl,solverAlias) $= modelSolverFlags(mdl,solver);
+  stdoutskip(solverAlias,mdl)       $= stdoutskip(solver,mdl);
+  stderrskip(solverAlias,mdl)       $= stderrskip(solver,mdl);
+  skip(solverAlias,mdl)             $= skip(solver,mdl);
+);
+
+scalar
+  rc     / 0 /,
+  tot    / 0 /,
+  err    / 0 /,
+  stderr / 0 /,
+  stdout / 0 /,
+  cnt    / 0 /;
+
+file oneTest  / 'onetest.gms' /     //Getting test from testlib and executing test
+     stdTest  / 'stdtest.gms' /     //Checking if stderr and stdout are empty
+     allTests / '%ALL%'  /
+     failures / '%FAIL%' /
+     rmme     / 'rmme.gms' /
+     fx;
+
+oneTest.tf    = 0;
+oneTest.lcase = 1;
+
+$if %ALL% == alltests.gms putclose allTests '* These are the tests we ran' /;
+$if %FAIL% == failures_qa.gms putclose failures '* These are the tests that failed' / '*Total tests: 0 Failed tests: 0' /;
+
+putclose rmme '* Delete all directories of tests without problems' /;
+allTests.ap = 1;
+failures.ap = 1;
+rmme.ap     = 1;
+$if exist %TRACE% $call rm -f %TRACE%
+
+$set DIRNAMEGAMS "'%PREFIX%_qa_' tmdl.tl:0 '_gams'"
+loop {mt(tmdl,'GAMS')$[not gskip(tmdl)],
+  cnt = cnt + 1;
+  tot = tot + 1;
+  put_utility fx 'shell' / 'rm -rf ' %DIRNAMEGAMS%;
+  put_utility fx 'shell' / 'mkdir ' %DIRNAMEGAMS%;
+  put oneTest
+     '$call testlib -q ' tmdl.tl:0
+   / '$if errorlevel 1 $abort'
+   / '$echo JobStart ' tmdl.tl:0 ' >> %TRACE%'
+   / '$call =gams ' tmdl.tl:0 ' jt=' tmdl.tl:0 ' trace=%TRACE% ' modelFlags.te(tmdl):0 ' %gams.user1% %FLAGS%';
+  put$(not mdltraceskip(tmdl))
+   / '$call gams %TRACE% a=gt ps=0 pw=255 tl=0 lo=0';
+  putclose
+   / '$if errorlevel 1 $set err 1'
+   / '$if set err scalar err /%err%/'
+   / '$call cat %TRACE% >> ..%SLASH%%TRACE%'
+   / "$if %err% == 1 $abort 'Problem'";
+  put_utility fx 'shell' / 'mv -f onetest.gms ' %DIRNAMEGAMS% ' && cd ' %DIRNAMEGAMS% ' && gams onetest lo=%GAMSlo% --err=0 gdx=..%SLASH%err > stdout.txt 2>stderr.txt'; rc=1; execute_load 'err' rc=err;
+  putclose stdTest                                                                                          //Checking if stderr and stdout are empty
+     '$call =test -s ' %DIRNAMEGAMS% '%SLASH%stderr.txt'
+   / '$if errorlevel 1 $set stderr 0'
+   / '$if set stderr scalar stderr /%stderr%/'
+   / '$call =test -s ' %DIRNAMEGAMS% '%SLASH%stdout.txt'
+   / '$if errorlevel 1 $set stdout 0'
+   / '$if set stdout scalar stdout /%stdout%/'
+  execute 'gams stdtest.gms lo=2 --stderr=1 --stdout=1 gdx=std'; stderr=1; stdout=1; execute_load 'std' stderr,stdout;
+  put allTests;
+  put '$call =gams quality %FLAGS% --prefix=%PREFIX% --fail=failures_qa.tmp --test=' tmdl.tl:0 ' ';
+  if {rc,                                 put '--ftrace=1 '};
+  if {stderr and not mdlstderrskip(tmdl), put '--fstderr=1 '};
+  if {stdout and not mdlstdoutskip(tmdl), put '--fstdout=1 '};
+  putclose allTests '--dir='%DIRNAMEGAMS% /;
+  if {rc or (stderr and not mdlstderrskip(tmdl)) or (stdout and not mdlstdoutskip(tmdl)),
+    err = err + 1;
+    put failures;                                                                                         // failure_qa.gms
+    put '$call =gams quality %FLAGS% --prefix=%PREFIX% --fail=failures_qa.tmp --test=' tmdl.tl:0 ' ';     // --fail defines alternative failures file
+    if {rc,     put '--ftrace=1 '};                                                                       // execution error
+    if {stderr and not mdlstderrskip(tmdl), put '--fstderr=1 '};                                          // writing to standard error
+    if {stdout and not mdlstdoutskip(tmdl), put '--fstdout=1 '};                                          // writing to standard output
+    putclose failures '--dir='%DIRNAMEGAMS% /;                                                            // name of kept directory
+  else
+    putclose rmme '$call rm -rf ' %DIRNAMEGAMS% /;
+  };
+  if(cnt=5,
+    execute "=gams rmme lo=0";
+    cnt = 0;
+    execute "echo '* Delete all directories of tests without problems' > rmme.gms";
+  );
+};
+
+$onecho > knitro.500
+maxit 20000
+$offecho
+$onecho > knitro.501
+feastol 1e-8
+$offecho
+$onecho > xpress.500
+bargapstop      1e-8
+barprimalstop   1e-7
+bardualstop     1e-7
+$offecho
+
+$set DIRNAME "'%PREFIX%_qa_' tmdl.tl:0 '_' type.tl:0 '_' tsolver.tl:0"
+loop {mt(tmdl,type)$[not sameas(type,'GAMS')],
+  loop {tsolver$[SolverCapabilities(tsolver,type) and not skip(tsolver,tmdl)],
+    cnt = cnt + 1;
+    tot = tot + 1;
+    put_utility fx 'shell' / 'rm -rf ' %DIRNAME%;
+    put_utility fx 'shell' / 'mkdir ' %DIRNAME%;
+    put oneTest
+       '$call testlib -q ' tmdl.tl:0
+     / '$if errorlevel 1 $abort'
+     / '$echo JobStart ' tmdl.tl:0 ' >> %TRACE%'
+     / '$call =gams ' tmdl.tl:0 ' jt=' tmdl.tl:0 ' trace=%TRACE% ' type.tl:0'='tsolver.tl:0 ' %FLAGS% ' solverFlags.te(tsolver):0 ' ' modelFlags.te(tmdl):0 ' ' modelSolverFlags.te(tmdl,tsolver):0 ' %gams.user1%';
+    put$(not traceskip(tsolver,tmdl))
+     / '$call gams %TRACE% a=gt ps=0 pw=255 tl=0 lo=0';
+    putclose
+     / '$if errorlevel 1 $set err 1'
+     / '$if set err scalar err /%err%/'
+     / '$call cat %TRACE% >> ..%SLASH%%TRACE%'
+     / "$if %err% == 1 $abort 'Problem'";
+    put_utility fx 'shell' / 'mv -f onetest.gms ' %DIRNAME% ' && cd ' %DIRNAME% ' && gams onetest lo=%GAMSlo% --err=0 gdx=..%SLASH%err > stdout.txt 2>stderr.txt'; rc=1; execute_load 'err' rc=err;
+    putclose stdTest
+       '$call =test -s ' %DIRNAME% '%SLASH%stderr.txt'
+     / '$if errorlevel 1 $set stderr 0'
+     / '$if set stderr scalar stderr /%stderr%/'
+     / '$call =test -s ' %DIRNAME% '%SLASH%stdout.txt'
+     / '$if errorlevel 1 $set stdout 0'
+     / '$if set stdout scalar stdout /%stdout%/';
+    execute 'gams stdtest.gms lo=2 --stderr=1 --stdout=1 gdx=std'; stderr=1; stdout=1; execute_load 'std' stderr,stdout;
+    put allTests;
+    put '$call =gams quality %FLAGS% --prefix=%PREFIX% --fail=failures_qa.tmp --test=' tmdl.tl:0 ' --solver=' tsolver.tl:0 ' ';
+    if {rc,                                      put '--ftrace=1 '};
+    if {stderr and not stderrskip(tsolver,tmdl), put '--fstderr=1 '};
+    if {stdout and not stdoutskip(tsolver,tmdl), put '--fstdout=1 '};
+    putclose allTests '--dir='%DIRNAME% /;
+    if {rc or (stderr and not stderrskip(tsolver,tmdl)) or (stdout and not stdoutskip(tsolver,tmdl)),
+      err = err + 1;
+      put failures;
+      put '$call =gams quality %FLAGS% --prefix=%PREFIX% --fail=failures_qa.tmp --test=' tmdl.tl:0 ' --solver=' tsolver.tl:0 ' ';
+      if {rc,                                      put '--ftrace=1 '};
+      if {stderr and not stderrskip(tsolver,tmdl), put '--fstderr=1 '};
+      if {stdout and not stdoutskip(tsolver,tmdl), put '--fstdout=1 '};
+      putclose failures '--dir='%DIRNAME% /;
+    else
+      putclose rmme '$call rm -rf ' %DIRNAME% /;
+    };
+    if(cnt=5,
+      execute "=gams rmme lo=0";
+      cnt = 0;
+      execute "echo '* Delete all directories of tests without problems' > rmme.gms";
+    );
+  };
+};
+
+execute "=gams %TRACE% a=gt ps=0 pw=255 o=%TRACEREP% tl=%TL% lo=0";
+execute "=gams rmme lo=0";
+
+putclose oneTest '*Total tests: ', tot:0:0, '  Failed tests: ', err:0:0 ;
+$if %FAIL% == failures_qa.gms execute 'cat onetest.gms >> %FAIL%'
+
+execute 'rm -f rmme.* err.gdx std.gdx onetest.gms stdtest.*';
+
+put log;
+if {(err > 0),
+  put 'There were errors: ', err:0:0, ' out of ',
+       tot:0:0, ' tests failed.' /;
+  put 'See the file failures_qa.gms to reproduce the failed runs'/;
+  put 'You have some failures. See failures_qa.gms for details.';
+else
+  put 'Congratulations!  All ', tot:0:0, ' tests passed.'/;
+};
+
+put 'See the file alltests.gms to reproduce all the runs'/;

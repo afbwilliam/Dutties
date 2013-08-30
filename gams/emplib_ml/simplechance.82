@@ -1,0 +1,83 @@
+$title Simple chance constraint model (SIMPLECHANCE,SEQ=82)
+
+$ontext
+
+Simple chance constraint model from Lindo manual
+
+Reference: LINDO API 7.0 User Manual
+
+$set JorI I -> individual chance constraints
+$set JorI J -> joint      chance constraints
+
+$offtext
+
+$if not set JorI $set JorI I
+
+Scalar
+*       Random parameters
+        om1  / 1 /
+        om2  / 1 /;
+
+Variable           Z     Objective;
+Positive Variables X1,X2;
+
+Equations OBJ, E1, E2;
+
+OBJ.. Z =e= X1 + X2;
+E1..  om1*X1 +   X2 =g=  7;
+E2..  om2*X1 + 3*X2 =g= 12;
+
+Model sc / all /;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%'/;
+* chance <prob> <equ1> [equ2 ... equn]
+$iftheni %JorI% == I
+$onput
+randvar om1 discrete 0.25 1
+                     0.25 2
+                     0.25 3
+                     0.25 4
+randvar om2 discrete 0.3333 1
+                     0.3334 2
+                     0.3333 3
+chance E1 0.6
+chance E2 0.6
+$offput
+$else
+$onput
+randvar om1 discrete 0.25 1
+                     0.25 2
+                     0.25 3
+                     0.25 4
+randvar om2 discrete 0.3333 1
+                     0.3334 2
+                     0.3333 3
+chance E1 E2 0.6
+$offput
+$endif
+putclose emp;
+
+Set scen        scenarios / s1*s12 /;
+Parameter
+    s_om1(scen)
+    s_om2(scen)
+    x1_l (scen)
+    x2_l (scen)
+    x1_m (scen)
+    e1_l (scen)
+    e2_l (scen)
+;
+
+
+Set dict / scen .scenario.''
+           om1  .randvar .s_om1
+           om2  .randvar .s_om2
+           x1   .level   .x1_l
+           x2   .level   .x2_l
+           x1   .marginal.x1_m
+           e1   .level   .e1_l
+           e2   .level   .e2_l
+/;
+solve sc min z use emp scenario dict;
+
+display s_om1, x1_l, x2_l, x1_m, e1_l, e1_l;

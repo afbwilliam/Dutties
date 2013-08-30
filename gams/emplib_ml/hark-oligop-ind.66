@@ -1,0 +1,77 @@
+$title SPE model from Harker - oligopoly version (HARK-OLIGOP-IND,SEQ=66)
+
+$ontext
+
+A spatial price equilibrium model is used to demonstrate different
+ways of modeling market behavior. In this variant, we look at
+the Cournot-Nash model that arises when we assume an oligopoly,
+i.e. the production in each region is controlled by a single firm,
+where the regional firms are independent.  This model starts from the
+Cournot-Nash solution and verifies that this is a solution to each of
+the agent optimization problems considered in turn.
+
+Harker, P T, Alternative Models of Spatial Competition. Operations
+Research 34, 3 (1986), 410-425.
+
+Contributor: Steven Dirkse, June 2011
+$offtext
+
+* either include hark-oligop or
+* run with a restart from the hark-oligop save file
+$include hark-oligop.gms
+
+set Q1(Q) 'one q to solve for';
+parameter
+  cBar(i,j) 'cost coeff for a price-taker in the transport market'
+  dlqBar(L,Q)
+  zBar(Q)
+  sBar(Q)
+  ;
+
+cBar(arc(i,j)) = cVar.L(i,j);
+dlqBar(L,Q) = dlq.l(L,Q);
+zBar(Q) = z.l(Q);
+sBar(Q) = s.l(Q);
+
+Equations
+  objDef1     objective definition oligopoly
+  flowBal1(n,Q)
+  sBal1(Q)
+  dlBal1(L,Q)
+  in1(L,Q)     inflow balance
+  out1(Q)      outflow balance
+  ;
+Variable  obj      objective value ;
+
+objDef1.. obj =e= sum{Q1(Q),
+    sum {L, (rho(L) - eta(L)*dl(L,Q)) * dlq(L,Q) }
+   - (alpha(Q)*s(Q) + beta(Q)*sqr(s(Q)))
+   -sum{arc(i,j), cBar(i,j) * t(i,j,Q)}
+                     };
+flowBal1(NL(n),Q1(Q))..  sum(arc(n,j), t(n,j,Q)) =e= sum(arc(i,n), t(i,n,Q));
+
+sBal1(Q1(Q)).. s(Q) =e= sum{L, dlq(L,Q)};
+
+dlBal1(L,Q1(Q))..  dl(L,Q) =E= dlq(L,Q)
+                            + sum{QQ$[not sameas(Q,QQ)], dlqBar(L,QQ)};
+
+in1(L,Q1(Q))$[not sameas(L,Q)].. dlq(L,Q) =e= sum{arc(i,L), t(i,L,Q)};
+
+out1(Q1(Q)).. s(Q) =E= dlq(Q,Q) + sum{arc(Q,j), t(Q,j,Q)};
+
+
+model oli1 / objDef1, flowBal1, sBal1, dlBal1, in, out / ;
+
+dl.up(L,Q) = 100;
+dlq.up(L,Q) = 100;
+s.up(Q) = 100;
+
+scalar dt;
+loop{Qi,
+  Q1(Q) = sameas(Q,Qi);
+  solve oli1 maximizing obj using nlp;
+  dt = zBar(Qi) - z.l(Qi);
+  abort$[abs(zBar(Qi)-z.l(Qi)) > 1e-3] 'NLP found different objective', Qi, zBar, z.l, dt;
+  dt = sBar(Qi) - s.l(Qi);
+  abort$[abs(sBar(Qi)-s.l(Qi)) > 1e-3] 'NLP found different supply', Qi, sBar, s.l, dt;
+};

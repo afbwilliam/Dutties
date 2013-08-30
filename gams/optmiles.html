@@ -1,0 +1,431 @@
+<html>
+<head>
+<title>MILES Options</title>
+</head>
+<body>
+<h2>MILES Options</h2>
+For more information about this solver please inspect the
+complete <a href="docs/solvers/miles.pdf">MILES manual</a>.
+
+<h2>Summary of MILES Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General options</h3></th></tr>
+<tr><td><a href="#MILEScontol">
+contol</a></td>
+<td>convergence tolerance</td></tr>
+<tr><td><a href="#MILESdens1">
+dens1</a></td>
+<td>LUSOL: density to start searching maxcol columns</td></tr>
+<tr><td><a href="#MILESdens2">
+dens2</a></td>
+<td>LUSOL: density to start searching 1 column</td></tr>
+<tr><td><a href="#MILESdmpfac">
+dmpfac</a></td>
+<td>damping factor in backtracking linesearch</td></tr>
+<tr><td><a href="#MILESelmax1">
+elmax1</a></td>
+<td>LUSOL: max multiplier allowed in L during factor</td></tr>
+<tr><td><a href="#MILESelmax2">
+elmax2</a></td>
+<td>LUSOL: max multiplier allowed in L during update</td></tr>
+<tr><td><a href="#MILESfactim">
+factim</a></td>
+<td>basis reinversion time</td></tr>
+<tr><td><a href="#MILESinvfrq">
+invfrq</a></td>
+<td>basis reinversion frequency</td></tr>
+<tr><td><a href="#MILESinvlog">
+invlog</a></td>
+<td>toggle Lemke inversion logging</td></tr>
+<tr><td><a href="#MILESitch">
+itch</a></td>
+<td>iteration refinement frequency</td></tr>
+<tr><td><a href="#MILESiterlim">
+iterlim</a></td>
+<td>minor (Lemke) iterations limit</td></tr>
+<tr><td><a href="#MILESitlimt">
+itlimt</a></td>
+<td>major (Newton) iterations limit</td></tr>
+<tr><td><a href="#MILESlcpdmp">
+lcpdmp</a></td>
+<td>LCP dump (post-scaling)</td></tr>
+<tr><td><a href="#MILESlcpech">
+lcpech</a></td>
+<td>LCP echo print (pre-scaling)</td></tr>
+<tr><td><a href="#MILESlevout">
+levout</a></td>
+<td>set output level</td></tr>
+<tr><td><a href="#MILESlprint">
+lprint</a></td>
+<td>LUSOL: print level</td></tr>
+<tr><td><a href="#MILESlusize">
+lusize</a></td>
+<td>LUSOL: multiplier for estimating memory requirements</td></tr>
+<tr><td><a href="#MILESmaxcol">
+maxcol</a></td>
+<td>LUSOL: max cols to search for pivot element</td></tr>
+<tr><td><a href="#MILESmaxeul">
+maxeul</a></td>
+<td>Euler iteration limit</td></tr>
+<tr><td><a href="#MILESmineul">
+mineul</a></td>
+<td>Euler iteration limit</td></tr>
+<tr><td><a href="#MILESminstp">
+minstp</a></td>
+<td>minimum step length</td></tr>
+<tr><td><a href="#MILESnorm">
+norm</a></td>
+<td>norm to use in measuring deviation</td></tr>
+<tr><td><a href="#MILESnrsmax">
+nrsmax</a></td>
+<td>restart limit</td></tr>
+<tr><td><a href="#MILESpivlog">
+pivlog</a></td>
+<td>toggle Lemke pivot logging</td></tr>
+<tr><td><a href="#MILESplinfy">
+plinfy</a></td>
+<td>infinity used by the solver</td></tr>
+<tr><td><a href="#MILESscale">
+scale</a></td>
+<td>turn on scaling at every iteration</td></tr>
+<tr><td><a href="#MILESsmall">
+small</a></td>
+<td>LUSOL: absolute zero tolerance</td></tr>
+<tr><td><a href="#MILESspdadj">
+spdadj</a></td>
+<td>Euler adjustment factor</td></tr>
+<tr><td><a href="#MILESuspace">
+uspace</a></td>
+<td>LUSOL: factor limiting waste space in U</td></tr>
+<tr><td><a href="#MILESutol1">
+utol1</a></td>
+<td>LUSOL: absolute tolerance U diagonal</td></tr>
+<tr><td><a href="#MILESutol2">
+utol2</a></td>
+<td>LUSOL: relative tolerance U diagonal</td></tr>
+<tr><td><a href="#MILESztolda">
+ztolda</a></td>
+<td>zero tolerance on coefficients</td></tr>
+<tr><td><a href="#MILESztolpv">
+ztolpv</a></td>
+<td>absolute zero tolerance on pivots</td></tr>
+<tr><td><a href="#MILESztolrp">
+ztolrp</a></td>
+<td>relative zero tolerance on pivots</td></tr>
+<tr><td><a href="#MILESztolz0">
+ztolz0</a></td>
+<td>absolute tolerance for installing cover elements</td></tr>
+<tr><td><a href="#MILESztolze">
+ztolze</a></td>
+<td>feasibility tolerance</td></tr></table>
+<h2>Detailed Descriptions of MILES Options</h2>
+
+<h4><a name="MILEScontol">
+contol</a>
+<i> (real)</i> convergence tolerance</h4><p>
+
+Whenever an iterate is encountered for
+which <tt>epsilon(z) < CONTOL</tt>, the algorithm terminates. This corresponds
+to the GAMS/MINOS parameter "Row tolerance".
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="MILESdens1">
+dens1</a>
+<i> (real)</i> LUSOL: density to start searching maxcol columns</h4><p>
+
+The density at which the Markowitz strategy should search <tt>maxcol</tt> columns
+and no rows.
+
+<br><i>(default = 0.3)</i>
+
+<h4><a name="MILESdens2">
+dens2</a>
+<i> (real)</i> LUSOL: density to start searching 1 column</h4><p>
+
+The density at which the Markowitz strategy should search only 1 column or
+(preferably) use a dense LU for all the remaining rows and columns.
+
+<br><i>(default = 0.6)</i>
+
+<h4><a name="MILESdmpfac">
+dmpfac</a>
+<i> (real)</i> damping factor in backtracking linesearch</h4><p>
+
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="MILESelmax1">
+elmax1</a>
+<i> (real)</i> LUSOL: max multiplier allowed in L during factor</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="MILESelmax2">
+elmax2</a>
+<i> (real)</i> LUSOL: max multiplier allowed in L during update</h4><p>
+
+
+<br><i>(default = 10)</i>
+
+<h4><a name="MILESfactim">
+factim</a>
+<i> (real)</i> basis reinversion time</h4><p>
+
+Indicates the maximum number of CPU seconds between recalculation of the
+basis factors.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="MILESinvfrq">
+invfrq</a>
+<i> (integer)</i> basis reinversion frequency</h4><p>
+
+Determines the maximum number of Lemke iterations between recalculation of
+the basis factors. This corresponds to the GAMS/MINOS parameter
+"Factorization frequency".
+
+<br><i>(default = 200)</i>
+
+<h4><a name="MILESinvlog">
+invlog</a>
+<i> (integer)</i> toggle Lemke inversion logging</h4><p>
+
+A switch which requests LUSOL to generate a report with basis statistics
+following each refactorization.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MILESitch">
+itch</a>
+<i> (integer)</i> iteration refinement frequency</h4><p>
+
+Indicates the frequency with which the factorization is checked. The number
+refers to the number of basis replacement operations between refinements.
+This
+corresponds to the GAMS/MINOS parameter "Check frequency".
+
+<br><i>(default = 25)</i>
+
+<h4><a name="MILESiterlim">
+iterlim</a>
+<i> (integer)</i> minor (Lemke) iterations limit<br>&nbsp;&nbsp;&nbsp;Synonym:
+itrlim</h4><p>
+
+
+<br><i>(default = GAMS IterLim)</i>
+
+<h4><a name="MILESitlimt">
+itlimt</a>
+<i> (integer)</i> major (Newton) iterations limit</h4><p>
+
+An upper bound on the number of Newton iterations. This corresponds to
+the GAMS/MINOS parameter "Major iterations".
+
+<br><i>(default = 100)</i>
+
+<h4><a name="MILESlcpdmp">
+lcpdmp</a>
+<i> (integer)</i> LCP dump (post-scaling)</h4><p>
+
+A switch to generate a printout of the LCP data after scaling.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MILESlcpech">
+lcpech</a>
+<i> (integer)</i> LCP echo print (pre-scaling)</h4><p>
+
+A switch to generate a printout of the LCP data before scaling, as evaluated.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MILESlevout">
+levout</a>
+<i> (integer)</i> set output level</h4><p>
+
+Sets the level of debug output written to the log and status files. The lowest
+meaningful value is -1 and the highest is 3. This corresponds, roughly, to the
+GAMS/MINOS parameter "Print level".
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MILESlprint">
+lprint</a>
+<i> (integer)</i> LUSOL: print level</h4><p>
+
+The print level, < 0 suppresses output.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right><0</td><td>suppresses output</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>gives error messages</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>gives debug output from some of the routines in LUSOL</td></tr>
+<tr valign="top"><td width=20 align=right>>=2</td><td>gives the pivot row and column and the no. of rows and columns involved at each elimination step in lu1fac</td></tr>
+</table>
+
+<h4><a name="MILESlusize">
+lusize</a>
+<i> (integer)</i> LUSOL: multiplier for estimating memory requirements</h4><p>
+
+Used to estimate the number of LU nonzeros which will be stored, as a multiple
+of the number of nonzeros in the Jacobian matrix.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="MILESmaxcol">
+maxcol</a>
+<i> (integer)</i> LUSOL: max cols to search for pivot element</h4><p>
+
+In lu1fac is the maximum number of columns searched allowed in a Markowitztype
+search for the next pivot element. For some of the factorization, the number
+of rows searched is maxrow = maxcol - 1.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="MILESmaxeul">
+maxeul</a>
+<i> (integer)</i> Euler iteration limit</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MILESmineul">
+mineul</a>
+<i> (integer)</i> Euler iteration limit</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MILESminstp">
+minstp</a>
+<i> (real)</i> minimum step length</h4><p>
+
+
+<br><i>(default = 0.01)</i>
+
+<h4><a name="MILESnorm">
+norm</a>
+<i> (integer)</i> norm to use in measuring deviation</h4><p>
+
+Defines the vector norm to be used for evaluating <tt>epsilon(z)</tt>.
+Acceptable values are 1,
+2 or 3 which correspond to p = 1, 2 and +INF.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MILESnrsmax">
+nrsmax</a>
+<i> (integer)</i> restart limit</h4><p>
+
+Sets an upper bound on the number of restarts which the linear subproblem
+solver will undertake before giving up.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MILESpivlog">
+pivlog</a>
+<i> (integer)</i> toggle Lemke pivot logging</h4><p>
+
+A switch to generate a status file listing of the Lemke pivot sequence.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="MILESplinfy">
+plinfy</a>
+<i> (real)</i> infinity used by the solver</h4><p>
+
+The value assigned for "plus infinity" ("+INF" in GAMS notation).
+
+<br><i>(default = 1e20)</i>
+
+<h4><a name="MILESscale">
+scale</a>
+<i> (integer)</i> turn on scaling at every iteration</h4><p>
+
+Invokes row and column scaling of the LCP tableau in every iteration. This
+corresponds, roughly, to the GAMS/MINOS switch "scale all variables".
+
+<br><i>(default = 1)</i>
+
+<h4><a name="MILESsmall">
+small</a>
+<i> (real)</i> LUSOL: absolute zero tolerance</h4><p>
+
+The absolute tolerance for treating reals as zero.
+
+<br><i>(default = 3.0d-13)</i>
+
+<h4><a name="MILESspdadj">
+spdadj</a>
+<i> (real)</i> Euler adjustment factor</h4><p>
+
+
+<br><i>(default = 0.01)</i>
+
+<h4><a name="MILESuspace">
+uspace</a>
+<i> (real)</i> LUSOL: factor limiting waste space in U</h4><p>
+
+In lu1fac, the row or column lists are
+compressed if their length exceeds uspace times the length of either file
+after the last compression.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="MILESutol1">
+utol1</a>
+<i> (real)</i> LUSOL: absolute tolerance U diagonal</h4><p>
+
+The absolute tol for flagging small diagonals of U.
+
+<br><i>(default = 3.7d-11)</i>
+
+<h4><a name="MILESutol2">
+utol2</a>
+<i> (real)</i> LUSOL: relative tolerance U diagonal</h4><p>
+
+The relative tol for flagging small diagonals of U.
+
+<br><i>(default = 3.7d-11)</i>
+
+<h4><a name="MILESztolda">
+ztolda</a>
+<i> (real)</i> zero tolerance on coefficients</h4><p>
+
+
+
+<h4><a name="MILESztolpv">
+ztolpv</a>
+<i> (real)</i> absolute zero tolerance on pivots</h4><p>
+
+The absolute pivot tolerance. This corresponds, roughly, to the
+GAMS/MINOS parameter "Pivot tolerance" as it applies for nonlinear problems.
+
+
+<h4><a name="MILESztolrp">
+ztolrp</a>
+<i> (real)</i> relative zero tolerance on pivots</h4><p>
+
+The relative pivot tolerance. This corresponds, roughly, to the GAMS/MINOS
+parameter "Pivot tolerance" as it applies for nonlinear problems.
+
+
+<h4><a name="MILESztolz0">
+ztolz0</a>
+<i> (real)</i> absolute tolerance for installing cover elements</h4><p>
+
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="MILESztolze">
+ztolze</a>
+<i> (real)</i> feasibility tolerance</h4><p>
+
+Used in the subproblem solution to determine when any variable has exceeded
+an upper or lower bound. This corresponds to GAMS/MINOS parameter "Feasibility
+tolerance".
+
+<br><i>(default = 1e-6)</i>
+</body></html>

@@ -1,0 +1,20 @@
+$title checks if empty equation are feasible (EMPTY1,SEQ=60)
+
+* this was reported by Gary Goldstein, GT00487
+
+variable x1; equations e1,e2,e3,e4,e5,e6,e7,e8; model m /all /;
+
+x1.l = 1;
+
+e1..   0*x1 =e= 0;
+e2.. eps*x1 =e= 0;
+e3..   0*x1 =e= eps;
+e4.. eps*x1 =e= eps;
+e5..    inf =g= 0;
+e6..      0 =l= inf;
+e7..    inf =e= inf;
+e8..   -inf =l= inf;
+
+x1.fx=1;
+
+solve m us lp min x1;

@@ -1,0 +1,189 @@
+$title 'Generates HTM testlib library files' (TESTHTM,SEQ=316);
+
+$ontext
+Generates HTM testlib library files
+
+GAMS Development Coorporation, Testlib Tool Box.
+
+  Generates all .htm related files for the set of models
+  found in testmod.inc. Uses unpublished and
+  unsupported PUT_Utilities features.
+
+  The file testmod.inc is the master file for all other
+  derived files.
+
+  Files generated:
+
+     seqindx.htm
+     alfindx.htm
+     *.htm  for all model and include files
+
+  All files $included, read and written have to be in the same
+  directory.  This program can be executed from another location
+  by using the GAMS parameter U1, for example:
+
+     >gams testhtm.316 U1=c:\oldd\alex\gams\gamslib\ver008\testlib\
+
+$offtext
+
+$setglobal testlib '%gams.u1%'
+
+files htm     HTML file handle        / htm.htm /
+      seqindx HTML sequence index     / '%testlib%seqindx.htm' /
+      alfindx HTML alpha index        / '%testlib%alfindx.htm' /
+
+scalar first;
+
+$offlisting
+$include %testlib%testmod.inc
+$onlisting
+*
+*  model htm files
+*
+put htm; htm.pw=1024; htm.lcase=1;
+loop(sm(s,m),
+   put_utilities 'ren'/ '%testlib%' m.tl:0 '.htm';
+   put   '<html> <head> <title>' m.tl:0 '.gms</title>'
+       / '<!--#include virtual="/header.html" -->'
+       / '<h2>'m.tl:0 '.gms : ' m.te(m) '</h2>';
+   put / '<hr>';
+   put_utilities 'htm'/ '%testlib%' m.tl:0 '.' s.tl:0;
+   put / '<hr>';
+   if(big(s), put 'Large ' else put 'Small ' );
+   put 'Model of Type';
+   put$(sum(ts(t,s),1)>1) 's';
+   put ':';
+   htm.lcase=2;
+   loop(tss(t,s), put ' ' t.tl );
+   htm.lcase=1;
+   loop(ts(t,s)$(not tss(t,s)), put ' ' t.tl );
+   first = 1;
+   loop(incmap(inc,s),
+      if(first,
+         put  '&nbsp;&nbsp;&nbsp;Includes:'; first = 0;);
+      put '&nbsp; <a href="' inc.tl:0 '.htm">' inc.tl:0 '.inc</a>');
+   put   '<hr>'
+       / '<plaintext>'
+       / '<!--#include virtual="%testlib%' m.tl:0 '.' s.tl:0 '" -->'
+* Either we do the < > replacement or we use plaintext
+*       / '</pre>'
+*       / '<!--#include virtual="/footer.html" -->'
+*       / '</html>'
+   );
+*
+*  include htm files
+*
+loop(inc,
+   put_utilities 'ren'/ '%testlib%' inc.tl:0 '.htm';
+   put   '<html> <head> <title>' inc.tl:0 '.inc</title>'
+       / '<!--#include virtual="/header.html" -->'
+       / '<h2>'inc.tl:0 '.inc : ' inc.te(inc) '</h2>'
+       / '<hr> <p> Used by:';
+   loop{(incmap(inc,s),sm(s,m)),
+     put '&nbsp; <a href="' m.tl:0 '.htm">' m.tl:0 '.gms</a>';
+     if {(htm.cc > 70),
+       put /;
+     };
+   };
+   put / '</p> <hr>'
+       / '<pre>'
+       / '<!--#include virtual="%testlib%' inc.tl:0 '.inc" -->'
+       / '</pre>'
+       / '<!--#include virtual="/footer.html" -->'
+       / '</html>'  );
+
+
+*
+*  seqindx
+*
+seqindx.lcase=1;
+put seqindx
+ '<HTML> <HEAD> <TITLE> GAMS Testlib Library Chronological Index</TITLE></HEAD>'
+       / '<!--#include virtual="/header.html" -->'
+/'<H1>Testlib Library Chronological Index</H1>'
+/'This is a listing of the Testlib library in order of'
+/'submission date. The newest ones are at the top.'
+/'<P>'
+/'There is also an '
+/'an <A HREF="alfindx.htm">alphabetical index</A>.'
+/'<P>'
+/ '<TABLE>'
+/ '<TR>'
+/ '    <TH ALIGN="LEFT">No</TH>'
+/ '    <TH ALIGN="LEFT">Model</TH>'
+/ '    <TH ALIGN="LEFT">Description</TH>'
+/ '    <TH ALIGN="LEFT">Type</TH>'
+/ '</TR>'
+
+loop((srev(ss,s),sm(s,m)),
+   put / '<TR>'
+       / '    <TD>',s.tl:0,'</TD>'
+       / '    <TD><A HREF="',m.tl:0,'.htm">',m.tl:0,'</A></TD>'
+       / '    <TD>',m.te(m):0,'</TD>'
+       / '    <TD>';
+   seqindx.lcase=2;
+   loop(tss(t,s),
+      put t.tl:0 );
+   seqindx.lcase=0;
+   put   '</TD>'
+       / '</TR>';
+   seqindx.lcase=1; );
+put / '</TABLE>'
+    / '<!--#include virtual="/footer.html" -->'
+    / '</html>';
+
+
+*
+*  alfindx
+*
+alfindx.lcase=1;
+put alfindx
+ '<HTML> <HEAD><TITLE> GAMS Testlib Library Alphabetical Index</TITLE></HEAD>'
+/ '<!--#include virtual="/header.html" -->'
+/'<H1>Testlib Library Alphabetical Index</H1>'
+/'This is an alphabetical listing of the models available'
+/'in the on-line Testlib library.'
+/'There is also a '
+/'a <A HREF="seqindx.htm">chronological index</A>.'
+/'<P><b>Shortcuts:</b> ';
+alfindx.lcase=2;
+loop (letters,
+  put alfindx '<A HREF="#' letters.tl:0 '"> ' letters.tl:0   '</A>' /
+);
+alfindx.lcase=1;
+put alfindx
+/'<P><TABLE>'
+/'<TR>'
+/'    <TD></TD>'
+/'    <TH ALIGN="LEFT">Model</TH>'
+/'    <TH ALIGN="LEFT">Description</TH>'
+/'    <TH ALIGN="LEFT">Type</TH>'
+/ '</TR>'
+
+loop(m,
+   if(letters(m),
+      alfindx.lcase=2;
+      put /'<TR>'
+          /' <TD></TD>'
+          /'<TH COLSPAN=4 ALIGN="LEFT"><A NAME="'m.tl:0'">',m.tl:0,'</TH>'
+          /'</TR>';
+      alfindx.lcase=1;
+   else
+      put / '<TR>'
+*                <TD><IMG SRC="/pics/new.gif"></TD>
+          / '    <TD></TD>'
+          / '    <TD><A HREF="',m.tl:0,'.htm">',m.tl:0,'</A></TD>'
+          / '    <TD>',m.te(m):0,'</TD>'
+          / '    <TD>';
+      alfindx.lcase=2;
+      loop(sm(s,m),
+         loop(tss(t,s),
+            put t.tl:0 );
+      alfindx.lcase=0;
+         put   '</TD>'
+             / '</TR>';
+         alfindx.lcase=1) ));
+put / '</TABLE>'
+    / '<!--#include virtual="/footer.html" -->'
+    / '</html>';
+

@@ -1,0 +1,25 @@
+$Title Test simple logical conditions  (EMPLOG2,SEQ=510)
+
+$ontext
+Verify that 'b2 =e= 1' is accepted as logical condition. There is no need
+to do it this way, but this corresponds to 'not b1 =e 1' which is/was allowed.
+Use both ways of defining a logic equation, via the keyword logic and the sign =B=.
+
+Contributor: Jan-H. Jagla, February 2011
+$offtext
+
+logic equation logic1
+equation logic2;
+binary variable b1,b2;
+
+logic1..  not b1;
+logic2..  b2 =b= 1;
+
+model m /all/;
+
+b1.l = 1;
+b2.l = 0;
+
+solve m using emp;
+abort$(b1.l <> 0) 'b1 is not 0';
+abort$(b2.l <> 1) 'b2 is not 1';

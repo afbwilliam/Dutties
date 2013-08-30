@@ -1,0 +1,3225 @@
+<html>
+<head>
+<title>LINDOGLOBAL Options</title>
+</head>
+<body>
+<h2>LINDOGLOBAL Options</h2>
+GAMS/GOP is the LINDO nonlinear global optimiztion solver.
+<p>
+All GOP options available through GAMS/GOP are described in this
+document.
+<p>For more information about this solver please inspect the
+complete <a href="docs/solvers/lindoglobal.pdf">LINDOGLOBAL manual</a>.
+
+<h2>Summary of LINDOGLOBAL Options</h2>
+<table>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>General Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALDECOMPOSITION_TYPE">
+DECOMPOSITION_TYPE</a></td>
+<td>decomposition to be performed on a linear or mixed integer model</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_FEASTOL">
+SOLVER_FEASTOL</a></td>
+<td>feasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_IUSOL">
+SOLVER_IUSOL</a></td>
+<td>flag for computing basic solution for infeasible model</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_OPTTOL">
+SOLVER_OPTTOL</a></td>
+<td>dual feasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_PRE_ELIM_FILL">
+SOLVER_PRE_ELIM_FILL</a></td>
+<td>fill-in introduced by the eliminations during pre-solve</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_RESTART">
+SOLVER_RESTART</a></td>
+<td>starting basis flag</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_TIMLMT">
+SOLVER_TIMLMT</a></td>
+<td>time limit in seconds for continous solver</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>LP Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALLP_PRELEVEL">
+LP_PRELEVEL</a></td>
+<td>controls the amount and type of LP pre-solving</td></tr>
+<tr><td><a href="#LINDOGLOBALPROB_TO_SOLVE">
+PROB_TO_SOLVE</a></td>
+<td>controls whether the explicit primal or dual form of the given LP problem will be solved</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_CONCURRENT_OPTMODE">
+SOLVER_CONCURRENT_OPTMODE</a></td>
+<td>controls if simplex and interior-point optimizers will run concurrently</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_CUTOFFVAL">
+SOLVER_CUTOFFVAL</a></td>
+<td>solver will exit if optimal solution is worse than this</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_IPMSOL">
+SOLVER_IPMSOL</a></td>
+<td>basis crossover flag for barrier solver</td></tr>
+<tr><td><a href="#LINDOGLOBALSOLVER_USECUTOFFVAL">
+SOLVER_USECUTOFFVAL</a></td>
+<td>flag for using cutoff value</td></tr>
+<tr><td><a href="#LINDOGLOBALSPLEX_DPRICING">
+SPLEX_DPRICING</a></td>
+<td>pricing option for dual simplex method</td></tr>
+<tr><td><a href="#LINDOGLOBALSPLEX_DUAL_PHASE">
+SPLEX_DUAL_PHASE</a></td>
+<td>controls the dual simplex strategy</td></tr>
+<tr><td><a href="#LINDOGLOBALSPLEX_ITRLMT">
+SPLEX_ITRLMT</a></td>
+<td>simplex iteration limit</td></tr>
+<tr><td><a href="#LINDOGLOBALSPLEX_PPRICING">
+SPLEX_PPRICING</a></td>
+<td>pricing option for primal simplex method</td></tr>
+<tr><td><a href="#LINDOGLOBALSPLEX_REFACFRQ">
+SPLEX_REFACFRQ</a></td>
+<td>number of simplex iterations between two consecutive basis re-factorizations</td></tr>
+<tr><td><a href="#LINDOGLOBALSPLEX_SCALE">
+SPLEX_SCALE</a></td>
+<td>scaling flag</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>IPM Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALIPM_BASIS_REL_TOL_S">
+IPM_BASIS_REL_TOL_S</a></td>
+<td>maximum relative dual bound violation allowed in an optimal basic solution</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_BASIS_TOL_S">
+IPM_BASIS_TOL_S</a></td>
+<td>maximum absolute dual bound violation in an optimal basic solution</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_BASIS_TOL_X">
+IPM_BASIS_TOL_X</a></td>
+<td>maximum absolute primal bound violation allowed in an optimal basic solution</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_BI_LU_TOL_REL_PIV">
+IPM_BI_LU_TOL_REL_PIV</a></td>
+<td>relative pivot tolerance used in the LU factorization in the basis identification procedure</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_MAX_ITERATIONS">
+IPM_MAX_ITERATIONS</a></td>
+<td>ipm iteration limit</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_NUM_THREADS">
+IPM_NUM_THREADS</a></td>
+<td>number of threads to run the interiorpoint optimizer on</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_OFF_COL_TRH">
+IPM_OFF_COL_TRH</a></td>
+<td>extent for detecting the offending columns in the Jacobian of the constraint matrix</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_DFEAS">
+IPM_TOL_DFEAS</a></td>
+<td>dual feasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_DSAFE">
+IPM_TOL_DSAFE</a></td>
+<td>controls the initial dual starting point</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_INFEAS">
+IPM_TOL_INFEAS</a></td>
+<td>infeasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_MU_RED">
+IPM_TOL_MU_RED</a></td>
+<td>relative complementarity gap tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_PATH">
+IPM_TOL_PATH</a></td>
+<td>how close to follow the central path</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_PFEAS">
+IPM_TOL_PFEAS</a></td>
+<td>primal feasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_PSAFE">
+IPM_TOL_PSAFE</a></td>
+<td>controls the initial primal starting point</td></tr>
+<tr><td><a href="#LINDOGLOBALIPM_TOL_REL_STEP">
+IPM_TOL_REL_STEP</a></td>
+<td>relative step size to the boundary</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>MIP Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALMIP_ABSOPTTOL">
+MIP_ABSOPTTOL</a></td>
+<td>MIP absolute optimality tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_ADDCUTOBJTOL">
+MIP_ADDCUTOBJTOL</a></td>
+<td>required objective improvement to continue generating cuts</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_ADDCUTPER">
+MIP_ADDCUTPER</a></td>
+<td>percentage of constraint cuts that can be added</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_ADDCUTPER_TREE">
+MIP_ADDCUTPER_TREE</a></td>
+<td>percentage of constraint cuts that can be added at child nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_AGGCUTLIM_TOP">
+MIP_AGGCUTLIM_TOP</a></td>
+<td>max number of constraints involved in derivation of aggregation cut at root node</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_AGGCUTLIM_TREE">
+MIP_AGGCUTLIM_TREE</a></td>
+<td>max number of constraints involved in derivation of aggregation cut at tree nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_ANODES_SWITCH_DF">
+MIP_ANODES_SWITCH_DF</a></td>
+<td>threshold on active nodes for switching to depth-first search</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_AOPTTIMLIM">
+MIP_AOPTTIMLIM</a></td>
+<td>time in seconds beyond which the relative optimality tolerance will be applied</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_BIGM_FOR_INTTOL">
+MIP_BIGM_FOR_INTTOL</a></td>
+<td>threshold for which coefficient of a binary variable would be considered as big-M</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_BRANCHDIR">
+MIP_BRANCHDIR</a></td>
+<td>first branching direction</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_BRANCHRULE">
+MIP_BRANCHRULE</a></td>
+<td>rule for choosing the variable to branch</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_BRANCH_LIMIT">
+MIP_BRANCH_LIMIT</a></td>
+<td>limit on the total number of branches to be created during branch and bound</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_BRANCH_PRIO">
+MIP_BRANCH_PRIO</a></td>
+<td>controls how variable selection priorities are set and used</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_CUTDEPTH">
+MIP_CUTDEPTH</a></td>
+<td>threshold value for the depth of nodes in the branch and bound tree</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_CUTFREQ">
+MIP_CUTFREQ</a></td>
+<td>frequency of invoking cut generation at child nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_CUTLEVEL_TOP">
+MIP_CUTLEVEL_TOP</a></td>
+<td>combination of cut types to try at the root node when solving a MIP</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_CUTLEVEL_TREE">
+MIP_CUTLEVEL_TREE</a></td>
+<td>combination of cut types to try at child nodes in the branch and bound tree when solving a MIP</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_CUTOFFOBJ">
+MIP_CUTOFFOBJ</a></td>
+<td>defines limit for branch and bound</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_CUTTIMLIM">
+MIP_CUTTIMLIM</a></td>
+<td>time to be spent in cut generation</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_DELTA">
+MIP_DELTA</a></td>
+<td>near-zero value used in linearizing nonlinear expressions</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_DUAL_SOLUTION">
+MIP_DUAL_SOLUTION</a></td>
+<td>flag for computing dual solution of LP relaxation</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_FP_ITRLIM">
+MIP_FP_ITRLIM</a></td>
+<td>iteration limit for feasibility pump heuristic</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_FP_MODE">
+MIP_FP_MODE</a></td>
+<td>mode for the feasibility pump heuristic</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_FP_OPT_METHOD">
+MIP_FP_OPT_METHOD</a></td>
+<td>optimization and reoptimization method for feasibility pump heuristic</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_FP_TIMLIM">
+MIP_FP_TIMLIM</a></td>
+<td>time limit for feasibility pump heuristic</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_FP_WEIGTH">
+MIP_FP_WEIGTH</a></td>
+<td>weight of the objective function in the feasibility pump</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_HEULEVEL">
+MIP_HEULEVEL</a></td>
+<td>specifies heuristic used to find integer solution</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_HEUMINTIMLIM">
+MIP_HEUMINTIMLIM</a></td>
+<td>minimum time in seconds to be spent in finding heuristic solutions</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_HEU_MODE">
+MIP_HEU_MODE</a></td>
+<td>heuristic used in MIP solver</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_INTTOL">
+MIP_INTTOL</a></td>
+<td>absolute integer feasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_ITRLIM">
+MIP_ITRLIM</a></td>
+<td>iteration limit for branch and bound</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_KEEPINMEM">
+MIP_KEEPINMEM</a></td>
+<td>flag for keeping LP bases in memory</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_LBIGM">
+MIP_LBIGM</a></td>
+<td>Big-M value used in linearizing nonlinear expressions</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_LSOLTIMLIM">
+MIP_LSOLTIMLIM</a></td>
+<td>time limit until finding a new integer solution</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_MAKECUT_INACTIVE_COUNT">
+MIP_MAKECUT_INACTIVE_COUNT</a></td>
+<td>threshold for times a cut could remain active after successive reoptimization</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_MAXCUTPASS_TOP">
+MIP_MAXCUTPASS_TOP</a></td>
+<td>number passes to generate cuts on the root node</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_MAXCUTPASS_TREE">
+MIP_MAXCUTPASS_TREE</a></td>
+<td>number passes to generate cuts on the child nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_MAXNONIMP_CUTPASS">
+MIP_MAXNONIMP_CUTPASS</a></td>
+<td>number of passes allowed in cut-generation that does not improve current relaxation</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_MAXNUM_MIP_SOL_STORAGE">
+MIP_MAXNUM_MIP_SOL_STORAGE</a></td>
+<td>maximum number of k-best solutions to store</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_MINABSOBJSTEP">
+MIP_MINABSOBJSTEP</a></td>
+<td>value to update cutoff value each time a mixed integer solution is found</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_NODESELRULE">
+MIP_NODESELRULE</a></td>
+<td>specifies the node selection rule</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PEROPTTOL">
+MIP_PEROPTTOL</a></td>
+<td>MIP relative optimality tolerance in effect after MIP_AOPTTIMLIM seconds</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PREHEU_DFE_VSTLIM">
+MIP_PREHEU_DFE_VSTLIM</a></td>
+<td>limit for the variable visit in depth first enumeration</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PREHEU_LEVEL">
+MIP_PREHEU_LEVEL</a></td>
+<td>heuristic level for the prerelax solver</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PREHEU_TC_ITERLIM">
+MIP_PREHEU_TC_ITERLIM</a></td>
+<td>iteration limit for the two change heuristic</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PRELEVEL">
+MIP_PRELEVEL</a></td>
+<td>controls the amount and type of MIP pre-solving at root node</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PRELEVEL_TREE">
+MIP_PRELEVEL_TREE</a></td>
+<td>amount and type of MIP pre-solving at tree nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PRE_ELIM_FILL">
+MIP_PRE_ELIM_FILL</a></td>
+<td>controls fill-in introduced by eliminations during pre-solve</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PSEUDOCOST_RULE">
+MIP_PSEUDOCOST_RULE</a></td>
+<td>specifies the rule in pseudocost computations for variable selection</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_PSEUDOCOST_WEIGT">
+MIP_PSEUDOCOST_WEIGT</a></td>
+<td>weight in pseudocost computations for variable selection</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_REDCOSTFIX_CUTOFF">
+MIP_REDCOSTFIX_CUTOFF</a></td>
+<td>cutoff value as a percentage of the reduced costs</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_REDCOSTFIX_CUTOFF_TREE">
+MIP_REDCOSTFIX_CUTOFF_TREE</a></td>
+<td>cutoff value as a percentage of the reduced costs at tree nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_RELINTTOL">
+MIP_RELINTTOL</a></td>
+<td>relative integer feasibility tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_RELOPTTOL">
+MIP_RELOPTTOL</a></td>
+<td>MIP relative optimality tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_REOPT">
+MIP_REOPT</a></td>
+<td>optimization method to use when doing reoptimization</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_SCALING_BOUND">
+MIP_SCALING_BOUND</a></td>
+<td>maximum difference between bounds of an integer variable for enabling scaling</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_SOLVERTYPE">
+MIP_SOLVERTYPE</a></td>
+<td>optimization method to use when solving mixed-integer models</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_STRONGBRANCHDONUM">
+MIP_STRONGBRANCHDONUM</a></td>
+<td>minimum number of variables to try the strong branching on</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_STRONGBRANCHLEVEL">
+MIP_STRONGBRANCHLEVEL</a></td>
+<td>depth from the root in which strong branching is used</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_SWITCHFAC_SIM_IPM_TIME">
+MIP_SWITCHFAC_SIM_IPM_TIME</a></td>
+<td>factor that multiplies the number of constraints to impose a time limit to simplex method and trigger a switch over to the barrier method</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_TIMLIM">
+MIP_TIMLIM</a></td>
+<td>time limit in seconds for integer solver</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_TOPOPT">
+MIP_TOPOPT</a></td>
+<td>optimization method to use when there is no previous basis</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_TREEREORDERLEVEL">
+MIP_TREEREORDERLEVEL</a></td>
+<td>tree reordering level</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_USECUTOFFOBJ">
+MIP_USECUTOFFOBJ</a></td>
+<td>flag for using branch and bound limit</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_USE_CUTS_HEU">
+MIP_USE_CUTS_HEU</a></td>
+<td>controls if cut generation is enabled during MIP heuristics</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_USE_ENUM_HEU">
+MIP_USE_ENUM_HEU</a></td>
+<td>frequency of enumeration heuristic</td></tr>
+<tr><td><a href="#LINDOGLOBALMIP_USE_INT_ZERO_TOL">
+MIP_USE_INT_ZERO_TOL</a></td>
+<td>controls if all MIP calculations would be based on absolute integer feasibility tolarance</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>NLP Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALNLP_AUTODERIV">
+NLP_AUTODERIV</a></td>
+<td>defining type of computing derivatives</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_AUTOHESS">
+NLP_AUTOHESS</a></td>
+<td>flag for using Second Order Automatic Differentiation for solving NLP</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_DERIV_DIFFTYPE">
+NLP_DERIV_DIFFTYPE</a></td>
+<td>flag indicating the technique used in computing derivatives with finite differences</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_FEASCHK">
+NLP_FEASCHK</a></td>
+<td>how to report results when solution satisfies tolerance of scaled but not original model</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_FEASTOL">
+NLP_FEASTOL</a></td>
+<td>feasibility tolerance for nonlinear constraints</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_ITERS_PER_LOGLINE">
+NLP_ITERS_PER_LOGLINE</a></td>
+<td>number of nonlinear iterations to elapse before next progress message</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_ITRLMT">
+NLP_ITRLMT</a></td>
+<td>nonlinear iteration limit</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_LINEARZ">
+NLP_LINEARZ</a></td>
+<td>extent to which the solver will attempt to linearize nonlinear models</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MAXLOCALSEARCH">
+NLP_MAXLOCALSEARCH</a></td>
+<td>maximum number of local searches</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MAXLOCALSEARCH_TREE">
+NLP_MAXLOCALSEARCH_TREE</a></td>
+<td>maximum number of multistarts</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MAX_RETRY">
+NLP_MAX_RETRY</a></td>
+<td>maximum number refinement retries to purify the final NLP solution</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_EUCDIST_THRES">
+NLP_MSW_EUCDIST_THRES</a></td>
+<td>euclidean distance threshold in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_FILTMODE">
+NLP_MSW_FILTMODE</a></td>
+<td>filtering mode to exclude certain domains during sampling in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_MAXNOIMP">
+NLP_MSW_MAXNOIMP</a></td>
+<td>maximum number of consecutive populations to generate without any improvements</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_MAXPOP">
+NLP_MSW_MAXPOP</a></td>
+<td>maximum number of populations to generate in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_MAXREF">
+NLP_MSW_MAXREF</a></td>
+<td>maximum number of reference points to generate trial points in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_NORM">
+NLP_MSW_NORM</a></td>
+<td>norm to measure the distance between two points in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_POXDIST_THRES">
+NLP_MSW_POXDIST_THRES</a></td>
+<td>penalty function neighborhood threshold in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_SOLIDX">
+NLP_MSW_SOLIDX</a></td>
+<td>index of the multistart solution to be loaded</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_XKKTRAD_FACTOR">
+NLP_MSW_XKKTRAD_FACTOR</a></td>
+<td>KKT solution neighborhood factor in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_MSW_XNULRAD_FACTOR">
+NLP_MSW_XNULRAD_FACTOR</a></td>
+<td>initial solution neighborhood factor in multistart search</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_PRELEVEL">
+NLP_PRELEVEL</a></td>
+<td>controls the amount and type of NLP pre-solving</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_PSTEP_FINITEDIFF">
+NLP_PSTEP_FINITEDIFF</a></td>
+<td>value of the step length in computing the derivatives using finite differences</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_QUADCHK">
+NLP_QUADCHK</a></td>
+<td>flag for checking if NLP is quadratic</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_REDGTOL">
+NLP_REDGTOL</a></td>
+<td>tolerance for the gradients of nonlinear functions</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_SOLVER">
+NLP_SOLVER</a></td>
+<td>type of nonlinear solver</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_SOLVE_AS_LP">
+NLP_SOLVE_AS_LP</a></td>
+<td>flag indicating if the nonlinear model will be solved as an LP</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_STALL_ITRLMT">
+NLP_STALL_ITRLMT</a></td>
+<td>iteration limit before a sequence of non-improving NLP iterations is declared as stalling</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_STARTPOINT">
+NLP_STARTPOINT</a></td>
+<td>flag for using initial starting solution for NLP</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_SUBSOLVER">
+NLP_SUBSOLVER</a></td>
+<td>type of nonlinear subsolver</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_USE_CRASH">
+NLP_USE_CRASH</a></td>
+<td>flag for using simple crash routines for initial solution</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_USE_LINDO_CRASH">
+NLP_USE_LINDO_CRASH</a></td>
+<td>flag for using advanced crash routines for initial solution</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_USE_SELCONEVAL">
+NLP_USE_SELCONEVAL</a></td>
+<td>flag for using selective constraint evaluations for solving NLP</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_USE_SLP">
+NLP_USE_SLP</a></td>
+<td>flag for using sequential linear programming step directions for updating solution</td></tr>
+<tr><td><a href="#LINDOGLOBALNLP_USE_STEEPEDGE">
+NLP_USE_STEEPEDGE</a></td>
+<td>flag for using steepest edge directions for updating solution</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Global Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALABSOPTTOL">
+ABSOPTTOL</a></td>
+<td>absolute optimality tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALALGREFORMMD">
+ALGREFORMMD</a></td>
+<td>algebraic reformulation rule for a GOP</td></tr>
+<tr><td><a href="#LINDOGLOBALBBSRCHMD">
+BBSRCHMD</a></td>
+<td>node selection rule in GOP branch-and-bound</td></tr>
+<tr><td><a href="#LINDOGLOBALBNDLIM">
+BNDLIM</a></td>
+<td>max magnitude of variable bounds used in GOP convexification</td></tr>
+<tr><td><a href="#LINDOGLOBALBOXTOL">
+BOXTOL</a></td>
+<td>minimal width of variable intervals</td></tr>
+<tr><td><a href="#LINDOGLOBALBRANCHMD">
+BRANCHMD</a></td>
+<td>direction to branch first when branching on a variable</td></tr>
+<tr><td><a href="#LINDOGLOBALBRANCH_LIMIT">
+BRANCH_LIMIT</a></td>
+<td>limit on the total number of branches to be created in GOP tree</td></tr>
+<tr><td><a href="#LINDOGLOBALCORELEVEL">
+CORELEVEL</a></td>
+<td>strategy of GOP branch-and-bound</td></tr>
+<tr><td><a href="#LINDOGLOBALDECOMPPTMD">
+DECOMPPTMD</a></td>
+<td>decomposition point selection rule in GOP branch-and-bound</td></tr>
+<tr><td><a href="#LINDOGLOBALDELTATOL">
+DELTATOL</a></td>
+<td>delta tolerance in GOP convexification</td></tr>
+<tr><td><a href="#LINDOGLOBALFLTTOL">
+FLTTOL</a></td>
+<td>floating-point tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALHEU_MODE">
+HEU_MODE</a></td>
+<td>heuristic used in global solver</td></tr>
+<tr><td><a href="#LINDOGLOBALITRLIM">
+ITRLIM</a></td>
+<td>GOP iteration limit</td></tr>
+<tr><td><a href="#LINDOGLOBALITRLIM_IPM">
+ITRLIM_IPM</a></td>
+<td>total barrier iteration limit summed over all branches in GOP</td></tr>
+<tr><td><a href="#LINDOGLOBALITRLIM_NLP">
+ITRLIM_NLP</a></td>
+<td>total nonlinear iteration limit summed over all branches in GOP</td></tr>
+<tr><td><a href="#LINDOGLOBALITRLIM_SIM">
+ITRLIM_SIM</a></td>
+<td>total simplex iteration limit summed over all branches in GOP</td></tr>
+<tr><td><a href="#LINDOGLOBALLIM_MODE">
+LIM_MODE</a></td>
+<td>flag indicating which heuristic limit on sub-solver in GOP is based</td></tr>
+<tr><td><a href="#LINDOGLOBALLSOLBRANLIM">
+LSOLBRANLIM</a></td>
+<td>branch limit until finding a new nonlinear solution</td></tr>
+<tr><td><a href="#LINDOGLOBALMAXWIDMD">
+MAXWIDMD</a></td>
+<td>maximum width flag for the global solution</td></tr>
+<tr><td><a href="#LINDOGLOBALOPTCHKMD">
+OPTCHKMD</a></td>
+<td>criterion used to certify the global optimality</td></tr>
+<tr><td><a href="#LINDOGLOBALOPT_MODE">
+OPT_MODE</a></td>
+<td>mode for GOP optimization</td></tr>
+<tr><td><a href="#LINDOGLOBALPOSTLEVEL">
+POSTLEVEL</a></td>
+<td>amount and type of GOP postsolving</td></tr>
+<tr><td><a href="#LINDOGLOBALPRELEVEL">
+PRELEVEL</a></td>
+<td>amount and type of GOP presolving</td></tr>
+<tr><td><a href="#LINDOGLOBALRELBRNDMD">
+RELBRNDMD</a></td>
+<td>reliable rounding in the GOP branch-and-bound</td></tr>
+<tr><td><a href="#LINDOGLOBALRELOPTTOL">
+RELOPTTOL</a></td>
+<td>relative optimality tolerance</td></tr>
+<tr><td><a href="#LINDOGLOBALSUBOUT_MODE">
+SUBOUT_MODE</a></td>
+<td>substituting out fixed variables</td></tr>
+<tr><td><a href="#LINDOGLOBALTIMLIM">
+TIMLIM</a></td>
+<td>time limit in seconds for GOP branch-and-bound</td></tr>
+<tr><td><a href="#LINDOGLOBALUSEBNDLIM">
+USEBNDLIM</a></td>
+<td>max magnitude of variable bounds flag for GOP convexification</td></tr>
+<tr><td><a href="#LINDOGLOBALUSEGOP">
+USEGOP</a></td>
+<td>use global optimization</td></tr>
+<tr><td><a href="#LINDOGLOBALWIDTOL">
+WIDTOL</a></td>
+<td>maximal width of variable intervals</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>SP Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALCORE_ORDER_BY_STAGE">
+CORE_ORDER_BY_STAGE</a></td>
+<td>order nontemporal models or not</td></tr>
+<tr><td><a href="#LINDOGLOBALREPORTEVSOL">
+REPORTEVSOL</a></td>
+<td>solve and report the expected value solution</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_CDSINC">
+SAMP_CDSINC</a></td>
+<td>correlation matrix diagonal shift increment</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_NCM_CUTOBJ">
+SAMP_NCM_CUTOBJ</a></td>
+<td>objective cutoff (target) value to stop the nearest correlation matrix (NCM) subproblem</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_NCM_DSTORAGE">
+SAMP_NCM_DSTORAGE</a></td>
+<td>flag to enable or disable sparse mode in NCM computations</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_NCM_ITERLIM">
+SAMP_NCM_ITERLIM</a></td>
+<td>iteration limit for NCM method</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_NCM_METHOD">
+SAMP_NCM_METHOD</a></td>
+<td>bitmask to enable methods for solving the nearest correlation matrix (NCM) subproblem</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_NCM_OPTTOL">
+SAMP_NCM_OPTTOL</a></td>
+<td>optimality tolerance for NCM method</td></tr>
+<tr><td><a href="#LINDOGLOBALSAMP_SCALE">
+SAMP_SCALE</a></td>
+<td>flag to enable scaling of raw sample data</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ABSOPTTOL">
+STOC_ABSOPTTOL</a></td>
+<td>absolute optimality tolerance (w.r.t lower and upper bounds on the true objective) to stop the solver</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ADD_MPI">
+STOC_ADD_MPI</a></td>
+<td>flag to use add-instructions mode when building deteq</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ALD_DUAL_FEASTOL">
+STOC_ALD_DUAL_FEASTOL</a></td>
+<td>dual feasibility tolerance for ALD</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ALD_DUAL_STEPLEN">
+STOC_ALD_DUAL_STEPLEN</a></td>
+<td>dual step length for ALD</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ALD_INNER_ITER_LIM">
+STOC_ALD_INNER_ITER_LIM</a></td>
+<td>inner loop iteration limit for ALD</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ALD_OUTER_ITER_LIM">
+STOC_ALD_OUTER_ITER_LIM</a></td>
+<td>outer loop iteration limit for ALD</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ALD_PRIMAL_FEASTOL">
+STOC_ALD_PRIMAL_FEASTOL</a></td>
+<td>primal feasibility tolerance for ALD</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ALD_PRIMAL_STEPLEN">
+STOC_ALD_PRIMAL_STEPLEN</a></td>
+<td>primal step length for ALD</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_AUTOAGGR">
+STOC_AUTOAGGR</a></td>
+<td>flag to enable or disable autoaggregation</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_BENCHMARK_SCEN">
+STOC_BENCHMARK_SCEN</a></td>
+<td>benchmark scenario to compare EVPI and EVMU against</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_BIGM">
+STOC_BIGM</a></td>
+<td>big-M value for linearization and penalty functions</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_BUCKET_SIZE">
+STOC_BUCKET_SIZE</a></td>
+<td>bucket size in Benders decomposition</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_CALC_EVPI">
+STOC_CALC_EVPI</a></td>
+<td>flag to enable or disable calculation of EVPI</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_CORRELATION_TYPE">
+STOC_CORRELATION_TYPE</a></td>
+<td>correlation type associated with correlation matrix</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_DEQOPT">
+STOC_DEQOPT</a></td>
+<td>method to solve the DETEQ problem</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_DETEQ_TYPE">
+STOC_DETEQ_TYPE</a></td>
+<td>type of deterministic equivalent</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ELIM_FXVAR">
+STOC_ELIM_FXVAR</a></td>
+<td>flag to enable elimination of fixed variables from deteq MPI</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_INFBND">
+STOC_INFBND</a></td>
+<td>value to truncate infinite bounds at non-leaf nodes</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_ITER_LIM">
+STOC_ITER_LIM</a></td>
+<td>iteration limit for stochastic solver</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_MAP_MPI2LP">
+STOC_MAP_MPI2LP</a></td>
+<td>flag to specify whether stochastic parameters in MPI will be mapped as LP matrix elements</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_MAX_NUMSCENS">
+STOC_MAX_NUMSCENS</a></td>
+<td>maximum number of scenarios before forcing automatic sampling</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_METHOD">
+STOC_METHOD</a></td>
+<td>stochastic optimization method to solve the model</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_NAMEDATA_LEVEL">
+STOC_NAMEDATA_LEVEL</a></td>
+<td>name data level</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_NODELP_PRELEVEL">
+STOC_NODELP_PRELEVEL</a></td>
+<td>presolve level solving node-models</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_NSAMPLE_PER_STAGE">
+STOC_NSAMPLE_PER_STAGE</a></td>
+<td>list of sample sizes per stage (starting at stage 2)</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_NSAMPLE_SPAR">
+STOC_NSAMPLE_SPAR</a></td>
+<td>common sample size per stochastic parameter</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_NSAMPLE_STAGE">
+STOC_NSAMPLE_STAGE</a></td>
+<td>common sample size per stage</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_RELOPTTOL">
+STOC_RELOPTTOL</a></td>
+<td>relative optimality tolerance (w.r.t lower and upper bounds on the true objective) to stop the solver</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_REOPT">
+STOC_REOPT</a></td>
+<td>reoptimization method to solve the node-models</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_RG_SEED">
+STOC_RG_SEED</a></td>
+<td>seed to initialize the random number generator</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_SAMP_CONT_ONLY">
+STOC_SAMP_CONT_ONLY</a></td>
+<td>flag to restrict sampling to continuous stochastic parameters only or not</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_SBD_MAXCUTS">
+STOC_SBD_MAXCUTS</a></td>
+<td>max cuts to generate for master problem</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_SBD_NUMCANDID">
+STOC_SBD_NUMCANDID</a></td>
+<td>maximum number of candidate solutions to generate at SBD root</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_SBD_OBJCUTFLAG">
+STOC_SBD_OBJCUTFLAG</a></td>
+<td>flag to enable objective cut in SBD master problem</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_SBD_OBJCUTVAL">
+STOC_SBD_OBJCUTVAL</a></td>
+<td>RHS value of objective cut in SBD master problem</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_SHARE_BEGSTAGE">
+STOC_SHARE_BEGSTAGE</a></td>
+<td>stage beyond which node-models are shared</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_TIME_LIM">
+STOC_TIME_LIM</a></td>
+<td>time limit for stochastic solver</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_TOPOPT">
+STOC_TOPOPT</a></td>
+<td>optimization method to solve the root problem</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_VARCONTROL_METHOD">
+STOC_VARCONTROL_METHOD</a></td>
+<td>sampling method for variance reduction</td></tr>
+<tr><td><a href="#LINDOGLOBALSTOC_WSBAS">
+STOC_WSBAS</a></td>
+<td>warm start basis for wait-see model</td></tr>
+<tr><td><a href="#LINDOGLOBALSVR_LS_ANTITHETIC">
+SVR_LS_ANTITHETIC</a></td>
+<td>Sample variance reduction map to Lindo Antithetic algorithm</td></tr>
+<tr><td><a href="#LINDOGLOBALSVR_LS_LATINSQUARE">
+SVR_LS_LATINSQUARE</a></td>
+<td>Sample variance reduction map to Lindo Latin Square algorithm</td></tr>
+<tr><td><a href="#LINDOGLOBALSVR_LS_MONTECARLO">
+SVR_LS_MONTECARLO</a></td>
+<td>Sample variance reduction map to Lindo Montecarlo algorithm</td></tr>
+<tr><th height=75 valign=bottom colspan=2 align=left><h3>Link Options</h3></th></tr>
+<tr><td><a href="#LINDOGLOBALCHECKRANGE">
+CHECKRANGE</a></td>
+<td>calculate feasible range for variables</td></tr>
+<tr><td><a href="#LINDOGLOBALREADPARAMS">
+READPARAMS</a></td>
+<td>read Lindo parameter file</td></tr>
+<tr><td><a href="#LINDOGLOBALWRITEDEMPI">
+WRITEDEMPI</a></td>
+<td>write deterministic equivalent in MPI format</td></tr>
+<tr><td><a href="#LINDOGLOBALWRITEDEMPS">
+WRITEDEMPS</a></td>
+<td>write deterministic equivalent in MPS format</td></tr>
+<tr><td><a href="#LINDOGLOBALWRITEMPI">
+WRITEMPI</a></td>
+<td>write (S)MPI file of processed model</td></tr>
+<tr><td><a href="#LINDOGLOBALWRITEMPS">
+WRITEMPS</a></td>
+<td>write (S)MPS file of processed model</td></tr></table>
+<h2>Detailed Descriptions of LINDOGLOBAL Options</h2>
+
+<h4><a name="LINDOGLOBALABSOPTTOL">
+ABSOPTTOL</a>
+<i> (real)</i> absolute optimality tolerance</h4><p>
+
+This value is the GOP absolute optimality tolerance. Solutions must beat the
+incumbent by at least this amount to become the new best solution.
+
+<br><i>(default = GAMS OptCA)</i>
+
+<h4><a name="LINDOGLOBALALGREFORMMD">
+ALGREFORMMD</a>
+<i> (integer)</i> algebraic reformulation rule for a GOP</h4><p>
+
+This controls the algebraic reformulation rule for a GOP. The
+algebraic reformulation and analysis is very crucial in building a
+tight convex envelope to enclose the nonlinear/nonconvex functions. A
+lower degree of overestimation on convex envelopes helps increase the
+convergence rate to the global optimum.
+
+<br><i>(default = 18)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Rearrange and collect terms</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Expand all parentheses</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Retain nonlinear functions</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Selectively expand parentheses</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALBBSRCHMD">
+BBSRCHMD</a>
+<i> (integer)</i> node selection rule in GOP branch-and-bound</h4><p>
+
+This specifies the node selection rule for choosing between all active
+nodes in the GOP branch-and-bound tree when solving global
+optimization programs.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Depth first search</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Choose node with worst bound</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALBNDLIM">
+BNDLIM</a>
+<i> (real)</i> max magnitude of variable bounds used in GOP convexification</h4><p>
+
+This value specifies the maximum magnitude of variable bounds used in
+the GOP convexification. Any lower bound smaller than the negative of
+this value will be treated as the negative of this value. Any upper
+bound greater than this value will be treated as this value. This
+helps the global solver focus on more productive domains.
+
+<br><i>(default = 1e10)</i>
+
+<h4><a name="LINDOGLOBALBOXTOL">
+BOXTOL</a>
+<i> (real)</i> minimal width of variable intervals</h4><p>
+
+This value specifies the minimal width of variable intervals in a box
+allowed to branch.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LINDOGLOBALBRANCHMD">
+BRANCHMD</a>
+<i> (integer)</i> direction to branch first when branching on a variable</h4><p>
+
+This specifies the direction to branch first when branching on a
+variable. The branch variable is selected as the one that holds the
+largest magnitude in the measure.
+
+<br><i>(default = 5)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Absolute width</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Locally relative width</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Globally relative width</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Globally relative distance from the convex minimum to the bounds</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Absolute violation between the function and its convex envelope at the convex minimum</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Relative violation between the function and its convex envelope at the convex minimum</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALBRANCH_LIMIT">
+BRANCH_LIMIT</a>
+<i> (integer)</i> limit on the total number of branches to be created in GOP tree</h4><p>
+
+This is the limit on the total number of branches to be created during
+branch-and- bound in GOP tree. The default value is -1, which means no
+limit is imposed. If the branch limit is reached and a feasible
+solution was found, it will be installed as the incumbent (best known)
+solution.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALCHECKRANGE">
+CHECKRANGE</a>
+<i> (string)</i> calculate feasible range for variables</h4><p>
+
+If this option is set, Lindo calculates the feasible range (determined by an
+upper and lower bound) for every variable in each equation while all other
+variables are fixed to their level. If set, the value of this option defines
+the name of the GDX file where the results are written to. For every
+combination of equation- and variable block there will be one symbol in the
+format <i>EquBlock_VarBlock(equ_Ind_1, ..., equ_Ind_M, var_Ind_1, ..., var_Ind_N, directions)</i>.
+
+<br><i>(default = range.gdx)</i>
+
+<h4><a name="LINDOGLOBALCORELEVEL">
+CORELEVEL</a>
+<i> (integer)</i> strategy of GOP branch-and-bound</h4><p>
+
+This controls the strategy of GOP branch-and-bound procedure.
+
+<br><i>(default = 14)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>LP convex relaxation</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>NLP solving</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Box Branching</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALCORE_ORDER_BY_STAGE">
+CORE_ORDER_BY_STAGE</a>
+<i> (integer)</i> order nontemporal models or not</h4><p>
+
+Order nontemporal models or not.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALDECOMPOSITION_TYPE">
+DECOMPOSITION_TYPE</a>
+<i> (integer)</i> decomposition to be performed on a linear or mixed integer model</h4><p>
+
+This refers to the type of decomposition to be performed on a linear
+or mixed integer model.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides which type of decomposition to use</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solver does not perform any decompositions and uses the original model</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Attempt total decomposition</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Decomposed model will have dual angular structure</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Decomposed model will have block angular structure</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Decomposed model will have both dual and block angular structure</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALDECOMPPTMD">
+DECOMPPTMD</a>
+<i> (integer)</i> decomposition point selection rule in GOP branch-and-bound</h4><p>
+
+This specifies the decomposition point selection rule. In the branch
+step of GOP branch-and-bound, a branch point M is selected to
+decompose the selected variable interval [Lb, Ub] into two
+subintervals, [Lb, M] and [M, Ub].
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Mid-point</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Local minimum or convex minimum</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALDELTATOL">
+DELTATOL</a>
+<i> (real)</i> delta tolerance in GOP convexification</h4><p>
+
+This value is the delta tolerance in the GOP convexification. It is a
+measure of how closely the additional constraints added as part of
+convexification should be satisfied.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALFLTTOL">
+FLTTOL</a>
+<i> (real)</i> floating-point tolerance</h4><p>
+
+This value is the GOP floating-point tolerance. It specifies the
+maximum rounding errors in the floating-point computation.
+
+<br><i>(default = 1e-10)</i>
+
+<h4><a name="LINDOGLOBALHEU_MODE">
+HEU_MODE</a>
+<i> (integer)</i> heuristic used in global solver</h4><p>
+
+This specifies the heuristic used in the global solver to find a good
+solution.  Typically, if a heuristic is used, this will put more
+efforts in searching for good solutions, and less in bound tightening.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No heuristic is used</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>A simple heuristic is used</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALIPM_BASIS_REL_TOL_S">
+IPM_BASIS_REL_TOL_S</a>
+<i> (real)</i> maximum relative dual bound violation allowed in an optimal basic solution</h4><p>
+
+Maximum relative dual bound violation allowed in an optimal basic solution.
+
+<br><i>(default = 1e-12)</i>
+
+<h4><a name="LINDOGLOBALIPM_BASIS_TOL_S">
+IPM_BASIS_TOL_S</a>
+<i> (real)</i> maximum absolute dual bound violation in an optimal basic solution</h4><p>
+
+Maximum absolute dual bound violation in an optimal basic solution.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALIPM_BASIS_TOL_X">
+IPM_BASIS_TOL_X</a>
+<i> (real)</i> maximum absolute primal bound violation allowed in an optimal basic solution</h4><p>
+
+Maximum absolute primal bound violation allowed in an optimal basic
+solution.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALIPM_BI_LU_TOL_REL_PIV">
+IPM_BI_LU_TOL_REL_PIV</a>
+<i> (real)</i> relative pivot tolerance used in the LU factorization in the basis identification procedure</h4><p>
+
+Relative pivot tolerance used in the LU factorization in the basis identification
+procedure.
+
+<br><i>(default = 1e-2)</i>
+
+<h4><a name="LINDOGLOBALIPM_MAX_ITERATIONS">
+IPM_MAX_ITERATIONS</a>
+<i> (integer)</i> ipm iteration limit</h4><p>
+
+Controls the maximum number of iterations allowed in the interior-point
+optimizer.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="LINDOGLOBALIPM_NUM_THREADS">
+IPM_NUM_THREADS</a>
+<i> (integer)</i> number of threads to run the interiorpoint optimizer on</h4><p>
+
+Number of threads to run the interiorpoint optimizer on. This value should be
+less than or equal to the actual number of processors or cores on a multi-core
+system.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALIPM_OFF_COL_TRH">
+IPM_OFF_COL_TRH</a>
+<i> (integer)</i> extent for detecting the offending columns in the Jacobian of the constraint matrix</h4><p>
+
+Controls the extent for detecting the offending columns in the Jacobian of
+the constraint matrix. 0 means no offending columns will be detected. 1 means
+offending columns will be detected. In general, increasing the parameter value
+beyond the default value of 40 does not improve the result.
+
+<br><i>(default = 40)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_DFEAS">
+IPM_TOL_DFEAS</a>
+<i> (real)</i> dual feasibility tolerance</h4><p>
+
+Dual feasibility tolerance used for linear and quadratic optimization problems.
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_DSAFE">
+IPM_TOL_DSAFE</a>
+<i> (real)</i> controls the initial dual starting point</h4><p>
+
+Controls the initial dual starting point used by the interior-point optimizer. If
+the interior-point optimizer converges slowly and/or the dual variables
+associated with constraint or variable bounds are very large, then it might be
+worthwhile to increase this value.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_INFEAS">
+IPM_TOL_INFEAS</a>
+<i> (real)</i> infeasibility tolerance</h4><p>
+
+This is the tolerance to declare the model primal or dual infeasible using
+the interior-point optimizer. A smaller number means the optimizer gets more
+conservative about declaring the model infeasible.
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_MU_RED">
+IPM_TOL_MU_RED</a>
+<i> (real)</i> relative complementarity gap tolerance</h4><p>
+
+Relative complementarity gap tolerance.
+
+<br><i>(default = 1e-16)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_PATH">
+IPM_TOL_PATH</a>
+<i> (real)</i> how close to follow the central path</h4><p>
+
+Controls how close the interior-point optimizer follows the central path. A
+large value of this parameter means the central path is followed very closely.
+For numerically unstable problems it might help to increase this parameter.
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_PFEAS">
+IPM_TOL_PFEAS</a>
+<i> (real)</i> primal feasibility tolerance</h4><p>
+
+Primal feasibility tolerance used for linear and quadratic optimization
+problems.
+
+<br><i>(default = 1e-8)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_PSAFE">
+IPM_TOL_PSAFE</a>
+<i> (real)</i> controls the initial primal starting point</h4><p>
+
+Controls the initial primal starting point used by the interior-point optimizer. If
+the interior-point optimizer converges slowly and/or the constraint or variable
+bounds are very large, then it might be worthwhile to increase this value.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALIPM_TOL_REL_STEP">
+IPM_TOL_REL_STEP</a>
+<i> (real)</i> relative step size to the boundary</h4><p>
+
+Relative step size to the boundary for linear and quadratic optimization
+problems.
+
+<br><i>(default = 0.9999)</i>
+
+<h4><a name="LINDOGLOBALITRLIM">
+ITRLIM</a>
+<i> (real)</i> GOP iteration limit</h4><p>
+
+This is the total iteration limit (including simplex, barrier and nonlinear iteration)
+summed over branches in GOP. The default value is -1, which means no
+iteration limit is imposed. If this limit is reached, GOP will stop.
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="LINDOGLOBALITRLIM_IPM">
+ITRLIM_IPM</a>
+<i> (real)</i> total barrier iteration limit summed over all branches in GOP</h4><p>
+
+This is the total barrier iteration limit summed over all branches in GOP.
+The default value is -1, which means no iteration limit is imposed. If this limit is
+reached, GOP will stop.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALITRLIM_NLP">
+ITRLIM_NLP</a>
+<i> (real)</i> total nonlinear iteration limit summed over all branches in GOP</h4><p>
+
+This is the total nonlinear iteration limit summed over all branches in GOP.
+The default value is -1, which means no iteration limit is imposed. If this limit is
+reached, GOP will stop.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALITRLIM_SIM">
+ITRLIM_SIM</a>
+<i> (real)</i> total simplex iteration limit summed over all branches in GOP</h4><p>
+
+This is the total simplex iteration limit summed over all branches in GOP.
+The default value is -1, which means no iteration limit is imposed. If this limit is
+reached, GOP will stop.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALLIM_MODE">
+LIM_MODE</a>
+<i> (integer)</i> flag indicating which heuristic limit on sub-solver in GOP is based</h4><p>
+
+This is a flag indicating which heuristic limit on sub-solver in GOP is based.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>No limit</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Time based limit</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Iteration based limit</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Both time and iteration based limit</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALLP_PRELEVEL">
+LP_PRELEVEL</a>
+<i> (integer)</i> controls the amount and type of LP pre-solving</h4><p>
+
+This controls the amount and type of LP pre-solving to be used.
+
+<br><i>(default = 126)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Simple pre-solving</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Probing</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Elimination</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Dual reductions</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Use dual information</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Maximum pass</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALLSOLBRANLIM">
+LSOLBRANLIM</a>
+<i> (integer)</i> branch limit until finding a new nonlinear solution</h4><p>
+
+This value controls the branch limit until finding a new nonlinear
+solution since the last nonlinear solution is found. The default value
+is -1, which means no branch limit is imposed.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMAXWIDMD">
+MAXWIDMD</a>
+<i> (integer)</i> maximum width flag for the global solution</h4><p>
+
+This is the maximum width flag for the global solution. The GOP
+branch-and-bound may continue contracting a box with an incumbent
+solution until its maximum width is smaller than
+<a href="#LINDOGLOBALWIDTOL">
+WIDTOL</a>.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The maximum width criterion is suppressed</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>The maximum width criterion is performed</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_ABSOPTTOL">
+MIP_ABSOPTTOL</a>
+<i> (real)</i> MIP absolute optimality tolerance</h4><p>
+
+This is the MIP absolute optimality tolerance. Solutions must beat the
+incumbent by at least this absolute amount to become the new, best
+solution.
+
+<br><i>(default = GAMS OptCA)</i>
+
+<h4><a name="LINDOGLOBALMIP_ADDCUTOBJTOL">
+MIP_ADDCUTOBJTOL</a>
+<i> (real)</i> required objective improvement to continue generating cuts</h4><p>
+
+This specifies the minimum required improvement in the objective
+function for the cut generation phase to continue generating cuts.
+
+<br><i>(default = 1.5625e-5)</i>
+
+<h4><a name="LINDOGLOBALMIP_ADDCUTPER">
+MIP_ADDCUTPER</a>
+<i> (real)</i> percentage of constraint cuts that can be added</h4><p>
+
+This determines how many constraint cuts can be added as a percentage
+of the number of original rows in an integer programming model.
+
+<br><i>(default = 0.75)</i>
+
+<h4><a name="LINDOGLOBALMIP_ADDCUTPER_TREE">
+MIP_ADDCUTPER_TREE</a>
+<i> (real)</i> percentage of constraint cuts that can be added at child nodes</h4><p>
+
+This determines how many constraint cuts can be added at child nodes
+as a percentage of the number of original rows in an integer
+programming model.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="LINDOGLOBALMIP_AGGCUTLIM_TOP">
+MIP_AGGCUTLIM_TOP</a>
+<i> (integer)</i> max number of constraints involved in derivation of aggregation cut at root node</h4><p>
+
+This specifies an upper limit on the number of constraints to be
+involved in the derivation of an aggregation cut at the root node. The
+default is .1, which means that the solver will decide.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMIP_AGGCUTLIM_TREE">
+MIP_AGGCUTLIM_TREE</a>
+<i> (integer)</i> max number of constraints involved in derivation of aggregation cut at tree nodes</h4><p>
+
+This specifies an upper limit on the number of constraints to be
+involved in the derivation of an aggregation cut at the tree
+nodes. The default is .1, which means that the solver will decide.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMIP_ANODES_SWITCH_DF">
+MIP_ANODES_SWITCH_DF</a>
+<i> (integer)</i> threshold on active nodes for switching to depth-first search</h4><p>
+
+This specifies the threshold on active nodes for switching to
+depth-first search rule.
+
+<br><i>(default = 50000)</i>
+
+<h4><a name="LINDOGLOBALMIP_AOPTTIMLIM">
+MIP_AOPTTIMLIM</a>
+<i> (integer)</i> time in seconds beyond which the relative optimality tolerance will be applied</h4><p>
+
+This is the time in seconds beyond which the relative optimality
+tolerance, <a href="#LINDOGLOBALMIP_PEROPTTOL">
+MIP_PEROPTTOL</a> will be applied.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="LINDOGLOBALMIP_BIGM_FOR_INTTOL">
+MIP_BIGM_FOR_INTTOL</a>
+<i> (real)</i> threshold for which coefficient of a binary variable would be considered as big-M</h4><p>
+
+This value specifies the threshold for which the coefficient of a
+binary variable would be considered as big-M (when applicable).
+
+<br><i>(default = 1e8)</i>
+
+<h4><a name="LINDOGLOBALMIP_BRANCHDIR">
+MIP_BRANCHDIR</a>
+<i> (integer)</i> first branching direction</h4><p>
+
+This specifies the direction to branch first when branching on a
+variable.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Always branch up first</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Always branch down first</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_BRANCHRULE">
+MIP_BRANCHRULE</a>
+<i> (integer)</i> rule for choosing the variable to branch</h4><p>
+
+This specifies the rule for choosing the variable to branch on at the
+selected node.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Basis rounding with pseudo reduced costs</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Maximum infeasibility</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Pseudo reduced costs only</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_BRANCH_LIMIT">
+MIP_BRANCH_LIMIT</a>
+<i> (integer)</i> limit on the total number of branches to be created during branch and bound</h4><p>
+
+This is the limit on the total number of branches to be created during
+branch-and- bound. The default value is -1, which means no limit is
+imposed.  If the branch limit is reached and a feasible integer
+solution was found, it will be installed as the incumbent (best known)
+solution.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMIP_BRANCH_PRIO">
+MIP_BRANCH_PRIO</a>
+<i> (integer)</i> controls how variable selection priorities are set and used</h4><p>
+
+This controls how variable selection priorities are set and used.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>If the user has specified priorities then use them Otherwise let LINDO API decide</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>If user has specified priorities then use them Overwrite users choices if necessary</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>If user has specified priorities then use them Otherwise do not use any priorities</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Let LINDO API set the priorities and ignore any user specified priorities</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Binaries always have higher priority over general integers</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_CUTDEPTH">
+MIP_CUTDEPTH</a>
+<i> (integer)</i> threshold value for the depth of nodes in the branch and bound tree</h4><p>
+
+This controls a threshold value for the depth of nodes in the B&amp;B
+tree, so cut generation will be less likely at those nodes deeper than
+this threshold.
+
+<br><i>(default = 8)</i>
+
+<h4><a name="LINDOGLOBALMIP_CUTFREQ">
+MIP_CUTFREQ</a>
+<i> (integer)</i> frequency of invoking cut generation at child nodes</h4><p>
+
+This controls the frequency of invoking cut generation at child
+nodes. The default value is 10, indicating that the MIP solver will
+try to generate cuts at every 10 nodes.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LINDOGLOBALMIP_CUTLEVEL_TOP">
+MIP_CUTLEVEL_TOP</a>
+<i> (integer)</i> combination of cut types to try at the root node when solving a MIP</h4><p>
+
+This controls the combination of cut types to try at the root node
+when solving a MIP. Bit settings are used to enable the various cut
+types.
+
+<br><i>(default = 22526)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>GUB cover</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Flow cover</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Lifting</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Plant location</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Disaggregation</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Knapsack cover</td></tr>
+<tr valign="top"><td width=20 align=right>+128</td><td>Lattice</td></tr>
+<tr valign="top"><td width=20 align=right>+256</td><td>Gomory</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+1024</td><td>GCD</td></tr>
+<tr valign="top"><td width=20 align=right>+2048</td><td>Obj integrality</td></tr>
+<tr valign="top"><td width=20 align=right>+4096</td><td>Basis Cuts</td></tr>
+<tr valign="top"><td width=20 align=right>+8192</td><td>Cardinality Cuts</td></tr>
+<tr valign="top"><td width=20 align=right>+16384</td><td>Disjunk Cuts</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_CUTLEVEL_TREE">
+MIP_CUTLEVEL_TREE</a>
+<i> (integer)</i> combination of cut types to try at child nodes in the branch and bound tree when solving a MIP</h4><p>
+
+This controls the combination of cut types to try at child nodes in
+the B&amp;B tree when solving a MIP.
+
+<br><i>(default = 4094)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>GUB cover</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Flow cover</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Lifting</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Plant location</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Disaggregation</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Knapsack cover</td></tr>
+<tr valign="top"><td width=20 align=right>+128</td><td>Lattice</td></tr>
+<tr valign="top"><td width=20 align=right>+256</td><td>Gomory</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+1024</td><td>GCD</td></tr>
+<tr valign="top"><td width=20 align=right>+2048</td><td>Obj integrality</td></tr>
+<tr valign="top"><td width=20 align=right>+4096</td><td>Basis Cuts</td></tr>
+<tr valign="top"><td width=20 align=right>+8192</td><td>Cardinality Cuts</td></tr>
+<tr valign="top"><td width=20 align=right>+16384</td><td>Disjunk Cuts</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_CUTOFFOBJ">
+MIP_CUTOFFOBJ</a>
+<i> (real)</i> defines limit for branch and bound</h4><p>
+
+If this is specified, then any part of the branch-and-bound tree that
+has a bound worse than this value will not be considered. This can be
+used to reduce the running time if a good bound is known.
+
+<br><i>(default = 1e30)</i>
+
+<h4><a name="LINDOGLOBALMIP_CUTTIMLIM">
+MIP_CUTTIMLIM</a>
+<i> (integer)</i> time to be spent in cut generation</h4><p>
+
+This controls the total time to be spent in cut generation throughout
+the solution of a MIP. The default value is -1, indicating that no
+time limits will be imposed when generating cuts.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMIP_DELTA">
+MIP_DELTA</a>
+<i> (real)</i> near-zero value used in linearizing nonlinear expressions</h4><p>
+
+This refers to a near-zero value used in linearizing nonlinear
+expressions.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LINDOGLOBALMIP_DUAL_SOLUTION">
+MIP_DUAL_SOLUTION</a>
+<i> (integer)</i> flag for computing dual solution of LP relaxation</h4><p>
+
+This flag controls whether the dual solution to the LP relaxation that
+yielded the optimal MIP solution will be computed or not.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not calculate dual solution for LP relaxation</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Calculate dual solution for LP relaxation</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_FP_ITRLIM">
+MIP_FP_ITRLIM</a>
+<i> (integer)</i> iteration limit for feasibility pump heuristic</h4><p>
+
+This is the iteration limit in seconds for feasibility pump heuristic. A value of -1
+means no iteration limit is imposed.
+
+<br><i>(default = 500)</i>
+
+<h4><a name="LINDOGLOBALMIP_FP_MODE">
+MIP_FP_MODE</a>
+<i> (integer)</i> mode for the feasibility pump heuristic</h4><p>
+
+Controls the mode for the feasibility pump heuristic.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>On until the first solution</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Try to get more than one solution</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_FP_OPT_METHOD">
+MIP_FP_OPT_METHOD</a>
+<i> (integer)</i> optimization and reoptimization method for feasibility pump heuristic</h4><p>
+
+This specifies optimization and reoptimization method for feasibility
+pump heuristic.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Primal simplex</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Barrier</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_FP_TIMLIM">
+MIP_FP_TIMLIM</a>
+<i> (real)</i> time limit for feasibility pump heuristic</h4><p>
+
+This is the time limit in seconds for feasibility pump heuristic. A value of -1
+implies no time limit is imposed.
+
+<br><i>(default = 1800)</i>
+
+<h4><a name="LINDOGLOBALMIP_FP_WEIGTH">
+MIP_FP_WEIGTH</a>
+<i> (real)</i> weight of the objective function in the feasibility pump</h4><p>
+
+Controls the weight of the objective function in the feasibility pump.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALMIP_HEULEVEL">
+MIP_HEULEVEL</a>
+<i> (integer)</i> specifies heuristic used to find integer solution</h4><p>
+
+This specifies the heuristic used to find the integer
+solution. Possible values are: 0: No heuristic is used.  1: A simple
+heuristic is used.  Typically, this will find integer solutions only
+on problems with a certain structure. However, it tends to be fast.
+2: This is an advanced heuristic that tries to find a "good" integer
+solution fast. In general, a value of 2 seems to not increase the
+total solution time and will find an integer solution fast on many
+problems.  A higher value may find an integer solution faster, or an
+integer solution where none would have been found with a lower
+level. Try level 3 or 4 on "difficult" problems where 2 does not help.
+Higher values cause more time to be spent in the heuristic. The value
+may be set arbitrarily high.  However, >20 is probably not worthwhile.
+<a href="#LINDOGLOBALMIP_HEUMINTIMLIM">
+MIP_HEUMINTIMLIM</a> controls the time to
+be spent in searching heuristic solutions.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="LINDOGLOBALMIP_HEUMINTIMLIM">
+MIP_HEUMINTIMLIM</a>
+<i> (integer)</i> minimum time in seconds to be spent in finding heuristic solutions</h4><p>
+
+This specifies the minimum time in seconds to be spent in finding
+heuristic solutions to the MIP model.
+<a href="#LINDOGLOBALMIP_HEULEVEL">
+MIP_HEULEVEL</a> controls the heuristic used to
+find the integer solution.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALMIP_HEU_MODE">
+MIP_HEU_MODE</a>
+<i> (integer)</i> heuristic used in MIP solver</h4><p>
+
+This controls the MIP heuristic mode.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides when to stop the heuristic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solver uses a pre-specified time limit to stop the heuristic.</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Solver uses a pre-specified iteration limit to stop the heuristic</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_INTTOL">
+MIP_INTTOL</a>
+<i> (real)</i> absolute integer feasibility tolerance</h4><p>
+
+An integer variable is considered integer feasible if the absolute
+difference from the nearest integer is smaller than this.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LINDOGLOBALMIP_ITRLIM">
+MIP_ITRLIM</a>
+<i> (real)</i> iteration limit for branch and bound</h4><p>
+
+This is the iteration limit for branch-and- bound. The default value
+is .1, which means no iteration limit is imposed.  If the iteration
+limit is reached and a feasible integer solution was found, it will be
+installed as the incumbent (best known) solution.
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="LINDOGLOBALMIP_KEEPINMEM">
+MIP_KEEPINMEM</a>
+<i> (integer)</i> flag for keeping LP bases in memory</h4><p>
+
+If this is set to 1, the integer pre-solver will try to keep LP bases
+in memory.  This typically gives faster solution times, but uses more
+memory. Setting this parameter to 0 causes the pre-solver to erase
+bases from memory.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not keep LP bases in memory</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Keep LP bases in memory</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_LBIGM">
+MIP_LBIGM</a>
+<i> (real)</i> Big-M value used in linearizing nonlinear expressions</h4><p>
+
+This refers to the Big-M value used in linearizing nonlinear
+expressions.
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="LINDOGLOBALMIP_LSOLTIMLIM">
+MIP_LSOLTIMLIM</a>
+<i> (integer)</i> time limit until finding a new integer solution</h4><p>
+
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMIP_MAKECUT_INACTIVE_COUNT">
+MIP_MAKECUT_INACTIVE_COUNT</a>
+<i> (integer)</i> threshold for times a cut could remain active after successive reoptimization</h4><p>
+
+This value specifies the threshold for the times a cut could remain
+active after successive reoptimization during branch-and-bound. If the
+count is larger than the specified level the solver will inactive the
+cut.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LINDOGLOBALMIP_MAXCUTPASS_TOP">
+MIP_MAXCUTPASS_TOP</a>
+<i> (integer)</i> number passes to generate cuts on the root node</h4><p>
+
+This controls the number passes to generate cuts on the root
+node. Each of these passes will be followed by a reoptimization and a
+new batch of cuts will be generated at the new solution.
+
+<br><i>(default = 200)</i>
+
+<h4><a name="LINDOGLOBALMIP_MAXCUTPASS_TREE">
+MIP_MAXCUTPASS_TREE</a>
+<i> (integer)</i> number passes to generate cuts on the child nodes</h4><p>
+
+This controls the number passes to generate cuts on the child
+nodes. Each of these passes will be followed by a reoptimization and a
+new batch of cuts will be generated at the new solution.
+
+<br><i>(default = 2)</i>
+
+<h4><a name="LINDOGLOBALMIP_MAXNONIMP_CUTPASS">
+MIP_MAXNONIMP_CUTPASS</a>
+<i> (integer)</i> number of passes allowed in cut-generation that does not improve current relaxation</h4><p>
+
+This controls the maximum number of passes allowed in cut-generation
+that does not improve the current relaxation.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="LINDOGLOBALMIP_MAXNUM_MIP_SOL_STORAGE">
+MIP_MAXNUM_MIP_SOL_STORAGE</a>
+<i> (integer)</i> maximum number of k-best solutions to store</h4><p>
+
+This specifies the maximum number of k-best solutions to store. Possible values
+are positive integers.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALMIP_MINABSOBJSTEP">
+MIP_MINABSOBJSTEP</a>
+<i> (real)</i> value to update cutoff value each time a mixed integer solution is found</h4><p>
+
+This specifies the value to update the cutoff value each time a mixed
+integer solution is found.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALMIP_NODESELRULE">
+MIP_NODESELRULE</a>
+<i> (integer)</i> specifies the node selection rule</h4><p>
+
+This specifies the node selection rule for choosing between all active
+nodes in the branch-and-bound tree when solving integer
+programs.Possible selections are: 0: Solver decides (default).  1:
+Depth first search.  2: Choose node with worst bound.  3: Choose node
+with best bound.  4: Start with best bound. If no improvement in the
+gap between best bound and best integer solution is obtained for some
+time, switch to: if (number of active nodes<10000) Best estimate node
+selection (5).  else Worst bound node selection (2).  5: Choose the
+node with the best estimate, where the new objective estimate is
+obtained using pseudo costs.  6: Same as (4), but start with the best
+estimate.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Depth first search</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Choose node with worst bound</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Choose node with best bound</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Start with best bound</td></tr>
+<tr valign="top"><td width=20 align=right>5</td><td>Choose the node with the best estimate</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>Same as 4 but start with the best estimate</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_PEROPTTOL">
+MIP_PEROPTTOL</a>
+<i> (real)</i> MIP relative optimality tolerance in effect after MIP_AOPTTIMLIM seconds</h4><p>
+
+This is the MIP relative optimality tolerance that will be in effect
+after T seconds following the start. The value T should be specified
+using the <a href="#LINDOGLOBALMIP_AOPTTIMLIM">
+MIP_AOPTTIMLIM</a> parameter.
+
+<br><i>(default = 1e-5)</i>
+
+<h4><a name="LINDOGLOBALMIP_PREHEU_DFE_VSTLIM">
+MIP_PREHEU_DFE_VSTLIM</a>
+<i> (integer)</i> limit for the variable visit in depth first enumeration</h4><p>
+
+Limit for the variable visit in depth first enumeration.
+
+<br><i>(default = 200)</i>
+
+<h4><a name="LINDOGLOBALMIP_PREHEU_LEVEL">
+MIP_PREHEU_LEVEL</a>
+<i> (integer)</i> heuristic level for the prerelax solver</h4><p>
+
+The heuristic level for the prerelax solver.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Nothing</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>One-change</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>One-change and two-change</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Depth first enumeration</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_PREHEU_TC_ITERLIM">
+MIP_PREHEU_TC_ITERLIM</a>
+<i> (integer)</i> iteration limit for the two change heuristic</h4><p>
+
+Iteration limit for the two change heuristic.
+
+<br><i>(default = 30000000)</i>
+
+<h4><a name="LINDOGLOBALMIP_PRELEVEL">
+MIP_PRELEVEL</a>
+<i> (integer)</i> controls the amount and type of MIP pre-solving at root node</h4><p>
+
+This controls the amount and type of MIP pre-solving at root node.
+
+<br><i>(default = 1022)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Simple pre-solving</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Probing</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Elimination</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Dual reductions</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Use dual information</td></tr>
+<tr valign="top"><td width=20 align=right>+128</td><td>Binary row presolving</td></tr>
+<tr valign="top"><td width=20 align=right>+256</td><td>Row aggregation</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Coef Probe Lifting</td></tr>
+<tr valign="top"><td width=20 align=right>+1024</td><td>Maximum pass</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_PRELEVEL_TREE">
+MIP_PRELEVEL_TREE</a>
+<i> (integer)</i> amount and type of MIP pre-solving at tree nodes</h4><p>
+
+This controls the amount and type of MIP pre-solving at tree nodes.
+
+<br><i>(default = 1214)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Simple pre-solving</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Probing</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Elimination</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Dual reductions</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Use dual information</td></tr>
+<tr valign="top"><td width=20 align=right>+128</td><td>Binary row presolving</td></tr>
+<tr valign="top"><td width=20 align=right>+256</td><td>Row aggregation</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Coef Probe Lifting</td></tr>
+<tr valign="top"><td width=20 align=right>+1024</td><td>Maximum pass</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_PRE_ELIM_FILL">
+MIP_PRE_ELIM_FILL</a>
+<i> (integer)</i> controls fill-in introduced by eliminations during pre-solve</h4><p>
+
+This is a nonnegative value that controls the fill-in introduced by
+the eliminations during pre-solve.  Smaller values could help when the
+total nonzeros in the presolved model is significantly more than the
+original model.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="LINDOGLOBALMIP_PSEUDOCOST_RULE">
+MIP_PSEUDOCOST_RULE</a>
+<i> (integer)</i> specifies the rule in pseudocost computations for variable selection</h4><p>
+
+This specifies the rule in pseudocost computations for variable
+selection.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Only use min pseudo cost</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Only use max pseudo cost</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use quadratic score function and the pseudo cost weigth</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Same as 3 without quadratic score</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_PSEUDOCOST_WEIGT">
+MIP_PSEUDOCOST_WEIGT</a>
+<i> (real)</i> weight in pseudocost computations for variable selection</h4><p>
+
+This specifies the weight in pseudocost computations for variable
+selection.
+
+<br><i>(default = 1.5625e-05)</i>
+
+<h4><a name="LINDOGLOBALMIP_REDCOSTFIX_CUTOFF">
+MIP_REDCOSTFIX_CUTOFF</a>
+<i> (real)</i> cutoff value as a percentage of the reduced costs</h4><p>
+
+This specifies the cutoff value as a percentage of the reduced costs
+to be used in fixing variables when using the reduced cost fixing
+heuristic.
+
+<br><i>(default = 0.9)</i>
+
+<h4><a name="LINDOGLOBALMIP_REDCOSTFIX_CUTOFF_TREE">
+MIP_REDCOSTFIX_CUTOFF_TREE</a>
+<i> (real)</i> cutoff value as a percentage of the reduced costs at tree nodes</h4><p>
+
+This specifies the cutoff value as a percentage of the reduced costs
+to be used in fixing variables when using the reduced cost fixing
+heuristic at tree nodes.
+
+<br><i>(default = 0.9)</i>
+
+<h4><a name="LINDOGLOBALMIP_RELINTTOL">
+MIP_RELINTTOL</a>
+<i> (real)</i> relative integer feasibility tolerance</h4><p>
+
+An integer variable is considered integer feasible if the difference
+between its value and the nearest integer value divided by the value
+of the nearest integer is less than this.
+
+<br><i>(default = 8e-6)</i>
+
+<h4><a name="LINDOGLOBALMIP_RELOPTTOL">
+MIP_RELOPTTOL</a>
+<i> (real)</i> MIP relative optimality tolerance</h4><p>
+
+This is the MIP relative optimality tolerance. Solutions must beat the
+incumbent by at least this relative amount to become the new, best
+solution.
+
+<br><i>(default = GAMS OptCR)</i>
+
+<h4><a name="LINDOGLOBALMIP_REOPT">
+MIP_REOPT</a>
+<i> (integer)</i> optimization method to use when doing reoptimization</h4><p>
+
+This specifies which optimization method to use when doing
+reoptimization from a given basis.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use primal method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use barrier solver</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_SCALING_BOUND">
+MIP_SCALING_BOUND</a>
+<i> (integer)</i> maximum difference between bounds of an integer variable for enabling scaling</h4><p>
+
+This controls the maximum difference between the upper and lower
+bounds of an integer variable that will enable the scaling in the
+simplex solver when solving a subproblem in the branch-and-bound tree.
+
+<br><i>(default = 10000)</i>
+
+<h4><a name="LINDOGLOBALMIP_SOLVERTYPE">
+MIP_SOLVERTYPE</a>
+<i> (integer)</i> optimization method to use when solving mixed-integer models</h4><p>
+
+This specifies the optimization method to use when solving
+mixed-integer models.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use Branch and Bound only</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use Enumeration and Knapsack solver only</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_STRONGBRANCHDONUM">
+MIP_STRONGBRANCHDONUM</a>
+<i> (integer)</i> minimum number of variables to try the strong branching on</h4><p>
+
+This value specifies the minimum number of variables, among all the
+candidates, to try the strong branching on.
+
+<br><i>(default = 3)</i>
+
+<h4><a name="LINDOGLOBALMIP_STRONGBRANCHLEVEL">
+MIP_STRONGBRANCHLEVEL</a>
+<i> (integer)</i> depth from the root in which strong branching is used</h4><p>
+
+This specifies the depth from the root in which strong branching is
+used. The default value of 10 means that strong branching is used on a
+level of 1 to 10 measured from the root. Strong branching finds the
+real bound for branching on a given variable, which, in most cases,
+requires a solution of a linear program and may therefore also be
+quite expensive in computing time.  However, if used on nodes close to
+the root node of the tree, it also gives a much better bound for that
+part of the tree and can therefore reduce the size of the
+branch-and-bound tree.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LINDOGLOBALMIP_SWITCHFAC_SIM_IPM_TIME">
+MIP_SWITCHFAC_SIM_IPM_TIME</a>
+<i> (real)</i> factor that multiplies the number of constraints to impose a time limit to simplex method and trigger a switch over to the barrier method</h4><p>
+
+This specifies the (positive) factor that multiplies the number of constraints to
+impose a time limit to simplex method and trigger a switch over to the barrier
+method. A value of –1.0 means that no time limit is imposed.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALMIP_TIMLIM">
+MIP_TIMLIM</a>
+<i> (integer)</i> time limit in seconds for integer solver</h4><p>
+
+This is the time limit in seconds for branch-and-bound. The default
+value is -1, which means no time limit is imposed. However, the value
+of <a href="#LINDOGLOBALSOLVER_TIMLMT">
+SOLVER_TIMLMT</a> will be applied to each
+continuous subproblem solve.  If the value of this parameter is
+greater than 0, then the value of
+<a href="#LINDOGLOBALSOLVER_TIMLMT">
+SOLVER_TIMLMT</a> will be disregarded.  If this
+time limit is reached and a feasible integer solution was found, it
+will be installed as the incumbent (best known) solution.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="LINDOGLOBALMIP_TOPOPT">
+MIP_TOPOPT</a>
+<i> (integer)</i> optimization method to use when there is no previous basis</h4><p>
+
+This specifies which optimization method to use when there is no
+previous basis.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use primal method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use barrier solver</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_TREEREORDERLEVEL">
+MIP_TREEREORDERLEVEL</a>
+<i> (integer)</i> tree reordering level</h4><p>
+
+This specifies the tree reordering level.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LINDOGLOBALMIP_USECUTOFFOBJ">
+MIP_USECUTOFFOBJ</a>
+<i> (integer)</i> flag for using branch and bound limit</h4><p>
+
+This is a flag for the parameter <a href="#LINDOGLOBALMIP_CUTOFFOBJ">
+MIP_CUTOFFOBJ</a>.
+If you do not want to lose the value of the parameter <a href="#LINDOGLOBALMIP_CUTOFFOBJ">
+MIP_CUTOFFOBJ</a>,
+this provides an alternative to disabling the cutoff objective.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use current cutoff value</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use current cutoff value</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_USE_CUTS_HEU">
+MIP_USE_CUTS_HEU</a>
+<i> (integer)</i> controls if cut generation is enabled during MIP heuristics</h4><p>
+
+This flag controls if cut generation is enabled during MIP
+heuristics. The default is -1 (i.e. the solver decides).
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use cut heuristic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use cut heuristic</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_USE_ENUM_HEU">
+MIP_USE_ENUM_HEU</a>
+<i> (integer)</i> frequency of enumeration heuristic</h4><p>
+
+This specifies the frequency of enumeration heuristic.
+
+<br><i>(default = 4)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Off</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Only at top (root) node without cuts</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Both at top (root) and tree nodes without cuts</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Same as 1 with cuts</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Same as 2 with cuts</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALMIP_USE_INT_ZERO_TOL">
+MIP_USE_INT_ZERO_TOL</a>
+<i> (integer)</i> controls if all MIP calculations would be based on absolute integer feasibility tolarance</h4><p>
+
+This flag controls if all MIP calculations would be based on the
+integrality tolarance specified by
+<a href="#LINDOGLOBALMIP_INTTOL">
+MIP_INTTOL</a>.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not base MIP calculations on MIP_INTTOL</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Base MIP calculations on MIP_INTTOL</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_AUTODERIV">
+NLP_AUTODERIV</a>
+<i> (integer)</i> defining type of computing derivatives</h4><p>
+
+This is a flag to indicate if automatic differentiation is the method
+of choice for computing derivatives and select the type of
+differentiation.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Finite Differences approach will be used</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Forward type of Automatic Differentiation will be used</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Backward type of Automatic Differentiation will be used</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_AUTOHESS">
+NLP_AUTOHESS</a>
+<i> (integer)</i> flag for using Second Order Automatic Differentiation for solving NLP</h4><p>
+
+This is a flag to indicate if Second Order Automatic Differentiation
+will be performed in solving a nonlinear model.  The second order
+derivatives provide an exact/precise Hessian matrix to the SQP
+algorithm, which may lead to less iterations and better solutions, but
+may also be quite expensive in computing time for some cases.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use Second Order Automatic Differentiation</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use Second Order Automatic Differentiation</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_DERIV_DIFFTYPE">
+NLP_DERIV_DIFFTYPE</a>
+<i> (integer)</i> flag indicating the technique used in computing derivatives with finite differences</h4><p>
+
+This is a flag indicating the technique used in computing derivatives
+with Finite Differences.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>The solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use forward differencing method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use backward differencing method</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use center differencing method</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_FEASCHK">
+NLP_FEASCHK</a>
+<i> (integer)</i> how to report results when solution satisfies tolerance of scaled but not original model</h4><p>
+
+This input parameter specifies how the NLP solver reports the results when an
+optimal or local-optimal solution satisfies the feasibililty tolerance
+(<a href="#LINDOGLOBALNLP_FEASTOL">
+NLP_FEASTOL</a>) of the scaled model but not the original
+(descaled) one.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Perform no action accept the final solution</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Declare the model status as FEASIBLE if maximum violation in the unscaled model is not higher than 10 times NLP_FEASTOL</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Declare the model status as UNKNOWN if maximum violation in the unscaled model is higher than NLP_FEASTOL</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_FEASTOL">
+NLP_FEASTOL</a>
+<i> (real)</i> feasibility tolerance for nonlinear constraints</h4><p>
+
+This is the feasibility tolerance for nonlinear constraints. A
+constraint is considered violated if the artificial, slack, or surplus
+variable associated with the constraint violates its lower or upper
+bounds by the feasibility tolerance.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LINDOGLOBALNLP_ITERS_PER_LOGLINE">
+NLP_ITERS_PER_LOGLINE</a>
+<i> (integer)</i> number of nonlinear iterations to elapse before next progress message</h4><p>
+
+Number of nonlinear iterations to elapse before next progress message.
+
+<br><i>(default = 10)</i>
+
+<h4><a name="LINDOGLOBALNLP_ITRLMT">
+NLP_ITRLMT</a>
+<i> (integer)</i> nonlinear iteration limit</h4><p>
+
+This controls the iteration limit on the number of nonlinear
+iterations performed.
+
+<br><i>(default = GAMS IterLim)</i>
+
+<h4><a name="LINDOGLOBALNLP_LINEARZ">
+NLP_LINEARZ</a>
+<i> (integer)</i> extent to which the solver will attempt to linearize nonlinear models</h4><p>
+
+This determines the extent to which the solver will attempt to
+linearize nonlinear models.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>No linearization occurs</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Linearize ABS MAX and MIN functions</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Same as option 2 plus IF AND OR NOT and all logical operators are linearized</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_MAXLOCALSEARCH">
+NLP_MAXLOCALSEARCH</a>
+<i> (integer)</i> maximum number of local searches</h4><p>
+
+This controls the maximum number of local searches (multistarts) when
+solving a NLP using the multistart solver.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="LINDOGLOBALNLP_MAXLOCALSEARCH_TREE">
+NLP_MAXLOCALSEARCH_TREE</a>
+<i> (integer)</i> maximum number of multistarts</h4><p>
+
+Maximum number of multistarts (at tree nodes)
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALNLP_MAX_RETRY">
+NLP_MAX_RETRY</a>
+<i> (integer)</i> maximum number refinement retries to purify the final NLP solution</h4><p>
+
+Maximum number refinement retries to purify the final NLP solution.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_EUCDIST_THRES">
+NLP_MSW_EUCDIST_THRES</a>
+<i> (real)</i> euclidean distance threshold in multistart search</h4><p>
+
+Euclidean distance threshold in multistart search
+
+<br><i>(default = 0.001)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_FILTMODE">
+NLP_MSW_FILTMODE</a>
+<i> (integer)</i> filtering mode to exclude certain domains during sampling in multistart search</h4><p>
+
+Filtering mode to exclude certain domains during sampling in multistart
+search.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>+1</td><td>Filter-out the points around known KKT or feasible points previously visited</td></tr>
+<tr valign="top"><td width=20 align=right>+2</td><td>Filter-out the points whose p are in the vicinity of p(x)</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Filter-out the points in the vicinity of x where x are initial points of all previous local optimizations</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Filter-out the points whose p(.) values are below a dynamic threshold tolerance</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_MSW_MAXNOIMP">
+NLP_MSW_MAXNOIMP</a>
+<i> (integer)</i> maximum number of consecutive populations to generate without any improvements</h4><p>
+
+Maximum number of consecutive populations to generate without any
+improvements.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_MAXPOP">
+NLP_MSW_MAXPOP</a>
+<i> (integer)</i> maximum number of populations to generate in multistart search</h4><p>
+
+Maximum number of populations to generate in multistart search.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_MAXREF">
+NLP_MSW_MAXREF</a>
+<i> (integer)</i> maximum number of reference points to generate trial points in multistart search</h4><p>
+
+Maximum number of reference points in the solution space to generate trial
+points in multistart search.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_NORM">
+NLP_MSW_NORM</a>
+<i> (integer)</i> norm to measure the distance between two points in multistart search</h4><p>
+
+Norm to measure the distance between two points in multistart search.
+
+<br><i>(default = 2)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_POXDIST_THRES">
+NLP_MSW_POXDIST_THRES</a>
+<i> (real)</i> penalty function neighborhood threshold in multistart search</h4><p>
+
+Penalty function neighborhood threshold in multistart search
+
+<br><i>(default = 0.01)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_SOLIDX">
+NLP_MSW_SOLIDX</a>
+<i> (integer)</i> index of the multistart solution to be loaded</h4><p>
+
+Index of the multistart solution to be loaded main solution structures.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_XKKTRAD_FACTOR">
+NLP_MSW_XKKTRAD_FACTOR</a>
+<i> (real)</i> KKT solution neighborhood factor in multistart search</h4><p>
+
+KKT solution neighborhood factor in multistart search
+
+<br><i>(default = 0.85)</i>
+
+<h4><a name="LINDOGLOBALNLP_MSW_XNULRAD_FACTOR">
+NLP_MSW_XNULRAD_FACTOR</a>
+<i> (real)</i> initial solution neighborhood factor in multistart search</h4><p>
+
+Initial solution neighborhood factor in multistart search
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="LINDOGLOBALNLP_PRELEVEL">
+NLP_PRELEVEL</a>
+<i> (integer)</i> controls the amount and type of NLP pre-solving</h4><p>
+
+This controls the amount and type of NLP pre-solving.
+
+<br><i>(default = 126)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Simple pre-solving</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Probing</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Elimination</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Dual reductions</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Use dual information</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Maximum pass</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_PSTEP_FINITEDIFF">
+NLP_PSTEP_FINITEDIFF</a>
+<i> (real)</i> value of the step length in computing the derivatives using finite differences</h4><p>
+
+This controls the value of the step length in computing the
+derivatives using finite differences.
+
+<br><i>(default = 5e-7)</i>
+
+<h4><a name="LINDOGLOBALNLP_QUADCHK">
+NLP_QUADCHK</a>
+<i> (integer)</i> flag for checking if NLP is quadratic</h4><p>
+
+This is a flag indicating if the nonlinear model should be examined to
+check if it is a quadratic model.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not check if NLP is quadratic</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Check if NLP is quadratic</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_REDGTOL">
+NLP_REDGTOL</a>
+<i> (real)</i> tolerance for the gradients of nonlinear functions</h4><p>
+
+This is the tolerance for the gradients of nonlinear functions. The
+(projected) gradient of a function is considered to be the zero-vector
+if its norm is below this tolerance.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALNLP_SOLVER">
+NLP_SOLVER</a>
+<i> (integer)</i> type of nonlinear solver</h4><p>
+
+This value determines the type of nonlinear solver.
+
+<br><i>(default = 7)</i>
+<table>
+<tr valign="top"><td width=20 align=right>4</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>7</td><td>Uses CONOPTs reduced gradient solver</td></tr>
+<tr valign="top"><td width=20 align=right>9</td><td>Uses CONOPT with multistart feature enabled</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_SOLVE_AS_LP">
+NLP_SOLVE_AS_LP</a>
+<i> (integer)</i> flag indicating if the nonlinear model will be solved as an LP</h4><p>
+
+This is a flag indicating if the nonlinear model will be solved as an
+LP. 1 means that an LP using first order approximations of the
+nonlinear terms in the model will be used when optimizing the model
+with the LSoptimize() function.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>NLP will not be solved as LP</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>NLP will be solved as LP</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_STALL_ITRLMT">
+NLP_STALL_ITRLMT</a>
+<i> (integer)</i> iteration limit before a sequence of non-improving NLP iterations is declared as stalling</h4><p>
+
+This specifies the iteration limit before a sequence of non-improving
+NLP iterations is declared as stalling, thus causing the solver to
+terminate.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="LINDOGLOBALNLP_STARTPOINT">
+NLP_STARTPOINT</a>
+<i> (integer)</i> flag for using initial starting solution for NLP</h4><p>
+
+This is a flag indicating if the nonlinear solver should accept
+initial starting solutions.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use initial starting solution for NLP</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use initial starting solution for NLP</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_SUBSOLVER">
+NLP_SUBSOLVER</a>
+<i> (integer)</i> type of nonlinear subsolver</h4><p>
+
+This controls the type of linear solver to be used for solving linear
+subproblems when solving nonlinear models.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>1</td><td>Primal simplex method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Dual simplex method</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Barrier solver with or without crossover</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_USE_CRASH">
+NLP_USE_CRASH</a>
+<i> (integer)</i> flag for using simple crash routines for initial solution</h4><p>
+
+This is a flag indicating if an initial solution will be computed
+using simple crash routines.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use simple crash routines</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use simple crash routines</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_USE_LINDO_CRASH">
+NLP_USE_LINDO_CRASH</a>
+<i> (integer)</i> flag for using advanced crash routines for initial solution</h4><p>
+
+This is a flag indicating if an initial solution will be computed
+using advanced crash routines.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use advanced crash routines</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use advanced crash routines</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_USE_SELCONEVAL">
+NLP_USE_SELCONEVAL</a>
+<i> (integer)</i> flag for using selective constraint evaluations for solving NLP</h4><p>
+
+This is a flag indicating if selective constraint evaluations will be
+performed in solving a nonlinear model.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use selective constraint evaluations</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use selective constraint evaluations</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_USE_SLP">
+NLP_USE_SLP</a>
+<i> (integer)</i> flag for using sequential linear programming step directions for updating solution</h4><p>
+
+This is a flag indicating if sequential linear programming step
+directions should be used in updating the solution.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use sequential linear programming step directions</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use sequential linear programming step directions</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALNLP_USE_STEEPEDGE">
+NLP_USE_STEEPEDGE</a>
+<i> (integer)</i> flag for using steepest edge directions for updating solution</h4><p>
+
+This is a flag indicating if steepest edge directions should be used
+in updating the solution.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use steepest edge directions</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use steepest edge directions</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALOPTCHKMD">
+OPTCHKMD</a>
+<i> (integer)</i> criterion used to certify the global optimality</h4><p>
+
+This specifies the criterion used to certify the global
+optimality. When this value is 0, the absolute deviation of objective
+lower and upper bounds should be smaller than
+<a href="#LINDOGLOBALABSOPTTOL">
+ABSOPTTOL</a> at the global optimum. When its value is 1,
+the relative deviation of objective lower and upper bounds should be
+smaller than <a href="#LINDOGLOBALRELOPTTOL">
+RELOPTTOL</a> at the global optimum. 2 means either absolute or
+relative tolerance is satisfied at global optimum.
+
+<br><i>(default = 2)</i>
+
+<h4><a name="LINDOGLOBALOPT_MODE">
+OPT_MODE</a>
+<i> (integer)</i> mode for GOP optimization</h4><p>
+
+This specifies the mode for GOP optimization.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Global search for a feasible solution (thus a feasibility certificate)</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Global search for an optimal solution</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Global search for an unboundedness certificate</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALPOSTLEVEL">
+POSTLEVEL</a>
+<i> (integer)</i> amount and type of GOP postsolving</h4><p>
+
+This controls the amount and type of GOP post-solving. The default
+value is: 6 = 2+4 meaning to do both of the below options.
+
+<br><i>(default = 6)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Apply LSgetBestBound</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Reoptimize variable bounds</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALPRELEVEL">
+PRELEVEL</a>
+<i> (integer)</i> amount and type of GOP presolving</h4><p>
+
+This controls the amount and type of GOP pre-solving. The default
+value is: 30 = 2+4+8+16 meaning to do all of the below options.
+
+<br><i>(default = 30)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Initial local optimization</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Initial linear constraint propagation</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Recursive linear constraint propagation</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Recursive nonlinear constraint propagation</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALPROB_TO_SOLVE">
+PROB_TO_SOLVE</a>
+<i> (integer)</i> controls whether the explicit primal or dual form of the given LP problem will be solved</h4><p>
+
+This flag controls whether the explicit primal or dual form of the
+given LP problem will be solved.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Explicit primal form</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Explicit dual form</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALREADPARAMS">
+READPARAMS</a>
+<i> (string)</i> read Lindo parameter file</h4><p>
+
+
+
+<h4><a name="LINDOGLOBALRELBRNDMD">
+RELBRNDMD</a>
+<i> (integer)</i> reliable rounding in the GOP branch-and-bound</h4><p>
+
+This controls the reliable rounding rule in the GOP
+branch-and-bound. The global solver applies many suboptimizations to
+estimate the lower and upper bounds on the global optimum. A rounding
+error or numerical instability could unintentionally cut off a good
+solution. A variety of reliable approaches are available to improve
+the precision.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Use smaller optimality or feasibility tolerances and appropriate presolving options</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Apply interval arithmetic to reverify the solution feasibility</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALRELOPTTOL">
+RELOPTTOL</a>
+<i> (real)</i> relative optimality tolerance<br>&nbsp;&nbsp;&nbsp;Synonym:
+opttol</h4><p>
+
+This value is the GOP relative optimality tolerance. Solutions must beat the
+incumbent by at least this amount to become the new best solution.
+
+<br><i>(default = GAMS OptCR)</i>
+
+<h4><a name="LINDOGLOBALREPORTEVSOL">
+REPORTEVSOL</a>
+<i> (integer)</i> solve and report the expected value solution</h4><p>
+
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALSAMP_CDSINC">
+SAMP_CDSINC</a>
+<i> (real)</i> correlation matrix diagonal shift increment</h4><p>
+
+Correlation matrix diagonal shift increment.
+
+<br><i>(default = 1e-6)</i>
+
+<h4><a name="LINDOGLOBALSAMP_NCM_CUTOBJ">
+SAMP_NCM_CUTOBJ</a>
+<i> (real)</i> objective cutoff (target) value to stop the nearest correlation matrix (NCM) subproblem</h4><p>
+
+Objective cutoff (target) value to stop the nearest correlation matrix (NCM)
+subproblem.
+
+<br><i>(default = 1e-30)</i>
+
+<h4><a name="LINDOGLOBALSAMP_NCM_DSTORAGE">
+SAMP_NCM_DSTORAGE</a>
+<i> (integer)</i> flag to enable or disable sparse mode in NCM computations</h4><p>
+
+Flag to enable/disable sparse mode in NCM computations.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSAMP_NCM_ITERLIM">
+SAMP_NCM_ITERLIM</a>
+<i> (integer)</i> iteration limit for NCM method</h4><p>
+
+Iteration limit for NCM method.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="LINDOGLOBALSAMP_NCM_METHOD">
+SAMP_NCM_METHOD</a>
+<i> (integer)</i> bitmask to enable methods for solving the nearest correlation matrix (NCM) subproblem</h4><p>
+
+Bitmask to enable methods for solving the nearest correlation matrix (NCM)
+subproblem.
+
+<br><i>(default = 5)</i>
+
+<h4><a name="LINDOGLOBALSAMP_NCM_OPTTOL">
+SAMP_NCM_OPTTOL</a>
+<i> (real)</i> optimality tolerance for NCM method</h4><p>
+
+Optimality tolerance for NCM method.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALSAMP_SCALE">
+SAMP_SCALE</a>
+<i> (integer)</i> flag to enable scaling of raw sample data</h4><p>
+
+Flag to enable scaling of raw sample data.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALSOLVER_CONCURRENT_OPTMODE">
+SOLVER_CONCURRENT_OPTMODE</a>
+<i> (integer)</i> controls if simplex and interior-point optimizers will run concurrently</h4><p>
+
+Controls if simplex and interior-point optimizers will run concurrently, 0
+means no concurrent runs will be performed, 1 means both optimizers will
+run concurrently if at least two threads exist in system, 2 means both optimizers
+will run concurrently.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>no concurrent runs</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>run concurrently if at least 2 threads exist</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>run concurrently</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSOLVER_CUTOFFVAL">
+SOLVER_CUTOFFVAL</a>
+<i> (real)</i> solver will exit if optimal solution is worse than this</h4><p>
+
+If the optimal objective value of the LP being solved is shown to be
+worse than this (e.g., if the dual simplex method is being used), then
+the solver will exit without finding a feasible solution. This is a
+way of saving computer time if there is no sufficiently attractive
+solution. <a href="#LINDOGLOBALSOLVER_USECUTOFFVAL">
+SOLVER_USECUTOFFVAL</a> needs
+to be set to 1 to activate this value.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALSOLVER_FEASTOL">
+SOLVER_FEASTOL</a>
+<i> (real)</i> feasibility tolerance</h4><p>
+
+This is the feasibility tolerance. A constraint is considered violated
+if the artificial, slack, or surplus variable associated with the
+constraint violates its lower or upper bounds by the feasibility
+tolerance.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALSOLVER_IPMSOL">
+SOLVER_IPMSOL</a>
+<i> (integer)</i> basis crossover flag for barrier solver</h4><p>
+
+This flag controls whether a basis crossover will be performed when
+solving LPs with the barrier solver. A value of 0 indicates that a crossover to a
+basic solution will be performed. If the value is 1, then the barrier solution will
+be left intact. For example, if alternate optima exist, the barrier method will
+return a solution that is, loosely speaking, the average of all alternate optima.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Perform crossover to basis solution</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Leave barrier solution intact</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSOLVER_IUSOL">
+SOLVER_IUSOL</a>
+<i> (integer)</i> flag for computing basic solution for infeasible model</h4><p>
+
+This is a flag that, when set to 1, will force the solver to compute a
+basic solution to an infeasible model that minimizes the sum of
+infeasibilities and a basic feasible solution to an unbounded problem
+from which an extreme direction originates. When set to the default of
+0, the solver will return with an appopriate status flag as soon as
+infeasibility or unboundedness is detected. If infeasibility or
+unboundedness is declared with presolver's determination, no solution
+will be computed.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Return appropriate status if infeasibility is encountered</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Force the solver to compute a basic solution to an infeasible model</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSOLVER_OPTTOL">
+SOLVER_OPTTOL</a>
+<i> (real)</i> dual feasibility tolerance</h4><p>
+
+This is the optimality tolerance. It is also referred to as the dual
+feasibility tolerance. A dual slack (reduced cost) is considered
+violated if it violates its lower bound by the optimality tolerance.
+
+<br><i>(default = 1e-7)</i>
+
+<h4><a name="LINDOGLOBALSOLVER_PRE_ELIM_FILL">
+SOLVER_PRE_ELIM_FILL</a>
+<i> (integer)</i> fill-in introduced by the eliminations during pre-solve</h4><p>
+
+This is a nonnegative value that controls the fill-in introduced by the eliminations
+during pre-solve. Smaller values could help when the total nonzeros in the
+presolved model is significantly more than the original model.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="LINDOGLOBALSOLVER_RESTART">
+SOLVER_RESTART</a>
+<i> (integer)</i> starting basis flag</h4><p>
+
+This is the starting basis flag. 1 means LINDO API will perform warm
+starts using any basis currently in memory. 0 means LINDO API will
+perform cold starts discarding any basis in memory and starting from
+scratch.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Perform cold start</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Perform warm start</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSOLVER_TIMLMT">
+SOLVER_TIMLMT</a>
+<i> (integer)</i> time limit in seconds for continous solver</h4><p>
+
+This is a time limit in seconds for the LP solver. The default value
+of -1 imposes no time limit.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="LINDOGLOBALSOLVER_USECUTOFFVAL">
+SOLVER_USECUTOFFVAL</a>
+<i> (integer)</i> flag for using cutoff value</h4><p>
+
+This is a flag for the parameter
+<a href="#LINDOGLOBALSOLVER_CUTOFFVAL">
+SOLVER_CUTOFFVAL</a>
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use cutoff value</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use cutoff value</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSPLEX_DPRICING">
+SPLEX_DPRICING</a>
+<i> (integer)</i> pricing option for dual simplex method</h4><p>
+
+This is the pricing option to be used by the dual simplex method.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Solver decides the dual pricing method</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Partial pricing</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Steepest edge</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSPLEX_DUAL_PHASE">
+SPLEX_DUAL_PHASE</a>
+<i> (integer)</i> controls the dual simplex strategy</h4><p>
+
+This controls the dual simplex strategy, single-phase versus
+two-phase.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Single-phase</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Two-phase</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSPLEX_ITRLMT">
+SPLEX_ITRLMT</a>
+<i> (integer)</i> simplex iteration limit</h4><p>
+
+This is a limit on the number of iterations the solver will perform
+before terminating. If this value is a nonnegative integer, then it
+will be used as an upper bound on the number of iterations the solver
+will perform. If this value is -1, then no iteration limit will be
+used. The solution may be infeasible.
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="LINDOGLOBALSPLEX_PPRICING">
+SPLEX_PPRICING</a>
+<i> (integer)</i> pricing option for primal simplex method</h4><p>
+
+This is the pricing option to be used by the primal simplex method.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Solver decides the primal pricing method</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Partial pricing</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Devex</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSPLEX_REFACFRQ">
+SPLEX_REFACFRQ</a>
+<i> (integer)</i> number of simplex iterations between two consecutive basis re-factorizations</h4><p>
+
+This is a positive integer scalar referring to the simplex iterations
+between two consecutive basis re-factorizations. For numerically
+unstable models, setting this parameter to smaller values may help.
+
+<br><i>(default = 100)</i>
+
+<h4><a name="LINDOGLOBALSPLEX_SCALE">
+SPLEX_SCALE</a>
+<i> (integer)</i> scaling flag</h4><p>
+
+This is the scaling flag. Scaling multiplies the rows and columns of
+the model by appropriate factors in an attempt to avoid numerical
+difficulties by reducing the range of coefficient values.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Scaling is suppressed</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Scaling is performed</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_ABSOPTTOL">
+STOC_ABSOPTTOL</a>
+<i> (real)</i> absolute optimality tolerance (w.r.t lower and upper bounds on the true objective) to stop the solver</h4><p>
+
+Absolute optimality tolerance (w.r.t lower and upper bounds on the true
+objective) to stop the solver. . Possible values are reals in (0,1) interval.
+
+<br><i>(default = GAMS OptCA)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ADD_MPI">
+STOC_ADD_MPI</a>
+<i> (integer)</i> flag to use add-instructions mode when building deteq</h4><p>
+
+Flag to use add-instructions mode when building deteq.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ALD_DUAL_FEASTOL">
+STOC_ALD_DUAL_FEASTOL</a>
+<i> (real)</i> dual feasibility tolerance for ALD</h4><p>
+
+Dual feasibility tolerance for ALD.
+
+<br><i>(default = 1e-4)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ALD_DUAL_STEPLEN">
+STOC_ALD_DUAL_STEPLEN</a>
+<i> (real)</i> dual step length for ALD</h4><p>
+
+Dual step length for ALD.
+
+<br><i>(default = 0.9)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ALD_INNER_ITER_LIM">
+STOC_ALD_INNER_ITER_LIM</a>
+<i> (integer)</i> inner loop iteration limit for ALD</h4><p>
+
+Inner loop iteration limit for ALD.
+
+<br><i>(default = 1000)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ALD_OUTER_ITER_LIM">
+STOC_ALD_OUTER_ITER_LIM</a>
+<i> (integer)</i> outer loop iteration limit for ALD</h4><p>
+
+Outer loop iteration limit for ALD.
+
+<br><i>(default = 200)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ALD_PRIMAL_FEASTOL">
+STOC_ALD_PRIMAL_FEASTOL</a>
+<i> (real)</i> primal feasibility tolerance for ALD</h4><p>
+
+Primal feasibility tolerance for ALD.
+
+<br><i>(default = 1e-4)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ALD_PRIMAL_STEPLEN">
+STOC_ALD_PRIMAL_STEPLEN</a>
+<i> (real)</i> primal step length for ALD</h4><p>
+
+Primal step length for ALD.
+
+<br><i>(default = 0.5)</i>
+
+<h4><a name="LINDOGLOBALSTOC_AUTOAGGR">
+STOC_AUTOAGGR</a>
+<i> (integer)</i> flag to enable or disable autoaggregation</h4><p>
+
+Flag to enable or disable autoaggregation.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_BENCHMARK_SCEN">
+STOC_BENCHMARK_SCEN</a>
+<i> (integer)</i> benchmark scenario to compare EVPI and EVMU against</h4><p>
+
+Benchmark scenario to compare EVPI and EVMU against.
+
+<br><i>(default = -2)</i>
+
+<h4><a name="LINDOGLOBALSTOC_BIGM">
+STOC_BIGM</a>
+<i> (real)</i> big-M value for linearization and penalty functions</h4><p>
+
+Big-M value for linearization and penalty functions.
+
+<br><i>(default = 1e7)</i>
+
+<h4><a name="LINDOGLOBALSTOC_BUCKET_SIZE">
+STOC_BUCKET_SIZE</a>
+<i> (integer)</i> bucket size in Benders decomposition</h4><p>
+
+Bucket size in Benders decomposition. Possible values are positive integers or
+(-1) for solver decides.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_CALC_EVPI">
+STOC_CALC_EVPI</a>
+<i> (integer)</i> flag to enable or disable calculation of EVPI</h4><p>
+
+Flag to enable/disable calculation of lower bounds on EVPI.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>disable</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>enable</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_CORRELATION_TYPE">
+STOC_CORRELATION_TYPE</a>
+<i> (integer)</i> correlation type associated with correlation matrix</h4><p>
+
+Correlation type associated with the correlation matrix.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Target correlation</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Pearson correlation</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Kendall correlation</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Spearman correlation</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_DEQOPT">
+STOC_DEQOPT</a>
+<i> (integer)</i> method to solve the DETEQ problem</h4><p>
+
+Optimization method to solve the DETEQ problem.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use primal method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use barrier solver</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Use NLP solver</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>Use multi-start solver</td></tr>
+<tr valign="top"><td width=20 align=right>7</td><td>Use global solver</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_DETEQ_TYPE">
+STOC_DETEQ_TYPE</a>
+<i> (integer)</i> type of deterministic equivalent</h4><p>
+
+Type of deterministic equivalent to be used by the solver.
+Implicit determinisitc equivalent is valid for linear and integer models only.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Implicit determinisitc equivalent</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Explicit determinisitc equivalent</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_ELIM_FXVAR">
+STOC_ELIM_FXVAR</a>
+<i> (integer)</i> flag to enable elimination of fixed variables from deteq MPI</h4><p>
+
+Flag to enable elimination of fixed variables from deteq MPI.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_INFBND">
+STOC_INFBND</a>
+<i> (real)</i> value to truncate infinite bounds at non-leaf nodes</h4><p>
+
+Value to truncate infinite bounds at nonleaf nodes.
+
+<br><i>(default = 1e9)</i>
+
+<h4><a name="LINDOGLOBALSTOC_ITER_LIM">
+STOC_ITER_LIM</a>
+<i> (integer)</i> iteration limit for stochastic solver</h4><p>
+
+Iteration limit for stochastic solver. Possible values are positive integers or
+(-1) no limit.
+
+<br><i>(default = infinity)</i>
+
+<h4><a name="LINDOGLOBALSTOC_MAP_MPI2LP">
+STOC_MAP_MPI2LP</a>
+<i> (integer)</i> flag to specify whether stochastic parameters in MPI will be mapped as LP matrix elements</h4><p>
+
+Flag to specify whether stochastic parameters in MPI will be mapped as
+LP matrix elements.
+
+<br><i>(default = 0)</i>
+
+<h4><a name="LINDOGLOBALSTOC_MAX_NUMSCENS">
+STOC_MAX_NUMSCENS</a>
+<i> (integer)</i> maximum number of scenarios before forcing automatic sampling</h4><p>
+
+Maximum number of scenarios before forcing automatic sampling. Possible
+values are positive integers.
+
+<br><i>(default = 40000)</i>
+
+<h4><a name="LINDOGLOBALSTOC_METHOD">
+STOC_METHOD</a>
+<i> (integer)</i> stochastic optimization method to solve the model</h4><p>
+
+Stochastic optimization method to solve the model.
+
+<br><i>(default = -1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>-1</td><td>Solve with the method chosen by the solver</td></tr>
+<tr valign="top"><td width=20 align=right>0</td><td>Solve the deterministic equivalent (DETEQ)</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Solve with the Nested Benders Decomposition (NBD) method</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_NAMEDATA_LEVEL">
+STOC_NAMEDATA_LEVEL</a>
+<i> (integer)</i> name data level</h4><p>
+
+Name data level.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_NODELP_PRELEVEL">
+STOC_NODELP_PRELEVEL</a>
+<i> (integer)</i> presolve level solving node-models</h4><p>
+
+Presolve level solving node-models.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>+2</td><td>Simple pre-solving</td></tr>
+<tr valign="top"><td width=20 align=right>+4</td><td>Probing</td></tr>
+<tr valign="top"><td width=20 align=right>+8</td><td>Coefficient reduction</td></tr>
+<tr valign="top"><td width=20 align=right>+16</td><td>Elimination</td></tr>
+<tr valign="top"><td width=20 align=right>+32</td><td>Dual reductions</td></tr>
+<tr valign="top"><td width=20 align=right>+64</td><td>Use dual information</td></tr>
+<tr valign="top"><td width=20 align=right>+512</td><td>Maximum pass</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_NSAMPLE_PER_STAGE">
+STOC_NSAMPLE_PER_STAGE</a>
+<i> (string)</i> list of sample sizes per stage (starting at stage 2)</h4><p>
+
+Comma separated list of sample sizes per stage. The sample size of stage 1 is assumed to be 1
+so that this list starts with stage stage 2.
+
+
+<h4><a name="LINDOGLOBALSTOC_NSAMPLE_SPAR">
+STOC_NSAMPLE_SPAR</a>
+<i> (integer)</i> common sample size per stochastic parameter</h4><p>
+
+Common sample size per stochastic parameter. Possible values are positive
+integers.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_NSAMPLE_STAGE">
+STOC_NSAMPLE_STAGE</a>
+<i> (integer)</i> common sample size per stage</h4><p>
+
+Common sample size per stage.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_RELOPTTOL">
+STOC_RELOPTTOL</a>
+<i> (real)</i> relative optimality tolerance (w.r.t lower and upper bounds on the true objective) to stop the solver</h4><p>
+
+Relative optimality tolerance (w.r.t lower and upper bounds on the true
+objective) to stop the solver. Possible values are reals in (0,1) interval.
+
+<br><i>(default = GAMS OptCR)</i>
+
+<h4><a name="LINDOGLOBALSTOC_REOPT">
+STOC_REOPT</a>
+<i> (integer)</i> reoptimization method to solve the node-models</h4><p>
+
+Reoptimization method to solve the node-models.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use primal method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use barrier solver</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Use NLP solver</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_RG_SEED">
+STOC_RG_SEED</a>
+<i> (integer)</i> seed to initialize the random number generator</h4><p>
+
+Seed to initialize the random number generator. Possible values are positive
+integers.
+
+<br><i>(default = 1031)</i>
+
+<h4><a name="LINDOGLOBALSTOC_SAMP_CONT_ONLY">
+STOC_SAMP_CONT_ONLY</a>
+<i> (integer)</i> flag to restrict sampling to continuous stochastic parameters only or not</h4><p>
+
+Flag to restrict sampling to continuous stochastic parameters only or not.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>disable</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>enable</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_SBD_MAXCUTS">
+STOC_SBD_MAXCUTS</a>
+<i> (integer)</i> max cuts to generate for master problem</h4><p>
+
+Max cuts to generate for master problem.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_SBD_NUMCANDID">
+STOC_SBD_NUMCANDID</a>
+<i> (integer)</i> maximum number of candidate solutions to generate at SBD root</h4><p>
+
+Maximum number of candidate solutions to generate at SBD root.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_SBD_OBJCUTFLAG">
+STOC_SBD_OBJCUTFLAG</a>
+<i> (integer)</i> flag to enable objective cut in SBD master problem</h4><p>
+
+Flag to enable objective cut in SBD master problem.
+
+<br><i>(default = 1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_SBD_OBJCUTVAL">
+STOC_SBD_OBJCUTVAL</a>
+<i> (real)</i> RHS value of objective cut in SBD master problem</h4><p>
+
+RHS value of objective cut in SBD master problem.
+
+<br><i>(default = 1e-30)</i>
+
+<h4><a name="LINDOGLOBALSTOC_SHARE_BEGSTAGE">
+STOC_SHARE_BEGSTAGE</a>
+<i> (integer)</i> stage beyond which node-models are shared</h4><p>
+
+Stage beyond which node-models share the same model structure. Possible
+values are positive integers less than or equal to number of stages in the model
+or (-1) for solver decides.
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSTOC_TIME_LIM">
+STOC_TIME_LIM</a>
+<i> (real)</i> time limit for stochastic solver</h4><p>
+
+Time limit for stochastic solver. Possible values are nonnegative real
+numbers or -1 for solver decides.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="LINDOGLOBALSTOC_TOPOPT">
+STOC_TOPOPT</a>
+<i> (integer)</i> optimization method to solve the root problem</h4><p>
+
+Optimization method to solve the root problem.
+
+<br><i>(default = 0)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Solver decides</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use primal method</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use dual simplex</td></tr>
+<tr valign="top"><td width=20 align=right>3</td><td>Use barrier solver</td></tr>
+<tr valign="top"><td width=20 align=right>4</td><td>Use NLP solver</td></tr>
+<tr valign="top"><td width=20 align=right>6</td><td>Use multi-start solver</td></tr>
+<tr valign="top"><td width=20 align=right>7</td><td>Use global solver</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_VARCONTROL_METHOD">
+STOC_VARCONTROL_METHOD</a>
+<i> (integer)</i> sampling method for variance reduction</h4><p>
+
+Sampling method for variance reduction.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Montecarlo sampling</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Latinsquare sampling</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Antithetic sampling</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSTOC_WSBAS">
+STOC_WSBAS</a>
+<i> (integer)</i> warm start basis for wait-see model</h4><p>
+
+Warm start basis for wait-see model .
+
+<br><i>(default = -1)</i>
+
+<h4><a name="LINDOGLOBALSUBOUT_MODE">
+SUBOUT_MODE</a>
+<i> (integer)</i> substituting out fixed variables</h4><p>
+
+This is a flag indicating whether fixed variables are substituted out
+of the instruction list used in the global solver.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not substitute out fixed variables</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Substitute out fixed variables</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALSVR_LS_ANTITHETIC">
+SVR_LS_ANTITHETIC</a>
+<i> (string)</i> Sample variance reduction map to Lindo Antithetic algorithm</h4><p>
+
+
+
+<h4><a name="LINDOGLOBALSVR_LS_LATINSQUARE">
+SVR_LS_LATINSQUARE</a>
+<i> (string)</i> Sample variance reduction map to Lindo Latin Square algorithm</h4><p>
+
+
+
+<h4><a name="LINDOGLOBALSVR_LS_MONTECARLO">
+SVR_LS_MONTECARLO</a>
+<i> (string)</i> Sample variance reduction map to Lindo Montecarlo algorithm</h4><p>
+
+
+
+<h4><a name="LINDOGLOBALTIMLIM">
+TIMLIM</a>
+<i> (integer)</i> time limit in seconds for GOP branch-and-bound</h4><p>
+
+This is the time limit in seconds for GOP branch-and-bound.
+
+<br><i>(default = GAMS ResLim)</i>
+
+<h4><a name="LINDOGLOBALUSEBNDLIM">
+USEBNDLIM</a>
+<i> (integer)</i> max magnitude of variable bounds flag for GOP convexification</h4><p>
+
+This value is a flag for the parameter <a href="#LINDOGLOBALBNDLIM">
+BNDLIM</a>.
+
+<br><i>(default = 2)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use the bound limit on the variables</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use the bound limit right at the beginning of global optimization</td></tr>
+<tr valign="top"><td width=20 align=right>2</td><td>Use the bound limit after the initial local optimization if selected</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALUSEGOP">
+USEGOP</a>
+<i> (integer)</i> use global optimization</h4><p>
+
+This value determines whether the global optimization will be used.
+
+<br><i>(default = 1)</i>
+<table>
+<tr valign="top"><td width=20 align=right>0</td><td>Do not use global optimization</td></tr>
+<tr valign="top"><td width=20 align=right>1</td><td>Use global optimization</td></tr>
+</table>
+
+<h4><a name="LINDOGLOBALWIDTOL">
+WIDTOL</a>
+<i> (real)</i> maximal width of variable intervals</h4><p>
+
+This value specifies the maximal width of variable intervals for a box
+to be considered as an incumbent box containing an incumbent
+solution. It is used when <a href="#LINDOGLOBALMAXWIDMD">
+MAXWIDMD</a> is set at
+1.
+
+<br><i>(default = 1e-4)</i>
+
+<h4><a name="LINDOGLOBALWRITEDEMPI">
+WRITEDEMPI</a>
+<i> (string)</i> write deterministic equivalent in MPI format</h4><p>
+
+
+
+<h4><a name="LINDOGLOBALWRITEDEMPS">
+WRITEDEMPS</a>
+<i> (string)</i> write deterministic equivalent in MPS format</h4><p>
+
+
+
+<h4><a name="LINDOGLOBALWRITEMPI">
+WRITEMPI</a>
+<i> (string)</i> write (S)MPI file of processed model</h4><p>
+
+If this option is set, Lindo write an MPI file of processed model. If set, the
+value of this option defines the name of the MPI file.
+
+
+<h4><a name="LINDOGLOBALWRITEMPS">
+WRITEMPS</a>
+<i> (string)</i> write (S)MPS file of processed model</h4><p>
+
+
+</body></html>

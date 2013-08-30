@@ -1,0 +1,154 @@
+$Title Traveling Salesman Problem Instance prepared with AWK (AWKTSP,SEQ=298)
+
+$Ontext
+
+The model writes an AWK script on the fly to process the an input file
+format defined by the maintainers of the TSPLib. More input instances
+are available from
+
+http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/
+
+$Offtext
+
+$set fn p43.inc
+$if not exist %fn% $abort %fn% ist not present
+
+$echon "$setglobal n " > %gams.scrdir%n.%gams.scrext%
+$call grep DIMENSION %fn% | cut -d: -f2 >> "%gams.scrdir%n.%gams.scrext%"
+$include %gams.scrdir%n.%gams.scrext%
+
+$onecho > %gams.scrdir%x.%gams.scrext%
+BEGIN                  { i=1 }
+/^EDGE_WEIGHT_TYPE/    { if ( $2 != "EXPLICIT" )    error("Wrong type")   }
+/^EDGE_WEIGHT_FORMAT/  { if ( $2 != "FULL_MATRIX" ) error("Wrong format") }
+/^EDGE_WEIGHT_SECTION/ { readM = 1; next }
+/^EOF/                 { exit }
+readM == 1             { for (k=1; k <= NF; k++) print "i" i,"i" j+k,$k;
+                         if (j+NF < %n%) j += NF; else { i++; j=0 }       }
+function error(s) { print("--- " s ". Exiting.");  exit; }
+$offecho
+
+$call awk -f "%gams.scrdir%x.%gams.scrext%" %fn% > "%gams.scrdir%data.%gams.scrext%"
+set ii    cities / i1*i%n% /
+    i(ii) subset of cities to fit GAMS demo model size / i1*i7 /
+alias (ii,jj),(i,j,k);
+
+parameter c(ii,jj) /
+$ondelim
+$include %gams.scrdir%data.%gams.scrext%
+$offdelim
+/;
+
+variables x(ii,jj)  decision variables - leg of trip
+          z         objective variable;
+binary variable x;
+
+equations objective   total cost
+          rowsum(ii)  leave each city only once
+          colsum(jj)  arrive at each city only once;
+*
+*
+* the assignment problem is a relaxation of the TSP
+*
+objective.. z =e= sum((i,j), c(i,j)*x(i,j));
+
+rowsum(i).. sum(j, x(i,j)) =e= 1;
+colsum(j).. sum(i, x(i,j)) =e= 1;
+
+* exclude diagonal
+*
+x.fx(ii,ii) = 0;
+
+set ij(ii,jj) exclude first row and column; ij(ii,jj) = ord(ii)>1 and ord(jj)>1;
+
+option optcr=0,optca=0.99;
+
+model assign /objective, rowsum, colsum/;
+
+solve assign using mip minimizing z;
+
+* find and display tours
+*
+set t tours  /t1*t17/; abort$(card(t) < card(i)) "Set t is possibly too small"
+     sets tour(i,j,t)  subtours
+          from(i)      contains always one element: the from city
+          next(j)      contains always one element: the to city
+          visited(i)   flag whether a city is already visited
+          tt(t)        contains always one element: the current subtour;
+   scalar goon         go on flag used to control loop;
+alias(i,ix);
+
+$eolcom //
+* initialize
+from(i)$(ord(i)=1) = yes;    // turn first element on
+tt(t)$(ord(t)=1)   = yes;    // turn first element on
+
+* subtour elimination by adding cuts
+*
+
+set cc /c1*c1000/; alias(cc,ccc); // we allow up to 1000 cuts
+
+set curcut(cc)  current cut always one element
+    allcuts(cc) total cuts;
+
+parameters cutcoeff(cc, i, j)
+           rhs(cc)
+           nosubtours  number of subtours;
+
+equations cut(cc) dynamic cuts;
+
+cut(allcuts).. sum((i,j), cutcoeff(allcuts,i,j)*x(i,j)) =l= rhs(allcuts);
+
+model tspcut /objective, rowsum, colsum, cut/;
+
+curcut(cc)$(ord(cc)=1) = yes;
+scalar ok;
+goon = 1;
+
+loop(ccc$goon,
+* initialize
+   from(i) = no;
+   tt(t)   = no;
+   from(i)$(ord(i)=1) = yes;    // turn first element on
+   tt(t)$(ord(t)=1)   = yes;    // turn first element on
+   tour(i,j,t)=no;
+   visited(i)=no;
+   loop(i,
+      next(j)=no;                 // find city visited after city 'from'
+      loop((from,j),next(j)$(x.l(from,j)>0.5) = yes);
+                               // check x.l(from,j)=1 would be dangerous
+      tour(from,next,tt) = yes;   // store in table
+      visited(from) = yes;        // mark city 'from' as visited
+      from(j) = next(j);
+      if (sum(visited(next),1)>0, // if already visited...
+         tt(t) = tt(t-1);
+         loop(ix$(not visited(ix)), // find starting point of new subtour
+            from(j) = no;         // make sure we only have one element turned on
+            from(ix) = yes;
+          )
+      )
+    );
+    display tour;
+    nosubtours = sum(t, max(0,smax(tour(i,j,t),1)));
+    display nosubtours;
+   if (nosubtours=1,
+          goon = 0;           // done: no subtours
+       else                   // else: introduce cut
+          loop(t$(ord(t) <= nosubtours),
+            rhs(curcut)=-1;
+            loop(tour(i,j,t),
+             cutcoeff(curcut, i, j)$(x.l(i,j) > 0.5) = 1;
+* not needed due to nature of assignment constraints
+*             cutcoeff(curcut, i, j)$(x.l(i,j) < 0.5) = -1;
+             rhs(curcut) = rhs(curcut) + 1;
+            );
+             allcuts(curcut) = yes;   // include this cut in set
+             curcut(cc) = curcut(cc-1);
+          );
+          solve tspcut using mip minimizing z;
+          tspcut.solprint=%solprint.Quiet%;tspcut.limrow=0;tspcut.limcol=0;
+   )
+);
+
+display x.l;
+abort$(goon = 1) "Too many cuts needed"

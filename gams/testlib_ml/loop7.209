@@ -1,0 +1,32 @@
+$title 'Test assignment using a map' (LOOP7,SEQ=209)
+
+set p  / e, w, m, n /;
+set pp / 1 * 10 /;
+
+parameter x(p) / e 1,w 3, m 4, n 2 /
+          q(p,pp);
+
+set dpp(p,pp);
+
+dpp(p,pp) = yes;
+q(p,pp) = 1;
+
+
+
+set fpp(p,pp) free panels
+    upp(p,pp) potentially used panels
+    vpp(p,pp) potentially used panels;
+parameter out(p);
+fpp(p,pp) = q(p,pp);
+upp(p,pp) = no;
+vpp(p,pp) = no;
+out(p) = 0;
+loop(fpp(p,pp)$(out(p) <= x(p)),
+   out(p) = out(p) + q(fpp);
+   upp(p,pp) = yes;
+   vpp(fpp)  = yes;
+    );
+$debug dmpins
+set xpp(p,pp);  xpp(p,pp) = upp(p,pp) xor vpp(p,pp);
+
+abort$card(xpp) xpp,upp,vpp;

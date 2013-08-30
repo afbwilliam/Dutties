@@ -1,0 +1,80 @@
+$title Test of correctness of solvestat (MIQCP02,SEQ=561)
+
+$ontext
+This test os based on the GAMS Model Library qmeanvar. It caused Xpress to crash
+on Windows for some time.
+
+Contributor: Lutz Westermann
+$offtext
+
+
+Set  i  securities  / cn, fr, gr, jp, sw, uk, us /;  alias (i,j) ;
+
+Table  q(i,j)   covariance matrix
+
+            cn      fr      gr      jp      sw      uk      us
+    cn    42.18
+    fr    20.18   70.89
+    gr    10.88   21.58   25.51
+    jp     5.30   15.41    9.60   22.33
+    sw    12.32   23.24   22.63   10.32   30.01
+    uk    23.84   23.80   13.22   10.46   16.36   42.23
+    us    17.41   12.62    4.70    1.00    7.20    9.90   16.42 ;
+
+*  we will continue to use only the lower triangle of the q-matrix
+*  and adjust the off diagonal entries to give the correct results.
+
+q(i,j) = 2*q(j,i) ;  q(i,i) = q(i,i)/2;
+
+
+Scalars  tau   bounding parameter on turnover of current holdings  /0.3 /;
+
+Set pd  portfolio data labels  /
+          old       current holdings fraction of the portfolio
+          umin      minimum increase of holdings fraction of security i
+          umax      maximum increase of holdings fraction of security i
+          lmin      minimum decrease of holdings fraction of security i
+          lmax      maximum decrease of holdings fraction of security i  /
+
+
+Table    bdata(i,pd)    portfolio data and trading restrictions
+*                    - increase -        - decrease -
+              old    umin    umax        lmin    lmax
+        cn    0.2    0.03    0.11        0.02    0.30
+        fr    0.2    0.04    0.10        0.02    0.15
+        gr    0.0    0.04    0.07        0.04    0.10
+        jp    0.0    0.03    0.11        0.04    0.10
+        sw    0.2    0.03    0.20        0.04    0.10
+        uk    0.2    0.03    0.10        0.04    0.15
+        us    0.2    0.03    0.10        0.04    0.30    ;
+
+bdata(i,'lmax') = min(bdata(i,'old'),bdata(i,'lmax'));
+Abort$(abs(sum(i, bdata(i,'old'))-1) >= 1e5) 'error in bdata', bdata;
+
+Variables
+    var       variance of portfolio
+    x(i)      fraction of portfolio of current holdings of i
+    xi(i)     fraction of portfolio increase
+    xd(i)     fraction of portfolio decrease
+    y(i)      binary switch for increasing current holdings of i
+
+Binary variable y;
+positive variables x, xi, xd;
+
+Equations  budget     budget constraint
+           turnover   restrict maximum turnover of portfolio
+           maxinc(i)  bound of maximum lot increase of fraction of i
+           mininc(i)  bound of minimum lot increase of fraction of i
+           xdef(i)    final portfolio definition
+           vardef     variance definition;
+
+budget..   sum(i, x(i))  =e=  1 ;
+xdef(i)..  x(i) =e= bdata(i,'old') - xd(i) + xi(i);
+maxinc(i)..  xi(i)  =l=  bdata(i,'umax')*y(i) ;
+mininc(i)..  xi(i)  =g=  bdata(i,'umin')*y(i) ;
+turnover.. sum(i, xi(i)) =l=  tau ;
+vardef..  var =e= sum((i,j), x(i)*q(i,j)*x(j));
+
+Model minvar / all /;
+Solve minvar min var using miqcp;
+abort$(minvar.solvestat <> %solvestat.NormalCompletion%) 'Wrong Solvestat';

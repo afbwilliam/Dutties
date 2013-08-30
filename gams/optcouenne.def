@@ -1,0 +1,292 @@
+*
+* optcouenne.def
+*
+
+2mir_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating 2mir_cuts cuts in branch-and-cut.
+Gomory_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating Gomory_cuts cuts in branch-and-cut.
+aggressive_fbbt enumstr 0 "yes" 1 1 Aggressive feasibility-based bound tightening (to use with NLP points)
+ "no" 1
+ "yes" 1
+art_cutoff double 0 maxdouble mindouble maxdouble 1 1 Artificial cutoff
+art_lower double 0 mindouble mindouble maxdouble 1 1 Artificial lower bound
+boundtightening_print_level integer 0 0 -2 12 1 1 Output level for bound tightening code in Couenne
+branch_conv_cuts enumstr 0 "yes" 1 1 Apply convexification cuts before branching (for now only within strong branching)
+ "no" 1
+ "yes" 1
+branch_fbbt enumstr 0 "yes" 1 1 Apply bound tightening before branching
+ "no" 1
+ "yes" 1
+branch_lp_clamp double 0 0.2 0 1 1 1 Defines safe interval percentage for using LP point as a branching point.
+branch_lp_clamp_cube double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_div double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_exp double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_log double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_negpow double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_pow double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_prod double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_sqr double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_lp_clamp_trig double 0 0.2 0 0.5 1 1 Defines safe interval percentage [0,0.5] for using LP point as a branching point.
+branch_midpoint_alpha double 0 0.25 0 1 1 1 Defines convex combination of mid point and current LP point: b = alpha x_lp + (1-alpha) (lb+ub)/2.
+branch_pt_select enumstr 0 "mid-point" 1 1 Chooses branching point selection strategy
+ "balanced" 1 minimizes max distance from curve to convexification
+ "lp-central" 1 LP point if within [k,1-k] of the bound intervals, middle point otherwise(k defined by branch_lp_clamp)
+ "lp-clamped" 1 LP point clamped in [k,1-k] of the bound intervals (k defined by lp_clamp)
+ "mid-point" 1 convex combination of current point and mid point
+ "min-area" 1 minimizes total area of the two convexifications
+ "no-branch" 1 do not branch, return null infeasibility; for testing purposes only
+branch_pt_select_cube enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator cube.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_div enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator div.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_exp enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator exp.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_log enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator log.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_negpow enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator negpow.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_pow enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator pow.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_prod enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator prod.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_sqr enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator sqr.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branch_pt_select_trig enumstr 0 "common" 1 1 Chooses branching point selection strategy for operator trig.
+ "balanced" 1
+ "common" 1
+ "lp-central" 1
+ "lp-clamped" 1
+ "mid-point" 1
+ "min-area" 1
+ "no-branch" 1
+branching_object enumstr 0 "var_obj" 1 1 type of branching object for variable selection
+ "expr_obj" 1 use one object for each nonlinear expression
+ "var_obj" 1 use one object for each variable
+ "vt_obj" 1 use Violation Transfer from Tawarmalani and Sahinidis
+branching_print_level integer 0 0 -2 12 1 1 Output level for braching code in Couenne
+check_lp enumstr 0 "no" 1 1 Check all LPs through an independent call to OsiClpSolverInterface::initialSolve()
+ "no" 1
+ "yes" 1
+clique_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating clique_cuts cuts in branch-and-cut.
+cont_var_priority integer 0 2000 1 maxint 1 1 Priority of continuous variable branching
+convexification_cuts integer 0 1 -99 maxint 1 1 Specify the frequency (in terms of nodes) at which couenne ecp cuts are generated.
+convexification_points integer 0 4 0 maxint 1 1 Specify the number of points at which to convexify when convexification type is uniform-grid or around-current-point.
+convexification_type enumstr 0 "current-point-only" 1 1 Determines in which point the linear over/under-estimator are generated
+ "around-current-point" 1 At points around current optimum of relaxation
+ "current-point-only" 1 Only at current optimum of relaxation
+ "uniform-grid" 1 Points chosen in a uniform grid between the bounds of the problem
+convexifying_print_level integer 0 0 -2 12 1 1 Output level for convexifying code in Couenne
+cover_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating cover_cuts cuts in branch-and-cut.
+delete_redundant enumstr 0 "yes" 1 1 Eliminate redundant variables, which appear in the problem as x_k = x_h
+ "no" 1 Keep redundant variables, making the problem a bit larger
+ "yes" 1 Eliminate redundant variables (the problem will be equivalent, only smaller)
+disj_active_cols enumstr 0 "no" 1 1 Only include violated variable bounds in the Cut Generating LP (CGLP).
+ "no" 1
+ "yes" 1
+disj_active_rows enumstr 0 "no" 1 1 Only include violated linear inequalities in the CGLP.
+ "no" 1
+ "yes" 1
+disj_cumulative enumstr 0 "no" 1 1 Add previous disjunctive cut to current CGLP.
+ "no" 1
+ "yes" 1
+disj_depth_level integer 0 5 -1 maxint 1 1 Depth of the B&B tree when to start decreasing the number of objects that generate disjunctions.
+disj_depth_stop integer 0 20 -1 maxint 1 1 Depth of the B&B tree where separation of disjunctive cuts is stopped.
+disj_init_number integer 0 10 -1 maxint 1 1 Maximum number of disjunction to consider at each iteration.
+disj_init_perc double 0 0.5 0 1 1 1 The maximum fraction of all disjunctions currently violated by the problem to consider for generating disjunctions.
+disjcuts_print_level integer 0 0 -2 12 1 1 Output level for disjunctive cuts in Couenne
+display_stats enumstr 0 "no" 1 1 display statistics at the end of the run
+ "no" 1
+ "yes" 1
+enable_lp_implied_bounds enumstr 0 "no" 1 1 Enable OsiSolverInterface::tightenBounds () -- warning: it has caused some trouble to Couenne
+ "no" 1
+ "yes" 1
+enable_sos enumstr 0 "no" 1 1 Use Special Ordered Sets (SOS) as indicated in the MINLP model
+ "no" 1
+ "yes" 1
+estimate_select enumstr 0 "normal" 1 1 How the min/max estimates of the subproblems' bounds are used in strong branching
+ "normal" 1 as usual in literature
+ "product" 1 use their product
+feas_pump_convcuts enumstr 0 "none" 1 1 Separate MILP-feasible, MINLP-infeasible solution during or after MILP solver.
+ "external" 1 Done after the MILP solver, in a Benders-like fashion
+ "integrated" 1 Done within the MILP solver in a branch-and-cut fashion
+ "none" 1 Just proceed to the NLP
+ "postcut" 1 Do one round of cuts and proceed with NLP
+feas_pump_heuristic enumstr 0 "no" 1 1 Apply the nonconvex Feasibility Pump
+ "no" 1
+ "yes" 1
+feas_pump_iter integer 0 10 -1 maxint 1 1 Number of iterations in the main Feasibility Pump loop
+feas_pump_level integer 0 3 -1 maxint 1 1 Specify the logarithm of the number of feasibility pumps to perform on average for each level of given depth of the tree.
+feas_pump_milpmethod integer 0 -1 -1 4 1 1 How should the integral solution be constructed?
+feas_pump_mult_dist_milp double 0 0 0 1 1 1 Weight of the distance in the distance function of the milp problem
+feas_pump_mult_dist_nlp double 0 0 0 1 1 1 Weight of the distance in the distance function of the nlp problem
+feas_pump_mult_hess_milp double 0 0 0 1 1 1 Weight of the Hessian in the distance function of the milp problem
+feas_pump_mult_hess_nlp double 0 0 0 1 1 1 Weight of the Hessian in the distance function of the nlp problem
+feas_pump_mult_objf_milp double 0 0 0 1 1 1 Weight of the original objective function in the distance function of the milp problem
+feas_pump_mult_objf_nlp double 0 0 0 1 1 1 Weight of the original objective function in the distance function of the nlp problem
+feas_pump_nseprounds integer 0 4 1 100000 1 1 Number of rounds that separate convexification cuts. Must be at least 1
+feas_pump_poolcomp integer 0 0 0 2 1 1 Priority field to compare solutions in FP pool
+feas_pump_tabumgt enumstr 0 "pool" 1 1 Retrieval of MILP solutions when the one returned is unsatisfactory
+ "cut" 1 Separate convexification cuts
+ "none" 1 Bail out of feasibility pump
+ "perturb" 1 Randomly perturb unsatisfactory solution
+ "pool" 1 Use a solution pool and replace unsatisfactory solution with Euclidean-closest in pool
+feas_pump_usescip enumstr 0 "yes" 1 1 Should SCIP be used to solve the MILPs?
+ "no" 1 Use Cbc's branch-and-cut to solve the MILP
+ "yes" 1 Use SCIP's branch-and-cut or heuristics (see feas_pump_milpmethod option) to solve the MILP
+feas_pump_vardist enumstr 0 "integer" 1 1 Distance computed on integer-only or on both types of variables, in different flavors.
+ "all" 1 Compute the distance using continuous and integer variables
+ "int-postprocess" 1 Use a post-processing fixed-IP LP to determine a closest-point solution
+ "integer" 1 Only compute the distance based on integer coordinates (use post-processing if numerical errors occur)
+feas_tolerance double 0 1e-05 mindouble maxdouble 1 1 Tolerance for constraints/auxiliary variables
+feasibility_bt enumstr 0 "yes" 1 1 Feasibility-based (cheap) bound tightening (FBBT)
+ "no" 1
+ "yes" 1
+fixpoint_bt integer 0 0 -99 maxint 1 1 The frequency (in terms of nodes) at which Fix Point Bound Tightening is performed.
+fixpoint_bt_model enumstr 0 "compact" 1 1 Choose whether to add an extended fixpoint LP model or a more compact one.
+ "compact" 1
+ "extended" 1
+flow_covers_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating flow_covers_cuts cuts in branch-and-cut.
+int_var_priority integer 0 1000 1 maxint 1 1 Priority of integer variable branching
+iterative_rounding_aggressiveness integer 0 1 0 2 1 1 Aggressiveness of the Iterative Rounding heuristic
+iterative_rounding_base_lbrhs integer 0 15 0 maxint 1 1 Base rhs of the local branching constraint for Iterative Rounding
+iterative_rounding_heuristic enumstr 0 "no" 1 1 Do we use the Iterative Rounding heuristic
+ "no" 1
+ "yes" 1
+iterative_rounding_num_fir_points integer 0 5 1 maxint 1 1 Max number of points rounded at the beginning of Iterative Rounding
+iterative_rounding_omega double 0 0.2 0 1 1 1 Omega parameter of the Iterative Rounding heuristic
+iterative_rounding_time double 0 -1 mindouble maxdouble 1 1 Specify the maximum time allowed for the Iterative Rounding heuristic
+iterative_rounding_time_firstcall double 0 -1 mindouble maxdouble 1 1 Specify the maximum time allowed for the Iterative Rounding heuristic when no feasible solution is known
+lift_and_project_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating lift_and_project_cuts cuts in branch-and-cut.
+local_branching_heuristic enumstr 0 "no" 1 1 Apply local branching heuristic
+ "no" 1
+ "yes" 1
+local_optimization_heuristic enumstr 0 "yes" 1 1 Search for local solutions of MINLPs
+ "no" 1
+ "yes" 1
+log_num_abt_per_level integer 0 2 -1 maxint 1 1 Specify the frequency (in terms of nodes) for aggressive bound tightening.
+log_num_local_optimization_per_level integer 0 2 -1 maxint 1 1 Specify the logarithm of the number of local optimizations to perform on average for each level of given depth of the tree.
+log_num_obbt_per_level integer 0 1 -1 maxint 1 1 Specify the frequency (in terms of nodes) for optimality-based bound tightening.
+lp_solver enumstr 0 "clp" 1 1 Linear Programming solver for the linearization
+ "clp" 1 Use the COIN-OR Open Source solver CLP
+ "cplex" 1 Use the commercial solver Cplex (license is needed)
+ "gurobi" 1 Use the commercial solver Gurobi (license is needed)
+ "soplex" 1 Use the freely available Soplex
+ "xpress-mp" 1 Use the commercial solver Xpress MP (license is needed)
+max_fbbt_iter integer 0 3 -1 maxint 1 1 Number of FBBT iterations before stopping even with tightened bounds.
+minlp_disj_cuts integer 0 0 -99 maxint 1 1 The frequency (in terms of nodes) at which Couenne disjunctive cuts are generated.
+mir_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating mir_cuts cuts in branch-and-cut.
+multilinear_separation enumstr 0 "tight" 1 1 Separation for multilinear terms
+ "none" 1 No separation -- just use the four McCormick inequalities
+ "simple" 1 Use one considering lower curve only
+ "tight" 1 Use one considering both curves pi(x) = l_{k+1} and pi(x) = u_{k+1}
+nlpheur_print_level integer 0 0 -2 12 1 1 Output level for NLP heuristic in Couenne
+optimality_bt enumstr 0 "yes" 1 1 Optimality-based (expensive) bound tightening (OBBT)
+ "no" 1
+ "yes" 1
+orbital_branching enumstr 0 "no" 1 1 detect symmetries and apply orbital branching
+ "no" 1
+ "yes" 1
+output_level integer 0 0 -2 12 1 1 Output level
+probing_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating probing_cuts cuts in branch-and-cut.
+problem_print_level integer 0 0 -2 12 1 1 Output level for problem manipulation code in Couenne
+pseudocost_mult enumstr 0 "interval_br_rev" 1 1 Multipliers of pseudocosts for estimating and update estimation of bound
+ "infeasibility" 1 infeasibility returned by object
+ "interval_br" 1 width of the interval between bound and branching point
+ "interval_br_rev" 1 similar to interval_br, reversed
+ "interval_lp" 1 width of the interval between bound and current lp point
+ "interval_lp_rev" 1 similar to interval_lp, reversed
+ "projectDist" 1 distance between current LP point and resulting branches' LP points
+pseudocost_mult_lp enumstr 0 "no" 1 1 Use distance between LP points to update multipliers of pseudocosts after simulating branching
+ "no" 1
+ "yes" 1
+quadrilinear_decomp enumstr 0 "rAI" 1 1 type of decomposition for quadrilinear terms (see work by Cafieri, Lee, Liberti)
+ "bi+tri" 1 Bilinear, THEN trilinear term: x5 = ((x1 x2) x3 x4))
+ "hier-bi" 1 Hierarchical decomposition: x5 = ((x1 x2) (x3 x4))
+ "rAI" 1 Recursive decomposition in bilinear terms (as in Ryoo and Sahinidis): x5 = ((x1 x2) x3) x4)
+ "tri+bi" 1 Trilinear and bilinear term: x5 = (x1 (x2 x3 x4))
+red_cost_branching enumstr 0 "no" 1 1 Apply Reduced Cost Branching (instead of the Violation Transfer) -- MUST have vt_obj enabled
+ "no" 1 Use Violation Transfer with $\sum |\pi_i a_{ij}|$
+ "yes" 1 Use Reduced cost branching with $|\sum \pi_i a_{ij}|$
+redcost_bt enumstr 0 "yes" 1 1 Reduced cost bound tightening
+ "no" 1
+ "yes" 1
+reduce_split_cuts integer 0 0 -100 maxint 1 1 Frequency k (in terms of nodes) for generating reduce_split_cuts cuts in branch-and-cut.
+reformulate_print_level integer 0 0 -2 12 1 1 Output level for reformulating problems in Couenne
+solvetrace string 0 "" 1 1 Name of file for writing solving progress information.
+solvetracenodefreq integer 0 100 0 maxint 1 1 Frequency in number of nodes for writing solving progress information.
+solvetracetimefreq double 0 5 0 maxdouble 1 1 Frequency in seconds for writing solving progress information.
+trust_strong enumstr 0 "yes" 1 1 Fathom strong branching LPs when their bound is above the cutoff
+ "no" 1
+ "yes" 1
+two_implied_bt integer 0 0 -99 maxint 1 1 The frequency (in terms of nodes) at which Couenne two-implied bounds are tightened.
+two_implied_max_trials integer 0 2 1 maxint 1 1 The number of iteration at each call to the cut generator.
+twoimpl_depth_level integer 0 5 -1 maxint 1 1 Depth of the B&B tree when to start decreasing the chance of running this algorithm.
+twoimpl_depth_stop integer 0 20 -1 maxint 1 1 Depth of the B&B tree where separation is stopped.
+use_auxcons enumstr 0 "yes" 1 1 Use constraints-defined auxiliaries, i.e. auxiliaries w = f(x) defined by original constraints f(x) - w = 0
+ "no" 1
+ "yes" 1
+use_quadratic enumstr 0 "no" 1 1 Use quadratic expressions and related exprQuad class
+ "no" 1 Use an auxiliary for each bilinear term
+ "yes" 1 Create only one auxiliary for a quadratic expression
+use_semiaux enumstr 0 "yes" 1 1 Use semiauxiliaries, i.e. auxiliaries defined as w >= f(x) rather than w := f(x))
+ "no" 1 Only use auxiliaries assigned with '='
+ "yes" 1 Use auxiliaries defined by w <= f(x), w >= f(x), and w = f(x)
+violated_cuts_only enumstr 0 "yes" 1 1 Yes if only violated convexification cuts should be added
+ "no" 1
+ "yes" 1
+*
+* indicator section
+*
+*
+* Groups
+* <group-ident> group <group-number <help-context> <help-text>
+*
+gr_Couenne_options group 1 1 Couenne options
+*** End of file

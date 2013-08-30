@@ -1,0 +1,105 @@
+$title Stochastic Electric Power Expansion Planning Problem (APL1PSP,SEQ=70)
+
+$ontext
+
+ Stochastic Electric Power Expansion Planning Problem.
+ This is a two-stage stochastic linear program.
+ Facing uncertain demand, decisions about generation
+ capacity need to be made.
+
+ This model is also used as an example in the
+ GAMS/DECIS user's guide.
+
+Infanger, G, Planning Under Uncertainty - Solving Large-Scale
+Stochastic Linear Programs, 1988.
+
+$offtext
+
+set g generators / g1, g2/;
+set dl demand levels /h, m, l/;
+
+parameter ccmin(g) min capacity / g1  1000, g2  1000 /;
+parameter ccmax(g) max capacity / g1 10000, g2 10000 /;
+parameter c(g) investment       / g1   4.0, g2   2.5 /;
+
+table f(g,dl) operating cost
+             h    m    l
+   g1        4.3  2.0  0.5
+   g2        8.7  4.0  1.0;
+
+parameter us(dl) cost of unserved demand / h   10, m   10, l   10 /;
+
+parameter alpha(g) availability / g1 0.68, g2 0.64          /
+          d(dl)    demand       / h  1040, m  1040, l  1040 /;
+
+* -----------------------------------------------
+* define the core model
+* -----------------------------------------------
+
+free variable tcost         total cost;
+positive variable x(g)      capacity of generators;
+positive variable y(g, dl)  operation level;
+positive variable s(dl)     unserved demand;
+
+equations
+cost        total cost
+cmin(g)     minimum capacity
+cmax(g)     maximum capacity
+omax(g)     maximum operating level
+demand(dl)  satisfy demand;
+
+cost .. tcost =e=     sum(g, c(g)*x(g))
+                    + sum(g, sum(dl, f(g,dl)*y(g,dl)))
+                    + sum(dl,us(dl)*s(dl));
+
+cmin(g) .. x(g) =g= ccmin(g);
+cmax(g) .. x(g) =l= ccmax(g);
+omax(g) .. sum(dl, y(g,dl)) =l= alpha(g)*x(g);
+demand(dl) .. sum(g, y(g,dl)) + s(dl) =g= d(dl);
+
+model apl1p /all/;
+
+set omega / o1*o5 /;
+
+table  stochasticalpha(omega,g)     availability distribution on generator g
+     g1   g2
+ o1  1.0  1.0
+ o2  0.9  0.9
+ o3  0.5  0.7
+ o4  0.4  0.1
+ o5       0.0
+;
+
+table  alphaprobability(omega,g)    availability probabilities
+     g1   g2
+ o1  0.2  0.1
+ o2  0.3  0.2
+ o3  0.4  0.5
+ o4  0.1  0.1
+ o5       0.1
+;
+
+parameter stochasticd(omega)  demand distribution
+          / o1 900,  o2 1000, o3 1100, o4 1200/
+          dprobability(omega) demand probabilities
+          / o1 0.15, o2 0.45, o3 0.25, o4 0.15/ ;
+
+file emp / '%emp.info%' /; put emp '* problem %gams.i%';
+loop(g,
+   put / 'randvar ' alpha.tn(g) ' discrete ';
+   loop(omega$alphaprobability(omega,g), put alphaprobability(omega,g):5:2 stochasticalpha(omega,g):5:2));
+loop(dl,
+   put / 'randvar ' d.tn(dl) ' discrete ';
+   loop(omega$dprobability(omega), put dprobability(omega):5:2 stochasticd(omega):5:0));
+putclose / 'stage 2 alpha d'
+         / 'stage 2 omax demand'
+         / 'stage 2 y s';
+
+Set scen scenarios / s1*s5 /;
+parameter  s_alpha(scen,g), s_d(scen,dl);
+
+Set dict / scen   .scenario.''
+           alpha  .randvar. s_alpha
+           d      .randvar. s_d /;
+
+solve apl1p using emp min tcost scenario dict;

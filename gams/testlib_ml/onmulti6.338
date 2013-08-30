@@ -1,0 +1,30 @@
+$title 'Test merge with $onmulti and $gdxin' (ONMULTI6,SEQ=338)
+
+$ontext
+This tests AB01267: celmerge was called incorrectly
+
+Contributor: Alex Meeraus
+$offtext
+
+set       i / 1*10 /;
+parameter a(i) / 1*5 2  /, b(i) / 6*10 3 /
+          cab(i),cba(i),dab(i),dba(i);
+
+$onmulti
+parameter cab / 1*5  2 /, cab / 6*10 3 /
+          cba / 6*10 3 /, cba / 1*5  2 /;
+$offmulti
+display cab,cba;
+abort$sum(i, cab(i) <> cba(i)) '$onmulti with declaration failed';
+
+$gdxout g
+$unload a b
+$gdxout
+
+$onmulti
+$gdxin g
+$load dab=a dab=b dba=b dba=a
+$onmulti
+
+display dab,dba;
+abort$sum(i, dab(i) <> dba(i)) '$onmulti with $gdxin failed';

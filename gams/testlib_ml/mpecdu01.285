@@ -1,0 +1,67 @@
+$TITLE 'MPECDUMP test suite - basic option reading test' (MPECDU01,SEQ=285)
+$ondollar
+
+$call gamslib -q trnsport
+
+$onecho > mpecdump.opt
+matlab tmp
+$offecho
+
+$onecho > md1awant.txt
+% data from what model??
+
+fprintf ('Loading column data . .\n');
+load tmp_xlb.dat -ascii
+load tmp_xl.dat -ascii
+load tmp_xub.dat -ascii
+load tmp_xm.dat -ascii
+tmp_xnames = textread('tmp_xnames.dat','%s');
+load tmp_c.dat -ascii
+fprintf ('Loading row data . .\n');
+load tmp_b.dat -ascii
+load tmp_beq.dat -ascii
+load tmp_bm.dat -ascii
+load tmp_beqm.dat -ascii
+tmp_bnames = textread('tmp_bnames.dat','%s');
+tmp_beqnames = textread('tmp_beqnames.dat','%s');
+fprintf ('Loading matrix data . .\n');
+load tmp_A_ijval.dat -ascii
+tmp_A = spconvert(tmp_A_ijval);
+tmp_Aeq = sparse(0,6);
+fprintf ('Done loading data.\n');
+% [x,z] = linprog(tmp_c, tmp_A, tmp_b, tmp_Aeq, tmp_beq, tmp_xlb, tmp_xub);
+$offecho
+
+$onecho > md1bwant.txt
+x(seattle,new-york)
+x(seattle,chicago)
+x(seattle,topeka)
+x(san-diego,new-york)
+x(san-diego,chicago)
+x(san-diego,topeka)
+$offecho
+
+$call gams trnsport lp=mpecdump optfile=1 lo=%gams.lo%
+
+$if not exist tmp.m $abort 'Expected file tmp.m does not exist'
+$if not exist tmp_xnames.dat $abort 'Expected file tmp_xnames.dat does not exist'
+
+$onecho > md1adiff.txt
+999999
+$offecho
+$onecho > md1bdiff.txt
+999999
+$offecho
+
+$call diff tmp.m md1awant.txt | wc -w > md1adiff.txt
+$call diff tmp_xnames.dat md1bwant.txt | wc -w > md1bdiff.txt
+
+scalar diffa /
+$include md1adiff.txt
+/;
+abort$diffa   'The MPECDUMP output was not what we expected';
+
+scalar diffb /
+$include md1bdiff.txt
+/;
+abort$diffb   'The MPECDUMP output was not what we expected';

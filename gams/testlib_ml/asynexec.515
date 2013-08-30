@@ -1,0 +1,214 @@
+$Title Test asynchronous execution at compile and execution time (ASYNEXEC,SEQ=515)
+
+$ontext
+In this test GAMS jobs are started asynchronous. Afterwards it is demonstrated
+how to either wait for completion or send a kill signal to those jobs. There are
+three ways to start a job asynchronously:
+
+ > $Call.ASync ...
+ > Execute.ASync '...';
+ > put_utility fx 'Exec.ASync' / '...'; / put_utility fx 'Shell.ASync' / '...';
+
+After each of those the function JobHandle could be used to get the Process ID
+of the last job executed. With JobStatus(pid) one could check for the status of
+a job. Possible return values are:
+
+ 0: error (input is not a valid PID or access is denied)
+ 1: process is still running
+ 2: process is finished with return code which could be accessed by errorlevel
+ 3: process not running anymore or was never running, no return code available
+
+With JobTerminate(pid) a interrupt signal can be send to a running job. If this
+was successful the return value is one, otherwise it is zero.
+With JobKill(pid) a kill signal can be send to a running job. If this was
+successful the return value is one, otherwise it is zero.
+
+Contributor: L. Westermann
+$offtext
+
+
+$call gamslib -q trnsport
+
+$onecho > sleep.gms
+$if not set secs $set secs 0
+display$sleep(%secs%) 'Sleep %secs% seconds'
+$offecho
+
+$Call.ASync gams sleep --secs 3 lo=%GAMS.lo%
+$eval jh JobHandle
+$set jh2 %system.JobHandle%
+$if not %jh% == %jh2% $abort JobHandle <> system.JobHandle
+$log >>> JobHandle : %jh%
+$label loopstart1
+$eval status JobStatus(%jh%)
+$log >>> Status    : %status%
+$if not %status% == 1 $goto loopdone1
+$call sleep 1
+$goto loopstart1
+$label loopdone1
+$if not %status% == 2 $abort '*** $Call.ASync gams... failed: wrong status'
+$if errorlevel 1      $abort '*** $Call.ASync gams... failed: wrong errorlevel'
+
+$Call.ASync =gams sleep --secs 3 lo=%GAMS.lo%
+$eval jh JobHandle
+$log >>> JobHandle : %jh%
+$label loopstart2
+$eval status JobStatus(%jh%)
+$log >>> Status    : %status%
+$if not %status% == 1 $goto loopdone2
+$call sleep 1
+$goto loopstart2
+$label loopdone2
+$if not %status% == 2 $abort '*** $Call.ASync =gams... failed: wrong status'
+$if errorlevel 1      $abort '*** $Call.ASync =gams... failed: wrong errorlevel'
+
+file fx;
+scalar jh,kill,status /1/;
+Execute.ASync 'gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+while(status = 1,
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+  display$sleep(1$(status=1)) 'sleep some';
+);
+abort$(status <> 2) '*** Execute.ASync gams... failed: wrong status';
+abort$errorlevel    '*** Execute.ASync gams... failed: wrong errorlevel';
+
+Execute.ASync '=gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+status = 1;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+while(status = 1,
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+  display$sleep(1$(status=1)) 'sleep some';
+);
+abort$(status <> 2) '*** Execute.ASync =gams... failed: wrong status';
+abort$errorlevel    '*** Execute.ASync =gams... failed: wrong errorlevel';
+
+
+put_utility fx 'Exec.ASync' / 'gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+status = 1;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+while(status = 1,
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+  display$sleep(1$(status=1)) 'sleep some';
+);
+abort$(status <> 2) '*** Exec.ASync gams... failed: wrong status';
+abort$errorlevel    '*** Exec.ASync gams... failed: wrong errorlevel';
+
+put_utility fx 'Shell.ASync' / 'gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+status = 1;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+while(status = 1,
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+  display$sleep(1$(status=1)) 'sleep some';
+);
+abort$(status <> 2) '*** Shell.ASync gams... failed: wrong status';
+abort$errorlevel    '*** Shell.ASync gams... failed: wrong errorlevel';
+
+
+$Call.ASync =gams sleep --secs 3 lo=%GAMS.lo%
+$eval jh JobHandle
+$log >>> JobHandle : %jh%
+$eval status JobStatus(%jh%)
+$log >>> Status    : %status%
+$eval kill JobKill(%jh%)
+$log >>> Kill RC   : %kill%
+$if %kill% == 0 $abort '*** compile time JobKill failed: kill returns error'
+$eval status JobStatus(%jh%)
+$log >>> Status    : %status%
+$ifthen %status% == 1
+$call sleep 1
+$eval status JobStatus(%jh%)
+$log >>> Status    : %status%
+$endif
+$if %status% == 1 $abort '*** compile time JobKill failed: process not killed'
+
+Execute.ASync '=gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+status = JobStatus(jh);
+put_utility fx 'log' / '>>> Status    :' status;
+kill = JobKill(jh);
+put_utility fx 'log' / '>>> Kill RC   :' kill;
+abort$(kill=0) '*** execution time JobKill failed: kill returns error';
+status = JobStatus(jh);
+put_utility fx 'log' / '>>> Status    :' status;
+if(status=1,
+  display$sleep(1) 'sleep some';
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+);
+abort$(status=1) '*** execution time JobKill failed: process not killed';
+
+Execute.ASync 'gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+status = JobStatus(jh);
+put_utility fx 'log' / '>>> Status    :' status;
+
+option solvelink=%solvelink.chainscript%;
+$include trnsport.gms
+
+put_utility fx 'log' / '>>> JobHandle :' jh;
+while(status = 1,
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+  display$sleep(1$(status=1)) 'sleep some';
+);
+$if     %system.filesys% == UNIX abort$(status <> 3) '*** Recollect after solve failed: wrong status';
+$if not %system.filesys% == UNIX abort$(status <> 2) '*** Recollect after solve failed: wrong status';
+$if not %system.filesys% == UNIX abort$errorlevel    '*** Recollect after solve failed: wrong errorlevel';
+
+$onecho > SpawnJob.gms
+$set flags mip=bdmlp iterlim=30000 lo=2
+
+file fx, fy /pid.inc/;
+scalar jh,kill,status /1/;
+
+Execute.ASync '=gams sleep --secs 3 lo=%GAMS.lo%';
+jh = JobHandle;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+status = JobStatus(jh);
+put_utility fx 'log' / '>>> Status    :' status;
+putclose fy jh:0:0;
+$offecho
+
+$call gams SpawnJob lo=%GAMS.lo%
+
+$onecho > CollectJob.gms
+file fx;
+scalar kill,status /1/;
+scalar jh /
+$include pid.inc
+/;
+
+put_utility fx 'log' / '>>> JobHandle :' jh;
+while(status = 1,
+  status = JobStatus(jh);
+  put_utility fx 'log' / '>>> Status    :' status;
+  display$sleep(1$(status=1)) 'sleep some';
+);
+$if     %system.filesys% == UNIX abort$(status <> 3) '*** Collect Handle failed: wrong status';
+$if not %system.filesys% == UNIX abort$(status <> 2) '*** Collect Handle failed: wrong status';
+$if not %system.filesys% == UNIX abort$errorlevel    '*** Collect Handle failed: wrong errorlevel';
+$offecho
+
+$call gams CollectJob lo=%GAMS.lo%
+$if errorlevel 1 $abort '*** Collect Handle failed'
+
+$exit
+*This needs some work to have something running on all platforms
+Execute.ASync 'garbage dice %flags%';
+jh = JobHandle;
+put_utility fx 'log' / '>>> JobHandle :' jh;
+status = JobStatus(jh);
+put_utility fx 'log' / '>>> Status    :' status;
+abort$(Status<>0) '*** Should get an error when spawning garbage';
+

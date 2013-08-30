@@ -1,0 +1,10 @@
+$title Simple level and sign test (NLPLP02,SEQ=131)
+$ontext
+Run lp02 as an NLP
+$offtext
+
+$set MTYPE nlp
+* set MSMAX to 2 to allow NLP solver to return modelstat = %modelstat.LocallyOptimal% LOCALLY OPTIMAL
+$set MSMAX 2
+
+$include lp02.gms

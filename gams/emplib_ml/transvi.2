@@ -1,0 +1,114 @@
+$title VI version of the transport model (TRANSVI,SEQ=2)
+
+$ontext
+
+Example showing how to write a VI as an MCP
+
+We want to write the VI using EMP to avoid manual translation to MCP. We use
+the definitions of VI and MCP from
+
+Steven P. Dirkse,  Ph.D. Dissertation
+    Robust Solution of Mixed Complementarity Problems.
+    Mathematical Programming Technical Report 94-12, August 1994.
+    ftp://ftp.cs.wisc.edu/math-prog/tech-reports/94-12.ps
+    Pages 4-6
+
+In this case, the VI to start with is what we get by letting F(x) = df/dx,
+where f is the objective in the transport model.
+
+We adjusted the data to get nonzero supply marginals.
+
+Contributor: Steven Dirkse and Jan-H. Jagla, January 2009
+
+$offtext
+
+Sets
+     i   canning plants   / seattle, san-diego /
+     j   markets          / new-york, chicago, topeka / ;
+
+Parameters
+
+     a(i)  capacity of plant i in cases
+       /    seattle     350
+            san-diego   600  /
+
+     b(j)  demand at market j in cases
+       /    new-york    325
+            chicago     300
+            topeka      275  / ;
+
+Table d(i,j)  distance in thousands of miles
+                  new-york       chicago      topeka
+    seattle          2.2           1.7          1.8
+    san-diego        2.5           1.8          1.4  ;
+
+Scalar f  freight in dollars per case per thousand miles  /90/ ;
+
+Parameter c(i,j)  transport cost in thousands of dollars per case ;
+
+          c(i,j) = f * d(i,j) / 1000 ;
+
+Variables
+     x(i,j)  shipment quantities in cases
+     z       total transportation costs in thousands of dollars ;
+
+Positive Variable x ;
+
+Equations
+     cost        define objective function
+     supply(i)   observe supply limit at plant i
+     demand(j)   satisfy demand at market j ;
+
+cost ..        z  =e=  sum((i,j), c(i,j)*x(i,j)) ;
+
+supply(i) ..   sum(j, x(i,j))  =l=  a(i) ;
+
+demand(j) ..   sum(i, x(i,j))  =g=  b(j) ;
+
+Model transport /all/ ;
+
+* Solve the LP
+option lp = pathnlp;
+Solve transport using lp minimizing z ;
+abort$[transport.modelstat <> %MODELSTAT.OPTIMAL%] 'LP not solved';
+
+*-------------------------------------------------------------------------------
+* That's how the VI looks like
+
+positive variable
+     dPrice(j)   'demand price';
+negative variable
+     sPrice(i)   'supply price*(-1)';
+equations
+     ggrad(i,j)  'MCP version of grad from VI';
+
+ggrad(i,j)..  c(i,j) - sPrice(i) - dPrice(j) =N= 0;
+
+model mcpTransport / ggrad.x, supply.sPrice, demand.dPrice /;
+
+*Adopt solution from LP solve and verify it is a solution of the MCP
+sPrice.l(i) = supply.m(i);
+dPrice.l(j) = demand.m(j);
+mcpTransport.iterlim = 0;
+solve mcpTransport using mcp;
+abort$[mcpTransport.objVal > 1e-6] 'Input for model mcpTransport should be optimal, was not';
+
+*-------------------------------------------------------------------------------
+* Now use EMP to this reformulation
+
+* F(x) = c for our VI: LP models yield a linear VI
+equations
+  grad(i,j) 'dcost/dx(i,j)';
+
+grad(i,j)..  c(i,j) =N= 0;
+
+model viTransport / grad, supply, demand /;
+
+file myinfo / '%emp.info%' /;
+put myinfo '* complementarity pairs for grad.x' /;
+putclose   'vi grad x';
+
+*Verfiy the solution we already have.
+viTransport.iterlim = 0;
+solve viTransport using emp;
+abort$[viTransport.objVal > 1e-6] 'Input for model viTransport should be optimal, was not';

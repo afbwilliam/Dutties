@@ -1,0 +1,6 @@
+$title MPSGE naming test: labels cannot contain a space (MPSGE03,SEQ=80)
+
+$set ILABEL    "no space"
+$set SETUPFAIL  1
+
+$include exchange.inc

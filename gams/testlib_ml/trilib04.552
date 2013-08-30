@@ -1,0 +1,63 @@
+$Title Demonstrates problems with a stateful function library (TRILIB04,SEQ=552)
+
+$ontext
+This demonstrates the problems with a stateful function library in
+the context of GAMS and solver processes.
+
+The trilib default mode for computations is in radians (mode=0). The
+function SetTriMode can be used to interpret the arguments of
+subsequent function calls to Cosine and Sine as degrees (mode=1)
+instead of radians (mode=0). The SetTriMod function returns the
+previous mode value.
+
+Contributor: Michael Bussieck
+$offtext
+
+$if %system.buildcode% == AIX $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == DIG $funclibin trilib %GAMS.workdir%libtricclib.dylib
+$if %system.buildcode% == DEG $funclibin trilib %GAMS.workdir%libtricclib64.dylib
+$if %system.buildcode% == LNX $funclibin trilib %GAMS.workdir%libtricclib.so
+$if %system.buildcode% == LEG $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == SIG $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == SOL $funclibin trilib %GAMS.workdir%libtricclib.so
+$if %system.buildcode% == SOX $funclibin trilib %GAMS.workdir%libtricclib64.so
+$if %system.buildcode% == VS8 $funclibin trilib %GAMS.workdir%tricclib.dll
+$if %system.buildcode% == WEI
+$if %gams.ide% == 1 $call cp %GAMS.sysdir%testlib_ml\tricclib64.dll %GAMS.workdir%
+$if %system.buildcode% == WEI $funclibin trilib %GAMS.workdir%tricclib64.dll
+
+function mySetTriMode /trilib.SetTriMode /
+         myCos        /trilib.Cosine     /;
+
+variable x, y; equation e;
+e..   x =e= mycos(y);
+model m /e/;
+
+* Everything is default, so in radians
+y.fx = pi/2;
+solve m min x using nlp;
+abort$(abs(x.l-0)>1e-12) 'x<>0';
+
+display$mySetTriMode(1) 'Now we switch to degrees but do solvelink=ChainScript';
+
+* The solver runs in a separate process and we start with a new function library instance with default state (i.e. mode=0)
+m.solvelink=%solvelink.ChainScript%;
+solve m min x using nlp;
+abort$(abs(x.l-0)>1e-6) 'x.l expected to be 0', x.l;
+
+* Since GAMS solve restarts with a new process and a default state library mode was 0
+abort$(0<>mySetTriMode(1)) 'mode expected to be 0';
+
+* Now the same with solvelink=CallModule, where we have a solver process, but GAMS stays memory resident
+m.solvelink=%solvelink.CallModule%;
+solve m min x using nlp;
+abort$(abs(x.l-0)>1e-6) 'x.l expected to be 0', x.l;
+abort$(1<>mySetTriMode(1)) 'mode expected to be 1';
+
+* Now the same with solvelink=LoadLibrary, where we have a solver library linked into GAMS
+m.solvelink=%solvelink.LoadLibrary%;
+y.fx=90;
+solve m min x using nlp;
+abort$(abs(x.l-0)>1e-6) 'x.l expected to be 0', x.l;
+abort$(1<>mySetTriMode(1)) 'mode expected to be 1';
+

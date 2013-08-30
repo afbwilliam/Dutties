@@ -1,0 +1,90 @@
+$title 'Tests of $IF statement' (IFSTAT1,SEQ=140)
+
+$log %system.version%
+$log %system.verid%
+* this tests a number of $IF options
+
+$set       var_scoped scoped
+$setlocal  var_local  local
+$setglobal var_global global
+$show
+$if NOT SET Var_Scoped $abort set scoped failed
+$if NOT SET Var_Local  $abort set local  failed
+$if NOT SET Var_Global $abort set global failed
+
+$if NOT errorfree $abort bad errorfree test
+
+$if errorlevel 1 $abort errolevel should be zero
+
+set s
+parameter p
+variable v
+equation e
+file f
+model m
+procedure pr
+function fun
+acronym acr
+
+$if NOT FunType exp  $abort should be funtype
+$if NOT SetType s    $abort should be settype
+$if NOT ParType p    $abort should be partype
+$if NOT VarType v    $abort should be vartype
+$if NOT EquType e    $abort should be eqytype
+$if NOT AcrType acr  $abort should be acrtype
+$if NOT FilType f    $abort should be filtype
+$if NOT ModType m    $abort should be modtype
+$if NOT ProType pr   $abort should be protype
+$if NOT FunType fun  $abort should be funtype
+$if NOT PreType diag $abort should be pretype
+
+$if not declared s $abort should be declared
+
+$if      defined s $abort no data yet
+$if      defined f $abort no data yet
+$if      defined m $abort no data yet
+
+* this will create an error starting in 147
+$if      dimension 0 s  $abort dimension should not be known
+$ifthen errorfree  $abort we should have an error
+$else              $clearerrors
+$endif
+
+set s / 1*3 /; p = 20; file f / temp /; model m / e /;
+
+$if not  defined f $abort we should have data
+$if not  defined m $abort we should have date
+$if not defined  s $abort s should be definded
+$if not defined  p $abort p should be definded
+
+$if not dimension 1 s  $abort dimension should be 1
+$if     dimension 0 V  $abort dimension should not be known
+$if     dimension 0 m  $abort dimension not defined
+$if     dimension 0 f  $abort dimension not defined
+$ifthen errorfree  $abort we should have an error
+$else              $clearerrors
+$endif
+
+* pretypes are implemented in a funny way, when a symbol is
+* referenced we make a second entry and make the first one
+* invisible
+
+$if NOT declared    sameas $abort should be pretype
+$if NOT PreType     sameas $abort should be pretype
+$if NOT defined     sameas $abort should have data
+$if NOT SetType     sameas $abort should be pretype
+$if NOT dimension 2 sameas $abort should be pretype
+p = sameas('1','1');
+
+* symbol not reachable any more with current symbol table management
+*$if NOT PreType     sameas $abort should be pretype
+$if NOT declared    sameas $abort should be pretype
+$if NOT SetType     sameas $abort should be pretype
+$if NOT dimension 2 sameas $abort should be pretype
+$if NOT defined     sameas $abort should have data
+
+* the following requires at least version 139
+$version 139
+
+$if solver xxxxxxxxxx  $abort there is no solver xxxxxxxxxx
+$if not solver bdmlp       $abort bdmlp should be there always

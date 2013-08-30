@@ -1,0 +1,41 @@
+$title Kestrel test for minlp solvers (KESTREL1,SEQ=543)
+
+$ontext
+Simple trnsport test for minlp solvers supported by kestrel.
+
+Contributor: Clemens Westphal, Nov 2011
+$offtext
+
+$if not set neos_server $set neos_server "www.neos-server.org"
+
+$call gamslib -q fuel
+
+set kestrel_solver /alphaecp, baron, bonmin, dicopt, lindoglobal, sbb, scip, knitro, couenne/;
+
+$onecho > fuel_test.gms
+
+Parameter loc_cost;
+Parameter tolerance /1e-5/;
+
+$include fuel.gms
+
+loc_cost = cost.l;
+ucom.optfile=1;
+option minlp=kestrel;
+Solve ucom using minlp minimizing cost;
+abort$(ucom.solvestat <> %solvestat.NormalCompletion% or (ucom.modelstat <> %modelstat.Optimal% and
+                                                          ucom.modelstat <> %modelstat.LocallyOptimal% and
+                                                          ucom.modelstat <> %modelstat.IntegerSolution%)) 'wrong status codes';
+abort$(abs(loc_cost - cost.l) > tolerance) 'obj different from local obj' , loc_cost, cost.l;
+
+$offecho
+
+file fx;
+file optfile /kestrel.opt/;
+loop(kestrel_solver,
+  put optfile 'kestrel_solver ' kestrel_solver.tl:0/;
+  put 'neos_server %neos_server%'/;
+  putclose 'socket_timeout 10'/;
+  put_utility fx 'shell' / 'gams fuel_test lo=%GAMS.lo% minlp=' kestrel_solver.tl:0;
+  abort$ERRORLEVEL "error in fuel_test";
+)

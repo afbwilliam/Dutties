@@ -1,0 +1,39 @@
+$title Bad acronym loading (GDX7,SEQ=404)
+
+$ontext
+Dear gams team,
+
+I realized that a $load of a parameter with $GDXIN in which acronyms are
+used will fail when the acronym is defined after a definition of a set.
+As a workaround I defined all acronyms at the top of each program, but
+this is rather upsetting.
+The small example below demonstrates the strange behavior. Maybe I
+missed something in the documentation? Hope to hear from you soon.
+
+Alexander Gocht
+
+<alexander.gocht@ilr.uni-bonn.de>
+Bonn University (CPARI Team)
+Institute for Food and Resource Economics
+$offtext
+
+$call "rm -f acr1.gdx"
+
+$onecho > acr1.gms
+ACRONYM averLevels,anotherone;
+scalar x / averlevels /
+       y / anotherone /;
+execute_unload "acr1.gdx";
+$offecho
+
+$call gams acr1 lo=%gams.lo%
+
+ACRONYM firstsone,averLevels;
+scalar x,y,z;
+$GDXIN acr1.gdx
+$LOAD x y
+$gdxin
+execute_load 'acr1.gdx' z=x;
+display x,y,z;
+abort$(x <> averLevels) 'bad acronym loading';
+abort$(z <> averLevels) 'bad acronym loading';

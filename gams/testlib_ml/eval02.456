@@ -1,0 +1,19 @@
+$title $eval/ife/...  sameas function (EVAL02,SEQ=456)
+$ontext
+* strings are unquoted (uel syntax), single or double quoted
+* reserved words can be unquoted strings
+
+Contributor: Alex
+$offtext
+
+
+$ondollar
+$eval a sameas(xyz,xYz)
+$eval b sameas ( 'xyz' , "xyz"  ) + sameas (12-3,12-3)
+$eval c undf$sameas(undf,inf)
+
+$if not %a% == 1 $error a is wrong
+$if not %b% == 2 $error b is wrong
+$if not %c% == 0 $error c is wrong
+
+$show

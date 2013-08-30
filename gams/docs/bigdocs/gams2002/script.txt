@@ -1,0 +1,10 @@
+*GAMSIDE script V1
+fileopen;%ProjDir%trandata.gms;
+filerun;%ProjDir%trandata.gms; s=r1
+filewait;%ProjDir%trandata.gms;
+fileopen;%ProjDir%trandata.gms;
+filerun;%ProjDir%tranmodl.gms; r=r1 s=r2
+filewait;%ProjDir%tranmodl.gms;
+fileopen;%ProjDir%trandata.gms;
+filerun;%ProjDir%tranrept.gms; r=r2
+filewait;%ProjDir%tranrept.gms;

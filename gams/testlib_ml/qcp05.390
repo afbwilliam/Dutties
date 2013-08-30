@@ -1,0 +1,54 @@
+$TITLE 'Test case for poly function'  (QCP05,SEQ=390)
+
+$ontext
+Compare modlib's qdemo7 with a version making use of the poly function
+
+Contributor: Jan-Hendrik Jagla, June 2008
+$offtext
+
+$set NUL     nul
+$if %system.filesys% == UNIX $set NUL /dev/null
+
+$if not set TESTTOL $set TESTTOL 1e-4
+
+$call gamslib -q qdemo7
+$call cat qdemo7.gms | grep -viw solve > qdemo7x.gms
+$OnEcho >> qdemo7.gms
+Equation  objnpoly          objective function;
+
+objnpoly.l = objn.l;
+objnpoly.m = objn.m;
+objnpoly.lo= objn.lo;
+objnpoly.up= objn.up;
+$OffEcho
+
+$call gams qdemo7 lo=%gams.lo% gdx=demo7n qcp=%SYSTEM.QCP%
+
+$include qdemo7x.gms
+
+Equation   objn
+           objnpoly          objective function;
+
+objnpoly.. cps =e= sum(cn, poly(natcon(cn),0,alpha(cn),.5*beta(cn)))
+             + sum(ce, exports(ce)*pe(ce))
+             - sum(cm, imports(cm)*pm(cm))
+             - tcost;
+
+Model demo7npoly QCP version/ landbal, laborbal, plow, ares,
+                              alab, acost, dem, proc,
+                              amisc, aplow, lclover, lstraw, objnpoly /;
+
+Solve demo7npoly maximizing cps using QCP;
+* Skip check if Solver cannot handle poly function
+if ((demo7npoly.solvestat = %solvestat.CapabilityProblems%),
+  abort$(demo7npoly.modelstat <> %modelstat.NoSolutionReturned%) 'bad modelstat';
+else
+  objn.l = objnpoly.l;
+  objn.m = objnpoly.m;
+  objn.lo= objnpoly.lo;
+  objn.up= objnpoly.up;
+  execute_unload 'demo7npoly.gdx';
+
+  execute 'gdxdiff demo7n.gdx demo7npoly.gdx Eps=%TESTTOL% RelEps=%TESTTOL% > %NUL%';
+  abort$(errorlevel <> 0) 'GDXDIFF no difference expected';
+);

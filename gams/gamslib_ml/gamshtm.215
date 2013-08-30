@@ -1,0 +1,334 @@
+$title Generates HTM model library files (GAMSHTM,SEQ=215);
+$Ontext
+Generates HTM model library files
+
+
+GAMS Development Corporation, Modeling Tool Box.
+
+  Generates all .htm related files for a set of models
+  found in gamsmod.inc. Uses unpublished and
+  unsupported PUT_Utilities features.
+
+  The file gamsmod.inc is the master file for all other
+  derived files.
+
+  Files generated:
+
+     seqindx.htm
+     subindx.htm
+     modlist.tex
+     alfindx.htm
+     athindx.htm
+     *.htm  for all model and include files
+
+  All files $included, read and written have to be in the same
+  directory. This program can be execute from another location
+  by using the GAMS parameter U1, for example:
+
+     >gams gamshtm.215 U1=c:\oldd\alex\gams\gamslib\ver008\test\
+
+$Offtext
+
+$setglobal gamslib '%gams.u1%'
+
+files htm     HTML file handle        / htm.htm /
+      seqindx HTML sequence index     / '%gamslib%seqindx.htm' /
+      subindx HTML subject index      / '%gamslib%subindx.htm' /
+      alfindx HTML alpha index        / '%gamslib%alfindx.htm' /
+      athindx HTML author index       / '%gamslib%athindx.htm' /
+      modlist TeX  subject index      / '%gamslib%modlist.tex' /
+
+scalar first;
+
+$offlisting
+$include "%gamslib%gamsmod.inc"
+$onlisting
+*
+*  model htm files
+*
+put htm; htm.pw=4096; htm.lcase=1;
+loop(sm(s,m),
+   put_utilities 'ren'/ '%gamslib%' m.tl:0 '.htm';
+   put   '<html> <head> <title>' m.tl:0 '.gms</title>'
+       / '<!--#include virtual="/header.html" -->'
+       / '<h2>'m.tl:0 '.gms : ' m.te(m) '</h2>';
+   put / '<hr>';
+   put_utilities 'htm'/ '%gamslib%' m.tl:0 '.' s.tl:0;
+   put / '<hr>'
+       / 'Reference'
+       put$(sum(sr(s,r),1)>1) 's';
+       put ':'
+       / '<ul>';
+   loop(sr(s,r), put / '<li>' r.te(r); put$ro(r) ro.te(r));
+   put / '</ul>'
+       / '<hr>';
+   if(big(s), put 'Large ' else put 'Small ' );
+   put 'Model of Type';
+   put$(sum(ts(t,s),1)>1) 's';
+   put ':';
+   htm.lcase=2;
+   loop(tss(t,s), put ' ' t.tl );
+   htm.lcase=1;
+   loop(ts(t,s)$(not tss(t,s)), put ' ' t.tl );
+   first = 1;
+   loop(incmap(inc,s),
+      if(first,
+         put  '&nbsp;&nbsp;&nbsp;Includes:'; first = 0;);
+      put$(not bininc(inc)) '&nbsp; <a href="' inc.tl:0 '.htm">' inc.tl:0 '</a>'
+      put$bininc(inc)       '&nbsp; <a href="' inc.tl:0 '">' inc.tl:0 '</a>'
+   );
+   put   '<hr>'
+       / '<plaintext>'
+       / '<!--#include virtual="%gamslib%' m.tl:0 '.' s.tl:0 '" -->'
+* Either we do the < > replacement or we use plaintext
+*       / '</pre>'
+*       / '<!--#include virtual="/footer.html" -->'
+*       / '</html>'
+   );
+*
+*  include htm files
+*
+loop(inc$(not bininc(inc)),
+   put_utilities 'ren'/ '%gamslib%' inc.tl:0 '.htm';
+   put   '<html> <head> <title>' inc.tl:0 '</title>'
+       / '<!--#include virtual="/header.html" -->'
+       / '<h2>'inc.tl:0 ' : ' inc.te(inc) '</h2>'
+       / '<hr> <p> Used by:';
+   loop((incmap(inc,s),sm(s,m)),
+      put '&nbsp; <a href="' m.tl:0 '.htm">' m.tl:0 '.gms</a>');
+   put / '</p> <hr>'
+       / '<pre>'
+       / '<!--#include virtual="%gamslib%' inc.tl:0 '" -->'
+       / '</pre>'
+       / '<!--#include virtual="/footer.html" -->'
+       / '</html>'  );
+*
+*  seqindx
+*
+seqindx.lcase=1;
+put seqindx
+ '<HTML> <HEAD> <TITLE> GAMS Model Library Chronological Index</TITLE></HEAD>'
+       / '<!--#include virtual="/header.html" -->'
+/'<H1>Model Library Chronological Index</H1>'
+/'This is a listing of the model library in order of'
+/'submission date. The newest ones are at the top.'
+/'<P>'
+/'There is also an <A HREF="athindx.htm">author index</A>,'
+/'a <A HREF="subindx.htm">subject index</A>,'
+/'and an <A HREF="alfindx.htm">alphabetical index</A>.'
+/'<P>'
+/ '<TABLE>'
+/ '<TR>'
+/ '    <TH ALIGN="LEFT">No</TH>'
+/ '    <TH ALIGN="LEFT">Model</TH>'
+/ '    <TH ALIGN="LEFT">Description</TH>'
+/ '    <TH ALIGN="LEFT">Type</TH>'
+/ '    <TH ALIGN="LEFT">Author</TH>'
+/ '</TR>'
+
+loop((srev(ss,s),sm(s,m),sath(s,ath)),
+   put / '<TR>'
+       / '    <TD>',s.tl:0,'</TD>'
+       / '    <TD><A HREF="',m.tl:0,'.htm">',m.tl:0,'</A></TD>'
+       / '    <TD>',m.te(m):0,'</TD>'
+       / '    <TD>';
+   seqindx.lcase=2;
+   loop(tss(t,s),
+      put t.tl:0 );
+   seqindx.lcase=0;
+   put   '</TD>'
+       / '    <TD>',ath.tl:0,'</TD>'
+       / '</TR>';
+   seqindx.lcase=1; );
+put / '</TABLE>'
+    / '<!--#include virtual="/footer.html" -->'
+    / '</html>';
+*
+*  subindx
+*
+subindx.lcase=1;
+put subindx
+ '<HTML> <HEAD><TITLE> GAMS Model Library Subject Index</TITLE></HEAD>'
+       / '<!--#include virtual="/header.html" -->'
+/'<H1>Model Library Subject Index</H1>'
+/'The following subject areas are covered:'
+/'<UL>'
+loop(a,
+   put /'<LI> <A HREF="#',a.tl:0,'">',a.te(a):0,'</A>' );
+put
+/'</UL>'
+/'</UL>'
+/'<P>'
+/'There is also an <A HREF="alfindx.htm">alphabetical index</A>'
+/'an <A HREF="athindx.htm">author index</A>,'
+/'and a <A HREF="seqindx.htm">chronological index</A>.'
+
+loop(a,
+   put
+   /'<H2> <A NAME="',a.tl:0,'">',a.te(a):0,'</A> </H2>'
+   /'<TABLE WIDTH="100%">'
+   /'<TR>'
+   /'    <TH ALIGN="LEFT" WIDTH="10%">Model</TD>'
+   /'    <TH ALIGN="LEFT" WIDTH="50%">Description</TD>'
+   /'    <TH ALIGN="LEFT" WIDTH="10%">Type</TD>'
+   /'    <TH ALIGN="LEFT" WIDTH="30%">Author</TD>'
+   /'</TR>'
+
+   loop((m,as(a,s),sm(s,m),sath(s,ath)),
+      put / '<TR>'
+       / '    <TD><A HREF="',m.tl:0,'.htm">',m.tl:0,'</A></TD>'
+       / '    <TD>',m.te(m):0,'</TD>'
+       / '    <TD>';
+   subindx.lcase=2;
+   loop(tss(t,s),
+      put t.tl:0 );
+   subindx.lcase=0;
+   put   '</TD>'
+       / '    <TD>',ath.tl:0,'</TD>'
+       / '</TR>';
+   subindx.lcase=1)
+   put / '</TABLE>')
+   put / '<!--#include virtual="/footer.html" -->'
+       / '</html>';
+
+*
+*  modlist
+*
+modlist.lcase=1;
+put modlist
+ '% Model library listed by application area' /
+loop(a,
+   put /
+   /'\subsubsection*{' a.te(a):0 '}' /
+   /'\begin{modellist}'
+   /'\Mname{\normalfont\textbf{Name}}'
+    '\Mdesc{\textbf{Description}}'
+    '\Mtype{\textbf{Type}}'
+    '\Mnumber{\textbf{No.}}'
+    '\Mauthor{\textbf{Author}}'
+   loop((m,as(a,s),sm(s,m),sath(s,ath)),
+      put /  '\Mname{\textbf{' m.tl:0 '}}'
+             '\Mdesc{' m.te(m):0 '}';
+      modlist.lcase=2;
+      loop(tss(t,s),
+         put '\Mtype{' t.tl:0 '}' );
+      modlist.lcase=0;
+      put    '\Mnumber{' s.tl:0 '}'
+             '\Mauthor{',ath.tl:0,'}' /;
+      modlist.lcase=1
+   );
+   put / '\end{modellist}'
+);
+
+*
+*  alfindx
+*
+alfindx.lcase=1;
+put alfindx
+ '<HTML> <HEAD><TITLE> GAMS Model Library Alphabetical Index</TITLE></HEAD>'
+/ '<!--#include virtual="/header.html" -->'
+/'<H1>Model Library Alphabetical Index</H1>'
+/'This is an alphabetical listing of the models available'
+/'in the on-line model library.'
+/'There is also an <A HREF="athindx.htm">author index</A>,'
+/'a <A HREF="subindx.htm">subject index</A>, and'
+/'a <A HREF="seqindx.htm">chronological index</A>.'
+/'<P><b>Shortcuts:</b> ';
+alfindx.lcase=2;
+loop (letters,
+  put alfindx '<A HREF="#' letters.tl:0 '"> ' letters.tl:0   '</A>' /
+);
+alfindx.lcase=1;
+put alfindx
+/'<P><TABLE>'
+/'<TR>'
+/'    <TD></TD>'
+/'    <TH ALIGN="LEFT">Model</TH>'
+/'    <TH ALIGN="LEFT">Description</TH>'
+/'    <TH ALIGN="LEFT">Type</TH>'
+/'    <TH ALIGN="LEFT">Author</TH>'
+/ '</TR>'
+
+loop(m,
+   if(letters(m),
+      alfindx.lcase=2;
+      put /'<TR>'
+          /' <TD></TD>'
+          /'<TH COLSPAN=4 ALIGN="LEFT"><A NAME="'m.tl:0'">',m.tl:0,'</TH>'
+          /'</TR>';
+      alfindx.lcase=1;
+   else
+      put / '<TR>'
+*                <TD><IMG SRC="/pics/new.gif"></TD>
+          / '    <TD></TD>'
+          / '    <TD><A HREF="',m.tl:0,'.htm">',m.tl:0,'</A></TD>'
+          / '    <TD>',m.te(m):0,'</TD>'
+          / '    <TD>';
+      alfindx.lcase=2;
+      loop((sm(s,m),sath(s,ath)),
+         loop(tss(t,s),
+            put t.tl:0 );
+      alfindx.lcase=0;
+         put   '</TD>'
+             / '    <TD>',ath.tl:0,'</TD>'
+             / '</TR>';
+         alfindx.lcase=1) ));
+put / '</TABLE>'
+    / '<!--#include virtual="/footer.html" -->'
+    / '</html>';
+
+*
+*  athindx
+*
+athindx.lcase=1; athindx.pw=4096;
+put athindx
+ '<HTML> <HEAD><TITLE> GAMS Model Library Author Index</TITLE></HEAD>'
+/ '<!--#include virtual="/header.html" -->'
+/'<H1>Model Library Author Index</H1>'
+/'This is an listing of authors of the models available'
+/'in the on-line model library.'
+/'There is also an <A HREF="alfindx.htm">alphabetical index</A>, '
+/'a <A HREF="subindx.htm">subject index</A>, and'
+/'a <A HREF="seqindx.htm">chronological index</A> .'
+/'<hr>'
+/'<table width="100%">';
+scalar acnter /0/;
+set seqath(s) models of an author;
+
+athindx.lcase=0;
+loop(ath$(not cath(ath)),
+  if (mod(acnter,5)=0, put / '<tr>');
+  acnter = acnter+1;
+  put / '<td align=left><a href="#' ath.tl:0 '">'ath.tl:0'</a></td>'
+);
+put / '</table>'
+    / '<hr>';
+
+set printr(r) references to print for an author;
+
+loop(ath$(not cath(ath) and sum((sr(s,r),athr(ath,r)), 1)),
+  athindx.lcase=0;
+  put / '<a name="' ath.tl:0 '"></a>'
+      / '<h3>' ath.tl:0 '</h3>'
+      / '<ul>';
+     printr(r) = athr(ath,r);
+     printr(printr) = not sum(cr(r,printr)$athr(ath,r),yes)
+     loop(printr(r), put / '<li>' r.te(r); put$ro(r) ro.te(r));
+     seqath(s) = sum((sr(s,r),athr(ath,r)), 1);
+     if (card(seqath),
+       put / '<li> Models:'
+           / '<table width="100%" border=0 cellspacing=0 cellpadding=0>'
+       loop((seqath(s),sm(s,m)),
+       athindx.lcase=1;
+         put / '<tr>'
+             / '<td width="10%"><a href="' m.tl:0 '.htm">' m.tl:0 '</a></td>'
+             / '<td width="90%">' m.te(m) '</td>'
+       )
+       put / '</table>';
+     )
+     put / '</ul>';
+)
+put  / '<!--#include virtual="/footer.html" -->'
+     / '</body></html>';
+
+$exit

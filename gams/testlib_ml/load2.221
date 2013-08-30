@@ -1,0 +1,32 @@
+$title 'Test filtered $load' (LOAD2,SEQ=221)
+
+$ontext
+AB00747, the gdx filter could overflow AND may
+have been wrong when using $onmulti in declarations or $load
+sequences.
+
+$load dom sub(dom) more_uels param(dom)
+$offtext
+
+$onecho > xx.gms
+set i /i1*i2/
+    ii /i1*i100/;
+parameter A(i) /i1=1, i2=2/;
+parameter B(ii);
+B(ii)= Ord(ii);
+$offecho
+
+$call =gams xx.gms gdx=data lo=%GAMS.lo%
+
+set i,ii;
+parameter A(i), AA(i);
+$gdxin data
+$load I A
+* expand the domain
+$load ii
+* the filter should be able to handle this
+$load AA=B
+$gdxin
+
+display i,a,aa;
+Abort$(Card(a) <> Card(AA)) "GDX loading filter does not work";

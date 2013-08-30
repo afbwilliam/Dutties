@@ -1,0 +1,55 @@
+$title Simplest test for QCP correctness (QCP09,SEQ=555)
+
+$ontext
+Very simple QCP: quadratic obj and 1 quadratic constraint.
+It should be impossible to have the wrong conventions for passing Q
+matrices (e.g. symmetry treatment, "implied 1/2", signs) and
+get this one correct.
+
+Contributor: Steven Dirkse, January 2012
+$offtext
+
+$if not set TESTTOL $set TESTTOL 1e-6
+
+scalars
+  mchecks / 0 /
+  tol  / %TESTTOL% /
+  xbar / 2 /
+  ybar / 3 /
+  zbar / 44.25 /
+  ;
+$ifthen set QCPMCHECKS
+$ if not %QCPMCHECKS% == 0 mchecks = 1;
+$else
+$ if not  %QPMCHECKS% == 0 mchecks = 1;
+$endif
+
+variables x, y, z;
+equations f, g;
+
+f .. z =E= -10.875 * x  -1 * y + 3 * sqr(x-5) + x * y + 4 * sqr(y-6);
+g .. 3 * sqr(x) + 2 * x * y + 2 * sqr(y) =L= 42;
+
+model m / f, g /;
+
+solve m using qcp min z;
+
+if {(m.solvestat = %solvestat.CapabilityProblems%),
+  abort$(m.modelstat <> %modelstat.NoSolutionReturned%)           'wrong modelstat for capability error';
+  display 'Solver capability error: further tests suppressed';
+else
+  abort$(m.solvestat <> %solvestat.NormalCompletion% or m.modelstat > %modelstat.LocallyOptimal%)  'wrong status codes';
+  abort$[abs(x.l-xbar) > tol]              'bad x.l';
+  abort$[abs(y.l-ybar) > tol]              'bad y.l';
+  abort$[abs(z.l-zbar) > tol]              'bad z.l';
+  abort$[abs(f.l)      > tol]              'bad f.l';
+  abort$[abs(g.l-g.up) > tol]              'bad g.l';
+  if {mchecks,
+    abort$[abs(x.m)        > tol]          'bad x.m';
+    abort$[abs(y.m)        > tol]          'bad y.m';
+    abort$[abs(z.m)        > tol]          'bad z.m';
+    abort$[abs(f.m-1)      > tol]          'bad f.m';
+    abort$[abs(g.m+1.4375) > tol]          'bad g.m';
+  };
+  display 'All tests passed';
+};

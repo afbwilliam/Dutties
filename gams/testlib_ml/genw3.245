@@ -1,0 +1,19 @@
+$TITLE 'Generate test data for write3 test of gdxMrw' (GENW3,SEQ=245)
+
+set i / 1 * 3 /,
+    musketeers / athos, porthos, aramis /;
+
+parameter
+  c(i) /
+    1 2
+    2 4
+    3 6
+  /,
+  d(musketeers) /
+    athos    2
+    porthos  4
+    aramis   6
+  /;
+
+execute_unload 'exw3_.gdx', c;
+execute_unload 'exw3_lab_.gdx', d;
